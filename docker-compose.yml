@@ -1,0 +1,15 @@
+version: "3.7"
+services:
+  database:
+    image: postgres:14
+    environment:
+      POSTGRES_USER: admin
+      POSTGRES_PASSWORD: admin
+      POSTGRES_DB: xbrl
+    # Update the port if needed.
+    ports:
+      - 5432:5432
+    volumes:
+      - xbrl-database:/var/lib/postgresql/data
+volumes:
+  xbrl-database:
