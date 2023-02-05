@@ -12,10 +12,23 @@
 
         <!-- Scripts -->
         @vite(['resources/css/app.css', 'resources/js/app.js'])
+        @livewireStyles
+        @powerGridStyles
     </head>
     <body>
-        <div class="font-sans text-gray-900 antialiased">
-            {{ $slot }}
+        <x-jet-banner />
+
+         <div class="min-h-screen bg-gray-100">
+         @livewire('navigation-menu-guest')
+        <!-- Page Content -->
+            <main>
+                {{ $slot }}
+            </main>
         </div>
+
+        @stack('modals')
+
+        @livewireScripts
+        @powerGridScripts
     </body>
 </html>
