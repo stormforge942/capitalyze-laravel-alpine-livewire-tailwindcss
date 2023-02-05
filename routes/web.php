@@ -18,7 +18,13 @@ Route::get('/', function () {
     return view('welcome');
 });
 
-Route::get('/company/{ticker}', [CompanyController::class, 'show'])->name('company');
+Route::get('/company/{ticker}', [CompanyController::class, 'show'])->name('company.show');
+Route::get('/company/{ticker}/metrics', [CompanyController::class, 'metrics'])->name('company.metrics');
+Route::get('/company/{ticker}/calcbench', [CompanyController::class, 'calcbench'])->name('company.calcbench');
+Route::get('/company/{ticker}/report', [CompanyController::class, 'report'])->name('company.report');
+Route::get('/company/{ticker}/periods', [CompanyController::class, 'periods'])->name('company.periods');
+Route::get('/company/{ticker}/sc2', [CompanyController::class, 'sc2'])->name('company.sc2');
+Route::get('/company/{ticker}/sc3', [CompanyController::class, 'sc3'])->name('company.sc3');
 
 Route::middleware([
     'auth:sanctum',
