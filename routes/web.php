@@ -16,7 +16,7 @@ use App\Http\Controllers\CompanyController;
 
 Route::get('/', function () {
     return view('welcome');
-});
+})->name('home');
 
 Route::get('/company/{ticker}', [CompanyController::class, 'show'])->name('company.show');
 Route::get('/company/{ticker}/metrics', [CompanyController::class, 'metrics'])->name('company.metrics');
