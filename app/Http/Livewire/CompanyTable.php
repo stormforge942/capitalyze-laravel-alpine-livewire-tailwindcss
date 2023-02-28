@@ -149,7 +149,7 @@ final class CompanyTable extends PowerGridComponent
      * @return array<int, Button>
      */
 
-    
+
     public function actions(): array
     {
        return [
