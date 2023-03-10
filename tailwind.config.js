@@ -1,4 +1,5 @@
 const defaultTheme = require('tailwindcss/defaultTheme');
+const colors = require('tailwindcss/colors');
 
 /** @type {import('tailwindcss').Config} */
 module.exports = {
@@ -9,6 +10,7 @@ module.exports = {
         './resources/views/**/*.blade.php',
         './vendor/power-components/livewire-powergrid/resources/views/**/*.php',
         './vendor/power-components/livewire-powergrid/src/Themes/Tailwind.php',
+        './app/Http/Livewire/*.php', 
     ],
 
     theme: {
@@ -16,6 +18,12 @@ module.exports = {
             fontFamily: {
                 sans: ['Nunito', ...defaultTheme.fontFamily.sans],
             },
+            colors: { 
+                danger: colors.rose,
+                primary: colors.blue,
+                success: colors.green,
+                warning: colors.yellow,
+            }, 
         },
     },
 
@@ -23,5 +31,23 @@ module.exports = {
 
     plugins: [require('@tailwindcss/forms')({
         strategy: 'class',
-      }), require('@tailwindcss/typography')],
+      }), require('@tailwindcss/typography'),
+      function({ addBase, theme }) {
+        function extractColorVars(colorObj, colorGroup = '') {
+          return Object.keys(colorObj).reduce((vars, colorKey) => {
+            const value = colorObj[colorKey];
+  
+            const newVars =
+              typeof value === 'string'
+                ? { [`--color${colorGroup}-${colorKey}`]: value }
+                : extractColorVars(value, `-${colorKey}`);
+  
+            return { ...vars, ...newVars };
+          }, {});
+        }
+  
+        addBase({
+          ':root': extractColorVars(theme('colors')),
+        });
+      }],
 };

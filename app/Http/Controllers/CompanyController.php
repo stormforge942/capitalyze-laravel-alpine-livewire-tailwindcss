@@ -12,21 +12,23 @@ class CompanyController extends BaseController
     {
         $company = Company::where('ticker', $ticker)->get()->first();
 
-        return view('company.show', [
+        return view('layouts.company', [
             'company' => $company,
             'ticker' => $ticker,
-            'period' => $request->query('period') || 'annual'
+            'period' => $request->query('period', 'annual'),
+            'tab' => 'geographical'
         ]);
     }
 
-    public function metrics(Request $request, $ticker)
+    public function product(Request $request, $ticker)
     {
         $company = Company::where('ticker', $ticker)->get()->first();
 
-        return view('company.metrics', [
+        return view('layouts.company', [
             'company' => $company,
             'ticker' => $ticker,
-            'period' => $request->query('period') || 'annual'
+            'period' => $request->query('period', 'annual'),
+            'tab' => 'products'
         ]);
     }
 
@@ -37,7 +39,7 @@ class CompanyController extends BaseController
         return view('company.calcbench', [
             'company' => $company,
             'ticker' => $ticker,
-            'period' => $request->query('period') || 'annual'
+            'period' => $request->query('period', 'annual')
         ]);
     }
 
@@ -48,7 +50,7 @@ class CompanyController extends BaseController
         return view('company.report', [
             'company' => $company,
             'ticker' => $ticker,
-            'period' => $request->query('period') || 'annual'
+            'period' => $request->query('period', 'annual')
         ]);
     }
 
@@ -59,7 +61,7 @@ class CompanyController extends BaseController
         return view('company.periods', [
             'company' => $company,
             'ticker' => $ticker,
-            'period' => $request->query('period') || 'annual'
+            'period' => $request->query('period', 'annual')
         ]);
     }
 
@@ -70,7 +72,7 @@ class CompanyController extends BaseController
         return view('company.sc2', [
             'company' => $company,
             'ticker' => $ticker,
-            'period' => $request->query('period') || 'annual'
+            'period' => $request->query('period', 'annual')
         ]);
     }
 
@@ -81,7 +83,7 @@ class CompanyController extends BaseController
         return view('company.sc3', [
             'company' => $company,
             'ticker' => $ticker,
-            'period' => $request->query('period') || 'annual'
+            'period' => $request->query('period', 'annual')
         ]);
     }
 }

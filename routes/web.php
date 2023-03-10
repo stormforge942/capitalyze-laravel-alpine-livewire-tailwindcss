@@ -19,7 +19,7 @@ Route::get('/', function () {
 })->name('home');
 
 Route::get('/company/{ticker}', [CompanyController::class, 'show'])->name('company.show');
-Route::get('/company/{ticker}/metrics', [CompanyController::class, 'metrics'])->name('company.metrics');
+Route::get('/company/{ticker}/product', [CompanyController::class, 'product'])->name('company.product');
 Route::get('/company/{ticker}/calcbench', [CompanyController::class, 'calcbench'])->name('company.calcbench');
 Route::get('/company/{ticker}/report', [CompanyController::class, 'report'])->name('company.report');
 Route::get('/company/{ticker}/periods', [CompanyController::class, 'periods'])->name('company.periods');
