@@ -25,8 +25,10 @@
             <main>
                 @if($tab == 'geographical')
                     <livewire:company-geographical :company="$company" :ticker="$ticker" :period="$period" />
-                @else
+                @elseif($tab == 'products')
                     <livewire:company-products :company="$company" :ticker="$ticker" :period="$period" />
+                @elseif($tab == 'metrics')
+                    <livewire:company-metrics :company="$company" :ticker="$ticker" :period="$period" />
                 @endif
             </main>
         </div>

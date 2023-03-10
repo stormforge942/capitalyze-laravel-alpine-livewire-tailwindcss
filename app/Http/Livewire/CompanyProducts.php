@@ -18,7 +18,7 @@ class CompanyProducts extends Component
    protected $listeners = ['periodChange'];
 
    public function getProducts() {
-        $source = ($this->period == 'annual') ? 'as_reported_sec_quarter_revenue_product_segmentation_api' : 'as_reported_sec_annual_revenue_product_segmentation_api';
+        $source = ($this->period == 'annual') ? 'as_reported_sec_annual_revenue_product_segmentation_api' : 'as_reported_sec_quarter_revenue_product_segmentation_api';
         $data = DB::connection('pgsql-xbrl')
         ->table($source)
         ->where('ticker', '=', $this->ticker)

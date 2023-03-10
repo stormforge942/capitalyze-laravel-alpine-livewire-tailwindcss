@@ -32,58 +32,15 @@ class CompanyController extends BaseController
         ]);
     }
 
-    public function calcbench(Request $request, $ticker)
+    public function metrics(Request $request, $ticker)
     {
         $company = Company::where('ticker', $ticker)->get()->first();
 
-        return view('company.calcbench', [
+        return view('layouts.company', [
             'company' => $company,
             'ticker' => $ticker,
-            'period' => $request->query('period', 'annual')
-        ]);
-    }
-
-    public function report(Request $request, $ticker)
-    {
-        $company = Company::where('ticker', $ticker)->get()->first();
-
-        return view('company.report', [
-            'company' => $company,
-            'ticker' => $ticker,
-            'period' => $request->query('period', 'annual')
-        ]);
-    }
-
-    public function periods(Request $request, $ticker)
-    {
-        $company = Company::where('ticker', $ticker)->get()->first();
-
-        return view('company.periods', [
-            'company' => $company,
-            'ticker' => $ticker,
-            'period' => $request->query('period', 'annual')
-        ]);
-    }
-
-    public function sc2(Request $request, $ticker)
-    {
-        $company = Company::where('ticker', $ticker)->get()->first();
-
-        return view('company.sc2', [
-            'company' => $company,
-            'ticker' => $ticker,
-            'period' => $request->query('period', 'annual')
-        ]);
-    }
-
-    public function sc3(Request $request, $ticker)
-    {
-        $company = Company::where('ticker', $ticker)->get()->first();
-
-        return view('company.sc3', [
-            'company' => $company,
-            'ticker' => $ticker,
-            'period' => $request->query('period', 'annual')
+            'period' => $request->query('period', 'annual'),
+            'tab' => 'metrics'
         ]);
     }
 }

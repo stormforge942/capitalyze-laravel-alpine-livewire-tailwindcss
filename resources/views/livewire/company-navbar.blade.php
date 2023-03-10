@@ -9,21 +9,9 @@
                 <livewire:company-navbar-item wire:key="navbar-product-{{ $period }}"
                     href="/company/{{ $company->ticker }}/product?period={{ $period }}" name="Products"
                     :active="$currentRoute === 'company.product'" />
-                <livewire:company-navbar-item wire:key="navbar-calcbench-{{ $period }}"
-                    href="/company/{{ $company->ticker }}/calcbench?period={{ $period }}" name="c/ Calcbench"
-                    :active="$currentRoute === 'company.calcbench'" />
-                <livewire:company-navbar-item wire:key="navbar-report-{{ $period }}"
-                    href="/company/{{ $company->ticker }}/report?period={{ $period }}" name="Full report"
-                    :active="$currentRoute === 'company.report'" />
-                <livewire:company-navbar-item wire:key="navbar-periods-{{ $period }}"
-                    href="/company/{{ $company->ticker }}/periods?period={{ $period }}" name="F.R. by period"
-                    :active="$currentRoute === 'company.periods'" />
-                <livewire:company-navbar-item wire:key="navbar-sc2-{{ $period }}"
-                    href="/company/{{ $company->ticker }}/sc2?period={{ $period }}" name="Harmonization Sc2"
-                    :active="$currentRoute === 'company.sc2'" />
-                <livewire:company-navbar-item wire:key="navbar-sc3-{{ $period }}"
-                    href="/company/{{ $company->ticker }}/sc3?period={{ $period }}" name="Harmonization Sc"
-                    :active="$currentRoute === 'company.sc3'" />
+                <livewire:company-navbar-item wire:key="navbar-metrics-{{ $period }}"
+                    href="/company/{{ $company->ticker }}/metrics?period={{ $period }}" name="Metrics"
+                    :active="$currentRoute === 'company.metrics'" />
             </div>
             <div class="hidden ml-auto sm:flex sm:items-center">
 
@@ -54,25 +42,14 @@
             <livewire:company-navbar-item wire:key="navbar-product-mob-{{ $period }}"
                 href="/company/{{ $company->ticker }}/product?period={{ $period }}" name="Product"
                 :active="$currentRoute === 'company.product'" />
-            <livewire:company-navbar-item wire:key="navbar-calcbench-mob-{{ $period }}"
-                href="/company/{{ $company->ticker }}/calcbench?period={{ $period }}" name="c/ Calcbench"
-                :active="$currentRoute === 'company.calcbench'" />
-            <livewire:company-navbar-item wire:key="navbar-report-mob-{{ $period }}"
-                href="/company/{{ $company->ticker }}/report?period={{ $period }}" name="Full report"
-                :active="$currentRoute === 'company.report'" />
-            <livewire:company-navbar-item wire:key="navbar-periods-mob-{{ $period }}"
-                href="/company/{{ $company->ticker }}/periods?period={{ $period }}" name="F.R. by period"
-                :active="$currentRoute === 'company.periods'" />
-            <livewire:company-navbar-item wire:key="navbar-sc2-mob-{{ $period }}"
-                href="/company/{{ $company->ticker }}/sc2?period={{ $period }}" name="Harmonization Sc2"
-                :active="$currentRoute === 'company.sc2'" />
-            <livewire:company-navbar-item wire:key="navbar-sc3-mob-{{ $period }}"
-                href="/company/{{ $company->ticker }}/sc3?period={{ $period }}" name="Harmonization Sc"
-                :active="$currentRoute === 'company.sc3'" />
+            <livewire:company-navbar-item wire:key="navbar-metrics-mob-{{ $period }}"
+                href="/company/{{ $company->ticker }}/metrics?period={{ $period }}" name="Metrics"
+                :active="$currentRoute === 'company.metrics'" />
             <div class="relative mt-3">
                 <label for="period" class="inline-flex text-sm font-medium text-gray-900"> Periodicity : </label>
                 <select wire:model.lazy="period" wire:key="navbar-select-mob"
                     class="inline-flex px-3 py-2 pr-8 leading-tight border rounded appearance-none bg-slate-50 border-slate-300 text-slate-700 focus:outline-none focus:bg-white focus:border-slate-500 dark:bg-slate-600 dark:text-slate-200 dark:placeholder-slate-200 dark:border-slate-500"
+                    wire:change="$emit('periodChange', $event.target.value)"
                     name="period" id="period-mob">
                     <option value="annual">
                         Annual
