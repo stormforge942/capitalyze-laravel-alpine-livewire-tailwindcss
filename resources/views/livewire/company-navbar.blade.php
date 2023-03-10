@@ -45,7 +45,7 @@
             <livewire:company-navbar-item wire:key="navbar-metrics-mob-{{ $period }}"
                 href="/company/{{ $company->ticker }}/metrics?period={{ $period }}" name="Metrics"
                 :active="$currentRoute === 'company.metrics'" />
-            <div class="relative mt-3">
+            <div class="relative mt-3 ml-3">
                 <label for="period" class="inline-flex text-sm font-medium text-gray-900"> Periodicity : </label>
                 <select wire:model.lazy="period" wire:key="navbar-select-mob"
                     class="inline-flex px-3 py-2 pr-8 leading-tight border rounded appearance-none bg-slate-50 border-slate-300 text-slate-700 focus:outline-none focus:bg-white focus:border-slate-500 dark:bg-slate-600 dark:text-slate-200 dark:placeholder-slate-200 dark:border-slate-500"
