@@ -13,18 +13,19 @@ class CompanyProducts extends Component
     public $products;
     public $segments;
     public $table;
+    public $json;
     protected $request;
 
    protected $listeners = ['periodChange'];
 
    public function getProducts() {
         $source = ($this->period == 'annual') ? 'as_reported_sec_annual_revenue_product_segmentation_api' : 'as_reported_sec_quarter_revenue_product_segmentation_api';
-        $data = DB::connection('pgsql-xbrl')
+        $json = DB::connection('pgsql-xbrl')
         ->table($source)
         ->where('ticker', '=', $this->ticker)
         ->value('api_return_simplified_new');
 
-        $data = json_decode($data, true);
+        $data = json_decode($json, true);
         $products = [];
         $dates = [];
         $segments = [];
@@ -41,6 +42,7 @@ class CompanyProducts extends Component
             }
         }
         
+        $this->json = $json;
         $this->products = $products;
         $this->segments = $segments;
    }
@@ -86,6 +88,8 @@ class CompanyProducts extends Component
         $this->period = $period;
         $this->getProducts();
         $this->renderTable();
+
+        $this->emit('updateChart', $this->json, $this->period);
     }
 
     public function render()

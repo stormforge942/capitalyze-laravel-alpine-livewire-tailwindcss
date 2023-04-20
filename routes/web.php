@@ -18,8 +18,8 @@ Route::get('/', function () {
     return view('welcome');
 })->name('home');
 
-Route::get('/company/{ticker}', [CompanyController::class, 'show'])->name('company.show');
-Route::get('/company/{ticker}/product', [CompanyController::class, 'product'])->name('company.product');
+Route::get('/company/{ticker}/', [CompanyController::class, 'product'])->name('company.product');
+Route::get('/company/{ticker}/geographic', [CompanyController::class, 'geographic'])->name('company.geographic');
 Route::get('/company/{ticker}/metrics', [CompanyController::class, 'metrics'])->name('company.metrics');
 
 Route::middleware([

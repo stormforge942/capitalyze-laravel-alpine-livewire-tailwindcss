@@ -8,7 +8,7 @@ use Illuminate\Routing\Controller as BaseController;
 
 class CompanyController extends BaseController
 {
-    public function show(Request $request, $ticker)
+    public function geographic(Request $request, $ticker)
     {
         $company = Company::where('ticker', $ticker)->get()->first();
 
