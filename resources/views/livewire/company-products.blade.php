@@ -1,6 +1,6 @@
 <div class="py-12">
-    <div class="mx-auto">
-        <div class="px-4 sm:px-6 lg:px-8 bg-white py-4 shadow mx-4 rounded">
+    <div class="mx-auto flex flex-col md:flex-row">
+        <div class="px-4 sm:px-6 lg:px-8 bg-white py-4 shadow md:mx-4 rounded md:w-1/2 w-full">
             <div class="sm:flex sm:items-center">
                 <div class="sm:flex-auto">
                     <h1 class="text-base font-semibold leading-6 text-gray-900">Revenue Geographic Segmentation - Chart - {{ Str::title($period) }}</h1>
@@ -8,13 +8,29 @@
             </div>
             <div class="mt-8 flow-root rounded-lg overflow-x-auto">
                 <div class="align-middle">
-                    <div class="inline-block min-w-full sm:rounded-lg">
+                    <div class="inline-block min-w-full sm:rounded-lg min-h-[30rem]">
                         <canvas id="revenueChart"></canvas>
                     </div>
                 </div>
             </div>
         </div>
-        <div class="mt-4 px-4 sm:px-6 lg:px-8 bg-white py-4 shadow mx-4 rounded">
+        <div class="px-4 sm:px-6 lg:px-8 bg-white py-4 shadow md:mx-4 rounded md:w-1/2 w-full mt-4 md:mt-0">
+            <div class="sm:flex sm:items-center">
+                <div class="sm:flex-auto">
+                    <h1 class="text-base font-semibold leading-6 text-gray-900">Revenue Geographic Segmentation - Product Distribution - {{ Str::title($period) }}</h1>
+                </div>
+            </div>
+            <div class="mt-8 flow-root rounded-lg overflow-x-auto">
+                <div class="align-middle">
+                    <div class="inline-block min-w-full sm:rounded-lg max-h-[30rem] flex justify-center">
+                        <canvas id="Distribution"></canvas>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="mx-auto flex">
+        <div class="mt-4 px-4 sm:px-6 lg:px-8 bg-white py-4 shadow md:mx-4 rounded w-full">
             <div class="sm:flex sm:items-center">
                 <div class="sm:flex-auto">
                     <h1 class="text-base font-semibold leading-6 text-gray-900">Revenue Geographic Segmentation - {{ Str::title($period) }}</h1>
@@ -37,11 +53,59 @@
     let segments = {!! json_encode($segments) !!}
     let periodicity = '{!! $period !!}';
     let config;
+    let colors = ['#7ff27d', '#fafa7e', '#f364ab', '#f5926a', '#525df0', '#8d47ef', '#b8f77c', '#c554ee', '#6dd8f2', '#6e47ef']
 
     config = formatData(data, periodicity);
+    configDoughnut = generateDoughnut(data[0]);
+
+    function generateDoughnut(data) {
+        const firstKey = Object.keys(data)[0];
+        const values = Object.values(data[firstKey]);
+        const sum = values.reduce((acc, val) => acc + val);
+
+		// Calculate percentages
+		const percentages = values.map(val => ((val / sum) * 100).toFixed(2));
+
+        let config = {
+			type: 'doughnut',
+			data: {
+				labels: Object.keys(data[firstKey]),
+				datasets: [{
+					data: percentages,
+					backgroundColor: colors,
+					borderColor:colors,
+					borderWidth: 1
+				}]
+			},
+			options: {
+				responsive: true,
+                cutout: '70%',
+				plugins: {
+					legend: {
+						position: 'top',
+                        padding: 200,
+					},
+					title: {
+						display: true,
+						text: 'Product Distribution in Percentage'
+					},
+                    tooltip: {
+                        callbacks: {
+                        label: function(context) {
+                            return context.label + ': ' + context.parsed + '%';
+                        }
+                        }
+                    }
+				}
+			}
+		}
+
+        return config;
+    }
 
     function formatData(data, periodicity) {
         // Filter data for the last 4 years
+        let indexColor = 0;
         let currentDate = DateTime.local();
         let fourYearsAgo = currentDate.minus({
             years: 4
@@ -89,13 +153,12 @@
                 datasets.push({
                     label: category,
                     data: data,
-                    backgroundColor: getRandomColor(),
+                    backgroundColor: colors[indexColor],
                     stack: 'Stack 0'
                 });
+                indexColor++;
             }
         }
-
-        console.log(periodicity);
 
         let config = {
             type: 'bar'
@@ -104,8 +167,9 @@
                 , datasets: datasets
             }
             , options: {
+                maintainAspectRatio: false,
                 scales: {
-                    xAxes: [{
+                    x: [{
                         type: 'time'
                         , time: {
                             tooltipFormat: 'MMM dd, yyyy',
@@ -115,7 +179,7 @@
                             , parser: 'YYYY-MM-DD'
                         }
                     }]
-                    , yAxes: [{
+                    , y: [{
                         ticks: {
                             beginAtZero: true
                             , callbacks: {
@@ -154,24 +218,19 @@
         return config;
     }
 
+    const canvasDoughnut = document.getElementById('Distribution');
     const canvas = document.getElementById('revenueChart');
     let myChart = new Chart(canvas, config);
-
-    function getRandomColor() {
-        const letters = '0123456789ABCDEF';
-        let color = '#';
-        for (let i = 0; i < 6; i++) {
-            color += letters[Math.floor(Math.random() * 16)];
-        }
-        return color;
-    }
+    let doughnutChart = new Chart(canvasDoughnut, configDoughnut);
 
     Livewire.on('updateChart', (data, periodicity) => {
-            console.log('called');
-            console.log(JSON.parse(data));
+            let jsonData = JSON.parse(data);
             myChart.destroy();
-            let config = formatData(JSON.parse(data), periodicity);
+            doughnutChart.destroy();
+            let config = formatData(jsonData, periodicity);
+            let configDoughnut = generateDoughnut(jsonData[0]);
             myChart = new Chart(canvas, config);
+            doughnutChart = new Chart(canvasDoughnut, configDoughnut);
         });
 
 </script>
