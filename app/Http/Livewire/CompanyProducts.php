@@ -19,11 +19,12 @@ class CompanyProducts extends Component
    protected $listeners = ['periodChange'];
 
    public function getProducts() {
-        $source = ($this->period == 'annual') ? 'as_reported_sec_annual_revenue_product_segmentation_api' : 'as_reported_sec_quarter_revenue_product_segmentation_api';
+        $source = ($this->period == 'annual') ? 'arps' : 'qrps';
         $json = DB::connection('pgsql-xbrl')
-        ->table($source)
+        ->table('as_reported_sec_segmentation_api')
         ->where('ticker', '=', $this->ticker)
-        ->value('api_return_simplified_new');
+        ->where('endpoint', '=', $source)
+        ->value('api_return_open_ai');
 
         $data = json_decode($json, true);
         $products = [];

@@ -3,7 +3,7 @@
         <div class="px-4 sm:px-6 lg:px-8 bg-white py-4 shadow md:mx-4 rounded md:w-1/2 w-full">
             <div class="sm:flex sm:items-center">
                 <div class="sm:flex-auto">
-                    <h1 class="text-base font-semibold leading-6 text-gray-900">Revenue Geographic Segmentation - Chart - {{ Str::title($period) }}</h1>
+                    <h1 class="text-base font-semibold leading-6 text-gray-900">Revenue Product Segmentation - Chart - {{ Str::title($period) }}</h1>
                 </div>
             </div>
             <div class="mt-8 flow-root rounded-lg overflow-x-auto">
@@ -17,7 +17,7 @@
         <div class="px-4 sm:px-6 lg:px-8 bg-white py-4 shadow md:mx-4 rounded md:w-1/2 w-full mt-4 md:mt-0">
             <div class="sm:flex sm:items-center">
                 <div class="sm:flex-auto">
-                    <h1 class="text-base font-semibold leading-6 text-gray-900">Revenue Geographic Segmentation - Product Distribution - {{ Str::title($period) }}</h1>
+                    <h1 class="text-base font-semibold leading-6 text-gray-900">Revenue Product Segmentation - {{ Str::title($period) }}</h1>
                 </div>
             </div>
             <div class="mt-8 flow-root rounded-lg overflow-x-auto">
@@ -59,9 +59,10 @@
     configDoughnut = generateDoughnut(data[0]);
 
     function generateDoughnut(data) {
+        console.log(data);
         const firstKey = Object.keys(data)[0];
         const values = Object.values(data[firstKey]);
-        const sum = values.reduce((acc, val) => acc + val);
+        const sum = values.reduce((acc, val) => +acc + +val);
 
 		// Calculate percentages
 		const percentages = values.map(val => ((val / sum) * 100).toFixed(2));
@@ -107,12 +108,12 @@
         // Filter data for the last 4 years
         let indexColor = 0;
         let currentDate = DateTime.local();
-        let fourYearsAgo = currentDate.minus({
-            years: 4
+        let sixYearsAgo = currentDate.minus({
+            years: 6
         }).startOf('year');
         let filteredData = data.filter(item => {
             const date = Object.keys(item)[0];
-            return DateTime.fromISO(date) >= fourYearsAgo;
+            return DateTime.fromISO(date) >= sixYearsAgo;
         });
 
         let normalizedData = filteredData.map(item => {
@@ -134,7 +135,7 @@
         normalizedData.sort((a, b) => DateTime.fromISO(a.date) - DateTime.fromISO(b.date));
 
         let labels = normalizedData
-            .filter(item => DateTime.fromISO(item.date) >= fourYearsAgo)
+            .filter(item => DateTime.fromISO(item.date) >= sixYearsAgo)
             .map(item => item.date);
 
         let datasets = [];
@@ -145,10 +146,10 @@
             }
 
             let data = normalizedData
-                .filter(item => DateTime.fromISO(item.date) >= fourYearsAgo)
+                .filter(item => DateTime.fromISO(item.date) >= sixYearsAgo)
                 .map((entry) => entry[category]);
 
-            // Only add datasets if there is data available for the last 4 years
+            // Only add datasets if there is data available for the last 6 years
             if (data.some(value => value !== 0)) {
                 datasets.push({
                     label: category,
