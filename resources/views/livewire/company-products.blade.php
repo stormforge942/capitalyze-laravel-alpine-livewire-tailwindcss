@@ -47,14 +47,15 @@
     </div>
 </div>
 @push('scripts')
-<script wire:model="json">
+<script>
     let DateTime = luxon.DateTime;
-    let data = {!! $json !!};
-    let segments = {!! json_encode($segments) !!}
+    let data = "{!! $json !!}";
+    let segments = {!! json_encode($segments) !!};
     let periodicity = '{!! $period !!}';
     let config;
     let colors = ['#7ff27d', '#fafa7e', '#f364ab', '#f5926a', '#525df0', '#8d47ef', '#b8f77c', '#c554ee', '#6dd8f2', '#6e47ef']
 
+    data = JSON.parse(atob(data));
     config = formatData(data, periodicity);
     configDoughnut = generateDoughnut(data[0]);
 
@@ -208,11 +209,6 @@
                 , legend: {
                     position: 'bottom'
                 }
-                , title: {
-                    display: true
-                    , text: 'Apple Revenue by Product Category (Last 4 Years)'
-                    , fontSize: 18
-                }
             }
         };
 
@@ -224,15 +220,16 @@
     let myChart = new Chart(canvas, config);
     let doughnutChart = new Chart(canvasDoughnut, configDoughnut);
 
-    Livewire.on('updateChart', (data, periodicity) => {
-            let jsonData = JSON.parse(data);
-            myChart.destroy();
-            doughnutChart.destroy();
-            let config = formatData(jsonData, periodicity);
-            let configDoughnut = generateDoughnut(jsonData[0]);
-            myChart = new Chart(canvas, config);
-            doughnutChart = new Chart(canvasDoughnut, configDoughnut);
-        });
+    Livewire.on('updateChart', (data, periodicity, seg) => {
+        segments = seg;
+        let jsonData = JSON.parse(atob(data));
+        myChart.destroy();
+        doughnutChart.destroy();
+        let config = formatData(jsonData, periodicity);
+        let configDoughnut = generateDoughnut(jsonData[0]);
+        myChart = new Chart(canvas, config);
+        doughnutChart = new Chart(canvasDoughnut, configDoughnut);
+    });
 
 </script>
 @endpush

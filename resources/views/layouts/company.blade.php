@@ -40,7 +40,6 @@
     </div>
 
     @stack('modals')
-
     @livewireScripts
     @powerGridScripts
     @stack('scripts')

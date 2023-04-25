@@ -13,18 +13,20 @@ class CompanyGeographical extends Component
     public $geographical;
     public $segments;
     public $table;
+    public $json;
     protected $request;
 
    protected $listeners = ['periodChange'];
 
    public function getGeographical() {
-        $source = ($this->period == 'annual') ? 'as_reported_sec_annual_revenue_geographic_segmentation_api' : 'as_reported_sec_quarter_revenue_geographic_segmentation_api';
-        $data = DB::connection('pgsql-xbrl')
-        ->table($source)
+        $source = ($this->period == 'annual') ? 'args' : 'qrgs';
+        $json = DB::connection('pgsql-xbrl')
+        ->table('as_reported_sec_segmentation_api')
         ->where('ticker', '=', $this->ticker)
-        ->value('api_return_simplified_new');
+        ->where('endpoint', '=', $source)
+        ->value('api_return_open_ai');
 
-        $data = json_decode($data, true);
+        $data = json_decode($json, true);
         $geographical = [];
         $dates = [];
         $segments = [];
@@ -41,6 +43,7 @@ class CompanyGeographical extends Component
             }
         }
         
+        $this->json = base64_encode($json);
         $this->geographical = $geographical;
         $this->segments = $segments;
    }
@@ -86,6 +89,8 @@ class CompanyGeographical extends Component
         $this->period = $period;
         $this->getGeographical();
         $this->renderTable();
+
+        $this->emit('updateChart', $this->json, $this->period, $this->segments);
     }
 
     public function render()

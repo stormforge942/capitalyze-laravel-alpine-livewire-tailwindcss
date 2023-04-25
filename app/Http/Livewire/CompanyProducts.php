@@ -43,7 +43,7 @@ class CompanyProducts extends Component
             }
         }
         
-        $this->json = $json;
+        $this->json = base64_encode($json);
         $this->products = $products;
         $this->segments = $segments;
    }
@@ -90,7 +90,7 @@ class CompanyProducts extends Component
         $this->getProducts();
         $this->renderTable();
 
-        $this->emit('updateChart', $this->json, $this->period);
+        $this->emit('updateChart', $this->json, $this->period, $this->segments);
     }
 
     public function render()
