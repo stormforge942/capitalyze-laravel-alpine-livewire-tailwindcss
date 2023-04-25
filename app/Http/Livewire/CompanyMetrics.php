@@ -35,11 +35,15 @@ class CompanyMetrics extends Component
         foreach($data as $date) {
             $key = array_key_first($date);
             $dates[] = $key;
-            $metrics[$key] = $date[$key][$this->parentFace][$this->currentFace];
-            $keys = array_keys($metrics[$key]);
-            foreach($keys as $subkey) {
-                if(!in_array($subkey, $segments, true)){
-                    $segments[] =  $subkey;
+            if(array_key_exists($this->parentFace, $date[$key])) {
+                if(array_key_exists($this->currentFace, $date[$key][$this->parentFace])) {
+                    $metrics[$key] = $date[$key][$this->parentFace][$this->currentFace];
+                    $keys = array_keys($metrics[$key]);
+                    foreach($keys as $subkey) {
+                        if(!in_array($subkey, $segments, true)){
+                            $segments[] =  $subkey;
+                        }
+                    }
                 }
             }
         }
