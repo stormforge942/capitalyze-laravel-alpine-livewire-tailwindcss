@@ -1,3 +1,4 @@
+@import "../../vendor/wire-elements/pro/resources/css/tailwind/overlay-component.css";
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
@@ -37,4 +38,9 @@ table.data tr:nth-child(even):hover > td:first-child {
         word-break: break-word;
         white-space: break-spaces;
     }
+}
+
+.wep-modal-content,
+.wep-slide-over-container-inner-wrap {
+    @apply motion-reduce:transition-none;
 }

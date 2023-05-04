@@ -21,6 +21,7 @@ Route::get('/', function () {
 Route::get('/company/{ticker}/', [CompanyController::class, 'product'])->name('company.product');
 Route::get('/company/{ticker}/geographic', [CompanyController::class, 'geographic'])->name('company.geographic');
 Route::get('/company/{ticker}/metrics', [CompanyController::class, 'metrics'])->name('company.metrics');
+Route::get('/company/{ticker}/report', [CompanyController::class, 'report'])->name('company.report');
 
 Route::middleware([
     'auth:sanctum',

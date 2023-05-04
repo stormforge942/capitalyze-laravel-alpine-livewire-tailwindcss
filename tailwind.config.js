@@ -11,6 +11,8 @@ module.exports = {
         './vendor/power-components/livewire-powergrid/resources/views/**/*.php',
         './vendor/power-components/livewire-powergrid/src/Themes/Tailwind.php',
         './app/Http/Livewire/*.php', 
+        './vendor/wire-elements/pro/config/wire-elements-pro.php',
+        './vendor/wire-elements/pro/**/*.blade.php',
     ],
 
     theme: {

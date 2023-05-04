@@ -62,7 +62,7 @@ class CompanyProducts extends Component
             $table .= '<tr '.$class.'><td class="whitespace-nowrap px-2 py-2 text-sm text-gray-900">'.$segment.'</td>';
             foreach(array_keys($this->products) as $date) {
                 if(array_key_exists($segment, $this->products[$date])) {
-                    $table .= '<td class="whitespace-nowrap px-2 py-2 text-sm text-gray-900">$'.number_format($this->products[$date][$segment],0).'</td>';
+                    $table .= '<td class="whitespace-nowrap px-2 py-2 text-sm text-gray-900"">$'.number_format($this->products[$date][$segment],0).'</td>';
                 } else {
                     $table .= '<td class="whitespace-nowrap px-2 py-2 text-sm text-gray-900"></td>';
                 }

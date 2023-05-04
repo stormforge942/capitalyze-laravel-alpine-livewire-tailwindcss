@@ -12,6 +12,9 @@
                 <livewire:company-navbar-item wire:key="navbar-metrics-{{ $period }}"
                     href="/company/{{ $company->ticker }}/metrics?period={{ $period }}" name="Metrics"
                     :active="$currentRoute === 'company.metrics'" />
+                <livewire:company-navbar-item wire:key="navbar-report-{{ $period }}"
+                    href="/company/{{ $company->ticker }}/report?period={{ $period }}" name="Full Report"
+                    :active="$currentRoute === 'company.report'" />
             </div>
             <div class="hidden ml-auto sm:flex sm:items-center">
 
@@ -45,6 +48,9 @@
             <livewire:company-navbar-item wire:key="navbar-metrics-mob-{{ $period }}"
                 href="/company/{{ $company->ticker }}/metrics?period={{ $period }}" name="Metrics"
                 :active="$currentRoute === 'company.metrics'" />
+            <livewire:company-navbar-item wire:key="navbar-report-mob-{{ $period }}"
+                href="/company/{{ $company->ticker }}/report?period={{ $period }}" name="Full Report"
+                :active="$currentRoute === 'company.report'" />
             <div class="relative mt-3 ml-3">
                 <label for="period" class="inline-flex text-sm font-medium text-gray-900"> Periodicity : </label>
                 <select wire:model.lazy="period" wire:key="navbar-select-mob"

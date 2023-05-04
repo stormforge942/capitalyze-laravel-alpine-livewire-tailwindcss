@@ -35,11 +35,14 @@
             <livewire:company-products :company="$company" :ticker="$ticker" :period="$period" />
             @elseif($tab == 'metrics')
             <livewire:company-metrics :company="$company" :ticker="$ticker" :period="$period" />
+            @elseif($tab == 'report')
+            <livewire:company-report :company="$company" :ticker="$ticker" :period="$period" />
             @endif
         </main>
     </div>
 
     @stack('modals')
+    @livewire('slide-over-pro')
     @livewireScripts
     @powerGridScripts
     @stack('scripts')

@@ -5,7 +5,7 @@ namespace App\Http\Livewire;
 use Livewire\Component;
 use Illuminate\Support\Facades\DB;
 
-class CompanyMetrics extends Component
+class CompanyReport extends Component
 {
     public $company;
     public $ticker;
@@ -18,14 +18,14 @@ class CompanyMetrics extends Component
     public $currentFace = 'Incomestatement';
     protected $request;
 
-   protected $listeners = ['periodChange', 'metricChange'];
+   protected $listeners = ['periodChange', 'reportChange'];
 
-   public function getMetrics() {
-        $source = ($this->period == 'annual') ? 'as_reported_sec_annual_restated_api' : 'as_reported_sec_quarter_restated_api';
+   public function getReport() {
+        $source = ($this->period == 'annual') ? 'as_reported_sec_annual_restated_full_api' : 'as_reported_sec_quarter_restated_full_api';
         $data = DB::connection('pgsql-xbrl')
         ->table($source)
         ->where('ticker', '=', $this->ticker)
-        ->value('api_return_with_unit');
+        ->value('api_return_presentation');
 
         $data = json_decode($data, true);
         $metrics = [];
@@ -53,21 +53,21 @@ class CompanyMetrics extends Component
    }
 
    public function renderFaces() {
-        $source = ($this->period == 'annual') ? 'as_reported_sec_annual_restated_api' : 'as_reported_sec_quarter_restated_api';
+        $source = ($this->period == 'annual') ? 'as_reported_sec_annual_restated_full_api' : 'as_reported_sec_quarter_restated_full_api';
         $data = DB::connection('pgsql-xbrl')
         ->table($source)
         ->where('ticker', '=', $this->ticker)
-        ->value('api_return_with_unit');
+        ->value('api_return_presentation');
 
         $data = json_decode($data, true);
-        $first_data = $data[0][key($data[0])];
+        $first_data = [];
         $groups = [];
         $dropdown = '';
 
-        foreach($first_data as $key => $group) {
-            $groups[$key] = array_keys($group);
+        foreach($data as $array) {
+            $first_data = array_merge($first_data, array_keys($array));
         }
-
+        
         foreach($groups as $key => $face) {
             $dropdown .= '<optgroup label="'.$key.'">';
             foreach($face as $value) {
@@ -97,13 +97,7 @@ class CompanyMetrics extends Component
             $table .= '<tr '.$class.'><td class="whitespace-nowrap px-2 py-2 text-sm text-gray-900 font-bold">'.preg_replace('/(?<=\w)(?=[A-Z])/', ' ', $segment).'</td>';
             foreach(array_keys($this->metrics) as $date) {
                 if(array_key_exists($segment, $this->metrics[$date])) {
-                    if($this->metrics[$date][$segment][1] == 'USD')
-                        $value = number_format($this->metrics[$date][$segment][0],0).' $';
-                    else
-                        $value = $this->metrics[$date][$segment][0];
-                    $data = array("hash" => $this->metrics[$date][$segment][2], "ticker" => $this->ticker, "period" => $date);
-                    $data_json = json_encode($data);
-                    $table .= '<td class="whitespace-nowrap px-2 py-2 text-sm text-gray-900 open-slide" data-value="'.htmlspecialchars($data_json).'">'.$value.'</td>';
+                    $table .= '<td class="whitespace-nowrap px-2 py-2 text-sm text-gray-900">'.$this->metrics[$date][$segment].'</td>';
                 } else {
                     $table .= '<td class="whitespace-nowrap px-2 py-2 text-sm text-gray-900"></td>';
                 }
@@ -122,29 +116,29 @@ class CompanyMetrics extends Component
         $this->company  = $company;
         $this->ticker = $ticker;
         $this->period = $period;
-        $this->renderFaces();
-        $this->getMetrics();
-        $this->renderTable();
+        // $this->renderFaces();
+        // $this->getReport();
+        // $this->renderTable();
     }
 
-    public function metricChange($face, $parent)
+    public function reportChange($face, $parent)
     {
         $this->parentFace = $parent;
         $this->currentFace = $face;
 
-        $this->renderFaces();
-        $this->getMetrics();
-        $this->renderTable();
+        // $this->renderFaces();
+        // $this->getReport();
+        // $this->renderTable();
     }
 
     public function periodChange($period) {
         $this->period = $period;
-        $this->getMetrics();
-        $this->renderTable();
+        // $this->getReport();
+        // $this->renderTable();
     }
 
     public function render()
     {
-        return view('livewire.company-metrics');
+        return view('livewire.company-report');
     }
 }

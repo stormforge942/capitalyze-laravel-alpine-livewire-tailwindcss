@@ -43,4 +43,16 @@ class CompanyController extends BaseController
             'tab' => 'metrics'
         ]);
     }
+
+    public function report(Request $request, $ticker)
+    {
+        $company = Company::where('ticker', $ticker)->get()->first();
+
+        return view('layouts.company', [
+            'company' => $company,
+            'ticker' => $ticker,
+            'period' => $request->query('period', 'annual'),
+            'tab' => 'report'
+        ]);
+    }
 }
