@@ -13,10 +13,10 @@ class CompanyFactSlide extends SlideOver
     public $json;
     public $title = "Value Report";
     public $period = "";
+    public $loaded = false;
 
-    public function mount($hash, $ticker, $period) {
-        $this->hash = $hash;
-        $this->ticker = $ticker;
+    public function loadData()
+    {
         $source = 'info_facts_data';
         $json = DB::connection('pgsql-xbrl')
         ->table($source)
@@ -25,10 +25,15 @@ class CompanyFactSlide extends SlideOver
         ->value('info');
 
         $data = json_decode($json, true);
-
-        $this->period = $period;
         $this->json = $json;
         $this->data = $data;
+        $this->loaded = true;
+    }
+
+    public function mount($hash, $ticker, $period) {
+        $this->hash = $hash;
+        $this->ticker = $ticker;
+        $this->period = $period;
     }
 
     public function render()
