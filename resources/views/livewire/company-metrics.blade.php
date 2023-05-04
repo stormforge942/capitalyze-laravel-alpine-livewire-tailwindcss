@@ -38,17 +38,12 @@
                 var payload = JSON.parse(value);
                 window.livewire.emit('slide-over.open', 'company-fact-slide', payload, {force: true});
                 slideOpen = true;
-                document.body.style.cursor = "progress";
             }
         });
     });
 
     Livewire.on('slide-over.close', () => {
         slideOpen = false;
-    });
-
-    Livewire.on('Slideloaded', () => {
-       document.body.style.cursor = "default";
     });
 </script>
 @endpush

@@ -34,7 +34,6 @@
                 @foreach($components as $id => $component)
                     <div x-show.immediate="activeComponent === '{{ $id }}'" x-ref="{{ $id }}" wire:key="{{ $id }}" class="wep-slide-over-container-inner-content">
                         @livewire($component['name'], $component['parameters'], key($id))
-                        @php $this->emit('Slideloaded'); @endphp
                     </div>
                 @endforeach
             </div>
