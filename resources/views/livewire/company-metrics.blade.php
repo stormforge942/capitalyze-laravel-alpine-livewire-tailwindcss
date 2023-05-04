@@ -28,16 +28,22 @@
 </div>
 @push('scripts')
 <script>
+    let slideOpen = false;
+
     document.addEventListener('DOMContentLoaded', function() {
         document.body.addEventListener('click', function(event) {
             var element = event.target;
-            if (element.classList.contains('open-slide')) {
-            var value = element.dataset.value;
-            var payload = JSON.parse(value);
-            console.log(payload);
-            window.livewire.emit('slide-over.open', 'company-fact-slide', payload);
+            if (element.classList.contains('open-slide') && !slideOpen) {
+                var value = element.dataset.value;
+                var payload = JSON.parse(value);
+                window.livewire.emit('slide-over.open', 'company-fact-slide', payload, {force: true});
+                slideOpen = true;
             }
         });
+    });
+
+    Livewire.on('slide-over.close', () => {
+        slideOpen = false;
     });
 </script>
 @endpush

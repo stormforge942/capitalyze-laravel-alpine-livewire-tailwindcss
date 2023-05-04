@@ -1,6 +1,10 @@
 <x-wire-elements-pro::tailwind.slide-over>
     <x-slot name="title" class="font-bold">{!! $title !!}</x-slot>
 
+    <div wire:loading>
+         <p class="text-lg font-bold">Loading ...</p>
+    </div>
+
     @if(array_key_exists('Standardized Metrics Match', $data))
     <p class="text-lg font-bold">Standardized Metrics Match</h3>
     <table class="table-auto border-collapse">
