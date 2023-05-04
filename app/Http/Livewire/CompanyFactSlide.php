@@ -38,7 +38,6 @@ class CompanyFactSlide extends SlideOver
 
     public function render()
     {
-        $this->emit('Slideloaded');
         return view('livewire.company-fact-slide');
     }
 
