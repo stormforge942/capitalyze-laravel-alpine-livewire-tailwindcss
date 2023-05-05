@@ -103,7 +103,7 @@ class CompanyMetrics extends Component
                         $value = $this->metrics[$date][$segment][0];
                     $data = array("hash" => $this->metrics[$date][$segment][2], "ticker" => $this->ticker, "period" => $date);
                     $data_json = json_encode($data);
-                    $table .= '<td class="whitespace-nowrap px-2 py-2 text-sm text-gray-900 hover:cursor-pointer hover:font-bold open-slide" data-value="'.htmlspecialchars($data_json).'">'.$value.'</td>';
+                    $table .= '<td class="whitespace-nowrap px-2 py-2 text-sm text-gray-900 hover:cursor-pointer hover:underline underline-offset-1 open-slide" data-value="'.htmlspecialchars($data_json).'">'.$value.'</td>';
                 } else {
                     $table .= '<td class="whitespace-nowrap px-2 py-2 text-sm text-gray-900"></td>';
                 }
