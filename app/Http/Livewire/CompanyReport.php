@@ -87,9 +87,9 @@ class CompanyReport extends Component
         $i = 0;
         $class = '';
         $table = '<table class="table-auto min-w-full data"><thead><tr>';
-        $table .= '<th scope="col" class="whitespace-nowrap px-2 py-3.5 text-left text-sm font-semibold text-gray-900 bg-cyan-200">Segment</th>';
+        $table .= '<th scope="col" class="whitespace-nowrap px-2 py-3.5 text-left text-sm font-semibold text-gray-900 bg-blue-300">Segment</th>';
         foreach(array_keys($this->metrics) as $date) {
-            $table .= '<th scope="col" class="whitespace-nowrap px-2 py-3.5 text-left text-sm font-semibold text-gray-900 bg-cyan-200">'.$date.'</th>';
+            $table .= '<th scope="col" class="whitespace-nowrap px-2 py-3.5 text-left text-sm font-semibold text-gray-900 bg-blue-300">'.$date.'</th>';
         }
         $table .= '</thead><tbody class="divide-y bg-white">';
         foreach($this->segments as $segment) {

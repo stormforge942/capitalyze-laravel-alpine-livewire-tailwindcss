@@ -49,3 +49,8 @@ table.data tr:nth-child(even):hover > td:first-child {
 .wep-slide-over-backdrop {
    @apply backdrop-blur-none;
 }
+
+.wep-slide-over-container-inner {
+    @apply pl-0;
+    @apply md:pl-10;
+}

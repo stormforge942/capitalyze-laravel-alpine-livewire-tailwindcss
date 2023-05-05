@@ -86,10 +86,10 @@ class CompanyMetrics extends Component
    public function renderTable() {
         $i = 0;
         $class = '';
-        $table = '<table class="table-auto min-w-full data"><thead><tr>';
-        $table .= '<th scope="col" class="whitespace-nowrap px-2 py-3.5 text-left text-sm font-semibold text-gray-900 bg-cyan-200">Segment</th>';
+        $table = '<table class="table-auto min-w-full data border-collapse"><thead><tr>';
+        $table .= '<th scope="col" class="whitespace-nowrap px-2 py-3.5 text-left text-sm font-semibold text-gray-900 bg-blue-300">Segment</th>';
         foreach(array_keys($this->metrics) as $date) {
-            $table .= '<th scope="col" class="whitespace-nowrap px-2 py-3.5 text-left text-sm font-semibold text-gray-900 bg-cyan-200">'.$date.'</th>';
+            $table .= '<th scope="col" class="whitespace-nowrap px-2 py-3.5 text-left text-sm font-semibold text-slate-950 bg-blue-300">'.$date.'</th>';
         }
         $table .= '</thead><tbody class="divide-y bg-white">';
         foreach($this->segments as $segment) {
@@ -103,7 +103,7 @@ class CompanyMetrics extends Component
                         $value = $this->metrics[$date][$segment][0];
                     $data = array("hash" => $this->metrics[$date][$segment][2], "ticker" => $this->ticker, "period" => $date);
                     $data_json = json_encode($data);
-                    $table .= '<td class="whitespace-nowrap px-2 py-2 text-sm text-gray-900 open-slide" data-value="'.htmlspecialchars($data_json).'">'.$value.'</td>';
+                    $table .= '<td class="whitespace-nowrap px-2 py-2 text-sm text-gray-900 hover:cursor-pointer hover:font-bold open-slide" data-value="'.htmlspecialchars($data_json).'">'.$value.'</td>';
                 } else {
                     $table .= '<td class="whitespace-nowrap px-2 py-2 text-sm text-gray-900"></td>';
                 }
