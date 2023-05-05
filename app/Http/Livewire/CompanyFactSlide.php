@@ -60,7 +60,7 @@ class CompanyFactSlide extends SlideOver
         return [
             // Set the slide-over size to 2xl, you can choose between:
             // xs, sm, md, lg, xl, 2xl, 3xl, 4xl, 5xl, 6xl, 7xl
-            'size' => '2xl',
+            'size' => 'xl',
         ];
     }
 }
