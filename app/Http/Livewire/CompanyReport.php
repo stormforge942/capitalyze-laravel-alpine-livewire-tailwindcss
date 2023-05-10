@@ -59,7 +59,7 @@ class CompanyReport extends Component
             }
         }
         if (!empty($dateValues)) {
-            $class = $this->rowNumber % 2 == 0 ? 'border border-slate-50 bg-cyan-50 hover:bg-blue-200' : 'border border-slate-50 bg-white border-slate-100 hover:bg-blue-20';
+            $class = $this->rowNumber % 2 == 0 ? 'border border-slate-50 bg-cyan-50 hover:bg-blue-200' : 'border border-slate-50 bg-white border-slate-100 hover:bg-blue-200';
             $output .= '<tr class="' . $class . '">';
             $output .= '<td>' . $label . '</td>';
             foreach ($dates as $date) {
