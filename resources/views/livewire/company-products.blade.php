@@ -38,7 +38,7 @@
             </div>
             <div class="mt-8 flow-root rounded-lg overflow-x-auto">
                 <div class="align-middle">
-                    <div class="inline-block min-w-full sm:rounded-lg" wire:model="table">
+                    <div class="inline-block min-w-full sm:rounded-lg">
                         {!! $table !!}
                     </div>
                 </div>

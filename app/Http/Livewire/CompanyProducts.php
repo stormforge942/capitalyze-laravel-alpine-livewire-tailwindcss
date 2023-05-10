@@ -58,11 +58,11 @@ class CompanyProducts extends Component
         }
         $table .= '</thead><tbody class="divide-y bg-white">';
         foreach($this->segments as $segment) {
-            $class = ($i % 2 == 0) ? 'class="border border-slate-50 bg-cyan-50 hover:bg-blue-200 dark:bg-slate-700 dark:odd:bg-slate-800 dark:odd:hover:bg-slate-900 dark:hover:bg-slate-700"' : 'class="border border-slate-50 bg-white border-slate-100 dark:border-slate-400 hover:bg-blue-200 dark:bg-slate-700 dark:odd:bg-slate-800 dark:odd:hover:bg-slate-900 dark:hover:bg-slate-700"';
+            $class = ($i % 2 == 0) ? 'class="border border-slate-50 bg-cyan-50 hover:bg-blue-200"' : 'class="border border-slate-50 bg-white border-slate-100 hover:bg-blue-200"';
             $table .= '<tr '.$class.'><td class="whitespace-nowrap px-2 py-2 text-sm text-gray-900">'.$segment.'</td>';
             foreach(array_keys($this->products) as $date) {
                 if(array_key_exists($segment, $this->products[$date])) {
-                    $table .= '<td class="whitespace-nowrap px-2 py-2 text-sm text-gray-900"">$'.number_format($this->products[$date][$segment],0).'</td>';
+                    $table .= '<td class="whitespace-nowrap px-2 py-2 text-sm text-gray-900">$'.number_format($this->products[$date][$segment],0).'</td>';
                 } else {
                     $table .= '<td class="whitespace-nowrap px-2 py-2 text-sm text-gray-900"></td>';
                 }

@@ -1,3 +1,4 @@
+<div>
 <header class="bg-white shadow">
     <div class="px-2 mx-auto max-w-7xl sm:px-4 lg:divide-y lg:divide-gray-200 lg:px-8">
         <nav class="hidden lg:flex lg:py-2" aria-label="Global">
@@ -68,3 +69,4 @@
         </div>
     </nav>
 </header>
+</div>
