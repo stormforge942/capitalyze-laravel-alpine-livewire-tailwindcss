@@ -11,6 +11,7 @@
             <div class="mt-8 flow-root rounded-lg overflow-x-auto">
                 <div class="align-middle">
                     <div class="inline-block min-w-full sm:rounded-lg">
+                        {{-- {!! print_r($data) !!} --}}
                         {!! $table !!}
                     </div>
                 </div>

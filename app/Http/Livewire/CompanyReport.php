@@ -46,47 +46,25 @@ class CompanyReport extends Component
         }
     }
 
-    function generateTableRows($array, $dates, $label = '', $depth = 0) {
+    function generateTableRows($array, $dates, $label = '', $depth = 0, $isBold = false) {
         $output = '';
         $dateValues = [];
-        $hasChild = false;
-        $colors = ['bg-blue-100', 'bg-green-100', 'bg-yellow-100', 'bg-red-100', 'bg-blue-200', 'bg-green-200', 'bg-yellow-200', 'bg-red-200', 'bg-blue-300' ,'bg-green-300', 'bg-yellow-300', 'bg-red-300'];
+        $colors = ['bg-blue-100', 'bg-green-100', 'bg-yellow-100', 'bg-red-100', 'bg-blue-200', 'bg-green-200', 'bg-yellow-200', 'bg-red-200', 'bg-blue-300', 'bg-green-300', 'bg-yellow-300', 'bg-red-300'];
+        $boldClass = $isBold ? ' font-bold' : '';
     
-        // Check if label exists in the array, if not, manually add a row for that label
-        if (!array_key_exists($label, $array) && $label !== '') {
-            $class = 'border border-slate-50 ' . $colors[$depth % count($colors)] . ' hover:bg-blue-200';
-            $output .= '<tr class="' . $class . '">';
-            $output .= '<td>' . str_repeat('&nbsp;', $depth) . $label . '</td>';
-            foreach ($dates as $date) {
-                $output .= '<td></td>';
-            }
-            $output .= '</tr>';
-        }
-    
+        // If the current array contains any date values, store them in $dateValues
         foreach ($array as $key => $value) {
-            if (is_array($value)) {
-                if (preg_match('/\d{4}-\d{2}-\d{2}/', $key)) {
-                    $dateValues[$key] = $value[0];
-                } else {
-                    $hasChild = true;
-                    $output .= $this->generateTableRows($value, $dates, $key, $depth + 1);
-                }
+            if (preg_match('/\d{4}-\d{2}-\d{2}/', $key) && is_array($value)) {
+                $dateValues[$key] = $value[0];
             }
         }
     
-        if (empty($dateValues) && !$hasChild) {
-            // Add a row for the current label, even if there are no values for it
-            $class = 'border border-slate-50 ' . $colors[$depth % count($colors)] . ' hover:bg-blue-200';
+        // Generate a row for the label if it's not '#segmentation'
+        if ($label !== '#segmentation') {
+            $class = 'border border-slate-50 ' . $colors[$depth % count($colors)] . ' hover:bg-blue-200' . $boldClass;
             $output .= '<tr class="' . $class . '">';
             $output .= '<td>' . str_repeat('&nbsp;', $depth) . $label . '</td>';
-            foreach ($dates as $date) {
-                $output .= '<td></td>';
-            }
-            $output .= '</tr>';
-        } elseif (!empty($dateValues) || !$hasChild) {
-            $class = 'border border-slate-50 ' . $colors[$depth % count($colors)] . ' hover:bg-blue-200';
-            $output .= '<tr class="' . $class . '">';
-            $output .= '<td>' . str_repeat('&nbsp;', $depth) . $label . '</td>';
+            
             foreach ($dates as $date) {
                 if (isset($dateValues[$date])) {
                     $output .= '<td>' . $dateValues[$date] . '</td>';
@@ -94,12 +72,25 @@ class CompanyReport extends Component
                     $output .= '<td></td>';
                 }
             }
+    
             $output .= '</tr>';
+        }
+    
+        // Recursively generate rows for children
+        foreach ($array as $key => $value) {
+            if (!preg_match('/\d{4}-\d{2}-\d{2}/', $key) && is_array($value)) {
+                $newIsBold = $isBold;
+                if ($key === '#segmentation') {
+                    $newIsBold = true;
+                }
+                $output .= $this->generateTableRows($value, $dates, $key, $depth + 1, $newIsBold);
+            }
         }
     
         return $output;
     }
-      
+    
+       
 
    function generateTableFromNestedArray($data) {
     $this->rowNumber = 0;
