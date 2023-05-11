@@ -55,19 +55,24 @@ class CompanyReport extends Component
         // If the current array contains any date values, store them in $dateValues
         foreach ($array as $key => $value) {
             if (preg_match('/\d{4}-\d{2}-\d{2}/', $key) && is_array($value)) {
-                $dateValues[$key] = $value[0];
+                $dateValues[$key] = $value;
             }
         }
     
-        // Generate a row for the label if it's not '#segmentation'
-        if ($label !== '#segmentation') {
+        // Only generate a row if the label is not empty and not '#segmentation'
+        if (!empty($label) && $label !== '#segmentation') {
             $class = 'border border-slate-50 ' . $colors[$depth % count($colors)] . ' hover:bg-blue-200' . $boldClass;
             $output .= '<tr class="' . $class . '">';
-            $output .= '<td>' . str_repeat('&nbsp;', $depth) . $label . '</td>';
+            $output .= '<td class="py-2 break-words"">' . str_repeat('&nbsp;', $depth) . $label . '</td>';
             
             foreach ($dates as $date) {
                 if (isset($dateValues[$date])) {
-                    $output .= '<td>' . $dateValues[$date] . '</td>';
+                    $value = $dateValues[$date][0];
+                    // Check if the value is in USD and format it
+                    if (isset($dateValues[$date][1]) && $dateValues[$date][1] === 'USD') {
+                        $value = '$' . number_format($value, 2);
+                    }
+                    $output .= '<td class="p-2">' . $value . '</td>';
                 } else {
                     $output .= '<td></td>';
                 }
@@ -89,6 +94,8 @@ class CompanyReport extends Component
     
         return $output;
     }
+    
+    
     
        
 
