@@ -46,22 +46,47 @@ class CompanyReport extends Component
         }
     }
 
-    function generateTableRows($array, $dates, $label = '', $rowNumber = 1) {
+    function generateTableRows($array, $dates, $label = '', $depth = 0) {
         $output = '';
         $dateValues = [];
+        $hasChild = false;
+        $colors = ['bg-blue-100', 'bg-green-100', 'bg-yellow-100', 'bg-red-100', 'bg-blue-200', 'bg-green-200', 'bg-yellow-200', 'bg-red-200', 'bg-blue-300' ,'bg-green-300', 'bg-yellow-300', 'bg-red-300'];
+    
+        // Check if label exists in the array, if not, manually add a row for that label
+        if (!array_key_exists($label, $array) && $label !== '') {
+            $class = 'border border-slate-50 ' . $colors[$depth % count($colors)] . ' hover:bg-blue-200';
+            $output .= '<tr class="' . $class . '">';
+            $output .= '<td>' . str_repeat('&nbsp;', $depth) . $label . '</td>';
+            foreach ($dates as $date) {
+                $output .= '<td></td>';
+            }
+            $output .= '</tr>';
+        }
+    
         foreach ($array as $key => $value) {
             if (is_array($value)) {
                 if (preg_match('/\d{4}-\d{2}-\d{2}/', $key)) {
                     $dateValues[$key] = $value[0];
                 } else {
-                    $output .= $this->generateTableRows($value, $dates, $key);
+                    $hasChild = true;
+                    $output .= $this->generateTableRows($value, $dates, $key, $depth + 1);
                 }
             }
         }
-        if (!empty($dateValues)) {
-            $class = $this->rowNumber % 2 == 0 ? 'border border-slate-50 bg-cyan-50 hover:bg-blue-200' : 'border border-slate-50 bg-white border-slate-100 hover:bg-blue-200';
+    
+        if (empty($dateValues) && !$hasChild) {
+            // Add a row for the current label, even if there are no values for it
+            $class = 'border border-slate-50 ' . $colors[$depth % count($colors)] . ' hover:bg-blue-200';
             $output .= '<tr class="' . $class . '">';
-            $output .= '<td>' . $label . '</td>';
+            $output .= '<td>' . str_repeat('&nbsp;', $depth) . $label . '</td>';
+            foreach ($dates as $date) {
+                $output .= '<td></td>';
+            }
+            $output .= '</tr>';
+        } elseif (!empty($dateValues) || !$hasChild) {
+            $class = 'border border-slate-50 ' . $colors[$depth % count($colors)] . ' hover:bg-blue-200';
+            $output .= '<tr class="' . $class . '">';
+            $output .= '<td>' . str_repeat('&nbsp;', $depth) . $label . '</td>';
             foreach ($dates as $date) {
                 if (isset($dateValues[$date])) {
                     $output .= '<td>' . $dateValues[$date] . '</td>';
@@ -70,10 +95,11 @@ class CompanyReport extends Component
                 }
             }
             $output .= '</tr>';
-            $this->rowNumber++;
         }
+    
         return $output;
     }
+      
 
    function generateTableFromNestedArray($data) {
     $this->rowNumber = 0;
@@ -84,7 +110,7 @@ class CompanyReport extends Component
     rsort($dates);
 
     // Start generating the table
-    $output = '<table class="table-auto min-w-full data">';
+    $output = '<table class="table-auto min-w-full">';
     $output .= '<thead>';
     $output .= '<tr>';
     $output .= '<th scope="col" class="whitespace-nowrap px-2 py-3.5 text-left text-sm font-semibold text-gray-900 bg-blue-300">Label</th>';
@@ -95,7 +121,7 @@ class CompanyReport extends Component
     $output .= '</thead>';
 
     $output .= '<tbody class="divide-y bg-white">';
-    $output .= $this->generateTableRows($array, $dates, '', 1);
+    $output .= $this->generateTableRows($array, $dates, '', 0);
     $output .= '</tbody>';
     $output .= '</table>';
 
