@@ -37,12 +37,9 @@
     document.addEventListener('DOMContentLoaded', function() {
         document.body.addEventListener('click', function(event) {
             var element = event.target;
-            console.log(element);
             if (element.classList.contains('open-slide') && !slideOpen) {
-                console.log('ok');
                 var value = element.dataset.value;
                 value = JSON.parse(value);
-                console.log(value);
                 window.livewire.emit('slide-over.open', 'company-report-slide', value, {force: true});
                 slideOpen = true;
             }
