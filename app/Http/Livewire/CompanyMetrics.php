@@ -87,7 +87,7 @@ class CompanyMetrics extends Component
         $i = 0;
         $class = '';
         $table = '<table class="table-auto min-w-full data border-collapse"><thead><tr>';
-        $table .= '<th scope="col" class="whitespace-nowrap px-2 py-3.5 text-left text-sm font-semibold text-gray-900 bg-blue-300">Segment</th>';
+        $table .= '<th scope="col" class="whitespace-nowrap px-2 py-3.5 text-left text-sm font-semibold text-gray-900 bg-blue-300">Date</th>';
         foreach(array_keys($this->metrics) as $date) {
             $table .= '<th scope="col" class="whitespace-nowrap px-2 py-3.5 text-left text-sm font-semibold text-slate-950 bg-blue-300">'.$date.'</th>';
         }

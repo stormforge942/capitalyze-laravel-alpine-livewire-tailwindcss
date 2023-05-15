@@ -18,6 +18,7 @@ class CompanyReport extends Component
     public $activeSubIndex = '';
     public $data;
     protected $request;
+    protected $rowCount = 0;
 
    protected $listeners = ['periodChange', 'tabClicked', 'tabSubClicked'];
 
@@ -38,17 +39,6 @@ class CompanyReport extends Component
     function generateTableRows($array, $dates, $label = '', $depth = 0, $isBold = false) {
         $output = '';
         $dateValues = [];
-        $colors = [
-            'bg-blue-100', 
-            'bg-green-100', 
-            'bg-teal-100', 
-            'bg-blue-200', 
-            'bg-green-200', 
-            'bg-teal-200', 
-            'bg-blue-300', 
-            'bg-green-300', 
-            'bg-teal-300',
-        ];               
         $boldClass = $isBold ? ' font-bold' : '';
     
         // If the current array contains any date values, store them in $dateValues
@@ -60,9 +50,10 @@ class CompanyReport extends Component
     
         // Only generate a row if the label is not empty and not '#segmentation'
         if (!empty($label) && $label !== '#segmentation') {
-            $class = 'border border-slate-400 ' . $colors[$depth % count($colors)] . ' hover:bg-blue-200' . $boldClass;
+            $bgClass = $this->rowCount % 2 === 0 ? 'bg-cyan-50' : 'bg-white'; // Change $depth to $rowCount here
+            $class = $bgClass . ' hover:bg-blue-200' . $boldClass;
             $output .= '<tr class="' . $class . '">';
-            $output .= '<td class="border-slate-400 sticky left-0 py-2 break-words max-w-[400px] text-sm '.$colors[$depth % count($colors)].'">' . str_repeat('&nbsp;', $depth) . $label . '</td>';
+            $output .= '<td class="sticky left-0 py-2 break-words max-w-[400px] text-sm '.$bgClass.'">' . str_repeat('&nbsp;', $depth) . $label . '</td>';
             
             foreach ($dates as $date) {
                 if (isset($dateValues[$date])) {
@@ -91,6 +82,7 @@ class CompanyReport extends Component
             }
     
             $output .= '</tr>';
+            $this->rowCount++;
         }
     
         // Recursively generate rows for children
@@ -109,6 +101,7 @@ class CompanyReport extends Component
 
    function generateTableFromNestedArray($data) {
         // Find all unique dates
+        $this->rowCount = 0;
         $dates = [];
         $this->findDates($data, $dates);
         rsort($dates);
@@ -117,7 +110,7 @@ class CompanyReport extends Component
         $output = '<table class="table-auto min-w-full data-report">';
         $output .= '<thead>';
         $output .= '<tr>';
-        $output .= '<th scope="col" class="whitespace-nowrap px-2 py-3.5 text-left text-sm font-semibold text-gray-900 bg-blue-300">Label</th>';
+        $output .= '<th scope="col" class="whitespace-nowrap px-2 py-3.5 text-left text-sm font-semibold text-gray-900 bg-blue-300">Date</th>';
         foreach ($dates as $date) {
             $output .= '<th scope="col" class="whitespace-nowrap px-2 py-3.5 text-left text-sm font-semibold text-gray-900 bg-blue-300">' . $date . '</th>';
         }
