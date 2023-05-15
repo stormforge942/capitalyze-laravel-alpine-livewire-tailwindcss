@@ -3,6 +3,17 @@
 @tailwind components;
 @tailwind utilities;
 
+/* Hide scrollbar for Chrome, Safari and Opera */
+.scrollbar-hide::-webkit-scrollbar {
+    display: none;
+}
+
+/* Hide scrollbar for Firefox */
+.scrollbar-hide {
+    scrollbar-width: none;
+    -ms-overflow-style: none;
+}
+
 table.data {
     position: relative;
     table-layout: auto;
@@ -24,7 +35,9 @@ table.data tr:nth-child(even) > td:first-child {
 }
 
 table.data tr:nth-child(odd):hover > td:first-child,
-table.data tr:nth-child(even):hover > td:first-child {
+table.data tr:nth-child(even):hover > td:first-child,
+table.data-report tr:nth-child(odd):hover > td:first-child,
+table.data-report tr:nth-child(even):hover > td:first-child {
     background-color: var(--color-blue-200);
 }
 

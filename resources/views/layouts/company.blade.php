@@ -26,7 +26,7 @@
 
     <div class="min-h-screen bg-gray-100">
         @livewire('navigation-menu-guest')
-        <livewire:company-navbar :company="$company" />
+        <livewire:company-navbar :company="$company" :period="$period" />
         <!-- Page Content -->
         <main>
             @if($tab == 'geographical')

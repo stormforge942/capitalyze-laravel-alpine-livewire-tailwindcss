@@ -21,18 +21,12 @@
 
                 <!-- Settings Dropdown -->
                 <div class="relative ml-3">
-                    <label for="period" class="inline-flex text-sm font-medium text-gray-900">Periodicity: </label>
-                    <select wire:model="period" wire:key="navbar-select-period"
-                        class="inline-flex px-3 py-2 pr-8 leading-tight border rounded appearance-none bg-slate-50 border-slate-300 text-slate-700 focus:outline-none focus:bg-white focus:border-slate-500 dark:bg-slate-600 dark:text-slate-200 dark:placeholder-slate-200 dark:border-slate-500"
-                        name="period" wire:change="$emit('periodChange', $event.target.value)" id="period">
-                        <option value="annual">
-                            Annual
-                        </option>
-                        <option value="quarterly">
-                            Quarterly
-                        </option>
-                    </select>
+                    <button wire:key="navbar-period-annual" class="@if($period == 'annual')text-blue-700 @else text-slate-700 @endif text-sm appearance-none inline-flex px-3 py-2 leading-tight appearance-none focus:outline-none focus:bg-white focus:border-slate-500" wire:click="changePeriod('annual')">Annual</button>
+                    <span class="text-indigo-600">|</span>
+                    <button wire:key="navbar-period-quarterly" class="@if($period == 'quarterly')text-blue-700 @else text-slate-700 @endif text-sm appearance-none inline-flex px-3 py-2 leading-tight appearance-none focus:outline-none focus:bg-white focus:border-slate-500" wire:click="changePeriod('quarterly')">Quarterly</button>
                 </div>
+
+
             </div>
         </nav>
     </div>
@@ -54,17 +48,11 @@
                 :active="$currentRoute === 'company.report'" />
             <div class="relative mt-3 ml-3">
                 <label for="period" class="inline-flex text-sm font-medium text-gray-900"> Periodicity : </label>
-                <select wire:model.lazy="period" wire:key="navbar-select-mob"
-                    class="inline-flex px-3 py-2 pr-8 leading-tight border rounded appearance-none bg-slate-50 border-slate-300 text-slate-700 focus:outline-none focus:bg-white focus:border-slate-500 dark:bg-slate-600 dark:text-slate-200 dark:placeholder-slate-200 dark:border-slate-500"
-                    wire:change="$emit('periodChange', $event.target.value)"
-                    name="period" id="period-mob">
-                    <option value="annual">
-                        Annual
-                    </option>
-                    <option value="quarterly">
-                        Quarterly
-                    </option>
-                </select>
+                <!-- Settings Dropdown -->
+                <div class="relative ml-3">
+                    <button wire:key="navbar-period-annual" class="@if($period == 'annual')border-b-2 @endif appearance-none inline-flex px-3 py-2 leading-tight appearance-none border-slate-300 text-slate-700 focus:outline-none focus:bg-white focus:border-slate-500" wire:click="changePeriod('annual')">Annual</button>
+                    <button wire:key="navbar-period-quarterly" class="@if($period == 'quarterly')border-b-2 @endif appearance-none inline-flex px-3 py-2 leading-tight appearance-none border-slate-300 text-slate-700 focus:outline-none focus:bg-white focus:border-slate-500" wire:click="changePeriod('quarterly')">Quarterly</button>
+                </div>
             </div>
         </div>
     </nav>

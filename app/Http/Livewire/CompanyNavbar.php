@@ -15,6 +15,14 @@ class CompanyNavbar extends Component
         'period' => ['except' => 'annual']
     ];
 
+    protected $listeners = ['changePeriod'];
+
+    public function changePeriod($period)
+    {
+        $this->period = $period;
+        $this->emit('periodChange', $period);
+    }
+
     public function render()
     {
         return view('livewire.company-navbar');
