@@ -26,7 +26,7 @@ class EarningsCalendar extends Component
 
         // Load the earnings calls
         $this->loadEarningsCalls();
-        $this->week = Carbon::now()->format('Y-m-w');
+        $this->week = Carbon::now()->format('Y-\WW');
     }
 
     public function nextWeek()
