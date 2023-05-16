@@ -18,6 +18,7 @@
         "laravel/vapor-core": "^2.28",
         "livewire/livewire": "^2.5",
         "power-components/livewire-powergrid": "^3.5",
+        "spatie/calendar-links": "^1.8",
         "wire-elements/pro": "^3.0"
     },
     "require-dev": {
