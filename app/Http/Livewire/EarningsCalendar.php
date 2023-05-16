@@ -13,7 +13,7 @@ class EarningsCalendar extends Component
     public $startDate;
     public $endDate;
     public $earningsCalls;
-    public $month;
+    public $week;
 
     public function mount()
     {
@@ -21,36 +21,36 @@ class EarningsCalendar extends Component
         $this->selectedExchange = 'all';
 
         // Initialize start and end dates to the current month
-        $this->startDate = Carbon::now()->startOfMonth()->toDateString();
-        $this->endDate = Carbon::now()->endOfMonth()->toDateString();
+        $this->startDate = Carbon::now()->startOfWeek()->toDateString();
+        $this->endDate = Carbon::now()->endOfWeek()->toDateString();
 
         // Load the earnings calls
         $this->loadEarningsCalls();
-        $this->month = Carbon::now()->format('Y-m');
+        $this->week = Carbon::now()->format('Y-m-w');
     }
 
-    public function nextMonth()
+    public function nextWeek()
     {
-        $this->startDate = Carbon::parse($this->startDate)->addMonth()->startOfMonth()->toDateString();
-        $this->endDate = Carbon::parse($this->endDate)->addMonth()->endOfMonth()->toDateString();
+        $this->startDate = Carbon::parse($this->startDate)->addWeek()->startOfWeek()->toDateString();
+        $this->endDate = Carbon::parse($this->endDate)->addWeek()->endOfWeek()->toDateString();
 
         // Reload the earnings calls
         $this->loadEarningsCalls();
     }
 
-    public function previousMonth()
+    public function previousWeek()
     {
-        $this->startDate = Carbon::parse($this->startDate)->subMonth()->startOfMonth()->toDateString();
-        $this->endDate = Carbon::parse($this->endDate)->subMonth()->endOfMonth()->toDateString();
+        $this->startDate = Carbon::parse($this->startDate)->subWeek()->startOfWeek()->toDateString();
+        $this->endDate = Carbon::parse($this->endDate)->subWeek()->endOfWeek()->toDateString();
 
         // Reload the earnings calls
         $this->loadEarningsCalls();
     }
 
-    public function selectMonth($month)
+    public function selectWeek($week)
     {
-        $this->startDate = Carbon::parse($month)->startOfMonth()->toDateString();
-        $this->endDate = Carbon::parse($month)->endOfMonth()->toDateString();
+        $this->startDate = Carbon::parse($week)->startOfWeek()->toDateString();
+        $this->endDate = Carbon::parse($week)->endOfWeek()->toDateString();
 
         // Reload the earnings calls
         $this->loadEarningsCalls();
@@ -62,7 +62,7 @@ class EarningsCalendar extends Component
         $this->loadEarningsCalls();
 
         return view('livewire.earnings-calendar', [
-            'formattedDate' => $this->formatDate($this->month)
+            'formattedDate' => $this->formatDate($this->week)
         ]);
     }
 

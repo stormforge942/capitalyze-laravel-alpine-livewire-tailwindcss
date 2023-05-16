@@ -7,7 +7,7 @@
                 </div>
             </div>
             <div class="flex justify-between mb-3 mt-3">
-                <button wire:click="previousMonth" class="text-gray-500"><x-heroicon-s-chevron-left class="w-4 h-6 inline-block align-text-bottom"/> Previous Month</button>
+                <button wire:click="previousWeek" class="text-gray-500"><x-heroicon-s-chevron-left class="w-4 h-6 inline-block align-text-bottom"/> Previous Week</button>
                 <select id="exchange-select" wire:model="selectedExchange">
                     <option value="all">All Exchanges</option>
                     @foreach($exchanges as $exchange)
@@ -15,9 +15,9 @@
                     @endforeach
                 </select>
 
-                <input type="month" wire:model="month" wire:change="selectMonth($event.target.value)" class="border-b border-cyan-500">
+                <input type="week" wire:model="week" wire:change="selectWeek($event.target.value)" class="border-b border-cyan-500">
 
-                <button wire:click="nextMonth"class="text-gray-500">Next Month <x-heroicon-s-chevron-right class="w-4 h-6 inline-block align-text-bottom"/></button>
+                <button wire:click="nextWeek"class="text-gray-500">Next Week <x-heroicon-s-chevron-right class="w-4 h-6 inline-block align-text-bottom"/></button>
             </div>
 
             <table class="table-auto w-full">
@@ -36,7 +36,7 @@
                     </tr>
                     @foreach($calls as $call)
                         <tr>
-                            <td class="break-all">@if(isset($call->company_name)) {{ $call->company_name }} @else - @endif</td>
+                            <td class="break-all">@if(isset($call->company_name)) {{ $call->company_name }} @else {{ $call->symbol }} @endif</td>
                             <td class="px-2">{{ $call->symbol }}</td>
                             <td class="px-2">{{ $call->exchange }}</td>
                             <td class="px-2">{{ $call->time }}</td>
