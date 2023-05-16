@@ -75,7 +75,7 @@ class EarningsCalendar extends Component
     {
         $query = DB::connection('pgsql-xbrl')
             ->table('new_earnings')
-            ->select('symbol', 'date', 'exchange', 'time', 'title', 'url', 'company_name')
+            ->select('symbol', 'date', 'exchange', 'time', 'title', 'url', 'company_name', 'acceptance_time')
             ->whereBetween('date', [$this->startDate, $this->endDate]);
     
         if ($this->selectedExchange !== 'all') {
@@ -84,7 +84,7 @@ class EarningsCalendar extends Component
 
         $query_second = DB::connection('pgsql-xbrl')
             ->table('earnings_calendar')
-            ->select('symbol', 'date', 'exchange', 'time', 'title', 'url')
+            ->select('symbol', 'date', 'exchange', 'time', 'title', 'url', 'pub_date')
             ->whereBetween('date', [$this->startDate, $this->endDate]);
     
         if ($this->selectedExchange !== 'all') {
@@ -93,8 +93,19 @@ class EarningsCalendar extends Component
 
         $results1 = $query->get();
         $results2 = $query_second->get();
+
+        $results1->each(function ($result) {
+            $result->origin = '8-K';
+        });
+    
+        $results2->each(function ($result) {
+            $result->origin = 'press-release';
+        });
         
-        $this->earningsCalls = $results1->concat($results2)->sortBy('date');
+        $this->earningsCalls = $results1->concat($results2)->sortBy(function ($result) {
+            $dateTime = Carbon::parse($result->date . ' ' . $result->time);
+            return $dateTime->format('YmdHis');
+        });
     }
     
 }
