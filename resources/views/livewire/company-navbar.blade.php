@@ -16,17 +16,19 @@
                 <livewire:company-navbar-item wire:key="navbar-report-{{ $period }}"
                     href="/company/{{ $company->ticker }}/report?period={{ $period }}" name="Full Report"
                     :active="$currentRoute === 'company.report'" />
+                <livewire:company-navbar-item wire:key="navbar-shareholders"
+                    href="/company/{{ $company->ticker }}/shareholders" name="Shareholders"
+                    :active="$currentRoute === 'company.shareholders'" />
             </div>
             <div class="hidden ml-auto sm:flex sm:items-center">
-
+                @if($currentRoute !== 'company.shareholders')
                 <!-- Settings Dropdown -->
                 <div class="relative ml-3">
                     <button wire:key="navbar-period-annual" class="@if($period == 'annual')text-blue-700 @else text-slate-700 @endif text-sm appearance-none inline-flex px-3 py-2 leading-tight appearance-none focus:outline-none focus:bg-white focus:border-slate-500" wire:click="changePeriod('annual')">Annual</button>
                     <span class="text-indigo-600">|</span>
                     <button wire:key="navbar-period-quarterly" class="@if($period == 'quarterly')text-blue-700 @else text-slate-700 @endif text-sm appearance-none inline-flex px-3 py-2 leading-tight appearance-none focus:outline-none focus:bg-white focus:border-slate-500" wire:click="changePeriod('quarterly')">Quarterly</button>
                 </div>
-
-
+                @endif
             </div>
         </nav>
     </div>
@@ -46,14 +48,18 @@
             <livewire:company-navbar-item wire:key="navbar-report-mob-{{ $period }}"
                 href="/company/{{ $company->ticker }}/report?period={{ $period }}" name="Full Report"
                 :active="$currentRoute === 'company.report'" />
+            <livewire:company-navbar-item wire:key="navbar-shareholders-mob"
+                    href="/company/{{ $company->ticker }}/shareholders" name="Shareholders"
+                    :active="$currentRoute === 'company.shareholders'" />
+            @if($currentRoute !== 'company.shareholders')
             <div class="relative mt-3 ml-3">
-                <label for="period" class="inline-flex text-sm font-medium text-gray-900"> Periodicity : </label>
                 <!-- Settings Dropdown -->
                 <div class="relative ml-3">
                     <button wire:key="navbar-period-annual" class="@if($period == 'annual')border-b-2 @endif appearance-none inline-flex px-3 py-2 leading-tight appearance-none border-slate-300 text-slate-700 focus:outline-none focus:bg-white focus:border-slate-500" wire:click="changePeriod('annual')">Annual</button>
                     <button wire:key="navbar-period-quarterly" class="@if($period == 'quarterly')border-b-2 @endif appearance-none inline-flex px-3 py-2 leading-tight appearance-none border-slate-300 text-slate-700 focus:outline-none focus:bg-white focus:border-slate-500" wire:click="changePeriod('quarterly')">Quarterly</button>
                 </div>
             </div>
+            @endif
         </div>
     </nav>
 </header>

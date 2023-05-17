@@ -20,7 +20,7 @@ class EarningsCalendar extends Component
         $this->exchanges = DB::connection('pgsql-xbrl')->table('new_earnings')->select('exchange')->distinct()->pluck('exchange')->toArray();
         $this->selectedExchange = 'all';
 
-        // Initialize start and end dates to the current month
+        // Initialize start and end dates to the current week
         $this->startDate = Carbon::now()->startOfWeek()->toDateString();
         $this->endDate = Carbon::now()->endOfWeek()->toDateString();
 

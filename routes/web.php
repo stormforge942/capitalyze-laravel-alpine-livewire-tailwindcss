@@ -23,6 +23,7 @@ Route::get('/company/{ticker}/', [CompanyController::class, 'product'])->name('c
 Route::get('/company/{ticker}/geographic', [CompanyController::class, 'geographic'])->name('company.geographic');
 Route::get('/company/{ticker}/metrics', [CompanyController::class, 'metrics'])->name('company.metrics');
 Route::get('/company/{ticker}/report', [CompanyController::class, 'report'])->name('company.report');
+Route::get('/company/{ticker}/shareholders', [CompanyController::class, 'shareholders'])->name('company.shareholders');
 Route::get('/calendar', EarningsCalendar::class)->name('earnings-calendar');
 
 Route::middleware([
