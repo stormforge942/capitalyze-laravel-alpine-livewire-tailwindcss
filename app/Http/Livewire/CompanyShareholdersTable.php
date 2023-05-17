@@ -203,13 +203,13 @@ final class CompanyShareholdersTable extends PowerGridComponent
     }
 
 
-    public function filters(): array
-    {
-        return [
-        Filter::inputText('investor_name', 'investor_name')
-            ->operators(['contains', 'is', 'is_not']),
-        ];
-    }
+    // public function filters(): array
+    // {
+    //     return [
+    //     Filter::inputText('investor_name', 'investor_name')
+    //         ->operators(['contains', 'is', 'is_not']),
+    //     ];
+    // }
 
     /*
     |--------------------------------------------------------------------------
