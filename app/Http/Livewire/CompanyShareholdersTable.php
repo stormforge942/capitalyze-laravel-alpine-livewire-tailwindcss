@@ -22,7 +22,7 @@ final class CompanyShareholdersTable extends PowerGridComponent
     public string $primaryKey = 'composite_key';
     public string $sortField = 'ownership';
     public string $sortDirection = 'desc';
-    public int $perPage = 10;
+    public int $perPage = 25;
     public array $perPageValues = [10, 25, 50];
     public $company;
     public $ticker;
