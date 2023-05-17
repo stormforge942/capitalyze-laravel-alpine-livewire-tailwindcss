@@ -9,16 +9,21 @@ use Illuminate\Support\Facades\DB;
 use Illuminate\Database\Eloquent\Builder;
 use PowerComponents\LivewirePowerGrid\Rules\{Rule, RuleActions};
 use PowerComponents\LivewirePowerGrid\Traits\ActionButton;
+use PowerComponents\LivewirePowerGrid\Traits\WithExport;
+use PowerComponents\LivewirePowerGrid\Filters\Filter;
 use PowerComponents\LivewirePowerGrid\{Button, Column, Exportable, Footer, Header, PowerGrid, PowerGridComponent, PowerGridEloquent};
 
 final class CompanyShareholdersTable extends PowerGridComponent
 {
     use ActionButton;
+    use WithExport;
 
     public bool $deferLoading = true; // default false
     public string $primaryKey = 'composite_key';
     public string $sortField = 'ownership';
     public string $sortDirection = 'desc';
+    public int $perPage = 10;
+    public array $perPageValues = [10, 25, 50];
     public $company;
     public $ticker;
     public $period;
@@ -51,12 +56,11 @@ final class CompanyShareholdersTable extends PowerGridComponent
         $this->showCheckBox();
 
         return [
-            Exportable::make('export')
-                ->striped()
+            Exportable::make('my-export-file')
+                ->striped('#A6ACCD')
                 ->type(Exportable::TYPE_XLS, Exportable::TYPE_CSV),
-            Header::make()->showSearchInput(),
             Footer::make()
-                ->showPerPage()
+                ->showPerPage($this->perPage, $this->perPageValues)
                 ->showRecordCount(),
         ];
     }
@@ -119,7 +123,8 @@ final class CompanyShareholdersTable extends PowerGridComponent
     public function addColumns(): PowerGridEloquent
     {
         return PowerGrid::eloquent()
-            ->addColumn('investor_name', function (CompanyFilings $companyFilings) {
+            ->addColumn('investor_name') // Fund
+            ->addColumn('investor_name_formated', function (CompanyFilings $companyFilings) {
                 return ($companyFilings->investor_name . (!empty($companyFilings->put_call) ? ' <span class="text-sm font-bold">(' . $companyFilings->put_call . ')</span>' : ''));
             }) // Fund
             ->addColumn('ssh_prnamt') // Shares Held or Principal Amt
@@ -159,65 +164,50 @@ final class CompanyShareholdersTable extends PowerGridComponent
     public function columns(): array
     {
         return [
-            Column::make('Fund', 'investor_name')
-                ->sortable()
+            Column::add()
+                ->title('Fund')
+                ->field('investor_name_formated', 'investor_name')
                 ->searchable()
-                ->makeInputText(),
+                ->sortable(),
 
             Column::make('Shares Held or Principal Amt', 'ssh_prnamt')
-                ->sortable()
-                ->searchable()
-                ->makeInputText(),
+                ->sortable(),
 
             Column::make('Market Value', 'value')
-                ->sortable()
-                ->searchable()
-                ->makeInputText(),
+                ->sortable(),
 
             Column::make('% of Portfolio', 'weight')
-                ->sortable()
-                ->searchable()
-                ->makeInputText(),
+                ->sortable(),
 
             Column::make('Prior % of Portfolio', 'last_weight')
-                ->sortable()
-                ->searchable()
-                ->makeInputText(),
+                ->sortable(),
 
             Column::make('Change in Shares', 'change_in_shares')
-                ->sortable()
-                ->searchable()
-                ->makeInputText(),
+                ->sortable(),
 
             Column::make('% Ownership', 'ownership')
-                ->sortable()
-                ->searchable()
-                ->makeInputText(),
-
-            // Column::make('Source', 'source')
-            //     ->sortable()
-            //     ->searchable()
-            //     ->makeInputText(),
+                ->sortable(),
 
             Column::make('Date reported', 'signature_date')
-                ->sortable()
-                ->searchable()
-                ->makeInputText(),
+                ->sortable(),
 
             Column::make('Source Date', 'report_calendar_or_quarter')
-                ->sortable()
-                ->searchable()
-                ->makeInputText(),
+                ->sortable(),
                 
             Column::make('Qtr 1st Owned', 'first_added')
-                ->sortable()
-                ->searchable()
-                ->makeInputText(),
+                ->sortable(),
     
             Column::make('Estimated Avg Price Paid', 'price_paid')
-                ->sortable()
-                ->searchable()
-                ->makeInputText(),
+                ->sortable(),
+        ];
+    }
+
+
+    public function filters(): array
+    {
+        return [
+        Filter::inputText('investor_name', 'investor_name')
+            ->operators(['contains', 'is', 'is_not']),
         ];
     }
 

@@ -46,6 +46,31 @@ return [
                 ],
             ],
         ],
+        'select' => [
+            'default' => 'tom',
+
+            /*
+             * TomSelect Options
+             * https://tom-select.js.org
+             */
+            'tom' => [
+                'plugins' => [
+                    'clear_button' => [
+                        'title' => 'Remove all selected options',
+                    ],
+                ],
+            ],
+
+            /*
+             * Slim Select options
+             * https://slimselectjs.com/
+             */
+            'slim' => [
+                'settings' => [
+                    'alwaysOpen' => false,
+                ],
+            ],
+        ],
     ],
 
     /*
@@ -76,17 +101,6 @@ return [
 
     /*
     |--------------------------------------------------------------------------
-    | AlpineJS CDN
-    |--------------------------------------------------------------------------
-    |
-    | Define here the CDN source for imported AlpineJS
-    |
-    */
-
-    'alpinejs_cdn' => '',
-
-    /*
-    |--------------------------------------------------------------------------
     | New Release Notification
     |--------------------------------------------------------------------------
     |
@@ -97,6 +111,22 @@ return [
     |
     */
 
-    'check_version' => false,
+    'check_version' => true,
+
+        /*
+    |--------------------------------------------------------------------------
+    | Exportable class
+    |--------------------------------------------------------------------------
+    |
+    |
+    */
+
+    'exportable' => [
+        'default'      => 'openspout_v4',
+        'openspout_v4' => [
+            'xlsx' => \PowerComponents\LivewirePowerGrid\Services\OpenSpout\v4\ExportToXLS::class,
+            'csv'  => \PowerComponents\LivewirePowerGrid\Services\OpenSpout\v4\ExportToCsv::class,
+        ]
+    ],
 
 ];

@@ -3,15 +3,27 @@
 namespace App\Http\Livewire;
 
 use App\Models\Company;
-use Illuminate\Support\Carbon;
 use Illuminate\Database\Eloquent\Builder;
-use PowerComponents\LivewirePowerGrid\Rules\{Rule, RuleActions};
+use Illuminate\Support\Carbon;
+use PowerComponents\LivewirePowerGrid\Button;
+use PowerComponents\LivewirePowerGrid\Column;
+use PowerComponents\LivewirePowerGrid\Detail;
+use PowerComponents\LivewirePowerGrid\Exportable;
+use PowerComponents\LivewirePowerGrid\Filters\Filter;
+use PowerComponents\LivewirePowerGrid\Footer;
+use PowerComponents\LivewirePowerGrid\Header;
+use PowerComponents\LivewirePowerGrid\PowerGrid;
+use PowerComponents\LivewirePowerGrid\PowerGridComponent;
+use PowerComponents\LivewirePowerGrid\PowerGridEloquent;
+use PowerComponents\LivewirePowerGrid\Rules\Rule;
+use PowerComponents\LivewirePowerGrid\Rules\RuleActions;
 use PowerComponents\LivewirePowerGrid\Traits\ActionButton;
-use PowerComponents\LivewirePowerGrid\{Button, Column, Exportable, Footer, Header, PowerGrid, PowerGridComponent, PowerGridEloquent};
+use PowerComponents\LivewirePowerGrid\Traits\WithExport;
 
 final class CompanyTable extends PowerGridComponent
 {
     use ActionButton;
+    use WithExport;
 
 
     public string $primaryKey = 'companies.ticker';
@@ -31,7 +43,9 @@ final class CompanyTable extends PowerGridComponent
             Exportable::make('export')
                 ->striped()
                 ->type(Exportable::TYPE_XLS, Exportable::TYPE_CSV),
+
             Header::make()->showSearchInput(),
+
             Footer::make()
                 ->showPerPage()
                 ->showRecordCount(),
@@ -89,12 +103,6 @@ final class CompanyTable extends PowerGridComponent
     {
         return PowerGrid::eloquent()
             ->addColumn('ticker')
-
-           /** Example of custom column using a closure **/
-            ->addColumn('ticker_lower', function (Company $model) {
-                return strtolower(e($model->ticker));
-            })
-
             ->addColumn('cik')
             ->addColumn('name');
     }
@@ -118,21 +126,17 @@ final class CompanyTable extends PowerGridComponent
         return [
             Column::make('TICKER', 'ticker')
                 ->sortable()
-                ->searchable()
-                ->makeInputText(),
+                ->searchable(),
 
             Column::make('CIK', 'cik')
                 ->sortable()
-                ->searchable()
-                ->makeInputText(),
+                ->searchable(),
 
             Column::make('NAME', 'name')
                 ->sortable()
-                ->searchable()
-                ->makeInputText()
+                ->searchable(),
 
-        ]
-;
+        ];
     }
 
     /*

@@ -16,8 +16,9 @@
         "laravel/sanctum": "^3.0",
         "laravel/tinker": "^2.7",
         "laravel/vapor-core": "^2.28",
-        "livewire/livewire": "^2.5",
-        "power-components/livewire-powergrid": "^3.5",
+        "livewire/livewire": "^2.12",
+        "openspout/openspout": "^4",
+        "power-components/livewire-powergrid": "4.3.1",
         "spatie/calendar-links": "^1.8",
         "wire-elements/pro": "^3.0"
     },

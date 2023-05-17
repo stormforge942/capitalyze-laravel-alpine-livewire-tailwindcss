@@ -13,7 +13,6 @@
     <!-- Scripts -->
     @vite(['resources/css/app.css', 'resources/js/app.js'])
     @livewireStyles
-    @powerGridStyles
     @once
         @push('scripts')
         <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
@@ -46,7 +45,6 @@
     @stack('modals')
     @livewire('slide-over-pro')
     @livewireScripts
-    @powerGridScripts
     @stack('scripts')
 </body>
 </html>

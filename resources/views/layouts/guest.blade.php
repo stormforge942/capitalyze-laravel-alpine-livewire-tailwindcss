@@ -13,7 +13,6 @@
         <!-- Scripts -->
         @vite(['resources/css/app.css', 'resources/js/app.js'])
         @livewireStyles
-        @powerGridStyles
     </head>
     <body>
         <x-jet-banner />
@@ -29,6 +28,5 @@
         @stack('modals')
 
         @livewireScripts
-        @powerGridScripts
     </body>
 </html>
