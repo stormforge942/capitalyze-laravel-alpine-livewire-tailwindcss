@@ -18,7 +18,7 @@ final class CompanyShareholdersTable extends PowerGridComponent
     use ActionButton;
     use WithExport;
 
-    public bool $deferLoading = true; // default false
+    public bool $deferLoading = false; // default false
     public string $primaryKey = 'composite_key';
     public string $sortField = 'ownership';
     public string $sortDirection = 'desc';
