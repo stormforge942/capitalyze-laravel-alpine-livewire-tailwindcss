@@ -2,6 +2,7 @@ id: 43799
 name: XBRL-Explorer
 environments:
     production:
+        timeout: 30
         database: xbrl-front
         domain: xbrl-explorer.com
         memory: 1024
