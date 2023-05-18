@@ -22,7 +22,7 @@
             @endif
 
             <div @class(['overflow-auto' => $readyToLoad, 'overflow-hidden' => !$readyToLoad, $theme->table->divClass])
-                 style="{{ $theme->table->divStyle }}">
+                 style="{{ $theme->table->divStyle }}" @if($displayLoader) wire:loading.remove @endif>
                 @include($table)
             </div>
 

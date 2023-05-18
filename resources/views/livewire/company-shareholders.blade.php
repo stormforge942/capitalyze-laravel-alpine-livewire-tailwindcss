@@ -14,7 +14,7 @@
                     </select>
                 </div>
             </div>
-            <livewire:company-shareholders-table :company="$company" :ticker="$ticker" :period="$period" :selectedQuarter="$selectedQuarter" />
+            <livewire:company-shareholders-table :company="$company" :ticker="$ticker" :period="$period" :selectedQuarter="$selectedQuarter"/>
         </div>
     </div>
 </div>

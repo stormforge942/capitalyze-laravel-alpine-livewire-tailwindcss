@@ -28,6 +28,7 @@ final class CompanyShareholdersTable extends PowerGridComponent
     public $ticker;
     public $period;
     public string $selectedQuarter = '';
+    public bool $displayLoader = true;
 
     protected function getListeners(): array
     {
@@ -53,12 +54,11 @@ final class CompanyShareholdersTable extends PowerGridComponent
     */
     public function setUp(): array
     {
-        $this->showCheckBox();
-
         return [
             Exportable::make('my-export-file')
                 ->striped('#A6ACCD')
                 ->type(Exportable::TYPE_XLS, Exportable::TYPE_CSV),
+            Header::make(),
             Footer::make()
                 ->showPerPage($this->perPage, $this->perPageValues)
                 ->showRecordCount(),
@@ -127,7 +127,9 @@ final class CompanyShareholdersTable extends PowerGridComponent
             ->addColumn('investor_name_formated', function (CompanyFilings $companyFilings) {
                 return ($companyFilings->investor_name . (!empty($companyFilings->put_call) ? ' <span class="text-sm font-bold">(' . $companyFilings->put_call . ')</span>' : ''));
             }) // Fund
-            ->addColumn('ssh_prnamt') // Shares Held or Principal Amt
+            ->addColumn('ssh_prnamt', function(CompanyFilings $companyFilings) {
+                return number_format($companyFilings->ssh_prnamt);
+            }) // Shares Held or Principal Amt
             ->addColumn('value', function(CompanyFilings $companyFilings) {
                 return number_format($companyFilings->value, 0).' $';
             }) // Market Value
@@ -137,7 +139,14 @@ final class CompanyShareholdersTable extends PowerGridComponent
             ->addColumn('last_weight', function (CompanyFilings $companyFilings) {
                 return number_format($companyFilings->last_weight, 4) . '%';
             }) // Prior % of Portfolio
-            ->addColumn('change_in_shares') // Change in Shares
+            ->addColumn('change_in_shares', function (CompanyFilings $companyFilings) {
+                return ($companyFilings->change_in_shares > 0 ? '<span class="text-green-400">
+                <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="w-4 h-5 inline-block">
+                <path stroke-linecap="round" stroke-linejoin="round" d="M8.25 6.75L12 3m0 0l3.75 3.75M12 3v18" /></svg>'.number_format($companyFilings->change_in_shares).'</span>'
+                : '<span class="text-red-400"><svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="w-4 h-5 inline-block">
+                <path stroke-linecap="round" stroke-linejoin="round" d="M15.75 17.25L12 21m0 0l-3.75-3.75M12 21V3" /></svg>'.number_format($companyFilings->change_in_shares).'</span>');
+              
+            }) // Change in Shares
             ->addColumn('ownership', function (CompanyFilings $companyFilings) {
                 return number_format($companyFilings->ownership, 4) . '%';
             })
@@ -197,7 +206,9 @@ final class CompanyShareholdersTable extends PowerGridComponent
             Column::make('Qtr 1st Owned', 'first_added')
                 ->sortable(),
     
-            Column::make('Estimated Avg Price Paid', 'price_paid')
+            Column::add()
+                ->title('Estimated Avg Price Paid')
+                ->field('price_paid')
                 ->sortable(),
         ];
     }

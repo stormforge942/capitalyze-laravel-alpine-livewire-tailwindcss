@@ -25,9 +25,12 @@ final class CompanyTable extends PowerGridComponent
     use ActionButton;
     use WithExport;
 
-
+    public int $perPage = 10;
+    public array $perPageValues = [10, 25, 50];
     public string $primaryKey = 'companies.ticker';
     public string $sortField = 'companies.ticker';
+    public bool $displayLoader = false;
+
     /*
     |--------------------------------------------------------------------------
     |  Features Setup
@@ -37,17 +40,17 @@ final class CompanyTable extends PowerGridComponent
     */
     public function setUp(): array
     {
-        $this->showCheckBox();
-
         return [
             Exportable::make('export')
                 ->striped()
                 ->type(Exportable::TYPE_XLS, Exportable::TYPE_CSV),
 
-            Header::make()->showSearchInput(),
+            Header::make()
+            ->showSearchInput()
+            ->withoutLoading(),
 
             Footer::make()
-                ->showPerPage()
+                ->showPerPage($this->perPage, $this->perPageValues)
                 ->showRecordCount(),
         ];
     }

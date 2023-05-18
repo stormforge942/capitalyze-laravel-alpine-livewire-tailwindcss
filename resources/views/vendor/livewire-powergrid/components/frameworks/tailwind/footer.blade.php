@@ -1,4 +1,4 @@
-<div>
+<div @if($displayLoader) wire:loading.remove @endif>
     @includeIf(data_get($setUp, 'footer.includeViewOnTop'))
     <div @class([
         'justify-between' => data_get($setUp, 'footer.perPage'),
