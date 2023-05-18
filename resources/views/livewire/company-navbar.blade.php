@@ -19,9 +19,12 @@
                 <livewire:company-navbar-item wire:key="navbar-shareholders"
                     href="/company/{{ $company->ticker }}/shareholders" name="Shareholders"
                     :active="$currentRoute === 'company.shareholders'" />
+                <livewire:company-navbar-item wire:key="navbar-summary"
+                    href="/company/{{ $company->ticker }}/summary" name="Summary"
+                    :active="$currentRoute === 'company.summary'" />
             </div>
             <div class="hidden ml-auto sm:flex sm:items-center">
-                @if($currentRoute !== 'company.shareholders')
+                @if($currentRoute !== 'company.shareholders' && $currentRoute !== 'company.summary')
                 <!-- Settings Dropdown -->
                 <div class="relative ml-3">
                     <button wire:key="navbar-period-annual" class="@if($period == 'annual')text-blue-700 @else text-slate-700 @endif text-sm appearance-none inline-flex px-3 py-2 leading-tight appearance-none focus:outline-none focus:bg-white focus:border-slate-500" wire:click="changePeriod('annual')">Annual</button>
@@ -51,7 +54,10 @@
             <livewire:company-navbar-item wire:key="navbar-shareholders-mob"
                     href="/company/{{ $company->ticker }}/shareholders" name="Shareholders"
                     :active="$currentRoute === 'company.shareholders'" />
-            @if($currentRoute !== 'company.shareholders')
+            <livewire:company-navbar-item wire:key="navbar-summary-mob"
+                    href="/company/{{ $company->ticker }}/summary" name="Summary"
+                    :active="$currentRoute === 'company.summary'" />
+            @if($currentRoute !== 'company.shareholders' && $currentRoute !== 'company.summary')
             <div class="relative mt-3 ml-3">
                 <!-- Settings Dropdown -->
                 <div class="relative ml-3">

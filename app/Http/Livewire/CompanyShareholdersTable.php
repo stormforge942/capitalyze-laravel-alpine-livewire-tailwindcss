@@ -214,13 +214,33 @@ final class CompanyShareholdersTable extends PowerGridComponent
     }
 
 
-    // public function filters(): array
-    // {
-    //     return [
-    //     Filter::inputText('investor_name', 'investor_name')
-    //         ->operators(['contains', 'is', 'is_not']),
-    //     ];
-    // }
+    public function filters(): array
+    {
+        return [
+        Filter::inputText('investor_name', 'investor_name')
+            ->operators([]),
+            Filter::inputText('ssh_prnamt', 'ssh_prnamt')
+            ->operators([]),
+            Filter::inputText('value', 'value')
+            ->operators([]),
+            Filter::inputText('weight', 'weight')
+            ->operators([]),
+            Filter::inputText('last_weight', 'last_weight')
+            ->operators([]),
+            Filter::inputText('change_in_shares', 'change_in_shares')
+            ->operators([]),
+            Filter::inputText('ownership', 'ownership')
+            ->operators([]),
+            Filter::inputText('signature_date', 'signature_date')
+            ->operators([]),
+            Filter::inputText('report_calendar_or_quarter', 'report_calendar_or_quarter')
+            ->operators([]),
+            Filter::inputText('first_added', 'first_added')
+            ->operators([]),
+            Filter::inputText('price_paid', 'price_paid')
+            ->operators([]),
+        ];
+    }
 
     /*
     |--------------------------------------------------------------------------

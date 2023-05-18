@@ -24,8 +24,8 @@ Route::get('/company/{ticker}/geographic', [CompanyController::class, 'geographi
 Route::get('/company/{ticker}/metrics', [CompanyController::class, 'metrics'])->name('company.metrics');
 Route::get('/company/{ticker}/report', [CompanyController::class, 'report'])->name('company.report');
 Route::get('/company/{ticker}/shareholders', [CompanyController::class, 'shareholders'])->name('company.shareholders');
+Route::get('/company/{ticker}/summary', [CompanyController::class, 'summary'])->name('company.summary');
 Route::get('/calendar', EarningsCalendar::class)->name('earnings-calendar');
-Route::view('/powergrid', 'powergrid-demo');
 
 Route::middleware([
     'auth:sanctum',

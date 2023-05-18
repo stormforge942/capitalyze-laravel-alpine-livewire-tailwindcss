@@ -142,6 +142,18 @@ final class CompanyTable extends PowerGridComponent
         ];
     }
 
+    public function filters(): array
+    {
+        return [
+        Filter::inputText('ticker', 'ticker')
+            ->operators([]),
+            Filter::inputText('cik', 'cik')
+            ->operators([]),
+            Filter::inputText('name', 'name')
+            ->operators([]),
+        ];
+    }
+
     /*
     |--------------------------------------------------------------------------
     | Actions Method

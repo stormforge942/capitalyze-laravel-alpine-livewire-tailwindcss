@@ -38,6 +38,8 @@
             <livewire:company-report :company="$company" :ticker="$ticker" :period="$period" />
              @elseif($tab == 'shareholders')
             <livewire:company-shareholders :company="$company" :ticker="$ticker" :period="$period" />
+            @elseif($tab == 'summary')
+            <livewire:company-summary :company="$company" :ticker="$ticker" :period="$period" />
             @endif
         </main>
     </div>
