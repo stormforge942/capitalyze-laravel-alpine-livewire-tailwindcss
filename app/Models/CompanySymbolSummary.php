@@ -12,6 +12,8 @@ class CompanySymbolSummary extends Model
      * @var bool
      */
     public $incrementing = false;
+    protected $primaryKey = 'symbol'; // use one part of the composite key as primary
+    protected $keyType = 'string'; // if your key is string, not necessary for integer keys
 
 
     /**
@@ -76,6 +78,14 @@ class CompanySymbolSummary extends Model
         'total_puts_change',
         'put_call_ratio',
         'last_put_call_ratio',
-        'put_call_ratio_change'    
+        'put_call_ratio_change'
     ];
+
+    public function getKey()
+    {
+        return [
+            'symbol' => $this->attributes['symbol'],
+            'date' => $this->attributes['date']
+        ];
+    }
 }
