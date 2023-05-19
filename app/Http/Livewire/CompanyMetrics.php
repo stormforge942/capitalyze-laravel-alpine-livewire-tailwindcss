@@ -12,76 +12,80 @@ class CompanyMetrics extends Component
     public $period;
     public $metrics;
     public $segments;
+    public $navbar;
+    public $subnavbar;
+    public $activeIndex = 'face';
+    public $activeSubIndex = 'Incomestatement';
     public $table;
     public $faces;
-    public $parentFace = 'face';
-    public $currentFace = 'Incomestatement';
     protected $request;
 
-   protected $listeners = ['periodChange', 'metricChange'];
+   protected $listeners = ['periodChange', 'metricChange', 'tabClicked', 'tabSubClicked'];
 
    public function getMetrics() {
-        $source = ($this->period == 'annual') ? 'as_reported_sec_annual_restated_api' : 'as_reported_sec_quarter_restated_api';
-        $data = DB::connection('pgsql-xbrl')
-        ->table($source)
-        ->where('ticker', '=', $this->ticker)
-        ->value('api_return_with_unit');
+    $source = ($this->period == 'annual') ? 'as_reported_sec_annual_restated_api' : 'as_reported_sec_quarter_restated_api';
+    $data = DB::connection('pgsql-xbrl')
+    ->table($source)
+    ->where('ticker', '=', $this->ticker)
+    ->value('api_return_with_unit');
 
-        $data = json_decode($data, true);
-        $metrics = [];
-        $dates = [];
-        $segments = [];
+    $data = json_decode($data, true);
+    $metrics = [];
+    $dates = [];
+    $segments = [];
 
-        foreach($data as $date) {
-            $key = array_key_first($date);
-            $dates[] = $key;
-            if(array_key_exists($this->parentFace, $date[$key])) {
-                if(array_key_exists($this->currentFace, $date[$key][$this->parentFace])) {
-                    $metrics[$key] = $date[$key][$this->parentFace][$this->currentFace];
-                    $keys = array_keys($metrics[$key]);
-                    foreach($keys as $subkey) {
-                        if(!in_array($subkey, $segments, true)){
-                            $segments[] =  $subkey;
-                        }
+    // Parse the actual face from activeSubIndex
+    $currentFace = substr($this->activeSubIndex, strpos($this->activeSubIndex, "-") + 1);
+
+    foreach($data as $date) {
+        $key = array_key_first($date);
+        $dates[] = $key;
+        if(array_key_exists($this->activeIndex, $date[$key])) {
+            if(array_key_exists($currentFace, $date[$key][$this->activeIndex])) {
+                $metrics[$key] = $date[$key][$this->activeIndex][$currentFace];
+                $keys = array_keys($metrics[$key]);
+                foreach($keys as $subkey) {
+                    if(!in_array($subkey, $segments, true)){
+                        $segments[] =  $subkey;
                     }
                 }
             }
         }
-        
-        $this->metrics = $metrics;
-        $this->segments = $segments;
-   }
+    }
+    
+    $this->metrics = $metrics;
+    $this->segments = $segments;
+}
 
-   public function renderFaces() {
-        $source = ($this->period == 'annual') ? 'as_reported_sec_annual_restated_api' : 'as_reported_sec_quarter_restated_api';
-        $data = DB::connection('pgsql-xbrl')
-        ->table($source)
-        ->where('ticker', '=', $this->ticker)
-        ->value('api_return_with_unit');
 
-        $data = json_decode($data, true);
-        $first_data = $data[0][key($data[0])];
-        $groups = [];
-        $dropdown = '';
+   public function getNavbar() {
+    $source = ($this->period == 'annual') ? 'as_reported_sec_annual_restated_api' : 'as_reported_sec_quarter_restated_api';
+    $data = DB::connection('pgsql-xbrl')
+    ->table($source)
+    ->where('ticker', '=', $this->ticker)
+    ->value('api_return_with_unit');
 
-        foreach($first_data as $key => $group) {
-            $groups[$key] = array_keys($group);
+    $data = json_decode($data, true);
+    $first_data = $data[0][key($data[0])];
+    $groups = [];
+    $navbar = [];
+
+    foreach($first_data as $key => $group) {
+        $groups[$key] = array_keys($group);
+    }
+
+    foreach($groups as $key => $face) {
+        foreach($face as $value) {
+            $id = $key . "-" . $value; // generating a pseudo-unique ID
+            $navbar[$key][] = ['value' => $value, 'id' => $id, 'title' => $value, 'selected' => ($value == $this->activeSubIndex)];
         }
+    }
 
-        foreach($groups as $key => $face) {
-            $dropdown .= '<optgroup label="'.$key.'">';
-            foreach($face as $value) {
-                if($value == $this->currentFace)
-                    $dropdown .= '<option value="'.$value.'" selected>'.$value.'</option>';
-                else
-                    $dropdown .= '<option value="'.$value.'">'.$value.'</option>';
-            }
-            $dropdown .= '</optgroup>';
-        }
-        
-
-        $this->faces = $dropdown;
-   }
+    $this->activeIndex = array_keys($navbar)[0];  // or any other logic to determine the active index
+    $this->activeSubIndex = 'face-Incomestatement';  // or any other logic to determine the active sub index
+    $this->navbar = $navbar;
+    $this->emit('navbarUpdated', $this->navbar, $this->activeIndex, $this->activeSubIndex);
+    }
 
    public function renderTable() {
         $i = 0;
@@ -94,11 +98,11 @@ class CompanyMetrics extends Component
         $table .= '</thead><tbody class="divide-y bg-white">';
         foreach($this->segments as $segment) {
             $class = ($i % 2 == 0) ? 'class="border border-slate-50 bg-cyan-50 hover:bg-blue-200 dark:bg-slate-700 dark:odd:bg-slate-800 dark:odd:hover:bg-slate-900 dark:hover:bg-slate-700"' : 'class="border border-slate-50 bg-white border-slate-100 dark:border-slate-400 hover:bg-blue-200 dark:bg-slate-700 dark:odd:bg-slate-800 dark:odd:hover:bg-slate-900 dark:hover:bg-slate-700"';
-            $table .= '<tr '.$class.'><td class="whitespace-nowrap px-2 py-2 text-sm text-gray-900 font-bold">'.preg_replace('/(?<=\w)(?=[A-Z])/', ' ', $segment).'</td>';
+            $table .= '<tr '.$class.'><td class="break-words max-w-[150px] lg:max-w-[400px] px-2 py-2 text-sm text-gray-900 font-bold">'.preg_replace('/(?<=\w)(?=[A-Z])/', ' ', $segment).'</td>';
             foreach(array_keys($this->metrics) as $date) {
                 if(array_key_exists($segment, $this->metrics[$date])) {
                     if($this->metrics[$date][$segment][1] == 'USD')
-                        $value = number_format($this->metrics[$date][$segment][0],0).' $';
+                        $value = number_format(floatval($this->metrics[$date][$segment][0]),0).' $';                
                     else
                         $value = $this->metrics[$date][$segment][0];
                     $data = array("hash" => $this->metrics[$date][$segment][2], "ticker" => $this->ticker, "period" => $date);
@@ -122,17 +126,16 @@ class CompanyMetrics extends Component
         $this->company  = $company;
         $this->ticker = $ticker;
         $this->period = $period;
-        $this->renderFaces();
+        $this->getNavbar();
         $this->getMetrics();
         $this->renderTable();
     }
 
     public function metricChange($face, $parent)
     {
-        $this->parentFace = $parent;
-        $this->currentFace = $face;
-
-        $this->renderFaces();
+        $this->activeIndex = $parent;
+        $this->activeSubIndex = $face;
+        
         $this->getMetrics();
         $this->renderTable();
     }
@@ -140,9 +143,22 @@ class CompanyMetrics extends Component
     public function periodChange($period) {
         $this->period = $period;
         $this->getMetrics();
+        $this->getNavbar();
+        $this->renderTable();
+    }
+    
+
+    public function tabClicked($key) {
+        $this->activeIndex = $key;
+        $this->getMetrics();
         $this->renderTable();
     }
 
+    public function tabSubClicked($key) {
+        $this->activeSubIndex = $key;
+        $this->getMetrics();
+        $this->renderTable();
+    }
     public function render()
     {
         return view('livewire.company-metrics');

@@ -10,224 +10,20 @@
             <span class="sr-only">Loading...</span>
         </div>
     @else
-        @if(array_key_exists('Standardized Metrics Match', $data))
-        <p class="text-lg font-bold">Standardized Metrics Match</p>
-        <table class="table-auto border-collapse">
-            <thead>
-                <tr>
-                    <th scope="col" class="border border-slate-600 px-2 py-2 text-left text-sm font-semibold text-gray-900 bg-blue-300">
-                        Original metric
-                    </th>
-                    <th scope="col" class="border border-slate-600 px-2 py-2 text-left text-sm font-semibold text-gray-900 bg-blue-300">
-                        Standardized metric
-                    </th>
-                    <th scope="col" class="border border-slate-600 px-2 py-2 text-left text-sm font-semibold text-gray-900 bg-blue-300">
-                        Period
-                    </th>
-                    <th scope="col" class="border border-slate-600 px-2 py-2 text-left text-sm font-semibold text-gray-900 bg-blue-300">
-                        Section
-                    </th>
-                    <th scope="col" class="border border-slate-600 px-2 py-2 text-left text-sm font-semibold text-gray-900 bg-blue-300">
-                        Type
-                    </th>
-                    <th scope="col" class="border border-slate-600 px-2 py-2 text-left text-sm font-semibold text-gray-900 bg-blue-300">
-                        Match Code
-                    </th>
-                </tr>
-            </thead>
-            <tbody>
-                @foreach($data['Standardized Metrics Match'] as $key => $value)
-                    <tr>
-                    <td class="break-all border border-slate-600 px-2 py-2 text-left text-sm font-semibold text-gray-900">
-                    {!! $data['Standardized Metrics Match'][$key][0] !!}
-                    </td>
-                    <td class="border border-slate-600 px-2 py-2 text-left text-sm font-semibold text-gray-900">
-                    {!! $data['Standardized Metrics Match'][$key][3] !!}
-                    </td>
-                    <td class="border border-slate-600 px-2 py-2 text-left text-sm font-semibold text-gray-900">
-                    {!! $period !!}
-                    </td>
-                    <td class="border border-slate-600 px-2 py-2 text-left text-sm font-semibold text-gray-900">
-                    {!! $data['Standardized Metrics Match'][$key][2] !!}
-                    </td>
-                    <td class="border border-slate-600 px-2 py-2 text-left text-sm font-semibold text-gray-900">
-                    {!! $data['Standardized Metrics Match'][$key][1] !!}
-                    </td>
-                    <td class="border border-slate-600 px-2 py-2 text-left text-sm font-semibold text-gray-900">
-                    {!! $data['Standardized Metrics Match'][$key][5] !!}
-                    </td>
-                    </tr>
-                @endforeach
-            </tbody>
-        </table>
-        @endif
-        @if(array_key_exists('Pairing', $data))
-            <p class="text-base font-bold mt-5">Paired QNames for {!! $data['Standardized Metrics Match'][0][0] !!}</p>
-            <table class="table-auto border-collapse w-full mt-2">
-                <tbody>
-                    @foreach($data['Pairing'] as $key => $value)
-                        <tr>
-                            <td class="border break-all border-slate-600 px-2 py-2 text-left text-sm font-medium text-gray-900">
-                                {!! $value[0] !!}
-                            </td>
-                            <td class="border break-all border-slate-600 px-2 py-2 text-left text-sm font-medium text-gray-900">
-                                {!! $value[1] !!}
-                            </td>
-                        </tr>
-                    @endforeach
-                </tbody>
-            </table>
-        @endif
-        @if(array_key_exists('Labels', $data))
-            @foreach($data['Labels'] as $item => $arr)
-                <p class="text-base font-bold mt-5">Labels for {!! $item !!} </p>
-                @foreach($arr as $key => $value)
-                    @if($value[1] == 'documentation')
-                        <p class="text-sm italic mt-1">{!! $value[0] !!}</p>
-                    @endif
-                @endforeach
-                <table class="table-auto border-collapse w-full mt-2">
-                    <tbody>
-                        @foreach($arr as $key => $value)
-                            @if($value[1] !== 'documentation')
-                            <tr>
-                                <td class="border border-slate-600 px-2 py-2 text-left text-sm font-medium text-gray-900">
-                                        {!! $value[0] !!} 
-                                </td>
-                                <td class="border border-slate-600 px-2 py-2 text-left text-sm font-medium text-gray-900">
-                                        {!! $value[1] !!} 
-                                </td>
-                                <td class="border border-slate-600 px-2 py-2 text-left text-sm font-medium text-gray-900">
-                                        {!! $value[2] !!}
-                                </td>
-                            </tr>
-                            @endif
-                        @endforeach
-                    </tbody>
-                </table>
-            @endforeach
-        @endif
-        @if(array_key_exists('Corrections', $data))
-            <p class="text-lg font-bold mt-5">Corrections</p>
-            <table class="table-auto border-collapse mt-2">
+       @if($data !== null)
+            @if(array_key_exists('Standardized Metrics Match', $data))
+            <p class="text-lg font-bold">Standardized Metrics Match</p>
+            <table class="table-auto border-collapse">
                 <thead>
                     <tr>
                         <th scope="col" class="border border-slate-600 px-2 py-2 text-left text-sm font-semibold text-gray-900 bg-blue-300">
-                            Metrics
+                            Original metric
+                        </th>
+                        <th scope="col" class="border border-slate-600 px-2 py-2 text-left text-sm font-semibold text-gray-900 bg-blue-300">
+                            Standardized metric
                         </th>
                         <th scope="col" class="border border-slate-600 px-2 py-2 text-left text-sm font-semibold text-gray-900 bg-blue-300">
                             Period
-                        </th>
-                        <th scope="col" class="border border-slate-600 px-2 py-2 text-left text-sm font-semibold text-gray-900 bg-blue-300">
-                            Restated on
-                        </th>
-                        <th scope="col" class="border border-slate-600 px-2 py-2 text-left text-sm font-semibold text-gray-900 bg-blue-300">
-                            Restated value
-                        </th>
-                        <th scope="col" class="border border-slate-600 px-2 py-2 text-left text-sm font-semibold text-gray-900 bg-blue-300">
-                            Originally reported date
-                        </th>
-                        <th scope="col" class="border border-slate-600 px-2 py-2 text-left text-sm font-semibold text-gray-900 bg-blue-300">
-                            Originally reported value	
-                        </th>
-                        <th scope="col" class="border border-slate-600 px-2 py-2 text-left text-sm font-semibold text-gray-900 bg-blue-300">
-                            Correction value
-                        </th>
-                    </tr>
-                </thead>
-                <tbody>
-                    @foreach($data['Corrections'] as $key => $value)
-                        <tr>
-                        <td class="break-all border border-slate-600 px-2 py-2 text-left text-sm font-semibold text-gray-900">
-                        {!! $data['Corrections'][$key][1] !!}
-                        </td>
-                        <td class="border border-slate-600 px-2 py-2 text-left text-sm font-semibold text-gray-900">
-                        {!! $data['Corrections'][$key][2] !!}
-                        </td>
-                        <td class="border border-slate-600 px-2 py-2 text-left text-sm font-semibold text-gray-900">
-                        {!! $period !!}
-                        </td>
-                        <td class="border border-slate-600 px-2 py-2 text-left text-sm font-semibold text-gray-900">
-                        {!! $data['Corrections'][$key][4] !!}
-                        </td>
-                        <td class="border border-slate-600 px-2 py-2 text-left text-sm font-semibold text-gray-900">
-                        {!! $data['Corrections'][$key][6] !!}
-                        </td>
-                        <td class="border border-slate-600 px-2 py-2 text-left text-sm font-semibold text-gray-900">
-                        {!! $data['Corrections'][$key][3] !!}
-                        </td>
-                        <td class="border border-slate-600 px-2 py-2 text-left text-sm font-semibold text-gray-900">
-                        {!! $data['Corrections'][$key][5] !!}
-                        </td>
-                        </tr>
-                    @endforeach
-                </tbody>
-            </table>
-        @endif
-        @if(array_key_exists('Restatements', $data))
-            <p class="text-lg font-bold mt-5">Restatements</p>
-            <table class="table-auto border-collapse mt-2">
-                <thead>
-                    <tr>
-                        <th scope="col" class="border border-slate-600 px-2 py-2 text-left text-sm font-semibold text-gray-900 bg-blue-300">
-                            Metrics
-                        </th>
-                        <th scope="col" class="border border-slate-600 px-2 py-2 text-left text-sm font-semibold text-gray-900 bg-blue-300">
-                            Period
-                        </th>
-                        <th scope="col" class="border border-slate-600 px-2 py-2 text-left text-sm font-semibold text-gray-900 bg-blue-300">
-                            Restated on
-                        </th>
-                        <th scope="col" class="border border-slate-600 px-2 py-2 text-left text-sm font-semibold text-gray-900 bg-blue-300">
-                            Restated value
-                        </th>
-                        <th scope="col" class="border border-slate-600 px-2 py-2 text-left text-sm font-semibold text-gray-900 bg-blue-300">
-                            Originally reported date
-                        </th>
-                        <th scope="col" class="border border-slate-600 px-2 py-2 text-left text-sm font-semibold text-gray-900 bg-blue-300">
-                            Originally reported value	
-                        </th>
-                        <th scope="col" class="border border-slate-600 px-2 py-2 text-left text-sm font-semibold text-gray-900 bg-blue-300">
-                            Correction value
-                        </th>
-                    </tr>
-                </thead>
-                <tbody>
-                    @foreach($data['Restatements'] as $key => $value)
-                        <tr>
-                        <td class="break-all border border-slate-600 px-2 py-2 text-left text-sm font-semibold text-gray-900">
-                        {!! $data['Restatements'][$key][1] !!}
-                        </td>
-                        <td class="border border-slate-600 px-2 py-2 text-left text-sm font-semibold text-gray-900">
-                        {!! $data['Restatements'][$key][2] !!}
-                        </td>
-                        <td class="border border-slate-600 px-2 py-2 text-left text-sm font-semibold text-gray-900">
-                        {!! $period !!}
-                        </td>
-                        <td class="border border-slate-600 px-2 py-2 text-left text-sm font-semibold text-gray-900">
-                        {!! $data['Restatements'][$key][4] !!}
-                        </td>
-                        <td class="border border-slate-600 px-2 py-2 text-left text-sm font-semibold text-gray-900">
-                        {!! $data['Restatements'][$key][6] !!}
-                        </td>
-                        <td class="border border-slate-600 px-2 py-2 text-left text-sm font-semibold text-gray-900">
-                        {!! $data['Restatements'][$key][3] !!}
-                        </td>
-                        <td class="border border-slate-600 px-2 py-2 text-left text-sm font-semibold text-gray-900">
-                        {!! $data['Restatements'][$key][5] !!}
-                        </td>
-                        </tr>
-                    @endforeach
-                </tbody>
-            </table>
-        @endif
-        @if(array_key_exists('Formula Processing Log', $data))
-            <p class="text-lg font-bold mt-5">Formula Processing Log</p>
-            <table class="table-auto border-collapse mt-2">
-                <thead>
-                    <tr>
-                        <th scope="col" class="border border-slate-600 px-2 py-2 text-left text-sm font-semibold text-gray-900 bg-blue-300">
-                            Standardized Metrics
                         </th>
                         <th scope="col" class="border border-slate-600 px-2 py-2 text-left text-sm font-semibold text-gray-900 bg-blue-300">
                             Section
@@ -236,53 +32,261 @@
                             Type
                         </th>
                         <th scope="col" class="border border-slate-600 px-2 py-2 text-left text-sm font-semibold text-gray-900 bg-blue-300">
-                            Period
-                        </th>
-                        <th scope="col" class="border border-slate-600 px-2 py-2 text-left text-sm font-semibold text-gray-900 bg-blue-300">
-                            Event type
-                        </th>
-                        <th scope="col" class="border border-slate-600 px-2 py-2 text-left text-sm font-semibold text-gray-900 bg-blue-300">
-                            Original value
-                        </th>
-                        <th scope="col" class="border border-slate-600 px-2 py-2 text-left text-sm font-semibold text-gray-900 bg-blue-300">
-                            Calculated value
-                        </th>
-                        <th scope="col" class="border border-slate-600 px-2 py-2 text-left text-sm font-semibold text-gray-900 bg-blue-300">
-                            Formula Id
+                            Match Code
                         </th>
                     </tr>
                 </thead>
                 <tbody>
-                    @foreach($data['Formula Processing Log'] as $key => $value)
+                    @foreach($data['Standardized Metrics Match'] as $key => $value)
                         <tr>
                         <td class="break-all border border-slate-600 px-2 py-2 text-left text-sm font-semibold text-gray-900">
-                        {!! $data['Formula Processing Log'][$key][0] !!}
+                        {!! $data['Standardized Metrics Match'][$key][0] !!}
                         </td>
                         <td class="border border-slate-600 px-2 py-2 text-left text-sm font-semibold text-gray-900">
-                        {!! $data['Formula Processing Log'][$key][1] !!}
+                        {!! $data['Standardized Metrics Match'][$key][3] !!}
                         </td>
                         <td class="border border-slate-600 px-2 py-2 text-left text-sm font-semibold text-gray-900">
-                        {!! $data['Formula Processing Log'][$key][2] !!}
+                        {!! $period !!}
                         </td>
                         <td class="border border-slate-600 px-2 py-2 text-left text-sm font-semibold text-gray-900">
-                        {!! $data['Formula Processing Log'][$key][3] !!}
+                        {!! $data['Standardized Metrics Match'][$key][2] !!}
                         </td>
                         <td class="border border-slate-600 px-2 py-2 text-left text-sm font-semibold text-gray-900">
-                        {!! $data['Formula Processing Log'][$key][4] !!}
+                        {!! $data['Standardized Metrics Match'][$key][1] !!}
                         </td>
                         <td class="border border-slate-600 px-2 py-2 text-left text-sm font-semibold text-gray-900">
-                        {!! $data['Formula Processing Log'][$key][5] !!}
-                        </td>
-                        <td class="border border-slate-600 px-2 py-2 text-left text-sm font-semibold text-gray-900">
-                        {!! $data['Formula Processing Log'][$key][6] !!}
-                        </td>
-                        <td class="border border-slate-600 px-2 py-2 text-left text-sm font-semibold text-gray-900">
-                        
+                        {!! $data['Standardized Metrics Match'][$key][5] !!}
                         </td>
                         </tr>
                     @endforeach
                 </tbody>
             </table>
+            @endif
+            @if(array_key_exists('Pairing', $data))
+                <p class="text-base font-bold mt-5">Paired QNames for {!! $data['Standardized Metrics Match'][0][0] !!}</p>
+                <table class="table-auto border-collapse w-full mt-2">
+                    <tbody>
+                        @foreach($data['Pairing'] as $key => $value)
+                            <tr>
+                                <td class="border break-all border-slate-600 px-2 py-2 text-left text-sm font-medium text-gray-900">
+                                    {!! $value[0] !!}
+                                </td>
+                                <td class="border break-all border-slate-600 px-2 py-2 text-left text-sm font-medium text-gray-900">
+                                    {!! $value[1] !!}
+                                </td>
+                            </tr>
+                        @endforeach
+                    </tbody>
+                </table>
+            @endif
+            @if(array_key_exists('Labels', $data))
+                @foreach($data['Labels'] as $item => $arr)
+                    <p class="text-base font-bold mt-5">Labels for {!! $item !!} </p>
+                    @foreach($arr as $key => $value)
+                        @if($value[1] == 'documentation')
+                            <p class="text-sm italic mt-1">{!! $value[0] !!}</p>
+                        @endif
+                    @endforeach
+                    <table class="table-auto border-collapse w-full mt-2">
+                        <tbody>
+                            @foreach($arr as $key => $value)
+                                @if($value[1] !== 'documentation')
+                                <tr>
+                                    <td class="border border-slate-600 px-2 py-2 text-left text-sm font-medium text-gray-900">
+                                            {!! $value[0] !!} 
+                                    </td>
+                                    <td class="border border-slate-600 px-2 py-2 text-left text-sm font-medium text-gray-900">
+                                            {!! $value[1] !!} 
+                                    </td>
+                                    <td class="border border-slate-600 px-2 py-2 text-left text-sm font-medium text-gray-900">
+                                            {!! $value[2] !!}
+                                    </td>
+                                </tr>
+                                @endif
+                            @endforeach
+                        </tbody>
+                    </table>
+                @endforeach
+            @endif
+            @if(array_key_exists('Corrections', $data))
+                <p class="text-lg font-bold mt-5">Corrections</p>
+                <table class="table-auto border-collapse mt-2">
+                    <thead>
+                        <tr>
+                            <th scope="col" class="border border-slate-600 px-2 py-2 text-left text-sm font-semibold text-gray-900 bg-blue-300">
+                                Metrics
+                            </th>
+                            <th scope="col" class="border border-slate-600 px-2 py-2 text-left text-sm font-semibold text-gray-900 bg-blue-300">
+                                Period
+                            </th>
+                            <th scope="col" class="border border-slate-600 px-2 py-2 text-left text-sm font-semibold text-gray-900 bg-blue-300">
+                                Restated on
+                            </th>
+                            <th scope="col" class="border border-slate-600 px-2 py-2 text-left text-sm font-semibold text-gray-900 bg-blue-300">
+                                Restated value
+                            </th>
+                            <th scope="col" class="border border-slate-600 px-2 py-2 text-left text-sm font-semibold text-gray-900 bg-blue-300">
+                                Originally reported date
+                            </th>
+                            <th scope="col" class="border border-slate-600 px-2 py-2 text-left text-sm font-semibold text-gray-900 bg-blue-300">
+                                Originally reported value	
+                            </th>
+                            <th scope="col" class="border border-slate-600 px-2 py-2 text-left text-sm font-semibold text-gray-900 bg-blue-300">
+                                Correction value
+                            </th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @foreach($data['Corrections'] as $key => $value)
+                            <tr>
+                            <td class="break-all border border-slate-600 px-2 py-2 text-left text-sm font-semibold text-gray-900">
+                            {!! $data['Corrections'][$key][1] !!}
+                            </td>
+                            <td class="border border-slate-600 px-2 py-2 text-left text-sm font-semibold text-gray-900">
+                            {!! $data['Corrections'][$key][2] !!}
+                            </td>
+                            <td class="border border-slate-600 px-2 py-2 text-left text-sm font-semibold text-gray-900">
+                            {!! $period !!}
+                            </td>
+                            <td class="border border-slate-600 px-2 py-2 text-left text-sm font-semibold text-gray-900">
+                            {!! $data['Corrections'][$key][4] !!}
+                            </td>
+                            <td class="border border-slate-600 px-2 py-2 text-left text-sm font-semibold text-gray-900">
+                            {!! $data['Corrections'][$key][6] !!}
+                            </td>
+                            <td class="border border-slate-600 px-2 py-2 text-left text-sm font-semibold text-gray-900">
+                            {!! $data['Corrections'][$key][3] !!}
+                            </td>
+                            <td class="border border-slate-600 px-2 py-2 text-left text-sm font-semibold text-gray-900">
+                            {!! $data['Corrections'][$key][5] !!}
+                            </td>
+                            </tr>
+                        @endforeach
+                    </tbody>
+                </table>
+            @endif
+            @if(array_key_exists('Restatements', $data))
+                <p class="text-lg font-bold mt-5">Restatements</p>
+                <table class="table-auto border-collapse mt-2">
+                    <thead>
+                        <tr>
+                            <th scope="col" class="border border-slate-600 px-2 py-2 text-left text-sm font-semibold text-gray-900 bg-blue-300">
+                                Metrics
+                            </th>
+                            <th scope="col" class="border border-slate-600 px-2 py-2 text-left text-sm font-semibold text-gray-900 bg-blue-300">
+                                Period
+                            </th>
+                            <th scope="col" class="border border-slate-600 px-2 py-2 text-left text-sm font-semibold text-gray-900 bg-blue-300">
+                                Restated on
+                            </th>
+                            <th scope="col" class="border border-slate-600 px-2 py-2 text-left text-sm font-semibold text-gray-900 bg-blue-300">
+                                Restated value
+                            </th>
+                            <th scope="col" class="border border-slate-600 px-2 py-2 text-left text-sm font-semibold text-gray-900 bg-blue-300">
+                                Originally reported date
+                            </th>
+                            <th scope="col" class="border border-slate-600 px-2 py-2 text-left text-sm font-semibold text-gray-900 bg-blue-300">
+                                Originally reported value	
+                            </th>
+                            <th scope="col" class="border border-slate-600 px-2 py-2 text-left text-sm font-semibold text-gray-900 bg-blue-300">
+                                Correction value
+                            </th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @foreach($data['Restatements'] as $key => $value)
+                            <tr>
+                            <td class="break-all border border-slate-600 px-2 py-2 text-left text-sm font-semibold text-gray-900">
+                            {!! $data['Restatements'][$key][1] !!}
+                            </td>
+                            <td class="border border-slate-600 px-2 py-2 text-left text-sm font-semibold text-gray-900">
+                            {!! $data['Restatements'][$key][2] !!}
+                            </td>
+                            <td class="border border-slate-600 px-2 py-2 text-left text-sm font-semibold text-gray-900">
+                            {!! $period !!}
+                            </td>
+                            <td class="border border-slate-600 px-2 py-2 text-left text-sm font-semibold text-gray-900">
+                            {!! $data['Restatements'][$key][4] !!}
+                            </td>
+                            <td class="border border-slate-600 px-2 py-2 text-left text-sm font-semibold text-gray-900">
+                            {!! $data['Restatements'][$key][6] !!}
+                            </td>
+                            <td class="border border-slate-600 px-2 py-2 text-left text-sm font-semibold text-gray-900">
+                            {!! $data['Restatements'][$key][3] !!}
+                            </td>
+                            <td class="border border-slate-600 px-2 py-2 text-left text-sm font-semibold text-gray-900">
+                            {!! $data['Restatements'][$key][5] !!}
+                            </td>
+                            </tr>
+                        @endforeach
+                    </tbody>
+                </table>
+            @endif
+            @if(array_key_exists('Formula Processing Log', $data))
+                <p class="text-lg font-bold mt-5">Formula Processing Log</p>
+                <table class="table-auto border-collapse mt-2">
+                    <thead>
+                        <tr>
+                            <th scope="col" class="border border-slate-600 px-2 py-2 text-left text-sm font-semibold text-gray-900 bg-blue-300">
+                                Standardized Metrics
+                            </th>
+                            <th scope="col" class="border border-slate-600 px-2 py-2 text-left text-sm font-semibold text-gray-900 bg-blue-300">
+                                Section
+                            </th>
+                            <th scope="col" class="border border-slate-600 px-2 py-2 text-left text-sm font-semibold text-gray-900 bg-blue-300">
+                                Type
+                            </th>
+                            <th scope="col" class="border border-slate-600 px-2 py-2 text-left text-sm font-semibold text-gray-900 bg-blue-300">
+                                Period
+                            </th>
+                            <th scope="col" class="border border-slate-600 px-2 py-2 text-left text-sm font-semibold text-gray-900 bg-blue-300">
+                                Event type
+                            </th>
+                            <th scope="col" class="border border-slate-600 px-2 py-2 text-left text-sm font-semibold text-gray-900 bg-blue-300">
+                                Original value
+                            </th>
+                            <th scope="col" class="border border-slate-600 px-2 py-2 text-left text-sm font-semibold text-gray-900 bg-blue-300">
+                                Calculated value
+                            </th>
+                            <th scope="col" class="border border-slate-600 px-2 py-2 text-left text-sm font-semibold text-gray-900 bg-blue-300">
+                                Formula Id
+                            </th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @foreach($data['Formula Processing Log'] as $key => $value)
+                            <tr>
+                            <td class="break-all border border-slate-600 px-2 py-2 text-left text-sm font-semibold text-gray-900">
+                            {!! $data['Formula Processing Log'][$key][0] !!}
+                            </td>
+                            <td class="border border-slate-600 px-2 py-2 text-left text-sm font-semibold text-gray-900">
+                            {!! $data['Formula Processing Log'][$key][1] !!}
+                            </td>
+                            <td class="border border-slate-600 px-2 py-2 text-left text-sm font-semibold text-gray-900">
+                            {!! $data['Formula Processing Log'][$key][2] !!}
+                            </td>
+                            <td class="border border-slate-600 px-2 py-2 text-left text-sm font-semibold text-gray-900">
+                            {!! $data['Formula Processing Log'][$key][3] !!}
+                            </td>
+                            <td class="border border-slate-600 px-2 py-2 text-left text-sm font-semibold text-gray-900">
+                            {!! $data['Formula Processing Log'][$key][4] !!}
+                            </td>
+                            <td class="border border-slate-600 px-2 py-2 text-left text-sm font-semibold text-gray-900">
+                            {!! $data['Formula Processing Log'][$key][5] !!}
+                            </td>
+                            <td class="border border-slate-600 px-2 py-2 text-left text-sm font-semibold text-gray-900">
+                            {!! $data['Formula Processing Log'][$key][6] !!}
+                            </td>
+                            <td class="border border-slate-600 px-2 py-2 text-left text-sm font-semibold text-gray-900">
+                            
+                            </td>
+                            </tr>
+                        @endforeach
+                    </tbody>
+                </table>
+            @endif
+        @else
+        <h1>No data available</h1>
         @endif
     @endif
 </x-wire-elements-pro::tailwind.slide-over>

@@ -30,9 +30,6 @@
                         <th scope="col" class="whitespace-nowrap px-2 py-3.5 text-left text-sm font-semibold text-gray-900 bg-blue-300">All 13F Filers</th>
                         <th scope="col" class="whitespace-nowrap px-2 py-3.5 text-left text-sm font-semibold text-gray-900 bg-blue-300">Prior</th>
                         <th scope="col" class="whitespace-nowrap px-2 py-3.5 text-left text-sm font-semibold text-gray-900 bg-blue-300">Change</th>
-                        <th scope="col" class="whitespace-nowrap px-2 py-3.5 text-left text-sm font-semibold text-gray-900 bg-blue-300">Hedge Funds</th>
-                        <th scope="col" class="whitespace-nowrap px-2 py-3.5 text-left text-sm font-semibold text-gray-900 bg-blue-300">Prior</th>
-                        <th scope="col" class="whitespace-nowrap px-2 py-3.5 text-left text-sm font-semibold text-gray-900 bg-blue-300">Change</th>
                         </tr>
                     </thead>
                     <tbody>
@@ -40,9 +37,6 @@
                     @foreach ($rows as $title => $row)
                         <tr class="@if($i % 2 == 0) bg-cyan-50 @else bg-white @endif hover:bg-blue-200">
                             <td class="@if($i % 2 == 0) bg-cyan-50 @else bg-white @endif sticky left-0 p-2 break-words text-sm">{{ $title }}</td>
-                            <td class="p-2">{{ rtrim(rtrim(number_format($summary[$row['value']], 2), '0'), '.') ?? '-' }}</td>
-                            <td class="p-2">{{ rtrim(rtrim(number_format($summary[$row['prior']], 2), '0'), '.') ?? '-' }}</td>
-                            <td class="p-2"><span class="{{ $summary[$row['change']] >= 0 ? 'bg-green-600' : 'bg-red-600' }} text-white text-sm px-2 py-1 rounded">{{ rtrim(rtrim(number_format($summary[$row['change']], 2), '0'), '.') ?? '-' }}</span></td>
                             <td class="p-2">{{ rtrim(rtrim(number_format($summary[$row['value']], 2), '0'), '.') ?? '-' }}</td>
                             <td class="p-2">{{ rtrim(rtrim(number_format($summary[$row['prior']], 2), '0'), '.') ?? '-' }}</td>
                             <td class="p-2"><span class="{{ $summary[$row['change']] >= 0 ? 'bg-green-600' : 'bg-red-600' }} text-white text-sm px-2 py-1 rounded">{{ rtrim(rtrim(number_format($summary[$row['change']], 2), '0'), '.') ?? '-' }}</span></td>

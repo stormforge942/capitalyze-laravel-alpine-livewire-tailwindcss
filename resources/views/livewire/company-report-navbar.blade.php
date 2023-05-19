@@ -3,7 +3,7 @@
         <div class="text-sm font-medium text-center text-gray-500 border-b border-gray-200 dark:text-gray-400 dark:border-gray-700">
             <ul class="flex flex-wrap -mb-px">
                 @foreach(array_keys($navbar) as $value)
-                    <li class="inline-block p-4 border-b-2 rounded-t-lg @if($value == $activeIndex)text-blue-600 active border-b-2 border-blue-600 @else cursor-pointer border-transparent hover:text-gray-600 hover:border-gray-300 @endif" wire:click="$emit('tabClicked', '{{$value}}')">{{ preg_replace('/\[[^\]]*?\]/', '', $value) }}</li>
+                    <li class="inline-block p-4 border-b-2 rounded-t-lg @if($value == $activeIndex)text-blue-600 active border-b-2 border-blue-600 @else cursor-pointer border-transparent hover:text-gray-600 hover:border-gray-300 @endif" wire:click="$emit('tabClicked', '{{$value}}')">{{ Str::title(preg_replace('/\[[^\]]*?\]/', '', $value)) }}</li>
                 @endforeach
             </ul>
         </div>
@@ -42,7 +42,6 @@ document.addEventListener('DOMContentLoaded', function () {
 Livewire.on('tabSubClicked', function(tabId) {
     // Wait for Livewire to finish updating the DOM
     Livewire.hook('message.processed', (message, component) => {
-            console.log(tabId);
         var tabElement = document.querySelector(`[data-tab-id="${tabId}"]`);
         if (tabElement) {
             tabElement.scrollIntoView({ behavior: "smooth", block: "nearest", inline: "nearest" });
