@@ -5,6 +5,7 @@ namespace App\Providers;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Support\ServiceProvider;
+use Illuminate\Support\Facades\App;
 
 class AppServiceProvider extends ServiceProvider
 {
@@ -25,13 +26,12 @@ class AppServiceProvider extends ServiceProvider
      */
     public function boot()
     {
-        DB::listen(function($query) {
-            Log::channel('papertrail')->debug(
-                "Query: {$query->sql}, Bindings: ".json_encode($query->bindings).", Time: {$query->time}"
-            );
-            Log::channel('stderr')->debug(
-                "Query: {$query->sql}, Bindings: ".json_encode($query->bindings).", Time: {$query->time}"
-            );
-        });
+        if (App::environment('production')) {
+            DB::listen(function($query) {
+                Log::stack(['papertrail'])->debug(
+                    "Query: {$query->sql}, Bindings: ".json_encode($query->bindings).", Time: {$query->time}"
+                );
+            });
+        }
     }
 }
