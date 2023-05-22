@@ -26,10 +26,8 @@ class AppServiceProvider extends ServiceProvider
     public function boot()
     {
         DB::listen(function($query) {
-            Log::error(
-                $query->sql,
-                $query->bindings,
-                $query->time
+            Log::channel('stderr')->debug(
+                "Query: {$query->sql}, Bindings: ".json_encode($query->bindings).", Time: {$query->time}"
             );
         });
     }
