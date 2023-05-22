@@ -82,7 +82,7 @@ class CompanyMetrics extends Component
     }
 
     $this->activeIndex = array_keys($navbar)[0];  // or any other logic to determine the active index
-    $this->activeSubIndex = 'face-Incomestatement';  // or any other logic to determine the active sub index
+    $this->activeSubIndex = 'face-Income Statement';  // or any other logic to determine the active sub index
     $this->navbar = $navbar;
     $this->emit('navbarUpdated', $this->navbar, $this->activeIndex, $this->activeSubIndex);
     }
