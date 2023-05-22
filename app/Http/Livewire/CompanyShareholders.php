@@ -32,8 +32,9 @@ class CompanyShareholders extends Component
     public function generateQuarters()
     {
         $quarters = [];
-        $oldestFiling = CompanyFilings::min('first_added');
+        $oldestFiling = CompanyFilings::where('symbol', $this->ticker)->min('report_calendar_or_quarter');
         $startYear = Carbon::parse($oldestFiling)->year;
+        $startQuarter = Carbon::parse($oldestFiling)->quarter;
         $currentYear = Carbon::now()->year;
         $currentQuarter = Carbon::now()->quarter;
         $currentDay = Carbon::now()->day;
@@ -51,7 +52,8 @@ class CompanyShareholders extends Component
         ];
     
         for ($year = $startYear; $year <= $currentYear; $year++) {
-            for ($quarter = 1; $quarter <= 4; $quarter++) {
+            $startQuarter = ($year == $startYear) ? $startQuarter : 1;
+            for ($quarter = $startQuarter; $quarter <= 4; $quarter++) {
                 if ($year == $currentYear && $quarter > $currentQuarter) {
                     break;
                 }
@@ -67,7 +69,6 @@ class CompanyShareholders extends Component
     
         return array_reverse($quarters, true);
     }
-    
 
     public function render()
     {
