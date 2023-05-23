@@ -1,6 +1,6 @@
 <div class="py-12">
     <div class="mx-auto flex flex-col md:flex-row justify-center">
-        <div class="mx-auto px-4 sm:px-6 lg:px-8 bg-white py-4 shadow md:mx-4 rounded md:w-10/12 xl:w-2/3 w-full">
+        <div class="mx-auto px-4 sm:px-6 lg:px-8 bg-white py-4 shadow md:mx-4 rounded md:w-10/12 2xl:w-2/3 w-full">
             <div class="sm:flex sm:items-center">
                 <div class="sm:flex-auto text-center">
                     <h1 class="text-xl font-bold leading-10 text-gray-900">Earnings Calendar - {{ $formattedDate }}</h1>
