@@ -1,6 +1,6 @@
 <div class="py-12">
     <div class="mx-auto flex flex-col md:flex-row justify-center">
-        <div class="mx-auto px-4 sm:px-6 lg:px-8 bg-white py-4 shadow md:mx-4 rounded md:w-2/3 w-full">
+        <div class="mx-auto px-4 sm:px-6 lg:px-8 bg-white py-4 shadow md:mx-4 rounded md:w-10/12 xl:w-2/3 w-full">
             <div class="sm:flex sm:items-center">
                 <div class="sm:flex-auto text-center">
                     <h1 class="text-xl font-bold leading-10 text-gray-900">Earnings Calendar - {{ $formattedDate }}</h1>
@@ -28,33 +28,35 @@
                     <span class="sr-only">Loading...</span>
                 </div>
             </div>
-            <table class="table-auto w-full" wire:loading.remove>
-                @foreach($earningsCalls->sortBy(function ($call) { return $call->date . ' ' . $call->time; })->groupBy('date') as $date => $calls)
-                    <tr>
-                        <td colspan="4" class="font-bold py-4">{{ $date }}</td>
-                    </tr>
-                    <tr>
-                        <td class="font-semibold py-4">Company name</td>
-                        <td class="font-semibold py-4">Symbol</td>
-                        <td class="font-semibold py-4">Exchange</td>
-                        <td class="font-semibold py-4">Time</td>
-                        <td class="font-semibold py-4">Origin</td>
-                        <td class="font-semibold py-4">reported time</td>
-                        <td class="font-semibold py-4">Url</td>
-                    </tr>
-                    @foreach($calls as $call)
+            <div class="overflow-x-scroll">
+                <table class="table-auto w-full overflow-scroll" wire:loading.remove>
+                    @foreach($earningsCalls->sortBy(function ($call) { return $call->date . ' ' . $call->time; })->groupBy('date') as $date => $calls)
                         <tr>
-                            <td class="break-all">@if(isset($call->company_name)) {{ $call->company_name }} @else {{ $call->symbol }} @endif</td>
-                            <td class="px-2">{{ $call->symbol }}</td>
-                            <td class="px-2">{{ $call->exchange }}</td>
-                            <td class="px-2">{{ $call->time }}</td>
-                            <td class="px-2">{{ $call->origin }}</td>
-                            <td class="px-2">@if(isset($call->acceptance_time)) {{ substr($call->acceptance_time, 0, 10) }} @else {{ $call->pub_date }} @endif</td>
-                            <td class="px-2"><a href="{{ $call->url }}" target="_blank">More Info</a></td>
+                            <td colspan="4" class="font-bold py-4">{{ $date }}</td>
                         </tr>
+                        <tr>
+                            <td class="font-semibold py-4">Company name</td>
+                            <td class="font-semibold py-4">Symbol</td>
+                            <td class="font-semibold py-4">Exchange</td>
+                            <td class="font-semibold py-4">Time</td>
+                            <td class="font-semibold py-4">Origin</td>
+                            <td class="font-semibold py-4">reported time</td>
+                            <td class="font-semibold py-4">Url</td>
+                        </tr>
+                        @foreach($calls as $call)
+                            <tr>
+                                <td class="break-all">@if(isset($call->company_name)) {{ $call->company_name }} @else {{ $call->symbol }} @endif</td>
+                                <td class="px-2">{{ $call->symbol }}</td>
+                                <td class="px-2">{{ $call->exchange }}</td>
+                                <td class="px-2">{{ $call->time }}</td>
+                                <td class="px-2">{{ $call->origin }}</td>
+                                <td class="px-2">@if(isset($call->acceptance_time)) {{ substr($call->acceptance_time, 0, 10) }} @else {{ $call->pub_date }} @endif</td>
+                                <td class="px-2"><a href="{{ $call->url }}" target="_blank">More Info</a></td>
+                            </tr>
+                        @endforeach
                     @endforeach
-                @endforeach
-            </table>
+                </table>
+            </div>
         </div>
     </div>
 </div>
