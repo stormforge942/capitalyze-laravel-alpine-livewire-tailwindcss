@@ -67,3 +67,35 @@ table.data-report tr:nth-child(even):hover > td:first-child {
     @apply pl-0;
     @apply md:pl-10;
 }
+
+.input-field {
+    height: 2.5rem;
+    padding: 10px;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+    font-size: 16px;
+    width: 100%;
+}
+
+.result-box {
+    padding: 10px;
+    width: 100%;
+    background-color: white;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+    cursor: pointer;
+    z-index: 9999;
+}
+.result-box li:hover {
+    background-color: #f7f7f7;
+}
+
+.result-container {
+    max-height: 200px; /* Adjust the height as per your requirements */
+    overflow-y: auto;
+}
+
+.input-field:focus {
+    outline: none;
+    border: 1px solid #ccc;
+    box-shadow: none;
+}

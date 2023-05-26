@@ -18,6 +18,8 @@
                     <x-jet-nav-link href="{{ route('earnings-calendar') }}" :active="request()->routeIs('earnings-calendar')">
                         {{ __('Earnings Calendar') }}
                     </x-jet-nav-link>
+                    
+                    @livewire('search-component')   
                 </div>
             </div>
 

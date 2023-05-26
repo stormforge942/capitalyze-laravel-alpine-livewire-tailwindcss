@@ -6,10 +6,11 @@
     </x-slot>
 
     <div class="py-12">
-        <div class="mx-auto max-w-7xl sm:px-6 lg:px-8">
-            <div class="p-4 overflow-hidden bg-white shadow-xl sm:rounded-lg">
-                <livewire:company-table />
+        <div class="mx-auto max-w-full max-w-7xl">
+            <div class="px-24 py-8 overflow-hidden bg-white shadow-xl sm:rounded-lg ">
+            <object data="{{ URL::to('/') }}/svg/xbrl-process.svg" type="image/svg+xml" alt="xbrl process"></object>
             </div>
         </div>
     </div>
+
 </x-guest-layout>

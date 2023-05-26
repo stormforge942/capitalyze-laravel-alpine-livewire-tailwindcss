@@ -33,5 +33,13 @@ class AppServiceProvider extends ServiceProvider
                 );
             });
         }
+        // log DB request local to termninal for debugging purposes
+        if (App::environment('local')) {
+            DB::listen(function($query) {
+                Log::debug(
+                    "Query: {$query->sql}, Bindings: ".json_encode($query->bindings).", Time: {$query->time}"
+                );
+            });
+        }
     }
 }
