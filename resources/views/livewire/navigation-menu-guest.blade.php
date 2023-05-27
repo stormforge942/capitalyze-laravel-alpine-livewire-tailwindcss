@@ -19,10 +19,13 @@
                         {{ __('Earnings Calendar') }}
                     </x-jet-nav-link>
 
-                    <button wire:click="$emit('spotlight.toggle')">
+                    <button wire:click="$emit('spotlight.toggle')" class="hover:text-gray-700 hover:border-gray-300 border-b-2 border-transparent focus:outline-none focus:border-indigo-700">
                         <svg class="h-5 w-5 inline-flex text-md font-medium leading-5 text-gray-500 focus:outline-none focus:border-indigo-700 transition" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" viewBox="0 0 24 24">
                             <path d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"></path>
                         </svg>
+                        <span class="text-sm font-medium leading-5 text-gray-500">
+                        Search
+                        </span>
                     </button>
                     
                     {{-- @livewire('search-component')    --}}
@@ -74,6 +77,9 @@
                     <svg class="h-5 w-5 inline-flex text-md font-medium leading-5 text-gray-500 focus:outline-none focus:border-indigo-700 transition" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" viewBox="0 0 24 24">
                         <path d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"></path>
                     </svg>
+                    <span class="text-sm font-medium leading-5 text-gray-500">
+                        Search
+                        </span>
                 </button>
                 <button @click="open = ! open" class="inline-flex items-center justify-center p-2 rounded-md text-gray-400 hover:text-gray-500 hover:bg-gray-100 focus:outline-none focus:bg-gray-100 focus:text-gray-500 transition">
                     <svg class="h-6 w-6" stroke="currentColor" fill="none" viewBox="0 0 24 24">
