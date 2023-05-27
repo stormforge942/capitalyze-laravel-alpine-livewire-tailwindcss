@@ -26,7 +26,7 @@
         </div>
 
         @stack('modals')
-
+        @livewire('spotlight-pro')
         @livewireScripts
     </body>
 </html>

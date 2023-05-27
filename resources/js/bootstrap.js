@@ -1,5 +1,6 @@
 import _ from 'lodash';
-import '../../vendor/wire-elements/pro/resources/js/overlay-component.js'
+import '../../vendor/wire-elements/pro/resources/js/overlay-component.js';
+import '../../vendor/wire-elements/pro/resources/js/spotlight-component.js';
 window._ = _;
 
 /**

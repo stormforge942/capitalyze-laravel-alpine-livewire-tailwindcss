@@ -45,6 +45,7 @@
     </div>
 
     @stack('modals')
+    @livewire('spotlight-pro')
     @livewire('slide-over-pro')
     @livewireScripts
     @stack('scripts')

@@ -6,6 +6,10 @@ use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Support\ServiceProvider;
 use Illuminate\Support\Facades\App;
+use App\Models\Company;
+use WireElements\Pro\Components\Spotlight\Spotlight;
+use WireElements\Pro\Components\Spotlight\SpotlightQuery;
+use WireElements\Pro\Components\Spotlight\SpotlightResult;
 
 class AppServiceProvider extends ServiceProvider
 {
@@ -16,7 +20,23 @@ class AppServiceProvider extends ServiceProvider
      */
     public function register()
     {
-        //
+        Spotlight::registerQueries(
+            SpotlightQuery::asDefault(function ($query) {
+                $collection = collect();
+
+                $companies = Company::where('name', 'ilike', "%{$query}%")->orWhere('ticker', 'ilike', "%{$query}%")->take(10)->get();
+
+                foreach ($companies as $company) {
+                    $collection->push(
+                        SpotlightResult::make()
+                            ->setTitle($company->name)
+                            ->setAction('jump_to', ['path' => '/company/'.$company->ticker])
+                    );
+                }
+            
+                return $collection;
+            })
+        );
     }
 
     /**

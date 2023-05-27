@@ -27,6 +27,13 @@ class Company extends Model
     ];
 
     /**
+     * The connection name for the model.
+     *
+     * @var string
+     */
+    protected $connection = 'pgsql'; 
+
+    /**
      * Indicates if the model's ID is auto-incrementing.
      *
      * @var bool

@@ -18,6 +18,11 @@
                     <x-jet-nav-link href="{{ route('earnings-calendar') }}" :active="request()->routeIs('earnings-calendar')">
                         {{ __('Earnings Calendar') }}
                     </x-jet-nav-link>
+                    <button wire:click="$emit('spotlight.toggle')">
+                        <svg class="h-5 w-5 inline-flex px-1 pt-1 border-b-2 border-indigo-400 text-sm font-medium leading-5 text-gray-900 focus:outline-none focus:border-indigo-700 transition" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" viewBox="0 0 24 24">
+                            <path d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"></path>
+                        </svg>
+                    </button>
                 </div>
             </div>
 

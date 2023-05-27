@@ -197,6 +197,7 @@ return [
         App\Providers\FortifyServiceProvider::class,
         App\Providers\JetstreamServiceProvider::class,
         WireElements\Pro\Components\SlideOver\SlideOverServiceProvider::class,
+        WireElements\Pro\Components\Spotlight\SpotlightServiceProvider::class,
 
     ],
 
