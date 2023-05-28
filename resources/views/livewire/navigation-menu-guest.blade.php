@@ -2,7 +2,7 @@
     <!-- Primary Navigation Menu -->
     <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div class="flex justify-between h-16">
-            <div class="flex">
+            <div class="flex justify-self-stretch">
                 <!-- Logo -->
                 <div class="shrink-0 flex items-center">
                     <a href="{{ route('home') }}">
@@ -18,18 +18,21 @@
                     <x-jet-nav-link href="{{ route('earnings-calendar') }}" :active="request()->routeIs('earnings-calendar')">
                         {{ __('Earnings Calendar') }}
                     </x-jet-nav-link>
-
-                    <button wire:click="$emit('spotlight.toggle')" class="hover:text-gray-700 hover:border-gray-300 border-b-2 border-transparent focus:outline-none focus:border-indigo-700">
-                        <svg class="h-5 w-5 inline-flex text-md font-medium leading-5 text-gray-500 focus:outline-none focus:border-indigo-700 transition" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" viewBox="0 0 24 24">
-                            <path d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"></path>
-                        </svg>
-                        <span class="text-sm font-medium leading-5 text-gray-500">
-                        Search
-                        </span>
-                    </button>
-                    
                     {{-- @livewire('search-component')    --}}
                 </div>
+            </div>
+
+            <div class="hidden sm:flex justify-center justify-items-stretch m-auto flex-grow px-10">
+                <button wire:click="$emit('spotlight.toggle')" class="border-2 border-gray-200 h-8 w-full grid grid-cols-5 mx-auto max-w-md">
+                    <span class="text-sm font-medium leading-5 text-gray-500 justify-self-stretch col-span-4 text-left h-7 px-2 py-1">
+                    {{ __('Search Stocks, Tickers ...') }}
+                    </span>
+                    <div class="bg-blue-500 h-7 px-2 py-1 text-center">
+                        <svg class="h-5 w-5 text-md font-medium leading-5 text-white m-auto" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" viewBox="0 0 24 24">
+                            <path d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"></path>
+                        </svg>
+                    </div>
+                </button>
             </div>
 
             <div class="hidden sm:flex sm:items-center sm:ml-6">
