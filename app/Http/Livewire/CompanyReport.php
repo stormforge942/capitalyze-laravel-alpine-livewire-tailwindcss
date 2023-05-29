@@ -53,7 +53,7 @@ class CompanyReport extends Component
             $bgClass = $this->rowCount % 2 === 0 ? 'bg-cyan-50' : 'bg-white'; // Change $depth to $rowCount here
             $class = $bgClass . ' hover:bg-blue-200' . $boldClass;
             $output .= '<tr class="' . $class . '">';
-            $output .= '<td class="sticky left-0 py-2 break-words max-w-[150px] lg:max-w-[400px] text-sm '.$bgClass.'">' . str_repeat('&nbsp;', $depth) . $label . '</td>';
+            $output .= '<td class="sticky left-0 py-2 break-words lg:max-w-[400px] lg:min-w-[280px] max-w-[150px] text-sm '.$bgClass.'">' . str_repeat('&nbsp;', $depth) . $label . '</td>';
             
             foreach ($dates as $date) {
                 if (isset($dateValues[$date])) {
