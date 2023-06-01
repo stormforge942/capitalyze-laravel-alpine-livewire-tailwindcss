@@ -40,6 +40,7 @@ class FundMetrics extends Component
         }
 
         $this->emit('renderChart', $chartData);
+        $this->emit('renderIndustryDistribution', end($chartData));
 
         return $chartData;
     }
