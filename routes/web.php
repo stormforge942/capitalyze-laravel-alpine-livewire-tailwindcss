@@ -2,6 +2,7 @@
 
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\CompanyController;
+use App\Http\Controllers\FundController;
 use App\Http\Livewire\EarningsCalendar;
 
 /*
@@ -19,6 +20,10 @@ Route::get('/', function () {
     return view('welcome');
 })->name('home');
 
+
+/*
+| Company routing
+*/
 Route::get('/company/{ticker}/', [CompanyController::class, 'product'])->name('company.product');
 Route::get('/company/{ticker}/geographic', [CompanyController::class, 'geographic'])->name('company.geographic');
 Route::get('/company/{ticker}/metrics', [CompanyController::class, 'metrics'])->name('company.metrics');
@@ -26,6 +31,13 @@ Route::get('/company/{ticker}/report', [CompanyController::class, 'report'])->na
 Route::get('/company/{ticker}/shareholders', [CompanyController::class, 'shareholders'])->name('company.shareholders');
 Route::get('/company/{ticker}/summary', [CompanyController::class, 'summary'])->name('company.summary');
 Route::get('/calendar', EarningsCalendar::class)->name('earnings-calendar');
+
+/*
+| Fund routing
+*/
+
+Route::get('/fund/{cik}/', [FundController::class, 'summary'])->name('fund.summary');
+Route::get('/fund/{cik}/holdings', [FundController::class, 'holdings'])->name('fund.holdings');
 
 Route::middleware([
     'auth:sanctum',

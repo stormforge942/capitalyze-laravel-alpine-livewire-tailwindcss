@@ -4,14 +4,14 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
 
-class Company extends Model
+class Fund extends Model
 {
     /**
      * The primary key associated with the table.
      *
      * @var string
      */
-    protected $primaryKey = 'ticker';
+    protected $primaryKey = 'cik';
 
      /**
      * The attributes that are mass assignable.
@@ -36,5 +36,4 @@ class Company extends Model
      * @var bool
      */
     public $incrementing = false;
-
 }

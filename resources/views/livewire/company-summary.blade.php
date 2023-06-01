@@ -35,12 +35,14 @@
                     <tbody>
                     @php($i = 0)
                     @foreach ($rows as $title => $row)
-                        <tr class="@if($i % 2 == 0) bg-cyan-50 @else bg-white @endif hover:bg-blue-200">
-                            <td class="@if($i % 2 == 0) bg-cyan-50 @else bg-white @endif sticky left-0 p-2 break-words text-sm">{{ $title }}</td>
-                            <td class="p-2">{{ rtrim(rtrim(number_format($summary[$row['value']], 2), '0'), '.') ?? '-' }}</td>
-                            <td class="p-2">{{ rtrim(rtrim(number_format($summary[$row['prior']], 2), '0'), '.') ?? '-' }}</td>
-                            <td class="p-2"><span class="{{ $summary[$row['change']] >= 0 ? 'bg-green-600' : 'bg-red-600' }} text-white text-sm px-2 py-1 rounded">{{ rtrim(rtrim(number_format($summary[$row['change']], 2), '0'), '.') ?? '-' }}</span></td>
-                        </tr>
+                        @if(is_array($row) && isset($row['value']) && isset($row['prior']) && isset($row['change']))
+                            <tr class="@if($i % 2 == 0) bg-cyan-50 @else bg-white @endif hover:bg-blue-200">
+                                <td class="@if($i % 2 == 0) bg-cyan-50 @else bg-white @endif sticky left-0 p-2 break-words text-sm">{{ $title }}</td>
+                                <td class="p-2">{{ rtrim(rtrim(number_format($summary[$row['value']] ?? 0, 2), '0'), '.') ?? '-' }}</td>
+                                <td class="p-2">{{ rtrim(rtrim(number_format($summary[$row['prior']] ?? 0, 2), '0'), '.') ?? '-' }}</td>
+                                <td class="p-2"><span class="{{ ($summary[$row['change']] ?? 0) >= 0 ? 'bg-green-600' : 'bg-red-600' }} text-white text-sm px-2 py-1 rounded">{{ rtrim(rtrim(number_format($summary[$row['change']] ?? 0, 2), '0'), '.') ?? '-' }}</span></td>
+                            </tr>
+                        @endif
                         @php($i++)
                     @endforeach
                     </tbody>
