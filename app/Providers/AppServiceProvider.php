@@ -7,6 +7,7 @@ use Illuminate\Support\Facades\Log;
 use Illuminate\Support\ServiceProvider;
 use Illuminate\Support\Facades\App;
 use App\Models\Company;
+use App\Models\Fund;
 use WireElements\Pro\Components\Spotlight\Spotlight;
 use WireElements\Pro\Components\Spotlight\SpotlightQuery;
 use WireElements\Pro\Components\Spotlight\SpotlightResult;
@@ -20,17 +21,31 @@ class AppServiceProvider extends ServiceProvider
      */
     public function register()
     {
+        Spotlight::registerGroup('companies', 'Companies');
+        Spotlight::registerGroup('funds', 'Funds');
+
         Spotlight::registerQueries(
             SpotlightQuery::asDefault(function ($query) {
                 $collection = collect();
 
                 $companies = Company::where('name', 'ilike', "%{$query}%")->orWhere('ticker', 'ilike', "%{$query}%")->take(10)->get();
+                $funds = Fund::where('name', 'ilike', "%{$query}%")->orWhere('cik', 'ilike', "%{$query}%")->take(10)->get();
 
                 foreach ($companies as $company) {
                     $collection->push(
                         SpotlightResult::make()
+                            ->setGroup('companies')
                             ->setTitle($company->name)
                             ->setAction('jump_to', ['path' => '/company/'.$company->ticker])
+                    );
+                }
+
+                foreach ($funds as $fund) {
+                    $collection->push(
+                        SpotlightResult::make()
+                            ->setGroup('funds')
+                            ->setTitle($fund->name)
+                            ->setAction('jump_to', ['path' => '/fund/'.$fund->cik])
                     );
                 }
             
