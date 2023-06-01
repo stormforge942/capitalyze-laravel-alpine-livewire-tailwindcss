@@ -121,9 +121,9 @@ final class FundHoldingsTable extends PowerGridComponent
     public function addColumns(): PowerGridEloquent
     {
         return PowerGrid::eloquent()
-            ->addColumn('investor_name') // Fund
+            ->addColumn('name_of_issuer') // Fund
             ->addColumn('investor_name_formated', function (CompanyFilings $companyFilings) {
-                return ('<a href="/company/'.$companyFilings->symbol.'">'.$companyFilings->symbol . (!empty($companyFilings->name_of_issuer) ? ' <span class="text-xs font-light">(' . $companyFilings->name_of_issuer . ')</span></a>' : '</a>'));
+                return ('<a class="text-blue-500" href="/company/'.$companyFilings->symbol.'/shareholders">'.$companyFilings->symbol . (!empty($companyFilings->name_of_issuer) ? ' <span class="text-xs font-light">(' . $companyFilings->name_of_issuer . ')</span></a>' : '</a>'));
             }) // Fund
             ->addColumn('ssh_prnamt', function(CompanyFilings $companyFilings) {
                 return number_format($companyFilings->ssh_prnamt);
@@ -173,7 +173,7 @@ final class FundHoldingsTable extends PowerGridComponent
         return [
             Column::add()
                 ->title('Company')
-                ->field('investor_name_formated', 'investor_name')
+                ->field('investor_name_formated', 'name_of_issuer')
                 ->searchable()
                 ->sortable(),
 
@@ -215,8 +215,13 @@ final class FundHoldingsTable extends PowerGridComponent
     public function filters(): array
     {
         return [
-        Filter::inputText('investor_name', 'investor_name')
-            ->operators([]),
+            Filter::inputText('name_of_issuer')
+            ->operators([])
+            ->builder(function (Builder $query, mixed $value) {
+                $input = $value['value'];
+                return $query->where('symbol', 'ilike', "%{$input}%")
+                             ->orWhere('name_of_issuer', 'ilike', "%{$input}%");
+            }),
             Filter::inputText('ssh_prnamt', 'ssh_prnamt')
             ->operators([]),
             Filter::inputText('value', 'value')
