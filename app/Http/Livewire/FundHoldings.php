@@ -9,12 +9,14 @@ use Carbon\Carbon;
 class FundHoldings extends Component
 {
     public $cik;
+    public $fund;
     public string $selectedQuarter = '';
     public array $quarters = [];
 
-    public function mount($cik)
+    public function mount($cik, $fund)
     {
         $this->cik = $cik;
+        $this->fund = $fund;
         $this->quarters = $this->generateQuarters();
         $this->selectedQuarter = array_key_first($this->quarters);
         $this->updatedSelectedQuarter();

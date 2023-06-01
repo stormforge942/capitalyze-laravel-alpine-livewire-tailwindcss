@@ -4,6 +4,7 @@ namespace App\Http\Livewire;
 
 use App\Models\CompanyFilings;
 use Livewire\Livewire;
+use Illuminate\Support\Str;
 use Illuminate\Support\Carbon;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Database\Eloquent\Builder;
@@ -125,7 +126,7 @@ final class CompanyShareholdersTable extends PowerGridComponent
         return PowerGrid::eloquent()
             ->addColumn('investor_name') // Fund
             ->addColumn('investor_name_formated', function (CompanyFilings $companyFilings) {
-                return ($companyFilings->investor_name . (!empty($companyFilings->put_call) ? ' <span class="text-sm font-bold">(' . $companyFilings->put_call . ')</span>' : ''));
+                return ('<a href="/fund/'.$companyFilings->cik.'">'.Str::title($companyFilings->investor_name) . (!empty($companyFilings->put_call) ? ' <span class="text-sm font-bold">(' . $companyFilings->put_call . ')</span></a>' : '</a>'));
             }) // Fund
             ->addColumn('ssh_prnamt', function(CompanyFilings $companyFilings) {
                 return number_format($companyFilings->ssh_prnamt);

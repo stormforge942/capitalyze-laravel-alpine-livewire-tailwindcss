@@ -3,7 +3,7 @@
         <div class="px-4 sm:px-6 lg:px-8 bg-white py-4 shadow mx-4 rounded max-w-5xl mx-auto">
             <div class="sm:flex sm:items-start flex-col">
                 <div class="block mb-3">
-                    <h1 class="text-base font-semibold leading-10 text-gray-900">Fund Summary - {{ $fund->name }}</h1>
+                    <h1 class="text-base font-semibold leading-10 text-gray-900">Fund Summary - {{ Str::title($fund->name) }}</h1>
                 </div>
                 <div class="grid gap-4 w-full grid-cols-1 md:grid-cols-2 items-start">
                     <div class="rounded rounded-lg border border-sky-950 w-full overflow-scroll inline-block" wire:loading.remove>

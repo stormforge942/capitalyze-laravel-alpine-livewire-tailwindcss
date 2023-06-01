@@ -123,7 +123,7 @@ final class FundHoldingsTable extends PowerGridComponent
         return PowerGrid::eloquent()
             ->addColumn('investor_name') // Fund
             ->addColumn('investor_name_formated', function (CompanyFilings $companyFilings) {
-                return ($companyFilings->symbol . (!empty($companyFilings->put_call) ? ' <span class="text-sm font-bold">(' . $companyFilings->put_call . ')</span>' : ''));
+                return ('<a href="/company/'.$companyFilings->symbol.'">'.$companyFilings->symbol . (!empty($companyFilings->name_of_issuer) ? ' <span class="text-xs font-light">(' . $companyFilings->name_of_issuer . ')</span></a>' : '</a>'));
             }) // Fund
             ->addColumn('ssh_prnamt', function(CompanyFilings $companyFilings) {
                 return number_format($companyFilings->ssh_prnamt);
@@ -172,7 +172,7 @@ final class FundHoldingsTable extends PowerGridComponent
     {
         return [
             Column::add()
-                ->title('Fund')
+                ->title('Company')
                 ->field('investor_name_formated', 'investor_name')
                 ->searchable()
                 ->sortable(),
