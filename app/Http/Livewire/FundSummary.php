@@ -67,10 +67,6 @@ class FundSummary extends Component
 
     }
 
-    public function allHoldings() {
-        return redirect()->to('/fund/'.$this->cik.'/holdings');
-    }
-
     public function render()
     {
         return view('livewire.fund-summary');

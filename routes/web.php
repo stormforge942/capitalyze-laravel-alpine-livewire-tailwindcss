@@ -38,6 +38,7 @@ Route::get('/calendar', EarningsCalendar::class)->name('earnings-calendar');
 
 Route::get('/fund/{cik}/', [FundController::class, 'summary'])->name('fund.summary');
 Route::get('/fund/{cik}/holdings', [FundController::class, 'holdings'])->name('fund.holdings');
+Route::get('/fund/{cik}/metrics', [FundController::class, 'metrics'])->name('fund.metrics');
 
 Route::middleware([
     'auth:sanctum',

@@ -9,6 +9,9 @@
                 <livewire:company-navbar-item wire:key="navbar-holdings"
                     href="/fund/{{ $fund->cik }}/holdings" name="Holdings"
                     :active="$currentRoute === 'fund.holdings'" />
+                <livewire:company-navbar-item wire:key="navbar-metrics"
+                    href="/fund/{{ $fund->cik }}/metrics" name="Metrics"
+                    :active="$currentRoute === 'fund.metrics'" />
             </div>
         </nav>
     </div>
@@ -22,6 +25,9 @@
             <livewire:company-navbar-item wire:key="navbar-holdings-mob"
                 href="/fund/{{ $fund->cik }}/holdings" name="Holdings"
                 :active="$currentRoute === 'fund.holdings'" />
+            <livewire:company-navbar-item wire:key="navbar-metrics-mob"
+                href="/fund/{{ $fund->cik }}/metrics" name="Metrics"
+                :active="$currentRoute === 'fund.metrics'" />
         </div>
     </nav>
 </header>

@@ -32,6 +32,8 @@
             <livewire:fund-summary :fund="$fund" :cik="$cik" />
             @elseif($tab == 'holdings')
             <livewire:fund-holdings :fund="$fund" :cik="$cik" />
+            @elseif($tab == 'metrics')
+            <livewire:fund-metrics :fund="$fund" :cik="$cik" />
             @endif
         </main>
     </div>
