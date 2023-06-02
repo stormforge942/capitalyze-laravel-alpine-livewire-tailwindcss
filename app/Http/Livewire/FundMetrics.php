@@ -20,29 +20,40 @@ class FundMetrics extends Component
         $investments = DB::connection('pgsql-xbrl')
         ->table('industry_summary')
         ->where('cik', '=', $this->cik)
-        ->where('weight', '>', '1')
         ->select('industry_title', 'weight', 'date')
-        ->orderBy('weight')
+        ->orderByDesc('weight')
         ->get();
-
+    
         $chartData = [];
-
+        
         foreach ($investments as $investment) {
             $quarter = $investment->date;
             $industry = $investment->industry_title;
             $weight = $investment->weight;
-
+        
             if (!isset($chartData[$quarter])) {
                 $chartData[$quarter] = [];
             }
-
-            $chartData[$quarter][$industry] = $weight;
+        
+            if (count($chartData[$quarter]) < 15) { // Ensure there are only up to 15 industries per quarter.
+                $chartData[$quarter][$industry] = $weight;
+            }
         }
-
+        
+        // Sort the array by keys (dates).
+        uksort($chartData, function($a, $b) {
+            return strtotime($a) - strtotime($b);
+        });
+        
+        // To ensure the data of the last quarter is also limited to 15 industries.
+        end($chartData);
+        $key = key($chartData);
+        $chartData[$key] = array_slice($chartData[$key], 0, 15, true);
+        
         $this->emit('renderChart', $chartData);
         $this->emit('renderIndustryDistribution', end($chartData));
-
-        return $chartData;
+        
+        return $chartData;    
     }
 
     public function getTotalValue()
