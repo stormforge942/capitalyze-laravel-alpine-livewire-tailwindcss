@@ -24,7 +24,7 @@ class FundHoldings extends Component
 
     public function updatedSelectedQuarter()
     {
-        $this->emitTo('company-shareholders-table', 'quarterChanged', $this->selectedQuarter);
+        $this->emitTo('fund-holdings-table', 'quarterChanged', $this->selectedQuarter);
     }
 
     public function generateQuarters()
