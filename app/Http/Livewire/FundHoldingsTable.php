@@ -19,7 +19,6 @@ final class FundHoldingsTable extends PowerGridComponent
     use WithExport;
 
     public bool $deferLoading = false; // default false
-    public string $primaryKey = 'composite_key';
     public string $sortField = 'ownership';
     public string $sortDirection = 'desc';
     public int $perPage = 25;
@@ -79,8 +78,7 @@ final class FundHoldingsTable extends PowerGridComponent
     public function datasource(): ?Builder
     {
         $query = CompanyFilings::query()
-            ->select('*', DB::raw("CONCAT(cik, '-', cusip, '-', put_call, '-', report_calendar_or_quarter) as composite_key"))
-            ->where('cik', '=', $this->cik);
+        ->where('cik', '=', $this->cik);
 
         if ($this->selectedQuarter !== '') {
             $query = $query->where('report_calendar_or_quarter', '=', $this->selectedQuarter);
