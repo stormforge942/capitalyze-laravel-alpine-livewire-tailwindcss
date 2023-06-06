@@ -19,6 +19,7 @@ class Company extends Model
      * @var string[]
      */
     protected $fillable = [
+        'ticker',
         'cik',
         'name',
     ];
