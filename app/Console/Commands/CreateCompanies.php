@@ -41,7 +41,7 @@ class CreateCompanies extends Command
             if (isset($value->ticker) && !empty($value->ticker)) {
                 Log::debug("Ticker is set and not empty: {$value->ticker}");
                 try {
-                    $company = Company::firstOrCreate(
+                    $company = Company::updateOrCreate(
                         ['cik' => $value->cik_str],
                         ['ticker' => $value->ticker, 'name' => $value->title]
                     );
