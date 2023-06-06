@@ -32,11 +32,10 @@ class CreateCompanies extends Command
         $json = file_get_contents($url);
         $json = json_decode($json);
 
-        foreach($json as $item => $value) {
+        foreach($json as $item => $value) {            
             $company = Company::firstOrCreate(
                 ['cik' => $value->cik_str], 
-                ['ticker' => $value->ticker], 
-                ['name' => $value->title]
+                ['ticker' => $value->ticker,'name' => $value->title]
             );
         }
     }
