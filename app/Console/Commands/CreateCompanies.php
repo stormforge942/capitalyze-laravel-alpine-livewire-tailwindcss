@@ -4,6 +4,7 @@ namespace App\Console\Commands;
  
 use App\Models\Company;
 use Illuminate\Console\Command;
+use Illuminate\Support\Facades\Log;
  
 class CreateCompanies extends Command
 {
@@ -31,14 +32,25 @@ class CreateCompanies extends Command
         $url = 'https://www.sec.gov/files/company_tickers.json';
         $json = file_get_contents($url);
         $json = json_decode($json);
-
-        foreach($json as $item => $value) {            
-            if (isset($value->ticker) && !empty($value->ticker)) {          
-                $company = Company::firstOrCreate(
-                    ['cik' => $value->cik_str],
-                    ['ticker' => $value->ticker, 'name' => $value->title]
-                );
+    
+        foreach($json as $key => $value) {
+            // Add debug logging
+            Log::debug("Processing item: $key");
+            Log::debug(json_encode($value));
+    
+            if (isset($value->ticker) && !empty($value->ticker)) {
+                Log::debug("Ticker is set and not empty: {$value->ticker}");
+                try {
+                    $company = Company::firstOrCreate(
+                        ['cik' => $value->cik_str],
+                        ['ticker' => $value->ticker, 'name' => $value->title]
+                    );
+                } catch (\Exception $e) {
+                    Log::error("Error creating or finding company: {$e->getMessage()}");
+                }
+            } else {
+                Log::warning("Skipping item $key because ticker is not set or empty");
             }
         }
-    }
+    }    
 }
