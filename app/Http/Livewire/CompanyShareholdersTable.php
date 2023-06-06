@@ -82,13 +82,12 @@ final class CompanyShareholdersTable extends PowerGridComponent
     public function datasource(): ?Builder
     {
         $query = CompanyFilings::query()
-            ->select('*', DB::raw("CONCAT(cik, '-', cusip, '-', put_call, '-', report_calendar_or_quarter) as composite_key"))
             ->where('symbol', '=', $this->ticker);
-
+    
         if ($this->selectedQuarter !== '') {
             $query = $query->where('report_calendar_or_quarter', '=', $this->selectedQuarter);
         }
-
+    
         return $query;
     }
 
