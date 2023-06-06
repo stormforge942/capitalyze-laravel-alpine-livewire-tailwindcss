@@ -2,6 +2,7 @@ id: 48027
 name: xbrl-explorer-laravel
 environments:
     production:
+        timeout: 30
         domain: xbrl-explorer.com
         database: xbrl-front-us
         memory: 1024
