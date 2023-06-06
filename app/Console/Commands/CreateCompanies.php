@@ -34,10 +34,6 @@ class CreateCompanies extends Command
         $json = json_decode($json);
     
         foreach($json as $key => $value) {
-            // Add debug logging
-            Log::debug("Processing item: $key");
-            Log::debug(json_encode($value));
-    
             if (isset($value->ticker) && !empty($value->ticker)) {
                 Log::debug("Ticker is set and not empty: {$value->ticker}");
                 try {
