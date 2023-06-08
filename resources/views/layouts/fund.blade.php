@@ -34,6 +34,12 @@
             <livewire:fund-holdings :fund="$fund" :cik="$cik" />
             @elseif($tab == 'metrics')
             <livewire:fund-metrics :fund="$fund" :cik="$cik" />
+            @elseif($tab == 'insider')
+            <livewire:fund-insider :fund="$fund" :cik="$cik" />
+            @elseif($tab == 'filings')
+            <livewire:fund-filings :fund="$fund" :cik="$cik" />
+            @elseif($tab == 'restatement')
+            <livewire:fund-restatement :fund="$fund" :cik="$cik" />
             @endif
         </main>
     </div>

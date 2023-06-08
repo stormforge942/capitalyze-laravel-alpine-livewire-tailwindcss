@@ -45,6 +45,9 @@ Route::get('/company/{ticker}/restatement', [CompanyController::class, 'restatem
 Route::get('/fund/{cik}/', [FundController::class, 'summary'])->name('fund.summary');
 Route::get('/fund/{cik}/holdings', [FundController::class, 'holdings'])->name('fund.holdings');
 Route::get('/fund/{cik}/metrics', [FundController::class, 'metrics'])->name('fund.metrics');
+Route::get('/fund/{ticker}/filings', [FundController::class, 'filings'])->name('fund.filings');
+Route::get('/fund/{ticker}/insider', [FundController::class, 'insider'])->name('fund.insider');
+Route::get('/fund/{ticker}/restatement', [FundController::class, 'restatement'])->name('fund.restatement');
 
 Route::middleware([
     'auth:sanctum',

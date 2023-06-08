@@ -12,6 +12,15 @@
                 <livewire:company-navbar-item wire:key="navbar-metrics"
                     href="/fund/{{ $fund->cik }}/metrics" name="Metrics"
                     :active="$currentRoute === 'fund.metrics'" />
+                <livewire:company-navbar-item wire:key="navbar-insider"
+                    href="/fund/{{ $fund->cik }}/insider" name="Insider"
+                    :active="$currentRoute === 'fund.insider'" />
+                <livewire:company-navbar-item wire:key="navbar-filings"
+                    href="/fund/{{ $fund->cik }}/filings" name="Filings"
+                    :active="$currentRoute === 'fund.filings'" />
+                <livewire:company-navbar-item wire:key="navbar-restatement"
+                    href="/fund/{{ $fund->cik }}/restatement" name="Restatement"
+                    :active="$currentRoute === 'fund.restatement'" />
             </div>
         </nav>
     </div>
@@ -28,6 +37,15 @@
             <livewire:company-navbar-item wire:key="navbar-metrics-mob"
                 href="/fund/{{ $fund->cik }}/metrics" name="Metrics"
                 :active="$currentRoute === 'fund.metrics'" />
+            <livewire:company-navbar-item wire:key="navbar-insider-mob"
+                    href="/fund/{{ $fund->cik }}/insider" name="Insider"
+                    :active="$currentRoute === 'fund.insider'" />
+            <livewire:company-navbar-item wire:key="navbar-filings-mob"
+                href="/fund/{{ $fund->cik }}/filings" name="Filings"
+                :active="$currentRoute === 'fund.filings'" />
+            <livewire:company-navbar-item wire:key="navbar-restatement-mob"
+                href="/fund/{{ $fund->cik }}/restatement" name="Restatement"
+                :active="$currentRoute === 'fund.restatement'" />
         </div>
     </nav>
 </header>

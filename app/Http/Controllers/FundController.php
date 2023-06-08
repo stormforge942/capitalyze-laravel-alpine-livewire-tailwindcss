@@ -39,4 +39,37 @@ class FundController extends BaseController
             'tab' => 'metrics'
         ]);
     }
+
+    public function insider($cik)
+    {
+        $fund = Fund::where('cik', $cik)->get()->first();
+
+        return view('layouts.fund', [
+            'fund' => $fund,
+            'cik' => $cik,
+            'tab' => 'insider'
+        ]);
+    }
+
+    public function filings($cik)
+    {
+        $fund = Fund::where('cik', $cik)->get()->first();
+
+        return view('layouts.fund', [
+            'fund' => $fund,
+            'cik' => $cik,
+            'tab' => 'filings'
+        ]);
+    }
+
+    public function restatement($cik)
+    {
+        $fund = Fund::where('cik', $cik)->get()->first();
+
+        return view('layouts.fund', [
+            'fund' => $fund,
+            'cik' => $cik,
+            'tab' => 'restatement'
+        ]);
+    }
 }
