@@ -4,7 +4,7 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
 
-class CompanyFilings extends Model
+class CompanyLinks extends Model
 {
     /**
      * The "booting" method of the model.
@@ -16,16 +16,16 @@ class CompanyFilings extends Model
         parent::boot();
 
         static::creating(function ($model) {
-            $model->{$model->getKeyName()} = $model->cik . '-' . $model->cusip . '-' . $model->put_call . '-' . $model->report_calendar_or_quarter;
+            $model->{$model->getKeyName()} = $model->symbol . '-' . $model->acceptance_time . '-' . $model->form_type;
         });
     }
 
     /**
      * The primary key for the model.
-     *
+     * 
      * @var array
      */
-    protected $primaryKey = ['cik', 'cusip', 'put_call', 'report_calendar_or_quarter'];
+    protected $primaryKey = ['symbol', 'acceptance_time', 'form_type'];
 
     /**
      * Indicates if the IDs are auto-incrementing.
@@ -39,7 +39,7 @@ class CompanyFilings extends Model
      *
      * @var string
      */
-    protected $table = 'filings';
+    protected $table = 'company_links';
 
     /**
      * The connection name for the model.
@@ -47,7 +47,6 @@ class CompanyFilings extends Model
      * @var string
      */
     protected $connection = 'pgsql-xbrl';
-
     /**
      * Indicates if the model should be timestamped.
      *
@@ -61,45 +60,13 @@ class CompanyFilings extends Model
      * @var array
      */
     protected $fillable = [
-        'change_in_ownership',
-        'change_in_ownership_percentage',
-        'change_in_performance',
-        'change_in_shares',
-        'change_in_shares_percentage',
-        'change_in_value',
-        'change_in_value_percentage',
-        'change_in_weight',
-        'change_in_weight_percentage',
-        'cik',
-        'cusip',
-        'first_added',
-        'holding_period',
-        'industry_title',
-        'investment_discretion',
-        'investor_name',
-        'is_counted',
-        'is_new',
-        'is_sold_out',
-        'last_ownership',
-        'last_performance',
-        'last_price_paid',
-        'last_shares',
-        'last_value',
-        'last_weight',
-        'name_of_issuer',
-        'ownership',
-        'performance',
-        'performance_percentage',
-        'price_paid',
-        'put_call',
-        'report_calendar_or_quarter',
-        'signature_date',
-        'ssh_prnamt',
-        'ssh_prnamt_type',
         'symbol',
-        'title_of_class',
-        'value',
-        'weight'
+        'cik',
+        'filing_date',
+        'acceptance_time',
+        'form_type',
+        'link',
+        'final_link'
     ];
 
     /**

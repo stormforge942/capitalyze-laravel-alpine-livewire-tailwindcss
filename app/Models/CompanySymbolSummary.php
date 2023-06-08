@@ -21,21 +21,21 @@ class CompanySymbolSummary extends Model
      *
      * @var string
      */
-    protected $table = 'symbol_summary'; // replace with your actual table name
+    protected $table = 'symbol_summary'; 
 
     /**
      * The connection name for the model.
      *
      * @var string
      */
-    protected $connection = 'pgsql-xbrl'; // replace with your actual connection name
+    protected $connection = 'pgsql-xbrl';
 
     /**
      * Indicates if the model should be timestamped.
      *
      * @var bool
      */
-    public $timestamps = false; // set to true if your table has timestamps
+    public $timestamps = false;
 
     /**
      * The attributes that are mass assignable.

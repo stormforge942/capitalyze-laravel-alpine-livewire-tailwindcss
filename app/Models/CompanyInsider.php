@@ -4,7 +4,7 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
 
-class CompanyFilings extends Model
+class CompanyInsider extends Model
 {
     /**
      * The "booting" method of the model.
@@ -16,16 +16,17 @@ class CompanyFilings extends Model
         parent::boot();
 
         static::creating(function ($model) {
-            $model->{$model->getKeyName()} = $model->cik . '-' . $model->cusip . '-' . $model->put_call . '-' . $model->report_calendar_or_quarter;
+            $model->{$model->getKeyName()} = $model->symbol . '-' . $model->form_type . '-' . $model->derivative_or_nonderivative . '-' . $model->amount_of_securities . '-' . $model->securities_owned_following_transaction . '-' . $model->acceptance_time;
+
         });
     }
 
     /**
      * The primary key for the model.
-     *
+     *  symbol,form_type,derivative_or_nonderivative,amount_of_securities,securities_owned_following_transaction,acceptance_time
      * @var array
      */
-    protected $primaryKey = ['cik', 'cusip', 'put_call', 'report_calendar_or_quarter'];
+    protected $primaryKey = ['symbol', 'form_type', 'derivative_or_nonderivative', 'amount_of_securities', 'securities_owned_following_transaction', 'acceptance_time'];
 
     /**
      * Indicates if the IDs are auto-incrementing.
@@ -39,7 +40,7 @@ class CompanyFilings extends Model
      *
      * @var string
      */
-    protected $table = 'filings';
+    protected $table = 'insider_transactions';
 
     /**
      * The connection name for the model.
@@ -47,7 +48,6 @@ class CompanyFilings extends Model
      * @var string
      */
     protected $connection = 'pgsql-xbrl';
-
     /**
      * Indicates if the model should be timestamped.
      *
@@ -61,45 +61,28 @@ class CompanyFilings extends Model
      * @var array
      */
     protected $fillable = [
-        'change_in_ownership',
-        'change_in_ownership_percentage',
-        'change_in_performance',
-        'change_in_shares',
-        'change_in_shares_percentage',
-        'change_in_value',
-        'change_in_value_percentage',
-        'change_in_weight',
-        'change_in_weight_percentage',
-        'cik',
-        'cusip',
-        'first_added',
-        'holding_period',
-        'industry_title',
-        'investment_discretion',
-        'investor_name',
-        'is_counted',
-        'is_new',
-        'is_sold_out',
-        'last_ownership',
-        'last_performance',
-        'last_price_paid',
-        'last_shares',
-        'last_value',
-        'last_weight',
-        'name_of_issuer',
-        'ownership',
-        'performance',
-        'performance_percentage',
-        'price_paid',
-        'put_call',
-        'report_calendar_or_quarter',
-        'signature_date',
-        'ssh_prnamt',
-        'ssh_prnamt_type',
         'symbol',
-        'title_of_class',
-        'value',
-        'weight'
+        'cik',
+        'registrant_name',
+        'form_type',
+        'reporting_person',
+        'reporting_cik',
+        'relationship_of_reporting_person',
+        'individual_or_joint_filing',
+        'derivative_or_nonderivative',
+        'title_of_security',
+        'transaction_date',
+        'transaction_code',
+        'amount_of_securities',
+        'price_per_security',
+        'acquired_or_disposed',
+        'title_of_underlying_security',
+        'amount_of_underlying_securities',
+        'securities_owned_following_transaction',
+        'ownership_form',
+        'nature_of_ownership',
+        'acceptance_time',
+        'url'
     ];
 
     /**

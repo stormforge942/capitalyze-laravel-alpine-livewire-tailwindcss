@@ -20,6 +20,10 @@ Route::get('/', function () {
     return view('welcome');
 })->name('home');
 
+/*
+| Global routes
+*/
+Route::get('/calendar', EarningsCalendar::class)->name('earnings-calendar');
 
 /*
 | Company routing
@@ -30,7 +34,9 @@ Route::get('/company/{ticker}/metrics', [CompanyController::class, 'metrics'])->
 Route::get('/company/{ticker}/report', [CompanyController::class, 'report'])->name('company.report');
 Route::get('/company/{ticker}/shareholders', [CompanyController::class, 'shareholders'])->name('company.shareholders');
 Route::get('/company/{ticker}/summary', [CompanyController::class, 'summary'])->name('company.summary');
-Route::get('/calendar', EarningsCalendar::class)->name('earnings-calendar');
+Route::get('/company/{ticker}/filings', [CompanyController::class, 'filings'])->name('company.filings');
+Route::get('/company/{ticker}/insider', [CompanyController::class, 'insider'])->name('company.insider');
+Route::get('/company/{ticker}/restatement', [CompanyController::class, 'restatement'])->name('company.restatement');
 
 /*
 | Fund routing

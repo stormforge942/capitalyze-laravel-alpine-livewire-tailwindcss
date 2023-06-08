@@ -79,4 +79,40 @@ class CompanyController extends BaseController
             'tab' => 'summary'
         ]);
     }
+
+    public function filings(Request $request, $ticker)
+    {
+        $company = Company::where('ticker', $ticker)->get()->first();
+
+        return view('layouts.company', [
+            'company' => $company,
+            'ticker' => $ticker,
+            'period' => $request->query('period', 'annual'),
+            'tab' => 'filings'
+        ]);
+    }
+
+    public function insider(Request $request, $ticker)
+    {
+        $company = Company::where('ticker', $ticker)->get()->first();
+
+        return view('layouts.company', [
+            'company' => $company,
+            'ticker' => $ticker,
+            'period' => $request->query('period', 'annual'),
+            'tab' => 'insider'
+        ]);
+    }
+
+    public function restatement(Request $request, $ticker)
+    {
+        $company = Company::where('ticker', $ticker)->get()->first();
+
+        return view('layouts.company', [
+            'company' => $company,
+            'ticker' => $ticker,
+            'period' => $request->query('period', 'annual'),
+            'tab' => 'restatement'
+        ]);
+    }
 }

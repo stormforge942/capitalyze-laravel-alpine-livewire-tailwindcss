@@ -40,6 +40,12 @@
             <livewire:company-shareholders :company="$company" :ticker="$ticker" :period="$period" />
             @elseif($tab == 'summary')
             <livewire:company-summary :company="$company" :ticker="$ticker" :period="$period" />
+            @elseif($tab == 'filings')
+            <livewire:company-filings :company="$company" :ticker="$ticker" :period="$period" />
+            @elseif($tab == 'insider')
+            <livewire:company-insider :company="$company" :ticker="$ticker" :period="$period" />
+            @elseif($tab == 'restatement')
+            <livewire:company-restatement :company="$company" :ticker="$ticker" :period="$period" />
             @endif
         </main>
     </div>
