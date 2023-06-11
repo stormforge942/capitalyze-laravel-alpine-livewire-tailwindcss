@@ -3,6 +3,8 @@
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\CompanyController;
 use App\Http\Controllers\FundController;
+use App\Http\Livewire\CompanyFilingsPage;
+use App\Http\Livewire\FundFilingsPage;
 use App\Http\Livewire\EarningsCalendar;
 
 /*
@@ -24,6 +26,8 @@ Route::get('/', function () {
 | Global routes
 */
 Route::get('/calendar', EarningsCalendar::class)->name('earnings-calendar');
+Route::get('/company-filings', CompanyFilingsPage::class)->name('company-filings');
+Route::get('/fund-filings', FundFilingsPage::class)->name('fund-filings');
 
 /*
 | Company routing

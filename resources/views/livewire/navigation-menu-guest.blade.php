@@ -18,7 +18,12 @@
                     <x-jet-nav-link href="{{ route('earnings-calendar') }}" :active="request()->routeIs('earnings-calendar')">
                         {{ __('Earnings Calendar') }}
                     </x-jet-nav-link>
-                    {{-- @livewire('search-component')    --}}
+                    <x-jet-nav-link href="{{ route('company-filings') }}" :active="request()->routeIs('company-filings')">
+                        {{ __('Company Filings') }}
+                    </x-jet-nav-link>
+                    <x-jet-nav-link href="{{ route('fund-filings') }}" :active="request()->routeIs('fund-filings')">
+                        {{ __('Funds Filings') }}
+                    </x-jet-nav-link>
                 </div>
             </div>
 
@@ -116,6 +121,12 @@
                     </x-jet-responsive-nav-link>
                     <x-jet-responsive-nav-link href="{{ route('earnings-calendar') }}" :active="request()->routeIs('earnings-calendar')">
                         {{ __('Earnings Calendar') }}
+                    </x-jet-responsive-nav-link>
+                    <x-jet-responsive-nav-link href="{{ route('company-filings') }}" :active="request()->routeIs('company-filings')">
+                        {{ __('Company Filings') }}
+                    </x-jet-responsive-nav-link>
+                    <x-jet-responsive-nav-link href="{{ route('fund-filings') }}" :active="request()->routeIs('fund-filings')">
+                        {{ __('Funds Filings') }}
                     </x-jet-responsive-nav-link>
                 <x-jet-responsive-nav-link href="{{ route('login') }}" :active="request()->routeIs('profile.show')">
                     {{ __('Login') }}

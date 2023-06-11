@@ -40,5 +40,6 @@
         @stack('modals')
         @livewire('spotlight-pro')
         @livewireScripts
+        @stack('scripts')
     </body>
 </html>
