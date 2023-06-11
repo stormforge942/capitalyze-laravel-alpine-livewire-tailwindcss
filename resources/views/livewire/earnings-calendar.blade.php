@@ -8,7 +8,7 @@
             </div>
             <div class="flex justify-between mb-3 mt-3">
                 <button wire:click="previousWeek" class="text-gray-500"><x-heroicon-s-chevron-left class="w-4 h-6 inline-block align-text-bottom"/> Previous Week</button>
-                <select id="exchange-select" wire:model="selectedExchange">
+                <select id="exchange-select" wire:model="selectedExchange" class="border-b-2">
                     <option value="all">All Exchanges</option>
                     @foreach($exchanges as $exchange)
                         <option value="{{ $exchange }}">{{ $exchange }}</option>
