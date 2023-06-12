@@ -3,7 +3,7 @@
     <div class="px-2 mx-auto max-w-7xl sm:px-4 lg:divide-y lg:divide-gray-200 lg:px-8">
         <nav class="hidden lg:flex lg:py-2" aria-label="Global">
             <!-- Current: "bg-gray-100 text-gray-900", Default: "text-gray-900 hover:bg-gray-50 hover:text-gray-900" -->
-            <div class="lg:space-x-4">
+            <div class="lg:space-x-1">
                 <livewire:company-navbar-item wire:key="navbar-product-{{ $period }}"
                     href="/company/{{ $company->ticker }}/?period={{ $period }}" name="Products"
                     :active="$currentRoute === 'company.product'" />
