@@ -15,13 +15,13 @@ class CompanyNavbar extends Component
         'period' => ['except' => 'annual']
     ];
 
-    protected $listeners = ['changePeriod'];
+    protected $listeners = ['periodChange' => '$refresh'];
 
     public function changePeriod($period)
     {
         $this->period = $period;
-        $this->emit('periodChange', $period);
-    }
+        return redirect()->route($this->currentRoute, ['ticker'=>$this->company->ticker, 'period' => $period]);
+    }    
 
     public function render()
     {
@@ -35,3 +35,4 @@ class CompanyNavbar extends Component
         }
     }
 }
+
