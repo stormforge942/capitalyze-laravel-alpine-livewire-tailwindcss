@@ -1,4 +1,15 @@
 <div class="py-12">
+    @if($noData)
+        <div class="mx-auto flex">
+            <div class="mt-4 px-4 sm:px-6 lg:px-8 bg-white py-4 shadow rounded w-full md:w-1/2 md:mx-auto">
+                <div class="sm:flex sm:items-center">
+                    <div class="sm:flex-auto">
+                        <h1 class="text-base font-semibold leading-6 text-gray-900">No data available</h1>
+                    </div>
+                </div>
+            </div>
+        </div> 
+    @else
     <div class="mx-auto flex flex-col md:flex-row">
         <div class="px-4 sm:px-6 lg:px-8 bg-white py-4 shadow md:mx-4 rounded md:w-1/2 w-full">
             <div class="sm:flex sm:items-center">
@@ -45,6 +56,7 @@
             </div>
         </div>
     </div>
+    @endif
 </div>
 @push('scripts')
 <script>

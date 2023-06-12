@@ -1,4 +1,17 @@
 <div>
+    @if($noData)
+        <div class="py-12">
+            <div class="mx-auto flex">
+                <div class="mt-4 px-4 sm:px-6 lg:px-8 bg-white py-4 shadow rounded w-full md:w-1/2 md:mx-auto">
+                    <div class="sm:flex sm:items-center">
+                        <div class="sm:flex-auto">
+                            <h1 class="text-base font-semibold leading-6 text-gray-900">No data available</h1>
+                        </div>
+                    </div>
+                </div>
+            </div> 
+        </div>
+    @else
     <livewire:company-report-navbar :navbar="$navbar" :activeIndex="$activeIndex" :activeSubIndex="$activeSubIndex" />
     <div class="py-12">
         <div class="mx-auto">
@@ -29,6 +42,7 @@
             </div>
         </div>
     </div>
+    @endif
 </div>
 @push('scripts')
 <script>

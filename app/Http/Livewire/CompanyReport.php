@@ -17,6 +17,7 @@ class CompanyReport extends Component
     public $activeIndex = '';
     public $activeSubIndex = '';
     public $data;
+    public $noData = false;
     protected $request;
     protected $rowCount = 0;
 
@@ -156,6 +157,10 @@ class CompanyReport extends Component
         foreach($collection as $value) {
             $navbar[$value->statement_group][] = ['statement' => $value->statement,'id' => $value->id, 'title' => $value->title];
         }
+        if ($navbar === []) {
+            $this->noData = true;
+            return;
+        }
 
         $this->activeIndex = 'Financial Statements [Financial Statements]';
         $this->activeSubIndex = $navbar[$this->activeIndex][0]['id'];
@@ -170,6 +175,9 @@ class CompanyReport extends Component
         $this->ticker = $ticker;
         $this->period = $period;
         $this->getNavbar();
+        if ($this->noData === true) {
+            return;
+        }
         $this->getData();
     }
 

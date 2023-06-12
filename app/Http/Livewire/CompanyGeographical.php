@@ -14,6 +14,7 @@ class CompanyGeographical extends Component
     public $segments;
     public $table;
     public $json;
+    public $noData = false;
     protected $request;
 
    protected $listeners = ['periodChange'];
@@ -30,6 +31,11 @@ class CompanyGeographical extends Component
         $geographical = [];
         $dates = [];
         $segments = [];
+
+        if ($json === null) {
+            $this->noData = true;
+            return;
+        }
 
         foreach($data as $date) {
             $key = array_key_first($date);
@@ -49,6 +55,9 @@ class CompanyGeographical extends Component
    }
 
    public function renderTable() {
+        if($this->noData) {
+            return;
+        }
         $i = 0;
         $class = '';
         $table = '<table class="table-auto min-w-full data"><thead><tr>';
