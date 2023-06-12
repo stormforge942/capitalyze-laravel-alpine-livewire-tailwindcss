@@ -41,6 +41,7 @@ Route::get('/company/{ticker}/summary', [CompanyController::class, 'summary'])->
 Route::get('/company/{ticker}/filings', [CompanyController::class, 'filings'])->name('company.filings');
 Route::get('/company/{ticker}/insider', [CompanyController::class, 'insider'])->name('company.insider');
 Route::get('/company/{ticker}/restatement', [CompanyController::class, 'restatement'])->name('company.restatement');
+Route::get('/company/{ticker}/employee', [CompanyController::class, 'employee'])->name('company.employee');
 
 /*
 | Fund routing

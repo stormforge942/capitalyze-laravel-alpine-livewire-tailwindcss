@@ -46,6 +46,8 @@
             <livewire:company-insider :company="$company" :ticker="$ticker" :period="$period" />
             @elseif($tab == 'restatement')
             <livewire:company-restatement :company="$company" :ticker="$ticker" :period="$period" />
+            @elseif($tab == 'employee')
+            <livewire:company-employee-count :company="$company" :ticker="$ticker" :period="$period" />
             @endif
         </main>
     </div>
