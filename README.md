@@ -112,6 +112,42 @@ npm run dev
 
 - You can use Xdebug for debugging PHP. Follow the [official documentation](https://xdebug.org/docs/install) for installation and setup.
 
+To debug SQL queries we use papertrail as you can see in logging.php
+
+```php
+'papertrail' => [
+            'driver' => 'monolog',
+            'level' => 'debug',
+            'handler' => SocketHandler::class,
+            'handler_with' => [
+                'connectionString' => 'tls://'.env('PAPERTRAIL_URL').':'.env('PAPERTRAIL_PORT'),
+            ],
+        ],
+```
+and inside AppServiceProvider.php
+
+```php
+    public function boot()
+    {
+        if (App::environment('production')) {
+            DB::listen(function($query) {
+                Log::stack(['papertrail'])->debug(
+                    "Query: {$query->sql}, Bindings: ".json_encode($query->bindings).", Time: {$query->time}"
+                );
+            });
+        }
+        // log DB request local to termninal for debugging purposes
+        if (App::environment('local')) {
+            DB::listen(function($query) {
+                Log::debug(
+                    "Query: {$query->sql}, Bindings: ".json_encode($query->bindings).", Time: {$query->time}"
+                );
+            });
+        }
+    }
+```
+to access the papertrail interface, you need to be invited, so please ask for an account.
+
 ## Deployment
 
 #### 1. Install the Vapor CLI if you haven't already:
