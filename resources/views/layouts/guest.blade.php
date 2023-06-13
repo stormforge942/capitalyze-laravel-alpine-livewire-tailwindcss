@@ -18,7 +18,12 @@
         <x-jet-banner />
 
          <div class="min-h-screen bg-gray-100">
-         @livewire('navigation-menu-guest')
+         @auth
+            @livewire('navigation-menu')
+        @else
+            @livewire('navigation-menu-guest')
+        @endauth
+
         <!-- Page Content -->
             <main>
                 {{ $slot }}

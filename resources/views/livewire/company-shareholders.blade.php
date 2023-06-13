@@ -18,3 +18,24 @@
         </div>
     </div>
 </div>
+
+@push('scripts')
+    <script>
+        document.addEventListener('livewire:load', function () {
+            Livewire.hook('message.processed', () => {
+                updateUrl();
+            });
+
+            function updateUrl() {
+                const selectedQuarter = document.getElementById('quarter-select').value;
+                const url = new URL(window.location.href);
+                url.searchParams.set('Quarter-to-view', selectedQuarter);
+                window.history.pushState({}, '', url);
+            }
+
+            window.livewire.on('updateUrl', (data) => {
+                updateUrl();
+            });
+        });
+    </script>
+@endpush

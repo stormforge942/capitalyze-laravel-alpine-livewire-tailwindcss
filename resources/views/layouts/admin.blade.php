@@ -25,21 +25,11 @@
 
     <div class="min-h-screen bg-gray-100">
         @livewire('navigation-menu')
-        <livewire:fund-navbar :fund="$fund" />
+        {{-- <livewire:admin-navbar /> --}}
         <!-- Page Content -->
         <main>
-            @if($tab == 'summary')
-            <livewire:fund-summary :fund="$fund" :cik="$cik" />
-            @elseif($tab == 'holdings')
-            <livewire:fund-holdings :fund="$fund" :cik="$cik" />
-            @elseif($tab == 'metrics')
-            <livewire:fund-metrics :fund="$fund" :cik="$cik" />
-            @elseif($tab == 'insider')
-            <livewire:fund-insider :fund="$fund" :cik="$cik" />
-            @elseif($tab == 'filings')
-            <livewire:fund-filings :fund="$fund" :cik="$cik" />
-            @elseif($tab == 'restatement')
-            <livewire:fund-restatement :fund="$fund" :cik="$cik" />
+            @if($tab == 'users')
+            <livewire:admin-users />
             @endif
         </main>
     </div>

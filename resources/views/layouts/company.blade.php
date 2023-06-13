@@ -24,7 +24,7 @@
     <x-jet-banner />
 
     <div class="min-h-screen bg-gray-100">
-        @livewire('navigation-menu-guest')
+        @livewire('navigation-menu')
         <livewire:company-navbar :company="$company" :period="$period" />
         <!-- Page Content -->
         <main>

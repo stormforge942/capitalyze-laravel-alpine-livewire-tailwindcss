@@ -5,6 +5,7 @@ namespace App\Http\Livewire;
 use Livewire\Component;
 use App\Models\CompanyFilings;
 use Carbon\Carbon;
+use Illuminate\Http\Request;
 
 class CompanyShareholders extends Component
 {
@@ -14,19 +15,27 @@ class CompanyShareholders extends Component
     public string $selectedQuarter = '';
     public array $quarters = [];
 
-    public function mount($company, $ticker, $period)
+    public function mount($company, $ticker, $period, Request $request)
     {
         $this->company = $company;
         $this->ticker = $ticker;
         $this->period = $period;
         $this->quarters = $this->generateQuarters();
-        $this->selectedQuarter = array_key_first($this->quarters);
-        $this->updatedSelectedQuarter();
+
+        $selectedQuarter = $request->query('Quarter-to-view');
+        if ($selectedQuarter && array_key_exists($selectedQuarter, $this->quarters)) {
+            $this->selectedQuarter = $selectedQuarter;
+        } else {
+            $this->selectedQuarter = array_key_first($this->quarters);
+        }
+
+        $this->updated('selectedQuarter', $this->selectedQuarter);
     }
 
     public function updatedSelectedQuarter()
     {
         $this->emitTo('company-shareholders-table', 'quarterChanged', $this->selectedQuarter);
+        $this->dispatchBrowserEvent('updateUrl', ['selectedQuarter' => $this->selectedQuarter]);
     }
 
     public function generateQuarters()

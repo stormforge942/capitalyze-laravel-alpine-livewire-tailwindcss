@@ -15,29 +15,7 @@
                     <x-jet-nav-link href="{{ route('home') }}" :active="request()->routeIs('home')">
                         {{ __('Home') }}
                     </x-jet-nav-link>
-                    <x-jet-nav-link href="{{ route('earnings-calendar') }}" :active="request()->routeIs('earnings-calendar')">
-                        {{ __('Earnings Calendar') }}
-                    </x-jet-nav-link>
-                    <x-jet-nav-link href="{{ route('company-filings') }}" :active="request()->routeIs('company-filings')">
-                        {{ __('Company Filings') }}
-                    </x-jet-nav-link>
-                    <x-jet-nav-link href="{{ route('fund-filings') }}" :active="request()->routeIs('fund-filings')">
-                        {{ __('Funds Filings') }}
-                    </x-jet-nav-link>
                 </div>
-            </div>
-
-            <div class="hidden sm:flex justify-center justify-items-stretch m-auto flex-grow px-10">
-                <button wire:click="$emit('spotlight.toggle')" class="h-8 w-full grid grid-cols-5 mx-auto max-w-md">
-                    <span class="border-2 border-gray-200 border-r-0 text-sm font-medium leading-5 text-gray-500 justify-self-stretch col-span-4 text-left h-8 px-2 py-1">
-                    {{ __('Search Stocks, Tickers ...') }}
-                    </span>
-                    <div class="bg-blue-500 h-8 px-2 py-1 text-center flex flex-row">
-                        <svg class="h-5 w-5 text-md font-medium leading-5 text-white m-auto" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" viewBox="0 0 24 24">
-                            <path d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"></path>
-                        </svg>
-                    </div>
-                </button>
             </div>
 
             <div class="hidden sm:flex sm:items-center sm:ml-6">
@@ -64,11 +42,11 @@
                                 {{ __('Account') }}
                             </div>
 
-                            <x-jet-dropdown-link href="{{ route('profile.show') }}">
+                            <x-jet-dropdown-link href="{{ route('login') }}">
                                 {{ __('login') }}
                             </x-jet-dropdown-link>
 
-                            <x-jet-dropdown-link href="{{ route('profile.show') }}">
+                            <x-jet-dropdown-link href="{{ route('register') }}">
                                 {{ __('Register') }}
                             </x-jet-dropdown-link>
 
@@ -119,17 +97,11 @@
                 <x-jet-responsive-nav-link href="{{ route('home') }}" :active="request()->routeIs('home')">
                         {{ __('Home') }}
                     </x-jet-responsive-nav-link>
-                    <x-jet-responsive-nav-link href="{{ route('earnings-calendar') }}" :active="request()->routeIs('earnings-calendar')">
-                        {{ __('Earnings Calendar') }}
-                    </x-jet-responsive-nav-link>
-                    <x-jet-responsive-nav-link href="{{ route('company-filings') }}" :active="request()->routeIs('company-filings')">
-                        {{ __('Company Filings') }}
-                    </x-jet-responsive-nav-link>
-                    <x-jet-responsive-nav-link href="{{ route('fund-filings') }}" :active="request()->routeIs('fund-filings')">
-                        {{ __('Funds Filings') }}
-                    </x-jet-responsive-nav-link>
-                <x-jet-responsive-nav-link href="{{ route('login') }}" :active="request()->routeIs('profile.show')">
+                <x-jet-responsive-nav-link href="{{ route('login') }}" :active="request()->routeIs('login')">
                     {{ __('Login') }}
+                </x-jet-responsive-nav-link>
+                <x-jet-responsive-nav-link href="{{ route('register') }}" :active="request()->routeIs('register')">
+                    {{ __('Register') }}
                 </x-jet-responsive-nav-link>
 
                 <!-- Authentication -->

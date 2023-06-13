@@ -124,7 +124,7 @@ final class CompanyShareholdersTable extends PowerGridComponent
         return PowerGrid::eloquent()
             ->addColumn('investor_name') // Fund
             ->addColumn('investor_name_formated', function (CompanyFilings $companyFilings) {
-                return ('<a class="text-blue-500" href="/fund/'.$companyFilings->cik.'">'.Str::title($companyFilings->investor_name) . (!empty($companyFilings->put_call) ? ' <span class="text-sm font-bold">(' . $companyFilings->put_call . ')</span></a>' : '</a>'));
+                return ('<a class="text-blue-500" href="/fund/'.$companyFilings->cik.'/holdings?Quarter-to-view='.$this->selectedQuarter.'">'.Str::title($companyFilings->investor_name) . (!empty($companyFilings->put_call) ? ' <span class="text-sm font-bold">(' . $companyFilings->put_call . ')</span></a>' : '</a>'));
             }) // Fund
             ->addColumn('ssh_prnamt', function(CompanyFilings $companyFilings) {
                 return number_format($companyFilings->ssh_prnamt);
