@@ -1,66 +1,143 @@
-<p align="center"><a href="https://laravel.com" target="_blank"><img src="https://raw.githubusercontent.com/laravel/art/master/logo-lockup/5%20SVG/2%20CMYK/1%20Full%20Color/laravel-logolockup-cmyk-red.svg" width="400" alt="Laravel Logo"></a></p>
+# Xbrl Explorer
 
-<p align="center">
-<a href="https://travis-ci.org/laravel/framework"><img src="https://travis-ci.org/laravel/framework.svg" alt="Build Status"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/dt/laravel/framework" alt="Total Downloads"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/v/laravel/framework" alt="Latest Stable Version"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/l/laravel/framework" alt="License"></a>
-</p>
+Xbrl Explorer is a Laravel 9 application that utilizes Livewire, Jetstream, and Sushi for a seamless user experience.
 
-## About Laravel
+## Table of Contents
 
-Laravel is a web application framework with expressive, elegant syntax. We believe development must be an enjoyable and creative experience to be truly fulfilling. Laravel takes the pain out of development by easing common tasks used in many web projects, such as:
+- [Requirements](#requirements)
+- [Getting Started](#getting-started)
+- [Running the Project Locally](#running-the-project-locally)
+- [Debugging](#debugging)
+- [Deployment](#deployment)
 
-- [Simple, fast routing engine](https://laravel.com/docs/routing).
-- [Powerful dependency injection container](https://laravel.com/docs/container).
-- Multiple back-ends for [session](https://laravel.com/docs/session) and [cache](https://laravel.com/docs/cache) storage.
-- Expressive, intuitive [database ORM](https://laravel.com/docs/eloquent).
-- Database agnostic [schema migrations](https://laravel.com/docs/migrations).
-- [Robust background job processing](https://laravel.com/docs/queues).
-- [Real-time event broadcasting](https://laravel.com/docs/broadcasting).
+## Requirements
 
-Laravel is accessible, powerful, and provides tools required for large, robust applications.
+Before you proceed, make sure you have the following software installed on your system:
 
-## Learning Laravel
+- PHP >= 8.0.2
+- Composer
+- Node.js >= v18 (you can install nvm for better compatibility)
+- Yarn
+- Docker (For local development)
+- Laravel Vapor CLI (For production deployment)
 
-Laravel has the most extensive and thorough [documentation](https://laravel.com/docs) and video tutorial library of all modern web application frameworks, making it a breeze to get started with the framework.
+## Getting Started
 
-You may also try the [Laravel Bootcamp](https://bootcamp.laravel.com), where you will be guided through building a modern Laravel application from scratch.
+#### 1. Clone the repository:
 
-If you don't feel like reading, [Laracasts](https://laracasts.com) can help. Laracasts contains over 2000 video tutorials on a range of topics including Laravel, modern PHP, unit testing, and JavaScript. Boost your skills by digging into our comprehensive video library.
+```sh
+git clone https://github.com/Financestime/xbrl-explorer-laravel
+cd xbrl-explorer-laravel
+```
 
-## Laravel Sponsors
+#### 2. Install PHP dependencies:
 
-We would like to extend our thanks to the following sponsors for funding Laravel development. If you are interested in becoming a sponsor, please visit the Laravel [Patreon page](https://patreon.com/taylorotwell).
+```sh
+composer install
+```
+When you'll be installing the project for the first time you'll be prompted for a licence for wire-elements-pro. Either use your own licence or this one :
+```sh
+arnaud.schoenher@hochi.fr
+1ff6bd4d-4b37-4caf-b2a1-7a62236fd13e
+```
 
-### Premium Partners
+#### 3. Install Node.js dependencies:
+If you have nvm installed :
+```sh
+nvm use
+```
+then :
+```sh
+yarn install
+```
+or : 
+```sh
+npm i
+```
 
-- **[Vehikl](https://vehikl.com/)**
-- **[Tighten Co.](https://tighten.co)**
-- **[Kirschbaum Development Group](https://kirschbaumdevelopment.com)**
-- **[64 Robots](https://64robots.com)**
-- **[Cubet Techno Labs](https://cubettech.com)**
-- **[Cyber-Duck](https://cyber-duck.co.uk)**
-- **[Many](https://www.many.co.uk)**
-- **[Webdock, Fast VPS Hosting](https://www.webdock.io/en)**
-- **[DevSquad](https://devsquad.com)**
-- **[Curotec](https://www.curotec.com/services/technologies/laravel/)**
-- **[OP.GG](https://op.gg)**
-- **[WebReinvent](https://webreinvent.com/?utm_source=laravel&utm_medium=github&utm_campaign=patreon-sponsors)**
-- **[Lendio](https://lendio.com)**
+#### 4. Copy the `.env.example` file to create a `.env` file.
+
+```sh
+cp .env.example .env
+```
+
+#### 5. Generate an app encryption key:
+
+```sh
+php artisan key:generate
+```
+
+#### 6. Start the Docker containers for the database (locally):
+
+```sh
+docker-compose up -d
+```
+
+#### 7. Run the database migrations:
+
+```sh
+php artisan migrate
+```
+
+#### 8. Import companies and funds:
+
+```sh
+php artisan company:import
+php artisan fund:import
+```
+
+#### 9. Create your first admin user:
+
+```sh
+php artisan create:admin Username email@example.com 'password'
+```
+
+## Running the Project Locally
+
+#### 1. Start the Laravel development server:
+
+```sh
+php artisan serve
+```
+
+#### 2. Visit `http://localhost:8000` in your browser.
+
+#### 3. On a different tab of your command line, run the live css compilator:
+
+```sh
+npm run dev
+```
+
+## Debugging
+
+- You can use Xdebug for debugging PHP. Follow the [official documentation](https://xdebug.org/docs/install) for installation and setup.
+
+## Deployment
+
+#### 1. Install the Vapor CLI if you haven't already:
+
+```sh
+composer global require laravel/vapor-cli
+```
+
+#### 2. Log in to your Vapor account:
+
+```sh
+vapor login
+```
+
+#### 3. Deploy the project:
+
+```sh
+vapor deploy [environment]
+```
+
+> Note: Replace `[environment]` with the environment name you are deploying to, as configured in your `vapor.yml` file (e.g. `production` or `staging`).
 
 ## Contributing
 
-Thank you for considering contributing to the Laravel framework! The contribution guide can be found in the [Laravel documentation](https://laravel.com/docs/contributions).
-
-## Code of Conduct
-
-In order to ensure that the Laravel community is welcoming to all, please review and abide by the [Code of Conduct](https://laravel.com/docs/contributions#code-of-conduct).
-
-## Security Vulnerabilities
-
-If you discover a security vulnerability within Laravel, please send an e-mail to Taylor Otwell via [taylor@laravel.com](mailto:taylor@laravel.com). All security vulnerabilities will be promptly addressed.
+Guidelines for contributing to this project.
 
 ## License
 
-The Laravel framework is open-sourced software licensed under the [MIT license](https://opensource.org/licenses/MIT).
+This project is copyrighted.
