@@ -9,7 +9,6 @@ use App\Http\Livewire\EarningsCalendar;
 use App\Http\Controllers\AdminController;
 use Laravel\Fortify\Http\Controllers\AuthenticatedSessionController;
 
-
 /*
 |--------------------------------------------------------------------------
 | Web Routes
@@ -22,10 +21,15 @@ use Laravel\Fortify\Http\Controllers\AuthenticatedSessionController;
 */
 
 Route::get('/', function () {
+    if (auth()->check() && (auth()->user()->is_approved == false || !auth()->user()->hasVerifiedEmail())) {
+        return redirect()->route('waiting-for-approval');
+    }
+    
     return view('welcome');
 })->name('home');
 
-Route::middleware(['auth'])->group(function () {
+
+Route::middleware(['auth', 'approved', 'verified'])->group(function () {
     /*
     | Global routes
     */
@@ -50,7 +54,6 @@ Route::middleware(['auth'])->group(function () {
     /*
     | Fund routing
     */
-
     Route::get('/fund/{cik}/', [FundController::class, 'summary'])->name('fund.summary');
     Route::get('/fund/{cik}/holdings', [FundController::class, 'holdings'])->name('fund.holdings');
     Route::get('/fund/{cik}/metrics', [FundController::class, 'metrics'])->name('fund.metrics');
@@ -59,22 +62,24 @@ Route::middleware(['auth'])->group(function () {
     Route::get('/fund/{ticker}/restatement', [FundController::class, 'restatement'])->name('fund.restatement');
 });
 
-Route::middleware([
-    'auth:sanctum',
-    config('jetstream.auth_session'),
-    'verified'
-])->group(function () {
-    Route::get('/dashboard', function () {
-        return view('dashboard');
-    })->name('dashboard');
+Route::middleware(['auth', 'verified', 'ensureUserIsApproved'])->group(function () {
+    Route::middleware(['auth:sanctum', config('jetstream.auth_session')])->group(function () {
+        Route::get('/dashboard', function () {
+            return view('welcome');
+        })->name('dashboard');
+    });
+
+    Route::middleware(['auth:sanctum', 'verified', 'ensureUserIsAdmin'])->group(function () {
+        Route::get('/admin/users', [AdminController::class, 'index'])->name('admin.users');
+        // You can add more routes here that should be subject to the same middleware
+    });
 });
 
-
-Route::middleware(['auth:sanctum', 'verified', 'ensureUserIsAdmin'])->group(function () {
-    Route::get('/admin/users', [App\Http\Controllers\AdminController::class, 'index'])->name('admin.users');
-    // You can add more routes here that should be subject to the same middleware
+Route::middleware(['auth', 'custom.email.verification'])->group(function () {
+    Route::get('/waiting-for-approval', function () {
+        return view('waiting-for-approval');
+    })->name('waiting-for-approval');
 });
-
 
 // Routes for guests
 Route::middleware(['guest'])->group(function () {
@@ -82,10 +87,5 @@ Route::middleware(['guest'])->group(function () {
     Route::post('/login', [AuthenticatedSessionController::class, 'store']);
 });
 
-// Routes for authenticated users
-Route::middleware(['auth:sanctum', config('jetstream.auth_session')])->group(function () {
-    Route::post('/logout', [AuthenticatedSessionController::class, 'destroy'])->name('logout');
-    Route::get('/dashboard', function () {
-        return view('dashboard');
-    })->name('dashboard');
-});
+// Logout route accessible to all users
+Route::post('/logout', [AuthenticatedSessionController::class, 'destroy'])->name('logout');

@@ -108,6 +108,16 @@ php artisan serve
 npm run dev
 ```
 
+#### 3. Handling e-mails
+
+In order to test e-mails locally, you need to install mailhog
+
+on mac :
+
+```sh
+brew install mailhog
+```
+
 ## Debugging
 
 - You can use Xdebug for debugging PHP. Follow the [official documentation](https://xdebug.org/docs/install) for installation and setup.

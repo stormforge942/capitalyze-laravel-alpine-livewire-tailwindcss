@@ -7,6 +7,10 @@ use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Validator;
 use Laravel\Fortify\Contracts\CreatesNewUsers;
 use Laravel\Jetstream\Jetstream;
+use App\Notifications\NewUser;
+use App\Http\Responses\CustomRegisterResponse;
+use Laravel\Fortify\Contracts\RegisterResponse;
+
 
 class CreateNewUser implements CreatesNewUsers
 {
@@ -26,12 +30,20 @@ class CreateNewUser implements CreatesNewUsers
             'password' => $this->passwordRules(),
             'terms' => Jetstream::hasTermsAndPrivacyPolicyFeature() ? ['accepted', 'required'] : '',
         ])->validate();
-
-        return User::create([
+    
+        $newUser = User::create([
             'name' => $input['name'],
             'email' => $input['email'],
             'password' => Hash::make($input['password']),
             'is_approved' => false, // New users are not approved by default
         ]);
-    }
+    
+        $admins = User::where('is_admin', true)->get(); // Fetch all admins
+    
+        foreach ($admins as $admin) {
+            $admin->notify(new NewUser($newUser)); // Notify each admin about new user
+        }
+
+        return $newUser;
+    }    
 }

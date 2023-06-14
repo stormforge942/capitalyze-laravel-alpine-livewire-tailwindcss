@@ -18,8 +18,12 @@
         <x-jet-banner />
 
          <div class="min-h-screen bg-gray-100">
-         @auth
-            @livewire('navigation-menu')
+        @auth
+            @if(auth()->user()->is_approved && auth()->user()->hasVerifiedEmail())
+                @livewire('navigation-menu')
+            @else
+                @livewire('navigation-menu-guest')
+            @endif
         @else
             @livewire('navigation-menu-guest')
         @endauth

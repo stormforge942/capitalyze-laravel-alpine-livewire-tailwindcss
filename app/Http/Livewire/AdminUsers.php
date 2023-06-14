@@ -33,14 +33,14 @@ class AdminUsers extends Component
     public function approveUser($userId)
     {
         $user = User::find($userId);
-        $user->approved = true;
+        $user->is_approved = true;
         $user->save();
     }
 
     public function disapproveUser($userId)
     {
         $user = User::find($userId);
-        $user->approved = false;
+        $user->is_approved = false;
         $user->save();
     }
 }

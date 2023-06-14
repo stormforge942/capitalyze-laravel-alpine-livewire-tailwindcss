@@ -20,7 +20,13 @@
         <x-jet-banner />
 
         <div class="min-h-screen bg-gray-100">
-            @livewire('navigation-menu')
+            @auth
+                @if(auth()->user()->is_approved && auth()->user()->hasVerifiedEmail())
+                    @livewire('navigation-menu')
+                @else
+                    @livewire('navigation-menu-guest')
+                @endif
+            @endauth
 
             <!-- Page Heading -->
             @if (isset($header))
