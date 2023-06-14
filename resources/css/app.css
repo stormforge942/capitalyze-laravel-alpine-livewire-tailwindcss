@@ -1,6 +1,7 @@
 @import "../../vendor/wire-elements/pro/resources/css/tailwind/overlay-component.css";
 @import "../../vendor/wire-elements/pro/resources/css/tailwind/spotlight-component.css";
 @import '../../node_modules/flowbite-datepicker/tailwind.css';
+@import '../../node_modules/sweetalert2/dist/sweetalert2.css';
 @tailwind base;
 @tailwind components;
 @tailwind utilities;

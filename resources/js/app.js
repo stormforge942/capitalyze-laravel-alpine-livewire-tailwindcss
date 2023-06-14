@@ -7,6 +7,8 @@ import NotificationsAlpinePlugin from '../../vendor/filament/notifications/dist/
 import "./../../vendor/power-components/livewire-powergrid/dist/powergrid";
 import "./../../vendor/power-components/livewire-powergrid/dist/powergrid.css";
 import './datepicker.js';
+import Swal from 'sweetalert2';
+window.Swal = Swal;
 
 window.Alpine = Alpine;
 

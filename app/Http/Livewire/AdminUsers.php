@@ -12,6 +12,10 @@ class AdminUsers extends Component
 
     public $sortBy = 'created_at';
     public $sortDirection = 'desc';
+    public $confirmingUserDeletion = false;
+    public $userToDelete;
+
+    protected $listeners = ['performUserDeletion'];
 
     public function render()
     {
@@ -43,4 +47,23 @@ class AdminUsers extends Component
         $user->is_approved = false;
         $user->save();
     }
+
+    public function deleteUser($userId)
+    {
+        $this->userToDelete = User::find($userId);
+        $this->dispatchBrowserEvent('swal:confirming-user-deletion', [
+            'title' => __('Confirm User Deletion'),
+            'text' => __('Are you sure you want to delete this user?'),
+            'type' => 'warning',
+            'confirmButtonText' => __('Delete User'),
+            'cancelButtonText' => __('Cancel'),
+        ]);
+    }    
+
+    public function performUserDeletion()
+    {
+        $this->userToDelete->delete();
+        $this->confirmingUserDeletion = false;
+    }
+
 }
