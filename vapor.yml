@@ -4,7 +4,7 @@ environments:
     production:
         timeout: 30
         cli-timeout: 600
-        domain: xbrl-explorer.com
+        domain: capitalyze.com
         database: xbrl-front-us
         memory: 1024
         cli-memory: 512
