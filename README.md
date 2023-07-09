@@ -1,4 +1,4 @@
-# Xbrl Explorer
+# Capitalyze Web
 
 Xbrl Explorer is a Laravel 9 application that utilizes Livewire, Jetstream, and Sushi for a seamless user experience.
 
