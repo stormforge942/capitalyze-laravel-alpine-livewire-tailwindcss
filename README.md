@@ -26,7 +26,7 @@ Before you proceed, make sure you have the following software installed on your 
 #### 1. Clone the repository:
 
 ```sh
-git clone https://github.com/Financestime/xbrl-explorer-laravel
+git clone git@github.com:Capitalyze-Inc/capitalyze-web.git
 cd xbrl-explorer-laravel
 ```
 
@@ -37,8 +37,8 @@ composer install
 ```
 When you'll be installing the project for the first time you'll be prompted for a licence for wire-elements-pro. Either use your own licence or this one :
 ```sh
-arnaud.schoenher@hochi.fr
-1ff6bd4d-4b37-4caf-b2a1-7a62236fd13e
+axxd.xxx@hxxhi.fr
+1xx4d-4xx7-4xxf-bxx1-7a6xxxxxd13e
 ```
 
 #### 3. Install Node.js dependencies:
