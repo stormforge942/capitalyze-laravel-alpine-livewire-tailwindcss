@@ -18,6 +18,7 @@ class CompanyReport extends Component
     public $activeSubIndex = '';
     public $data;
     public $noData = false;
+    public $skipNext = false;
     protected $request;
     protected $rowCount = 0;
 
@@ -41,6 +42,8 @@ class CompanyReport extends Component
         $output = '';
         $dateValues = [];
         $boldClass = $isBold ? ' font-bold' : '';
+
+       
     
         // If the current array contains any date values, store them in $dateValues
         foreach ($array as $key => $value) {
@@ -48,24 +51,32 @@ class CompanyReport extends Component
                 $dateValues[$key] = $value;
             }
         }
-    
+        
         // Only generate a row if the label is not empty and not '#segmentation'
-        if (!empty($label) && $label !== '#segmentation') {
+        if (!empty($label) && !$this->skipNext && $label !== '#segmentation') {
             $bgClass = $this->rowCount % 2 === 0 ? 'bg-cyan-50' : 'bg-white'; // Change $depth to $rowCount here
             $class = $bgClass . ' hover:bg-blue-200' . $boldClass;
             $output .= '<tr class="' . $class . '">';
             $output .= '<td class="sticky left-0 py-2 break-words lg:max-w-[400px] lg:min-w-[280px] max-w-[150px] text-sm '.$bgClass.'">' . str_repeat('&nbsp;', $depth) . $label . '</td>';
-            
+           
             foreach ($dates as $date) {
                 if (isset($dateValues[$date])) {
                     $value = $dateValues[$date][0];
                     // Check if the value is in USD and format it
                     if (isset($dateValues[$date][1]) && $dateValues[$date][1] === 'USD') {
-                        $value = '$' . number_format($value, 2);
+
+                        if(strpos($value, '|') !== false) {
+                            $value = '$' . number_format(strstr($value, '|', true), 2);
+
+                        } else {
+                            $value = '$' . number_format($value, 2);
+                        }
+
+
                     }
                     // Check if the value starts with '@@@'
                     if (substr($value, 0, 3) === '@@@') {
-                        $hash = substr($value, 3); // Get the value minus the three @
+                        $hash = substr($value, 3).strstr($value, '|', true); // Get the value minus the three @
                         // Add a specific class and a data-hash attribute and display an icon
                         $data = array("hash" => $hash, "ticker" => $this->ticker);
                         $data_json = json_encode($data);
@@ -73,6 +84,8 @@ class CompanyReport extends Component
                         <svg class="w-5 h-5 mx-auto cursor-pointer open-slide" data-value="'.htmlspecialchars($data_json).'" xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" viewBox="0 0 16 16">
                         <path class="open-slide" data-value="'.htmlspecialchars($data_json).'" d="M0 2a2 2 0 0 1 2-2h12a2 2 0 0 1 2 2v12a2 2 0 0 1-2 2H2a2 2 0 0 1-2-2V2zm15 2h-4v3h4V4zm0 4h-4v3h4V8zm0 4h-4v3h3a1 1 0 0 0 1-1v-2zm-5 3v-3H6v3h4zm-5 0v-3H1v2a1 1 0 0 0 1 1h3zm-4-4h4V8H1v3zm0-4h4V4H1v3zm5-3v3h4V4H6zm4 4H6v3h4V8z"></path>
                       </svg></td>';
+                    } else if(strpos($value, '|') !== false) {
+                        $value = '<td class="border-slate-400 p-2 text-sm">' . strstr($value, '|', true) . '</td>';
                     } else {
                         $value = '<td class="border-slate-400 p-2 text-sm">' . $value . '</td>';
                     }
@@ -86,6 +99,13 @@ class CompanyReport extends Component
             $this->rowCount++;
         }
     
+         
+        if($label === '#segmentation') {
+            $label = 'Segmentation';
+            $this->skipNext = true;
+        } else {
+            $this->skipNext = false;
+        }
         // Recursively generate rows for children
         foreach ($array as $key => $value) {
             if (!preg_match('/\d{4}-\d{2}-\d{2}/', $key) && is_array($value)) {
@@ -111,9 +131,9 @@ class CompanyReport extends Component
         $output = '<table class="table-auto min-w-full data-report">';
         $output .= '<thead>';
         $output .= '<tr>';
-        $output .= '<th scope="col" class="whitespace-nowrap px-2 py-3.5 text-left text-sm font-semibold text-gray-900 bg-blue-300">Date</th>';
+        $output .= '<th scope="col" class="sticky left-0 py-2 break-words lg:max-w-[400px] lg:min-w-[280px] max-w-[150px] text-sm text-left	text-gray-900 capitalize bg-white">Date</th>';
         foreach ($dates as $date) {
-            $output .= '<th scope="col" class="whitespace-nowrap px-2 py-3.5 text-left text-sm font-semibold text-gray-900 bg-blue-300">' . $date . '</th>';
+            $output .= '<th scope="col" class="whitespace-nowrap px-2 py-3.5 text-left text-sm font-semibold text-gray-900 ">' . $date . '</th>';
         }
         $output .= '</tr>';
         $output .= '</thead>';

@@ -1,44 +1,32 @@
 <nav x-data="{ open: false }" class="bg-white border-b border-gray-100">
     <!-- Primary Navigation Menu -->
-    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 p-4 sm:ml-64">
         <div class="flex justify-between h-16">
+
+            @if(Request::is('/'))
             <div class="flex justify-self-stretch">
                 <!-- Logo -->
                 <div class="shrink-0 flex items-center">
                     <a href="{{ route('home') }}">
-                        <x-jet-application-mark class="block h-9 w-auto" />
+                    <img src="{{ asset('img/capitalyze-logo.png') }}" class="block h-20 w-auto p-3" alt="Capitalyze Logo">
                     </a>
                 </div>
-
-                <!-- Navigation Links -->
-                <div class="hidden space-x-8 sm:-my-px sm:ml-10 sm:flex">
-                    <x-jet-nav-link href="{{ route('home') }}" :active="request()->routeIs('home')">
-                        {{ __('Home') }}
-                    </x-jet-nav-link>
-                    <x-jet-nav-link href="{{ route('earnings-calendar') }}" :active="request()->routeIs('earnings-calendar')">
-                        {{ __('Earnings Calendar') }}
-                    </x-jet-nav-link>
-                    <x-jet-nav-link href="{{ route('company-filings') }}" :active="request()->routeIs('company-filings')">
-                        {{ __('Company Filings') }}
-                    </x-jet-nav-link>
-                    <x-jet-nav-link href="{{ route('fund-filings') }}" :active="request()->routeIs('fund-filings')">
-                        {{ __('Funds Filings') }}
-                    </x-jet-nav-link>
-                </div>
             </div>
-
+            @endif
+            
             <div class="hidden sm:flex justify-center justify-items-stretch m-auto flex-grow px-10">
-                <button wire:click="$emit('spotlight.toggle')" class="h-8 w-full grid grid-cols-5 mx-auto max-w-md">
-                    <span class="border-2 border-gray-200 border-r-0 text-sm font-medium leading-5 text-gray-500 justify-self-stretch col-span-4 text-left h-8 px-2 py-1">
-                    {{ __('Search Stocks, Tickers ...') }}
+                <button wire:click="$emit('spotlight.toggle')" class="h-10 w-full grid grid-cols-5 mx-auto max-w-lg">
+                    <span class="border-2 border-gray-200 border-r-0 text-sm font-medium leading-7 text-gray-500 justify-self-stretch col-span-4 text-left h-10 px-2 py-1">
+                        {{ __('Search Stocks, Tickers ...') }}
                     </span>
-                    <div class="bg-blue-500 h-8 px-2 py-1 text-center flex flex-row">
+                    <div class="bg-blue-500 h-10 px-2 py-1 text-center flex flex-row">
                         <svg class="h-5 w-5 text-md font-medium leading-5 text-white m-auto" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" viewBox="0 0 24 24">
                             <path d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"></path>
                         </svg>
                     </div>
                 </button>
             </div>
+
 
             <div class="hidden sm:flex sm:items-center sm:ml-6">
 

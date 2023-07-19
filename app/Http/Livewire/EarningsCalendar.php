@@ -5,6 +5,8 @@ namespace App\Http\Livewire;
 use Livewire\Component;
 use Carbon\Carbon;
 use Illuminate\Support\Facades\DB;
+use App\Models\Company;
+
 
 class EarningsCalendar extends Component
 {
@@ -14,9 +16,16 @@ class EarningsCalendar extends Component
     public $endDate;
     public $earningsCalls;
     public $week;
+    public $company;
+    public $period = "annual";
 
     public function mount()
     {
+
+        // only because of left bar needs a default ticker if clicked on it
+        $company = Company::where('ticker', "AAPL")->get()->first();
+        $this->company = $company;
+
         $this->exchanges = DB::connection('pgsql-xbrl')->table('new_earnings')->select('exchange')->distinct()->pluck('exchange')->toArray();
         $this->selectedExchange = 'all';
 

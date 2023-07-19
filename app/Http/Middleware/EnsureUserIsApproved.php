@@ -8,6 +8,7 @@ use Illuminate\Support\Facades\Auth;
 
 class EnsureUserIsApproved
 {
+
     /**
      * Handle an incoming request.
      *
@@ -17,6 +18,8 @@ class EnsureUserIsApproved
      */
     public function handle(Request $request, Closure $next)
     {
+
+
         $user = Auth::user();
 
         if (!$user->hasVerifiedEmail() || !$user->is_approved ) {
