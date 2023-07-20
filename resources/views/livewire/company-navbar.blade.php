@@ -19,11 +19,16 @@
             </x-jet-nav-link>
          </li>
          <li>
-              
+            <x-jet-nav-link href="{{ route('economics-calendar') }}" :active="request()->routeIs('economics-calendar')">
+               {{ __('Economics Calendar') }}
+            </x-jet-nav-link>
+         </li>
+         <li>
+
             <x-jet-nav-link href="{{ route('company-filings') }}" :active="request()->routeIs('company-filings')">
                {{ __('Company Filings') }}
             </x-jet-nav-link>
-                    
+
          </li>
          <li>
             <x-jet-nav-link href="{{ route('fund-filings') }}" :active="request()->routeIs('fund-filings')">
@@ -96,7 +101,7 @@
                     :active="$currentRoute === 'company.employee'" />
             </li>
          </ul>
-        
+
    </div>
 </aside>
 

@@ -6,6 +6,7 @@ use App\Http\Controllers\FundController;
 use App\Http\Livewire\CompanyFilingsPage;
 use App\Http\Livewire\FundFilingsPage;
 use App\Http\Livewire\EarningsCalendar;
+use App\Http\Livewire\EconomicsCalendar;
 use App\Http\Controllers\AdminController;
 use Laravel\Fortify\Http\Controllers\AuthenticatedSessionController;
 
@@ -24,7 +25,7 @@ Route::get('/', function () {
     if (auth()->check() && (auth()->user()->is_approved == false || !auth()->user()->hasVerifiedEmail())) {
         return redirect()->route('waiting-for-approval');
     }
-    
+
     return view('welcome');
 })->name('home');
 
@@ -33,7 +34,8 @@ Route::middleware(['auth', 'approved', 'verified'])->group(function () {
     /*
     | Global routes
     */
-    Route::get('/calendar', EarningsCalendar::class)->name('earnings-calendar');
+    Route::get('/calendar/earnings', EarningsCalendar::class)->name('earnings-calendar');
+    Route::get('/calendar/economics', EconomicsCalendar::class)->name('economics-calendar');
     Route::get('/company-filings', CompanyFilingsPage::class)->name('company-filings');
     Route::get('/fund-filings', FundFilingsPage::class)->name('fund-filings');
 
