@@ -30,7 +30,7 @@ class EconomicsCalendar extends Component
         $this->startDate = Carbon::now()->startOfWeek()->toDateString();
         $this->endDate = Carbon::now()->endOfWeek()->toDateString();
 
-        // Load the earnings calls
+        // Load the economics calls
         $this->loadEconomicReleasesCalls();
         $this->week = Carbon::now()->format('Y-\WW');
     }
@@ -40,7 +40,7 @@ class EconomicsCalendar extends Component
         $this->startDate = Carbon::parse($this->startDate)->addWeek()->startOfWeek()->toDateString();
         $this->endDate = Carbon::parse($this->endDate)->addWeek()->endOfWeek()->toDateString();
 
-        // Reload the earnings calls
+        // Reload the economics calls
         $this->loadEconomicReleasesCalls();
     }
 
@@ -49,7 +49,7 @@ class EconomicsCalendar extends Component
         $this->startDate = Carbon::parse($this->startDate)->subWeek()->startOfWeek()->toDateString();
         $this->endDate = Carbon::parse($this->endDate)->subWeek()->endOfWeek()->toDateString();
 
-        // Reload the earnings calls
+        // Reload the economics calls
         $this->loadEconomicReleasesCalls();
     }
 
@@ -58,13 +58,13 @@ class EconomicsCalendar extends Component
         $this->startDate = Carbon::parse($week)->startOfWeek()->toDateString();
         $this->endDate = Carbon::parse($week)->endOfWeek()->toDateString();
 
-        // Reload the earnings calls
+        // Reload the economics calls
         $this->loadEconomicReleasesCalls();
     }
 
     public function render()
     {
-        // Reload the earnings calls
+        // Reload the economics calls
         $this->loadEconomicReleasesCalls();
 
         return view('livewire.economics-calendar', [
