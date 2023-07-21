@@ -10,17 +10,11 @@
                     <div class="mx-auto px-4 sm:px-6 lg:px-8 bg-white py-4 shadow md:mx-8 rounded md:w-12/14 2xl:w-2/3 w-full">
                         <div class="sm:flex sm:items-center">
                             <div class="sm:flex-auto text-center">
-                                <h1 class="text-xl font-bold leading-10 text-gray-900">Earnings Calendar - {{ $formattedDate }}</h1>
+                                <h1 class="text-xl font-bold leading-10 text-gray-900">Economics Calendar - {{ $formattedDate }}</h1>
                             </div>
                         </div>
                         <div class="flex justify-between mb-3 mt-3">
                             <button wire:click="previousWeek" class="text-gray-500"><x-heroicon-s-chevron-left class="w-4 h-6 inline-block align-text-bottom"/> Previous Week</button>
-                            <select id="exchange-select" wire:model="selectedExchange" class="border-b-2">
-                                <option value="all">All Exchanges</option>
-                                @foreach($exchanges as $exchange)
-                                    <option value="{{ $exchange }}">{{ $exchange }}</option>
-                                @endforeach
-                            </select>
 
                             <input type="week" wire:model="week" wire:change="selectWeek($event.target.value)" class="border-b border-cyan-500">
 
@@ -37,31 +31,31 @@
                         </div>
                         <div class="overflow-x-scroll">
                             <table class="table-auto w-full overflow-scroll" wire:loading.remove>
-                                @foreach($earningsCalls->sortBy(function ($call) { return $call->date . ' ' . $call->time; })->groupBy('date') as $date => $calls)
+                                    @if($is_last_events) 
                                     <tr>
-                                        <td colspan="4" class="font-bold py-4">{{ $date }}</td>
+                                        <td colspan="3" class="font-bold py-4">There is no data on this week. Showing Last 10 Records</td>
                                     </tr>
-                                    <tr>
-                                        <td class="font-semibold py-4">Company name</td>
-                                        <td class="font-semibold py-4">Symbol</td>
-                                        <td class="font-semibold py-4">Exchange</td>
-                                        <td class="font-semibold py-4">Time</td>
-                                        <td class="font-semibold py-4">Origin</td>
-                                        <td class="font-semibold py-4">reported time</td>
-                                        <td class="font-semibold py-4">Url</td>
-                                    </tr>
-                                    @foreach($calls as $call)
+                                    @endif
+                                    
+                                    @foreach($outputEventsData as $date => $events)
                                         <tr>
-                                            <td class="break-all">@if(isset($call->company_name)) {{ $call->company_name }} @else {{ $call->symbol }} @endif</td>
-                                            <td class="px-2">{{ $call->symbol }}</td>
-                                            <td class="px-2">{{ $call->exchange }}</td>
-                                            <td class="px-2">{{ $call->time }}</td>
-                                            <td class="px-2">{{ $call->origin }}</td>
-                                            <td class="px-2">@if(isset($call->acceptance_time)) {{ substr($call->acceptance_time, 0, 10) }} @else {{ $call->pub_date }} @endif</td>
-                                            <td class="px-2"><a href="{{ $call->url }}" target="_blank">More Info</a></td>
+                                            <td colspan="3" class="font-bold py-4">{{ $date }}</td>
                                         </tr>
+                                        <tr>
+                                            <td class="font-semibold py-4">Name</td>
+                                            <td class="font-semibold py-4">Source</td>
+                                        </tr>
+                                        @foreach($events as $event)
+                                        <tr>
+                                            <td class="break-all px-2"><a href="{{ route('economics-release', ['release_id' => $event->release_id]) }}">{{ isset($event->name) ? $event->name : 'Release' }}</a></td>
+                                            @if(isset($event->source))
+                                            <td class="px-2"><a class="text-blue-700" href="{{ $event->source }}" target="_blank" rel="noreferrer nofollow">More Info</a></td>
+                                            @else
+                                            <td class="px-2">No Source</td>
+                                            @endif
+                                        </tr>
+                                        @endforeach
                                     @endforeach
-                                @endforeach
                             </table>
                         </div>
                     </div>

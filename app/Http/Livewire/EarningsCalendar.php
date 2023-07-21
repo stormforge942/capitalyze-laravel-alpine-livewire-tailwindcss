@@ -43,6 +43,8 @@ class EarningsCalendar extends Component
         $this->startDate = Carbon::parse($this->startDate)->addWeek()->startOfWeek()->toDateString();
         $this->endDate = Carbon::parse($this->endDate)->addWeek()->endOfWeek()->toDateString();
 
+        $this->week = Carbon::parse($this->startDate)->format('Y-\WW');
+
         // Reload the earnings calls
         $this->loadEarningsCalls();
     }
@@ -51,6 +53,8 @@ class EarningsCalendar extends Component
     {
         $this->startDate = Carbon::parse($this->startDate)->subWeek()->startOfWeek()->toDateString();
         $this->endDate = Carbon::parse($this->endDate)->subWeek()->endOfWeek()->toDateString();
+
+        $this->week = Carbon::parse($this->startDate)->format('Y-\WW');
 
         // Reload the earnings calls
         $this->loadEarningsCalls();

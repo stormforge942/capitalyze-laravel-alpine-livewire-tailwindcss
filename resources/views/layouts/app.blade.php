@@ -15,6 +15,13 @@
 
         <!-- Styles -->
         @livewireStyles
+
+        @once
+        @push('scripts')
+        <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+        <script src="https://cdn.jsdelivr.net/npm/luxon"></script>
+        @endpush
+    @endonce
     </head>
     <body class="font-sans antialiased">
         <x-jet-banner />
