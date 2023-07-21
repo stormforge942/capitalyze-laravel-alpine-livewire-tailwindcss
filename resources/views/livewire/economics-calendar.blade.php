@@ -31,17 +31,30 @@
                         </div>
                         <div class="overflow-x-scroll">
                             <table class="table-auto w-full overflow-scroll" wire:loading.remove>
+                                    @if($is_last_events) 
                                     <tr>
-                                        <td class="font-semibold py-4">Date</td>
-                                        <td class="font-semibold py-4">Name</td>
-                                        <td class="font-semibold py-4">Source</td>
+                                        <td colspan="3" class="font-bold py-4">There is no data on this week. Showing Last 10 Records</td>
                                     </tr>
-                                    @foreach($earningsCalls as $call)
+                                    @endif
+                                    
+                                    @foreach($outputEventsData as $date => $events)
                                         <tr>
-                                            <td class="px-2 w-32">{{ $call->date }}</td>
-                                            <td class="break-all px-2">{{ $call->name }}</td>
-                                            <td class="px-2"><a class="text-blue-700" href="{{ $call->source }}">Link to source</a></td>
+                                            <td colspan="3" class="font-bold py-4">{{ $date }}</td>
                                         </tr>
+                                        <tr>
+                                            <td class="font-semibold py-4">Name</td>
+                                            <td class="font-semibold py-4">Source</td>
+                                        </tr>
+                                        @foreach($events as $event)
+                                        <tr>
+                                            <td class="break-all px-2"><a href="{{ route('economics-release', ['release_id' => $event->release_id]) }}">{{ isset($event->name) ? $event->name : 'Release' }}</a></td>
+                                            @if(isset($event->source))
+                                            <td class="px-2"><a class="text-blue-700" href="{{ $event->source }}" target="_blank" rel="noreferrer nofollow">More Info</a></td>
+                                            @else
+                                            <td class="px-2">No Source</td>
+                                            @endif
+                                        </tr>
+                                        @endforeach
                                     @endforeach
                             </table>
                         </div>
@@ -49,6 +62,6 @@
                 </div>
             </div>
         </div>
-    </div>
+    </main>
 </div>
 </div>

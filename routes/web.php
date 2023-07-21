@@ -7,6 +7,8 @@ use App\Http\Livewire\CompanyFilingsPage;
 use App\Http\Livewire\FundFilingsPage;
 use App\Http\Livewire\EarningsCalendar;
 use App\Http\Livewire\EconomicsCalendar;
+use App\Http\Livewire\EconomicRelease;
+use App\Http\Livewire\EconomicReleaseSeries;
 use App\Http\Controllers\AdminController;
 use Laravel\Fortify\Http\Controllers\AuthenticatedSessionController;
 
@@ -36,6 +38,8 @@ Route::middleware(['auth', 'approved', 'verified'])->group(function () {
     */
     Route::get('/calendar/earnings', EarningsCalendar::class)->name('earnings-calendar');
     Route::get('/calendar/economics', EconomicsCalendar::class)->name('economics-calendar');
+    Route::get('/calendar/economics/{release_id}/', EconomicRelease::class)->name('economics-release');
+    Route::get('/calendar/economics/{release_id}/{series_id}/', EconomicReleaseSeries::class)->name('economics-release-series');
     Route::get('/company-filings', CompanyFilingsPage::class)->name('company-filings');
     Route::get('/fund-filings', FundFilingsPage::class)->name('fund-filings');
 
