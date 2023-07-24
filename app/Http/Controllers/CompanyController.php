@@ -32,6 +32,30 @@ class CompanyController extends BaseController
         ]);
     }
 
+    public function profile(Request $request, $ticker)
+    {
+        $company = Company::where('ticker', $ticker)->get()->first();
+
+        return view('layouts.company', [
+            'company' => $company,
+            'ticker' => $ticker,
+            'period' => $request->query('period', 'annual'),
+            'tab' => 'profile'
+        ]);
+    }
+
+    public function splits(Request $request, $ticker)
+    {
+        $company = Company::where('ticker', $ticker)->get()->first();
+
+        return view('layouts.company', [
+            'company' => $company,
+            'ticker' => $ticker,
+            'period' => $request->query('period', 'annual'),
+            'tab' => 'splits'
+        ]);
+    }
+
     public function metrics(Request $request, $ticker)
     {
         $company = Company::where('ticker', $ticker)->get()->first();
