@@ -34,6 +34,10 @@
                     <livewire:company-geographical :company="$company" :ticker="$ticker" :period="$period" />
                     @elseif($tab == 'products')
                     <livewire:company-products :company="$company" :ticker="$ticker" :period="$period" />
+                    @elseif($tab == 'profile')
+                    <livewire:company-profile :company="$company" :ticker="$ticker" :period="$period" />
+                    @elseif($tab == 'splits')
+                    <livewire:company-splits :company="$company" :ticker="$ticker" :period="$period" />
                     @elseif($tab == 'metrics')
                     <livewire:company-metrics :company="$company" :ticker="$ticker" :period="$period" />
                     @elseif($tab == 'report')

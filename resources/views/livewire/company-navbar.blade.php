@@ -39,27 +39,33 @@
       <hr class="my-4"> <!-- Separator -->
       <ul class="space-y-2 font-medium">
 
-      <li>
-      @if(!(in_array($currentRoute, ['company.shareholders', 'company.summary', 'company.insider', 'company.filings', 'company.restatement', 'company.employee'])))
-         <!-- Settings Dropdown -->
-         <div class="relative ml-3">
-            <button wire:key="navbar-period-annual" class="@if($period == 'annual')text-blue-700 @else text-slate-700 pl-0 @endif text-sm appearance-none inline-flex px-3 py-2 leading-tight appearance-none focus:outline-none focus:bg-white focus:border-slate-500 pl-0" wire:click="changePeriod('annual')">Annual</button>
-            <span class="text-indigo-600">|</span>
-            <button wire:key="navbar-period-quarterly" class="@if($period == 'quarterly')text-blue-700 @else text-slate-700 @endif text-sm appearance-none inline-flex px-3 py-2 leading-tight appearance-none focus:outline-none focus:bg-white focus:border-slate-500" wire:click="changePeriod('quarterly')">Quarterly</button>
-         </div>
-         @endif
-      </li>
-      <li>
-
-      <livewire:company-navbar-item wire:key="navbar-product-{{ $period }}"
-                    href="/company/{{ $company->ticker }}/?period={{ $period }}" name="Products"
-                    :active="$currentRoute === 'company.product'" />
+         <li>
+         @if(!(in_array($currentRoute, ['company.shareholders', 'company.summary', 'company.insider', 'company.filings', 'company.restatement', 'company.employee'])))
+            <!-- Settings Dropdown -->
+            <div class="relative ml-3">
+               <button wire:key="navbar-period-annual" class="@if($period == 'annual')text-blue-700 @else text-slate-700 pl-0 @endif text-sm appearance-none inline-flex px-3 py-2 leading-tight appearance-none focus:outline-none focus:bg-white focus:border-slate-500 pl-0" wire:click="changePeriod('annual')">Annual</button>
+               <span class="text-indigo-600">|</span>
+               <button wire:key="navbar-period-quarterly" class="@if($period == 'quarterly')text-blue-700 @else text-slate-700 @endif text-sm appearance-none inline-flex px-3 py-2 leading-tight appearance-none focus:outline-none focus:bg-white focus:border-slate-500" wire:click="changePeriod('quarterly')">Quarterly</button>
+            </div>
+            @endif
          </li>
          <li>
+               <livewire:company-navbar-item wire:key="navbar-product-{{ $period }}"
+               href="/company/{{ $company->ticker }}/?period={{ $period }}" name="Products"
+               :active="$currentRoute === 'company.product'" />
+         </li>
+
+         <li>
+               <livewire:company-navbar-item wire:key="navbar-profile-{{ $period }}"
+               href="/company/{{ $company->ticker }}/profile" name="Company Profile"
+               :active="$currentRoute === 'company.profile'" />
+         </li>
+
+         <li>
                 <livewire:company-navbar-item wire:key="navbar-geographic-{{ $period }}"
-                    href="/company/{{ $company->ticker }}/geographic?period={{ $period }}" name="Geographic"
-                    :active="$currentRoute === 'company.geographic'" />
-                    </li>
+               href="/company/{{ $company->ticker }}/geographic?period={{ $period }}" name="Geographic"
+               :active="$currentRoute === 'company.geographic'" />
+         </li>
          <li>
                 <livewire:company-navbar-item wire:key="navbar-metrics-{{ $period }}"
                     href="/company/{{ $company->ticker }}/metrics?period={{ $period }}" name="Metrics"
@@ -91,6 +97,11 @@
                     :active="$currentRoute === 'company.filings'" />
                     </li>
          <li>
+               <livewire:company-navbar-item wire:key="navbar-splits"
+                  href="/company/{{ $company->ticker }}/splits" name="Splits"
+                  :active="$currentRoute === 'company.splits'" />
+         </li>
+         <li>
                 <livewire:company-navbar-item wire:key="navbar-insider"
                     href="/company/{{ $company->ticker }}/restatement" name="Restatement"
                     :active="$currentRoute === 'company.restatement'" />
@@ -100,7 +111,7 @@
                     href="/company/{{ $company->ticker }}/employee" name="Employee Count"
                     :active="$currentRoute === 'company.employee'" />
             </li>
-         </ul>
+      </ul>
 
    </div>
 </aside>
