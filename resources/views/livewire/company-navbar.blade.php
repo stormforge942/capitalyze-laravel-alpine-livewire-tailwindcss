@@ -102,6 +102,11 @@
                   :active="$currentRoute === 'company.splits'" />
          </li>
          <li>
+               <livewire:company-navbar-item wire:key="navbar-chart"
+                  href="/company/{{ $company->ticker }}/chart" name="Chart"
+                  :active="$currentRoute === 'company.chart'" />
+         </li>
+         <li>
                 <livewire:company-navbar-item wire:key="navbar-insider"
                     href="/company/{{ $company->ticker }}/restatement" name="Restatement"
                     :active="$currentRoute === 'company.restatement'" />
