@@ -48,6 +48,7 @@ Route::middleware(['auth', 'approved', 'verified'])->group(function () {
     */
     Route::get('/company/{ticker}/', [CompanyController::class, 'product'])->name('company.product');
     Route::get('/company/{ticker}/profile', [CompanyController::class, 'profile'])->name('company.profile');
+    Route::get('/company/{ticker}/chart', [CompanyController::class, 'chart'])->name('company.chart');
     Route::get('/company/{ticker}/splits', [CompanyController::class, 'splits'])->name('company.splits');
     Route::get('/company/{ticker}/geographic', [CompanyController::class, 'geographic'])->name('company.geographic');
     Route::get('/company/{ticker}/metrics', [CompanyController::class, 'metrics'])->name('company.metrics');
