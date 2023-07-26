@@ -25,12 +25,12 @@
                                             @foreach($resultsSearch as $result)
                                                 <tr class="hover:bg-gray-200 cursor-pointer">
                                                     <td class="break-all px-2">
-                                                        <a href="{{ route('economics-release-series', ['release_id' => $result->release_id, 'series_id' => $result->series_id]) }}">{{ $result->title }}</a>
+                                                        <a 
+                                                            href="{{ route('economics-release-series', ['release_id' => $result->release_id, 'series_id' => $result->series_id]) }}"
+                                                        >
+                                                            {{ $result->title }} | from {{ $result->observation_start }} to {{ $result->observation_end }} | {{ $result->seasonal_adjustment }} | {{ $result->popularity }} | {{ $result->last_updated }}
+                                                        </a>
                                                     </td>
-                                                    <td class="break-all px-2">from {{ $result->observation_start }} to {{ $result->observation_end }}</td>
-                                                    <td class="break-all px-2">{{ $result->seasonal_adjustment }}</td>
-                                                    <td class="break-all px-2">{{ $result->popularity }}</td>
-                                                    <td class="px-2">{{ $result->last_updated }}</td>
                                                 </tr>
                                             @endforeach
                                         </tbody>
