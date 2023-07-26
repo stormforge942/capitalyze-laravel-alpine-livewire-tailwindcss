@@ -30,8 +30,12 @@ document.addEventListener('livewire:load', function () {
     Livewire.on('getCompanyStockChart', function (chartData) {
         const canvas = document.getElementById('lineChart');
 
+        const ascChartData = chartData.sort(function(a,b){
+            return new Date(a.date) - new Date(b.date);
+        });
+
         const labels = chartData.map((data) => data.date);
-        const datasets = [{label: chartData.shift().symbol, data: chartData.map((data) => data.close)}];
+        const datasets = [{label: chartData.shift().symbol, data: ascChartData.map((data) => data.close)}];
 
         const dataLine = {
             type: 'line',

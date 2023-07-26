@@ -22,7 +22,7 @@ class CompanySplits extends Component
     }
 
     public function getCompanyStockSplits() {
-        $this->stockSplits = DB::connection('pgsql-xbrl')->table('splits')->select('*')->where('symbol', $this->ticker)->get()->toArray();
+        $this->stockSplits = DB::connection('pgsql-xbrl')->table('splits')->select('*')->where('symbol', $this->ticker)->orderBy('date', 'desc')->get()->toArray();
     }
 
     public function render()
