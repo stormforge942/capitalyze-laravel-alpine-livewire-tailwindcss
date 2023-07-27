@@ -40,11 +40,6 @@
                {{ __('Company Identifiers') }}
             </x-jet-nav-link>
          </li>
-         <li>
-            <x-jet-nav-link href="{{ route('delistings') }}" :active="request()->routeIs('delistings')">
-               {{ __('Delistings') }}
-            </x-jet-nav-link>
-         </li>
       </ul>
       <hr class="my-4"> <!-- Separator -->
       <ul class="space-y-2 font-medium">
