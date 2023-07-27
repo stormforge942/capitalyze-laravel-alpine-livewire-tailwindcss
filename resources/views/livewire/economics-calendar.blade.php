@@ -8,7 +8,7 @@
                     <div class="mx-auto flex flex-col md:flex-row justify-center">
                         <div class="mx-auto px-4 sm:px-6 lg:px-8 bg-white py-4 shadow md:mx-8 rounded md:w-12/14 2xl:w-2/3 w-full">
                             <div class="relative flex items-center">
-                                <input type="text" wire:model="search" placeholder="Search Economic Events..." class="input-field pr-10" wire:click="showText" x-on:click.away="$wire.call('hideText')">
+                                <input type="text" wire:model="search" placeholder="Search Economic Events..." class="input-field pr-10">
                                 <svg class="absolute right-3 top-2.5 h-5 w-5 text-pg-primary-300 dark:text-pg-primary-200" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" viewBox="0 0 24 24">
                                     <path d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"></path>
                                 </svg>
@@ -116,17 +116,3 @@
         </main>
     </div>
 </div>
-
-@push('scripts')
-    <script>
-        window.addEventListener('livewire:click', () => {
-            @this.call('hideText');
-        });
-
-        window.addEventListener('click', (event) => {
-            if (!event.target.closest('[wire\\:click]')) {
-                @this.call('hideText');
-            }
-        });
-    </script>
-@endpush

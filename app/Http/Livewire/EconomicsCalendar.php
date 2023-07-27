@@ -18,7 +18,6 @@ class EconomicsCalendar extends Component
     public $company;
     public $period = "annual";
     public $formattedDate;
-    public $showSearch = false;
     public $is_last_events = false;
     public $search;
     public $resultsSearch = [];
@@ -87,11 +86,6 @@ class EconomicsCalendar extends Component
         return view('livewire.economics-calendar');
     }
 
-    public function openSearch()
-    {
-        $this->showSearch = true;
-    }
-
     public function formatDate($date)
     {
         return Carbon::parse($date)->format('F Y');
@@ -143,7 +137,6 @@ class EconomicsCalendar extends Component
 
     public function hideText()
     {
-        $this->search = "";
         $this->showText = false;
     }
 }
