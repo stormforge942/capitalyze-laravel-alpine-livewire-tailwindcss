@@ -120,12 +120,6 @@ class EconomicsCalendar extends Component
     }
 
     // SEARCH
-
-    public function goToRelease($release_id, $series_id)
-    {
-        return redirect()->route('economics-release-series', ['release_id' => $release_id, 'series_id' => $series_id]);
-    }
-
     public function updatedSearch()
     {
         $this->resultsSearch = DB::connection('pgsql-xbrl')
