@@ -44,7 +44,7 @@ Route::middleware(['auth', 'approved', 'verified'])->group(function () {
     Route::get('/calendar/economics/{release_id}/{series_id}/', EconomicReleaseSeries::class)->name('economics-release-series');
     Route::get('/company-filings', CompanyFilingsPage::class)->name('company-filings');
     Route::get('/fund-filings', FundFilingsPage::class)->name('fund-filings');
-    Route::get('/identifiers', CompanyIdentifiers::class)->name('company-identifiers');
+    Route::get('/delistings', Delistings::class)->name('delistings');
 
     /*
     | Company routing
