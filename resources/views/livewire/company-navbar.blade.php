@@ -35,6 +35,11 @@
                {{ __('Funds Filings') }}
             </x-jet-nav-link>
          </li>
+         <li>
+            <x-jet-nav-link href="{{ route('company-identifiers') }}" :active="request()->routeIs('company-identifiers')">
+               {{ __('Company Identifiers') }}
+            </x-jet-nav-link>
+         </li>
       </ul>
       <hr class="my-4"> <!-- Separator -->
       <ul class="space-y-2 font-medium">

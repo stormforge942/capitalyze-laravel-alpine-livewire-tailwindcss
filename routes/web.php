@@ -5,6 +5,8 @@ use App\Http\Controllers\CompanyController;
 use App\Http\Controllers\FundController;
 use App\Http\Livewire\CompanyFilingsPage;
 use App\Http\Livewire\FundFilingsPage;
+use App\Http\Livewire\CompanyIdentifiers;
+use App\Http\Livewire\Delistings;
 use App\Http\Livewire\EarningsCalendar;
 use App\Http\Livewire\EconomicsCalendar;
 use App\Http\Livewire\EconomicRelease;
@@ -42,6 +44,7 @@ Route::middleware(['auth', 'approved', 'verified'])->group(function () {
     Route::get('/calendar/economics/{release_id}/{series_id}/', EconomicReleaseSeries::class)->name('economics-release-series');
     Route::get('/company-filings', CompanyFilingsPage::class)->name('company-filings');
     Route::get('/fund-filings', FundFilingsPage::class)->name('fund-filings');
+    Route::get('/identifiers', CompanyIdentifiers::class)->name('company-identifiers');
 
     /*
     | Company routing
