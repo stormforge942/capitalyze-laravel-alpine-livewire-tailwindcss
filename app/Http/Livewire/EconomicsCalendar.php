@@ -137,7 +137,6 @@ class EconomicsCalendar extends Component
 
     public function hideText()
     {
-        $this->search = "";
         $this->showText = false;
     }
 }
