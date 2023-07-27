@@ -18,7 +18,6 @@ class EconomicsCalendar extends Component
     public $company;
     public $period = "annual";
     public $formattedDate;
-    public $showSearch = false;
     public $is_last_events = false;
     public $search;
     public $resultsSearch = [];
@@ -87,11 +86,6 @@ class EconomicsCalendar extends Component
         return view('livewire.economics-calendar');
     }
 
-    public function openSearch()
-    {
-        $this->showSearch = true;
-    }
-
     public function formatDate($date)
     {
         return Carbon::parse($date)->format('F Y');
@@ -126,6 +120,12 @@ class EconomicsCalendar extends Component
     }
 
     // SEARCH
+
+    public function goToRelease($release_id, $series_id)
+    {
+        return redirect()->route('economics-release-series', ['release_id' => $release_id, 'series_id' => $series_id]);
+    }
+
     public function updatedSearch()
     {
         $this->resultsSearch = DB::connection('pgsql-xbrl')
