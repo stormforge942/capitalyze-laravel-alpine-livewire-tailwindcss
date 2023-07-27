@@ -19,10 +19,6 @@ class EconomicsCalendar extends Component
     public $period = "annual";
     public $formattedDate;
     public $is_last_events = false;
-    public $search;
-    public $resultsSearch = [];
-    public $showText = false;
-    protected $listeners = ['showText'];
 
     public function mount()
     {
@@ -117,26 +113,5 @@ class EconomicsCalendar extends Component
         foreach ($this->economicEvents as $event) {
             $this->outputEventsData[$event->date][] = $event;
         }
-    }
-
-    // SEARCH
-    public function updatedSearch()
-    {
-        $this->resultsSearch = DB::connection('pgsql-xbrl')
-        ->table('public.data_series')
-        ->where('title', 'ilike', '%' . $this->search . '%')
-        ->limit(10)
-        ->get()
-        ->toArray();
-    }
-
-    public function showText()
-    {
-        $this->showText = true;
-    }
-
-    public function hideText()
-    {
-        $this->showText = false;
     }
 }
