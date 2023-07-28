@@ -23,12 +23,36 @@ class AppServiceProvider extends ServiceProvider
     {
         Spotlight::registerGroup('companies', 'Companies');
         Spotlight::registerGroup('funds', 'Funds');
+        Spotlight::registerGroup('lse', 'LSE');
+        Spotlight::registerGroup('euronext', 'Euronext');
+        Spotlight::registerGroup('shanghai', 'Shanghai');
 
         Spotlight::registerQueries(
             SpotlightQuery::asDefault(function ($query) {
                 $collection = collect();
 
                 $companies = Company::where('name', 'ilike', "%{$query}%")->orWhere('ticker', 'ilike', "%{$query}%")->take(10)->get();
+                $euronexts = DB::connection('pgsql-xbrl')
+                ->table('euronext_statements')
+                ->where('registrant_name', 'ilike', "%{$query}%")
+                ->orWhere('symbol', 'ilike', "%{$query}%")
+                ->orWhere('market', 'ilike', "%{$query}%")
+                ->orWhere('market_full_name', 'ilike', "%{$query}%")
+                ->take(10)->get();
+                $lses = DB::connection('pgsql-xbrl')
+                ->table('lse_statements')
+                ->where('registrant_name', 'ilike', "%{$query}%")
+                ->orWhere('symbol', 'ilike', "%{$query}%")
+                ->orWhere('market', 'ilike', "%{$query}%")
+                ->orWhere('market_segment', 'ilike', "%{$query}%")
+                ->orWhere('share_register_country', 'ilike', "%{$query}%")
+                ->take(10)->get();
+                $shanghais = DB::connection('pgsql-xbrl')
+                ->table('shanghai_statements')
+                ->where('full_name', 'ilike', "%{$query}%")
+                ->orWhere('symbol', 'ilike', "%{$query}%")
+                ->orWhere('short_name', 'ilike', "%{$query}%")
+                ->take(10)->get();
                 $funds = Fund::where('name', 'ilike', "%{$query}%")->orWhere('cik', 'ilike', "%{$query}%")->take(10)->get();
 
                 foreach ($companies as $company) {
@@ -37,6 +61,33 @@ class AppServiceProvider extends ServiceProvider
                             ->setGroup('companies')
                             ->setTitle($company->name)
                             ->setAction('jump_to', ['path' => '/company/'.$company->ticker])
+                    );
+                }
+
+                foreach ($euronexts as $euronext) {
+                    $collection->push(
+                        SpotlightResult::make()
+                            ->setGroup('euronext')
+                            ->setTitle($company->name)
+                            ->setAction('jump_to', ['path' => '/euronext/'.$company->ticker])
+                    );
+                }
+
+                foreach ($lses as $lse) {
+                    $collection->push(
+                        SpotlightResult::make()
+                            ->setGroup('lse')
+                            ->setTitle($company->name)
+                            ->setAction('jump_to', ['path' => '/lse/'.$company->ticker])
+                    );
+                }
+
+                foreach ($shanghais as $shanghai) {
+                    $collection->push(
+                        SpotlightResult::make()
+                            ->setGroup('shanghai')
+                            ->setTitle($company->name)
+                            ->setAction('jump_to', ['path' => '/shanghai/'.$company->ticker])
                     );
                 }
 
