@@ -16,6 +16,10 @@
                         <h1 class="text-base font-semibold leading-6 text-gray-900">Company Stock Chart</h1>
                     </div>
                     <div wire:init="getCompanyStockChart" class="p-4" wire:loading.remove>
+                        <span class="font-medium px-2.5 py-0.5">Zoom</span>
+                        @foreach($chartPeriods as $chartPeriod)
+                            <span wire:click="setChartPeriod('{{ $chartPeriod }}')" class="{{ $currentChartPeriod === $chartPeriod ? 'bg-blue-100 text-blue-800 text-xs font-medium mr-2 px-2.5 py-0.5 rounded dark:bg-gray-700 dark:text-blue-400 border border-blue-400' : 'cursor-pointer bg-gray-100 text-gray-800 text-xs font-medium mr-2 px-2.5 py-0.5 rounded dark:bg-gray-700 dark:text-gray-400 border border-gray-500' }}">{{$chartPeriod}}</span>
+                        @endforeach
                         <canvas id="lineChart" class="!w-full !h-full"></canvas>
                     </div>
                 </div>
