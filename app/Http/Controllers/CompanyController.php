@@ -20,6 +20,18 @@ class CompanyController extends BaseController
         ]);
     }
 
+    public function executiveCompensation(Request $request, $ticker)
+    {
+        $company = Company::where('ticker', $ticker)->get()->first();
+
+        return view('layouts.company', [
+            'company' => $company,
+            'ticker' => $ticker,
+            'period' => $request->query('period', 'annual'),
+            'tab' => 'executiveCompensation'
+        ]);
+    }
+
     public function product(Request $request, $ticker)
     {
         $company = Company::where('ticker', $ticker)->get()->first();
