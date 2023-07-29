@@ -117,6 +117,11 @@
                   :active="$currentRoute === 'company.chart'" />
          </li>
          <li>
+               <livewire:company-navbar-item wire:key="navbar-chart"
+                  href="/company/{{ $company->ticker }}/executive-compensation" name="Executive Compensation"
+                  :active="$currentRoute === 'company.executive.compensation'" />
+         </li>
+         <li>
                 <livewire:company-navbar-item wire:key="navbar-insider"
                     href="/company/{{ $company->ticker }}/restatement" name="Restatement"
                     :active="$currentRoute === 'company.restatement'" />
