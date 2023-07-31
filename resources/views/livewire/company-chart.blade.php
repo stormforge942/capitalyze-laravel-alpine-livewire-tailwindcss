@@ -30,10 +30,17 @@
 
 @push('scripts')
 <script>
+const chart = new Chart(
+    document.getElementById('lineChart'), {
+        type: 'line',
+        data: {
+            labels: [],
+            datasets: []
+        },
+    }
+);
 document.addEventListener('livewire:load', function () {
     Livewire.on('getCompanyStockChart', function (chartData) {
-        const canvas = document.getElementById('lineChart');
-
         const ascChartData = chartData.sort(function(a,b){
             return new Date(a.date) - new Date(b.date);
         });
@@ -41,15 +48,9 @@ document.addEventListener('livewire:load', function () {
         const labels = chartData.map((data) => data.date);
         const datasets = [{label: chartData.shift().symbol, data: ascChartData.map((data) => data.close)}];
 
-        const dataLine = {
-            type: 'line',
-            data: {
-                labels: labels,
-                datasets: datasets,
-            },
-        };
-
-        new Chart(canvas, dataLine);
+        chart.data.labels = labels;
+        chart.data.datasets = datasets;
+        chart.update();
     });
 });
 </script>

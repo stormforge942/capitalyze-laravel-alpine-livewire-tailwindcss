@@ -11,10 +11,8 @@ class CompanyChart extends Component
 {
     public $company;
     public $ticker;
-    public $period;
     public $currentChartPeriod = "3m";
     public $chartPeriods = ["3m", "6m", "1yr", "3yr", "5yr", "10yr", "all"];
-    public $stockChart;
 
     public function mount($company, $ticker, $period)
     {
@@ -26,31 +24,49 @@ class CompanyChart extends Component
     }
 
     public function getCompanyStockChart() {
-        if($this->currentChartPeriod === 'all') {
-            $query = DB::connection('pgsql-xbrl')
+        $query = DB::connection('pgsql-xbrl')
             ->table('eod_prices')
-            ->where('symbol', $this->ticker)
-            ->orderBy('date', 'desc');
-        } else {
-            $toDate = Carbon::now();
+            ->where('symbol', $this->ticker);
 
-            if(Str::contains($this->currentChartPeriod, 'yr'))
-            {
+        $toDate = Carbon::now();
+            
+        switch ($this->currentChartPeriod) {
+            case '3m':
+                $fromDate = Carbon::now()->subMonths(3);
+                $query->whereBetween('date', [$fromDate, $toDate]);
+                break;
+
+            case '6m':
+                $fromDate = Carbon::now()->subMonths(6);
+                $query->whereBetween('date', [$fromDate, $toDate]);
+                break;
+
+            case '1yr':
+                $fromDate = Carbon::now()->subYear(1);
+                $query->whereBetween('date', [$fromDate, $toDate]);
+                break;
+
+            case '3yr':
+                $fromDate = Carbon::now()->subYear(3);
+                $query->whereBetween('date', [$fromDate, $toDate]);
+                break;
+
+            case '5yr':
                 $fromDate = Carbon::now()->subYear(5);
-            }
-            if(Str::contains($this->currentChartPeriod, 'm'))
-            {
-                $fromDate = Carbon::now()->subMonths(1);
-            }
+                $query->whereBetween('date', [$fromDate, $toDate]);
+                break;
 
-            $query = DB::connection('pgsql-xbrl')
-            ->table('eod_prices')
-            ->where('symbol', $this->ticker)
-            ->whereBetween('date', [$fromDate, $toDate])
-            ->orderBy('date', 'desc');
+            case '10yr':
+                $fromDate = Carbon::now()->subYear(10);
+                $query->whereBetween('date', [$fromDate, $toDate]);
+                break;
+
+            case 'all':
+            default:
+                break;
         }
 
-        $results = $query->get()->toArray();
+        $results = $query->orderBy('date', 'desc')->get()->toArray();
 
         $this->emit('getCompanyStockChart', $results);
 
@@ -60,6 +76,7 @@ class CompanyChart extends Component
     public function setChartPeriod($chartPeriod)
     {
         $this->currentChartPeriod = $chartPeriod;
+        $this->getCompanyStockChart();
     }
 
     public function render()
