@@ -7,7 +7,7 @@ use Livewire\Component;
 
 class ShanghaiNavbar extends Component
 {
-    public $company;
+    public $shanghai;
     public $currentRoute;
 
     public function render()

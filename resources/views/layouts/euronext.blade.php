@@ -25,7 +25,7 @@
 
     <div class="min-h-screen bg-gray-100">
         @livewire('navigation-menu')
-        <livewire:euronext-navbar :company="$company" />
+        <livewire:euronext-navbar :euronext="$euronext" />
         <!-- Page Content -->
         <main>
             @if($tab == 'metrics')

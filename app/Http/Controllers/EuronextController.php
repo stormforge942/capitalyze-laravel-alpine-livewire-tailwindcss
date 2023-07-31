@@ -2,17 +2,17 @@
 
 namespace App\Http\Controllers;
 
-use App\Models\Company;
+use App\Models\Euronext;
 use Illuminate\Routing\Controller as BaseController;
 
 class EuronextController extends BaseController
 {
     public function metrics($ticker)
     {
-        $company = Company::where('ticker', $ticker)->get()->first();
+        $euronext = Euronext::where('symbol', $ticker)->get()->first();
 
         return view('layouts.euronext', [
-            'company' => $company,
+            'euronext' => $euronext,
             'tab' => 'metrics'
         ]);
     }

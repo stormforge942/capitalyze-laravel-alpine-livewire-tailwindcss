@@ -25,7 +25,7 @@
 
     <div class="min-h-screen bg-gray-100">
         @livewire('navigation-menu')
-        <livewire:lse-navbar :company="$company" />
+        <livewire:lse-navbar :lse="$lse" />
         <!-- Page Content -->
         <main>
             @if($tab == 'metrics')

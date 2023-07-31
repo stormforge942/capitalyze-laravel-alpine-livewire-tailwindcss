@@ -25,7 +25,7 @@
 
     <div class="min-h-screen bg-gray-100">
         @livewire('navigation-menu')
-        <livewire:shanghai-navbar :company="$company" />
+        <livewire:shanghai-navbar :shanghai="$shanghai" />
         <!-- Page Content -->
         <main>
             @if($tab == 'metrics')

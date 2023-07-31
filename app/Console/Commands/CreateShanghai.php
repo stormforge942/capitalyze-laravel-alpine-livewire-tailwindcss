@@ -2,7 +2,7 @@
  
 namespace App\Console\Commands;
  
-use App\Models\Company;
+use App\Models\Shanghai;
 use Illuminate\Console\Command;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Log;
@@ -38,16 +38,19 @@ class CreateShanghai extends Command
         $collection = $query->collect();
         
         foreach($collection as $value) {
-            try {
-                $company = Company::updateOrCreate(
-                    [
-                        'ticker' => $value->symbol, 
-                        'full_name' => $value->full_name, 
-                        'short_name' => $value->short_name
-                    ]
-                );
-            } catch (\Exception $e) {
-                Log::error("Error creating or finding company: {$e->getMessage()}");
+            if (isset($value->symbol) && !empty($value->symbol)) {
+                Log::debug("Symbol is set and not empty: {$value->symbol}");
+                try {
+                    $shanghai = Shanghai::updateOrCreate(
+                        [
+                            'symbol' => $value->symbol, 
+                            'full_name' => $value->full_name, 
+                            'short_name' => $value->short_name
+                        ]
+                    );
+                } catch (\Exception $e) {
+                    Log::error("Error creating or finding company: {$e->getMessage()}");
+                }
             }
         }
     }

@@ -4,14 +4,21 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
 
-class Company extends Model
+class Lse extends Model
 {
     /**
      * The primary key associated with the table.
      *
      * @var string
      */
-    protected $primaryKey = 'ticker';
+    protected $primaryKey = 'symbol';
+
+    /**
+     * Table name
+     *
+     * @var string
+     */
+    protected $table = 'lses';
 
      /**
      * The attributes that are mass assignable.
@@ -19,9 +26,11 @@ class Company extends Model
      * @var string[]
      */
     protected $fillable = [
-        'ticker',
-        'cik',
-        'name',
+        'symbol',
+        'registrant_name',
+        'market',
+        'market_segment',
+        'share_register_country',
     ];
 
     /**
@@ -37,5 +46,4 @@ class Company extends Model
      * @var bool
      */
     public $incrementing = false;
-
 }

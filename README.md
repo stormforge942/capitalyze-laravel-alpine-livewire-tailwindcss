@@ -84,6 +84,9 @@ php artisan migrate
 ```sh
 php artisan company:import
 php artisan fund:import
+php artisan euronext:import
+php artisan lse:import
+php artisan shanghai:import
 ```
 
 #### 9. Create your first admin user:

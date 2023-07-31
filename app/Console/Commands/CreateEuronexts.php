@@ -4,10 +4,10 @@ namespace App\Console\Commands;
  
 use Illuminate\Console\Command;
 use Illuminate\Support\Facades\DB;
-use App\Models\Company;
+use App\Models\Euronext;
 use Illuminate\Support\Facades\Log;
  
-class CreateEuronext extends Command
+class CreateEuronexts extends Command
 {
     /**
      * The name and signature of the console command.
@@ -32,25 +32,23 @@ class CreateEuronext extends Command
     {
         $query = DB::connection('pgsql-xbrl')
         ->table('euronext_statements')
-        ->select('symbol', 'registrant_name', 'market', 'market_full_name')
         ->whereNotNull('symbol') // make sure 'symbol' is not null
+        ->select('symbol', 'registrant_name', 'market', 'market_full_name')
         ->distinct()->get();
 
         $collection = $query->collect();
         
         foreach($collection as $value) {
-            try {
-                $company = Company::updateOrCreate(
-                    [
-                        'ticker' => $value->symbol, 
-                        'registrant_name' => $value->registrant_name, 
-                        'market' => $value->market, 
-                        'market_full_name' => $value->market_full_name
-                    ]
-                );
-            } catch (\Exception $e) {
-                Log::error("Error creating or finding company: {$e->getMessage()}");
-            }
+                try {
+                    $euronext = Euronext::updateOrCreate(
+                        ['symbol' => $value->symbol], 
+                        ['registrant_name' => $value->registrant_name], 
+                        ['market' => $value->market], 
+                        ['market_full_name' => $value->market_full_name]
+                    );
+                } catch (\Exception $e) {
+                    Log::error("Error creating or finding euronext: {$e->getMessage()}");
+                }
         }
     }
 }

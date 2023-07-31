@@ -7,7 +7,7 @@ use Livewire\Component;
 
 class EuronextNavbar extends Component
 {
-    public $company;
+    public $euronext;
     public $currentRoute;
 
     public function render()

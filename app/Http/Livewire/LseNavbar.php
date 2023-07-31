@@ -7,7 +7,7 @@ use Livewire\Component;
 
 class LseNavbar extends Component
 {
-    public $company;
+    public $lse;
     public $currentRoute;
 
     public function render()
