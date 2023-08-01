@@ -2,6 +2,9 @@
 
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\CompanyController;
+use App\Http\Controllers\LseController;
+use App\Http\Controllers\EuronextController;
+use App\Http\Controllers\ShanghaiController;
 use App\Http\Controllers\FundController;
 use App\Http\Livewire\CompanyFilingsPage;
 use App\Http\Livewire\FundFilingsPage;
@@ -74,6 +77,21 @@ Route::middleware(['auth', 'approved', 'verified'])->group(function () {
     Route::get('/fund/{ticker}/filings', [FundController::class, 'filings'])->name('fund.filings');
     Route::get('/fund/{ticker}/insider', [FundController::class, 'insider'])->name('fund.insider');
     Route::get('/fund/{ticker}/restatement', [FundController::class, 'restatement'])->name('fund.restatement');
+
+    /*
+    | Euronext routing
+    */
+    Route::get('/euronext/{ticker}/', [EuronextController::class, 'metrics'])->name('euronext.metrics');
+
+    /*
+    | Lse routing
+    */
+    Route::get('/lse/{ticker}/', [LseController::class, 'metrics'])->name('lse.metrics');
+
+    /*
+    | Shanghai routing
+    */
+    Route::get('/shanghai/{ticker}/', [ShanghaiController::class, 'metrics'])->name('shanghai.metrics');
 });
 
 Route::middleware(['auth', 'verified', 'ensureUserIsApproved'])->group(function () {
