@@ -14,11 +14,11 @@ return new class extends Migration
     public function up()
     {
         Schema::create('lses', function (Blueprint $table) {
-            $table->string('registrant_name');
             $table->string('symbol')->primary();
-            $table->string('market');
-            $table->string('market_segment');
-            $table->string('share_register_country');
+            $table->string('registrant_name')->nullable();
+            $table->string('market')->nullable();
+            $table->string('market_segment')->nullable();
+            $table->string('share_register_country')->nullable();
             $table->timestamps();
         });
     }
