@@ -47,17 +47,17 @@
          </li>
          <li>
             <x-jet-nav-link href="{{ route('euronexts') }}" :active="request()->routeIs('euronexts')">
-               {{ __('Euronexts') }}
+               {{ __('Euronext') }}
             </x-jet-nav-link>
          </li>
          <li>
             <x-jet-nav-link href="{{ route('shanghais') }}" :active="request()->routeIs('shanghais')">
-               {{ __('Shanghais') }}
+               {{ __('Shanghai') }}
             </x-jet-nav-link>
          </li>
          <li>
             <x-jet-nav-link href="{{ route('lses') }}" :active="request()->routeIs('lses')">
-               {{ __('LSEs') }}
+               {{ __('LSE') }}
             </x-jet-nav-link>
          </li>
       </ul>

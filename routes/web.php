@@ -52,9 +52,9 @@ Route::middleware(['auth', 'approved', 'verified'])->group(function () {
     Route::get('/fund-filings', FundFilingsPage::class)->name('fund-filings');
     Route::get('/identifiers', CompanyIdentifiers::class)->name('company-identifiers');
     Route::get('/delistings', Delistings::class)->name('delistings');
-    Route::get('/euronexts', Euronexts::class)->name('euronexts');
-    Route::get('/lses', Lses::class)->name('lses');
-    Route::get('/shanghais', Shanghais::class)->name('shanghais');
+    Route::get('/euronext', Euronexts::class)->name('euronexts');
+    Route::get('/lse', Lses::class)->name('lses');
+    Route::get('/shanghai', Shanghais::class)->name('shanghais');
 
     /*
     | Company routing
