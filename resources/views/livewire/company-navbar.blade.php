@@ -45,6 +45,21 @@
                {{ __('Delistings') }}
             </x-jet-nav-link>
          </li>
+         <li>
+            <x-jet-nav-link href="{{ route('euronexts') }}" :active="request()->routeIs('euronexts')">
+               {{ __('Euronext') }}
+            </x-jet-nav-link>
+         </li>
+         <li>
+            <x-jet-nav-link href="{{ route('shanghais') }}" :active="request()->routeIs('shanghais')">
+               {{ __('Shanghai') }}
+            </x-jet-nav-link>
+         </li>
+         <li>
+            <x-jet-nav-link href="{{ route('lses') }}" :active="request()->routeIs('lses')">
+               {{ __('LSE') }}
+            </x-jet-nav-link>
+         </li>
       </ul>
       <hr class="my-4"> <!-- Separator -->
       <ul class="space-y-2 font-medium">
