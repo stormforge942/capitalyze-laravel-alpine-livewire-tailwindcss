@@ -1,5 +1,5 @@
 <div>
-    <livewire:lse-report-navbar :navbar="$navbar" :activeIndex="$activeIndex" :activeSubIndex="$activeSubIndex" />
+    <livewire:international-report-navbar :navbar="$navbar" :activeIndex="$activeIndex" :activeSubIndex="$activeSubIndex" />
     <div class="py-12">
         <div class="mx-auto">
             <div class="px-4 sm:px-6 lg:px-8 bg-white py-4 shadow mx-4 rounded max-w-5xl mx-auto">
