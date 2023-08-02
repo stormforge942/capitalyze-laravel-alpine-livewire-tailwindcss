@@ -29,7 +29,7 @@
         <!-- Page Content -->
         <main>
             @if($tab == 'metrics')
-            <livewire:euronext-metrics />
+            <livewire:euronext-metrics :euronext="$euronext" />
             @endif
         </main>
     </div>
