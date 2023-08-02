@@ -10,6 +10,9 @@ use App\Http\Livewire\CompanyFilingsPage;
 use App\Http\Livewire\FundFilingsPage;
 use App\Http\Livewire\CompanyIdentifiers;
 use App\Http\Livewire\Delistings;
+use App\Http\Livewire\Euronexts;
+use App\Http\Livewire\Lses;
+use App\Http\Livewire\Shanghais;
 use App\Http\Livewire\EarningsCalendar;
 use App\Http\Livewire\EconomicsCalendar;
 use App\Http\Livewire\EconomicRelease;
@@ -49,6 +52,9 @@ Route::middleware(['auth', 'approved', 'verified'])->group(function () {
     Route::get('/fund-filings', FundFilingsPage::class)->name('fund-filings');
     Route::get('/identifiers', CompanyIdentifiers::class)->name('company-identifiers');
     Route::get('/delistings', Delistings::class)->name('delistings');
+    Route::get('/euronexts', Euronexts::class)->name('euronexts');
+    Route::get('/lses', Lses::class)->name('lses');
+    Route::get('/shanghais', Shanghais::class)->name('shanghais');
 
     /*
     | Company routing
