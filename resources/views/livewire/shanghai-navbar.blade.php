@@ -13,7 +13,7 @@
     <!-- Mobile menu, show/hide based on menu state. -->
     <nav class="lg:hidden" aria-label="Global" id="mobile-menu">
         <div class="px-2 pt-2 pb-3 space-y-1">
-            <livewire:company-navbar-item wire:key="navbar-metrics"
+            <livewire:company-navbar-item wire:key="navbar-metrics-mob"
                 href="{{ route('shanghai.metrics', ['ticker' => $shanghai->symbol]) }}" name="Metrics"
                 :active="$currentRoute === 'shanghai.metrics'" />
         </div>

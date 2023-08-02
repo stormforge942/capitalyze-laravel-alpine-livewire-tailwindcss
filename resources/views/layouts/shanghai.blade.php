@@ -29,7 +29,7 @@
         <!-- Page Content -->
         <main>
             @if($tab == 'metrics')
-            <livewire:shanghai-metrics />
+            <livewire:shanghai-metrics :shanghai="$shanghai" />
             @endif
         </main>
     </div>

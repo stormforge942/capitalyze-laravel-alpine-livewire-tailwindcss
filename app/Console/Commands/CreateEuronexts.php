@@ -41,11 +41,22 @@ class CreateEuronexts extends Command
         foreach($collection as $value) {
                 try {
                     $euronext = Euronext::updateOrCreate(
-                        ['symbol' => $value->symbol], 
-                        ['registrant_name' => $value->registrant_name], 
-                        ['market' => $value->market], 
-                        ['market_full_name' => $value->market_full_name]
+                        ['symbol' => $value->symbol]
                     );
+                    
+                    if (!empty($value->registrant_name)){
+                        $euronext->registrant_name = $value->registrant_name;
+                    }
+
+                    if (!empty($value->market)){
+                        $euronext->market = $value->market;
+                    }
+
+                    if (!empty($value->market_full_name)){
+                        $euronext->market_full_name = $value->market_full_name;
+                    }
+
+                    $euronext->save();
                 } catch (\Exception $e) {
                     Log::error("Error creating or finding euronext: {$e->getMessage()}");
                 }

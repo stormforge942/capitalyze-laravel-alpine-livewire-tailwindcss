@@ -29,7 +29,7 @@
         <!-- Page Content -->
         <main>
             @if($tab == 'metrics')
-            <livewire:lse-metrics />
+            <livewire:lse-metrics :lse="$lse" />
             @endif
         </main>
     </div>

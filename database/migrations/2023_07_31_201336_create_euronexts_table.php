@@ -15,9 +15,9 @@ return new class extends Migration
     {
         Schema::create('euronexts', function (Blueprint $table) {
             $table->string('symbol')->primary();
-            $table->string('registrant_name');
-            $table->string('market');
-            $table->string('market_full_name');
+            $table->string('registrant_name')->nullable();
+            $table->string('market')->nullable();
+            $table->string('market_full_name')->nullable();
             $table->timestamps();
         });
     }
