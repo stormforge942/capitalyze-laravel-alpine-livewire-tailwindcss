@@ -4,7 +4,7 @@ namespace App\Http\Livewire;
 
 use Livewire\Component;
 
-class LseReportNavbar extends Component
+class InternationalReportNavbar extends Component
 {
     public $navbar;
     public $activeIndex;

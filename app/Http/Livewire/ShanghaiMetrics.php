@@ -25,7 +25,7 @@ class ShanghaiMetrics extends Component
         ->select('json_result')
         ->where('symbol', '=', $this->shanghai->symbol)
         ->orderBy('date', 'desc')
-        ->limit(10)->get()->toArray();
+        ->get()->toArray();
         
         $cols = [];
         $rows = [];
