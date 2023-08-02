@@ -25,7 +25,7 @@ class EuronextMetrics extends Component
         ->select('json_result')
         ->where('symbol', '=', $this->euronext->symbol)
         ->orderBy('date', 'desc')
-        ->limit(10)->get()->toArray();
+        ->get()->toArray();
         
         $cols = [];
         $rows = [];

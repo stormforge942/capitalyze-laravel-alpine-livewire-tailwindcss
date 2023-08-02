@@ -25,7 +25,7 @@ class LseMetrics extends Component
         ->select('json_result')
         ->where('symbol', '=', $this->lse->symbol)
         ->orderBy('date', 'desc')
-        ->limit(10)->get()->toArray();
+        ->get()->toArray();
         
         $cols = [];
         $rows = [];
