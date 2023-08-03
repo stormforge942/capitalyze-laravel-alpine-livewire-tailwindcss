@@ -14,7 +14,6 @@ class Lses extends Component
     {
         $company = Company::where('ticker', "AAPL")->get()->first();
         $this->company = $company;
-
     }
 
     public function render()

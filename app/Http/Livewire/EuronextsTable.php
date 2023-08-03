@@ -137,7 +137,9 @@ final class EuronextsTable extends PowerGridComponent
     public function addColumns(): PowerGridEloquent
     {
         return PowerGrid::eloquent()
-            ->addColumn('symbol')
+            ->addColumn('symbol', function(Euronexts $euronexts) {
+                return("<a class='text-blue-500' href='/euronext/$euronexts->symbol'>$euronexts->symbol</a>");
+            })
             ->addColumn('fiscal_period')
             ->addColumn('date')
             ->addColumn('updated_at');

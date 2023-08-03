@@ -137,7 +137,9 @@ final class LsesTable extends PowerGridComponent
     public function addColumns(): PowerGridEloquent
     {
         return PowerGrid::eloquent()
-            ->addColumn('symbol')
+            ->addColumn('symbol', function(Lses $lses) {
+                return("<a class='text-blue-500' href='/lse/$lses->symbol'>$lses->symbol</a>");
+            })
             ->addColumn('fiscal_period')
             ->addColumn('date')
             ->addColumn('updated_at');
