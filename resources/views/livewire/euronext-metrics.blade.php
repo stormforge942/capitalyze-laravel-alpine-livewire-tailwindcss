@@ -1,4 +1,4 @@
-<div>
+<div class="p-4 sm:ml-64 pl-0">
     <livewire:international-report-navbar :navbar="$navbar" :activeIndex="$activeIndex" :activeSubIndex="$activeSubIndex" />
     <div class="py-12">
         <div class="mx-auto">

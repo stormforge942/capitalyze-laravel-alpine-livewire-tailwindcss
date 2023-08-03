@@ -81,16 +81,19 @@ Route::middleware(['auth', 'approved', 'verified'])->group(function () {
     | Euronext routing
     */
     Route::get('/euronext/{ticker}/', [EuronextController::class, 'metrics'])->name('euronext.metrics');
+    Route::get('/euronext/{ticker}/filings', [EuronextController::class, 'filings'])->name('euronext.filings');
 
     /*
     | Lse routing
     */
     Route::get('/lse/{ticker}/', [LseController::class, 'metrics'])->name('lse.metrics');
+    Route::get('/lse/{ticker}/filings', [LseController::class, 'filings'])->name('lse.filings');
 
     /*
     | Shanghai routing
     */
     Route::get('/shanghai/{ticker}/', [ShanghaiController::class, 'metrics'])->name('shanghai.metrics');
+    Route::get('/shanghai/{ticker}/filings', [ShanghaiController::class, 'filings'])->name('shanghai.filings');
 });
 
 Route::middleware(['auth', 'verified', 'ensureUserIsApproved'])->group(function () {

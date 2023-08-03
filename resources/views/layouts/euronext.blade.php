@@ -31,6 +31,9 @@
             @if($tab == 'metrics')
             <livewire:euronext-metrics :euronext="$euronext" />
             @endif
+            @if($tab == 'filings')
+            <livewire:euronext-filings :euronext="$euronext" />
+            @endif
         </main>
     </div>
 

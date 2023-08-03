@@ -31,6 +31,9 @@
             @if($tab == 'metrics')
             <livewire:lse-metrics :lse="$lse" />
             @endif
+            @if($tab == 'filings')
+            <livewire:lse-filings :lse="$lse" />
+            @endif
         </main>
     </div>
 
