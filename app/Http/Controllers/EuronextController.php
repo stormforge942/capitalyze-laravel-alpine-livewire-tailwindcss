@@ -16,4 +16,14 @@ class EuronextController extends BaseController
             'tab' => 'metrics'
         ]);
     }
+
+    public function filings($ticker)
+    {
+        $euronext = Euronext::where('symbol', $ticker)->get()->first();
+
+        return view('layouts.euronext', [
+            'euronext' => $euronext,
+            'tab' => 'filings'
+        ]);
+    }
 }

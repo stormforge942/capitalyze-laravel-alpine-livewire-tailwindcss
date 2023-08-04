@@ -31,6 +31,9 @@
             @if($tab == 'metrics')
             <livewire:shanghai-metrics :shanghai="$shanghai" />
             @endif
+            @if($tab == 'filings')
+            <livewire:shanghai-filings :shanghai="$shanghai" />
+            @endif
         </main>
     </div>
 

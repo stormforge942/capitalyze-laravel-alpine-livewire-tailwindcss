@@ -16,4 +16,14 @@ class LseController extends BaseController
             'tab' => 'metrics'
         ]);
     }
+
+    public function filings($ticker)
+    {
+        $lse = Lse::where('symbol', $ticker)->get()->first();
+
+        return view('layouts.lse', [
+            'lse' => $lse,
+            'tab' => 'filings'
+        ]);
+    }
 }
