@@ -140,6 +140,7 @@ final class EuronextsTable extends PowerGridComponent
             ->addColumn('symbol', function(Euronexts $euronexts) {
                 return("<a class='text-blue-500' href='/euronext/$euronexts->symbol'>$euronexts->symbol</a>");
             })
+            ->addColumn('symbol')
             ->addColumn('fiscal_period')
             ->addColumn('date')
             ->addColumn('updated_at');
