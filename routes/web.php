@@ -94,6 +94,12 @@ Route::middleware(['auth', 'approved', 'verified'])->group(function () {
     */
     Route::get('/shanghai/{ticker}/', [ShanghaiController::class, 'metrics'])->name('shanghai.metrics');
     Route::get('/shanghai/{ticker}/filings', [ShanghaiController::class, 'filings'])->name('shanghai.filings');
+
+    /*
+    | Lse routing
+    */
+    Route::get('/japan/{ticker}/', [JapanController::class, 'metrics'])->name('japan.metrics');
+    Route::get('/japan/{ticker}/filings', [JapanController::class, 'filings'])->name('japan.filings');
 });
 
 Route::middleware(['auth', 'verified', 'ensureUserIsApproved'])->group(function () {

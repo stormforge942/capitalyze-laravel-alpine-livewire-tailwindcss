@@ -6,14 +6,14 @@ use Livewire\Component;
 
 class LseFilings extends Component
 {
-    public $lse;
+    public $japan;
 
-    public function mount($lse) {
-        $this->lse = $lse;
+    public function mount($japan) {
+        $this->japan = $japan;
     }
 
     public function render()
     {
-        return view('livewire.lse-filings');
+        return view('livewire.japan-filings');
     }
 }
