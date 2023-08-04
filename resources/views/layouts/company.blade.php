@@ -42,6 +42,8 @@
                     <livewire:company-metrics :company="$company" :ticker="$ticker" :period="$period" />
                     @elseif($tab == 'chart')
                     <livewire:company-chart :company="$company" :ticker="$ticker" :period="$period" />
+                    @elseif($tab == 'executiveCompensation')
+                    <livewire:company-executive-compensation :company="$company" :ticker="$ticker" :period="$period" />
                     @elseif($tab == 'report')
                     <livewire:company-report :company="$company" :ticker="$ticker" :period="$period" />
                     @elseif($tab == 'shareholders')

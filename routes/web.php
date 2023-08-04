@@ -10,6 +10,9 @@ use App\Http\Livewire\CompanyFilingsPage;
 use App\Http\Livewire\FundFilingsPage;
 use App\Http\Livewire\CompanyIdentifiers;
 use App\Http\Livewire\Delistings;
+use App\Http\Livewire\Euronexts;
+use App\Http\Livewire\Lses;
+use App\Http\Livewire\Shanghais;
 use App\Http\Livewire\EarningsCalendar;
 use App\Http\Livewire\EconomicsCalendar;
 use App\Http\Livewire\EconomicRelease;
@@ -49,12 +52,16 @@ Route::middleware(['auth', 'approved', 'verified'])->group(function () {
     Route::get('/fund-filings', FundFilingsPage::class)->name('fund-filings');
     Route::get('/identifiers', CompanyIdentifiers::class)->name('company-identifiers');
     Route::get('/delistings', Delistings::class)->name('delistings');
+    Route::get('/euronext', Euronexts::class)->name('euronexts');
+    Route::get('/lse', Lses::class)->name('lses');
+    Route::get('/shanghai', Shanghais::class)->name('shanghais');
 
     /*
     | Company routing
     */
     Route::get('/company/{ticker}/', [CompanyController::class, 'product'])->name('company.product');
     Route::get('/company/{ticker}/profile', [CompanyController::class, 'profile'])->name('company.profile');
+    Route::get('/company/{ticker}/executive-compensation', [CompanyController::class, 'executiveCompensation'])->name('company.executive.compensation');
     Route::get('/company/{ticker}/chart', [CompanyController::class, 'chart'])->name('company.chart');
     Route::get('/company/{ticker}/splits', [CompanyController::class, 'splits'])->name('company.splits');
     Route::get('/company/{ticker}/geographic', [CompanyController::class, 'geographic'])->name('company.geographic');
