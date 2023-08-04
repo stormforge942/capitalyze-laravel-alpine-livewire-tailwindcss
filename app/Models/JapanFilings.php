@@ -63,6 +63,10 @@ class JapanFilings extends Model
     protected $fillable = [
         'symbol',
         'updated_at',
+        'industry',
+        'fiscal_year',
+        'fiscal_period',
+        'url',
     ];
 
     /**

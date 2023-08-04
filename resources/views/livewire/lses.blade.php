@@ -9,7 +9,7 @@
                         <div class="mx-auto px-4 sm:px-6 lg:px-8 bg-white py-4 shadow md:mx-8 rounded md:w-12/14 2xl:w-2/3 w-full">
                             <div class="sm:flex sm:items-center">
                                 <div class="sm:flex-auto text-center">
-                                    <h1 class="text-xl font-bold leading-10 text-gray-900">LSEs</h1>
+                                    <h1 class="text-xl font-bold leading-10 text-gray-900">LSE</h1>
                                 </div>
                             </div>
                             <div wire:loading.flex class="justify-center items-center">

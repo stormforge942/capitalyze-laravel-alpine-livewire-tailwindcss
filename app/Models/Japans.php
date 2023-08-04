@@ -4,7 +4,7 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
 
-class ShanghaiFilings extends Model
+class Japans extends Model
 {
     /**
      * The "booting" method of the model.
@@ -16,7 +16,7 @@ class ShanghaiFilings extends Model
         parent::boot();
 
         static::creating(function ($model) {
-            $model->{$model->getKeyName()} = $model->symbol . '-' . $model->updated_at;
+            $model->{$model->getKeyName()} = $model->symbol . '-' . $model->date;
         });
     }
 
@@ -25,7 +25,7 @@ class ShanghaiFilings extends Model
      *
      * @var array
      */
-    protected $primaryKey = ['symbol', 'updated_at'];
+    protected $primaryKey = ['symbol', 'date'];
 
     /**
      * Indicates if the IDs are auto-incrementing.
@@ -39,7 +39,7 @@ class ShanghaiFilings extends Model
      *
      * @var string
      */
-    protected $table = 'public.shanghai_statements';
+    protected $table = 'public.japan_feed';
 
     /**
      * The connection name for the model.
@@ -62,7 +62,7 @@ class ShanghaiFilings extends Model
      */
     protected $fillable = [
         'symbol',
-        'updated_at',
+        'date',
     ];
 
     /**

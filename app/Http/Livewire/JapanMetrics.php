@@ -5,9 +5,9 @@ namespace App\Http\Livewire;
 use Livewire\Component;
 use Illuminate\Support\Facades\DB;
 
-class LseMetrics extends Component
+class JapanMetrics extends Component
 {
-    public $lse;
+    public $japan;
     public $table;
     public $metrics;
     public $segments;
@@ -21,9 +21,9 @@ class LseMetrics extends Component
 
     public function getMetrics() {
         $dbResponse = DB::connection('pgsql-xbrl')
-        ->table('public.lse_statements')
+        ->table('public.japan_statements')
         ->select('json_result')
-        ->where('symbol', '=', $this->lse->symbol)
+        ->where('symbol', '=', $this->japan->symbol)
         ->orderBy('date', 'desc')
         ->get()->toArray();
         
@@ -57,8 +57,8 @@ class LseMetrics extends Component
 
     public function getNavbar() {  
         $data = json_decode(DB::connection('pgsql-xbrl')
-        ->table('public.lse_statements')
-        ->where('symbol', '=', $this->lse->symbol)
+        ->table('public.japan_statements')
+        ->where('symbol', '=', $this->japan->symbol)
         ->value('json_result'), true);
         
 
@@ -108,9 +108,9 @@ class LseMetrics extends Component
         $this->table = $table;
    }
 
-    public function mount($lse)
+    public function mount($japan)
     {
-        $this->lse = $lse;
+        $this->japan = $japan;
         $this->getNavbar();
         $this->getMetrics();
         $this->renderTable();
@@ -130,6 +130,6 @@ class LseMetrics extends Component
 
     public function render()
     {
-        return view('livewire.lse-metrics');
+        return view('livewire.japan-metrics');
     }
 }

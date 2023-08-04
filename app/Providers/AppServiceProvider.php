@@ -29,7 +29,7 @@ class AppServiceProvider extends ServiceProvider
         Spotlight::registerGroup('funds', 'Funds');
         Spotlight::registerGroup('euronexts', 'Euronexts');
         Spotlight::registerGroup('lses', 'LSE');
-        Spotlight::registerGroup('shanghais', 'Shaghai');
+        Spotlight::registerGroup('shanghais', 'Shanghai');
         Spotlight::registerGroup('japans', 'Japan');
 
         Spotlight::registerQueries(

@@ -5,14 +5,14 @@ namespace App\Http\Livewire;
 use Illuminate\Http\Request;
 use Livewire\Component;
 
-class LseNavbar extends Component
+class JapanNavbar extends Component
 {
-    public $lse;
+    public $japan;
     public $currentRoute;
 
     public function render()
     {
-        return view('livewire.lse-navbar');
+        return view('livewire.japan-navbar');
     }
 
     public function mount(Request $request, $route = '', $active = false)

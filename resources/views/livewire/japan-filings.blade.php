@@ -4,7 +4,7 @@
             <div class="px-4 sm:px-6 lg:px-8 bg-white py-4 shadow mx-4 rounded max-w-5xl mx-auto">
                 <div class="sm:flex sm:items-start flex-col">
                     <div class="block mb-3">
-                        <h1 class="text-base font-semibold leading-10 text-gray-900">Euronext Filings - {{$euronext->registrant_name}}({{$euronext->symbol}})</h1>
+                        <h1 class="text-base font-semibold leading-10 text-gray-900">Japan Filings - {{$japan->registrant_name}}({{$japan->symbol}})</h1>
                     </div>
                     <div class="grid gap-4 w-full grid-cols-1 md:grid-cols-2 items-start">
                         <div wire:loading.flex class="justify-center items-center min-w-full col-span-2">
@@ -20,7 +20,7 @@
                     <div class="mt-8 flow-root rounded-lg overflow-x-auto w-full" wire:loading.remove>
                         <div class="align-middle">
                             <div class="inline-block min-w-full sm:rounded-lg" wire:model="table">
-                                <livewire:euronext-filings-table :euronext="$euronext" />
+                                <livewire:japan-filings-table :japan="$japan" />
                             </div>
                         </div>
                     </div>

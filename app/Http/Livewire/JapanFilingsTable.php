@@ -15,7 +15,7 @@ use PowerComponents\LivewirePowerGrid\Traits\WithExport;
 use PowerComponents\LivewirePowerGrid\Filters\Filter;
 use PowerComponents\LivewirePowerGrid\{Button, Column, Exportable, Footer, Header, PowerGrid, PowerGridComponent, PowerGridEloquent};
 
-final class LseFilingsTable extends PowerGridComponent
+final class JapanFilingsTable extends PowerGridComponent
 {
     use ActionButton;
     use WithExport;
@@ -28,6 +28,7 @@ final class LseFilingsTable extends PowerGridComponent
     public bool $displayLoader = true;
     public array $dateRange = [];
     public array $dateFilter = [];
+    public $japan;
 
 
     /*
@@ -95,7 +96,8 @@ final class LseFilingsTable extends PowerGridComponent
     */
     public function datasource(): ?Builder
     {
-        $query = JapanFilings::query();
+        $query = JapanFilings::query()
+            ->where('symbol', '=', $this->japan->symbol);
 
         if (!empty($this->dateFilter)) {
             $query = $query->whereBetween('updated_at', $this->dateFilter);
@@ -137,7 +139,6 @@ final class LseFilingsTable extends PowerGridComponent
     public function addColumns(): PowerGridEloquent
     {
         return PowerGrid::eloquent()
-            ->addColumn('symbol')
             ->addColumn('industry')
             ->addColumn('fiscal_year')
             ->addColumn('fiscal_period')
@@ -150,7 +151,6 @@ final class LseFilingsTable extends PowerGridComponent
     public function columns(): array
     {
         return [
-            Column::make('Symbol', 'symbol')->sortable(),
             Column::make('Industry', 'industry')->sortable(),
             Column::make('Fiscal Year', 'fiscal_year')->sortable(),
             Column::make('Fiscal Period', 'fiscal_period')->sortable(),
@@ -162,7 +162,6 @@ final class LseFilingsTable extends PowerGridComponent
     public function filters(): array
     {
         return [
-            Filter::inputText('symbol', 'symbol')->operators([]),
             Filter::inputText('industry', 'industry')->operators([]),
             Filter::inputText('fiscal_year', 'fiscal_year')->operators([]),
             Filter::inputText('fiscal_period', 'fiscal_period')->operators([]),

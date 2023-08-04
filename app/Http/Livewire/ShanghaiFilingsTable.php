@@ -21,13 +21,14 @@ final class ShanghaiFilingsTable extends PowerGridComponent
     use WithExport;
 
     public bool $deferLoading = false; // default false
-    public string $sortField = 'updated_at';
+    public string $sortField = 'date';
     public string $sortDirection = 'desc';
     public int $perPage = 25;
     public array $perPageValues = [10, 25, 50];
     public bool $displayLoader = true;
     public array $dateRange = [];
     public array $dateFilter = [];
+    public $shanghai;
 
 
     /*
@@ -95,7 +96,8 @@ final class ShanghaiFilingsTable extends PowerGridComponent
     */
     public function datasource(): ?Builder
     {
-        $query = ShanghaiFilings::query();
+        $query = ShanghaiFilings::query()
+            ->where('symbol', '=', $this->shanghai->symbol);
 
         if (!empty($this->dateFilter)) {
             $query = $query->whereBetween('updated_at', $this->dateFilter);
@@ -137,12 +139,9 @@ final class ShanghaiFilingsTable extends PowerGridComponent
     public function addColumns(): PowerGridEloquent
     {
         return PowerGrid::eloquent()
-            ->addColumn('symbol')
-            ->addColumn('market')
-            ->addColumn('market_full_name')
-            ->addColumn('fiscal_year')
-            ->addColumn('fiscal_period')
-            ->addColumn('updated_at')
+            ->addColumn('full_name')
+            ->addColumn('short_name')
+            ->addColumn('date')
             ->addColumn('url', function (ShanghaiFilings $shanghaiFilings) {
                 return ('<a class="text-blue-500" target="_blank"  href="'.$shanghaiFilings->url.'">More Info</a>');
             });
@@ -151,12 +150,9 @@ final class ShanghaiFilingsTable extends PowerGridComponent
     public function columns(): array
     {
         return [
-            Column::make('Symbol', 'symbol')->sortable(),
-            Column::make('Market', 'market')->sortable(),
-            Column::make('Market Full Name', 'market_full_name')->sortable(),
-            Column::make('Fiscal Year', 'fiscal_year')->sortable(),
-            Column::make('Fiscal Period', 'fiscal_period')->sortable(),
-            Column::make('Updated At', 'updated_at')->sortable(),
+            Column::make('Full Name', 'full_name')->sortable(),
+            Column::make('Short Name', 'short_name')->sortable(),
+            Column::make('Date', 'date')->sortable(),
             Column::make('URL', 'url')->sortable(),
         ];
     }
@@ -164,12 +160,9 @@ final class ShanghaiFilingsTable extends PowerGridComponent
     public function filters(): array
     {
         return [
-            Filter::inputText('symbol', 'symbol')->operators([]),
-            Filter::inputText('market', 'market')->operators([]),
-            Filter::inputText('market_full_name', 'market_full_name')->operators([]),
-            Filter::inputText('fiscal_year', 'fiscal_year')->operators([]),
-            Filter::inputText('fiscal_period', 'fiscal_period')->operators([]),
-            Filter::inputText('updated_at', 'updated_at')->operators([]),
+            Filter::inputText('full_name', 'full_name')->operators([]),
+            Filter::inputText('short_name', 'short_name')->operators([]),
+            Filter::inputText('date', 'date')->operators([]),
             Filter::inputText('url', 'url')->operators([]),
         ];
     }
