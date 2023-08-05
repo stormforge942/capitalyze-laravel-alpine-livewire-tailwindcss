@@ -11,6 +11,7 @@ use App\Models\Fund;
 use App\Models\Lse;
 use App\Models\Shanghai;
 use App\Models\Euronext;
+use App\Models\Japan;
 use WireElements\Pro\Components\Spotlight\Spotlight;
 use WireElements\Pro\Components\Spotlight\SpotlightQuery;
 use WireElements\Pro\Components\Spotlight\SpotlightResult;
@@ -28,7 +29,8 @@ class AppServiceProvider extends ServiceProvider
         Spotlight::registerGroup('funds', 'Funds');
         Spotlight::registerGroup('euronexts', 'Euronexts');
         Spotlight::registerGroup('lses', 'LSE');
-        Spotlight::registerGroup('shanghais', 'Shaghai');
+        Spotlight::registerGroup('shanghais', 'Shanghai');
+        Spotlight::registerGroup('japans', 'Japan');
 
         Spotlight::registerQueries(
             SpotlightQuery::asDefault(function ($query) {
@@ -47,6 +49,10 @@ class AppServiceProvider extends ServiceProvider
                 $shanghais = Shanghai::where('full_name', 'ilike', "%{$query}%")
                 ->orWhere('symbol', 'ilike', "%{$query}%")
                 ->orWhere('short_name', 'ilike', "%{$query}%")
+                ->take(10)->get();
+                $japans = Japan::where('registrant_name', 'ilike', "%{$query}%")
+                ->orWhere('symbol', 'ilike', "%{$query}%")
+                ->orWhere('isin', 'ilike', "%{$query}%")
                 ->take(10)->get();
 
                 foreach ($companies as $company) {
@@ -91,6 +97,15 @@ class AppServiceProvider extends ServiceProvider
                             ->setGroup('shanghais')
                             ->setTitle($shanghai->full_name)
                             ->setAction('jump_to', ['path' => '/shanghai/'.$shanghai->symbol])
+                    );
+                }
+
+                foreach ($japans as $japan) {
+                    $collection->push(
+                        SpotlightResult::make()
+                            ->setGroup('japans')
+                            ->setTitle($japan->registrant_name)
+                            ->setAction('jump_to', ['path' => '/japan/'.$japan->symbol])
                     );
                 }
             

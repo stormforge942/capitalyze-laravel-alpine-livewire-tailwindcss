@@ -2,7 +2,7 @@
 
 namespace App\Http\Livewire;
 
-use App\Models\EuronextFilings;
+use App\Models\JapanFilings;
 use Livewire\Livewire;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Str;
@@ -15,7 +15,7 @@ use PowerComponents\LivewirePowerGrid\Traits\WithExport;
 use PowerComponents\LivewirePowerGrid\Filters\Filter;
 use PowerComponents\LivewirePowerGrid\{Button, Column, Exportable, Footer, Header, PowerGrid, PowerGridComponent, PowerGridEloquent};
 
-final class EuronextFilingsTable extends PowerGridComponent
+final class JapanFilingsTable extends PowerGridComponent
 {
     use ActionButton;
     use WithExport;
@@ -28,7 +28,7 @@ final class EuronextFilingsTable extends PowerGridComponent
     public bool $displayLoader = true;
     public array $dateRange = [];
     public array $dateFilter = [];
-    public $euronext;
+    public $japan;
 
 
     /*
@@ -96,8 +96,8 @@ final class EuronextFilingsTable extends PowerGridComponent
     */
     public function datasource(): ?Builder
     {
-        $query = EuronextFilings::query()
-            ->where('symbol', '=', $this->euronext->symbol);
+        $query = JapanFilings::query()
+            ->where('symbol', '=', $this->japan->symbol);
 
         if (!empty($this->dateFilter)) {
             $query = $query->whereBetween('updated_at', $this->dateFilter);
@@ -139,21 +139,19 @@ final class EuronextFilingsTable extends PowerGridComponent
     public function addColumns(): PowerGridEloquent
     {
         return PowerGrid::eloquent()
-            ->addColumn('market')
-            ->addColumn('market_full_name')
+            ->addColumn('industry')
             ->addColumn('fiscal_year')
             ->addColumn('fiscal_period')
             ->addColumn('updated_at')
-            ->addColumn('url', function (EuronextFilings $euronextFilings) {
-                return ('<a class="text-blue-500" target="_blank"  href="'.$euronextFilings->url.'">More Info</a>');
+            ->addColumn('url', function (JapanFilings $japanFilings) {
+                return ('<a class="text-blue-500" target="_blank"  href="'.$japanFilings->url.'">More Info</a>');
             });
     }
 
     public function columns(): array
     {
         return [
-            Column::make('Market', 'market')->sortable(),
-            Column::make('Market Full Name', 'market_full_name')->sortable(),
+            Column::make('Industry', 'industry')->sortable(),
             Column::make('Fiscal Year', 'fiscal_year')->sortable(),
             Column::make('Fiscal Period', 'fiscal_period')->sortable(),
             Column::make('Updated At', 'updated_at')->sortable(),
@@ -164,8 +162,7 @@ final class EuronextFilingsTable extends PowerGridComponent
     public function filters(): array
     {
         return [
-            Filter::inputText('market', 'market')->operators([]),
-            Filter::inputText('market_full_name', 'market_full_name')->operators([]),
+            Filter::inputText('industry', 'industry')->operators([]),
             Filter::inputText('fiscal_year', 'fiscal_year')->operators([]),
             Filter::inputText('fiscal_period', 'fiscal_period')->operators([]),
             Filter::inputText('updated_at', 'updated_at')->operators([]),

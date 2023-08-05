@@ -140,7 +140,6 @@ final class ShanghaisTable extends PowerGridComponent
             ->addColumn('symbol', function(Shanghais $shanghais) {
                 return("<a class='text-blue-500' href='/shanghai/$shanghais->symbol'>$shanghais->symbol</a>");
             })
-            ->addColumn('symbol')
             ->addColumn('date')
             ->addColumn('updated_at');
     }

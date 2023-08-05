@@ -28,6 +28,7 @@ final class LseFilingsTable extends PowerGridComponent
     public bool $displayLoader = true;
     public array $dateRange = [];
     public array $dateFilter = [];
+    public $lse;
 
 
     /*
@@ -95,7 +96,8 @@ final class LseFilingsTable extends PowerGridComponent
     */
     public function datasource(): ?Builder
     {
-        $query = LseFilings::query();
+        $query = LseFilings::query()
+            ->where('symbol', '=', $this->lse->symbol);
 
         if (!empty($this->dateFilter)) {
             $query = $query->whereBetween('updated_at', $this->dateFilter);
@@ -137,7 +139,6 @@ final class LseFilingsTable extends PowerGridComponent
     public function addColumns(): PowerGridEloquent
     {
         return PowerGrid::eloquent()
-            ->addColumn('symbol')
             ->addColumn('market')
             ->addColumn('market_segment')
             ->addColumn('fiscal_year')
@@ -151,7 +152,6 @@ final class LseFilingsTable extends PowerGridComponent
     public function columns(): array
     {
         return [
-            Column::make('Symbol', 'symbol')->sortable(),
             Column::make('Market', 'market')->sortable(),
             Column::make('Market Segment', 'market_segment')->sortable(),
             Column::make('Fiscal Year', 'fiscal_year')->sortable(),
@@ -164,7 +164,6 @@ final class LseFilingsTable extends PowerGridComponent
     public function filters(): array
     {
         return [
-            Filter::inputText('symbol', 'symbol')->operators([]),
             Filter::inputText('market', 'market')->operators([]),
             Filter::inputText('market_segment', 'market_segment')->operators([]),
             Filter::inputText('fiscal_year', 'fiscal_year')->operators([]),
