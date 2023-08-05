@@ -60,6 +60,11 @@
                {{ __('LSE') }}
             </x-jet-nav-link>
          </li>
+         <li>
+            <x-jet-nav-link href="{{ route('japans') }}" :active="request()->routeIs('japans')">
+               {{ __('Japan') }}
+            </x-jet-nav-link>
+         </li>
       </ul>
       <hr class="my-4"> <!-- Separator -->
       <ul class="space-y-2 font-medium">

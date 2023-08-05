@@ -4,7 +4,7 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
 
-class ShanghaiFilings extends Model
+class JapanFilings extends Model
 {
     /**
      * The "booting" method of the model.
@@ -39,7 +39,7 @@ class ShanghaiFilings extends Model
      *
      * @var string
      */
-    protected $table = 'public.shanghai_statements';
+    protected $table = 'public.japan_urls';
 
     /**
      * The connection name for the model.
@@ -63,6 +63,10 @@ class ShanghaiFilings extends Model
     protected $fillable = [
         'symbol',
         'updated_at',
+        'industry',
+        'fiscal_year',
+        'fiscal_period',
+        'url',
     ];
 
     /**

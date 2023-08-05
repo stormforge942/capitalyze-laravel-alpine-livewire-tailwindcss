@@ -6,7 +6,7 @@ use Livewire\Component;
 
 class LseFilings extends Component
 {
-    public $euronext;
+    public $lse;
 
     public function mount($lse) {
         $this->lse = $lse;
