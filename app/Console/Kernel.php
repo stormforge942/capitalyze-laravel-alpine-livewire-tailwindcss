@@ -18,6 +18,10 @@ class Kernel extends ConsoleKernel
     {
         $schedule->command('company:import')->daily();
         $schedule->command('fund:import')->daily();
+        $schedule->command('shanghai:import')->daily();
+        $schedule->command('lse:import')->daily();
+        $schedule->command('japan:import')->daily();
+        $schedule->command('euronext:import')->daily();
     }
 
     /**
