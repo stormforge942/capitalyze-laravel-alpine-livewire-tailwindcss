@@ -65,6 +65,11 @@
                {{ __('Japan') }}
             </x-jet-nav-link>
          </li>
+         <li>
+            <x-jet-nav-link href="{{ route('press.release') }}" :active="request()->routeIs('press.release')">
+               {{ __('Press Release') }}
+            </x-jet-nav-link>
+         </li>
       </ul>
       <hr class="my-4"> <!-- Separator -->
       <ul class="space-y-2 font-medium">
