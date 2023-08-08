@@ -15,6 +15,7 @@ use App\Http\Livewire\Euronexts;
 use App\Http\Livewire\Lses;
 use App\Http\Livewire\Shanghais;
 use App\Http\Livewire\Japans;
+use App\Http\Livewire\PressRelease;
 use App\Http\Livewire\EarningsCalendar;
 use App\Http\Livewire\EconomicsCalendar;
 use App\Http\Livewire\EconomicRelease;
@@ -58,6 +59,7 @@ Route::middleware(['auth', 'approved', 'verified'])->group(function () {
     Route::get('/lse', Lses::class)->name('lses');
     Route::get('/shanghai', Shanghais::class)->name('shanghais');
     Route::get('/japan', Japans::class)->name('japans');
+    Route::get('/press-release', PressRelease::class)->name('press.release');
 
     /*
     | Company routing

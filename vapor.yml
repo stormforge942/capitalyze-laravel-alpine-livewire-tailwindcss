@@ -1,11 +1,11 @@
-id: 48027
-name: xbrl-explorer-laravel
+id: 50591
+name: Capitalyze
 environments:
     production:
         timeout: 30
         cli-timeout: 600
         domain: capitalyze.com
-        database: xbrl-front-us
+        database: xbrl-front
         memory: 1024
         cli-memory: 512
         runtime: 'php-8.2:al2'
@@ -13,6 +13,8 @@ environments:
             - 'COMPOSER_MIRROR_PATH_REPOS=1 composer install --no-dev'
             - 'php artisan event:cache'
             - 'npm ci && npm run build && rm -rf node_modules'
+        deploy:
+            - 'php artisan migrate --force'
     staging:
         memory: 1024
         cli-memory: 512
@@ -21,3 +23,5 @@ environments:
             - 'COMPOSER_MIRROR_PATH_REPOS=1 composer install'
             - 'php artisan event:cache'
             - 'npm ci && npm run build && rm -rf node_modules'
+        deploy:
+            - 'php artisan migrate --force'
