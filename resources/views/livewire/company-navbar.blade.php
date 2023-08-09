@@ -156,6 +156,11 @@
                     href="/company/{{ $company->ticker }}/employee" name="Employee Count"
                     :active="$currentRoute === 'company.employee'" />
             </li>
+         <li>
+               <livewire:company-navbar-item wire:key="navbar-employee"
+                  href="/company/{{ $company->ticker }}/fail-to-deliver" name="Fail To Deliver"
+                  :active="$currentRoute === 'company.fail.to.deliver'" />
+         </li>
       </ul>
 
    </div>
