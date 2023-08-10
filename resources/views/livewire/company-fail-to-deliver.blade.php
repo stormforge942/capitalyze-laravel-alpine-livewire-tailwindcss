@@ -15,19 +15,8 @@
                     <div class="block">
                         <h1 class="text-base font-semibold leading-6 text-gray-900">Company Fail To Deliver - {{ $company->name }}</h1>
                     </div>
-                    <div class="overflow-x-scroll">
-                        <table class="table-auto w-full overflow-scroll" wire:loading.remove>
-                                <tr>
-                                    <td class="font-semibold py-4">CUSIP</td>
-                                    <td class="font-semibold py-4">Date</td>
-                                </tr>
-                                @foreach($failToDeliver as $fail)
-                                <tr>
-                                    <td class="px-2">{{ $fail->cusip }}</td>
-                                    <td class="px-2">{{ $fail->date }}</td>
-                                </tr>
-                                @endforeach
-                        </table>
+                    <div class="overflow-x-scroll w-full">
+                        <livewire:company-fail-to-deliver-table />
                     </div>
                 </div>
             </div>
