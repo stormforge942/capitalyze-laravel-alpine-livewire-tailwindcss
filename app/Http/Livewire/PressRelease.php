@@ -20,7 +20,7 @@ class PressRelease extends Component
         $query = DB::connection('pgsql-xbrl')
             ->table('public.press_releases');
 
-        $results = $query->orderBy('url', 'asc')->limit(100)->get()->toArray();
+        $results = $query->orderBy('url', 'desc')->limit(100)->get()->toArray();
 
         $this->pressRelease = $results;
     }
