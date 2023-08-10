@@ -43,11 +43,17 @@
                                             </tr>
                                             <tr>
                                                 <td class="font-semibold py-4">Name</td>
+                                                <td class="font-semibold py-4">Time</td>
                                                 <td class="font-semibold py-4">Source</td>
                                             </tr>
                                             @foreach($events as $event)
                                             <tr>
-                                                <td class="break-all px-2"><a href="{{ route('economics-release', ['release_id' => $event->release_id]) }}">{{ isset($event->name) ? $event->name : 'Release' }}</a></td>
+                                                <td class="break-all px-2 w-[70%]"><a href="{{ route('economics-release', ['release_id' => $event->release_id]) }}">{{ isset($event->name) ? $event->name : 'Release' }}</a></td>
+                                                @if(isset($event->time))
+                                                <td class="px-2">{{$event->time}}</td>
+                                                @else
+                                                <td class="px-2">No Time</td>
+                                                @endif
                                                 @if(isset($event->source))
                                                 <td class="px-2"><a class="text-blue-700" href="{{ $event->source }}" target="_blank" rel="noreferrer nofollow">More Info</a></td>
                                                 @else

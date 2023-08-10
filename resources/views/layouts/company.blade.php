@@ -58,6 +58,8 @@
                     <livewire:company-restatement :company="$company" :ticker="$ticker" :period="$period" />
                     @elseif($tab == 'employee')
                     <livewire:company-employee-count :company="$company" :ticker="$ticker" :period="$period" />
+                    @elseif($tab == 'failToDeliver')
+                    <livewire:company-fail-to-deliver :company="$company" :ticker="$ticker" :period="$period" />
                     @endif
                 </div> 
             </div>

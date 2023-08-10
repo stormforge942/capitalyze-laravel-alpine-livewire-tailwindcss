@@ -32,6 +32,18 @@ class CompanyController extends BaseController
         ]);
     }
 
+    public function failToDeliver(Request $request, $ticker)
+    {
+        $company = Company::where('ticker', $ticker)->get()->first();
+
+        return view('layouts.company', [
+            'company' => $company,
+            'ticker' => $ticker,
+            'period' => $request->query('period', 'annual'),
+            'tab' => 'failToDeliver'
+        ]);
+    }
+
     public function product(Request $request, $ticker)
     {
         $company = Company::where('ticker', $ticker)->get()->first();

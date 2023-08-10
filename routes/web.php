@@ -78,6 +78,7 @@ Route::middleware(['auth', 'approved', 'verified'])->group(function () {
     Route::get('/company/{ticker}/insider', [CompanyController::class, 'insider'])->name('company.insider');
     Route::get('/company/{ticker}/restatement', [CompanyController::class, 'restatement'])->name('company.restatement');
     Route::get('/company/{ticker}/employee', [CompanyController::class, 'employee'])->name('company.employee');
+    Route::get('/company/{ticker}/fail-to-deliver', [CompanyController::class, 'failToDeliver'])->name('company.fail.to.deliver');
 
     /*
     | Fund routing
