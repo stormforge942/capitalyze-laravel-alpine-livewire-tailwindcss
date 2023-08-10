@@ -3,7 +3,7 @@
         <div class="px-4 sm:px-6 lg:px-8 bg-white py-4 shadow mx-4 rounded max-w-5xl mx-auto">
             <div class="sm:flex sm:items-start flex-col">
                 <div class="block mb-3">
-                    <h1 class="text-base font-semibold leading-10 text-gray-900">Fund Summary - {{ Str::title($fund->name) }}</h1>
+                    <h1 class="text-base font-semibold leading-10 text-gray-900">{{ Str::title($fund->name) }}</h1>
                 </div>
                 <div class="block mb-3">
                     <label for="quarter-select">Quarter to view:</label>
@@ -13,7 +13,7 @@
                         @endforeach
                     </select>
                 </div>
-                <div class="grid gap-4 w-full grid-cols-1 md:grid-cols-2 items-start">
+                <div class="grid gap-4 w-full grid-cols-1 md:grid-cols-2 items-start" wire:init="loadFundData('{{$selectedQuarter}}')">
                     <div wire:loading.flex class="justify-center items-center min-w-full col-span-2">
                             <div class="grid place-content-center h-full " role="status">
                             <svg aria-hidden="true" class="w-12 h-12 mr-2 text-gray-200 animate-spin dark:text-gray-600 fill-blue-600" viewBox="0 0 100 101" fill="none" xmlns="http://www.w3.org/2000/svg">
@@ -30,19 +30,8 @@
                             <th colspan="2" scope="colgroup" class="whitespace-nowrap px-2 py-3.5 text-left text-sm font-semibold text-white bg-sky-950 text-center">Top Buys (13F)</th>
                             </tr>
                         </thead>
-                        <tbody>
-                        <tr class="border-t border-gray-200">
-                            <th class="bg-gray-50 py-2 pl-4 pr-3 text-left text-sm font-semibold text-gray-900 sm:pl-3">Name</th>
-                            <th class="bg-gray-50 py-2 pl-4 pr-3 text-left text-sm font-semibold text-gray-900 sm:pl-3">Change</th>
-                        </tr>
-                        @foreach($topBuys as $key => $value)
-                            <tr>
-                                <td class="px-3 py-3.5"><span class="text-base font-semibold">{{ $value->symbol }}</span> <small>{{ Str::title($value->name_of_issuer) }}</small> </td>
-                                <td class="px-3 py-3.5 text-left text-sm text-green-500">{{ number_format(floatval($value->change_in_shares), 0) }}</td>
-                            </tr>
-                        @endforeach
-                        </tbody>
                         </table>
+                        <canvas id="topBuys"></canvas>
                     </div>
 
                     <div class="rounded rounded-lg border border-sky-950 w-full overflow-scroll inline-block" wire:loading.remove>
@@ -52,19 +41,8 @@
                             <th colspan="2" scope="colgroup" class="whitespace-nowrap px-2 py-3.5 text-left text-sm font-semibold text-white bg-sky-950 text-center">Top Sells (13F)</th>
                             </tr>
                         </thead>
-                        <tbody>
-                        <tr class="border-t border-gray-200">
-                            <th class="bg-gray-50 py-2 pl-4 pr-3 text-left text-sm font-semibold text-gray-900 sm:pl-3">Name</th>
-                            <th class="bg-gray-50 py-2 pl-4 pr-3 text-left text-sm font-semibold text-gray-900 sm:pl-3">Change</th>
-                        </tr>
-                        @foreach($topSells as $key => $value)
-                            <tr>
-                                <td class="px-3 py-3.5"><span class="text-base font-semibold">{{ $value->symbol }}</span> <small>{{ Str::title($value->name_of_issuer) }}</small> </td>
-                                <td class="px-3 py-3.5 text-left text-sm text-red-500">{{ number_format(floatval($value->change_in_shares), 0) }}</td>
-                            </tr>
-                        @endforeach
-                        </tbody>
                         </table>
+                        <canvas id="topSells"></canvas>
                     </div>
 
                     <div class="rounded rounded-lg border border-sky-950 w-full overflow-scroll inline-block" wire:loading.remove>
@@ -126,3 +104,47 @@
         </div>
     </div>
 </div>
+@push('scripts')
+<script>
+const chartBuys = new Chart(
+    document.getElementById('topBuys'), {
+        type: 'doughnut',
+        data: {
+            labels: [],
+            datasets: []
+        },
+    }
+);
+
+const chartSells = new Chart(
+    document.getElementById('topSells'), {
+        type: 'doughnut',
+        data: {
+            labels: [],
+            datasets: []
+        },
+    }
+);
+
+
+document.addEventListener('livewire:load', function () {
+    Livewire.on('getTopBuys', function (chartData) {
+        const labels = chartData.map((data) => data.name_of_issuer);
+        const datasets = [{label: 'Change', data: chartData.map((data) => data.change_in_shares)}];
+
+        chartBuys.data.labels = labels;
+        chartBuys.data.datasets = datasets;
+        chartBuys.update();
+    });
+
+    Livewire.on('getTopSells', function (chartData) {
+        const labels = chartData.map((data) => data.name_of_issuer);
+        const datasets = [{label: 'Change', data: chartData.map((data) => data.change_in_shares)}];
+
+        chartSells.data.labels = labels;
+        chartSells.data.datasets = datasets;
+        chartSells.update();
+    });
+});
+</script>
+@endpush
