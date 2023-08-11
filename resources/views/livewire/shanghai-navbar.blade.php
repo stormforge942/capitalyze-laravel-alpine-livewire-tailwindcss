@@ -14,6 +14,66 @@
             </a>
             <ul class="space-y-2 font-medium">
                 <li>
+                    <x-jet-nav-link href="{{ route('earnings-calendar') }}" :active="request()->routeIs('earnings-calendar')">
+                    {{ __('Earnings Calendar') }}
+                    </x-jet-nav-link>
+                </li>
+                <li>
+                    <x-jet-nav-link href="{{ route('economics-calendar') }}" :active="request()->routeIs('economics-calendar')">
+                    {{ __('Economics Calendar') }}
+                    </x-jet-nav-link>
+                </li>
+                <li>
+
+                    <x-jet-nav-link href="{{ route('company-filings') }}" :active="request()->routeIs('company-filings')">
+                    {{ __('Company Filings') }}
+                    </x-jet-nav-link>
+
+                </li>
+                <li>
+                    <x-jet-nav-link href="{{ route('fund-filings') }}" :active="request()->routeIs('fund-filings')">
+                    {{ __('Funds Filings') }}
+                    </x-jet-nav-link>
+                </li>
+                <li>
+                    <x-jet-nav-link href="{{ route('company-identifiers') }}" :active="request()->routeIs('company-identifiers')">
+                    {{ __('Company Identifiers') }}
+                    </x-jet-nav-link>
+                </li>
+                <li>
+                    <x-jet-nav-link href="{{ route('delistings') }}" :active="request()->routeIs('delistings')">
+                    {{ __('Delistings') }}
+                    </x-jet-nav-link>
+                </li>
+                <li>
+                    <x-jet-nav-link href="{{ route('euronexts') }}" :active="request()->routeIs('euronexts')">
+                    {{ __('Euronext') }}
+                    </x-jet-nav-link>
+                </li>
+                <li>
+                    <x-jet-nav-link href="{{ route('shanghais') }}" :active="request()->routeIs('shanghais')">
+                    {{ __('Shanghai') }}
+                    </x-jet-nav-link>
+                </li>
+                <li>
+                    <x-jet-nav-link href="{{ route('lses') }}" :active="request()->routeIs('lses')">
+                    {{ __('LSE') }}
+                    </x-jet-nav-link>
+                </li>
+                <li>
+                    <x-jet-nav-link href="{{ route('japans') }}" :active="request()->routeIs('japans')">
+                    {{ __('Japan') }}
+                    </x-jet-nav-link>
+                </li>
+                <li>
+                    <x-jet-nav-link href="{{ route('press.release') }}" :active="request()->routeIs('press.release')">
+                    {{ __('Press Release') }}
+                    </x-jet-nav-link>
+                </li>
+            </ul>
+            <hr class="my-4"> <!-- Separator -->
+            <ul class="space-y-2 font-medium">
+                <li>
                     <x-jet-nav-link href="{{ route('shanghai.metrics', ['ticker' => $shanghai->symbol]) }}" :active="request()->routeIs('shanghai.metrics')">
                     {{ __('Metrics') }}
                     </x-jet-nav-link>
