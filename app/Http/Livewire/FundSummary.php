@@ -36,7 +36,7 @@ class FundSummary extends Component
         ->limit(5)
         ->get()->toArray();
     
-
+        $this->emit('getTopBuys', $data);
         $this->topBuys = $data;
 
         $data = DB::connection('pgsql-xbrl')
@@ -48,6 +48,7 @@ class FundSummary extends Component
         ->limit(5)
         ->get()->toArray();
 
+        $this->emit('getTopSells', $data);
         $this->topSells = $data;
 
         $data = DB::connection('pgsql-xbrl')
