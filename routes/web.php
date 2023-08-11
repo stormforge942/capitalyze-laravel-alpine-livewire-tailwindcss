@@ -6,9 +6,11 @@ use App\Http\Controllers\LseController;
 use App\Http\Controllers\EuronextController;
 use App\Http\Controllers\ShanghaiController;
 use App\Http\Controllers\FundController;
+use App\Http\Controllers\MutualFundController;
 use App\Http\Controllers\JapanController;
 use App\Http\Livewire\CompanyFilingsPage;
 use App\Http\Livewire\FundFilingsPage;
+use App\Http\Livewire\MutualFundFilingsPage;
 use App\Http\Livewire\CompanyIdentifiers;
 use App\Http\Livewire\Delistings;
 use App\Http\Livewire\Euronexts;
@@ -53,6 +55,7 @@ Route::middleware(['auth', 'approved', 'verified'])->group(function () {
     Route::get('/calendar/economics/{release_id}/{series_id}/', EconomicReleaseSeries::class)->name('economics-release-series');
     Route::get('/company-filings', CompanyFilingsPage::class)->name('company-filings');
     Route::get('/fund-filings', FundFilingsPage::class)->name('fund-filings');
+    Route::get('/mutual-fund-filings', MutualFundFilingsPage::class)->name('mutual-fund-filings');
     Route::get('/identifiers', CompanyIdentifiers::class)->name('company-identifiers');
     Route::get('/delistings', Delistings::class)->name('delistings');
     Route::get('/euronext', Euronexts::class)->name('euronexts');
@@ -90,6 +93,11 @@ Route::middleware(['auth', 'approved', 'verified'])->group(function () {
     Route::get('/fund/{ticker}/insider', [FundController::class, 'insider'])->name('fund.insider');
     Route::get('/fund/{ticker}/restatement', [FundController::class, 'restatement'])->name('fund.restatement');
     Route::get('/fund/{ticker}/returns', [FundController::class, 'returns'])->name('fund.returns');
+
+    /*
+    | Mutual Fund routing
+    */
+    Route::get('/mutual-fund/{cik}', [MutualFundController::class, 'holdings'])->name('mutual-fund.holdings');
 
     /*
     | Euronext routing

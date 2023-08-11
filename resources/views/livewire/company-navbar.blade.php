@@ -36,6 +36,11 @@
             </x-jet-nav-link>
          </li>
          <li>
+            <x-jet-nav-link href="{{ route('mutual-fund-filings') }}" :active="request()->routeIs('mutual-fund-filings')">
+               {{ __('Mutual Funds Filings') }}
+            </x-jet-nav-link>
+         </li>
+         <li>
             <x-jet-nav-link href="{{ route('company-identifiers') }}" :active="request()->routeIs('company-identifiers')">
                {{ __('Company Identifiers') }}
             </x-jet-nav-link>

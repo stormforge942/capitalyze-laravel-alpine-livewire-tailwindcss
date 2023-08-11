@@ -8,6 +8,7 @@ use Illuminate\Support\ServiceProvider;
 use Illuminate\Support\Facades\App;
 use App\Models\Company;
 use App\Models\Fund;
+use App\Models\MutualFunds;
 use App\Models\Lse;
 use App\Models\Shanghai;
 use App\Models\Euronext;
@@ -27,6 +28,7 @@ class AppServiceProvider extends ServiceProvider
     {
         Spotlight::registerGroup('companies', 'Companies');
         Spotlight::registerGroup('funds', 'Funds');
+        Spotlight::registerGroup('mutual-funds', 'Mutual Funds');
         Spotlight::registerGroup('euronexts', 'Euronexts');
         Spotlight::registerGroup('lses', 'LSE');
         Spotlight::registerGroup('shanghais', 'Shanghai');
@@ -38,6 +40,8 @@ class AppServiceProvider extends ServiceProvider
 
                 $companies = Company::where('name', 'ilike', "%{$query}%")->orWhere('ticker', 'ilike', "%{$query}%")->take(10)->get();
                 $funds = Fund::where('name', 'ilike', "%{$query}%")->orWhere('cik', 'ilike', "%{$query}%")->take(10)->get();
+
+                $mutualFunds = MutualFunds::where('registrant_name', 'ilike', "%{$query}%")->orWhere('cik', 'ilike', "%{$query}%")->take(10)->get();
 
                 $euronexts = Euronext::where('registrant_name', 'ilike', "%{$query}%")
                 ->orWhere('symbol', 'ilike', "%{$query}%")
@@ -70,6 +74,15 @@ class AppServiceProvider extends ServiceProvider
                             ->setGroup('funds')
                             ->setTitle($fund->name)
                             ->setAction('jump_to', ['path' => '/fund/'.$fund->cik])
+                    );
+                }
+
+                foreach ($mutualFunds as $mutualFund) {
+                    $collection->push(
+                        SpotlightResult::make()
+                            ->setGroup('mutual-funds')
+                            ->setTitle($mutualFund->registrant_name)
+                            ->setAction('jump_to', ['path' => '/mutual-fund/'.$mutualFund->cik])
                     );
                 }
 
