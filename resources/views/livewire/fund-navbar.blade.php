@@ -21,6 +21,9 @@
                 <livewire:company-navbar-item wire:key="navbar-restatement"
                     href="/fund/{{ $fund->cik }}/restatement" name="Restatement"
                     :active="$currentRoute === 'fund.restatement'" />
+                <livewire:company-navbar-item wire:key="navbar-returns"
+                    href="/fund/{{ $fund->cik }}/returns" name="Returns"
+                    :active="$currentRoute === 'fund.returns'" />
             </div>
         </nav>
     </div>
@@ -46,6 +49,9 @@
             <livewire:company-navbar-item wire:key="navbar-restatement-mob"
                 href="/fund/{{ $fund->cik }}/restatement" name="Restatement"
                 :active="$currentRoute === 'fund.restatement'" />
+            <livewire:company-navbar-item wire:key="navbar-returns"
+                href="/fund/{{ $fund->cik }}/returns" name="Returns"
+                :active="$currentRoute === 'fund.returns'" />
         </div>
     </nav>
 </header>
