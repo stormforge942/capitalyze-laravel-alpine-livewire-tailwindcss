@@ -1,58 +1,55 @@
 <div>
-<header class="bg-white shadow">
-    <div class="px-2 mx-auto max-w-7xl sm:px-4 lg:divide-y lg:divide-gray-200 lg:px-8">
-        <nav class="hidden lg:flex lg:py-2" aria-label="Global">
-            <div class="lg:space-x-4">
-                <livewire:company-navbar-item wire:key="navbar-summary"
-                    href="/fund/{{ $fund->cik }}" name="Summary"
-                    :active="$currentRoute === 'fund.summary'" />
-                <livewire:company-navbar-item wire:key="navbar-holdings"
-                    href="/fund/{{ $fund->cik }}/holdings" name="Holdings"
-                    :active="$currentRoute === 'fund.holdings'" />
-                <livewire:company-navbar-item wire:key="navbar-metrics"
-                    href="/fund/{{ $fund->cik }}/metrics" name="Metrics"
-                    :active="$currentRoute === 'fund.metrics'" />
-                <livewire:company-navbar-item wire:key="navbar-insider"
-                    href="/fund/{{ $fund->cik }}/insider" name="Insider"
-                    :active="$currentRoute === 'fund.insider'" />
-                <livewire:company-navbar-item wire:key="navbar-filings"
-                    href="/fund/{{ $fund->cik }}/filings" name="Filings"
-                    :active="$currentRoute === 'fund.filings'" />
-                <livewire:company-navbar-item wire:key="navbar-restatement"
-                    href="/fund/{{ $fund->cik }}/restatement" name="Restatement"
-                    :active="$currentRoute === 'fund.restatement'" />
-                <livewire:company-navbar-item wire:key="navbar-returns"
-                    href="/fund/{{ $fund->cik }}/returns" name="Returns"
-                    :active="$currentRoute === 'fund.returns'" />
-            </div>
-        </nav>
-    </div>
+   <div>
+        <button data-drawer-target="default-sidebar" data-drawer-toggle="default-sidebar" aria-controls="default-sidebar" type="button" class="inline-flex items-center p-2 mt-2 ml-3 text-sm text-gray-500 rounded-lg sm:hidden hover:bg-gray-100 focus:outline-none focus:ring-2 focus:ring-gray-200 dark:text-gray-400 dark:hover:bg-gray-700 dark:focus:ring-gray-600">
+        <span class="sr-only">Open sidebar</span>
+        <svg class="w-6 h-6" aria-hidden="true" fill="currentColor" viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg">
+            <path clip-rule="evenodd" fill-rule="evenodd" d="M2 4.75A.75.75 0 012.75 4h14.5a.75.75 0 010 1.5H2.75A.75.75 0 012 4.75zm0 10.5a.75.75 0 01.75-.75h7.5a.75.75 0 010 1.5h-7.5a.75.75 0 01-.75-.75zM2 10a.75.75 0 01.75-.75h14.5a.75.75 0 010 1.5H2.75A.75.75 0 012 10z"></path>
+        </svg>
+        </button>
 
-    <!-- Mobile menu, show/hide based on menu state. -->
-    <nav class="lg:hidden" aria-label="Global" id="mobile-menu">
-        <div class="px-2 pt-2 pb-3 space-y-1">
-            <livewire:company-navbar-item wire:key="navbar-summary-mob"
-                href="/fund/{{ $fund->cik }}" name="Summary"
-                :active="$currentRoute === 'fund.summary'" />
-            <livewire:company-navbar-item wire:key="navbar-holdings-mob"
-                href="/fund/{{ $fund->cik }}/holdings" name="Holdings"
-                :active="$currentRoute === 'fund.holdings'" />
-            <livewire:company-navbar-item wire:key="navbar-metrics-mob"
-                href="/fund/{{ $fund->cik }}/metrics" name="Metrics"
-                :active="$currentRoute === 'fund.metrics'" />
-            <livewire:company-navbar-item wire:key="navbar-insider-mob"
-                    href="/fund/{{ $fund->cik }}/insider" name="Insider"
-                    :active="$currentRoute === 'fund.insider'" />
-            <livewire:company-navbar-item wire:key="navbar-filings-mob"
-                href="/fund/{{ $fund->cik }}/filings" name="Filings"
-                :active="$currentRoute === 'fund.filings'" />
-            <livewire:company-navbar-item wire:key="navbar-restatement-mob"
-                href="/fund/{{ $fund->cik }}/restatement" name="Restatement"
-                :active="$currentRoute === 'fund.restatement'" />
-            <livewire:company-navbar-item wire:key="navbar-returns"
-                href="/fund/{{ $fund->cik }}/returns" name="Returns"
-                :active="$currentRoute === 'fund.returns'" />
+        <aside id="default-sidebar" class="fixed top-0 left-0 z-40 w-64 h-screen transition-transform -translate-x-full sm:translate-x-0" aria-label="Sidebar">
+        <div class="h-full px-3 py-4 overflow-y-auto bg-gray-50 dark:bg-gray-800">
+            <a href="{{ route('home') }}">
+                <img src="{{ asset('img/capitalyze-logo-bg.png') }}" class="block h-20 w-auto p-3" alt="Capitalyze Logo">
+            </a>
+            <ul class="space-y-2 font-medium">
+                <li>
+                    <x-jet-nav-link href="{{ route('fund.summary', ['cik' => $fund->cik]) }}" :active="request()->routeIs('fund.summary')">
+                    {{ __('Summary') }}
+                    </x-jet-nav-link>
+                </li>
+                <li>
+                    <x-jet-nav-link href="{{ route('fund.holdings', ['cik' => $fund->cik]) }}" :active="request()->routeIs('fund.holdings')">
+                    {{ __('Holdings') }}
+                    </x-jet-nav-link>
+                </li>
+                <li>
+                    <x-jet-nav-link href="{{ route('fund.metrics', ['cik' => $fund->cik]) }}" :active="request()->routeIs('fund.metrics')">
+                    {{ __('Metrics') }}
+                    </x-jet-nav-link>
+                </li>
+                <li>
+                    <x-jet-nav-link href="{{ route('fund.insider', ['ticker' => $fund->cik]) }}" :active="request()->routeIs('fund.incider')">
+                    {{ __('Insider') }}
+                    </x-jet-nav-link>
+                </li>
+                <li>
+                    <x-jet-nav-link href="{{ route('fund.filings', ['ticker' => $fund->cik]) }}" :active="request()->routeIs('fund.filings')">
+                    {{ __('Filings') }}
+                    </x-jet-nav-link>
+                </li>
+                <li>
+                    <x-jet-nav-link href="{{ route('fund.restatement', ['ticker' => $fund->cik]) }}" :active="request()->routeIs('fund.restatement')">
+                    {{ __('Restatement') }}
+                    </x-jet-nav-link>
+                </li>
+                <li>
+                    <x-jet-nav-link href="{{ route('fund.returns', ['ticker' => $fund->cik]) }}" :active="request()->routeIs('fund.returns')">
+                    {{ __('Returns') }}
+                    </x-jet-nav-link>
+                </li>
+            </ul>
         </div>
-    </nav>
-</header>
+        </aside>
+    </div>
 </div>

@@ -28,21 +28,23 @@
         <livewire:fund-navbar :fund="$fund" />
         <!-- Page Content -->
         <main>
-            @if($tab == 'summary')
-            <livewire:fund-summary :fund="$fund" :cik="$cik" />
-            @elseif($tab == 'holdings')
-            <livewire:fund-holdings :fund="$fund" :cik="$cik" />
-            @elseif($tab == 'metrics')
-            <livewire:fund-metrics :fund="$fund" :cik="$cik" />
-            @elseif($tab == 'insider')
-            <livewire:fund-insider :fund="$fund" :cik="$cik" />
-            @elseif($tab == 'filings')
-            <livewire:fund-filings :fund="$fund" :cik="$cik" />
-            @elseif($tab == 'restatement')
-            <livewire:fund-restatement :fund="$fund" :cik="$cik" />
-            @elseif($tab == 'returns')
-            <livewire:fund-returns :fund="$fund" :cik="$cik" />
+            <div class="p-4 sm:ml-64 pl-0">
+                @if($tab == 'summary')
+                <livewire:fund-summary :fund="$fund" :cik="$cik" />
+                @elseif($tab == 'holdings')
+                <livewire:fund-holdings :fund="$fund" :cik="$cik" />
+                @elseif($tab == 'metrics')
+                <livewire:fund-metrics :fund="$fund" :cik="$cik" />
+                @elseif($tab == 'insider')
+                <livewire:fund-insider :fund="$fund" :cik="$cik" />
+                @elseif($tab == 'filings')
+                <livewire:fund-filings :fund="$fund" :cik="$cik" />
+                @elseif($tab == 'restatement')
+                <livewire:fund-restatement :fund="$fund" :cik="$cik" />
+                @elseif($tab == 'returns')
+                <livewire:fund-returns :fund="$fund" :cik="$cik" />
             @endif
+            </div>
         </main>
     </div>
 

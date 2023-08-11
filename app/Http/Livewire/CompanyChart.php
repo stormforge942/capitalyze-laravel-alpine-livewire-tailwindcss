@@ -68,9 +68,15 @@ class CompanyChart extends Component
 
         $results = $query->orderBy('date', 'desc')->get()->toArray();
 
-        $this->emit('getCompanyStockChart', $results);
+        $queryAllData = DB::connection('pgsql-xbrl')
+            ->table('eod_prices')
+            ->where('symbol', $this->ticker);
 
-        return $results;
+        $resultsAllData = $queryAllData->orderBy('date', 'asc')->get()->toArray();
+
+        $this->emit('getAllData', $resultsAllData);
+
+        $this->emit('getCompanyStockChart', $results);
     }
 
     public function setChartPeriod($chartPeriod)
