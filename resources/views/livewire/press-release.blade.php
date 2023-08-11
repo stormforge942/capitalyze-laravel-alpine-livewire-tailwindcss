@@ -23,20 +23,7 @@
                                 </div>
                             </div>
                             <div class="overflow-x-scroll">
-                                <table class="table-auto w-full overflow-scroll" wire:loading.remove>
-                                        <tr>
-                                            <td class="font-semibold py-4">Title</td>
-                                            <td class="font-semibold py-4">Date</td>
-                                            <td class="font-semibold py-4">URL</td>
-                                        </tr>
-                                        @foreach($pressRelease as $release)
-                                        <tr>
-                                            <td onclick="showModal(this)" class="break-all px-2 w-[80%] cursor-pointer text-blue-500 open-slide" data-value="{{ $release->text }}">{{ $release->title }}</td>
-                                            <td class="px-2">{{ $release->date }}</td>
-                                            <td class="px-2 text-blue-500"><a href="{{ $release->url }}" target="_blank">More Info</a></td>
-                                        </tr>
-                                        @endforeach
-                                </table>
+                                <livewire:press-release-table />
                             </div>
                         </div>
                     </div>
