@@ -20,6 +20,7 @@
                                         <tr>
                                             <td class="font-semibold py-4">Industry Title</td>
                                             <td class="font-semibold py-4">Name And Position</td>
+                                            <td class="font-semibold py-4">Filing Date</td>
                                             <td class="font-semibold py-4">Salary</td>
                                             <td class="font-semibold py-4">Bonus</td>
                                             <td class="font-semibold py-4">Stock Award</td>
@@ -32,6 +33,7 @@
                                         <tr>
                                             <td class="px-2">{{ $executiveCompensation->industry_title }}</td>
                                             <td class="px-2">{{ $executiveCompensation->name_and_position }}</td>
+                                            <td class="px-2">{{ $executiveCompensation->filing_date }}</td>
                                             <td class="px-2">{{ $executiveCompensation->salary }}</td>
                                             <td class="px-2">{{ $executiveCompensation->bonus }}</td>
                                             <td class="px-2">{{ $executiveCompensation->stock_award }}</td>
