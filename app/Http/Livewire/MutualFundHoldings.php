@@ -33,7 +33,7 @@ class MutualFundHoldings extends Component
     
     public function updatedSelectedQuarter()
     {
-        $this->emitTo('fund-holdings-table', 'quarterChanged', $this->selectedQuarter);
+        $this->emitTo('mutual-fund-holdings-table', 'quarterChanged', $this->selectedQuarter);
         $this->dispatchBrowserEvent('updateUrl', ['selectedQuarter' => $this->selectedQuarter]);
     }
 

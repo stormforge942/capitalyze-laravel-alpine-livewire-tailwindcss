@@ -22,6 +22,7 @@ class Kernel extends ConsoleKernel
         $schedule->command('lse:import')->daily();
         $schedule->command('japan:import')->daily();
         $schedule->command('euronext:import')->daily();
+        $schedule->command('mutualFunds:import')->daily();
     }
 
     /**

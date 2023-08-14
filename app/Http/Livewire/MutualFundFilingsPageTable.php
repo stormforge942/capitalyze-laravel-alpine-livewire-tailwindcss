@@ -2,7 +2,7 @@
 
 namespace App\Http\Livewire;
 
-use App\Models\MutualFundsPage;
+use App\Models\MutualFundFilings;
 use Livewire\Livewire;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Str;
@@ -95,7 +95,7 @@ final class MutualFundFilingsPageTable extends PowerGridComponent
     */
     public function datasource(): ?Builder
     {
-        $query = MutualFundsPage::query();
+        $query = MutualFundFilings::query();
     
         if (!empty($this->dateFilter)) {
             $query = $query->whereBetween('acceptance_time', $this->dateFilter);
@@ -137,23 +137,19 @@ final class MutualFundFilingsPageTable extends PowerGridComponent
     public function addColumns(): PowerGridEloquent
     {
         return PowerGrid::eloquent()
-            ->addColumn('cik', function (MutualFundsPage $mutualFundsPage) {
-                return ('<a class="text-blue-500" target="_blank"  href="/mutual-fund/'.$mutualFundsPage->cik.'">'.$mutualFundsPage->cik.'</a>');
+            ->addColumn('cik', function (MutualFundFilings $mutualFundFilings) {
+                return ('<a class="text-blue-500" target="_blank"  href="/mutual-fund/'.$mutualFundFilings->cik.'">'.$mutualFundFilings->cik.'</a>');
             })
-            ->addColumn('symbol')
             ->addColumn('acceptance_time')
-            ->addColumn('isin')
-            ->addColumn('registrant_name');
+            ->addColumn('period_of_report');
     }
 
     public function columns(): array
     {
         return [
             Column::make('CIK', 'cik')->sortable(),
-            Column::make('Symbol', 'symbol')->sortable(),
             Column::make('Acceptance Time', 'acceptance_time')->sortable(),
-            Column::make('ISIN', 'isin')->sortable(),
-            Column::make('Registrant Name', 'registrant_name')->sortable(),
+            Column::make('Period Of Report', 'period_of_report')->sortable(),
         ];
     }
 
@@ -161,10 +157,8 @@ final class MutualFundFilingsPageTable extends PowerGridComponent
     {
         return [
             Filter::inputText('cik', 'cik')->operators([]),
-            Filter::inputText('symbol', 'symbol')->operators([]),
             Filter::inputText('acceptance_time', 'acceptance_time')->operators([]),
-            Filter::inputText('isin', 'isin')->operators([]),
-            Filter::inputText('registrant_name', 'registrant_name')->operators([]),
+            Filter::inputText('period_of_report', 'period_of_report')->operators([]),
         ];
     }
     
