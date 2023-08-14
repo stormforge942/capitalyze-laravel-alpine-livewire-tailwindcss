@@ -24,11 +24,9 @@
                     </x-jet-nav-link>
                 </li>
                 <li>
-
                     <x-jet-nav-link href="{{ route('company-filings') }}" :active="request()->routeIs('company-filings')">
                     {{ __('Company Filings') }}
                     </x-jet-nav-link>
-
                 </li>
                 <li>
                     <x-jet-nav-link href="{{ route('fund-filings') }}" :active="request()->routeIs('fund-filings')">
@@ -79,13 +77,8 @@
             <hr class="my-4"> <!-- Separator -->
             <ul class="space-y-2 font-medium">
                 <li>
-                    <x-jet-nav-link href="{{ route('shanghai.metrics', ['ticker' => $shanghai->symbol]) }}" :active="request()->routeIs('shanghai.metrics')">
-                    {{ __('Metrics') }}
-                    </x-jet-nav-link>
-                </li>
-                <li>
-                    <x-jet-nav-link href="{{ route('shanghai.filings', ['ticker' => $shanghai->symbol]) }}" :active="request()->routeIs('shanghai.filings')">
-                    {{ __('Filings') }}
+                    <x-jet-nav-link href="{{ route('mutual-fund.holdings', ['cik' => $fund->cik]) }}" :active="request()->routeIs('mutual-fund.holdings')">
+                    {{ __('Holdings') }}
                     </x-jet-nav-link>
                 </li>
             </ul>
