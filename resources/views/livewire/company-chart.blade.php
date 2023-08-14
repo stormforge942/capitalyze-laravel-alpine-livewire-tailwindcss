@@ -21,15 +21,6 @@
                             <span wire:click="setChartPeriod('{{ $chartPeriod }}')" class="{{ $currentChartPeriod === $chartPeriod ? 'bg-blue-100 text-blue-800 text-xs font-medium mr-2 px-2.5 py-0.5 rounded dark:bg-gray-700 dark:text-blue-400 border border-blue-400' : 'cursor-pointer bg-gray-100 text-gray-800 text-xs font-medium mr-2 px-2.5 py-0.5 rounded dark:bg-gray-700 dark:text-gray-400 border border-gray-500' }}">{{$chartPeriod}}</span>
                         @endforeach
                         <canvas id="lineChart" class="!w-full !h-full"></canvas>
-                        <div class="relative" id="timebox-wrapper">
-                            <div class="h-[100px]">
-                                <canvas id="allTimeChart"></canvas>
-                            </div>
-                            <div id="timebox" class="absolute bg-red-900/[0.3] top-0 bottom-0 h-full left-0 right-0 m-auto">
-                                <div id="fromDate" class="absolute h-[20px] w-[20px] bg-red-900 rounded-full top-0 left-[-9.5px] bottom-0 m-auto border-black border-solid border cursor-ew-resize"></div>
-                                <div id="toDate" class="absolute h-[20px] w-[20px] bg-red-900 rounded-full top-0 right-[-9.5px] bottom-0 m-auto border-black border-solid border cursor-ew-resize"></div>
-                            </div>
-                        </div>
                     </div>
                 </div>
             </div>
@@ -49,103 +40,6 @@ const chart = new Chart(
     }
 );
 
-const allTimeChart = new Chart(
-    document.getElementById('allTimeChart'), {
-        type: 'line',
-        data: {
-            labels: [],
-            datasets: []
-        },
-        options: {
-            onClick: (event, elements, chart) => {
-                if (elements[0]) {            
-                    const i = elements[0].index;
-                    alert(chart.data.labels[i] + ': ' + chart.data.datasets[0].data[i]);
-                }
-            },
-            maintainAspectRatio: false,
-            plugins: {
-                legend: {
-                    display: false
-                },
-                tooltip: {
-                    enabled: false
-                },
-            },
-            scales: {
-                x: {
-                    ticks: {
-                        // display: false
-                        maxTicksLimit: 9,
-                        align: 'start',
-                    }
-                },
-                y: {
-                    ticks: {
-                        display: false
-                    }
-                },
-            }
-        }
-    }
-)
-let fromDate = new Date('1970');
-let toDate = new Date();
-let timebox = document.getElementById("timebox");
-let timeboxWrapper = document.getElementById("timebox-wrapper");
-const maxRight = parseInt(timeboxWrapper.offsetLeft) + parseInt(timeboxWrapper.offsetWidth);
-const minLeft = parseInt(timeboxWrapper.offsetLeft);
-
-let filterCharts = (chartData) => {
-    return chartData.filter((data) => new Date(data.date).getTime() >= fromDate.getTime() && new Date(data.date).getTime() <= toDate.getTime());
-}
-
-const heightClickChart = (e) => {
-    let points = [];
-
-    let offsetHeight = parseInt(timeboxWrapper.offsetTop) + 60;
-
-    for(let i = timeboxWrapper.offsetTop; i < offsetHeight; i++) {
-        e.pageY = i;
-        let event = e;
-        let point = allTimeChart.getElementsAtEventForMode(e, 'nearest', { intersect: true }, true);
-        point.length > 0 && points.push(point);
-    }
-
-    return points;
-}
-
-const resizeLeft = (e) => {
-    if(e.clientX >= minLeft && e.clientX <= maxRight) {
-        let points = heightClickChart(e);
-        // console.log(points);
-        timebox.style.left = parseInt(e.clientX) - minLeft + "px";
-    }
-}
-
-let fromDateHandler = (e) => {
-    document.addEventListener("mousemove", resizeLeft, false);
-}
-
-const resizeRight = (e) => {
-    const newRight = maxRight - parseInt(e.clientX);
-    if(newRight > 0 && newRight < maxRight) {
-        timebox.style.right = newRight + "px";
-    }
-}
-
-let toDateHandler = (e) => {
-    document.addEventListener("mousemove", resizeRight, false);
-}
-
-document.addEventListener("mouseup", function(){
-    document.removeEventListener("mousemove", resizeLeft, false);
-    document.removeEventListener("mousemove", resizeRight, false);
-}, false);
-
-document.getElementById("fromDate").addEventListener('mousedown', fromDateHandler)
-document.getElementById("toDate").addEventListener('mousedown', toDateHandler)
-
 document.addEventListener('livewire:load', function () {
     Livewire.on('getCompanyStockChart', function (chartData) {
         const ascChartData = chartData.sort(function(a,b){
@@ -158,17 +52,6 @@ document.addEventListener('livewire:load', function () {
         chart.data.labels = labels;
         chart.data.datasets = datasets;
         chart.update();
-    });
-
-    Livewire.on('getAllData', function (chartData) {
-        const ascChartData = filterCharts(chartData);
-
-        const labels = ascChartData.map((data) => new Date(data.date).getFullYear());
-        const datasets = [{label: chartData.shift().symbol, data: ascChartData.map((data) => data.close), pointStyle: false}];
-
-        allTimeChart.data.labels = labels;
-        allTimeChart.data.datasets = datasets;
-        allTimeChart.update();
     });
 });
 </script>
