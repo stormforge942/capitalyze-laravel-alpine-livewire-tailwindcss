@@ -19,6 +19,7 @@ class CompanyReport extends Component
     public $data;
     public $noData = false;
     public $skipNext = false;
+    public $tableHtml;
     protected $request;
     protected $rowCount = 0;
 
@@ -76,7 +77,7 @@ class CompanyReport extends Component
                     }
                     // Check if the value starts with '@@@'
                     if (substr($value, 0, 3) === '@@@') {
-                        $hash = substr($value, 3).strstr($value, '|', true); // Get the value minus the three @
+                        $hash = substr($value, 3).strstr($value, '|'); // Get the value minus the three @
                         // Add a specific class and a data-hash attribute and display an icon
                         $data = array("hash" => $hash, "ticker" => $this->ticker);
                         $data_json = json_encode($data);
@@ -85,9 +86,15 @@ class CompanyReport extends Component
                         <path class="open-slide" data-value="'.htmlspecialchars($data_json).'" d="M0 2a2 2 0 0 1 2-2h12a2 2 0 0 1 2 2v12a2 2 0 0 1-2 2H2a2 2 0 0 1-2-2V2zm15 2h-4v3h4V4zm0 4h-4v3h4V8zm0 4h-4v3h3a1 1 0 0 0 1-1v-2zm-5 3v-3H6v3h4zm-5 0v-3H1v2a1 1 0 0 0 1 1h3zm-4-4h4V8H1v3zm0-4h4V4H1v3zm5-3v3h4V4H6zm4 4H6v3h4V8z"></path>
                       </svg></td>';
                     } else if(strpos($value, '|') !== false) {
-                        $value = '<td class="border-slate-400 p-2 text-sm">' . strstr($value, '|', true) . '</td>';
+                        list($content, $hash) = explode("|", $dateValues[$date][0], 2);
+                        $data = array("hash" => $hash, "ticker" => $this->ticker);
+                        $data_json = json_encode($data);
+                        $value = '<td data-value="'.htmlspecialchars($data_json).'" class="open-slide border-slate-400 p-2 text-sm hover:text-blue-500 hover:underline hover:cursor-pointer">' . strstr($value, '|', true) . '</td>';
                     } else {
-                        $value = '<td class="border-slate-400 p-2 text-sm">' . $value . '</td>';
+                        list($content, $hash) = explode("|", $dateValues[$date][0], 2);
+                        $data = array("hash" => $hash, "ticker" => $this->ticker);
+                        $data_json = json_encode($data);
+                        $value = '<td data-value="'.htmlspecialchars($data_json).'" class="open-slide border-slate-400 p-2 text-sm hover:text-blue-500 hover:underline hover:cursor-pointer">' . $value . '</td>';
                     }
                     $output .= $value;
                 } else {
@@ -120,7 +127,7 @@ class CompanyReport extends Component
         return $output;
     }
 
-   function generateTableFromNestedArray($data) {
+    function generateTableFromNestedArray($data) {
         // Find all unique dates
         $this->rowCount = 0;
         $dates = [];
@@ -144,7 +151,7 @@ class CompanyReport extends Component
         $output .= '</table>';
 
         return $output;
-  }
+    }
 
    public function getData() {
         $acronym = ($this->period == 'annual') ? 'arf5drs' : 'qrf5drs';
