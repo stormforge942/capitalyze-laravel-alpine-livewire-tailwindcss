@@ -17,15 +17,30 @@ class CompanyReportSlide extends SlideOver
 
     public function loadData()
     {
-        $source = 'as_reported_sec_text_block_content';
-        $data = DB::connection('pgsql-xbrl')
-        ->table($source)
+        $query = DB::connection('pgsql-xbrl')
+        ->table('public.info_idx_tb')
         ->where('ticker', '=', $this->ticker)
-        ->where('fact_hash', '=', $this->hash)
-        ->value('content');
+        ->where('info', 'ilike', '%' . $this->hash . '%')
+        ->value('info');
 
-        $this->data = $data;
-        $this->loaded = true;
+        $decodedQuery = json_decode($query, true); // Decoding JSON into an associative array
+
+        $keyToFind = $this->hash;
+
+        if (isset($decodedQuery[$keyToFind])) {
+            $factHashes = $decodedQuery[$keyToFind];
+            $queryHtml = DB::connection('pgsql-xbrl')
+            ->table('public.as_reported_sec_text_block_content')
+            ->where('ticker', '=', $this->ticker)
+            ->whereIn('fact_hash', $factHashes)
+            ->value('content');
+            
+            $this->data = $queryHtml;
+            $this->loaded = true;
+        } else {
+            $this->data = 'No Data Available';
+            $this->loaded = true;
+        }
     }
 
     public function mount($hash, $ticker) {
