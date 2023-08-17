@@ -5,39 +5,30 @@ namespace App\Http\Livewire;
 use WireElements\Pro\Components\SlideOver\SlideOver;
 use Illuminate\Support\Facades\DB;
 
-class CompanyReportSlide extends SlideOver
+class InternationalReportSlide extends SlideOver
 {
-    public $hash;
     public $data;
-    public $ticker;
-    public $json;
+    public $symbol;
+    public $source;
     public $title = "Report Info";
-    public $period = "";
     public $loaded = false;
 
     public function loadData()
     {
         $query = DB::connection('pgsql-xbrl')
-        ->table('public.info_idx_tb')
-        ->where('ticker', '=', $this->ticker)
-        ->where('info', 'ilike', '%' . $this->hash . '%')
-        ->value('info');
+        ->table($this->source)
+        ->where('symbol', '=', $this->symbol)
+        ->value('html_data');
 
-        $decodedQuery = json_decode($query, true); // Decoding JSON into an associative array
-
-        $keyToFind = $this->hash;
-
-        if (isset($decodedQuery[$keyToFind])) {
-            $factHashes = $decodedQuery[$keyToFind];
-            foreach($factHashes as $factHash) {
-                $queryHtml = DB::connection('pgsql-xbrl')
-                ->table('public.as_reported_sec_text_block_content')
-                ->where('ticker', '=', $this->ticker)
-                ->where('fact_hash', '=',$factHash)
-                ->value('content');
-                $this->data[] = $queryHtml;
+        if (isset($query)) {
+            if (is_array($query)) {
+                foreach($query as $table) {
+                    $this->data[] = $table;        
+                }
+            } else {
+                $this->data = [$query];
             }
-
+            
             $this->loaded = true;
         } else {
             $this->data = ['No Data Available'];
@@ -45,14 +36,14 @@ class CompanyReportSlide extends SlideOver
         }
     }
 
-    public function mount($hash, $ticker) {
-        $this->hash = $hash;
-        $this->ticker = $ticker;
+    public function mount($symbol, $source) {
+        $this->symbol = $symbol;
+        $this->source = $source;
     }
 
     public function render()
     {
-        return view('livewire.company-report-slide');
+        return view('livewire.international-report-slide');
     }
 
     public static function behavior(): array
