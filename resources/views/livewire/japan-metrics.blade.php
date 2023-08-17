@@ -30,3 +30,25 @@
         </div>
     </div>
 </div>
+
+@push('scripts')
+<script>
+    let slideOpen = false;
+
+    document.addEventListener('DOMContentLoaded', function() {
+        document.body.addEventListener('click', function(event) {
+            var element = event.target;
+            if (element.classList.contains('open-slide') && !slideOpen) {
+                var value = element.dataset.value;
+                value = JSON.parse(value);
+                window.livewire.emit('slide-over.open', 'international-report-slide', value, {force: true});
+                slideOpen = true;
+            }
+        });
+    });
+
+    Livewire.on('slide-over.close', () => {
+        slideOpen = false;
+    });
+</script>
+@endpush

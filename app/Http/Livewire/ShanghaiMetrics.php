@@ -95,7 +95,9 @@ class ShanghaiMetrics extends Component
             foreach(array_keys($this->metrics) as $date) {
                 if(array_key_exists($segment, $this->metrics[$date])) {
                     $data = $this->metrics[$date][$segment];
-                    $table .= '<td class="whitespace-nowrap px-2 py-2 text-sm text-gray-900 hover:cursor-pointer hover:underline underline-offset-1 open-slide">'.$data.'</td>';
+                    $dataSend = array("symbol" => $this->shanghai->symbol, "source" => 'public.shanghai_statements');
+                    $data_json = json_encode($dataSend);
+                    $table .= '<td data-value="'.htmlspecialchars($data_json).'" class="whitespace-nowrap px-2 py-2 text-sm text-gray-900 hover:cursor-pointer hover:underline underline-offset-1 open-slide">'.$data.'</td>';
                 } else {
                     $table .= '<td class="whitespace-nowrap px-2 py-2 text-sm text-gray-900"></td>';
                 }
