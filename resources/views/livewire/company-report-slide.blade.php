@@ -10,6 +10,8 @@
             <span class="sr-only">Loading...</span>
         </div>
     @else
-        {!! $data !!}
+        @foreach($data as $table)
+            {!! $table !!}
+        @endforeach
     @endif
 </x-wire-elements-pro::tailwind.slide-over>
