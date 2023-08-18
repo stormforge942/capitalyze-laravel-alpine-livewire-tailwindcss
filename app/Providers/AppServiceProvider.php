@@ -10,6 +10,7 @@ use App\Models\Company;
 use App\Models\Fund;
 use App\Models\MutualFunds;
 use App\Models\Lse;
+use App\Models\Tsx;
 use App\Models\Shanghai;
 use App\Models\Euronext;
 use App\Models\Japan;
@@ -31,6 +32,7 @@ class AppServiceProvider extends ServiceProvider
         Spotlight::registerGroup('mutual-funds', 'Mutual Funds');
         Spotlight::registerGroup('euronexts', 'Euronexts');
         Spotlight::registerGroup('lses', 'LSE');
+        Spotlight::registerGroup('tsxs', 'TSX');
         Spotlight::registerGroup('shanghais', 'Shanghai');
         Spotlight::registerGroup('japans', 'Japan');
 
@@ -48,6 +50,9 @@ class AppServiceProvider extends ServiceProvider
                 ->orWhere('market_full_name', 'ilike', "%{$query}%")
                 ->take(10)->get();
                 $lses = Lse::where('registrant_name', 'ilike', "%{$query}%")
+                ->orWhere('symbol', 'ilike', "%{$query}%")
+                ->take(10)->get();
+                $tsxs = Tsx::where('registrant_name', 'ilike', "%{$query}%")
                 ->orWhere('symbol', 'ilike', "%{$query}%")
                 ->take(10)->get();
                 $shanghais = Shanghai::where('full_name', 'ilike', "%{$query}%")
@@ -101,6 +106,15 @@ class AppServiceProvider extends ServiceProvider
                             ->setGroup('lses')
                             ->setTitle($lse->registrant_name)
                             ->setAction('jump_to', ['path' => '/lse/'.$lse->symbol])
+                    );
+                }
+
+                foreach ($tsxs as $tsx) {
+                    $collection->push(
+                        SpotlightResult::make()
+                            ->setGroup('tsxs')
+                            ->setTitle($tsx->registrant_name)
+                            ->setAction('jump_to', ['path' => '/tsx/'.$tsx->symbol])
                     );
                 }
 

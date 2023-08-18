@@ -66,6 +66,11 @@
             </x-jet-nav-link>
          </li>
          <li>
+            <x-jet-nav-link href="{{ route('tsxs') }}" :active="request()->routeIs('tsxs')">
+            {{ __('TSX') }}
+            </x-jet-nav-link>
+         </li>
+         <li>
             <x-jet-nav-link href="{{ route('japans') }}" :active="request()->routeIs('japans')">
                {{ __('Japan') }}
             </x-jet-nav-link>

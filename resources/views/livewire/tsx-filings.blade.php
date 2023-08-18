@@ -1,11 +1,10 @@
 <div class="p-4 sm:ml-64 pl-0">
-    <livewire:international-report-navbar :navbar="$navbar" :activeIndex="$activeIndex" :activeSubIndex="$activeSubIndex" :period="$period ?? 'annual'" />
     <div class="py-12">
         <div class="mx-auto">
             <div class="px-4 sm:px-6 lg:px-8 bg-white py-4 shadow mx-4 rounded max-w-5xl mx-auto">
                 <div class="sm:flex sm:items-start flex-col">
                     <div class="block mb-3">
-                        <h1 class="text-base font-semibold leading-10 text-gray-900">Japan Metrics - {{$japan->registrant_name}}({{$japan->symbol}})</h1>
+                        <h1 class="text-base font-semibold leading-10 text-gray-900">TSX Filings - {{$tsx->registrant_name}}({{$tsx->symbol}})</h1>
                     </div>
                     <div class="grid gap-4 w-full grid-cols-1 md:grid-cols-2 items-start">
                         <div wire:loading.flex class="justify-center items-center min-w-full col-span-2">
@@ -21,7 +20,7 @@
                     <div class="mt-8 flow-root rounded-lg overflow-x-auto w-full" wire:loading.remove>
                         <div class="align-middle">
                             <div class="inline-block min-w-full sm:rounded-lg" wire:model="table">
-                                {!! $table !!}
+                                <livewire:tsx-filings-table :tsx="$tsx" />
                             </div>
                         </div>
                     </div>
@@ -30,25 +29,3 @@
         </div>
     </div>
 </div>
-
-@push('scripts')
-<script>
-    let slideOpen = false;
-
-    document.addEventListener('DOMContentLoaded', function() {
-        document.body.addEventListener('click', function(event) {
-            var element = event.target;
-            if (element.classList.contains('open-slide') && !slideOpen) {
-                var value = element.dataset.value;
-                value = JSON.parse(value);
-                window.livewire.emit('slide-over.open', 'international-report-slide', value, {force: true});
-                slideOpen = true;
-            }
-        });
-    });
-
-    Livewire.on('slide-over.close', () => {
-        slideOpen = false;
-    });
-</script>
-@endpush

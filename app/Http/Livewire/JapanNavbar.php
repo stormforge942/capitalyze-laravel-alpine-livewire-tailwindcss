@@ -9,6 +9,19 @@ class JapanNavbar extends Component
 {
     public $japan;
     public $currentRoute;
+    public $period = "annual";
+
+    protected $queryString = [
+        'period' => ['except' => 'annual']
+    ];
+
+    protected $listeners = ['periodChange' => '$refresh'];
+
+    public function changePeriod($period)
+    {
+        $this->period = $period;
+        return redirect()->route($this->currentRoute, ['ticker'=>$this->japan->symbol, 'period' => $period]);
+    }    
 
     public function render()
     {

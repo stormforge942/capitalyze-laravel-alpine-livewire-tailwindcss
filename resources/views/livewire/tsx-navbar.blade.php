@@ -92,12 +92,12 @@
                     </div>
                 </li>
                 <li>
-                    <x-jet-nav-link href="{{ route('lse.metrics', ['ticker' => $lse->symbol]) }}" :active="request()->routeIs('lse.metrics')">
+                    <x-jet-nav-link href="{{ route('tsx.metrics', ['ticker' => $tsx->symbol]) }}" :active="request()->routeIs('tsx.metrics')">
                     {{ __('Metrics') }}
                     </x-jet-nav-link>
                 </li>
                 <li>
-                    <x-jet-nav-link href="{{ route('lse.filings', ['ticker' => $lse->symbol]) }}" :active="request()->routeIs('lse.filings')">
+                    <x-jet-nav-link href="{{ route('tsx.filings', ['ticker' => $tsx->symbol]) }}" :active="request()->routeIs('tsx.filings')">
                     {{ __('Filings') }}
                     </x-jet-nav-link>
                 </li>

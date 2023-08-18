@@ -3,6 +3,7 @@
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\CompanyController;
 use App\Http\Controllers\LseController;
+use App\Http\Controllers\TsxController;
 use App\Http\Controllers\EuronextController;
 use App\Http\Controllers\ShanghaiController;
 use App\Http\Controllers\FundController;
@@ -15,6 +16,7 @@ use App\Http\Livewire\CompanyIdentifiers;
 use App\Http\Livewire\Delistings;
 use App\Http\Livewire\Euronexts;
 use App\Http\Livewire\Lses;
+use App\Http\Livewire\Tsxs;
 use App\Http\Livewire\Shanghais;
 use App\Http\Livewire\Japans;
 use App\Http\Livewire\PressRelease;
@@ -60,6 +62,7 @@ Route::middleware(['auth', 'approved', 'verified'])->group(function () {
     Route::get('/delistings', Delistings::class)->name('delistings');
     Route::get('/euronext', Euronexts::class)->name('euronexts');
     Route::get('/lse', Lses::class)->name('lses');
+    Route::get('/tsx', Tsxs::class)->name('tsxs');
     Route::get('/shanghai', Shanghais::class)->name('shanghais');
     Route::get('/japan', Japans::class)->name('japans');
     Route::get('/press-release', PressRelease::class)->name('press.release');
@@ -110,6 +113,12 @@ Route::middleware(['auth', 'approved', 'verified'])->group(function () {
     */
     Route::get('/lse/{ticker}/', [LseController::class, 'metrics'])->name('lse.metrics');
     Route::get('/lse/{ticker}/filings', [LseController::class, 'filings'])->name('lse.filings');
+
+    /*
+    | Tsx routing
+    */
+    Route::get('/tsx/{ticker}/', [TsxController::class, 'metrics'])->name('tsx.metrics');
+    Route::get('/tsx/{ticker}/filings', [TsxController::class, 'filings'])->name('tsx.filings');
 
     /*
     | Shanghai routing

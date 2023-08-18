@@ -5,9 +5,9 @@ namespace App\Http\Livewire;
 use Illuminate\Http\Request;
 use Livewire\Component;
 
-class LseNavbar extends Component
+class TsxNavbar extends Component
 {
-    public $lse;
+    public $tsx;
     public $currentRoute;
     public $period = "annual";
 
@@ -20,12 +20,12 @@ class LseNavbar extends Component
     public function changePeriod($period)
     {
         $this->period = $period;
-        return redirect()->route($this->currentRoute, ['ticker'=>$this->lse->symbol, 'period' => $period]);
+        return redirect()->route($this->currentRoute, ['ticker'=>$this->tsx->symbol, 'period' => $period]);
     }
 
     public function render()
     {
-        return view('livewire.lse-navbar');
+        return view('livewire.tsx-navbar');
     }
 
     public function mount(Request $request, $route = '', $active = false)
