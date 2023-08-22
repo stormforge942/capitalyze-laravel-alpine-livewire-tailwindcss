@@ -25,11 +25,11 @@
 
     <div class="min-h-screen bg-gray-100">
         @livewire('navigation-menu')
-        <livewire:japan-navbar :japan="$japan" />
+        <livewire:japan-navbar :japan="$japan" :period="$period" />
         <!-- Page Content -->
         <main>
             @if($tab == 'metrics')
-            <livewire:japan-metrics :japan="$japan" />
+            <livewire:japan-metrics :japan="$japan" :period="$period" />
             @endif
             @if($tab == 'filings')
             <livewire:japan-filings :japan="$japan" />

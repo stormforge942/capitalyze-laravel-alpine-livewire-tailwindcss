@@ -15,36 +15,30 @@
                     <div class="block">
                         <h1 class="text-base font-semibold leading-6 text-gray-900">Company Executive Compensation - {{ $company->name }}</h1>
                     </div>
-                    <div class="overflow-x-scroll">
-                                <table class="table-auto w-full overflow-scroll" wire:loading.remove>
-                                        <tr>
-                                            <td class="font-semibold py-4">Industry Title</td>
-                                            <td class="font-semibold py-4">Name And Position</td>
-                                            <td class="font-semibold py-4">Filing Date</td>
-                                            <td class="font-semibold py-4">Salary</td>
-                                            <td class="font-semibold py-4">Bonus</td>
-                                            <td class="font-semibold py-4">Stock Award</td>
-                                            <td class="font-semibold py-4">Incentive Plan</td>
-                                            <td class="font-semibold py-4">Other Compensations</td>
-                                            <td class="font-semibold py-4">Total</td>
-                                            <td class="font-semibold py-4">URL</td>
-                                        </tr>
-                                        @foreach($executiveCompensations as $executiveCompensation)
-                                        <tr>
-                                            <td class="px-2">{{ $executiveCompensation->industry_title }}</td>
-                                            <td class="px-2">{{ $executiveCompensation->name_and_position }}</td>
-                                            <td class="px-2">{{ $executiveCompensation->filing_date }}</td>
-                                            <td class="px-2">{{ $executiveCompensation->salary }}</td>
-                                            <td class="px-2">{{ $executiveCompensation->bonus }}</td>
-                                            <td class="px-2">{{ $executiveCompensation->stock_award }}</td>
-                                            <td class="px-2">{{ $executiveCompensation->incentive_plan_compensation }}</td>
-                                            <td class="px-2">{{ $executiveCompensation->all_other_compensation }}</td>
-                                            <td class="px-2">{{ $executiveCompensation->total }}</td>
-                                            <td class="px-2"><a class="text-blue-500" target="_blank" href="{{ $executiveCompensation->url }}">More Info</a></td>
-                                        </tr>
-                                        @endforeach
-                                </table>
+                    <div class="flex items-center justify-between">
+                        <div date-rangepicker class="flex items-center">
+                            <div class="relative">
+                                <div class="absolute inset-y-0 left-0 flex items-center pl-3 pointer-events-none">
+                                    <svg aria-hidden="true" class="w-5 h-5 text-gray-500 dark:text-gray-400" fill="currentColor" viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg"><path fill-rule="evenodd" d="M6 2a1 1 0 00-1 1v1H4a2 2 0 00-2 2v10a2 2 0 002 2h12a2 2 0 002-2V6a2 2 0 00-2-2h-1V3a1 1 0 10-2 0v1H7V3a1 1 0 00-1-1zm0 5a1 1 0 000 2h8a1 1 0 100-2H6z" clip-rule="evenodd"></path></svg>
+                                </div>
+                                <input id="start-date-input" name="start" type="text" class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full pl-10 p-2.5  dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500" placeholder="Select date start">
                             </div>
+                            <span class="mx-4 text-gray-500">to</span>
+                            <div class="relative">
+                                <div class="absolute inset-y-0 left-0 flex items-center pl-3 pointer-events-none">
+                                    <svg aria-hidden="true" class="w-5 h-5 text-gray-500 dark:text-gray-400" fill="currentColor" viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg"><path fill-rule="evenodd" d="M6 2a1 1 0 00-1 1v1H4a2 2 0 00-2 2v10a2 2 0 002 2h12a2 2 0 002-2V6a2 2 0 00-2-2h-1V3a1 1 0 10-2 0v1H7V3a1 1 0 00-1-1zm0 5a1 1 0 000 2h8a1 1 0 100-2H6z" clip-rule="evenodd"></path></svg>
+                                </div>
+                                <input id="end-date-input" name="end" type="text" class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full pl-10 p-2.5  dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500" placeholder="Select date end">
+                            </div>
+                        </div>
+                    </div>
+                    <div class="mt-8 flow-root rounded-lg overflow-x-auto w-full" wire:loading.remove>
+                        <div class="align-middle">
+                            <div class="inline-block min-w-full sm:rounded-lg" wire:model="table">
+                                <livewire:company-executive-compensation-table :symbol="$ticker" />
+                            </div>
+                        </div>
+                    </div>
                 </div>
             </div>
         </div>

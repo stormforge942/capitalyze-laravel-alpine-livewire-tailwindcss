@@ -25,11 +25,11 @@
 
     <div class="min-h-screen bg-gray-100">
         @livewire('navigation-menu')
-        <livewire:shanghai-navbar :shanghai="$shanghai" />
+        <livewire:shanghai-navbar :shanghai="$shanghai" :period="$period" />
         <!-- Page Content -->
         <main>
             @if($tab == 'metrics')
-            <livewire:shanghai-metrics :shanghai="$shanghai" />
+            <livewire:shanghai-metrics :shanghai="$shanghai" :period="$period" />
             @endif
             @if($tab == 'filings')
             <livewire:shanghai-filings :shanghai="$shanghai" />

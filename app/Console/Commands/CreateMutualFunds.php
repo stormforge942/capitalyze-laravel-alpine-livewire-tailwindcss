@@ -32,8 +32,8 @@ class CreateMutualFunds extends Command
     {
         $query = DB::connection('pgsql-xbrl')
         ->table('public.mutual_fund_holdings')
-        ->whereNotNull('cik') // make sure 'symbol' is not null
-        ->select('registrant_name', 'cik')->distinct()->get();
+        ->whereNotNull('symbol') // make sure 'symbol' is not null
+        ->select('registrant_name', 'symbol')->distinct()->get();
 
         $collection = $query->collect();
         

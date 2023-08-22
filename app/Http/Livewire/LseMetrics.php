@@ -12,18 +12,20 @@ class LseMetrics extends Component
     public $metrics;
     public $segments;
     public $navbar;
+    public $period;
     public $subnavbar;
     public $activeIndex = null;
     public $activeSubIndex = null;
     public $currentNavbar = '';
 
-    protected $listeners = ['tabClicked', 'tabSubClicked'];
+    protected $listeners = ['tabClicked', 'tabSubClicked', 'periodChange'];
 
     public function getMetrics() {
         $dbResponse = DB::connection('pgsql-xbrl')
         ->table('public.lse_statements')
         ->select('json_result')
         ->where('symbol', '=', $this->lse->symbol)
+        ->where('is_annual_report', '=', $this->period === 'annual')
         ->orderBy('date', 'desc')
         ->get()->toArray();
         
@@ -110,9 +112,10 @@ class LseMetrics extends Component
         $this->table = $table;
    }
 
-    public function mount($lse)
+    public function mount($lse, $period)
     {
         $this->lse = $lse;
+        $this->period = $period;
         $this->getNavbar();
         $this->getMetrics();
         $this->renderTable();
