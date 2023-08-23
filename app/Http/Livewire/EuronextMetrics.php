@@ -13,17 +13,19 @@ class EuronextMetrics extends Component
     public $segments;
     public $navbar;
     public $subnavbar;
+    public $period;
     public $activeIndex = null;
     public $activeSubIndex = null;
     public $currentNavbar = '';
 
-    protected $listeners = ['tabClicked', 'tabSubClicked'];
+    protected $listeners = ['tabClicked', 'tabSubClicked', 'periodChange'];
 
     public function getMetrics() {
         $dbResponse = DB::connection('pgsql-xbrl')
         ->table('public.euronext_statements')
         ->select('json_result')
         ->where('symbol', '=', $this->euronext->symbol)
+        ->where('is_annual_report', '=', $this->period === 'annual')
         ->orderBy('date', 'desc')
         ->get()->toArray();
         
@@ -110,9 +112,10 @@ class EuronextMetrics extends Component
         $this->table = $table;
    }
 
-    public function mount($euronext)
+    public function mount($euronext, $period)
     {
         $this->euronext = $euronext;
+        $this->period = $period;
         $this->getNavbar();
         $this->getMetrics();
         $this->renderTable();

@@ -25,11 +25,11 @@
 
     <div class="min-h-screen bg-gray-100">
         @livewire('navigation-menu')
-        <livewire:lse-navbar :lse="$lse" />
+        <livewire:lse-navbar :lse="$lse" :period="$period" />
         <!-- Page Content -->
         <main>
             @if($tab == 'metrics')
-            <livewire:lse-metrics :lse="$lse" />
+            <livewire:lse-metrics :lse="$lse" :period="$period" />
             @endif
             @if($tab == 'filings')
             <livewire:lse-filings :lse="$lse" />

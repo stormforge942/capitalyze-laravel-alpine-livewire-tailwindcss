@@ -68,7 +68,7 @@ class AppServiceProvider extends ServiceProvider
                     $collection->push(
                         SpotlightResult::make()
                             ->setGroup('companies')
-                            ->setTitle($company->name)
+                            ->setTitle("$company->name ($company->ticker)")
                             ->setAction('jump_to', ['path' => '/company/'.$company->ticker])
                     );
                 }
@@ -86,7 +86,7 @@ class AppServiceProvider extends ServiceProvider
                     $collection->push(
                         SpotlightResult::make()
                             ->setGroup('mutual-funds')
-                            ->setTitle($mutualFund->registrant_name)
+                            ->setTitle("$mutualFund->registrant_name ($mutualFund->cik)")
                             ->setAction('jump_to', ['path' => '/mutual-fund/'.$mutualFund->cik])
                     );
                 }

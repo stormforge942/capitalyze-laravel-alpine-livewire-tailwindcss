@@ -25,11 +25,11 @@
 
     <div class="min-h-screen bg-gray-100">
         @livewire('navigation-menu')
-        <livewire:tsx-navbar :tsx="$tsx" />
+        <livewire:tsx-navbar :tsx="$tsx" :period="$period" />
         <!-- Page Content -->
         <main>
             @if($tab == 'metrics')
-            <livewire:tsx-metrics :tsx="$tsx" />
+            <livewire:tsx-metrics :tsx="$tsx" :period="$period" />
             @endif
             @if($tab == 'filings')
             <livewire:tsx-filings :tsx="$tsx" />

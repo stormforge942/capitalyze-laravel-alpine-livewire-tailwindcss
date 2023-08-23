@@ -25,11 +25,11 @@
 
     <div class="min-h-screen bg-gray-100">
         @livewire('navigation-menu')
-        <livewire:euronext-navbar :euronext="$euronext" />
+        <livewire:euronext-navbar :euronext="$euronext" :period="$period" />
         <!-- Page Content -->
         <main>
             @if($tab == 'metrics')
-            <livewire:euronext-metrics :euronext="$euronext" />
+            <livewire:euronext-metrics :euronext="$euronext" :period="$period" />
             @endif
             @if($tab == 'filings')
             <livewire:euronext-filings :euronext="$euronext" />

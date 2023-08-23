@@ -12,18 +12,20 @@ class TsxMetrics extends Component
     public $metrics;
     public $segments;
     public $navbar;
+    public $period;
     public $subnavbar;
     public $activeIndex = null;
     public $activeSubIndex = null;
     public $currentNavbar = '';
 
-    protected $listeners = ['tabClicked', 'tabSubClicked'];
+    protected $listeners = ['tabClicked', 'tabSubClicked', 'periodChange'];
 
     public function getMetrics() {
         $dbResponse = DB::connection('pgsql-xbrl')
         ->table('public.tsx_statements')
         ->select('json_result')
         ->where('symbol', '=', $this->tsx->symbol)
+        ->where('is_annual_report', '=', $this->period === 'annual')
         ->orderBy('date', 'desc')
         ->get()->toArray();
         
@@ -110,9 +112,10 @@ class TsxMetrics extends Component
         $this->table = $table;
    }
 
-    public function mount($tsx)
+    public function mount($tsx, $period)
     {
         $this->tsx = $tsx;
+        $this->period = $period;
         $this->getNavbar();
         $this->getMetrics();
         $this->renderTable();
