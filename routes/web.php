@@ -100,7 +100,7 @@ Route::middleware(['auth', 'approved', 'verified'])->group(function () {
     /*
     | Mutual Fund routing
     */
-    Route::get('/mutual-fund/{cik}', [MutualFundController::class, 'holdings'])->name('mutual-fund.holdings');
+    Route::get('/mutual-fund/{cik}/{fund_symbol}/{series_id}/{class_id}/', [MutualFundController::class, 'holdings'])->name('mutual-fund.holdings');
 
     /*
     | Euronext routing

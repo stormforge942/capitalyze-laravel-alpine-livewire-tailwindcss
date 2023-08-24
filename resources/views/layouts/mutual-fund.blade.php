@@ -30,7 +30,7 @@
         <main>
             <div class="p-4 sm:ml-64 pl-0">
                 @if($tab == 'holdings')
-                <livewire:mutual-fund-holdings :fund="$fund" :cik="$cik" />
+                <livewire:mutual-fund-holdings :fund="$fund" :cik="$cik" :fund_symbol="$fund_symbol" :series_id="$series_id" :class_id="$class_id" />
             @endif
             </div>
         </main>

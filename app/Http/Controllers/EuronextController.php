@@ -19,12 +19,13 @@ class EuronextController extends BaseController
         ]);
     }
 
-    public function filings($ticker)
+    public function filings(Request $request, $ticker)
     {
         $euronext = Euronext::where('symbol', $ticker)->get()->first();
 
         return view('layouts.euronext', [
             'euronext' => $euronext,
+            'period' => $request->query('period', 'annual'),
             'tab' => 'filings'
         ]);
     }

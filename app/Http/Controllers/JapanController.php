@@ -19,12 +19,13 @@ class JapanController extends BaseController
         ]);
     }
 
-    public function filings($ticker)
+    public function filings(Request $request, $ticker)
     {
         $japan = Japan::where('symbol', $ticker)->get()->first();
 
         return view('layouts.japan', [
             'japan' => $japan,
+            'period' => $request->query('period', 'annual'),
             'tab' => 'filings'
         ]);
     }

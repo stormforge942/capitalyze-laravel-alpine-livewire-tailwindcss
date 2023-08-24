@@ -11,7 +11,7 @@ class MutualFunds extends Model
      *
      * @var string
      */
-    protected $primaryKey = 'cik';
+    protected $primaryKey = 'registrant_name';
 
     /**
      * Table name
@@ -26,10 +26,11 @@ class MutualFunds extends Model
      * @var string[]
      */
     protected $fillable = [
-        'symbol',
-        'registrant_name',
-        'isin',
         'cik',
+        'registrant_name',
+        'fund_symbol',
+        'series_id',
+        'class_id'
     ];
 
     /**

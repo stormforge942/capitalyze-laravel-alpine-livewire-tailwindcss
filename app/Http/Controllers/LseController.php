@@ -19,12 +19,13 @@ class LseController extends BaseController
         ]);
     }
 
-    public function filings($ticker)
+    public function filings(Request $request, $ticker)
     {
         $lse = Lse::where('symbol', $ticker)->get()->first();
 
         return view('layouts.lse', [
             'lse' => $lse,
+            'period' => $request->query('period', 'annual'),
             'tab' => 'filings'
         ]);
     }

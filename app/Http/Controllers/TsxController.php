@@ -19,12 +19,13 @@ class TsxController extends BaseController
         ]);
     }
 
-    public function filings($ticker)
+    public function filings(Request $request, $ticker)
     {
         $tsx = Tsx::where('symbol', $ticker)->get()->first();
 
         return view('layouts.tsx', [
             'tsx' => $tsx,
+            'period' => $request->query('period', 'annual'),
             'tab' => 'filings'
         ]);
     }

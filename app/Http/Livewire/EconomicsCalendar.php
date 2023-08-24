@@ -91,10 +91,10 @@ class EconomicsCalendar extends Component
     {
         $query = DB::connection('pgsql-xbrl')
             ->table('public.economic_releases')
-            ->select('name', 'date', 'source', 'release_id', 'is_press_release')
+            ->select('name', 'date', 'source', 'release_id', 'is_press_release', 'time')
             ->whereBetween('date', [$this->startDate, $this->endDate]);
 
-        $results = $query->orderBy('date', 'desc')->limit(100)->get()->toArray();
+        $results = $query->orderBy('date', 'desc')->limit(100)->orderBy('time', 'asc')->get()->toArray();
 
         $this->economicEvents = $results ? $results : $this->lastEconomicEvents();
     }

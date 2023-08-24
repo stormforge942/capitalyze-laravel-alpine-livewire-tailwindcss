@@ -41,7 +41,7 @@ class CreateTsx extends Command
             if (isset($value->symbol) && !empty($value->symbol)) {
                 Log::debug("Symbol is set and not empty: {$value->symbol}");
                 try {
-                    $lse = Tsx::updateOrCreate(
+                    $tsx = Tsx::updateOrCreate(
                         [
                             'symbol' => $value->symbol, 
                             'registrant_name' => $value->registrant_name, 
