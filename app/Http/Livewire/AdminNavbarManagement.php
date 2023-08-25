@@ -18,7 +18,7 @@ class AdminNavbarManagement extends Component
 
     public function updateNavbar($navbarName, $value)
     {
-        $navbar = Navbar::where('name', $navbarName)->firstOrFail();
+        $navbar = Navbar::where('name', $navbarName)->get()->first();
         $navbar->update(['show' => $value]);
     }
 

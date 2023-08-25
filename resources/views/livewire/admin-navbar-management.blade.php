@@ -19,7 +19,7 @@
                         <tr>
                             <td class="font-semibold py-4">{{ $navbar->name }}</td>
                             <td class="font-semibold py-4">
-                                <select wire:change="updateNavbar({{ $navbar->name }}, $event.target.value)">
+                                <select wire:change="updateNavbar('{{ $navbar->name }}', $event.target.value === 'true')">
                                     <option value="true" @if ($navbar->show) selected @endif>True</option>
                                     <option value="false" @unless ($navbar->show) selected @endif>False</option>
                                 </select>
