@@ -13,73 +13,101 @@
          <img src="{{ asset('img/capitalyze-logo-bg.png') }}" class="block h-20 w-auto p-3" alt="Capitalyze Logo">
       </a>
       <ul class="space-y-2 font-medium">
-         <li>
-            <x-jet-nav-link href="{{ route('earnings-calendar') }}" :active="request()->routeIs('earnings-calendar')">
-               {{ __('Earnings Calendar') }}
-            </x-jet-nav-link>
-         </li>
-         <li>
-            <x-jet-nav-link href="{{ route('economics-calendar') }}" :active="request()->routeIs('economics-calendar')">
-               {{ __('Economics Calendar') }}
-            </x-jet-nav-link>
-         </li>
-         <li>
+         @foreach ($navbarItems as $navbar)
+            @if ($navbar->name === 'Earnings Calendar' && $navbar->show)
+               <li>
+                  <x-jet-nav-link href="{{ route('earnings-calendar') }}" :active="request()->routeIs('earnings-calendar')">
+                     {{ __('Earnings Calendar') }}
+                  </x-jet-nav-link>
+               </li>
+            @endif
+            @if ($navbar->name === 'Economics Calendar' && $navbar->show)
+               <li>
+                  <x-jet-nav-link href="{{ route('economics-calendar') }}" :active="request()->routeIs('economics-calendar')">
+                     {{ __('Economics Calendar') }}
+                  </x-jet-nav-link>
+               </li>
+            @endif
+            @if ($navbar->name === 'Company Filings' && $navbar->show)
+               <li>
 
-            <x-jet-nav-link href="{{ route('company-filings') }}" :active="request()->routeIs('company-filings')">
-               {{ __('Company Filings') }}
-            </x-jet-nav-link>
+                  <x-jet-nav-link href="{{ route('company-filings') }}" :active="request()->routeIs('company-filings')">
+                     {{ __('Company Filings') }}
+                  </x-jet-nav-link>
 
-         </li>
-         <li>
-            <x-jet-nav-link href="{{ route('fund-filings') }}" :active="request()->routeIs('fund-filings')">
-               {{ __('Funds Filings') }}
-            </x-jet-nav-link>
-         </li>
-         <li>
-            <x-jet-nav-link href="{{ route('mutual-fund-filings') }}" :active="request()->routeIs('mutual-fund-filings')">
-               {{ __('Mutual Funds Filings') }}
-            </x-jet-nav-link>
-         </li>
-         <li>
-            <x-jet-nav-link href="{{ route('company-identifiers') }}" :active="request()->routeIs('company-identifiers')">
-               {{ __('Company Identifiers') }}
-            </x-jet-nav-link>
-         </li>
-         <li>
-            <x-jet-nav-link href="{{ route('delistings') }}" :active="request()->routeIs('delistings')">
-               {{ __('Delistings') }}
-            </x-jet-nav-link>
-         </li>
-         <li>
-            <x-jet-nav-link href="{{ route('euronexts') }}" :active="request()->routeIs('euronexts')">
-               {{ __('Euronext') }}
-            </x-jet-nav-link>
-         </li>
-         <li>
-            <x-jet-nav-link href="{{ route('shanghais') }}" :active="request()->routeIs('shanghais')">
-               {{ __('Shanghai') }}
-            </x-jet-nav-link>
-         </li>
-         <li>
-            <x-jet-nav-link href="{{ route('lses') }}" :active="request()->routeIs('lses')">
-               {{ __('LSE') }}
-            </x-jet-nav-link>
-         </li>
-         <li>
-            <x-jet-nav-link href="{{ route('tsxs') }}" :active="request()->routeIs('tsxs')">
-            {{ __('TSX') }}
-            </x-jet-nav-link>
-         </li>
-         <li>
-            <x-jet-nav-link href="{{ route('japans') }}" :active="request()->routeIs('japans')">
-               {{ __('Japan') }}
-            </x-jet-nav-link>
-         </li>
-         <li>
-            <x-jet-nav-link href="{{ route('press.release') }}" :active="request()->routeIs('press.release')">
-               {{ __('Press Release') }}
-            </x-jet-nav-link>
-         </li>
+               </li>
+            @endif
+            @if ($navbar->name === 'Funds Filings' && $navbar->show)
+               <li>
+                  <x-jet-nav-link href="{{ route('fund-filings') }}" :active="request()->routeIs('fund-filings')">
+                     {{ __('Funds Filings') }}
+                  </x-jet-nav-link>
+               </li>
+            @endif
+            @if ($navbar->name === 'Mutual Funds Filings' && $navbar->show)
+               <li>
+                  <x-jet-nav-link href="{{ route('mutual-fund-filings') }}" :active="request()->routeIs('mutual-fund-filings')">
+                     {{ __('Mutual Funds Filings') }}
+                  </x-jet-nav-link>
+               </li>
+            @endif
+            @if ($navbar->name === 'Company Identifiers' && $navbar->show)
+               <li>
+                  <x-jet-nav-link href="{{ route('company-identifiers') }}" :active="request()->routeIs('company-identifiers')">
+                     {{ __('Company Identifiers') }}
+                  </x-jet-nav-link>
+               </li>
+            @endif
+            @if ($navbar->name === 'Delistings' && $navbar->show)
+               <li>
+                  <x-jet-nav-link href="{{ route('delistings') }}" :active="request()->routeIs('delistings')">
+                     {{ __('Delistings') }}
+                  </x-jet-nav-link>
+               </li>
+            @endif
+            @if ($navbar->name === 'Euronext' && $navbar->show)
+               <li>
+                  <x-jet-nav-link href="{{ route('euronexts') }}" :active="request()->routeIs('euronexts')">
+                     {{ __('Euronext') }}
+                  </x-jet-nav-link>
+               </li>
+            @endif
+            @if ($navbar->name === 'Shanghai' && $navbar->show)
+               <li>
+                  <x-jet-nav-link href="{{ route('shanghais') }}" :active="request()->routeIs('shanghais')">
+                     {{ __('Shanghai') }}
+                  </x-jet-nav-link>
+               </li>
+            @endif
+            @if ($navbar->name === 'LSE' && $navbar->show)
+               <li>
+                  <x-jet-nav-link href="{{ route('lses') }}" :active="request()->routeIs('lses')">
+                     {{ __('LSE') }}
+                  </x-jet-nav-link>
+               </li>
+            @endif
+            @if ($navbar->name === 'TSX' && $navbar->show)
+               <li>
+                  <x-jet-nav-link href="{{ route('tsxs') }}" :active="request()->routeIs('tsxs')">
+                  {{ __('TSX') }}
+                  </x-jet-nav-link>
+               </li>
+            @endif
+            @if ($navbar->name === 'Japan' && $navbar->show)
+               <li>
+                  <x-jet-nav-link href="{{ route('japans') }}" :active="request()->routeIs('japans')">
+                     {{ __('Japan') }}
+                  </x-jet-nav-link>
+               </li>
+            @endif
+            @if ($navbar->name === 'Press Release' && $navbar->show)
+               <li>
+                  <x-jet-nav-link href="{{ route('press.release') }}" :active="request()->routeIs('press.release')">
+                     {{ __('Press Release') }}
+                  </x-jet-nav-link>
+               </li>
+            @endif
+         @endforeach
       </ul>
       <hr class="my-4"> <!-- Separator -->
       <ul class="space-y-2 font-medium">
@@ -94,83 +122,113 @@
             </div>
             @endif
          </li>
-         <li>
-               <livewire:company-navbar-item wire:key="navbar-product-{{ $period }}"
-               href="/company/{{ $company->ticker }}/?period={{ $period }}" name="Products"
-               :active="$currentRoute === 'company.product'" />
-         </li>
-
-         <li>
-               <livewire:company-navbar-item wire:key="navbar-profile-{{ $period }}"
-               href="/company/{{ $company->ticker }}/profile" name="Company Profile"
-               :active="$currentRoute === 'company.profile'" />
-         </li>
-
-         <li>
-                <livewire:company-navbar-item wire:key="navbar-geographic-{{ $period }}"
-               href="/company/{{ $company->ticker }}/geographic?period={{ $period }}" name="Geographic"
-               :active="$currentRoute === 'company.geographic'" />
-         </li>
-         <li>
-                <livewire:company-navbar-item wire:key="navbar-metrics-{{ $period }}"
-                    href="/company/{{ $company->ticker }}/metrics?period={{ $period }}" name="Metrics"
-                    :active="$currentRoute === 'company.metrics'" />
-                    </li>
-         <li>
-                <livewire:company-navbar-item wire:key="navbar-report-{{ $period }}"
-                    href="/company/{{ $company->ticker }}/report?period={{ $period }}" name="Full Report"
-                    :active="$currentRoute === 'company.report'" />
-                    </li>
-         <li>
-                <livewire:company-navbar-item wire:key="navbar-shareholders"
-                    href="/company/{{ $company->ticker }}/shareholders" name="Shareholders"
-                    :active="$currentRoute === 'company.shareholders'" />
-                    </li>
-         <li>
-                <livewire:company-navbar-item wire:key="navbar-summary"
-                    href="/company/{{ $company->ticker }}/summary" name="Summary"
-                    :active="$currentRoute === 'company.summary'" />
-                    </li>
-         <li>
-                <livewire:company-navbar-item wire:key="navbar-summary"
-                    href="/company/{{ $company->ticker }}/insider" name="Insider"
-                    :active="$currentRoute === 'company.insider'" />
-                    </li>
-         <li>
-                <livewire:company-navbar-item wire:key="navbar-filings"
-                    href="/company/{{ $company->ticker }}/filings" name="Filings"
-                    :active="$currentRoute === 'company.filings'" />
-                    </li>
-         <li>
-               <livewire:company-navbar-item wire:key="navbar-splits"
-                  href="/company/{{ $company->ticker }}/splits" name="Splits"
-                  :active="$currentRoute === 'company.splits'" />
-         </li>
-         <li>
-               <livewire:company-navbar-item wire:key="navbar-chart"
-                  href="/company/{{ $company->ticker }}/chart" name="Chart"
-                  :active="$currentRoute === 'company.chart'" />
-         </li>
-         <li>
-               <livewire:company-navbar-item wire:key="navbar-chart"
-                  href="/company/{{ $company->ticker }}/executive-compensation" name="Executive Compensation"
-                  :active="$currentRoute === 'company.executive.compensation'" />
-         </li>
-         <li>
-                <livewire:company-navbar-item wire:key="navbar-insider"
-                    href="/company/{{ $company->ticker }}/restatement" name="Restatement"
-                    :active="$currentRoute === 'company.restatement'" />
-                    </li>
-         <li>
-                <livewire:company-navbar-item wire:key="navbar-employee"
-                    href="/company/{{ $company->ticker }}/employee" name="Employee Count"
-                    :active="$currentRoute === 'company.employee'" />
-            </li>
-         <li>
-               <livewire:company-navbar-item wire:key="navbar-employee"
-                  href="/company/{{ $company->ticker }}/fail-to-deliver" name="Fail To Deliver"
-                  :active="$currentRoute === 'company.fail.to.deliver'" />
-         </li>
+         @foreach ($navbarItems as $navbar)
+            @if ($navbar->name === 'Products' && $navbar->show)
+               <li>
+                  <livewire:company-navbar-item wire:key="navbar-product-{{ $period }}"
+                  href="/company/{{ $company->ticker }}/?period={{ $period }}" name="Products"
+                  :active="$currentRoute === 'company.product'" />
+               </li>
+            @endif
+            @if ($navbar->name === 'Company Profile' && $navbar->show)
+               <li>
+                  <livewire:company-navbar-item wire:key="navbar-profile-{{ $period }}"
+                  href="/company/{{ $company->ticker }}/profile" name="Company Profile"
+                  :active="$currentRoute === 'company.profile'" />
+               </li>
+            @endif
+            @if ($navbar->name === 'Geographic' && $navbar->show)
+               <li>
+                  <livewire:company-navbar-item wire:key="navbar-geographic-{{ $period }}"
+                  href="/company/{{ $company->ticker }}/geographic?period={{ $period }}" name="Geographic"
+                  :active="$currentRoute === 'company.geographic'" />
+               </li>
+            @endif
+            @if ($navbar->name === 'Metrics' && $navbar->show)
+               <li>
+                  <livewire:company-navbar-item wire:key="navbar-metrics-{{ $period }}"
+                     href="/company/{{ $company->ticker }}/metrics?period={{ $period }}" name="Metrics"
+                     :active="$currentRoute === 'company.metrics'" />
+               </li>
+            @endif
+            @if ($navbar->name === 'Full Report' && $navbar->show)
+               <li>
+                  <livewire:company-navbar-item wire:key="navbar-report-{{ $period }}"
+                     href="/company/{{ $company->ticker }}/report?period={{ $period }}" name="Full Report"
+                     :active="$currentRoute === 'company.report'" />
+               </li>
+            @endif
+            @if ($navbar->name === 'Shareholders' && $navbar->show)
+               <li>
+                  <livewire:company-navbar-item wire:key="navbar-shareholders"
+                     href="/company/{{ $company->ticker }}/shareholders" name="Shareholders"
+                     :active="$currentRoute === 'company.shareholders'" />
+               </li>
+            @endif
+            @if ($navbar->name === 'Summary' && $navbar->show)
+               <li>
+                  <livewire:company-navbar-item wire:key="navbar-summary"
+                     href="/company/{{ $company->ticker }}/summary" name="Summary"
+                     :active="$currentRoute === 'company.summary'" />
+               </li>
+            @endif
+            @if ($navbar->name === 'Insider' && $navbar->show)
+               <li>
+                  <livewire:company-navbar-item wire:key="navbar-summary"
+                     href="/company/{{ $company->ticker }}/insider" name="Insider"
+                     :active="$currentRoute === 'company.insider'" />
+               </li>
+            @endif
+            @if ($navbar->name === 'Filings' && $navbar->show)
+               <li>
+                  <livewire:company-navbar-item wire:key="navbar-filings"
+                     href="/company/{{ $company->ticker }}/filings" name="Filings"
+                     :active="$currentRoute === 'company.filings'" />
+               </li>
+            @endif
+            @if ($navbar->name === 'Splits' && $navbar->show)
+               <li>
+                  <livewire:company-navbar-item wire:key="navbar-splits"
+                     href="/company/{{ $company->ticker }}/splits" name="Splits"
+                     :active="$currentRoute === 'company.splits'" />
+               </li>
+            @endif
+            @if ($navbar->name === 'Chart' && $navbar->show)
+               <li>
+                  <livewire:company-navbar-item wire:key="navbar-chart"
+                     href="/company/{{ $company->ticker }}/chart" name="Chart"
+                     :active="$currentRoute === 'company.chart'" />
+               </li>
+            @endif
+            @if ($navbar->name === 'Executive Compensation' && $navbar->show)
+               <li>
+                  <livewire:company-navbar-item wire:key="navbar-chart"
+                     href="/company/{{ $company->ticker }}/executive-compensation" name="Executive Compensation"
+                     :active="$currentRoute === 'company.executive.compensation'" />
+               </li>
+            @endif
+            @if ($navbar->name === 'Restatement' && $navbar->show)
+               <li>
+                  <livewire:company-navbar-item wire:key="navbar-insider"
+                     href="/company/{{ $company->ticker }}/restatement" name="Restatement"
+                     :active="$currentRoute === 'company.restatement'" />
+               </li>
+            @endif
+            @if ($navbar->name === 'Employee Count' && $navbar->show)
+               <li>
+                  <livewire:company-navbar-item wire:key="navbar-employee"
+                     href="/company/{{ $company->ticker }}/employee" name="Employee Count"
+                     :active="$currentRoute === 'company.employee'" />
+               </li>
+            @endif
+            @if ($navbar->name === 'Fail To Deliver' && $navbar->show)
+               <li>
+                  <livewire:company-navbar-item wire:key="navbar-employee"
+                     href="/company/{{ $company->ticker }}/fail-to-deliver" name="Fail To Deliver"
+                     :active="$currentRoute === 'company.fail.to.deliver'" />
+               </li>
+            @endif
+         @endforeach
       </ul>
 
    </div>

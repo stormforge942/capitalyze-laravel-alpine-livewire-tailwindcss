@@ -45,6 +45,7 @@ class FundHoldings extends Component
         $startYear = Carbon::parse($oldestFiling)->year;
         $startQuarter = Carbon::parse($oldestFiling)->quarter;
         $endYear = Carbon::parse($newestFiling)->year;
+        $endQuarter = Carbon::parse($newestFiling)->quarter;
         $currentYear = Carbon::now()->year;
         $currentQuarter = Carbon::now()->quarter;
         $currentDay = Carbon::now()->day;
@@ -65,6 +66,9 @@ class FundHoldings extends Component
             $startQuarter = ($year == $startYear) ? $startQuarter : 1;
             for ($quarter = $startQuarter; $quarter <= 4; $quarter++) {
                 if ($year == $currentYear && $quarter > $currentQuarter) {
+                    break;
+                }
+                if ($year == $endYear && $quarter > $endQuarter) {
                     break;
                 }
                 // Don't include the current quarter if it's not over yet

@@ -16,11 +16,6 @@ class PressRelease extends Component
         // only because of left bar needs a default ticker if clicked on it
         $company = Company::where('ticker', "AAPL")->get()->first();
         $this->company = $company;
-
-        $query = DB::connection('pgsql-xbrl')
-            ->table('public.press_releases')->orderBy('date', 'desc')->limit(100)->get()->toArray();
-
-        $this->pressReleases = $query;
     }
 
     public function render()

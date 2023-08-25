@@ -31,6 +31,10 @@
             @if($tab == 'users')
             <livewire:admin-users />
             @endif
+
+            @if($tab == 'navbar-management')
+            <livewire:admin-navbar-management />
+            @endif
         </main>
     </div>
 

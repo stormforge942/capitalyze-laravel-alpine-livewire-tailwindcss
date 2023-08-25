@@ -144,6 +144,11 @@ Route::middleware(['auth', 'verified', 'ensureUserIsApproved'])->group(function 
         Route::get('/admin/users', [AdminController::class, 'index'])->name('admin.users');
         // You can add more routes here that should be subject to the same middleware
     });
+
+    Route::middleware(['auth:sanctum', 'verified', 'ensureUserIsAdmin'])->group(function () {
+        Route::get('/admin/navbar', [AdminController::class, 'navbar'])->name('admin.navbar-management');
+        // You can add more routes here that should be subject to the same middleware
+    });
 });
 
 Route::middleware(['auth', 'custom.email.verification'])->group(function () {

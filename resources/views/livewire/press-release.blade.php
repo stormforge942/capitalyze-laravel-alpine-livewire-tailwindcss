@@ -23,22 +23,7 @@
                                 </div>
                             </div>
                             <div class="overflow-x-scroll">
-                            <table class="table-auto w-full overflow-scroll" wire:loading.remove>
-                                <tr>
-                                    <td class="font-semibold py-4 w-32">Date</td>
-                                    <td class="font-semibold py-4">Title</td>
-                                    <td class="font-semibold py-4">Content</td>
-                                    <td class="font-semibold py-4 w-32">URL</td>
-                                </tr>
-                                @foreach($pressReleases as $pressRelease)
-                                    <tr>
-                                        <td class="break-all align-top w-32">{{ $pressRelease->date }}</td>
-                                        <td class="px-2 align-top">{{ $pressRelease->title }}</td>
-                                        <td class="px-2 align-top">{!! $pressRelease->html !!}</td>
-                                        <td class="px-2 align-top w-32"><a href="{{ $pressRelease->url }}" target="_blank">More Info</a></td>
-                                    </tr>
-                                @endforeach
-                            </table>
+                                <livewire:press-release-table />
                             </div>
                         </div>
                     </div>
@@ -97,7 +82,7 @@
         var elem = document.getElementById('modal');
 
         elem.classList.add('block');
-        elem.querySelector('#modal-text').textContent = value;
+        elem.querySelector('#modal-text').innerHTML = value;
         elem.classList.remove('hidden');
     }
 
