@@ -11,6 +11,10 @@ class MutualFundHoldings extends Component
 {
     public $cik;
     public $fund;
+    public $fund_symbol;
+    public $series_id;
+    public $class_id;
+
     public string $selectedQuarter = '';
     public array $quarters = [];
     
@@ -39,49 +43,18 @@ class MutualFundHoldings extends Component
 
     public function generateQuarters()
     {
-        $quarters = [];
-        $oldestFiling = MutualFundsPage::where('cik', $this->cik)->min('period_of_report');
-        $newestFiling = MutualFundsPage::where('cik', $this->cik)->max('period_of_report');
-        $startYear = Carbon::parse($oldestFiling)->year;
-        $startQuarter = Carbon::parse($oldestFiling)->quarter;
-        $endYear = Carbon::parse($newestFiling)->year;
-        $endQuarter = Carbon::parse($newestFiling)->quarter;
-        $currentYear = Carbon::now()->year;
-        $currentQuarter = Carbon::now()->quarter;
-        $currentDay = Carbon::now()->day;
-        $quarterEndDates = [
-            1 => '-03-31',
-            2 => '-06-30',
-            3 => '-09-30',
-            4 => '-12-31',
-        ];
-        $quarterEndDays = [
-            1 => 31,
-            2 => 30,
-            3 => 30,
-            4 => 31,
-        ];
+        $periodOfReport = MutualFundsPage::where('cik', $this->cik)
+            ->where('fund_symbol', $this->fund_symbol)
+            ->where('series_id', $this->series_id)
+            ->where('class_id', $this->class_id)
+            ->distinct()
+            ->pluck('period_of_report')
+            ->mapWithKeys(function ($period) {
+                return [$period => $period];
+            })
+            ->toArray();
     
-        for ($year = $startYear; $year <= $endYear; $year++) {
-            $startQuarter = ($year == $startYear) ? $startQuarter : 1;
-            for ($quarter = $startQuarter; $quarter <= 4; $quarter++) {
-                if ($year == $currentYear && $quarter > $currentQuarter) {
-                    break;
-                }
-                if ($year == $endYear && $quarter >= $endQuarter) {
-                    break;
-                }
-                // Don't include the current quarter if it's not over yet
-                if ($year == $currentYear && $quarter == $currentQuarter && $currentDay < $quarterEndDays[$quarter]) {
-                    continue;
-                }
-                $quarterEnd = $year . $quarterEndDates[$quarter];
-                $quarterText = 'Q' . $quarter . ' ' . $year . ' 13F Filings';
-                $quarters[$quarterEnd] = $quarterText;
-            }
-        }
-    
-        return array_reverse($quarters, true);
+        return array_reverse($periodOfReport, true);
     }
 
     public function render()
