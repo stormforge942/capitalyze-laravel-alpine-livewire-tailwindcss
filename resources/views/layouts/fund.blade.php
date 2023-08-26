@@ -41,8 +41,6 @@
                 <livewire:fund-filings :fund="$fund" :cik="$cik" />
                 @elseif($tab == 'restatement')
                 <livewire:fund-restatement :fund="$fund" :cik="$cik" />
-                @elseif($tab == 'returns')
-                <livewire:fund-returns :fund="$fund" :cik="$cik" />
             @endif
             </div>
         </main>

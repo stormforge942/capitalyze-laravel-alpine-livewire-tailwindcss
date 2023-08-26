@@ -81,6 +81,11 @@
                     {{ __('Holdings') }}
                     </x-jet-nav-link>
                 </li>
+                <li>
+                    <x-jet-nav-link href="{{ route('mutual-fund.returns', ['cik' => $fund->cik, 'fund_symbol' => $fund->fund_symbol, 'series_id' => $fund->series_id, 'class_id' => $fund->class_id]) }}" :active="request()->routeIs('mutual-fund.returns')">
+                    {{ __('Returns') }}
+                    </x-jet-nav-link>
+                </li>
             </ul>
         </div>
         </aside>
