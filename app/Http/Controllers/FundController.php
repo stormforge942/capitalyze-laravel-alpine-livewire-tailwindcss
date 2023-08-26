@@ -29,17 +29,6 @@ class FundController extends BaseController
         ]);
     }
 
-    public function returns($cik)
-    {
-        $fund = Fund::where('cik', $cik)->get()->first();
-
-        return view('layouts.fund', [
-            'fund' => $fund,
-            'cik' => $cik,
-            'tab' => 'returns'
-        ]);
-    }
-
     public function metrics($cik)
     {
         $fund = Fund::where('cik', $cik)->get()->first();

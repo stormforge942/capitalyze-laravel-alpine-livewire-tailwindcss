@@ -4,7 +4,7 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
 
-class FundReturns extends Model
+class MutualFundsReturn extends Model
 {
     /**
      * The primary key for the model.
@@ -47,6 +47,8 @@ class FundReturns extends Model
      */
     protected $fillable = [
         'cik',
+        'registrant_name',
+        'symbol',
         'series_id',
         'class_id',
         'acceptance_time'

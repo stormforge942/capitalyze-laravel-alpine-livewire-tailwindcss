@@ -6,7 +6,11 @@
                     <h1 class="text-base font-semibold leading-10 text-gray-900">Fund restatement log</h1>
                 </div>
             </div>
-            <livewire:fund-restatement-table :fund="$fund" :cik="$cik"/>
+            @if ($hasResults)
+                <livewire:fund-restatement-table :fund="$fund" :cik="$cik"/>
+            @else
+                <div class="text-gray-600">No results found.</div>
+            @endif
         </div>
     </div>
 </div>

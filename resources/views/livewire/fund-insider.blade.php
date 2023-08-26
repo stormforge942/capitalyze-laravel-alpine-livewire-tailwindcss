@@ -6,7 +6,11 @@
                     <h1 class="text-base font-semibold leading-10 text-gray-900">Insider table</h1>
                 </div>
             </div>
-            <livewire:fund-insider-table :fund="$fund" :cik="$cik"/>
+            @if ($hasResults)
+                <livewire:fund-insider-table :fund="$fund" :cik="$cik"/>
+            @else
+                <div class="text-gray-600">No results found.</div>
+            @endif
         </div>
     </div>
 </div>

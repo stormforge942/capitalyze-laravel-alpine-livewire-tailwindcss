@@ -95,12 +95,12 @@ Route::middleware(['auth', 'approved', 'verified'])->group(function () {
     Route::get('/fund/{ticker}/filings', [FundController::class, 'filings'])->name('fund.filings');
     Route::get('/fund/{ticker}/insider', [FundController::class, 'insider'])->name('fund.insider');
     Route::get('/fund/{ticker}/restatement', [FundController::class, 'restatement'])->name('fund.restatement');
-    Route::get('/fund/{ticker}/returns', [FundController::class, 'returns'])->name('fund.returns');
 
     /*
     | Mutual Fund routing
     */
     Route::get('/mutual-fund/{cik}/{fund_symbol}/{series_id}/{class_id}/', [MutualFundController::class, 'holdings'])->name('mutual-fund.holdings');
+    Route::get('/mutual-fund/{cik}/{fund_symbol}/{series_id}/{class_id}/returns', [MutualFundController::class, 'returns'])->name('mutual-fund.returns');
 
     /*
     | Euronext routing

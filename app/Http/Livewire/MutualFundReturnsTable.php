@@ -2,7 +2,7 @@
 
 namespace App\Http\Livewire;
 
-use App\Models\FundReturns;
+use App\Models\MutualFundsReturn;
 use Livewire\Livewire;
 use Illuminate\Support\Str;
 use Illuminate\Support\Carbon;
@@ -14,18 +14,21 @@ use PowerComponents\LivewirePowerGrid\Traits\WithExport;
 use PowerComponents\LivewirePowerGrid\Filters\Filter;
 use PowerComponents\LivewirePowerGrid\{Button, Column, Exportable, Footer, Header, PowerGrid, PowerGridComponent, PowerGridEloquent};
 
-final class FundReturnsTable extends PowerGridComponent
+final class MutualFundReturnsTable extends PowerGridComponent
 {
     use ActionButton;
     use WithExport;
 
     public bool $deferLoading = false; // default false
-    public string $sortField = 'period_report_restated';
+    public string $sortField = 'acceptance_time';
     public string $sortDirection = 'desc';
     public int $perPage = 25;
     public array $perPageValues = [10, 25, 50];
     public $fund;
     public $cik;
+    public $fund_symbol;
+    public $series_id;
+    public $class_id;
     public bool $displayLoader = true;
 
     /*
@@ -63,8 +66,11 @@ final class FundReturnsTable extends PowerGridComponent
     */
     public function datasource(): ?Builder
     {
-        $query = FundReturns::query()
-            ->where('cik', '=', str_pad($this->cik, 10, "0", STR_PAD_LEFT));
+        $query = MutualFundsReturn::query()
+            ->where('cik', '=', str_pad($this->cik, 10, "0", STR_PAD_LEFT))
+            ->where('symbol', '=', $this->fund_symbol)
+            ->where('series_id', '=', $this->series_id)
+            ->where('class_id', '=', $this->class_id);
     
         return $query;
     }

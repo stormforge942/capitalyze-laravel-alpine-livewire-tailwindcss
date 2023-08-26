@@ -108,11 +108,6 @@
                     {{ __('Restatement') }}
                     </x-jet-nav-link>
                 </li>
-                <li>
-                    <x-jet-nav-link href="{{ route('fund.returns', ['ticker' => $fund->cik]) }}" :active="request()->routeIs('fund.returns')">
-                    {{ __('Returns') }}
-                    </x-jet-nav-link>
-                </li>
             </ul>
         </div>
         </aside>
