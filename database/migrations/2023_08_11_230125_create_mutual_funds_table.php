@@ -15,9 +15,6 @@ return new class extends Migration
     {
         Schema::create('mutual_funds', function (Blueprint $table) {
             $table->string('cik')->primary();
-            $table->string('fund_symbol')->nullable();
-            $table->string('series_id')->nullable();
-            $table->string('class_id')->nullable();
             $table->string('registrant_name')->nullable();
             $table->timestamps();
         });

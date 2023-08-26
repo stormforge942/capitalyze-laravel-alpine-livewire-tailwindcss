@@ -13,11 +13,7 @@ return new class extends Migration
      */
     public function up()
     {
-        Schema::table('mutual_funds', function (Blueprint $table) {
-            $table->string('fund_symbol')->nullable();
-            $table->string('series_id')->nullable();
-            $table->string('class_id')->nullable();
-        });
+        DB::table('mutual_funds')->truncate();
     }
 
     /**
@@ -27,8 +23,6 @@ return new class extends Migration
      */
     public function down()
     {
-        Schema::table('mutual_funds', function (Blueprint $table) {
-            $table->dropColumn(['fund_symbol', 'series_id', 'class_id']);
-        });
+        // There's no need for a down() method when truncating data
     }
 };
