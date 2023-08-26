@@ -14,7 +14,7 @@
                     </select>
                 </div>
             </div>
-            <livewire:mutual-fund-holdings-table :cik="$cik" :selectedQuarter="$selectedQuarter"/>
+            <livewire:mutual-fund-holdings-table :cik="$cik" :fund_symbol=$fund_symbol :series_id=$series_id :class_id=$class_id :selectedQuarter="$selectedQuarter"/>
         </div>
     </div>
 </div>

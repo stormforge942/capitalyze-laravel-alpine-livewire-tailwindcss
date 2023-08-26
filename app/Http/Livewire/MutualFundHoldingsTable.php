@@ -24,6 +24,9 @@ final class MutualFundHoldingsTable extends PowerGridComponent
     public int $perPage = 25;
     public array $perPageValues = [10, 25, 50];
     public $cik;
+    public $fund_symbol;
+    public $series_id;
+    public $class_id;
     public string $selectedQuarter = '';
     public bool $displayLoader = true;
 
@@ -78,7 +81,11 @@ final class MutualFundHoldingsTable extends PowerGridComponent
     public function datasource(): ?Builder
     {
         $query = MutualFundsPage::query()
-        ->where('cik', '=', $this->cik);
+        ->where('cik', '=', $this->cik)
+        ->where('fund_symbol', '=', $this->fund_symbol)
+        ->where('series_id', '=', $this->series_id)
+        ->where('class_id', '=', $this->class_id);
+        
 
         if ($this->selectedQuarter !== '') {
             $query = $query->where('period_of_report', '=', $this->selectedQuarter);
