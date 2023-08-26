@@ -120,6 +120,7 @@ final class FundHoldingsTable extends PowerGridComponent
     {
         return PowerGrid::eloquent()
             ->addColumn('name_of_issuer') // Fund
+            ->addColumn('put_call') // Put or Call
             ->addColumn('investor_name_formated', function (CompanyFilings $companyFilings) {
                 return ('<a class="text-blue-500" href="/company/'.$companyFilings->symbol.'/shareholders?Quarter-to-view='.$this->selectedQuarter.'">'.$companyFilings->symbol . (!empty($companyFilings->name_of_issuer) ? ' <span class="text-xs font-light">(' . $companyFilings->name_of_issuer . ')</span></a>' : '</a>'));
             }) // Fund
@@ -175,6 +176,9 @@ final class FundHoldingsTable extends PowerGridComponent
                 ->searchable()
                 ->sortable(),
 
+            Column::make('Put or Call', 'put_call')
+                ->sortable(),
+
             Column::make('Shares Held or Principal Amt', 'ssh_prnamt')
                 ->sortable(),
 
@@ -220,6 +224,8 @@ final class FundHoldingsTable extends PowerGridComponent
                 return $query->where('symbol', 'ilike', "%{$input}%")
                              ->orWhere('name_of_issuer', 'ilike', "%{$input}%");
             }),
+            Filter::inputText('put_call', 'put_call')
+            ->operators([]),
             Filter::inputText('ssh_prnamt', 'ssh_prnamt')
             ->operators([]),
             Filter::inputText('value', 'value')

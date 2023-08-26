@@ -87,6 +87,9 @@ php artisan fund:import
 php artisan euronext:import
 php artisan lse:import
 php artisan shanghai:import
+php artisan japan:import
+php artisan tsx:import
+php artisan mutualFunds:import
 ```
 
 #### 9. Create your first admin user:

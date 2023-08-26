@@ -41,8 +41,11 @@ class MutualFundHoldings extends Component
     {
         $quarters = [];
         $oldestFiling = MutualFundsPage::where('cik', $this->cik)->min('period_of_report');
+        $newestFiling = MutualFundsPage::where('cik', $this->cik)->max('period_of_report');
         $startYear = Carbon::parse($oldestFiling)->year;
         $startQuarter = Carbon::parse($oldestFiling)->quarter;
+        $endYear = Carbon::parse($newestFiling)->year;
+        $endQuarter = Carbon::parse($newestFiling)->quarter;
         $currentYear = Carbon::now()->year;
         $currentQuarter = Carbon::now()->quarter;
         $currentDay = Carbon::now()->day;
@@ -59,10 +62,13 @@ class MutualFundHoldings extends Component
             4 => 31,
         ];
     
-        for ($year = $startYear; $year <= $currentYear; $year++) {
+        for ($year = $startYear; $year <= $endYear; $year++) {
             $startQuarter = ($year == $startYear) ? $startQuarter : 1;
             for ($quarter = $startQuarter; $quarter <= 4; $quarter++) {
                 if ($year == $currentYear && $quarter > $currentQuarter) {
+                    break;
+                }
+                if ($year == $endYear && $quarter >= $endQuarter) {
                     break;
                 }
                 // Don't include the current quarter if it's not over yet

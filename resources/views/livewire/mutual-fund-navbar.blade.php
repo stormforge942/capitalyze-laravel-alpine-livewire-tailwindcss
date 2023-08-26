@@ -77,7 +77,7 @@
             <hr class="my-4"> <!-- Separator -->
             <ul class="space-y-2 font-medium">
                 <li>
-                    <x-jet-nav-link href="{{ route('mutual-fund.holdings', ['cik' => $fund->cik]) }}" :active="request()->routeIs('mutual-fund.holdings')">
+                    <x-jet-nav-link href="{{ route('mutual-fund.holdings', ['cik' => $fund->cik, 'fund_symbol' => $fund->fund_symbol, 'series_id' => $fund->series_id, 'class_id' => $fund->class_id]) }}" :active="request()->routeIs('mutual-fund.holdings')">
                     {{ __('Holdings') }}
                     </x-jet-nav-link>
                 </li>

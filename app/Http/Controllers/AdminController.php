@@ -19,6 +19,13 @@ class AdminController extends Controller
         ]);
     }
 
+    public function navbar()
+    {
+        return view('layouts.admin', [
+            'tab' => 'navbar-management'
+        ]);
+    }
+
     /**
      * Show the form for creating a new resource.
      *

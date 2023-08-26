@@ -108,9 +108,8 @@ final class PressReleaseTable extends PowerGridComponent
     {
         return PowerGrid::eloquent()
             ->addColumn('title', function (PressRelease $pressRelease) {
-                return ('<div onclick="showModal(this)" class="break-all px-2 w-[80%] cursor-pointer text-blue-500 open-slide" data-value="'.$pressRelease->text.'">'.$pressRelease->title.'</div>');
+                return ('<div data-value="'.htmlspecialchars($pressRelease->html).'" onclick="showModal(this)" class="break-all px-2 w-[80%] cursor-pointer text-blue-500 open-slide">'.$pressRelease->title.'</div>');
             })
-            ->addColumn('date')
             ->addColumn('url', function (PressRelease $pressRelease) {
                 return ('<a class="text-blue-500" target="_blank"  href="'.$pressRelease->url.'">More Info</a>');
             });
@@ -120,7 +119,6 @@ final class PressReleaseTable extends PowerGridComponent
     {
         return [
             Column::make('Title', 'title')->sortable(),
-            Column::make('Date', 'date')->sortable(),
             Column::make('URL', 'url')->sortable(),
         ];
     }
@@ -129,7 +127,6 @@ final class PressReleaseTable extends PowerGridComponent
     {
         return [
             Filter::inputText('title', 'title')->operators([]),
-            Filter::inputText('date', 'date')->operators([]),
             Filter::inputText('url', 'url')->operators([]),
         ];
     }

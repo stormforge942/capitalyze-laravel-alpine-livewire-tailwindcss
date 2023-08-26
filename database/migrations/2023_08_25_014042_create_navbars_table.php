@@ -13,9 +13,9 @@ return new class extends Migration
      */
     public function up()
     {
-        Schema::create('mutual_funds', function (Blueprint $table) {
-            $table->string('cik')->primary();
-            $table->string('registrant_name')->nullable();
+        Schema::create('navbars', function (Blueprint $table) {
+            $table->string('name')->primary();
+            $table->boolean('show')->default(false);
             $table->timestamps();
         });
     }
@@ -27,6 +27,6 @@ return new class extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('mutual_funds');
+        Schema::dropIfExists('navbars');
     }
 };

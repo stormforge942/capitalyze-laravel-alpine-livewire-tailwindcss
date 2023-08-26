@@ -82,7 +82,7 @@
         var elem = document.getElementById('modal');
 
         elem.classList.add('block');
-        elem.querySelector('#modal-text').textContent = value;
+        elem.querySelector('#modal-text').innerHTML = value;
         elem.classList.remove('hidden');
     }
 

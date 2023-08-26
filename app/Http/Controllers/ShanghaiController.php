@@ -19,12 +19,13 @@ class ShanghaiController extends BaseController
         ]);
     }
 
-    public function filings($ticker)
+    public function filings(Request $request, $ticker)
     {
         $shanghai = Shanghai::where('symbol', $ticker)->get()->first();
 
         return view('layouts.shanghai', [
             'shanghai' => $shanghai,
+            'period' => $request->query('period', 'annual'),
             'tab' => 'filings'
         ]);
     }

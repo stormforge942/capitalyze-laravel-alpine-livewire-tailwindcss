@@ -9,6 +9,7 @@ use Illuminate\Support\Facades\DB;
 class PressRelease extends Component
 {
     public $company;
+    public $pressReleases;
 
     public function mount()
     {
