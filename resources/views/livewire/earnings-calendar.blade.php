@@ -57,7 +57,7 @@
                                             <td class="px-2">{{ $call->exchange }}</td>
                                             <td class="px-2">{{ $call->time }}</td>
                                             <td class="px-2">{{ $call->origin }}</td>
-                                            <td class="px-2">@if(isset($call->acceptance_time)) {{ substr($call->acceptance_time, 0, 10) }} @else {{ $call->pub_date }} @endif</td>
+                                            <td class="px-2">@if(isset($call->acceptance_time)) {{ substr($call->acceptance_time, 0, 10) }} @else {{ $call->pub_time }} @endif</td>
                                             <td class="px-2"><a href="{{ $call->url }}" target="_blank">More Info</a></td>
                                         </tr>
                                     @endforeach

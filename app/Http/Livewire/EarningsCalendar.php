@@ -97,7 +97,7 @@ class EarningsCalendar extends Component
 
         $query_second = DB::connection('pgsql-xbrl')
             ->table('earnings_calendar')
-            ->select('symbol', 'date', 'exchange', 'time', 'title', 'url', 'pub_date')
+            ->select('symbol', 'date', 'exchange', 'time', 'title', 'url', 'pub_time')
             ->whereBetween('date', [$this->startDate, $this->endDate]);
     
         if ($this->selectedExchange !== 'all') {
