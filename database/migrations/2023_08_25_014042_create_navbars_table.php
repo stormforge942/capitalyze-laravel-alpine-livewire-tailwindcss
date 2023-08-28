@@ -16,7 +16,10 @@ return new class extends Migration
         Schema::create('navbars', function (Blueprint $table) {
             $table->id();
             $table->string('name')->nullable();
-            $table->boolean('show')->default(false);
+            $table->boolean('show_users')->default(false);
+            $table->boolean('show_developers')->default(false);
+            $table->boolean('show_testers')->default(false);
+            $table->boolean('show_admins')->default(false);
             $table->timestamps();
         });
     }

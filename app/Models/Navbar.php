@@ -27,7 +27,10 @@ class Navbar extends Model
      */
     protected $fillable = [
         'name',
-        'show',
+        'show_users',
+        'show_admins',
+        'show_developers',
+        'show_testers',
     ];
 
     /**

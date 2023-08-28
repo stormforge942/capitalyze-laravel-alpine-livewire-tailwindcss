@@ -16,10 +16,31 @@ class AdminNavbarManagement extends Component
     }
 
 
-    public function updateNavbar($navbarId, $value)
+    public function updateNavbarForUsers($navbarId, $value)
     {
         $navbar = Navbar::find($navbarId);
-        $navbar->show = $value;
+        $navbar->show_users = $value;
+        $navbar->save();
+    }
+
+    public function updateNavbarForTesters($navbarId, $value)
+    {
+        $navbar = Navbar::find($navbarId);
+        $navbar->show_testers = $value;
+        $navbar->save();
+    }
+
+    public function updateNavbarForAdmins($navbarId, $value)
+    {
+        $navbar = Navbar::find($navbarId);
+        $navbar->show_admins = $value;
+        $navbar->save();
+    }
+
+    public function updateNavbarForDevelopers($navbarId, $value)
+    {
+        $navbar = Navbar::find($navbarId);
+        $navbar->show_developers = $value;
         $navbar->save();
     }
 

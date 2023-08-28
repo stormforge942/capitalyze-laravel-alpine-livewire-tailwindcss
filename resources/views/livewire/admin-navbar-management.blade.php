@@ -11,7 +11,10 @@
                     <thead>
                         <tr>
                             <td class="font-semibold py-4">Item</td>
-                            <td class="font-semibold py-4">Show</td>
+                            <td class="font-semibold py-4">Show For Users</td>
+                            <td class="font-semibold py-4">Show For Admins</td>
+                            <td class="font-semibold py-4">Show For Developers</td>
+                            <td class="font-semibold py-4">Show For Testers</td>
                         </tr>
                     </thead>
                     <tbody>
@@ -19,9 +22,27 @@
                         <tr>
                             <td class="font-semibold py-4">{{ $navbar->name }}</td>
                             <td class="font-semibold py-4">
-                                <select wire:change="updateNavbar('{{ $navbar->id }}', $event.target.value)">
-                                    <option value="true" @if ($navbar->show) selected @endif>True</option>
-                                    <option value="false" @unless ($navbar->show) selected @endif>False</option>
+                                <select wire:change="updateNavbarForUsers('{{ $navbar->id }}', $event.target.value)">
+                                    <option value="true" @if ($navbar->show_users) selected @endif>True</option>
+                                    <option value="false" @unless ($navbar->show_users) selected @endif>False</option>
+                                </select>
+                            </td>
+                            <td class="font-semibold py-4">
+                                <select wire:change="updateNavbarForAdmins('{{ $navbar->id }}', $event.target.value)">
+                                    <option value="true" @if ($navbar->show_admins) selected @endif>True</option>
+                                    <option value="false" @unless ($navbar->show_admins) selected @endif>False</option>
+                                </select>
+                            </td>
+                            <td class="font-semibold py-4">
+                                <select wire:change="updateNavbarForDevelopers('{{ $navbar->id }}', $event.target.value)">
+                                    <option value="true" @if ($navbar->show_developers) selected @endif>True</option>
+                                    <option value="false" @unless ($navbar->show_developers) selected @endif>False</option>
+                                </select>
+                            </td>
+                            <td class="font-semibold py-4">
+                                <select wire:change="updateNavbarForTesters('{{ $navbar->id }}', $event.target.value)">
+                                    <option value="true" @if ($navbar->show_testers) selected @endif>True</option>
+                                    <option value="false" @unless ($navbar->show_testers) selected @endif>False</option>
                                 </select>
                             </td>
                         </tr>

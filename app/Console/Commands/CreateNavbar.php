@@ -31,35 +31,35 @@ class CreateNavbar extends Command
     public function handle()
     {
         $query = [
-            (object)['name' => 'Earnings Calendar', 'show' => true],
-            (object)['name' => 'Economics Calendar', 'show' => true],
-            (object)['name' => 'Company Filings', 'show' => true],
-            (object)['name' => 'Funds Filings', 'show' => true],
-            (object)['name' => 'Mutual Funds Filings', 'show' => true],
-            (object)['name' => 'Company Identifiers', 'show' => true],
-            (object)['name' => 'Delistings', 'show' => true],
-            (object)['name' => 'Euronext', 'show' => true],
-            (object)['name' => 'Shanghai', 'show' => true],
-            (object)['name' => 'LSE', 'show' => true],
-            (object)['name' => 'TSX', 'show' => true],
-            (object)['name' => 'HKEX', 'show' => true],
-            (object)['name' => 'Japan', 'show' => true],
-            (object)['name' => 'Press Release', 'show' => true],
-            (object)['name' => 'Products', 'show' => true],
-            (object)['name' => 'Company Profile', 'show' => true],
-            (object)['name' => 'Geographic', 'show' => true],
-            (object)['name' => 'Metrics', 'show' => true],
-            (object)['name' => 'Full Report', 'show' => true],
-            (object)['name' => 'Shareholders', 'show' => true],
-            (object)['name' => 'Summary', 'show' => true],
-            (object)['name' => 'Insider', 'show' => true],
-            (object)['name' => 'Filings', 'show' => true],
-            (object)['name' => 'Splits', 'show' => true],
-            (object)['name' => 'Chart', 'show' => true],
-            (object)['name' => 'Executive Compensation', 'show' => true],
-            (object)['name' => 'Restatement', 'show' => true],
-            (object)['name' => 'Employee Count', 'show' => true],
-            (object)['name' => 'Fail To Deliver', 'show' => true]
+            (object)['name' => 'Earnings Calendar', 'show_users' => true, 'show_admins' => true, 'show_testers' => true, 'show_developers' => true],
+            (object)['name' => 'Economics Calendar', 'show_users' => true, 'show_admins' => true, 'show_testers' => true, 'show_developers' => true],
+            (object)['name' => 'Company Filings', 'show_users' => true, 'show_admins' => true, 'show_testers' => true, 'show_developers' => true],
+            (object)['name' => 'Funds Filings', 'show_users' => true, 'show_admins' => true, 'show_testers' => true, 'show_developers' => true],
+            (object)['name' => 'Mutual Funds Filings', 'show_users' => true, 'show_admins' => true, 'show_testers' => true, 'show_developers' => true],
+            (object)['name' => 'Company Identifiers', 'show_users' => true, 'show_admins' => true, 'show_testers' => true, 'show_developers' => true],
+            (object)['name' => 'Delistings', 'show_users' => true, 'show_admins' => true, 'show_testers' => true, 'show_developers' => true],
+            (object)['name' => 'Euronext', 'show_users' => true, 'show_admins' => true, 'show_testers' => true, 'show_developers' => true],
+            (object)['name' => 'Shanghai', 'show_users' => true, 'show_admins' => true, 'show_testers' => true, 'show_developers' => true],
+            (object)['name' => 'LSE', 'show_users' => true, 'show_admins' => true, 'show_testers' => true, 'show_developers' => true],
+            (object)['name' => 'TSX', 'show_users' => true, 'show_admins' => true, 'show_testers' => true, 'show_developers' => true],
+            (object)['name' => 'HKEX', 'show_users' => true, 'show_admins' => true, 'show_testers' => true, 'show_developers' => true],
+            (object)['name' => 'Japan', 'show_users' => true, 'show_admins' => true, 'show_testers' => true, 'show_developers' => true],
+            (object)['name' => 'Press Release', 'show_users' => true, 'show_admins' => true, 'show_testers' => true, 'show_developers' => true],
+            (object)['name' => 'Products', 'show_users' => true, 'show_admins' => true, 'show_testers' => true, 'show_developers' => true],
+            (object)['name' => 'Company Profile', 'show_users' => true, 'show_admins' => true, 'show_testers' => true, 'show_developers' => true],
+            (object)['name' => 'Geographic', 'show_users' => true, 'show_admins' => true, 'show_testers' => true, 'show_developers' => true],
+            (object)['name' => 'Metrics', 'show_users' => true, 'show_admins' => true, 'show_testers' => true, 'show_developers' => true],
+            (object)['name' => 'Full Report', 'show_users' => true, 'show_admins' => true, 'show_testers' => true, 'show_developers' => true],
+            (object)['name' => 'Shareholders', 'show_users' => true, 'show_admins' => true, 'show_testers' => true, 'show_developers' => true],
+            (object)['name' => 'Summary', 'show_users' => true, 'show_admins' => true, 'show_testers' => true, 'show_developers' => true],
+            (object)['name' => 'Insider', 'show_users' => true, 'show_admins' => true, 'show_testers' => true, 'show_developers' => true],
+            (object)['name' => 'Filings', 'show_users' => true, 'show_admins' => true, 'show_testers' => true, 'show_developers' => true],
+            (object)['name' => 'Splits', 'show_users' => true, 'show_admins' => true, 'show_testers' => true, 'show_developers' => true],
+            (object)['name' => 'Chart', 'show_users' => true, 'show_admins' => true, 'show_testers' => true, 'show_developers' => true],
+            (object)['name' => 'Executive Compensation', 'show_users' => true, 'show_admins' => true, 'show_testers' => true, 'show_developers' => true],
+            (object)['name' => 'Restatement', 'show_users' => true, 'show_admins' => true, 'show_testers' => true, 'show_developers' => true],
+            (object)['name' => 'Employee Count', 'show_users' => true, 'show_admins' => true, 'show_testers' => true, 'show_developers' => true],
+            (object)['name' => 'Fail To Deliver', 'show_users' => true, 'show_admins' => true, 'show_testers' => true, 'show_developers' => true]
         ];
 
         $collection = collect($query);
@@ -71,7 +71,10 @@ class CreateNavbar extends Command
                     $navbar = Navbar::updateOrCreate(
                         [
                             'name' => $value->name, 
-                            'show' => $value->show, 
+                            'show_users' => $value->show_users, 
+                            'show_admins' => $value->show_admins, 
+                            'show_developers' => $value->show_developers, 
+                            'show_testers' => $value->show_testers, 
                         ]
                     );
                 } catch (\Exception $e) {
