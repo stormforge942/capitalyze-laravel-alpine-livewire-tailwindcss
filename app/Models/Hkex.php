@@ -4,21 +4,21 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
 
-class MutualFunds extends Model
+class Hkex extends Model
 {
     /**
      * The primary key associated with the table.
      *
      * @var string
      */
-    protected $primaryKey = 'cik';
+    protected $primaryKey = 'symbol';
 
     /**
      * Table name
      *
      * @var string
      */
-    protected $table = 'mutual_funds';
+    protected $table = 'hkexs';
 
      /**
      * The attributes that are mass assignable.
@@ -26,11 +26,8 @@ class MutualFunds extends Model
      * @var string[]
      */
     protected $fillable = [
-        'cik',
-        'registrant_name',
-        'fund_symbol',
-        'series_id',
-        'class_id'
+        'symbol',
+        'short_name'
     ];
 
     /**

@@ -71,6 +71,11 @@
                     </x-jet-nav-link>
                 </li>
                 <li>
+                    <x-jet-nav-link href="{{ route('hkexs') }}" :active="request()->routeIs('hkexs')">
+                    {{ __('HKEX') }}
+                    </x-jet-nav-link>
+                </li>
+                <li>
                     <x-jet-nav-link href="{{ route('press.release') }}" :active="request()->routeIs('press.release')">
                     {{ __('Press Release') }}
                     </x-jet-nav-link>

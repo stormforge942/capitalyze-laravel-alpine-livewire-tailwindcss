@@ -79,17 +79,10 @@ docker-compose up -d
 php artisan migrate
 ```
 
-#### 8. Import companies and funds:
+#### 8. Import data to local database:
 
 ```sh
-php artisan company:import
-php artisan fund:import
-php artisan euronext:import
-php artisan lse:import
-php artisan shanghai:import
-php artisan japan:import
-php artisan tsx:import
-php artisan mutualFunds:import
+php artisan capitalyze:import
 ```
 
 #### 9. Create your first admin user:

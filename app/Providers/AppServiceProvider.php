@@ -10,6 +10,7 @@ use App\Models\Company;
 use App\Models\Fund;
 use App\Models\MutualFunds;
 use App\Models\Lse;
+use App\Models\Hkex;
 use App\Models\Tsx;
 use App\Models\Shanghai;
 use App\Models\Euronext;
@@ -35,6 +36,7 @@ class AppServiceProvider extends ServiceProvider
         Spotlight::registerGroup('tsxs', 'TSX');
         Spotlight::registerGroup('shanghais', 'Shanghai');
         Spotlight::registerGroup('japans', 'Japan');
+        Spotlight::registerGroup('hkexs', 'HKEX');
 
         Spotlight::registerQueries(
             SpotlightQuery::asDefault(function ($query) {
@@ -50,6 +52,9 @@ class AppServiceProvider extends ServiceProvider
                 ->orWhere('market_full_name', 'ilike', "%{$query}%")
                 ->take(10)->get();
                 $lses = Lse::where('registrant_name', 'ilike', "%{$query}%")
+                ->orWhere('symbol', 'ilike', "%{$query}%")
+                ->take(10)->get();
+                $hkexs = Hkex::where('short_name', 'ilike', "%{$query}%")
                 ->orWhere('symbol', 'ilike', "%{$query}%")
                 ->take(10)->get();
                 $tsxs = Tsx::where('registrant_name', 'ilike', "%{$query}%")
@@ -86,7 +91,7 @@ class AppServiceProvider extends ServiceProvider
                     $collection->push(
                         SpotlightResult::make()
                             ->setGroup('mutual-funds')
-                            ->setTitle("$mutualFund->cik $mutualFund->registrant_name $mutualFund->fund_symbol $mutualFund->series_id $mutualFund->class_id")
+                            ->setTitle("$mutualFund->cik | $mutualFund->registrant_name | $mutualFund->fund_symbol | $mutualFund->series_id | $mutualFund->class_id")
                             ->setAction('jump_to', ['path' => '/mutual-fund/'.$mutualFund->cik.'/'.$mutualFund->fund_symbol.'/'.$mutualFund->series_id.'/'.$mutualFund->class_id])
                     );
                 }
@@ -95,7 +100,7 @@ class AppServiceProvider extends ServiceProvider
                     $collection->push(
                         SpotlightResult::make()
                             ->setGroup('euronexts')
-                            ->setTitle($euronext->registrant_name)
+                            ->setTitle("$euronext->registrant_name | $euronext->symbol | $euronext->market | $euronext->market_full_name | $euronext->isin")
                             ->setAction('jump_to', ['path' => '/euronext/'.$euronext->symbol])
                     );
                 }
@@ -104,8 +109,17 @@ class AppServiceProvider extends ServiceProvider
                     $collection->push(
                         SpotlightResult::make()
                             ->setGroup('lses')
-                            ->setTitle($lse->registrant_name)
+                            ->setTitle("$lse->registrant_name | $lse->symbol | $lse->market | $lse->market_segment | $lse->isin")
                             ->setAction('jump_to', ['path' => '/lse/'.$lse->symbol])
+                    );
+                }
+
+                foreach ($hkexs as $hkex) {
+                    $collection->push(
+                        SpotlightResult::make()
+                            ->setGroup('hkexs')
+                            ->setTitle("$hkex->short_name | $hkex->symbol")
+                            ->setAction('jump_to', ['path' => '/hkex/'.$hkex->symbol])
                     );
                 }
 
@@ -113,7 +127,7 @@ class AppServiceProvider extends ServiceProvider
                     $collection->push(
                         SpotlightResult::make()
                             ->setGroup('tsxs')
-                            ->setTitle($tsx->registrant_name)
+                            ->setTitle("$tsx->registrant_name | $tsx->symbol")
                             ->setAction('jump_to', ['path' => '/tsx/'.$tsx->symbol])
                     );
                 }
@@ -122,7 +136,7 @@ class AppServiceProvider extends ServiceProvider
                     $collection->push(
                         SpotlightResult::make()
                             ->setGroup('shanghais')
-                            ->setTitle($shanghai->full_name)
+                            ->setTitle("$shanghai->full_name | $shanghai->symbol | $shanghai->short_name")
                             ->setAction('jump_to', ['path' => '/shanghai/'.$shanghai->symbol])
                     );
                 }
@@ -131,7 +145,7 @@ class AppServiceProvider extends ServiceProvider
                     $collection->push(
                         SpotlightResult::make()
                             ->setGroup('japans')
-                            ->setTitle($japan->registrant_name)
+                            ->setTitle("$japan->registrant_name | $japan->symbol | $japan->isin")
                             ->setAction('jump_to', ['path' => '/japan/'.$japan->symbol])
                     );
                 }

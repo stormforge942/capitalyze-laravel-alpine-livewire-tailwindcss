@@ -100,6 +100,13 @@
                   </x-jet-nav-link>
                </li>
             @endif
+            @if ($navbar->name === 'HKEX' && $navbar->show)
+            <li>
+               <x-jet-nav-link href="{{ route('hkexs') }}" :active="request()->routeIs('hkexs')">
+               {{ __('HKEX') }}
+               </x-jet-nav-link>
+            </li>
+            @endif
             @if ($navbar->name === 'Press Release' && $navbar->show)
                <li>
                   <x-jet-nav-link href="{{ route('press.release') }}" :active="request()->routeIs('press.release')">

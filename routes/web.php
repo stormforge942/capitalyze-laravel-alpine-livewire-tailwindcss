@@ -9,6 +9,7 @@ use App\Http\Controllers\ShanghaiController;
 use App\Http\Controllers\FundController;
 use App\Http\Controllers\MutualFundController;
 use App\Http\Controllers\JapanController;
+use App\Http\Controllers\HkexController;
 use App\Http\Livewire\CompanyFilingsPage;
 use App\Http\Livewire\FundFilingsPage;
 use App\Http\Livewire\MutualFundFilingsPage;
@@ -16,6 +17,7 @@ use App\Http\Livewire\CompanyIdentifiers;
 use App\Http\Livewire\Delistings;
 use App\Http\Livewire\Euronexts;
 use App\Http\Livewire\Lses;
+use App\Http\Livewire\Hkexs;
 use App\Http\Livewire\Tsxs;
 use App\Http\Livewire\Shanghais;
 use App\Http\Livewire\Japans;
@@ -65,6 +67,7 @@ Route::middleware(['auth', 'approved', 'verified'])->group(function () {
     Route::get('/tsx', Tsxs::class)->name('tsxs');
     Route::get('/shanghai', Shanghais::class)->name('shanghais');
     Route::get('/japan', Japans::class)->name('japans');
+    Route::get('/hkex', Hkexs::class)->name('hkexs');
     Route::get('/press-release', PressRelease::class)->name('press.release');
 
     /*
@@ -127,10 +130,16 @@ Route::middleware(['auth', 'approved', 'verified'])->group(function () {
     Route::get('/shanghai/{ticker}/filings', [ShanghaiController::class, 'filings'])->name('shanghai.filings');
 
     /*
-    | Lse routing
+    | Japan routing
     */
     Route::get('/japan/{ticker}/', [JapanController::class, 'metrics'])->name('japan.metrics');
     Route::get('/japan/{ticker}/filings', [JapanController::class, 'filings'])->name('japan.filings');
+
+    /*
+    | Hkex routing
+    */
+    Route::get('/hkex/{ticker}/', [HkexController::class, 'metrics'])->name('hkex.metrics');
+    Route::get('/hkex/{ticker}/filings', [HkexController::class, 'filings'])->name('hkex.filings');
 });
 
 Route::middleware(['auth', 'verified', 'ensureUserIsApproved'])->group(function () {

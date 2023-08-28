@@ -42,6 +42,7 @@ class CreateNavbar extends Command
             (object)['name' => 'Shanghai', 'show' => true],
             (object)['name' => 'LSE', 'show' => true],
             (object)['name' => 'TSX', 'show' => true],
+            (object)['name' => 'HKEX', 'show' => true],
             (object)['name' => 'Japan', 'show' => true],
             (object)['name' => 'Press Release', 'show' => true],
             (object)['name' => 'Products', 'show' => true],

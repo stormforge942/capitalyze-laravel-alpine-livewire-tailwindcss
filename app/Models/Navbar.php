@@ -11,7 +11,7 @@ class Navbar extends Model
      *
      * @var string
      */
-    protected $primaryKey = 'name';
+    protected $primaryKey = 'id';
 
     /**
      * Table name
@@ -42,5 +42,5 @@ class Navbar extends Model
      *
      * @var bool
      */
-    public $incrementing = false;
+    public $incrementing = true;
 }

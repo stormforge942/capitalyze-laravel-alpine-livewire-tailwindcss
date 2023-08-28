@@ -12,14 +12,15 @@ class AdminNavbarManagement extends Component
 
     public function mount()
     {
-        $this->navbarItems = Navbar::get();
+        $this->navbarItems = Navbar::orderBy('id', 'asc')->get();
     }
 
 
-    public function updateNavbar($navbarName, $value)
+    public function updateNavbar($navbarId, $value)
     {
-        $navbar = Navbar::where('name', $navbarName)->get()->first();
-        $navbar->update(['show' => $value]);
+        $navbar = Navbar::find($navbarId);
+        $navbar->show = $value;
+        $navbar->save();
     }
 
     public function render()

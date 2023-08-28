@@ -13,10 +13,9 @@ return new class extends Migration
      */
     public function up()
     {
-        Schema::create('navbars', function (Blueprint $table) {
-            $table->id();
-            $table->string('name')->nullable();
-            $table->boolean('show')->default(false);
+        Schema::create('hkexs', function (Blueprint $table) {
+            $table->string('symbol')->primary();
+            $table->string('short_name')->nullable();
             $table->timestamps();
         });
     }
@@ -28,6 +27,6 @@ return new class extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('navbars');
+        Schema::dropIfExists('hkexs');
     }
 };

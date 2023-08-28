@@ -97,12 +97,12 @@
                     </div>
                 </li>
                 <li>
-                    <x-jet-nav-link href="{{ route('shanghai.metrics', ['ticker' => $shanghai->symbol]) }}" :active="request()->routeIs('shanghai.metrics')">
+                    <x-jet-nav-link href="{{ route('hkex.metrics', ['ticker' => $hkex->symbol]) }}" :active="request()->routeIs('hkex.metrics')">
                     {{ __('Metrics') }}
                     </x-jet-nav-link>
                 </li>
                 <li>
-                    <x-jet-nav-link href="{{ route('shanghai.filings', ['ticker' => $shanghai->symbol]) }}" :active="request()->routeIs('shanghai.filings')">
+                    <x-jet-nav-link href="{{ route('hkex.filings', ['ticker' => $hkex->symbol]) }}" :active="request()->routeIs('hkex.filings')">
                     {{ __('Filings') }}
                     </x-jet-nav-link>
                 </li>
