@@ -23,6 +23,13 @@ class AdminUsers extends Component
         return view('livewire.admin-users', compact('users'));
     }    
 
+    public function updateUserGroup($userId, $value)
+    {
+        $user = User::find($userId);
+        $user->group = $value;
+        $user->save();
+    }
+
     public function sortBy($field)
     {
         if ($this->sortDirection == 'asc') {

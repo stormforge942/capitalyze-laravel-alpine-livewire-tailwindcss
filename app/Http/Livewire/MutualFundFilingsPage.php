@@ -2,13 +2,13 @@
 
 namespace App\Http\Livewire;
 
-use Livewire\Component;
 use App\Models\Company;
+use Livewire\Component;
 
 
 class MutualFundFilingsPage extends Component
 {
-    
+
     public $company;
     public $period = "annual";
 

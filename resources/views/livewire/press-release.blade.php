@@ -59,7 +59,7 @@
                     <div class="bg-white px-4 pb-4 pt-5 sm:p-6 sm:pb-4">
                     <div class="sm:flex sm:items-start">
                         <div class="mt-2">
-                            <p class="text-sm text-gray-500" id="modal-text">1</p>
+                            <p class="text-sm text-gray-500" id="modal-text"></p>
                         </div>
                     </div>
                     </div>
@@ -90,7 +90,7 @@
         var elem = document.getElementById('modal');
 
         elem.classList.remove('block');
-        elem.querySelector('#modal-text').textContent = '';
+        elem.querySelector('#modal-text').innerHTML = '';
         elem.classList.add('hidden');
     }
 </script>

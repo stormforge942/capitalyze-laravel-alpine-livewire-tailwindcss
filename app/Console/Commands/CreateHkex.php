@@ -33,7 +33,7 @@ class CreateHkex extends Command
         $query = DB::connection('pgsql-xbrl')
         ->table('hkex_statements')
         ->whereNotNull('symbol') // make sure 'symbol' is not null
-        ->select('short_name', 'symbol')->distinct()->get();
+        ->select('short_name', 'symbol', 'full_name')->distinct()->get();
 
         $collection = $query->collect();
         
@@ -42,11 +42,18 @@ class CreateHkex extends Command
                 Log::debug("Symbol is set and not empty: {$value->symbol}");
                 try {
                     $hkex = Hkex::updateOrCreate(
-                        [
-                            'symbol' => $value->symbol, 
-                            'short_name' => $value->short_name
-                        ]
+                        ['symbol' => $value->symbol]
                     );
+
+                    if (!empty($value->short_name)){
+                        $hkex->short_name = $value->short_name;
+                    }
+
+                    if (!empty($value->full_name)){
+                        $hkex->full_name = $value->full_name;
+                    }
+
+                    $hkex->save();
                 } catch (\Exception $e) {
                     Log::error("Error creating or finding company: {$e->getMessage()}");
                 }

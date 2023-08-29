@@ -13,11 +13,8 @@ return new class extends Migration
      */
     public function up()
     {
-        Schema::create('navbars', function (Blueprint $table) {
-            $table->string('name')->primary();
-            $table->boolean('show')->default(false);
-            $table->timestamps();
-        });
+        DB::table('navbars')->truncate();
+        Schema::dropIfExists('navbars');
     }
 
     /**

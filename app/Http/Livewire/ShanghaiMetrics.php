@@ -25,7 +25,6 @@ class ShanghaiMetrics extends Component
         ->table('public.shanghai_statements')
         ->select('json_result')
         ->where('symbol', '=', $this->shanghai->symbol)
-        ->where('is_annual_report', '=', $this->period === 'annual')
         ->orderBy('date', 'desc')
         ->get()->toArray();
         

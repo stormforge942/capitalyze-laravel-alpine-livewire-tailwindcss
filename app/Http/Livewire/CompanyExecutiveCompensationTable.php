@@ -29,6 +29,7 @@ final class CompanyExecutiveCompensationTable extends PowerGridComponent
     public array $dateRange = [];
     public array $dateFilter = [];
     public $symbol;
+    public $current_filing_date;
 
 
     /*
@@ -52,34 +53,14 @@ final class CompanyExecutiveCompensationTable extends PowerGridComponent
     {
         return array_merge(
             parent::getListeners(), 
-            ['dateRangeChanged' => 'setDateRange', 'dateRangeCleared' => 'clearDate']
+            ['dateRangeChanged' => 'setDateRange', 'dateRangeCleared' => 'clearDate', 'updateSelectedFilingDate' => 'update']
         );
     }
 
-    public function clearDate()
-    {   
-        $this->dateFilter = [];
-        $this->resetPage();
-        $this->datasource();
+    public function update($value)
+    {
+        $this->current_filing_date = $value;
     }
-
-    public function setDateRange($dateRange)
-    {   
-        $this->dateRange = $dateRange;
-    
-        // Extract dates from the $dateRange array
-        $startDate = $dateRange['start'];
-        $endDate = $dateRange['end'];
-    
-        // Convert dates to a format that the database can understand
-        $this->dateFilter = [
-            Carbon::parse($startDate)->startOfDay()->format('Y-m-d H:i:s'), 
-            Carbon::parse($endDate)->endOfDay()->format('Y-m-d H:i:s')
-        ];        
-    
-        $this->resetPage();
-        $this->datasource();
-    } 
 
     /*
     |--------------------------------------------------------------------------
@@ -99,8 +80,8 @@ final class CompanyExecutiveCompensationTable extends PowerGridComponent
         $query = ExecutiveCompensation::query()
             ->where('symbol', '=', $this->symbol);
 
-        if (!empty($this->dateFilter)) {
-            $query = $query->whereBetween('filing_date', $this->dateFilter);
+        if (!empty($this->current_filing_date)) {
+            $query = $query->where('filing_date', $this->current_filing_date);
         }
 
         return $query;

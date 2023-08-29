@@ -28,7 +28,7 @@ final class MutualFundFilingsPageTable extends PowerGridComponent
     public bool $displayLoader = true;
     public array $dateRange = [];
     public array $dateFilter = [];
-
+    public array $cikData = [];
 
     /*
     |--------------------------------------------------------------------------
@@ -50,35 +50,35 @@ final class MutualFundFilingsPageTable extends PowerGridComponent
     protected function getListeners(): array
     {
         return array_merge(
-            parent::getListeners(), 
+            parent::getListeners(),
             ['dateRangeChanged' => 'setDateRange', 'dateRangeCleared' => 'clearDate']
         );
     }
 
     public function clearDate()
-    {   
+    {
         $this->dateFilter = [];
         $this->resetPage();
         $this->datasource();
     }
 
     public function setDateRange($dateRange)
-    {   
+    {
         $this->dateRange = $dateRange;
-    
+
         // Extract dates from the $dateRange array
         $startDate = $dateRange['start'];
         $endDate = $dateRange['end'];
-    
+
         // Convert dates to a format that the database can understand
         $this->dateFilter = [
-            Carbon::parse($startDate)->startOfDay()->format('Y-m-d H:i:s'), 
+            Carbon::parse($startDate)->startOfDay()->format('Y-m-d H:i:s'),
             Carbon::parse($endDate)->endOfDay()->format('Y-m-d H:i:s')
-        ];        
-    
+        ];
+
         $this->resetPage();
         $this->datasource();
-    }    
+    }
 
     /*
     |--------------------------------------------------------------------------
@@ -96,14 +96,14 @@ final class MutualFundFilingsPageTable extends PowerGridComponent
     public function datasource(): ?Builder
     {
         $query = MutualFundFilings::query();
-    
+
         if (!empty($this->dateFilter)) {
             $query = $query->whereBetween('acceptance_time', $this->dateFilter);
         }
-    
+
         return $query;
     }
-    
+
 
     /*
     |--------------------------------------------------------------------------
@@ -137,8 +137,9 @@ final class MutualFundFilingsPageTable extends PowerGridComponent
     public function addColumns(): PowerGridEloquent
     {
         return PowerGrid::eloquent()
+                // return ('<a class="text-blue-500" target="_blank"  href="/mutual-fund/'.$mutualFundFilings->cik.'">'.$mutualFundFilings->cik.'</a>');
             ->addColumn('cik', function (MutualFundFilings $mutualFundFilings) {
-                return ('<a class="text-blue-500" target="_blank"  href="/mutual-fund/'.$mutualFundFilings->cik.'">'.$mutualFundFilings->cik.'</a>');
+                return ('<div data-value="'.$mutualFundFilings->cik.'" onclick="showModal(this)" class="break-all px-2 w-[80%] cursor-pointer text-blue-500 open-slide">'.$mutualFundFilings->cik.'</div>');
             })
             ->addColumn('acceptance_time')
             ->addColumn('period_of_report');
@@ -161,7 +162,7 @@ final class MutualFundFilingsPageTable extends PowerGridComponent
             Filter::inputText('period_of_report', 'period_of_report')->operators([]),
         ];
     }
-    
+
     /*
     |--------------------------------------------------------------------------
     | Actions Method

@@ -14,8 +14,12 @@ return new class extends Migration
     public function up()
     {
         Schema::create('navbars', function (Blueprint $table) {
-            $table->string('name')->primary();
-            $table->boolean('show')->default(false);
+            $table->id();
+            $table->string('name');
+            $table->boolean('show_users')->default(false);
+            $table->boolean('show_developers')->default(false);
+            $table->boolean('show_testers')->default(false);
+            $table->boolean('show_admins')->default(false);
             $table->timestamps();
         });
     }

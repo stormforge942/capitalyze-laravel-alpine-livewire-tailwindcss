@@ -13,6 +13,7 @@
                             <th><a wire:click.prevent="sortBy('id')">ID</a></th>
                             <th><a wire:click.prevent="sortBy('name')">Name</a></th>
                             <th><a wire:click.prevent="sortBy('email')">Email</a></th>
+                            <th><a wire:click.prevent="sortBy('email')">Group</a></th>
                             <th><a wire:click.prevent="sortBy('approved')">Approved</a></th>
                             <th><a wire:click.prevent="sortBy('created_at')">Registration Date</a></th>
                             <th>Action</th>
@@ -24,6 +25,14 @@
                             <td class="text-center">{{ $user->id }}</td>
                             <td class="text-center">{{ $user->name }}</td>
                             <td class="text-center">{{ $user->email }}</td>
+                            <td class="text-center">
+                                <select wire:change="updateUserGroup('{{ $user->id }}', $event.target.value)">
+                                    <option value="admin" @if ($user->group === 'admin') selected @endif>Admin</option>
+                                    <option value="user" @if ($user->group === 'user') selected @endif>User</option>
+                                    <option value="developer" @if ($user->group === 'developer') selected @endif>Developer</option>
+                                    <option value="tester" @if ($user->group === 'tester') selected @endif>Tester</option>
+                                </select>
+                            </td>
                             <td class="text-center">{{ $user->is_approved ? 'Yes' : 'No' }}</td>
                             <td class="text-center">{{ $user->created_at->format('m/d/Y') }}</td>
                             <td class="text-center">

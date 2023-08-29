@@ -13,10 +13,8 @@ return new class extends Migration
      */
     public function up()
     {
-        Schema::create('navbars', function (Blueprint $table) {
-            $table->string('name')->primary();
-            $table->boolean('show')->default(false);
-            $table->timestamps();
+        Schema::table('lses', function (Blueprint $table) {
+            $table->string('isin')->nullable();
         });
     }
 
@@ -27,6 +25,8 @@ return new class extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('navbars');
+        Schema::table('lses', function (Blueprint $table) {
+            $table->dropColumn(['isin']);
+        });
     }
 };

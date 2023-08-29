@@ -118,7 +118,7 @@ class AppServiceProvider extends ServiceProvider
                     $collection->push(
                         SpotlightResult::make()
                             ->setGroup('hkexs')
-                            ->setTitle("$hkex->short_name | $hkex->symbol")
+                            ->setTitle("$hkex->full_name | $hkex->short_name | $hkex->symbol")
                             ->setAction('jump_to', ['path' => '/hkex/'.$hkex->symbol])
                     );
                 }

@@ -33,7 +33,7 @@ class CreateEuronexts extends Command
         $query = DB::connection('pgsql-xbrl')
         ->table('euronext_statements')
         ->whereNotNull('symbol') // make sure 'symbol' is not null
-        ->select('symbol', 'registrant_name', 'market', 'market_full_name')
+        ->select('symbol', 'registrant_name', 'market', 'market_full_name', 'isin')
         ->distinct()->get();
 
         $collection = $query->collect();
@@ -54,6 +54,10 @@ class CreateEuronexts extends Command
 
                     if (!empty($value->market_full_name)){
                         $euronext->market_full_name = $value->market_full_name;
+                    }
+
+                    if (!empty($value->isin)){
+                        $euronext->isin = $value->isin;
                     }
 
                     $euronext->save();

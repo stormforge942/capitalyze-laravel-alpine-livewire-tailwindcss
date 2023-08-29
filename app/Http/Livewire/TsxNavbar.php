@@ -4,12 +4,14 @@ namespace App\Http\Livewire;
 
 use Illuminate\Http\Request;
 use Livewire\Component;
+use App\Models\Navbar;
 
 class TsxNavbar extends Component
 {
     public $tsx;
     public $currentRoute;
     public $period = "annual";
+    public $navbarItems;
 
     protected $queryString = [
         'period' => ['except' => 'annual']
@@ -30,6 +32,7 @@ class TsxNavbar extends Component
 
     public function mount(Request $request, $route = '', $active = false)
     {
+        $this->navbarItems = Navbar::get();
         if (!$this->currentRoute) {
             $this->currentRoute = $request->route()->getName();
         }
