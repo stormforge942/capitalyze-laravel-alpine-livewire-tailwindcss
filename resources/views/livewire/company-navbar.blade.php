@@ -15,7 +15,7 @@
       <ul class="space-y-2 font-medium">
          @foreach ($navbarItems as $navbar)
             @if ($navbar->name === 'Earnings Calendar')
-               @if ($navbar->show_admins && (Auth::user()->group === 'admin'))
+               @if ($this->showNavbar($navbar->id))
                   <li>
                      <x-jet-nav-link href="{{ route('earnings-calendar') }}" :active="request()->routeIs('earnings-calendar')">
                         {{ __('Earnings Calendar') }}
@@ -24,7 +24,7 @@
                @endif
             @endif
             @if ($navbar->name === 'Economics Calendar')
-               @if ($navbar->show_admins && (Auth::user()->group === 'admin') || $navbar->show_users && (Auth::user()->group === 'user') || $navbar->show_testers && (Auth::user()->group === 'tester') || $navbar->show_developers && (Auth::user()->group === 'developer'))
+               @if ($this->showNavbar($navbar->id))
                <li>
                   <x-jet-nav-link href="{{ route('economics-calendar') }}" :active="request()->routeIs('economics-calendar')">
                      {{ __('Economics Calendar') }}
@@ -33,7 +33,7 @@
                @endif
             @endif
             @if ($navbar->name === 'Company Filings')
-               @if ($navbar->show_admins && (Auth::user()->group === 'admin') || $navbar->show_users && (Auth::user()->group === 'user') || $navbar->show_testers && (Auth::user()->group === 'tester') || $navbar->show_developers && (Auth::user()->group === 'developer'))
+               @if ($this->showNavbar($navbar->id))
                <li>
                   <x-jet-nav-link href="{{ route('company-filings') }}" :active="request()->routeIs('company-filings')">
                      {{ __('Company Filings') }}
@@ -42,7 +42,7 @@
                @endif
             @endif
             @if ($navbar->name === 'Funds Filings')
-               @if ($navbar->show_admins && (Auth::user()->group === 'admin') || $navbar->show_users && (Auth::user()->group === 'user') || $navbar->show_testers && (Auth::user()->group === 'tester') || $navbar->show_developers && (Auth::user()->group === 'developer'))
+               @if ($this->showNavbar($navbar->id))
                <li>
                   <x-jet-nav-link href="{{ route('fund-filings') }}" :active="request()->routeIs('fund-filings')">
                      {{ __('Funds Filings') }}
@@ -51,7 +51,7 @@
                @endif
             @endif
             @if ($navbar->name === 'Mutual Funds Filings')
-               @if ($navbar->show_admins && (Auth::user()->group === 'admin') || $navbar->show_users && (Auth::user()->group === 'user') || $navbar->show_testers && (Auth::user()->group === 'tester') || $navbar->show_developers && (Auth::user()->group === 'developer'))
+               @if ($this->showNavbar($navbar->id))
                <li>
                   <x-jet-nav-link href="{{ route('mutual-fund-filings') }}" :active="request()->routeIs('mutual-fund-filings')">
                      {{ __('Mutual Funds Filings') }}
@@ -60,7 +60,7 @@
                @endif
             @endif
             @if ($navbar->name === 'Company Identifiers')
-               @if ($navbar->show_admins && (Auth::user()->group === 'admin') || $navbar->show_users && (Auth::user()->group === 'user') || $navbar->show_testers && (Auth::user()->group === 'tester') || $navbar->show_developers && (Auth::user()->group === 'developer'))
+               @if ($this->showNavbar($navbar->id))
                <li>
                   <x-jet-nav-link href="{{ route('company-identifiers') }}" :active="request()->routeIs('company-identifiers')">
                      {{ __('Company Identifiers') }}
@@ -69,7 +69,7 @@
                @endif
             @endif
             @if ($navbar->name === 'Delistings')
-               @if ($navbar->show_admins && (Auth::user()->group === 'admin') || $navbar->show_users && (Auth::user()->group === 'user') || $navbar->show_testers && (Auth::user()->group === 'tester') || $navbar->show_developers && (Auth::user()->group === 'developer'))
+               @if ($this->showNavbar($navbar->id))
                <li>
                   <x-jet-nav-link href="{{ route('delistings') }}" :active="request()->routeIs('delistings')">
                      {{ __('Delistings') }}
@@ -78,7 +78,7 @@
                @endif
             @endif
             @if ($navbar->name === 'Euronext')
-               @if ($navbar->show_admins && (Auth::user()->group === 'admin') || $navbar->show_users && (Auth::user()->group === 'user') || $navbar->show_testers && (Auth::user()->group === 'tester') || $navbar->show_developers && (Auth::user()->group === 'developer'))
+               @if ($this->showNavbar($navbar->id))
                <li>
                   <x-jet-nav-link href="{{ route('euronexts') }}" :active="request()->routeIs('euronexts')">
                      {{ __('Euronext') }}
@@ -87,7 +87,7 @@
                @endif
             @endif
             @if ($navbar->name === 'Shanghai')
-               @if ($navbar->show_admins && (Auth::user()->group === 'admin') || $navbar->show_users && (Auth::user()->group === 'user') || $navbar->show_testers && (Auth::user()->group === 'tester') || $navbar->show_developers && (Auth::user()->group === 'developer'))
+               @if ($this->showNavbar($navbar->id))
                <li>
                   <x-jet-nav-link href="{{ route('shanghais') }}" :active="request()->routeIs('shanghais')">
                      {{ __('Shanghai') }}
@@ -96,7 +96,7 @@
                @endif
             @endif
             @if ($navbar->name === 'LSE')
-               @if ($navbar->show_admins && (Auth::user()->group === 'admin') || $navbar->show_users && (Auth::user()->group === 'user') || $navbar->show_testers && (Auth::user()->group === 'tester') || $navbar->show_developers && (Auth::user()->group === 'developer'))
+               @if ($this->showNavbar($navbar->id))
                <li>
                   <x-jet-nav-link href="{{ route('lses') }}" :active="request()->routeIs('lses')">
                      {{ __('LSE') }}
@@ -105,7 +105,7 @@
                @endif
             @endif
             @if ($navbar->name === 'TSX')
-               @if ($navbar->show_admins && (Auth::user()->group === 'admin') || $navbar->show_users && (Auth::user()->group === 'user') || $navbar->show_testers && (Auth::user()->group === 'tester') || $navbar->show_developers && (Auth::user()->group === 'developer'))
+               @if ($this->showNavbar($navbar->id))
                <li>
                   <x-jet-nav-link href="{{ route('tsxs') }}" :active="request()->routeIs('tsxs')">
                   {{ __('TSX') }}
@@ -114,7 +114,7 @@
                @endif
             @endif
             @if ($navbar->name === 'Japan')
-               @if ($navbar->show_admins && (Auth::user()->group === 'admin') || $navbar->show_users && (Auth::user()->group === 'user') || $navbar->show_testers && (Auth::user()->group === 'tester') || $navbar->show_developers && (Auth::user()->group === 'developer'))
+               @if ($this->showNavbar($navbar->id))
                <li>
                   <x-jet-nav-link href="{{ route('japans') }}" :active="request()->routeIs('japans')">
                      {{ __('Japan') }}
@@ -123,7 +123,7 @@
                @endif
             @endif
                @if ($navbar->name === 'HKEX')
-               @if ($navbar->show_admins && (Auth::user()->group === 'admin') || $navbar->show_users && (Auth::user()->group === 'user') || $navbar->show_testers && (Auth::user()->group === 'tester') || $navbar->show_developers && (Auth::user()->group === 'developer'))
+               @if ($this->showNavbar($navbar->id))
                <li>
                   <x-jet-nav-link href="{{ route('hkexs') }}" :active="request()->routeIs('hkexs')">
                   {{ __('HKEX') }}
@@ -132,7 +132,7 @@
                @endif
             @endif
                @if ($navbar->name === 'Press Release')
-               @if ($navbar->show_admins && (Auth::user()->group === 'admin') || $navbar->show_users && (Auth::user()->group === 'user') || $navbar->show_testers && (Auth::user()->group === 'tester') || $navbar->show_developers && (Auth::user()->group === 'developer'))
+               @if ($this->showNavbar($navbar->id))
                <li>
                   <x-jet-nav-link href="{{ route('press.release') }}" :active="request()->routeIs('press.release')">
                      {{ __('Press Release') }}
@@ -157,7 +157,7 @@
          </li>
          @foreach ($navbarItems as $navbar)
             @if ($navbar->name === 'Products')
-               @if ($navbar->show_admins && (Auth::user()->group === 'admin') || $navbar->show_users && (Auth::user()->group === 'user') || $navbar->show_testers && (Auth::user()->group === 'tester') || $navbar->show_developers && (Auth::user()->group === 'developer'))
+               @if ($this->showNavbar($navbar->id))
                <li>
                   <livewire:company-navbar-item wire:key="navbar-product-{{ $period }}"
                   href="/company/{{ $company->ticker }}/?period={{ $period }}" name="Products"
@@ -166,7 +166,7 @@
                @endif
             @endif
             @if ($navbar->name === 'Company Profile')
-               @if ($navbar->show_admins && (Auth::user()->group === 'admin') || $navbar->show_users && (Auth::user()->group === 'user') || $navbar->show_testers && (Auth::user()->group === 'tester') || $navbar->show_developers && (Auth::user()->group === 'developer'))
+               @if ($this->showNavbar($navbar->id))
                <li>
                   <livewire:company-navbar-item wire:key="navbar-profile-{{ $period }}"
                   href="/company/{{ $company->ticker }}/profile" name="Company Profile"
@@ -175,7 +175,7 @@
                @endif
             @endif
             @if ($navbar->name === 'Geographic')
-               @if ($navbar->show_admins && (Auth::user()->group === 'admin') || $navbar->show_users && (Auth::user()->group === 'user') || $navbar->show_testers && (Auth::user()->group === 'tester') || $navbar->show_developers && (Auth::user()->group === 'developer'))
+               @if ($this->showNavbar($navbar->id))
                <li>
                   <livewire:company-navbar-item wire:key="navbar-geographic-{{ $period }}"
                   href="/company/{{ $company->ticker }}/geographic?period={{ $period }}" name="Geographic"
@@ -184,7 +184,7 @@
                @endif
             @endif
             @if ($navbar->name === 'Metrics')
-               @if ($navbar->show_admins && (Auth::user()->group === 'admin') || $navbar->show_users && (Auth::user()->group === 'user') || $navbar->show_testers && (Auth::user()->group === 'tester') || $navbar->show_developers && (Auth::user()->group === 'developer'))
+               @if ($this->showNavbar($navbar->id))
                <li>
                   <livewire:company-navbar-item wire:key="navbar-metrics-{{ $period }}"
                      href="/company/{{ $company->ticker }}/metrics?period={{ $period }}" name="Metrics"
@@ -193,7 +193,7 @@
                @endif
             @endif
             @if ($navbar->name === 'Full Report')
-               @if ($navbar->show_admins && (Auth::user()->group === 'admin') || $navbar->show_users && (Auth::user()->group === 'user') || $navbar->show_testers && (Auth::user()->group === 'tester') || $navbar->show_developers && (Auth::user()->group === 'developer'))
+               @if ($this->showNavbar($navbar->id))
                <li>
                   <livewire:company-navbar-item wire:key="navbar-report-{{ $period }}"
                      href="/company/{{ $company->ticker }}/report?period={{ $period }}" name="Full Report"
@@ -202,7 +202,7 @@
                @endif
             @endif
             @if ($navbar->name === 'Shareholders')
-               @if ($navbar->show_admins && (Auth::user()->group === 'admin') || $navbar->show_users && (Auth::user()->group === 'user') || $navbar->show_testers && (Auth::user()->group === 'tester') || $navbar->show_developers && (Auth::user()->group === 'developer'))
+               @if ($this->showNavbar($navbar->id))
                <li>
                   <livewire:company-navbar-item wire:key="navbar-shareholders"
                      href="/company/{{ $company->ticker }}/shareholders" name="Shareholders"
@@ -211,7 +211,7 @@
                @endif
             @endif
             @if ($navbar->name === 'Summary')
-               @if ($navbar->show_admins && (Auth::user()->group === 'admin') || $navbar->show_users && (Auth::user()->group === 'user') || $navbar->show_testers && (Auth::user()->group === 'tester') || $navbar->show_developers && (Auth::user()->group === 'developer'))
+               @if ($this->showNavbar($navbar->id))
                <li>
                   <livewire:company-navbar-item wire:key="navbar-summary"
                      href="/company/{{ $company->ticker }}/summary" name="Summary"
@@ -220,7 +220,7 @@
                @endif
             @endif
             @if ($navbar->name === 'Insider')
-               @if ($navbar->show_admins && (Auth::user()->group === 'admin') || $navbar->show_users && (Auth::user()->group === 'user') || $navbar->show_testers && (Auth::user()->group === 'tester') || $navbar->show_developers && (Auth::user()->group === 'developer'))
+               @if ($this->showNavbar($navbar->id))
                <li>
                   <livewire:company-navbar-item wire:key="navbar-summary"
                      href="/company/{{ $company->ticker }}/insider" name="Insider"
@@ -229,7 +229,7 @@
                @endif
             @endif
             @if ($navbar->name === 'Filings')
-               @if ($navbar->show_admins && (Auth::user()->group === 'admin') || $navbar->show_users && (Auth::user()->group === 'user') || $navbar->show_testers && (Auth::user()->group === 'tester') || $navbar->show_developers && (Auth::user()->group === 'developer'))
+               @if ($this->showNavbar($navbar->id))
                <li>
                   <livewire:company-navbar-item wire:key="navbar-filings"
                      href="/company/{{ $company->ticker }}/filings" name="Filings"
@@ -238,7 +238,7 @@
                @endif
             @endif
             @if ($navbar->name === 'Splits')
-               @if ($navbar->show_admins && (Auth::user()->group === 'admin') || $navbar->show_users && (Auth::user()->group === 'user') || $navbar->show_testers && (Auth::user()->group === 'tester') || $navbar->show_developers && (Auth::user()->group === 'developer'))
+               @if ($this->showNavbar($navbar->id))
                <li>
                   <livewire:company-navbar-item wire:key="navbar-splits"
                      href="/company/{{ $company->ticker }}/splits" name="Splits"
@@ -247,7 +247,7 @@
                @endif
             @endif
             @if ($navbar->name === 'Chart')
-               @if ($navbar->show_admins && (Auth::user()->group === 'admin') || $navbar->show_users && (Auth::user()->group === 'user') || $navbar->show_testers && (Auth::user()->group === 'tester') || $navbar->show_developers && (Auth::user()->group === 'developer'))
+               @if ($this->showNavbar($navbar->id))
                <li>
                   <livewire:company-navbar-item wire:key="navbar-chart"
                      href="/company/{{ $company->ticker }}/chart" name="Chart"
@@ -256,7 +256,7 @@
                @endif
             @endif
             @if ($navbar->name === 'Executive Compensation')
-               @if ($navbar->show_admins && (Auth::user()->group === 'admin') || $navbar->show_users && (Auth::user()->group === 'user') || $navbar->show_testers && (Auth::user()->group === 'tester') || $navbar->show_developers && (Auth::user()->group === 'developer'))
+               @if ($this->showNavbar($navbar->id))
                <li>
                   <livewire:company-navbar-item wire:key="navbar-chart"
                      href="/company/{{ $company->ticker }}/executive-compensation" name="Executive Compensation"
@@ -265,7 +265,7 @@
                @endif
             @endif
             @if ($navbar->name === 'Restatement')
-               @if ($navbar->show_admins && (Auth::user()->group === 'admin') || $navbar->show_users && (Auth::user()->group === 'user') || $navbar->show_testers && (Auth::user()->group === 'tester') || $navbar->show_developers && (Auth::user()->group === 'developer'))
+               @if ($this->showNavbar($navbar->id))
                <li>
                   <livewire:company-navbar-item wire:key="navbar-insider"
                      href="/company/{{ $company->ticker }}/restatement" name="Restatement"
@@ -274,7 +274,7 @@
                @endif
             @endif
             @if ($navbar->name === 'Employee Count')
-               @if ($navbar->show_admins && (Auth::user()->group === 'admin') || $navbar->show_users && (Auth::user()->group === 'user') || $navbar->show_testers && (Auth::user()->group === 'tester') || $navbar->show_developers && (Auth::user()->group === 'developer'))
+               @if ($this->showNavbar($navbar->id))
                <li>
                   <livewire:company-navbar-item wire:key="navbar-employee"
                      href="/company/{{ $company->ticker }}/employee" name="Employee Count"
@@ -283,7 +283,7 @@
                @endif
             @endif
             @if ($navbar->name === 'Fail To Deliver')
-               @if ($navbar->show_admins && (Auth::user()->group === 'admin') || $navbar->show_users && (Auth::user()->group === 'user') || $navbar->show_testers && (Auth::user()->group === 'tester') || $navbar->show_developers && (Auth::user()->group === 'developer'))
+               @if ($this->showNavbar($navbar->id))
                <li>
                   <livewire:company-navbar-item wire:key="navbar-employee"
                      href="/company/{{ $company->ticker }}/fail-to-deliver" name="Fail To Deliver"

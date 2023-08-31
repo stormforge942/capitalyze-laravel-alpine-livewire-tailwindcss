@@ -11,40 +11,22 @@
                     <thead>
                         <tr>
                             <td class="font-semibold py-4">Item</td>
-                            <td class="font-semibold py-4">Show For Users</td>
-                            <td class="font-semibold py-4">Show For Admins</td>
-                            <td class="font-semibold py-4">Show For Developers</td>
-                            <td class="font-semibold py-4">Show For Testers</td>
+                            @foreach ($groups as $group)
+                            <td class="font-semibold py-4">Show For {{ $group->name }}</td>
+                            @endforeach
                         </tr>
                     </thead>
                     <tbody>
                         @foreach ($navbarItems as $navbar)
                         <tr>
                             <td class="font-semibold py-4">{{ $navbar->name }}</td>
+                            @foreach ($groups as $group)
                             <td class="font-semibold py-4">
-                                <select wire:change="updateNavbarForUsers('{{ $navbar->id }}', $event.target.value)">
-                                    <option value="true" @if ($navbar->show_users) selected @endif>True</option>
-                                    <option value="false" @unless ($navbar->show_users) selected @endif>False</option>
-                                </select>
+                                <div class="flex items-center mr-4">
+                                    <input wire:change="updateNavbar({{ $navbar->id }}, {{ $group->id }}, $event.target.value)" @if($this->isShow($navbar->id, $group->id)) checked @endif value="{{ $this->isShow($navbar->id, $group->id) ? 1 : 0 }}" type="checkbox" class="w-4 h-4 bg-red-700 text-green-700 ">
+                                </div>
                             </td>
-                            <td class="font-semibold py-4">
-                                <select wire:change="updateNavbarForAdmins('{{ $navbar->id }}', $event.target.value)">
-                                    <option value="true" @if ($navbar->show_admins) selected @endif>True</option>
-                                    <option value="false" @unless ($navbar->show_admins) selected @endif>False</option>
-                                </select>
-                            </td>
-                            <td class="font-semibold py-4">
-                                <select wire:change="updateNavbarForDevelopers('{{ $navbar->id }}', $event.target.value)">
-                                    <option value="true" @if ($navbar->show_developers) selected @endif>True</option>
-                                    <option value="false" @unless ($navbar->show_developers) selected @endif>False</option>
-                                </select>
-                            </td>
-                            <td class="font-semibold py-4">
-                                <select wire:change="updateNavbarForTesters('{{ $navbar->id }}', $event.target.value)">
-                                    <option value="true" @if ($navbar->show_testers) selected @endif>True</option>
-                                    <option value="false" @unless ($navbar->show_testers) selected @endif>False</option>
-                                </select>
-                            </td>
+                            @endforeach
                         </tr>
                         @endforeach
                     </tbody>

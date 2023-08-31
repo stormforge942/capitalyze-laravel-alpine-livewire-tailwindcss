@@ -81,6 +81,12 @@
                                 </x-jet-dropdown-link>
                             @endif
 
+                            @if (Auth::user() && Auth::user()->isAdmin())
+                                <x-jet-dropdown-link href="{{ route('admin.groups-management') }}" :active="request()->routeIs('admin.groups-management')">
+                                    {{ __('Groups Management') }}
+                                </x-jet-dropdown-link>
+                            @endif
+
                             <div class="border-t border-gray-100"></div>
 
                             <!-- Authentication -->

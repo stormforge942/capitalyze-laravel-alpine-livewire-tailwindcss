@@ -5,6 +5,7 @@ namespace App\Http\Livewire;
 use Livewire\Component;
 use Livewire\WithPagination;
 use App\Models\User;
+use App\Models\Groups;
 
 class AdminUsers extends Component
 {
@@ -14,11 +15,13 @@ class AdminUsers extends Component
     public $sortDirection = 'desc';
     public $confirmingUserDeletion = false;
     public $userToDelete;
+    public $groups;
 
     protected $listeners = ['performUserDeletion'];
 
     public function render()
     {
+        $this->groups = Groups::get();
         $users = User::orderBy($this->sortBy, $this->sortDirection)->paginate(10);
         return view('livewire.admin-users', compact('users'));
     }    
@@ -26,7 +29,7 @@ class AdminUsers extends Component
     public function updateUserGroup($userId, $value)
     {
         $user = User::find($userId);
-        $user->group = $value;
+        $user->group_id = $value;
         $user->save();
     }
 

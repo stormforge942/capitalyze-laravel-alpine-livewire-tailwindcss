@@ -5,43 +5,51 @@ namespace App\Http\Livewire;
 use Livewire\Component;
 use Livewire\WithPagination;
 use App\Models\Navbar;
+use App\Models\Groups;
+use App\Models\NavbarGroupShows;
 
 class AdminNavbarManagement extends Component
 {
     public $navbarItems;
+    public $groups;
+    public $navbarGroupShows;
 
     public function mount()
     {
-        $this->navbarItems = Navbar::orderBy('id', 'asc')->get();
+        $this->navbarItems = Navbar::get();
+        $this->groups = Groups::get();
+        $this->navbarGroupShows = NavbarGroupShows::get();
     }
 
-
-    public function updateNavbarForUsers($navbarId, $value)
+    public function updateNavbar($navbarId, $groupId, $value)
     {
-        $navbar = Navbar::find($navbarId);
-        $navbar->show_users = $value;
-        $navbar->save();
+        $existingNavbarGroupShow = NavbarGroupShows::where('navbar_id', $navbarId)
+        ->where('group_id', $groupId)
+        ->first();
+
+        if ($existingNavbarGroupShow) {
+            // Update the existing row
+            $existingNavbarGroupShow->show = $value;
+            $existingNavbarGroupShow->save();
+        } else {
+            // Create a new row
+            $navbarGroupShow = new NavbarGroupShows();
+            $navbarGroupShow->navbar_id = $navbarId;
+            $navbarGroupShow->group_id = $groupId;
+            $navbarGroupShow->show = $value;
+            $navbarGroupShow->save();
+        }
     }
 
-    public function updateNavbarForTesters($navbarId, $value)
+    public function isShow($navbarId, $group_id)
     {
-        $navbar = Navbar::find($navbarId);
-        $navbar->show_testers = $value;
-        $navbar->save();
-    }
+        $navbar = NavbarGroupShows::where('navbar_id', $navbarId)->where('group_id', $group_id)->first();
 
-    public function updateNavbarForAdmins($navbarId, $value)
-    {
-        $navbar = Navbar::find($navbarId);
-        $navbar->show_admins = $value;
-        $navbar->save();
-    }
-
-    public function updateNavbarForDevelopers($navbarId, $value)
-    {
-        $navbar = Navbar::find($navbarId);
-        $navbar->show_developers = $value;
-        $navbar->save();
+        if ($navbar) {
+            return $navbar->show;
+        }
+    
+        return false;
     }
 
     public function render()

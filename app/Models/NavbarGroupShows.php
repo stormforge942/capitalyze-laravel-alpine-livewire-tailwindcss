@@ -4,7 +4,7 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
 
-class Navbar extends Model
+class NavbarGroupShows extends Model
 {
     /**
      * The primary key associated with the table.
@@ -18,7 +18,7 @@ class Navbar extends Model
      *
      * @var string
      */
-    protected $table = 'navbars';
+    protected $table = 'navbar_group_shows';
 
      /**
      * The attributes that are mass assignable.
@@ -26,12 +26,9 @@ class Navbar extends Model
      * @var string[]
      */
     protected $fillable = [
-        'name',
-        'position',
-        'show_users',
-        'show_admins',
-        'show_developers',
-        'show_testers',
+        'navbar_id', 
+        'group_id', 
+        'show'
     ];
 
     /**

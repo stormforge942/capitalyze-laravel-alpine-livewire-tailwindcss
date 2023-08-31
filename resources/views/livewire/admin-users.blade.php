@@ -27,10 +27,9 @@
                             <td class="text-center">{{ $user->email }}</td>
                             <td class="text-center">
                                 <select wire:change="updateUserGroup('{{ $user->id }}', $event.target.value)">
-                                    <option value="admin" @if ($user->group === 'admin') selected @endif>Admin</option>
-                                    <option value="user" @if ($user->group === 'user') selected @endif>User</option>
-                                    <option value="developer" @if ($user->group === 'developer') selected @endif>Developer</option>
-                                    <option value="tester" @if ($user->group === 'tester') selected @endif>Tester</option>
+                                    @foreach($groups as $group)
+                                        <option value="{{ $group->id }}">{{ $group->name }}</option>
+                                    @endforeach
                                 </select>
                             </td>
                             <td class="text-center">{{ $user->is_approved ? 'Yes' : 'No' }}</td>

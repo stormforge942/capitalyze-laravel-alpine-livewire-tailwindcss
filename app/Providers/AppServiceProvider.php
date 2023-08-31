@@ -115,10 +115,11 @@ class AppServiceProvider extends ServiceProvider
                 }
 
                 foreach ($hkexs as $hkex) {
+                    $search = !empty($hkex->full_name) ? "$hkex->full_name | $hkex->short_name | $hkex->symbol" : "$hkex->short_name | $hkex->symbol";
                     $collection->push(
                         SpotlightResult::make()
                             ->setGroup('hkexs')
-                            ->setTitle("$hkex->full_name | $hkex->short_name | $hkex->symbol")
+                            ->setTitle($search)
                             ->setAction('jump_to', ['path' => '/hkex/'.$hkex->symbol])
                     );
                 }
