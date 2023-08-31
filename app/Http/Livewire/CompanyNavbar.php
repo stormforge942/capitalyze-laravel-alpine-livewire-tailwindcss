@@ -46,7 +46,7 @@ class CompanyNavbar extends Component
 
     public function mount(Request $request, $route = '', $active = false)
     {
-        $this->navbarItems = Navbar::orderBy('position', 'asc')->get();
+        $this->navbarItems = Navbar::where('is_closed', false)->orderBy('position', 'asc')->get();
         $this->navbarGroupShows = NavbarGroupShows::get();
         $this->groups = Groups::get();
         if (!$this->currentRoute) {

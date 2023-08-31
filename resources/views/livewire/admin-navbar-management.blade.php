@@ -10,23 +10,42 @@
                 <table class="table-auto w-full overflow-scroll" wire:loading.remove>
                     <thead>
                         <tr>
-                            <td class="font-semibold py-4">Item</td>
+                            <td class="font-semibold py-4">Route</td>
+                            <td class="pr-5">Is Closed</td>
+                            <td class="font-semibold pr-5">Position</td>
+                            <td class="pr-5">Is Custom</td>
                             @foreach ($groups as $group)
-                            <td class="font-semibold py-4">Show For {{ $group->name }}</td>
+                            <td class="font-semibold pr-5">Show For {{ $group->name }}</td>
                             @endforeach
                         </tr>
                     </thead>
                     <tbody>
                         @foreach ($navbarItems as $navbar)
                         <tr>
-                            <td class="font-semibold py-4">{{ $navbar->name }}</td>
-                            @foreach ($groups as $group)
-                            <td class="font-semibold py-4">
+                            <td class="font-semibold">
+                                <div class="text-gray-500 text-sm">{{ $navbar->route_name }}</div>
+                                <div>{{ $navbar->name }}</div>
+                            </td>
+                            <td class="font-semibold">
                                 <div class="flex items-center mr-4">
-                                    <input wire:change="updateNavbar({{ $navbar->id }}, {{ $group->id }}, $event.target.value)" @if($this->isShow($navbar->id, $group->id)) checked @endif value="{{ $this->isShow($navbar->id, $group->id) ? 1 : 0 }}" type="checkbox" class="w-4 h-4 bg-red-700 text-green-700 ">
+                                    <input wire:change="updateNavbarClosed({{ $navbar->id }}, $event.target.value)" @if($navbar->is_closed) checked @endif type="checkbox" value="{{ $navbar->is_closed == true ? 0 : 1 }}" class="w-4 h-4 bg-red-700 text-green-700 ">
                                 </div>
                             </td>
-                            @endforeach
+                            @if (!$navbar->is_closed)
+                                <td class="font-semibold"><input class="w-12" wire:change="updateNavbarPosition({{ $navbar->id }}, $event.target.value)" value="{{ $navbar->position }}"></td>
+                                <td class="font-semibold">
+                                    <div class="flex items-center mr-4">
+                                        <input wire:change="updateNavbarCustom({{ $navbar->id }}, $event.target.value)" @if($navbar->is_custom) checked @endif type="checkbox" value="{{ $navbar->is_custom == true ? 0 : 1 }}" class="w-4 h-4 bg-red-700 text-green-700 ">
+                                    </div>
+                                </td>
+                                @foreach ($groups as $group)
+                                <td class="font-semibold">
+                                    <div class="flex items-center mr-4">
+                                        <input wire:change="updateNavbar({{ $navbar->id }}, {{ $group->id }}, $event.target.value)" @if($this->isShow($navbar->id, $group->id)) checked @endif type="checkbox" value="{{ $this->isShow($navbar->id, $group->id) == true ? 0 : 1 }}" class="w-4 h-4 bg-red-700 text-green-700 ">
+                                    </div>
+                                </td>
+                                @endforeach
+                            @endif
                         </tr>
                         @endforeach
                     </tbody>

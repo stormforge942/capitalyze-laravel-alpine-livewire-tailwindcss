@@ -28,10 +28,9 @@ class Navbar extends Model
     protected $fillable = [
         'name',
         'position',
-        'show_users',
-        'show_admins',
-        'show_developers',
-        'show_testers',
+        'route_name',
+        'is_custom',
+        'is_closed'
     ];
 
     /**
