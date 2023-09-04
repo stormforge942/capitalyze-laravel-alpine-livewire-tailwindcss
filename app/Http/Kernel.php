@@ -68,5 +68,6 @@ class Kernel extends HttpKernel
         'admin' => \App\Http\Middleware\EnsureUserIsAdmin::class,
         'ensureUserIsAdmin' => \App\Http\Middleware\EnsureUserIsAdmin::class,
         'custom.email.verification' => \App\Http\Middleware\CustomEmailVerificationPrompt::class,
+        'checkPagePermission' => \App\Http\Middleware\CheckPagePermission::class,
     ];
 }
