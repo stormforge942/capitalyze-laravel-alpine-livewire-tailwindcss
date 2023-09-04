@@ -12,13 +12,15 @@ class CheckPagePermission
 {
     public function handle($request, Closure $next)
     {
-        // Get the current route name
         $routeName = $request->route()->getName();
 
-        // Check if the route has a corresponding record in the Navbar model
         $navbar = Navbar::where('route_name', $routeName)->first();
 
         $navbarGroupShows = NavbarGroupShows::where('navbar_id', $navbar->id)->get();
+
+        if ($navbar && count($navbarGroupShows) === 0) {
+            return redirect()->route('permission-denied');
+        }
 
         foreach ($navbarGroupShows as $item) {
             if ($item && $item->group_id === Auth::user()->group_id && $item->show === false) {
