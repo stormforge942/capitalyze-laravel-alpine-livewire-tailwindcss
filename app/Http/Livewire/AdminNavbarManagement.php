@@ -13,12 +13,26 @@ class AdminNavbarManagement extends Component
     public $navbarItems;
     public $groups;
     public $navbarGroupShows;
+    public $navbarItemToEdit = null;
+
+    protected $listeners = ['navbarItemSaved' => 'refreshNavbarItems'];
 
     public function mount()
     {
         $this->navbarItems = Navbar::orderBy('id', 'asc')->get();
         $this->groups = Groups::get();
         $this->navbarGroupShows = NavbarGroupShows::get();
+    }
+
+    public function openEditModal($navbarItemId)
+    {
+        $this->navbarItemToEdit = Navbar::find($navbarItemId);
+        $this->emit('openEditModal', $navbarItemId);
+    }
+
+    public function refreshNavbarItems()
+    {
+        $this->navbarItems = Navbar::orderBy('id', 'asc')->get();
     }
 
     public function updateNavbarShow($navbarId, $groupId, $value)
@@ -43,6 +57,18 @@ class AdminNavbarManagement extends Component
                 'is_moddable' => $value
             ]
         );
+
+        if ($value === "0") {
+            $navbarGroups = NavbarGroupShows::where('navbar_id', $navbarId)->get();
+
+            foreach ($navbarGroups as $group) {
+                NavbarGroupShows::find($group->id)->update(
+                    [
+                        'show' => $value
+                    ]
+                );
+            }
+        }
 
         $this->navbarItems = Navbar::orderBy('id', 'asc')->get();
     }

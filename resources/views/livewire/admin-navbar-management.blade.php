@@ -23,6 +23,7 @@
                             <td class="font-semibold py-[5px] px-[10px] w-[200px]">
                                 <!-- <div class="text-gray-500 text-sm">{{ $navbar->route_name }}</div> -->
                                 <div>{{ $navbar->name }}</div>
+                                <button wire:click="openEditModal({{ $navbar->id }})">Edit</button>
                             </td>
                             <td class="font-semibold py-[5px] px-[10px] w-[200px]">
                                 <label class="relative inline-flex items-center cursor-pointer">
@@ -48,3 +49,8 @@
         </div>
     </div>
 </div>
+
+<div wire:ignore>
+    <livewire:edit-navbar-item-modal />
+</div>
+
