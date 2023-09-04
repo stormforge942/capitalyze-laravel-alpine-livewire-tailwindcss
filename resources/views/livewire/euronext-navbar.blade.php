@@ -14,132 +14,13 @@
             </a>
             <ul class="space-y-2 font-medium">
             @foreach ($navbarItems as $navbar)
-                @if ($navbar->name === 'Earnings Calendar')
-                @if ($navbar->show_admins && (Auth::user()->group === 'admin'))
-                    <li>
-                        <x-jet-nav-link href="{{ route('earnings-calendar') }}" :active="request()->routeIs('earnings-calendar')">
-                            {{ __('Earnings Calendar') }}
-                        </x-jet-nav-link>
-                    </li>
-                @endif
-                @endif
-                @if ($navbar->name === 'Economics Calendar')
-                @if ($navbar->show_admins && (Auth::user()->group === 'admin') || $navbar->show_users && (Auth::user()->group === 'user') || $navbar->show_testers && (Auth::user()->group === 'tester') || $navbar->show_developers && (Auth::user()->group === 'developer'))
-                <li>
-                    <x-jet-nav-link href="{{ route('economics-calendar') }}" :active="request()->routeIs('economics-calendar')">
-                        {{ __('Economics Calendar') }}
-                    </x-jet-nav-link>
-                </li>
-                @endif
-                @endif
-                @if ($navbar->name === 'Company Filings')
-                @if ($navbar->show_admins && (Auth::user()->group === 'admin') || $navbar->show_users && (Auth::user()->group === 'user') || $navbar->show_testers && (Auth::user()->group === 'tester') || $navbar->show_developers && (Auth::user()->group === 'developer'))
-                <li>
-                    <x-jet-nav-link href="{{ route('company-filings') }}" :active="request()->routeIs('company-filings')">
-                        {{ __('Company Filings') }}
-                    </x-jet-nav-link>
-                </li>
-                @endif
-                @endif
-                @if ($navbar->name === 'Funds Filings')
-                @if ($navbar->show_admins && (Auth::user()->group === 'admin') || $navbar->show_users && (Auth::user()->group === 'user') || $navbar->show_testers && (Auth::user()->group === 'tester') || $navbar->show_developers && (Auth::user()->group === 'developer'))
-                <li>
-                    <x-jet-nav-link href="{{ route('fund-filings') }}" :active="request()->routeIs('fund-filings')">
-                        {{ __('Funds Filings') }}
-                    </x-jet-nav-link>
-                </li>
-                @endif
-                @endif
-                @if ($navbar->name === 'Mutual Funds Filings')
-                @if ($navbar->show_admins && (Auth::user()->group === 'admin') || $navbar->show_users && (Auth::user()->group === 'user') || $navbar->show_testers && (Auth::user()->group === 'tester') || $navbar->show_developers && (Auth::user()->group === 'developer'))
-                <li>
-                    <x-jet-nav-link href="{{ route('mutual-fund-filings') }}" :active="request()->routeIs('mutual-fund-filings')">
-                        {{ __('Mutual Funds Filings') }}
-                    </x-jet-nav-link>
-                </li>
-                @endif
-                @endif
-                @if ($navbar->name === 'Company Identifiers')
-                @if ($navbar->show_admins && (Auth::user()->group === 'admin') || $navbar->show_users && (Auth::user()->group === 'user') || $navbar->show_testers && (Auth::user()->group === 'tester') || $navbar->show_developers && (Auth::user()->group === 'developer'))
-                <li>
-                    <x-jet-nav-link href="{{ route('company-identifiers') }}" :active="request()->routeIs('company-identifiers')">
-                        {{ __('Company Identifiers') }}
-                    </x-jet-nav-link>
-                </li>
-                @endif
-                @endif
-                @if ($navbar->name === 'Delistings')
-                @if ($navbar->show_admins && (Auth::user()->group === 'admin') || $navbar->show_users && (Auth::user()->group === 'user') || $navbar->show_testers && (Auth::user()->group === 'tester') || $navbar->show_developers && (Auth::user()->group === 'developer'))
-                <li>
-                    <x-jet-nav-link href="{{ route('delistings') }}" :active="request()->routeIs('delistings')">
-                        {{ __('Delistings') }}
-                    </x-jet-nav-link>
-                </li>
-                @endif
-                @endif
-                @if ($navbar->name === 'Euronext')
-                @if ($navbar->show_admins && (Auth::user()->group === 'admin') || $navbar->show_users && (Auth::user()->group === 'user') || $navbar->show_testers && (Auth::user()->group === 'tester') || $navbar->show_developers && (Auth::user()->group === 'developer'))
-                <li>
-                    <x-jet-nav-link href="{{ route('euronexts') }}" :active="request()->routeIs('euronexts')">
-                        {{ __('Euronext') }}
-                    </x-jet-nav-link>
-                </li>
-                @endif
-                @endif
-                @if ($navbar->name === 'Shanghai')
-                @if ($navbar->show_admins && (Auth::user()->group === 'admin') || $navbar->show_users && (Auth::user()->group === 'user') || $navbar->show_testers && (Auth::user()->group === 'tester') || $navbar->show_developers && (Auth::user()->group === 'developer'))
-                <li>
-                    <x-jet-nav-link href="{{ route('shanghais') }}" :active="request()->routeIs('shanghais')">
-                        {{ __('Shanghai') }}
-                    </x-jet-nav-link>
-                </li>
-                @endif
-                @endif
-                @if ($navbar->name === 'LSE')
-                @if ($navbar->show_admins && (Auth::user()->group === 'admin') || $navbar->show_users && (Auth::user()->group === 'user') || $navbar->show_testers && (Auth::user()->group === 'tester') || $navbar->show_developers && (Auth::user()->group === 'developer'))
-                <li>
-                    <x-jet-nav-link href="{{ route('lses') }}" :active="request()->routeIs('lses')">
-                        {{ __('LSE') }}
-                    </x-jet-nav-link>
-                </li>
-                @endif
-                @endif
-                @if ($navbar->name === 'TSX')
-                @if ($navbar->show_admins && (Auth::user()->group === 'admin') || $navbar->show_users && (Auth::user()->group === 'user') || $navbar->show_testers && (Auth::user()->group === 'tester') || $navbar->show_developers && (Auth::user()->group === 'developer'))
-                <li>
-                    <x-jet-nav-link href="{{ route('tsxs') }}" :active="request()->routeIs('tsxs')">
-                    {{ __('TSX') }}
-                    </x-jet-nav-link>
-                </li>
-                @endif
-                @endif
-                @if ($navbar->name === 'Japan')
-                @if ($navbar->show_admins && (Auth::user()->group === 'admin') || $navbar->show_users && (Auth::user()->group === 'user') || $navbar->show_testers && (Auth::user()->group === 'tester') || $navbar->show_developers && (Auth::user()->group === 'developer'))
-                <li>
-                    <x-jet-nav-link href="{{ route('japans') }}" :active="request()->routeIs('japans')">
-                        {{ __('Japan') }}
-                    </x-jet-nav-link>
-                </li>
-                @endif
-                @endif
-                @if ($navbar->name === 'HKEX')
-                @if ($navbar->show_admins && (Auth::user()->group === 'admin') || $navbar->show_users && (Auth::user()->group === 'user') || $navbar->show_testers && (Auth::user()->group === 'tester') || $navbar->show_developers && (Auth::user()->group === 'developer'))
-                <li>
-                    <x-jet-nav-link href="{{ route('hkexs') }}" :active="request()->routeIs('hkexs')">
-                    {{ __('HKEX') }}
-                    </x-jet-nav-link>
-                </li>
-                @endif
-                @endif
-                @if ($navbar->name === 'Press Release')
-                @if ($navbar->show_admins && (Auth::user()->group === 'admin') || $navbar->show_users && (Auth::user()->group === 'user') || $navbar->show_testers && (Auth::user()->group === 'tester') || $navbar->show_developers && (Auth::user()->group === 'developer'))
-                <li>
-                    <x-jet-nav-link href="{{ route('press.release') }}" :active="request()->routeIs('press.release')">
-                        {{ __('Press Release') }}
-                    </x-jet-nav-link>
-                </li>
-                @endif
-                @endif
+               @if ($navbar->is_moddable && $this->showNavbar($navbar->id) && !Str::startsWith($navbar->route_name, ['company.', 'lse.', 'tsx.', 'fund.', 'mutual-fund.', 'shanghai.', 'japan.', 'hkex.', 'euronext']))
+                  <li>
+                     <x-jet-nav-link href="{{ route($navbar->route_name, ['ticker' => $euronext->symbol]) }}" :active="request()->routeIs($navbar->route_name)">
+                        {{ __($navbar->name) }}
+                     </x-jet-nav-link>
+                  </li>
+               @endif
             @endforeach
             </ul>
             <hr class="my-4"> <!-- Separator -->
@@ -152,16 +33,16 @@
                         <button wire:key="navbar-period-quarterly" class="@if($period == 'quarterly')text-blue-700 @else text-slate-700 @endif text-sm appearance-none inline-flex px-3 py-2 leading-tight appearance-none focus:outline-none focus:bg-white focus:border-slate-500" wire:click="changePeriod('quarterly')">Quarterly</button>
                     </div>
                 </li>
-                <li>
-                    <x-jet-nav-link href="{{ route('euronext.metrics', ['ticker' => $euronext->symbol]) }}" :active="request()->routeIs('euronext.metrics')">
-                    {{ __('Metrics') }}
-                    </x-jet-nav-link>
-                </li>
-                <li>
-                    <x-jet-nav-link href="{{ route('euronext.filings', ['ticker' => $euronext->symbol]) }}" :active="request()->routeIs('euronext.filings')">
-                    {{ __('Filings') }}
-                    </x-jet-nav-link>
-                </li>
+
+                @foreach ($navbarItems as $navbar)
+                    @if ($navbar->is_moddable && $this->showNavbar($navbar->id) && Str::startsWith($navbar->route_name, ['euronext.']))
+                        <li>
+                            <livewire:company-navbar-item wire:key="{{ $navbar->route_name }}-{{ $period }}"
+                            href="{{ route($navbar->route_name, ['ticker' => $euronext->symbol, 'period' => $period]) }}" name="{{ $navbar->name }}"
+                            :active="$currentRoute === $navbar->route_name" />
+                        </li>
+                    @endif
+                @endforeach
             </ul>
         </div>
         </aside>

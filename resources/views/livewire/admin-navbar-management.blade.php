@@ -11,9 +11,7 @@
                     <thead>
                         <tr>
                             <td class="font-semibold py-4">Route</td>
-                            <td class="pr-5">Is Closed</td>
-                            <td class="font-semibold pr-5">Position</td>
-                            <td class="pr-5">Is Custom</td>
+                            <td class="pr-5">Is Moddable</td>
                             @foreach ($groups as $group)
                             <td class="font-semibold pr-5">Show For {{ $group->name }}</td>
                             @endforeach
@@ -27,22 +25,18 @@
                                 <div>{{ $navbar->name }}</div>
                             </td>
                             <td class="font-semibold">
-                                <div class="flex items-center mr-4">
-                                    <input wire:change="updateNavbarClosed({{ $navbar->id }}, $event.target.value)" @if($navbar->is_closed) checked @endif type="checkbox" value="{{ $navbar->is_closed == true ? 0 : 1 }}" class="w-4 h-4 bg-red-700 text-green-700 ">
-                                </div>
+                                <label class="relative inline-flex items-center cursor-pointer">
+                                    <input class="sr-only peer" wire:change="updateNavbarModdable({{ $navbar->id }}, $event.target.value)" @if($navbar->is_moddable) checked @endif type="checkbox" value="{{ $navbar->is_moddable == true ? 0 : 1 }}">
+                                    <div class="w-11 h-6 bg-gray-200 peer-focus:outline-none peer-focus:ring-4 peer-focus:ring-blue-300 dark:peer-focus:ring-blue-800 rounded-full peer dark:bg-gray-700 peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all dark:border-gray-600 peer-checked:bg-blue-600"></div>
+                                </label>
                             </td>
-                            @if (!$navbar->is_closed)
-                                <td class="font-semibold"><input class="w-12" wire:change="updateNavbarPosition({{ $navbar->id }}, $event.target.value)" value="{{ $navbar->position }}"></td>
-                                <td class="font-semibold">
-                                    <div class="flex items-center mr-4">
-                                        <input wire:change="updateNavbarCustom({{ $navbar->id }}, $event.target.value)" @if($navbar->is_custom) checked @endif type="checkbox" value="{{ $navbar->is_custom == true ? 0 : 1 }}" class="w-4 h-4 bg-red-700 text-green-700 ">
-                                    </div>
-                                </td>
+                            @if ($navbar->is_moddable)
                                 @foreach ($groups as $group)
                                 <td class="font-semibold">
-                                    <div class="flex items-center mr-4">
-                                        <input wire:change="updateNavbar({{ $navbar->id }}, {{ $group->id }}, $event.target.value)" @if($this->isShow($navbar->id, $group->id)) checked @endif type="checkbox" value="{{ $this->isShow($navbar->id, $group->id) == true ? 0 : 1 }}" class="w-4 h-4 bg-red-700 text-green-700 ">
-                                    </div>
+                                    <label class="relative inline-flex items-center cursor-pointer">
+                                        <input class="sr-only peer" wire:change="updateNavbarShow({{ $navbar->id }}, {{ $group->id }}, $event.target.value)" @if($this->isShow($navbar->id, $group->id)) checked @endif type="checkbox" value="{{ $this->isShow($navbar->id, $group->id) == true ? 0 : 1 }}">
+                                        <div class="w-11 h-6 bg-gray-200 peer-focus:outline-none peer-focus:ring-4 peer-focus:ring-blue-300 dark:peer-focus:ring-blue-800 rounded-full peer dark:bg-gray-700 peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all dark:border-gray-600 peer-checked:bg-blue-600"></div>
+                                    </label>
                                 </td>
                                 @endforeach
                             @endif

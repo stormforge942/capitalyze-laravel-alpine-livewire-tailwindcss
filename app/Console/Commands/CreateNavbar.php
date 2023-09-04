@@ -48,13 +48,54 @@ class CreateNavbar extends Command
             try {
                 if (!Navbar::where('route_name', $value)->exists()) {
                     Log::debug("Navbar creation: {$value}");
+                    $isModdable = true;
+
+                    $notModdable = $value === 'login' 
+                    || $value === 'password.request' 
+                    || $value === 'logout' 
+                    || $value === 'password.reset' 
+                    || $value === 'password.email' 
+                    || $value === 'password.update'
+                    || $value === 'register'
+                    || $value === 'verification.notice'
+                    || $value === 'verification.verify'
+                    || $value === 'verification.send'
+                    || $value === 'user-profile-information.update'
+                    || $value === 'user-password.update'
+                    || $value === 'password.confirmation'
+                    || $value === 'password.confirm'
+                    || $value === 'two-factor.login'
+                    || $value === 'two-factor.enable'
+                    || $value === 'two-factor.confirm'
+                    || $value === 'two-factor.disable'
+                    || $value === 'two-factor.qr-code'
+                    || $value === 'two-factor.secret-key'
+                    || $value === 'two-factor.recovery-codes'
+                    || $value === 'profile.show'
+                    || $value === 'sanctum.csrf-cookie'
+                    || $value === 'livewire.message'
+                    || $value === 'livewire.message-localized'
+                    || $value === 'livewire.upload-file'
+                    || $value === 'livewire.preview-file'
+                    || $value === 'ignition.healthCheck'
+                    || $value === 'ignition.executeSolution'
+                    || $value === 'ignition.updateConfig'
+                    || $value === 'home'
+                    || $value === 'dashboard'
+                    || $value === 'admin.users'
+                    || $value === 'admin.navbar-management'
+                    || $value === 'admin.groups-management'
+                    || $value === 'waiting-for-approval';
+
+                    if ($notModdable) {
+                        $isModdable = false;
+                    }
+
                     $navbar = Navbar::create(
                         [
                             'name' => $this->titleCase($value), 
-                            'position' => 0, 
                             'route_name' => $value, 
-                            'is_custom' => false, 
-                            'is_closed' => true
+                            'is_moddable' => $isModdable
                         ],
                     );
                 }

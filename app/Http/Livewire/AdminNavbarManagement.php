@@ -16,12 +16,12 @@ class AdminNavbarManagement extends Component
 
     public function mount()
     {
-        $this->navbarItems = Navbar::orderBy('position', 'asc')->orderBy('id', 'asc')->get();
+        $this->navbarItems = Navbar::orderBy('id', 'asc')->get();
         $this->groups = Groups::get();
         $this->navbarGroupShows = NavbarGroupShows::get();
     }
 
-    public function updateNavbar($navbarId, $groupId, $value)
+    public function updateNavbarShow($navbarId, $groupId, $value)
     {
         $existingNavbarGroupShow = NavbarGroupShows::updateOrCreate(
             [
@@ -33,40 +33,18 @@ class AdminNavbarManagement extends Component
             ]
         );
 
-        $this->navbarItems = Navbar::orderBy('position', 'asc')->orderBy('id', 'asc')->get();
+        $this->navbarItems = Navbar::orderBy('id', 'asc')->get();
     }
 
-    public function updateNavbarClosed($navbarId, $value)
+    public function updateNavbarModdable($navbarId, $value)
     {
         $existingNavbarGroupShow = Navbar::find($navbarId)->update(
             [
-                'is_closed' => $value
+                'is_moddable' => $value
             ]
         );
 
-        $this->navbarItems = Navbar::orderBy('position', 'asc')->orderBy('id', 'asc')->get();
-    }
-
-    public function updateNavbarCustom($navbarId, $value)
-    {
-        $existingNavbarGroupShow = Navbar::find($navbarId)->update(
-            [
-                'is_custom' => $value
-            ]
-        );
-
-        $this->navbarItems = Navbar::orderBy('position', 'asc')->orderBy('id', 'asc')->get();
-    }
-
-    public function updateNavbarPosition($navbarId, $value)
-    {
-        $existingNavbarGroupShow = Navbar::find($navbarId)->update(
-            [
-                'position' => $value
-            ]
-        );
-
-        $this->navbarItems = Navbar::orderBy('position', 'asc')->orderBy('id', 'asc')->get();
+        $this->navbarItems = Navbar::orderBy('id', 'asc')->get();
     }
 
     public function isShow($navbarId, $groupId)

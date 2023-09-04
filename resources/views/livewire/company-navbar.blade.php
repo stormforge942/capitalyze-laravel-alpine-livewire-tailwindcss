@@ -12,9 +12,9 @@
          </a>
          <ul class="space-y-2 font-medium">
             @foreach ($navbarItems as $navbar)
-               @if (!$navbar->is_closed && !$navbar->is_custom && $this->showNavbar($navbar->id))
+               @if ($navbar->is_moddable && $this->showNavbar($navbar->id) && !Str::startsWith($navbar->route_name, ['company.', 'lse.', 'tsx.', 'fund.', 'mutual-fund.', 'shanghai.', 'japan.', 'hkex.', 'euronext']))
                   <li>
-                     <x-jet-nav-link href="{{ route($navbar->route_name, ['ticker' => $company->ticker]) }}" :active="request()->routeIs($navbar->route_name)">
+                     <x-jet-nav-link href="{{ route($navbar->route_name) }}" :active="request()->routeIs($navbar->route_name)">
                         {{ __($navbar->name) }}
                      </x-jet-nav-link>
                   </li>
@@ -34,7 +34,7 @@
                @endif
             </li>
             @foreach ($navbarItems as $navbar)
-               @if (!$navbar->is_closed && $navbar->is_custom && $this->showNavbar($navbar->id))
+               @if ($navbar->is_moddable && $this->showNavbar($navbar->id) && Str::startsWith($navbar->route_name, ['company.']))
                   <li>
                      <livewire:company-navbar-item wire:key="{{ $navbar->route_name }}-{{ $period }}"
                      href="{{ route($navbar->route_name, ['ticker' => $company->ticker, 'period' => $period]) }}" name="{{ $navbar->name }}"
