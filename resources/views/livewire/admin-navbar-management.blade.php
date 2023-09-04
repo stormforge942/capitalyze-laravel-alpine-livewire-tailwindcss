@@ -7,7 +7,7 @@
                 </div>
             </div>
             <div class="mt-8 flow-root rounded-lg overflow-x-auto">
-                <table class="table-auto w-full overflow-scroll" wire:loading.remove>
+                <table class="table-auto w-full overflow-scroll">
                     <thead>
                         <tr>
                             <td class="font-semibold py-4">Route</td>
