@@ -122,7 +122,9 @@ final class CompanyExecutiveCompensationTable extends PowerGridComponent
         return PowerGrid::eloquent()
             ->addColumn('industry_title')
             ->addColumn('name_and_position')
-            ->addColumn('filing_date')
+            ->addColumn('filing_date', function (ExecutiveCompensation $executiveCompensation) {
+                return ('<span data="filing_date">'. $executiveCompensation->filing_date .'</a>');
+            })
             ->addColumn('salary')
             ->addColumn('bonus')
             ->addColumn('stock_award')

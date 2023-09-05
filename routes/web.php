@@ -43,14 +43,15 @@ use Laravel\Fortify\Http\Controllers\AuthenticatedSessionController;
 
 Route::get('/permission-denied', PermissionDenied::class)->name('permission-denied');
 
-Route::middleware(['checkPagePermission'])->group(function () {
-    Route::get('/', function () {
-        if (auth()->check() && (auth()->user()->is_approved == false || !auth()->user()->hasVerifiedEmail())) {
-            return redirect()->route('waiting-for-approval');
-        }
+Route::get('/', function () {
+    if (auth()->check() && (auth()->user()->is_approved == false || !auth()->user()->hasVerifiedEmail())) {
+        return redirect()->route('waiting-for-approval');
+    }
 
-        return view('welcome');
-    })->name('home');
+    return view('welcome');
+})->name('home');
+
+Route::middleware(['checkPagePermission'])->group(function () {
 
 
     Route::middleware(['auth', 'approved', 'verified'])->group(function () {
