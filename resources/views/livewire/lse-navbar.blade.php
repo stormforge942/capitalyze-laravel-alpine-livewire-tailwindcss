@@ -25,6 +25,7 @@
             </ul>
             <hr class="my-4"> <!-- Separator -->
             <ul class="space-y-2 font-medium">
+                @if(in_array($currentRoute, ['lse.metrics']))
                 <li>
                     <!-- Settings Dropdown -->
                     <div class="relative ml-3">
@@ -33,6 +34,7 @@
                         <button wire:key="navbar-period-quarterly" class="@if($period == 'quarterly')text-blue-700 @else text-slate-700 @endif text-sm appearance-none inline-flex px-3 py-2 leading-tight appearance-none focus:outline-none focus:bg-white focus:border-slate-500" wire:click="changePeriod('quarterly')">Quarterly</button>
                     </div>
                 </li>
+                @endif
 
                 @foreach ($navbarItems as $navbar)
                     @if ($navbar->is_moddable && $this->showNavbar($navbar->id) && Str::startsWith($navbar->route_name, ['lse.']))

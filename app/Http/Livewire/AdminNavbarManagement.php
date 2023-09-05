@@ -19,7 +19,7 @@ class AdminNavbarManagement extends Component
 
     public function mount()
     {
-        $this->navbarItems = Navbar::orderBy('id', 'asc')->get();
+        $this->navbarItems = Navbar::orderByDesc('is_moddable')->orderByDesc('id')->get();
         $this->groups = Groups::get();
         $this->navbarGroupShows = NavbarGroupShows::get();
     }
@@ -32,7 +32,7 @@ class AdminNavbarManagement extends Component
 
     public function refreshNavbarItems()
     {
-        $this->navbarItems = Navbar::orderBy('id', 'asc')->get();
+        $this->navbarItems = Navbar::orderByDesc('is_moddable')->orderByDesc('id')->get();
     }
 
     public function updateNavbarShow($navbarId, $groupId, $value)
@@ -47,7 +47,7 @@ class AdminNavbarManagement extends Component
             ]
         );
 
-        $this->navbarItems = Navbar::orderBy('id', 'asc')->get();
+        $this->navbarItems = Navbar::orderByDesc('is_moddable')->orderByDesc('id')->get();
     }
 
     public function updateNavbarModdable($navbarId, $value)
@@ -70,7 +70,7 @@ class AdminNavbarManagement extends Component
             }
         }
 
-        $this->navbarItems = Navbar::orderBy('id', 'asc')->get();
+        $this->navbarItems = Navbar::orderByDesc('is_moddable')->orderByDesc('id')->get();
     }
 
     public function isShow($navbarId, $groupId)
