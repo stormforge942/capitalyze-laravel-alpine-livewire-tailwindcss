@@ -11,7 +11,7 @@ class CompanyExecutiveCompensation extends Component
     public $ticker;
     public $period;
     public $executiveCompensations;
-    public $selectedFilingDate;
+    public $selectedFilingDate = '';
 
     protected $listener = ["updateSelectedFilingDate" => "update"];
 
