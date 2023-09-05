@@ -27,6 +27,7 @@ class CompanyExecutiveCompensation extends Component
             ->distinct()
             ->pluck('filing_date'); // Pluck only the filing dates
         $this->executiveCompensations = $query;
+        $this->selectedFilingDate = $query->first();
     }
 
     public function update($value)
