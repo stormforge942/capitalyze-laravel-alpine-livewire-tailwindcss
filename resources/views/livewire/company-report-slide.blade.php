@@ -13,5 +13,36 @@
         @foreach($data as $table)
             {!! $table !!}
         @endforeach
+        <script>
+            setTimeout(() => {
+                const values = document.querySelectorAll('table tbody [unitref]');
+
+                function formatNumber(number) {
+                // Convert the number to a string
+                let numStr = number.toString();
+
+                // Split the string into integer and decimal parts (if any)
+                let parts = numStr.split('.');
+                let integerPart = parts[0];
+                let decimalPart = parts[1];
+
+                // Add commas as thousands separators to the integer part
+                integerPart = integerPart.replace(/\B(?=(\d{3})+(?!\d))/g, ',');
+
+                // Combine the integer and decimal parts with a dot as the decimal separator
+                let formattedNumber = integerPart;
+                if (decimalPart !== undefined) {
+                    formattedNumber += '.' + decimalPart;
+                }
+
+                return formattedNumber;
+                }
+
+                for (const value of values) {
+                    value.innerHTML = formatNumber(value.innerHTML);
+                    value.style.background = 'yellow';
+                }
+            }, [100])
+        </script>
     @endif
 </x-wire-elements-pro::tailwind.slide-over>
