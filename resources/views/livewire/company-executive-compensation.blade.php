@@ -44,13 +44,13 @@
         document.getElementById('date-select').addEventListener('change', function(event) {
             Livewire.emit('updateSelectedFilingDate', event.target.value);
             setTimeout(() => {
-                document.getElementById('company-executive-compensation').classList.add('hidden');
-                document.getElementById('preloader').classList.remove('hidden');
-            }, [150])
+                document.getElementById('company-executive-compensation').style.display = "none";
+                document.getElementById('preloader').style.display = "block";
+            }, [300])
 
             setTimeout(() => {
-                document.getElementById('company-executive-compensation').classList.remove('hidden');
-                document.getElementById('preloader').classList.add('hidden');
+                document.getElementById('company-executive-compensation').style.display = "block";
+                document.getElementById('preloader').style.display = "none";
             }, [2000])
         });
     });
