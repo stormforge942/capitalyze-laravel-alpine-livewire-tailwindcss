@@ -15,32 +15,17 @@
         @endforeach
         <script>
             setTimeout(() => {
+                const phpValue = @json($value);
+
+                // Remove the dollar sign and format the number with commas
+                const parsedValue = phpValue.replace(/\$/g, '').replace(/(\d)(?=(\d{3})+(?!\d))/g, '$1,');
+
                 const values = document.querySelectorAll('table tbody [unitref]');
 
-                function formatNumber(number) {
-                // Convert the number to a string
-                let numStr = number.toString();
-
-                // Split the string into integer and decimal parts (if any)
-                let parts = numStr.split('.');
-                let integerPart = parts[0];
-                let decimalPart = parts[1];
-
-                // Add commas as thousands separators to the integer part
-                integerPart = integerPart.replace(/\B(?=(\d{3})+(?!\d))/g, ',');
-
-                // Combine the integer and decimal parts with a dot as the decimal separator
-                let formattedNumber = integerPart;
-                if (decimalPart !== undefined) {
-                    formattedNumber += '.' + decimalPart;
-                }
-
-                return formattedNumber;
-                }
-
                 for (const value of values) {
-                    value.innerHTML = formatNumber(value.innerHTML);
-                    value.style.background = 'yellow';
+                    if(parsedValue.includes(value.innerHTML)) {
+                        value.style.background = 'yellow';
+                    }
                 }
             }, [100])
         </script>

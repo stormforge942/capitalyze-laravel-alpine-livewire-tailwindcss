@@ -92,7 +92,7 @@ class CompanyReport extends Component
                         $value = '<td data-value="'.htmlspecialchars($data_json).'" class="open-slide border-slate-400 p-2 text-sm hover:text-blue-500 hover:underline hover:cursor-pointer">' . strstr($value, '|', true) . '</td>';
                     } else {
                         list($content, $hash) = explode("|", $dateValues[$date][0], 2);
-                        $data = array("hash" => $hash, "ticker" => $this->ticker);
+                        $data = array("hash" => $hash, "ticker" => $this->ticker, "value" => $value);
                         $data_json = json_encode($data);
                         $value = '<td data-value="'.htmlspecialchars($data_json).'" class="open-slide border-slate-400 p-2 text-sm hover:text-blue-500 hover:underline hover:cursor-pointer">' . $value . '</td>';
                     }
