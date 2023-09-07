@@ -13,6 +13,7 @@ class InternationalReportSlide extends SlideOver
     public $date;
     public $title = "Report Info";
     public $loaded = false;
+    public $value;
 
     public function loadData()
     {
@@ -38,9 +39,10 @@ class InternationalReportSlide extends SlideOver
         }
     }
 
-    public function mount($symbol, $source) {
+    public function mount($symbol, $source, $value) {
         $this->symbol = $symbol;
         $this->source = $source;
+        $this->value = $value;
     }
 
     public function render()
