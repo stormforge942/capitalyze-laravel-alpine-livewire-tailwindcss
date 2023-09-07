@@ -24,7 +24,7 @@
          <hr class="my-4"> <!-- Separator -->
          <ul class="space-y-2 font-medium">
             <li>
-            @if(in_array($currentRoute, ['company.geographic', 'company.product', 'company.metrics', 'company.shareholders']))
+            @if(in_array($currentRoute, ['company.report', 'company.geographic', 'company.product', 'company.metrics', 'company.shareholders']))
                <!-- Settings Dropdown -->
                <div class="relative ml-3">
                   <button wire:key="navbar-period-annual" class="@if($period == 'annual')text-blue-700 @else text-slate-700 pl-0 @endif text-sm appearance-none inline-flex px-3 py-2 leading-tight appearance-none focus:outline-none focus:bg-white focus:border-slate-500 pl-0" wire:click="changePeriod('annual')">Annual</button>
