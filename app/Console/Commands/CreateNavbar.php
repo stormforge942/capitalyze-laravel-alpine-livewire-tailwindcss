@@ -103,5 +103,6 @@ class CreateNavbar extends Command
                 Log::error("Error creating or finding navbar item: {$e->getMessage()}");
             }
         }
+        $this->info('Navbar imported successfully!');
     }
 }

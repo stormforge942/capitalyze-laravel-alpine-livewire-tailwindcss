@@ -53,5 +53,6 @@ class CreateShanghai extends Command
                 }
             }
         }
+        $this->info('Shanghai import completed');
     }
 }

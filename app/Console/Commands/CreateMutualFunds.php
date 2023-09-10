@@ -55,5 +55,6 @@ class CreateMutualFunds extends Command
                 }
             }
         }
+        $this->info('Mutual Funds import completed');
     }
 }

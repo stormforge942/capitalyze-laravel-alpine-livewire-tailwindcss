@@ -71,5 +71,6 @@ class CreateLse extends Command
                 }
             }
         }
+        $this->info('LSE import completed');
     }
 }
