@@ -16,17 +16,7 @@ class Kernel extends ConsoleKernel
      */
     protected function schedule(Schedule $schedule)
     {
-        $schedule->command('company:import')->daily();
-        $schedule->command('fund:import')->daily();
-        $schedule->command('shanghai:import')->daily();
-        $schedule->command('lse:import')->daily();
-        $schedule->command('japan:import')->daily();
-        $schedule->command('euronext:import')->daily();
-        $schedule->command('mutualFunds:import')->daily();
-        $schedule->command('navbar:import')->daily();
-        $schedule->command('tsx:import')->daily();
-        //todo: verify that it could be run daily
-        $schedule->command('navbar:import')->daily();
+        $schedule->command('capitalyze:import')->daily();
     }
 
     /**
