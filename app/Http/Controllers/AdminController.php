@@ -26,6 +26,13 @@ class AdminController extends Controller
         ]);
     }
 
+    public function groups()
+    {
+        return view('layouts.admin', [
+            'tab' => 'groups-management'
+        ]);
+    }
+
     /**
      * Show the form for creating a new resource.
      *

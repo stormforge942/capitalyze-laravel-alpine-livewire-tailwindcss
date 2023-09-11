@@ -35,6 +35,10 @@
             @if($tab == 'navbar-management')
             <livewire:admin-navbar-management />
             @endif
+
+            @if($tab == 'groups-management')
+            <livewire:admin-groups-management />
+            @endif
         </main>
     </div>
 

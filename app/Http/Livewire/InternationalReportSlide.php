@@ -10,14 +10,17 @@ class InternationalReportSlide extends SlideOver
     public $data;
     public $symbol;
     public $source;
+    public $date;
     public $title = "Report Info";
     public $loaded = false;
+    public $value;
 
     public function loadData()
     {
         $query = DB::connection('pgsql-xbrl')
         ->table($this->source)
         ->where('symbol', '=', $this->symbol)
+        ->where('date', '=', $this->date)
         ->value('html_data');
 
         if (isset($query)) {
@@ -36,9 +39,10 @@ class InternationalReportSlide extends SlideOver
         }
     }
 
-    public function mount($symbol, $source) {
+    public function mount($symbol, $source, $value) {
         $this->symbol = $symbol;
         $this->source = $source;
+        $this->value = $value;
     }
 
     public function render()

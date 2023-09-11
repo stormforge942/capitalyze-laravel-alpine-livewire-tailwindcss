@@ -10,6 +10,23 @@
             <span class="sr-only">Loading...</span>
         </div>
     @else
+        <script>
+            setTimeout(() => {
+                const phpValue = @json($value);
+                
+                const parsedValue = parseFloat(phpValue) / 1000000;
+
+                console.log(parsedValue);
+
+                const values = document.querySelectorAll('form div p span');
+
+                for (const value of values) {
+                    if(parsedValue === parseFloat(value.innerHTML)) {
+                        value.style.background = 'yellow';
+                    }
+                }
+            }, [100])
+        </script>
         @foreach($data as $table)
             {!! $table !!}
         @endforeach

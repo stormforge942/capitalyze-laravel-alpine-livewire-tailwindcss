@@ -54,5 +54,6 @@ class CreateTsx extends Command
                 }
             }
         }
+        $this->info('TSX import completed');
     }
 }

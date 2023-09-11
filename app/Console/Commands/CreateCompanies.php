@@ -48,5 +48,7 @@ class CreateCompanies extends Command
                 Log::warning("Skipping item $key because ticker is not set or empty");
             }
         }
+
+        $this->info('Companies imported successfully!');
     }    
 }

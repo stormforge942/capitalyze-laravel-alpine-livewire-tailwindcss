@@ -77,7 +77,13 @@
 
                             @if (Auth::user() && Auth::user()->isAdmin())
                                 <x-jet-dropdown-link href="{{ route('admin.navbar-management') }}" :active="request()->routeIs('admin.navbar-management')">
-                                    {{ __('Navbar Management') }}
+                                    {{ __('Users Permissions') }}
+                                </x-jet-dropdown-link>
+                            @endif
+
+                            @if (Auth::user() && Auth::user()->isAdmin())
+                                <x-jet-dropdown-link href="{{ route('admin.groups-management') }}" :active="request()->routeIs('admin.groups-management')">
+                                    {{ __('Groups Management') }}
                                 </x-jet-dropdown-link>
                             @endif
 

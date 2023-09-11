@@ -6,6 +6,7 @@ use App\Models\Navbar;
 use Illuminate\Console\Command;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Log;
+use Illuminate\Support\Facades\Route;
  
 class CreateNavbar extends Command
 {
@@ -23,6 +24,9 @@ class CreateNavbar extends Command
      */
     protected $description = 'Import all navbar items to the local database';
  
+    public function titleCase($input) {
+        return implode(' ', array_map('ucfirst', explode('.', str_replace('-', '.', $input))));
+    }
     /**
      * Execute the console command.
      *
@@ -30,53 +34,75 @@ class CreateNavbar extends Command
      */
     public function handle()
     {
-        $query = [
-            (object)['name' => 'Earnings Calendar', 'show' => true],
-            (object)['name' => 'Economics Calendar', 'show' => true],
-            (object)['name' => 'Company Filings', 'show' => true],
-            (object)['name' => 'Funds Filings', 'show' => true],
-            (object)['name' => 'Mutual Funds Filings', 'show' => true],
-            (object)['name' => 'Company Identifiers', 'show' => true],
-            (object)['name' => 'Delistings', 'show' => true],
-            (object)['name' => 'Euronext', 'show' => true],
-            (object)['name' => 'Shanghai', 'show' => true],
-            (object)['name' => 'LSE', 'show' => true],
-            (object)['name' => 'TSX', 'show' => true],
-            (object)['name' => 'Japan', 'show' => true],
-            (object)['name' => 'Press Release', 'show' => true],
-            (object)['name' => 'Products', 'show' => true],
-            (object)['name' => 'Company Profile', 'show' => true],
-            (object)['name' => 'Geographic', 'show' => true],
-            (object)['name' => 'Metrics', 'show' => true],
-            (object)['name' => 'Full Report', 'show' => true],
-            (object)['name' => 'Shareholders', 'show' => true],
-            (object)['name' => 'Summary', 'show' => true],
-            (object)['name' => 'Insider', 'show' => true],
-            (object)['name' => 'Filings', 'show' => true],
-            (object)['name' => 'Splits', 'show' => true],
-            (object)['name' => 'Chart', 'show' => true],
-            (object)['name' => 'Executive Compensation', 'show' => true],
-            (object)['name' => 'Restatement', 'show' => true],
-            (object)['name' => 'Employee Count', 'show' => true],
-            (object)['name' => 'Fail To Deliver', 'show' => true]
-        ];
+        $routeCollection = Route::getRoutes();
+
+        foreach ($routeCollection as $key => $value) {
+            if ($value->getName()) {
+                $query[] = $value->getName();
+            }
+        }
 
         $collection = collect($query);
         
         foreach($collection as $value) {
-            if (isset($value->name) && !empty($value->name)) {
-                Log::debug("`Name` is set and not empty: {$value->name}");
-                try {
-                    $navbar = Navbar::updateOrCreate(
+            try {
+                if (!Navbar::where('route_name', $value)->exists()) {
+                    Log::debug("Navbar creation: {$value}");
+                    $isModdable = true;
+
+                    $notModdable = $value === 'login' 
+                    || $value === 'password.request' 
+                    || $value === 'logout' 
+                    || $value === 'password.reset' 
+                    || $value === 'password.email' 
+                    || $value === 'password.update'
+                    || $value === 'register'
+                    || $value === 'verification.notice'
+                    || $value === 'verification.verify'
+                    || $value === 'verification.send'
+                    || $value === 'user-profile-information.update'
+                    || $value === 'user-password.update'
+                    || $value === 'password.confirmation'
+                    || $value === 'password.confirm'
+                    || $value === 'two-factor.login'
+                    || $value === 'two-factor.enable'
+                    || $value === 'two-factor.confirm'
+                    || $value === 'two-factor.disable'
+                    || $value === 'two-factor.qr-code'
+                    || $value === 'two-factor.secret-key'
+                    || $value === 'two-factor.recovery-codes'
+                    || $value === 'profile.show'
+                    || $value === 'sanctum.csrf-cookie'
+                    || $value === 'livewire.message'
+                    || $value === 'livewire.message-localized'
+                    || $value === 'livewire.upload-file'
+                    || $value === 'livewire.preview-file'
+                    || $value === 'ignition.healthCheck'
+                    || $value === 'ignition.executeSolution'
+                    || $value === 'ignition.updateConfig'
+                    || $value === 'home'
+                    || $value === 'dashboard'
+                    || $value === 'admin.users'
+                    || $value === 'admin.navbar-management'
+                    || $value === 'admin.groups-management'
+                    || $value === 'waiting-for-approval';
+
+                    if ($notModdable) {
+                        $isModdable = false;
+                    }
+
+                    $navbar = Navbar::create(
                         [
-                            'name' => $value->name, 
-                            'show' => $value->show, 
-                        ]
+                            'name' => $this->titleCase($value), 
+                            'route_name' => $value, 
+                            'is_moddable' => $isModdable
+                        ],
                     );
-                } catch (\Exception $e) {
-                    Log::error("Error creating or finding navbar item: {$e->getMessage()}");
                 }
+            } catch (\Exception $e) {
+                Log::error("Error creating or finding navbar item: {$e->getMessage()}");
             }
         }
+        $this->info('Navbar imported successfully!');
     }
 }

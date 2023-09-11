@@ -13,5 +13,21 @@
         @foreach($data as $table)
             {!! $table !!}
         @endforeach
+        <script>
+            setTimeout(() => {
+                const phpValue = @json($value);
+
+                // Remove the dollar sign and format the number with commas
+                const parsedValue = phpValue.replace(/\$/g, '').replace(/(\d)(?=(\d{3})+(?!\d))/g, '$1,');
+
+                const values = document.querySelectorAll('table tbody [unitref]');
+
+                for (const value of values) {
+                    if(parsedValue.includes(value.innerHTML)) {
+                        value.style.background = 'yellow';
+                    }
+                }
+            }, [100])
+        </script>
     @endif
 </x-wire-elements-pro::tailwind.slide-over>

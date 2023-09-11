@@ -11,7 +11,7 @@ class MutualFunds extends Model
      *
      * @var string
      */
-    protected $primaryKey = 'registrant_name';
+    protected $primaryKey = 'cik';
 
     /**
      * Table name

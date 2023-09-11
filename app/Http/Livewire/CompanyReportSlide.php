@@ -9,6 +9,7 @@ class CompanyReportSlide extends SlideOver
 {
     public $hash;
     public $data;
+    public $value;
     public $ticker;
     public $json;
     public $title = "Report Info";
@@ -45,9 +46,10 @@ class CompanyReportSlide extends SlideOver
         }
     }
 
-    public function mount($hash, $ticker) {
+    public function mount($hash, $ticker, $value) {
         $this->hash = $hash;
         $this->ticker = $ticker;
+        $this->value = $value;
     }
 
     public function render()

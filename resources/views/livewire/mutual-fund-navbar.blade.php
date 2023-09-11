@@ -13,79 +13,27 @@
                 <img src="{{ asset('img/capitalyze-logo-bg.png') }}" class="block h-20 w-auto p-3" alt="Capitalyze Logo">
             </a>
             <ul class="space-y-2 font-medium">
-                <li>
-                    <x-jet-nav-link href="{{ route('earnings-calendar') }}" :active="request()->routeIs('earnings-calendar')">
-                    {{ __('Earnings Calendar') }}
-                    </x-jet-nav-link>
-                </li>
-                <li>
-                    <x-jet-nav-link href="{{ route('economics-calendar') }}" :active="request()->routeIs('economics-calendar')">
-                    {{ __('Economics Calendar') }}
-                    </x-jet-nav-link>
-                </li>
-                <li>
-                    <x-jet-nav-link href="{{ route('company-filings') }}" :active="request()->routeIs('company-filings')">
-                    {{ __('Company Filings') }}
-                    </x-jet-nav-link>
-                </li>
-                <li>
-                    <x-jet-nav-link href="{{ route('fund-filings') }}" :active="request()->routeIs('fund-filings')">
-                    {{ __('Funds Filings') }}
-                    </x-jet-nav-link>
-                </li>
-                <li>
-                    <x-jet-nav-link href="{{ route('mutual-fund-filings') }}" :active="request()->routeIs('mutual-fund-filings')">
-                    {{ __('Mutual Funds Filings') }}
-                    </x-jet-nav-link>
-                </li>
-                <li>
-                    <x-jet-nav-link href="{{ route('company-identifiers') }}" :active="request()->routeIs('company-identifiers')">
-                    {{ __('Company Identifiers') }}
-                    </x-jet-nav-link>
-                </li>
-                <li>
-                    <x-jet-nav-link href="{{ route('delistings') }}" :active="request()->routeIs('delistings')">
-                    {{ __('Delistings') }}
-                    </x-jet-nav-link>
-                </li>
-                <li>
-                    <x-jet-nav-link href="{{ route('euronexts') }}" :active="request()->routeIs('euronexts')">
-                    {{ __('Euronext') }}
-                    </x-jet-nav-link>
-                </li>
-                <li>
-                    <x-jet-nav-link href="{{ route('shanghais') }}" :active="request()->routeIs('shanghais')">
-                    {{ __('Shanghai') }}
-                    </x-jet-nav-link>
-                </li>
-                <li>
-                    <x-jet-nav-link href="{{ route('lses') }}" :active="request()->routeIs('lses')">
-                    {{ __('LSE') }}
-                    </x-jet-nav-link>
-                </li>
-                <li>
-                    <x-jet-nav-link href="{{ route('japans') }}" :active="request()->routeIs('japans')">
-                    {{ __('Japan') }}
-                    </x-jet-nav-link>
-                </li>
-                <li>
-                    <x-jet-nav-link href="{{ route('press.release') }}" :active="request()->routeIs('press.release')">
-                    {{ __('Press Release') }}
-                    </x-jet-nav-link>
-                </li>
+            @foreach ($navbarItems as $navbar)
+               @if ($navbar->is_moddable && $this->showNavbar($navbar->id) && !Str::startsWith($navbar->route_name, ['company.', 'lse.', 'tsx.', 'fund.', 'mutual-fund.', 'shanghai.', 'japan.', 'hkex.', 'euronext.','economics-release']))
+                  <li>
+                     <x-jet-nav-link href="{{ route($navbar->route_name) }}" :active="request()->routeIs($navbar->route_name)">
+                        {{ __($navbar->name) }}
+                     </x-jet-nav-link>
+                  </li>
+               @endif
+            @endforeach
             </ul>
             <hr class="my-4"> <!-- Separator -->
             <ul class="space-y-2 font-medium">
-                <li>
-                    <x-jet-nav-link href="{{ route('mutual-fund.holdings', ['cik' => $fund->cik, 'fund_symbol' => $fund->fund_symbol, 'series_id' => $fund->series_id, 'class_id' => $fund->class_id]) }}" :active="request()->routeIs('mutual-fund.holdings')">
-                    {{ __('Holdings') }}
-                    </x-jet-nav-link>
-                </li>
-                <li>
-                    <x-jet-nav-link href="{{ route('mutual-fund.returns', ['cik' => $fund->cik, 'fund_symbol' => $fund->fund_symbol, 'series_id' => $fund->series_id, 'class_id' => $fund->class_id]) }}" :active="request()->routeIs('mutual-fund.returns')">
-                    {{ __('Returns') }}
-                    </x-jet-nav-link>
-                </li>
+                @foreach ($navbarItems as $navbar)
+                    @if ($navbar->is_moddable && $this->showNavbar($navbar->id) && Str::startsWith($navbar->route_name, ['mutual-fund.']))
+                        <li>
+                            <livewire:company-navbar-item wire:key="{{ $navbar->route_name }}"
+                            href="{{ route($navbar->route_name, ['cik' => $fund->cik, 'fund_symbol' => $fund->fund_symbol, 'series_id' => $fund->series_id, 'class_id' => $fund->class_id]) }}" name="{{ $navbar->name }}"
+                            :active="$currentRoute === $navbar->route_name" />
+                        </li>
+                    @endif
+                @endforeach
             </ul>
         </div>
         </aside>

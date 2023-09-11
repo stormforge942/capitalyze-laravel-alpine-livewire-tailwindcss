@@ -1,9 +1,8 @@
 <div>
     <div>
         <livewire:company-navbar :company="$company" :period="$period" />
-        <!-- Page Content -->
+        <!-- Page Content Start -->
         <div class="p-4 sm:ml-64 pl-0">
-                
             <div class="mx-auto">
                 <div class="px-4 sm:px-6 lg:px-8 bg-white py-4 shadow mx-4 rounded">
                     <div class="sm:flex sm:items-start flex-col">
@@ -32,5 +31,40 @@
                 </div>
             </div>
         </div>
+        <!-- Page Content End -->
+        <!-- Modal Content Start -->
+        <div class="relative z-[100] hidden" aria-labelledby="modal-title" role="dialog" aria-modal="true" id="modal">
+            <div class="fixed inset-0 bg-gray-500 bg-opacity-75 transition-opacity"></div>
+            <div class="fixed inset-0 z-10 overflow-y-auto">
+                <div class="flex min-h-full items-end justify-center p-4 text-center sm:items-center sm:p-0">
+                    <div class="relative transform overflow-hidden rounded-lg bg-white text-left shadow-xl transition-all sm:my-8 w-1/2">
+                        <div class="bg-white px-4 pb-4 pt-5 sm:p-6 sm:pb-4">
+                            <livewire:mutual-funds-data />
+                        </div>
+                        <div class="bg-gray-50 px-4 py-3 sm:flex sm:flex-row-reverse sm:px-6">
+                            <button onclick="hideModal()" type="button" class="mt-3 inline-flex w-full justify-center rounded-md bg-white px-3 py-2 text-sm font-semibold text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 hover:bg-gray-50 sm:mt-0 sm:w-auto">Close</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <!-- Modal Content End -->
     </div>
 </div>
+@push('scripts')
+<script>
+    function showModal(e) {
+        var value = e.dataset.value;
+        var elem = document.getElementById('modal');
+        Livewire.emit('mutualFundsDataUpdate', value);
+        elem.classList.add('block');
+        elem.classList.remove('hidden');
+    }
+
+    function hideModal() {
+        var elem = document.getElementById('modal');
+        elem.classList.remove('block');
+        elem.classList.add('hidden');
+    }
+</script>
+@endpush

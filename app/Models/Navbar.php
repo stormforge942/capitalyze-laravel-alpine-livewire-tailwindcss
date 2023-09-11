@@ -11,7 +11,7 @@ class Navbar extends Model
      *
      * @var string
      */
-    protected $primaryKey = 'name';
+    protected $primaryKey = 'id';
 
     /**
      * Table name
@@ -27,7 +27,8 @@ class Navbar extends Model
      */
     protected $fillable = [
         'name',
-        'show',
+        'route_name',
+        'is_moddable'
     ];
 
     /**
@@ -42,5 +43,5 @@ class Navbar extends Model
      *
      * @var bool
      */
-    public $incrementing = false;
+    public $incrementing = true;
 }

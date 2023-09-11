@@ -33,7 +33,7 @@ class CreateLse extends Command
         $query = DB::connection('pgsql-xbrl')
         ->table('lse_statements')
         ->whereNotNull('symbol') // make sure 'symbol' is not null
-        ->select('registrant_name', 'symbol', 'market', 'market_segment', 'share_register_country')->distinct()->get();
+        ->select('registrant_name', 'symbol', 'market', 'market_segment', 'share_register_country', 'isin')->distinct()->get();
 
         $collection = $query->collect();
         
@@ -42,18 +42,35 @@ class CreateLse extends Command
                 Log::debug("Symbol is set and not empty: {$value->symbol}");
                 try {
                     $lse = Lse::updateOrCreate(
-                        [
-                            'symbol' => $value->symbol, 
-                            'registrant_name' => $value->registrant_name, 
-                            'market' => $value->market, 
-                            'market_segment' => $value->market_segment,
-                            'share_register_country' => $value->share_register_country
-                        ]
+                        ['symbol' => $value->symbol]
                     );
+
+                    if (!empty($value->registrant_name)){
+                        $lse->registrant_name = $value->registrant_name;
+                    }
+
+                    if (!empty($value->market)){
+                        $lse->market = $value->market;
+                    }
+
+                    if (!empty($value->market_segment)){
+                        $lse->market_segment = $value->market_segment;
+                    }
+
+                    if (!empty($value->share_register_country)){
+                        $lse->share_register_country = $value->share_register_country;
+                    }
+
+                    if (!empty($value->isin)){
+                        $lse->isin = $value->isin;
+                    }
+
+                    $lse->save();
                 } catch (\Exception $e) {
                     Log::error("Error creating or finding company: {$e->getMessage()}");
                 }
             }
         }
+        $this->info('LSE import completed');
     }
 }
