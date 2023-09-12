@@ -54,5 +54,6 @@ class CreateJapan extends Command
                 }
             }
         }
+        $this->info('Japan import completed');
     }
 }

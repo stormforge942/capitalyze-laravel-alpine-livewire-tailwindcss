@@ -42,5 +42,6 @@ class CreateFunds extends Command
                 ['name' => $value->investor_name]
             );
         }
+        $this->info('All funds imported!');
     }
 }

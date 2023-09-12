@@ -12,7 +12,7 @@
          </a>
          <ul class="space-y-2 font-medium">
             @foreach ($navbarItems as $navbar)
-               @if ($navbar->is_moddable && $this->showNavbar($navbar->id) && !Str::startsWith($navbar->route_name, ['company.', 'lse.', 'tsx.', 'fund.', 'mutual-fund.', 'shanghai.', 'japan.', 'hkex.', 'euronext']))
+               @if ($navbar->is_moddable && $this->showNavbar($navbar->id) && !Str::startsWith($navbar->route_name, ['company.', 'lse.', 'tsx.', 'fund.', 'mutual-fund.', 'shanghai.', 'japan.', 'hkex.', 'euronext.','economics-release']))
                   <li>
                      <x-jet-nav-link href="{{ route($navbar->route_name) }}" :active="request()->routeIs($navbar->route_name)">
                         {{ __($navbar->name) }}
