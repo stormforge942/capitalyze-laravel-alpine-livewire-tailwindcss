@@ -26,7 +26,7 @@
             <hr class="my-4"> <!-- Separator -->
             <ul class="space-y-2 font-medium">
                 @foreach ($navbarItems as $navbar)
-                    @if ($navbar->is_moddable && $this->showNavbar($navbar->id) && Str::startsWith($navbar->route_name, ['mutual-fund.']))
+                    @if (isset($fund->cik) && $navbar->is_moddable && $this->showNavbar($navbar->id) && Str::startsWith($navbar->route_name, ['mutual-fund.']))
                         <li>
                             <livewire:company-navbar-item wire:key="{{ $navbar->route_name }}"
                             href="{{ route($navbar->route_name, ['cik' => $fund->cik, 'fund_symbol' => $fund->fund_symbol, 'series_id' => $fund->series_id, 'class_id' => $fund->class_id]) }}" name="{{ $navbar->name }}"

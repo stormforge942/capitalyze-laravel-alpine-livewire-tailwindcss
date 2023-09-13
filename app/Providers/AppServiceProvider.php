@@ -45,7 +45,7 @@ class AppServiceProvider extends ServiceProvider
                 $companies = Company::where('name', 'ilike', "%{$query}%")->orWhere('ticker', 'ilike', "%{$query}%")->take(10)->get();
                 $funds = Fund::where('name', 'ilike', "%{$query}%")->orWhere('cik', 'ilike', "%{$query}%")->take(10)->get();
 
-                $mutualFunds = MutualFunds::where('registrant_name', 'ilike', "%{$query}%")->orWhere('cik', 'ilike', "%{$query}%")->take(10)->get();
+                $mutualFunds = MutualFunds::where('registrant_name', 'ilike', "%{$query}%")->orWhere('cik', 'ilike', "%{$query}%")->orWhere('class_id', 'ilike', "%{$query}%")->orWhere('series_id', 'ilike', "%{$query}%")->orWhere('fund_symbol', 'ilike', "%{$query}%")->take(10)->get();
 
                 $euronexts = Euronext::where('registrant_name', 'ilike', "%{$query}%")
                 ->orWhere('symbol', 'ilike', "%{$query}%")

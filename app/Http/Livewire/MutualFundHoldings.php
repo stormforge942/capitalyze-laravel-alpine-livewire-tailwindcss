@@ -24,12 +24,12 @@ class MutualFundHoldings extends Component
         $this->cik = $cik;
         $this->fund = $fund;
         $this->quarters = $this->generateQuarters();
-        $this->selectedQuarter = array_key_first($this->quarters);
+        $this->selectedQuarter = !empty($this->quarters) ? array_key_first($this->quarters) : '';
         $selectedQuarter = $request->query('Quarter-to-view');
         if ($selectedQuarter && array_key_exists($selectedQuarter, $this->quarters)) {
             $this->selectedQuarter = $selectedQuarter;
         } else {
-            $this->selectedQuarter = array_key_first($this->quarters);
+            $this->selectedQuarter = !empty($this->quarters) ? array_key_first($this->quarters) : '';
         }
 
         $this->updated('selectedQuarter', $this->selectedQuarter);

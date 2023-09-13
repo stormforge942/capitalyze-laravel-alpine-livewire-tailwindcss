@@ -16,12 +16,12 @@
                 
                 const parsedValue = parseFloat(phpValue) / 1000000;
 
-                console.log(parsedValue);
+                const formattedValue = parsedValue.toLocaleString();
 
                 const values = document.querySelectorAll('form div p span');
 
                 for (const value of values) {
-                    if(parsedValue === parseFloat(value.innerHTML)) {
+                    if(parsedValue === parseFloat(value.innerHTML) || formattedValue === value.innerHTML) {
                         value.style.background = 'yellow';
                     }
                 }
