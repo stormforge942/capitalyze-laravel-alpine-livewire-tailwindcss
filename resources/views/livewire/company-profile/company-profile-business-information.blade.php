@@ -1,4 +1,4 @@
-<div class="cards-wrapper flex flex-wrap wide-cards-wrapper">
+<div class="cards-wrapper wide-cards-wrapper">
     <div class="white-card">
         <div class="title">
             <div>Company Profile</div>
