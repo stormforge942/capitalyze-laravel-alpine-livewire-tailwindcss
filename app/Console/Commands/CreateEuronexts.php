@@ -65,5 +65,6 @@ class CreateEuronexts extends Command
                     Log::error("Error creating or finding euronext: {$e->getMessage()}");
                 }
         }
+        $this->info('Euronexts imported successfully!');
     }
 }

@@ -52,5 +52,6 @@ class CreateGroups extends Command
                 }
             }
         }
+        $this->info('Groups imported successfully!');
     }
 }

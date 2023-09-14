@@ -28,7 +28,7 @@
                             <td class="text-center">
                                 <select wire:change="updateUserGroup('{{ $user->id }}', $event.target.value)">
                                     @foreach($groups as $group)
-                                        <option value="{{ $group->id }}">{{ $group->name }}</option>
+                                        <option value="{{ $group->id }}" @if($user->group_id == $group->id) selected @endif>{{ $group->name }}</option>
                                     @endforeach
                                 </select>
                             </td>

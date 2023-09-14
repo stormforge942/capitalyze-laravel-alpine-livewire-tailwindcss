@@ -59,5 +59,6 @@ class CreateHkex extends Command
                 }
             }
         }
+        $this->info('All HKEX imported!');
     }
 }

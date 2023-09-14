@@ -67,5 +67,6 @@ class CreateNavbarGroupShows extends Command
                 }
             }
         }
+        $this->info('NavbarGroupShows created successfully!');
     }
 }
