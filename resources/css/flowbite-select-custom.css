@@ -1,0 +1,13 @@
+.flowbite-select {
+    border-radius: 99px;
+    border: 1px solid rgba(147, 149, 152, 0.50);
+    margin: 2px auto;
+}
+.flowbite-select {
+    cursor: pointer;
+}
+
+.flowbite-select:focus {
+    border: 1px solid  rgb(147, 149, 152);
+    box-shadow: none;
+}

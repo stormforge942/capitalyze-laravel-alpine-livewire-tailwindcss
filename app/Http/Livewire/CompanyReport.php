@@ -4,12 +4,15 @@ namespace App\Http\Livewire;
 
 use Livewire\Component;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Http\Request;
 use Illuminate\Support\Collection;
 
 class CompanyReport extends Component
 {
     public $company;
     public $ticker;
+    public $companyName;
+    public $currentRoute;
     public $period;
     public $table;
     public $navbar;
@@ -17,9 +20,15 @@ class CompanyReport extends Component
     public $activeIndex = '';
     public $activeSubIndex = '';
     public $data;
+    public $tableDates = [];
     public $noData = false;
     public $skipNext = false;
-    public $tableHtml;
+    public $view = 'Common Size';
+    public $unitType = 'Millions';
+    public $template = 'Standart';
+    public $order = 'Latest on the Right';
+    public $freezePanes = 'Top Row';
+    public $decimal = '.00';
     protected $request;
     protected $rowCount = 0;
 
@@ -28,8 +37,9 @@ class CompanyReport extends Component
    function findDates($array, &$dates) {
         foreach ($array as $key => $value) {
             if (is_array($value)) {
-                if (preg_match('/\d{4}-\d{2}-\d{2}/', $key)) {
-                    if (!in_array($key, $dates)) {
+                if (preg_match('/(\d{4})-\d{2}-\d{2}/', $key, $m)) {
+                    $year = $m[1];
+                    if (!in_array($key, $dates) && $year > 2016) {
                         $dates[] = $key;
                     }
                 } else {
@@ -44,22 +54,22 @@ class CompanyReport extends Component
         $dateValues = [];
         $boldClass = $isBold ? ' font-bold' : '';
 
-       
-    
+
+
         // If the current array contains any date values, store them in $dateValues
         foreach ($array as $key => $value) {
             if (preg_match('/\d{4}-\d{2}-\d{2}/', $key) && is_array($value)) {
                 $dateValues[$key] = $value;
             }
         }
-        
+
         // Only generate a row if the label is not empty and not '#segmentation'
         if (!empty($label) && !$this->skipNext && $label !== '#segmentation') {
-            $bgClass = $this->rowCount % 2 === 0 ? 'bg-cyan-50' : 'bg-white'; // Change $depth to $rowCount here
-            $class = $bgClass . ' hover:bg-blue-200' . $boldClass;
-            $output .= '<tr class="' . $class . '">';
-            $output .= '<td class="sticky left-0 py-2 break-words lg:max-w-[400px] lg:min-w-[280px] max-w-[150px] text-sm '.$bgClass.'">' . str_repeat('&nbsp;', $depth) . $label . '</td>';
-           
+
+            $class =  $boldClass;
+            $output .= '<div class=" row ' . $class . '">';
+            $output .= '<div class="cell">' . str_repeat("&nbsp; ", $depth) . $label . '</div>';
+
             foreach ($dates as $date) {
                 if (isset($dateValues[$date])) {
                     $value = $dateValues[$date][0];
@@ -81,32 +91,32 @@ class CompanyReport extends Component
                         // Add a specific class and a data-hash attribute and display an icon
                         $data = array("hash" => $hash, "ticker" => $this->ticker);
                         $data_json = json_encode($data);
-                        $value = '<td class="open-slide" data-value="'.htmlspecialchars($data_json).'">
+                        $value = '<div class="open-slide cell" data-value="'.htmlspecialchars($data_json).'">
                         <svg class="w-5 h-5 mx-auto cursor-pointer open-slide" data-value="'.htmlspecialchars($data_json).'" xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" viewBox="0 0 16 16">
                         <path class="open-slide" data-value="'.htmlspecialchars($data_json).'" d="M0 2a2 2 0 0 1 2-2h12a2 2 0 0 1 2 2v12a2 2 0 0 1-2 2H2a2 2 0 0 1-2-2V2zm15 2h-4v3h4V4zm0 4h-4v3h4V8zm0 4h-4v3h3a1 1 0 0 0 1-1v-2zm-5 3v-3H6v3h4zm-5 0v-3H1v2a1 1 0 0 0 1 1h3zm-4-4h4V8H1v3zm0-4h4V4H1v3zm5-3v3h4V4H6zm4 4H6v3h4V8z"></path>
-                      </svg></td>';
+                      </svg></div>';
                     } else if(strpos($value, '|') !== false) {
                         list($content, $hash) = explode("|", $dateValues[$date][0], 2);
                         $data = array("hash" => $hash, "ticker" => $this->ticker);
                         $data_json = json_encode($data);
-                        $value = '<td data-value="'.htmlspecialchars($data_json).'" class="open-slide border-slate-400 p-2 text-sm hover:text-blue-500 hover:underline hover:cursor-pointer">' . strstr($value, '|', true) . '</td>';
+                        $value = '<div data-value="'.htmlspecialchars($data_json).'" class="cell">' . strstr($value, '|', true) . '</div>';
                     } else {
                         list($content, $hash) = explode("|", $dateValues[$date][0], 2);
                         $data = array("hash" => $hash, "ticker" => $this->ticker, "value" => $value);
                         $data_json = json_encode($data);
-                        $value = '<td data-value="'.htmlspecialchars($data_json).'" class="open-slide border-slate-400 p-2 text-sm hover:text-blue-500 hover:underline hover:cursor-pointer">' . $value . '</td>';
+                        $value = '<div data-value="'.htmlspecialchars($data_json).'" class="open-slide cell cursor-pointer hover:underline">' . $value . '</div>';
                     }
                     $output .= $value;
                 } else {
-                    $output .= '<td></td>';
+                    $output .= '<div class="cell"></div>';
                 }
             }
-    
-            $output .= '</tr>';
+
+            $output .= '</div>'; // .row
             $this->rowCount++;
         }
-    
-         
+
+
         if($label === '#segmentation') {
             $label = 'Segmentation';
             $this->skipNext = true;
@@ -123,7 +133,7 @@ class CompanyReport extends Component
                 $output .= $this->generateTableRows($value, $dates, $key, $depth + 1, $newIsBold);
             }
         }
-    
+
         return $output;
     }
 
@@ -131,31 +141,17 @@ class CompanyReport extends Component
         // Find all unique dates
         $this->rowCount = 0;
         $dates = [];
+
         $this->findDates($data, $dates);
         rsort($dates);
-
+        $this->tableDates = $dates;
         // Start generating the table
-        $output = '<table class="table-auto min-w-full data-report">';
-        $output .= '<thead>';
-        $output .= '<tr>';
-        $output .= '<th scope="col" class="sticky left-0 py-2 break-words lg:max-w-[400px] lg:min-w-[280px] max-w-[150px] text-sm text-left	text-gray-900 capitalize bg-white">Date</th>';
-        foreach ($dates as $date) {
-            $output .= '<th scope="col" class="whitespace-nowrap px-2 py-3.5 text-left text-sm font-semibold text-gray-900 ">' . $date . '</th>';
-        }
-        $output .= '</tr>';
-        $output .= '</thead>';
-
-        $output .= '<tbody class="divide-y bg-white">';
-        $output .= $this->generateTableRows($data, $dates, '', 0);
-        $output .= '</tbody>';
-        $output .= '</table>';
-
-        return $output;
     }
 
-   public function getData() {
+    public function getData() {
         $acronym = ($this->period == 'annual') ? 'arf5drs' : 'qrf5drs';
         $source = 'info_presentations';
+
         $query = DB::connection('pgsql-xbrl')
         ->table($source)
         ->where('ticker', '=', $this->ticker)
@@ -165,9 +161,12 @@ class CompanyReport extends Component
 
         $data = json_decode($query, true);
         $this->data = $data;
-        $table = $this->generateTableFromNestedArray($data);
-        $this->table = $table;
-   }
+        $this->generateTableFromNestedArray($data);
+    }
+
+    public function updatedPeriod() {
+        $this->getData();
+    }
 
    public function getNavbar() {
         $navbar = [];
@@ -195,17 +194,24 @@ class CompanyReport extends Component
         $this->emit('navbarUpdated', $this->navbar, $this->activeIndex, $this->activeSubIndex);
    }
 
-    public function mount($company, $ticker, $period)
+    public function mount(Request $request, $company, $ticker, $period)
     {
         $this->emit('periodChange', 'annual');
         $this->company  = $company;
         $this->ticker = $ticker;
         $this->period = $period;
+        $this->companyName = $this->ticker;
+        $companyData = @json_decode($this->company, true);
+        if ($companyData && count($companyData) && is_array($companyData) && array_key_exists('name', $companyData))
+            $this->companyName = $companyData['name'];
         $this->getNavbar();
         if ($this->noData === true) {
             return;
         }
         $this->getData();
+        if (!$this->currentRoute) {
+            $this->currentRoute = $request->route()->getName();
+        }
     }
 
     public function periodChange($period) {
