@@ -62,6 +62,14 @@
                                 </div>
 
                                 <div class="tabs-wrapper flex">
+                                    <a href="{{route('company.report', ['ticker' => $company->ticker, 'period' => $period])}}" @class(['tab','px-3', 'active' => $currentRoute === 'company.report'])>Income Statement</a>
+                                    <a href="{{route('company.metrics', ['ticker' => $company->ticker, 'period' => $period])}}" @class(['tab','px-3', 'active' => $currentRoute === 'company.metrics'])>Balance Sheet</a>
+                                    <a href="{{route('company.filings', ['ticker' => $company->ticker, 'period' => $period])}}" @class(['tab','px-3', 'active' => $currentRoute === 'company.filings'])>Cash Flow</a>
+                                    <a href="{{route('company.geographic', ['ticker' => $company->ticker, 'period' => $period])}}" @class(['tab','px-3', 'active' => $currentRoute === 'company.geographic'])>Segments</a>
+                                    <a href="{{route('company.shareholders', ['ticker' => $company->ticker, 'period' => $period])}}" @class(['tab','px-3', 'active' => $currentRoute === 'company.shareholders'])>Ratios</a>
+                                    <a href="{{route('company.executive.compensation', ['ticker' => $company->ticker, 'period' => $period])}}" @class(['tab','px-3', 'active' => $currentRoute === 'company.executive.compensation'])>Consolidated Statements</a>
+                                </div>
+                                <div class="tabs-wrapper flex">
                                     @foreach(array_keys($navbar) as $value)
                                         <div @class(['tab','px-3', 'active' => $value == $activeIndex]) wire:click="$emit('tabClicked', '{{$value}}')">{{ Str::title(preg_replace('/\[[^\]]*?\]/', '', $value)) }}</div>
                                     @endforeach

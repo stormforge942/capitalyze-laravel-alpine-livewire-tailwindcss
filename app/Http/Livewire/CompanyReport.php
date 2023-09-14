@@ -4,6 +4,7 @@ namespace App\Http\Livewire;
 
 use Livewire\Component;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Http\Request;
 use Illuminate\Support\Collection;
 
 class CompanyReport extends Component
@@ -11,6 +12,7 @@ class CompanyReport extends Component
     public $company;
     public $ticker;
     public $companyName;
+    public $currentRoute;
     public $period;
     public $table;
     public $navbar;
@@ -192,7 +194,7 @@ class CompanyReport extends Component
         $this->emit('navbarUpdated', $this->navbar, $this->activeIndex, $this->activeSubIndex);
    }
 
-    public function mount($company, $ticker, $period)
+    public function mount(Request $request, $company, $ticker, $period)
     {
         $this->emit('periodChange', 'annual');
         $this->company  = $company;
@@ -207,6 +209,9 @@ class CompanyReport extends Component
             return;
         }
         $this->getData();
+        if (!$this->currentRoute) {
+            $this->currentRoute = $request->route()->getName();
+        }
     }
 
     public function periodChange($period) {
