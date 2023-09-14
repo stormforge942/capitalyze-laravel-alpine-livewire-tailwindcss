@@ -3,9 +3,10 @@
 @import '../../node_modules/flowbite-datepicker/tailwind.css';
 @import '../../node_modules/sweetalert2/dist/sweetalert2.css';
 @import "company-profile.css";
+@import "company-report.css";
+@import "flowbite-select-custom.css";
+@import "common-styles.css";
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
 
-
-@import "common-styles.css";

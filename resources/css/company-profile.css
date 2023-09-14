@@ -1,3 +1,7 @@
+.company-profile-loading {
+    min-height: 100vh;
+    min-height: calc(100vh - 20vw);
+}
 .no-company-profile-found {
     width: 100%;
     height: 25vw;
@@ -13,17 +17,17 @@
     font-size: 24px;  /* base size */
 }
 
-.company-profile-page .text-color-green {
+.page-titles .text-color-green {
     color: #13B05B;
     font-weight: 500;
 }
 
-.company-profile-page .page-titles {
+.page-titles {
     font-size: inherit;
     vertical-align: middle;
 }
 
-.company-profile-page .page-titles small {
+.page-titles small {
     font-size: 0.66em;
     line-height: 2.25em;
     height: 2.25em;
@@ -31,7 +35,7 @@
     vertical-align: middle;
 }
 
-.company-profile-page .tabs-wrapper {
+.tabs-wrapper {
     font-size: 14px;
     border-radius: 0.56em;
     border: 1px solid #D4DDD7;
@@ -41,7 +45,7 @@
     background: white;
 }
 
-.company-profile-page .tab {
+.tab {
     height: 2.8em;
     min-width: 12em;
     color: #828C85;
@@ -54,26 +58,26 @@
     cursor: pointer;
 }
 
-.company-profile-page .tab.active {
+.tab.active {
     background-color: #52D3A2;
     color: #121A0F;
 }
 
-.company-profile-page .cards-wrapper {
+.cards-wrapper {
     display: grid;
     grid-gap: 1em;
     grid-template-columns: repeat(4, 1fr);
     width: 100%;
 }
 
-.company-profile-page .white-card {
+.white-card {
     font-size: 0.5em;
     padding: 2em;
     background: white;
     border-radius: 0.666em;
 }
 
-.company-profile-page .white-card .title {
+.white-card .title {
     color: #3561E7;
     font-weight: 600;
     margin-bottom: 1.33em;
@@ -81,28 +85,28 @@
     justify-content: space-between;
 }
 
-.company-profile-page .white-card .key-values-wrapper {
+.white-card .key-values-wrapper {
     display: grid;
     grid-template-columns: auto auto;
     grid-gap: 1.333em;
 }
 
-.company-profile-page .white-card .key {
+.white-card .key {
     color: #464E49;
     font-weight: 400;
 }
 
-.company-profile-page .white-card .value {
+.white-card .value {
     color: #121A0F;
     font-size: 1.166em;
     font-weight: 600;
 }
 
-.company-profile-page .cards-wrapper.wide-cards-wrapper {
+.cards-wrapper.wide-cards-wrapper {
     grid-template-columns: 1fr;
 }
 
-.company-profile-page .wide-cards-wrapper .key-values-wrapper {
+.wide-cards-wrapper .key-values-wrapper {
     grid-template-columns: repeat(6, auto);
 }
 
@@ -116,18 +120,18 @@
     color: #121A0F;
 }
 
-.company-profile-page .title-spoiler {
+.title-spoiler {
     color: #121A0F;
     font-size: 1.17em;
     font-weight: 600;
 }
 
-.company-profile-page .table-wrapper {
+.table-wrapper {
     width: 100%;
     font-size: 0.5em;
     margin-top: 0.5em;
 }
-.company-profile-page .table {
+.table-wrapper .table {
     display: table;
     width: 100%;
     margin: 1.5em 0;
@@ -136,8 +140,8 @@
     overflow: hidden;
 }
 
-.company-profile-page .table .row {display: table-row;}
-.company-profile-page .table .cell {
+.table-wrapper .table .row {display: table-row;}
+.table-wrapper .table .cell {
     display: table-cell;
     background: white;
     font-weight: bold;
@@ -146,70 +150,70 @@
     border-bottom: 1px solid #e6e6e6;
     font-size: 1.17em;
 }
-.company-profile-page .table .row-group .row:first-child .cell { border-top: none; }
-.company-profile-page .row-head .cell {background: #e5e5e5;}
-.company-profile-page .cell {
+.table-wrapper .table .row-group .row:first-child .cell { border-top: none; }
+.table-wrapper .row-head .cell {background: #e5e5e5;}
+.table-wrapper .cell {
     text-align: right;
 }
-.company-profile-page .cell:first-child {
+.table-wrapper .cell:first-child {
     text-align: left;
 }
 
-.company-profile-page .row-sub .cell {
+.table-wrapper .row-sub .cell {
     border-top: none;
     border-bottom: none;
     font-weight: normal;
 }
 
-.company-profile-page .row-sub .cell:first-child {
+.table-wrapper .row-sub .cell:first-child {
     padding-left: 2.3em;
 }
 
-.company-profile-page .row-group {
+.table-wrapper .row-group {
     display: table-row-group;
     margin: 1em 0;
     border-radius: 0.66em;
     overflow: hidden;
 }
 
-.company-profile-page .row-group .row:first-child {
+.table-wrapper .row-group .row:first-child {
     border-top-left-radius: 0.66em;
     border-top-right-radius: 0.66em;
     overflow: hidden;
 }
 
-.company-profile-page .row-spacer {
+.table-wrapper .row-spacer {
     height: 1.3em;
     background: transparent;
 }
 
-.company-profile-page .row-group .row:first-of-type .cell:first-of-type {
+.table-wrapper .row-group .row:first-of-type .cell:first-of-type {
     border-top-left-radius: 0.66em;
 }
 
-.company-profile-page .row-group .row:first-of-type .cell:last-of-type {
+.table-wrapper .row-group .row:first-of-type .cell:last-of-type {
     border-top-right-radius: 0.66em;
 }
 
-.company-profile-page .row-group .row:last-of-type .cell:first-of-type {
+.table-wrapper .row-group .row:last-of-type .cell:first-of-type {
     border-bottom-left-radius: 0.66em;
 }
 
-.company-profile-page .row-group .row:last-of-type .cell:last-of-type {
+.table-wrapper .row-group .row:last-of-type .cell:last-of-type {
     border-bottom-right-radius: 0.66em;
 }
 
-.company-profile-page .table .row-group-blue {
+.table-wrapper .table .row-group-blue {
     padding: 0.5em;
 }
-.company-profile-page .table .row-group-blue .cell {
+.table-wrapper .table .row-group-blue .cell {
     background: rgba(82, 198, 255, 0.10);
 }
-.company-profile-page .table .row-group-blue .row-sub .cell:not(:first-of-type) {
+.table-wrapper .table .row-group-blue .row-sub .cell:not(:first-of-type) {
     font-weight: bold;
 }
 
-.company-profile-page .graph-wrapper {
+.graph-wrapper {
     background: white;
     font-size: 0.5em;
     border-radius: 0.666em;
@@ -218,14 +222,14 @@
     width: 100%;
 }
 
-.company-profile-page .graph-wrapper .graph-header div:first-child small {
+.graph-wrapper .graph-header div:first-child small {
     font-size: 1.17em;
 }
-.company-profile-page .graph-wrapper .graph-header .title {
+.graph-wrapper .graph-header .title {
     font-size: 1.33em;
 }
 
-.company-profile-page .graph-header {
+.graph-header {
     display: grid;
     grid-template-columns: 1fr auto 1fr;
 }
@@ -236,15 +240,19 @@
 .company-profile-page .select-graph-date-wrapper {
     color: #828C85;
 }
-.company-profile-page .select-graph-date-wrapper input[type=radio]:checked + * {
+.soft-radio-wrapper input[type=radio] + * {
+    color: #828C85;
+    cursor: pointer;
+}
+.soft-radio-wrapper input[type=radio]:checked + * {
     color: #121A0F;
 }
-.company-profile-page .select-graph-date-wrapper input[type=radio] {
+.soft-radio-wrapper input[type=radio] {
     visibility: hidden;
     position: relative;
 }
 
-.company-profile-page .select-graph-date-wrapper input[type=radio]:before {
+.soft-radio-wrapper input[type=radio]:before {
     visibility: visible;
     content: '';
     display: block;
@@ -253,12 +261,13 @@
     height: 100%;
     border-radius: 99px;
     border: 2px solid #828C85;
+    cursor: pointer;
 }
-.company-profile-page .select-graph-date-wrapper input[type=radio]:checked:before {
+.soft-radio-wrapper input[type=radio]:checked:before {
     border-color: #121A0F;
 }
 
-.company-profile-page .select-graph-date-wrapper input[type=radio]:after {
+.soft-radio-wrapper input[type=radio]:after {
     visibility: visible;
     content: '';
     display: block;
@@ -273,7 +282,14 @@
     transition: 0.3s ease all;
 }
 
-.company-profile-page .select-graph-date-wrapper input[type=radio]:checked:after {
+.big-checked input[type=radio]:after {
+    left: 20%;
+    top: 20%;
+    width: 60%;
+    height: 60%;
+}
+
+.soft-radio-wrapper input[type=radio]:checked:after {
     opacity: 1;
 }
 
@@ -289,6 +305,17 @@
 .company-profile-page .date-range-select-wrapper .value {
     color: #121A0F;
     font-weight: normal;
+    font-size: 1em;
+    height: 1em;
+    -webkit-appearance: none;
+    border: none;
+    padding:0;
+    margin: 0;
+}
+.company-profile-page .date-range-select-wrapper input {
+    border: none !important;
+    outline: none !important;
+    box-shadow: none !important;
 }
 
 .company-profile-page .date-range-select-wrapper .icon-wrapper svg {
@@ -301,10 +328,10 @@
 }
 
 @media (max-width: 1600px) {
-    .company-profile-page .cards-wrapper {
+    .cards-wrapper {
         grid-template-columns: repeat(2, 1fr);
     }
-    .company-profile-page .wide-cards-wrapper .key-values-wrapper {
+    .wide-cards-wrapper .key-values-wrapper {
         grid-template-columns: repeat(3, auto);
     }
 }

@@ -41,7 +41,7 @@
             <svg width="16" height="17" viewBox="0 0 16 17" fill="none" xmlns="http://www.w3.org/2000/svg">
                <path d="M7.77966 5.31441C7.19566 5.31441 6.29165 4.65041 5.33965 4.67441C4.08365 4.69041 2.93165 5.40241 2.28365 6.53041C0.979648 8.79441 1.94765 12.1384 3.21965 13.9784C3.84365 14.8744 4.57965 15.8824 5.55565 15.8504C6.49165 15.8104 6.84366 15.2424 7.97966 15.2424C9.10766 15.2424 9.42766 15.8504 10.4197 15.8264C11.4277 15.8104 12.0677 14.9144 12.6837 14.0104C13.3957 12.9704 13.6917 11.9624 13.7077 11.9064C13.6837 11.8984 11.7477 11.1544 11.7237 8.91441C11.7077 7.04241 13.2517 6.14641 13.3237 6.10641C12.4437 4.81841 11.0917 4.67441 10.6197 4.64241C9.38766 4.54641 8.35566 5.31441 7.77966 5.31441ZM9.85966 3.42641C10.3797 2.80241 10.7237 1.93041 10.6277 1.06641C9.88366 1.09841 8.98766 1.56241 8.45166 2.18641C7.97166 2.73841 7.55566 3.62641 7.66766 4.47441C8.49166 4.53841 9.33966 4.05041 9.85966 3.42641Z" fill="#3561E7"/>
             </svg>
-            <span class="ml-3" id="collapsed-span">Company</span>
+            <span class="ml-3" id="collapsed-span">{{$company->name}}</span>
          </li>
          <li>
             <a data-tooltip-target="tooltip-Overwiew" data-tooltip-placement="right" id="nav" href="{{ route('company.profile', ['ticker' => $this->company->ticker]) }}" class="flex items-center p-2 text-[#464E49] hover:bg-[#828c851a] @if($currentRoute === 'company.profile') bg-[#52d3a233] font-bold @endif rounded-lg group">
@@ -56,7 +56,7 @@
             </div>
          </li>
          <li>
-            <a data-tooltip-target="tooltip-Financials" data-tooltip-placement="right" id="nav" href="{{ route('company.profile', ['ticker' => $this->company->ticker]) }}" class="flex items-center p-2 text-[#464E49] hover:bg-[#828c851a] @if($currentRoute === 'financials') bg-[#52d3a233] font-bold @endif rounded-lg group">
+            <a data-tooltip-target="tooltip-Financials" data-tooltip-placement="right" id="nav" href="{{ route('company.report', ['ticker' => $this->company->ticker]) }}" class="flex items-center p-2 text-[#464E49] hover:bg-[#828c851a] @if($currentRoute === 'company.report') bg-[#52d3a233] font-bold @endif rounded-lg group">
                <svg width="16" height="16" viewBox="0 0 16 16" fill="none" xmlns="http://www.w3.org/2000/svg">
                   <g clip-path="url(#clip0_312_54067)">
                   <path d="M2.70265 11.6758H0.445165C0.200192 11.6758 0 11.8734 0 12.121V15.5533C0 15.7983 0.197543 15.9985 0.445165 15.9985H2.70265C2.94763 15.9985 3.14782 15.8009 3.14782 15.5533V12.121C3.14786 11.8734 2.95028 11.6758 2.70265 11.6758ZM0.890372 15.1081V12.5635H2.25753V15.1081H0.890372Z" fill="#464E49"/>
@@ -285,7 +285,8 @@
       if (!collapsed) {
          // uncollapsed
          collapseButton.classList.remove('rotate-180');
-         // document.getElementById('main-container').style.marginLeft = '16rem';
+         document.getElementById('main-container').style.marginLeft = '16rem';
+         document.getElementById('navigation').style.marginLeft = '16rem';
          document.getElementById('logo').classList.remove('hidden');
          document.getElementById('collapsed-logo').classList.add('hidden');
          document.getElementById('default-sidebar').classList.remove('w-20');
@@ -315,7 +316,8 @@
       } else {
          // collapsed
          collapseButton.classList.add('rotate-180');
-         // document.getElementById('main-container').style.marginLeft = '6rem';
+         document.getElementById('main-container').style.marginLeft = '5rem';
+         document.getElementById('navigation').style.marginLeft = '5rem';
          document.getElementById('logo').classList.add('hidden');
          document.getElementById('collapsed-logo').classList.remove('hidden');
          document.getElementById('default-sidebar').classList.add('w-20');

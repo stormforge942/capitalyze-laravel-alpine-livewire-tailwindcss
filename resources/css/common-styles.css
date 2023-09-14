@@ -114,3 +114,18 @@ table.data-report tr:nth-child(even):hover > td:first-child {
     border: 1px solid #ccc;
     box-shadow: none;
 }
+
+
+.warning-text {
+    color: #DA680B;
+    display: flex;
+    align-items: center;
+    font-size: 0.75em;
+}
+.warning-text svg {
+    display: inline;
+    height: 1em;
+    width: 1em;
+    margin-right: 0.3em;
+
+}

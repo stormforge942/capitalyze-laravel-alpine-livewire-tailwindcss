@@ -18,7 +18,9 @@
         "vite": "^4.0.0"
     },
     "dependencies": {
+        "flowbite": "^1.8.1",
         "flowbite-datepicker": "^1.2.2",
+        "range-slider-input": "^2.4.4",
         "sweetalert2": "^11.7.12"
     }
 }
