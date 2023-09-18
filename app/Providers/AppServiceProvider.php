@@ -2,19 +2,20 @@
 
 namespace App\Providers;
 
+use App\Models\Lse;
+use App\Models\Otc;
+use App\Models\Tsx;
+use App\Models\Fund;
+use App\Models\Hkex;
+use App\Models\Japan;
+use App\Models\Company;
+use App\Models\Euronext;
+use App\Models\Shanghai;
+use App\Models\MutualFunds;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\App;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Support\ServiceProvider;
-use Illuminate\Support\Facades\App;
-use App\Models\Company;
-use App\Models\Fund;
-use App\Models\MutualFunds;
-use App\Models\Lse;
-use App\Models\Hkex;
-use App\Models\Tsx;
-use App\Models\Shanghai;
-use App\Models\Euronext;
-use App\Models\Japan;
 use WireElements\Pro\Components\Spotlight\Spotlight;
 use WireElements\Pro\Components\Spotlight\SpotlightQuery;
 use WireElements\Pro\Components\Spotlight\SpotlightResult;
@@ -37,6 +38,7 @@ class AppServiceProvider extends ServiceProvider
         Spotlight::registerGroup('shanghais', 'Shanghai');
         Spotlight::registerGroup('japans', 'Japan');
         Spotlight::registerGroup('hkexs', 'HKEX');
+        Spotlight::registerGroup('otcs', 'OTC');
 
         Spotlight::registerQueries(
             SpotlightQuery::asDefault(function ($query) {
@@ -67,6 +69,9 @@ class AppServiceProvider extends ServiceProvider
                 $japans = Japan::where('registrant_name', 'ilike', "%{$query}%")
                 ->orWhere('symbol', 'ilike', "%{$query}%")
                 ->orWhere('isin', 'ilike', "%{$query}%")
+                ->take(10)->get();
+                $otcs = Otc::where('company_name', 'ilike', "%{$query}%")
+                ->orWhere('symbol', 'ilike', "%{$query}%")
                 ->take(10)->get();
 
                 foreach ($companies as $company) {
@@ -148,6 +153,15 @@ class AppServiceProvider extends ServiceProvider
                             ->setGroup('japans')
                             ->setTitle("$japan->registrant_name | $japan->symbol | $japan->isin")
                             ->setAction('jump_to', ['path' => '/japan/'.$japan->symbol])
+                    );
+                }
+
+                foreach ($otcs as $otc) {
+                    $collection->push(
+                        SpotlightResult::make()
+                            ->setGroup('otcs')
+                            ->setTitle("$otc->company_name | $otc->symbol")
+                            ->setAction('jump_to', ['path' => '/otc/'.$otc->symbol])
                     );
                 }
             
