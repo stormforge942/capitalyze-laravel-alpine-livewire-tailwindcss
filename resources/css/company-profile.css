@@ -102,7 +102,7 @@
     font-weight: 600;
 }
 
-.key-values-wrapper > .key-value {
+#business-information .key-values-wrapper > .key-value {
     margin-left: 47px;
 }
 
