@@ -123,3 +123,9 @@ table.data-report tr:nth-child(even):hover > td:first-child {
     border: 1px solid #ccc;
     box-shadow: none;
 }
+
+.validation-error {
+    margin-top: 0.3rem;
+    font-size: 0.875rem;
+    color: #e53e3e;
+}

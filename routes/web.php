@@ -51,7 +51,8 @@ Route::get('/', function () {
     return view('welcome');
 })->name('home');
 
-Route::middleware(['checkPagePermission'])->group(function () {
+//Route::middleware(['checkPagePermission'])->group(function () {
+Route::middleware([])->group(function () {
 
 
     Route::middleware(['auth', 'approved', 'verified'])->group(function () {
@@ -70,6 +71,8 @@ Route::middleware(['checkPagePermission'])->group(function () {
         Route::get('/euronext', Euronexts::class)->name('euronexts');
         Route::get('/lse', Lses::class)->name('lses');
         Route::get('/tsx', Tsxs::class)->name('tsxs');
+        // !!!
+        Route::get('/create.company.segment.report', Tsxs::class)->name('create.company.segment.report');
         Route::get('/shanghai', Shanghais::class)->name('shanghais');
         Route::get('/japan', Japans::class)->name('japans');
         Route::get('/hkex', Hkexs::class)->name('hkexs');

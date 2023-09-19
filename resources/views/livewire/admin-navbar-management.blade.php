@@ -18,6 +18,7 @@
                         </tr>
                     </thead>
                     <tbody class="block w-full overflow-auto h-[400px]">
+{{--                        Reviewer Access--}}
                         @foreach ($navbarItems as $navbar)
                         <tr>
                             <td class="font-semibold py-[10px] px-[5px] w-[200px]">
