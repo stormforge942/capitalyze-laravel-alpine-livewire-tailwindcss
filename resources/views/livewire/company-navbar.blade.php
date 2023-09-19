@@ -302,7 +302,9 @@
          }
          const navItemSpans = document.querySelectorAll('#collapsed-span');
          for (const navItemSpan of navItemSpans) {
-            navItemSpan.classList.remove('hidden');
+             navItemSpan.classList.add('invisible');
+
+             navItemSpan.classList.remove('hidden');
             navItemSpan.classList.add('inline');
          }
          const navItems = document.querySelectorAll('#nav');
@@ -313,6 +315,12 @@
          for (const tooltipElement of tooltipElements) {
             tooltipElement.classList.add('hidden');
          }
+
+          setTimeout(() => {
+              for (const navItemSpan of navItemSpans) {
+                  navItemSpan.classList.remove('invisible');
+              }
+          }, 150);
       } else {
          // collapsed
          collapseButton.classList.add('rotate-180');
