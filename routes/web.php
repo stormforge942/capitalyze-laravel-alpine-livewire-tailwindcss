@@ -152,7 +152,7 @@ Route::middleware(['checkPagePermission'])->group(function () {
         | Otc routing
         */
         Route::get('/otc/{ticker}/', [OtcController::class, 'metrics'])->name('otc.metrics');
-        // Route::get('/otc/{ticker}/filings', [OtcController::class, 'filings'])->name('otc.filings');
+        Route::get('/otc/{ticker}/filings', [OtcController::class, 'filings'])->name('otc.filings');
     });
 });
 
