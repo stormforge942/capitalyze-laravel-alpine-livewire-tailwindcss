@@ -102,6 +102,28 @@
     font-weight: 600;
 }
 
+.key-values-wrapper > .key-value {
+    margin-left: 47px;
+}
+
+.key-values-wrapper__item {
+    display: flex;
+    gap: 15px;
+}
+
+.key-values-wrapper__item > div:first-child {
+    background: #52D3A233;
+    width: 32px;
+    height: 32px;
+    border-radius: 4px;
+    display: flex;
+}
+
+.key-values-wrapper__item > div svg {
+    display: block;
+    margin: auto;
+}
+
 .cards-wrapper.wide-cards-wrapper {
     grid-template-columns: 1fr;
 }
