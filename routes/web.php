@@ -30,6 +30,7 @@ use App\Http\Controllers\ShanghaiController;
 use App\Http\Livewire\EconomicReleaseSeries;
 use App\Http\Livewire\MutualFundFilingsPage;
 use App\Http\Controllers\MutualFundController;
+use App\Http\Livewire\Otcs;
 use Laravel\Fortify\Http\Controllers\AuthenticatedSessionController;
 
 /*
@@ -75,6 +76,7 @@ Route::middleware(['checkPagePermission'])->group(function () {
         Route::get('/shanghai', Shanghais::class)->name('shanghais');
         Route::get('/japan', Japans::class)->name('japans');
         Route::get('/hkex', Hkexs::class)->name('hkexs');
+        Route::get('/otc', Otcs::class)->name('otcs');
         Route::get('/press-release', PressRelease::class)->name('press.release');
 
         /*
