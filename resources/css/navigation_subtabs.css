@@ -1,0 +1,23 @@
+
+.nav-subtabs {
+    display: flex;
+    color: #A5A5A5;
+    font-weight: 500;
+    height: 3.4em;
+}
+.nav-subtabs .subtab {
+    height: 100%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    padding: 1.5em 1em;
+    cursor: pointer;
+    user-select: none;
+}
+
+.nav-subtabs .subtab.active {
+    cursor: default;
+    color: #13B05B;
+    font-weight: 600;
+    border-bottom: 2px solid #13B05B;
+}
