@@ -1,6 +1,5 @@
 <?php
 
-use App\Models\Otc;
 use App\Http\Livewire\Lses;
 use App\Http\Livewire\Tsxs;
 use App\Http\Livewire\Hkexs;

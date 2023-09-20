@@ -8,14 +8,13 @@ use Illuminate\Support\Facades\DB;
 class OtcMetrics extends Component
 {
     public $otc;
-    private $table;
+    public $table;
     private $metrics;
     private $segments;
-    private $navbar;
+    public $navbar;
     public $period;
-    private $subnavbar;
-    private $activeIndex = null;
-    private $activeSubIndex = null;
+    public $activeIndex = null;
+    public $activeSubIndex = null;
     private $currentNavbar = '';
 
     protected $listeners = ['tabClicked', 'tabSubClicked', 'periodChange'];
@@ -140,17 +139,6 @@ class OtcMetrics extends Component
 
     public function render()
     {
-        // to fix hydration error we are manually passing the data
-        return view('livewire.otc-metrics', [
-            'otc' => $this->otc,
-            'table' => $this->table,
-            'metrics' => $this->metrics,
-            'segments' => $this->segments,
-            'navbar' => $this->navbar,
-            'subnavbar' => $this->subnavbar,
-            'activeIndex' => $this->activeIndex,
-            'activeSubIndex' => $this->activeSubIndex,
-            'currentNavbar' => $this->currentNavbar,
-        ]);
+        return view('livewire.otc-metrics');
     }
 }

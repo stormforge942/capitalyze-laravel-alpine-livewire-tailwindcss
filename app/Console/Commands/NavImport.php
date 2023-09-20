@@ -19,7 +19,7 @@ class NavImport extends Command
      *
      * @var string
      */
-    protected $description = 'Command description';
+    protected $description = 'Delete and import all navbar items';
 
     /**
      * Execute the console command.

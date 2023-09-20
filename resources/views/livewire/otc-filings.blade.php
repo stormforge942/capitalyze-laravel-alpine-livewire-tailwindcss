@@ -19,7 +19,7 @@
                     </div>
                     <div class="mt-8 flow-root rounded-lg overflow-x-auto w-full" wire:loading.remove>
                         <div class="align-middle">
-                            <div class="inline-block min-w-full sm:rounded-lg" wire:model="table">
+                            <div class="inline-block min-w-full sm:rounded-lg">
                                 <livewire:otc-filings-table :otc="$otc" />
                             </div>
                         </div>
