@@ -10,24 +10,46 @@
             <span class="sr-only">Loading...</span>
         </div>
     @else
-        <script>
-            setTimeout(() => {
-                const phpValue = @json($value);
-                
-                const parsedValue = parseFloat(phpValue) / 1000000;
+    <script>
+        function __parseText(value, shouldBeNumber = false) {
+            let term = String(value).replaceAll(',', '').replaceAll('.', '').trim();
 
-                const formattedValue = parsedValue.toLocaleString();
-
-                const values = document.querySelectorAll('form div p span');
-
-                for (const value of values) {
-                    if(parsedValue === parseFloat(value.innerHTML) || formattedValue === value.innerHTML) {
-                        value.style.background = 'yellow';
-                    }
+            if(isNaN(Number(term))) {
+                if(shouldBeNumber) {
+                    return null;
                 }
-            }, [100])
-        </script>
-        @foreach($data as $table)
+                
+                term = value;
+            }
+
+            return term.replace(/0+$/, '');
+        }
+
+        setTimeout(() => {
+            const phpValue = @json($value);
+
+            const search = __parseText(phpValue);
+
+            const values = document.querySelectorAll('form div p span');
+
+            const regex = new RegExp(`^${search}0*$`)
+
+            for (const value of values) {
+                if(value.innerText == search){
+                    value.style.backgroundColor = 'yellow';
+                    continue;
+                }
+
+                let text = __parseText(value.innerText, true);
+
+                if(text && (text === search || regex.test())){
+                    value.style.backgroundColor = 'yellow';
+                    continue;
+                }
+            }
+        }, [100])
+    </script>
+    @foreach($data as $table)
             {!! $table !!}
         @endforeach
     @endif
