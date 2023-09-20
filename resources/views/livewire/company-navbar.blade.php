@@ -200,7 +200,7 @@
             </div>
          </li>
       </ul>
-      <button id="profileButton" data-dropdown-toggle="dropdownProfile" data-dropdown-placement="left-end" type="button" class="mt-64 inline-flex items-center font-bold text-sm leading-4 focus:outline-none transition">
+      <button id="profileButton" data-dropdown-toggle="dropdownProfile" data-dropdown-placement="left-end" type="button" class="mt-5 inline-flex items-center font-bold text-sm leading-4 focus:outline-none transition">
          <div class="bg-[#52D3A2] w-[36px] h-[36px] leading-9 w-9 h-9 rounded-full mr-2">{{ Auth::user()->initials }}</div>
 
          <span id="tag-collapsed">{{ Auth::user()->name }}</span>
