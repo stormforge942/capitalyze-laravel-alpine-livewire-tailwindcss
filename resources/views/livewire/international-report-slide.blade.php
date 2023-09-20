@@ -12,7 +12,7 @@
     @else
     <script>
         function __parseText(value, shouldBeNumber = false) {
-            let term = String(value).replaceAll(',', '').replaceAll('.', '').trim();
+            let term = String(value).replaceAll(',', '').replaceAll('.', '').trim().replace(/^\$/, '').replace(/\$$/, '').trim();
 
             if(isNaN(Number(term))) {
                 if(shouldBeNumber) {
