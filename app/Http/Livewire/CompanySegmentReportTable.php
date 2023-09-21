@@ -3,18 +3,11 @@
 namespace App\Http\Livewire;
 
 use App\Models\CompanySegmentReport;
-use App\Models\Tsxs;
 use Illuminate\Support\Facades\Storage;
-use Livewire\Livewire;
-use Illuminate\Support\Facades\Log;
-use Illuminate\Support\Str;
-use Illuminate\Support\Carbon;
-use Illuminate\Support\Facades\DB;
 use Illuminate\Database\Eloquent\Builder;
 use PowerComponents\LivewirePowerGrid\Rules\{Rule, RuleActions};
 use PowerComponents\LivewirePowerGrid\Traits\ActionButton;
 use PowerComponents\LivewirePowerGrid\Traits\WithExport;
-use PowerComponents\LivewirePowerGrid\Filters\Filter;
 use PowerComponents\LivewirePowerGrid\{Button, Column, Exportable, Footer, Header, PowerGrid, PowerGridComponent, PowerGridEloquent};
 
 final class CompanySegmentReportTable extends PowerGridComponent
@@ -59,18 +52,6 @@ final class CompanySegmentReportTable extends PowerGridComponent
     }
 
 
-
-    /*
-    |--------------------------------------------------------------------------
-    |  Add Column
-    |--------------------------------------------------------------------------
-    | Make Datasource fields available to be used as columns.
-    | You can pass a closure to transform/modify the data.
-    |
-    | ❗ IMPORTANT: When using closures, you must escape any value coming from
-    |    the database using the `e()` Laravel Helper function.
-    |
-    */
     public function addColumns(): PowerGridEloquent
     {
         return PowerGrid::eloquent()
@@ -145,31 +126,4 @@ final class CompanySegmentReportTable extends PowerGridComponent
                ->emitTo('review-page', 'toggle-slider', ['id'])
         ];
     }
-
-    /*
-    |--------------------------------------------------------------------------
-    | Actions Rules
-    |--------------------------------------------------------------------------
-    | Enable the method below to configure Rules for your Table and Action Buttons.
-    |
-    */
-
-     /**
-     * PowerGrid CompanyFilings Action Rules.
-     *
-     * @return array<int, RuleActions>
-     */
-
-    /*
-    public function actionRules(): array
-    {
-       return [
-
-           //Hide button edit for ID 1
-            Rule::button('edit')
-                ->when(fn($company-filings) => $company-filings->id === 1)
-                ->hide(),
-        ];
-    }
-    */
 }
