@@ -1,13 +1,13 @@
 <?php
- 
+
 namespace App\Console\Commands;
- 
+
 use App\Models\Navbar;
 use Illuminate\Console\Command;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Route;
- 
+
 class CreateNavbar extends Command
 {
     /**
@@ -16,14 +16,14 @@ class CreateNavbar extends Command
      * @var string
      */
     protected $signature = 'navbar:import';
- 
+
     /**
      * The console command description.
      *
      * @var string
      */
     protected $description = 'Import all navbar items to the local database';
- 
+
     public function titleCase($input) {
         return implode(' ', array_map('ucfirst', explode('.', str_replace('-', '.', $input))));
     }
@@ -43,18 +43,18 @@ class CreateNavbar extends Command
         }
 
         $collection = collect($query);
-        
+
         foreach($collection as $value) {
             try {
                 if (!Navbar::where('route_name', $value)->exists()) {
                     Log::debug("Navbar creation: {$value}");
                     $isModdable = true;
 
-                    $notModdable = $value === 'login' 
-                    || $value === 'password.request' 
-                    || $value === 'logout' 
-                    || $value === 'password.reset' 
-                    || $value === 'password.email' 
+                    $notModdable = $value === 'login'
+                    || $value === 'password.request'
+                    || $value === 'logout'
+                    || $value === 'password.reset'
+                    || $value === 'password.email'
                     || $value === 'password.update'
                     || $value === 'register'
                     || $value === 'verification.notice'
@@ -93,8 +93,8 @@ class CreateNavbar extends Command
 
                     $navbar = Navbar::create(
                         [
-                            'name' => $this->titleCase($value), 
-                            'route_name' => $value, 
+                            'name' => $this->titleCase($value),
+                            'route_name' => $value,
                             'is_moddable' => $isModdable
                         ],
                     );
@@ -103,6 +103,18 @@ class CreateNavbar extends Command
                 Log::error("Error creating or finding navbar item: {$e->getMessage()}");
             }
         }
+
+        if(!Navbar::where('route_name', "create.company.segment.report")->exists()){
+            $navbar = Navbar::create(
+                [
+                    'name' => $this->titleCase("Reviewer Access"),
+                    'route_name' => "create.company.segment.report",
+                    'is_moddable' => true,
+                    'is_route' => false,
+                ],
+            );
+        }
+
         $this->info('Navbar imported successfully!');
     }
 }

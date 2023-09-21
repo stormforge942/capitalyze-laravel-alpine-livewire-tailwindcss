@@ -13,7 +13,7 @@
                 </div>
             </div>
             @endif
-            
+
             <div class="hidden sm:flex justify-center justify-items-stretch m-auto flex-grow px-10">
                 <button wire:click="$emit('spotlight.toggle')" class="h-10 w-full grid grid-cols-5 mx-auto max-w-lg">
                     <span class="border-2 border-gray-200 border-r-0 text-sm font-medium leading-7 text-gray-500 justify-self-stretch col-span-4 text-left h-10 px-2 py-1">
@@ -72,6 +72,12 @@
                             @if (Auth::user() && Auth::user()->isAdmin())
                                 <x-jet-dropdown-link href="{{ route('admin.users') }}" :active="request()->routeIs('admin.users')">
                                     {{ __('User Management') }}
+                                </x-jet-dropdown-link>
+                            @endif
+
+                            @if (Auth::user() && Auth::user()->isAdmin())
+                                <x-jet-dropdown-link href="{{ route('review') }}" :active="request()->routeIs('review')">
+                                    {{ __('Review') }}
                                 </x-jet-dropdown-link>
                             @endif
 

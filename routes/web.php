@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Livewire\ReviewPage;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\CompanyController;
 use App\Http\Controllers\LseController;
@@ -71,11 +72,10 @@ Route::middleware([])->group(function () {
         Route::get('/euronext', Euronexts::class)->name('euronexts');
         Route::get('/lse', Lses::class)->name('lses');
         Route::get('/tsx', Tsxs::class)->name('tsxs');
-        // !!!
-        Route::get('/create.company.segment.report', Tsxs::class)->name('create.company.segment.report');
         Route::get('/shanghai', Shanghais::class)->name('shanghais');
         Route::get('/japan', Japans::class)->name('japans');
         Route::get('/hkex', Hkexs::class)->name('hkexs');
+        Route::get('/review', ReviewPage::class)->name('review');
         Route::get('/press-release', PressRelease::class)->name('press.release');
 
         /*
@@ -148,6 +148,10 @@ Route::middleware([])->group(function () {
         */
         Route::get('/hkex/{ticker}/', [HkexController::class, 'metrics'])->name('hkex.metrics');
         Route::get('/hkex/{ticker}/filings', [HkexController::class, 'filings'])->name('hkex.filings');
+
+        /*
+            | Review routing
+        */
     });
 });
 

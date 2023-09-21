@@ -28,6 +28,7 @@ class Navbar extends Model
     protected $fillable = [
         'name',
         'route_name',
+        'is_route',
         'is_moddable'
     ];
 

@@ -3,6 +3,7 @@
 namespace App\Http\Livewire;
 
 use App\Models\CompanySegmentReport;
+use App\Models\File;
 use Illuminate\Support\Facades\Storage;
 use Livewire\WithFileUploads;
 use WireElements\Pro\Components\SlideOver\SlideOver;
@@ -12,11 +13,15 @@ class CompanySegmentReportSlide extends SlideOver
     use WithFileUploads;
 
     public string $amount;
+    public $file;
     public string $link = '';
-    public $image;
+    public $images = [];
     public string $explanations = '';
     public string $fileName = '';
     public string $path = '';
+    public $previousAmount;
+    public $fullUrl;
+    public $date;
 
     protected $rules = [
         'amount' => [
@@ -33,18 +38,32 @@ class CompanySegmentReportSlide extends SlideOver
             'nullable',
             'string',
         ],
-        'image' => [
-            'nullable',
-            'image',
-            'mimes:jpeg,png',
-            'max:2048'
+        'images' => [
+            'array'
         ],
+        'images.*' => [
+            'image',
+            'mimes:jpeg,png,jpg',
+            'max:2048'
+        ]
     ];
+
+    public function mount($previousAmount, $date, $fullUrl)
+    {
+        $this->fullUrl = $fullUrl;
+        $this->previousAmount = $previousAmount;
+        $this->date = $date;
+    }
 
     public function updated($propertyName)
     {
-        if ($propertyName === 'image') {
-            $this->fileName = $this->image->getClientOriginalName();
+        if ($propertyName == 'images') {
+            $this->fileName = $this->images[0]->getClientOriginalName();
+            if (count($this->images) > 1) {
+                $this->fileName .= ', ' . count($this->images) - 1 . ' more ';
+            }
+
+            $this->validateOnly('images.*');
         }
 
         $this->validateOnly($propertyName);
@@ -59,17 +78,29 @@ class CompanySegmentReportSlide extends SlideOver
     {
         $this->validate();
 
-        if ($this->image) {
-            $this->path = Storage::disk('s3')->put('/company_segment_reports', $this->image);
+        $files_ids = [];
+
+        foreach ($this->images as $image) {
+            $path = Storage::disk('s3')->put('/company_segment_reports', $image);
+            $file = File::create([
+                'user_id' => auth()->id(),
+                'path' => $path,
+                'url' => Storage::disk('s3')->url($path)
+            ]);
+            $files_ids[] = $file->id;
         }
 
-        CompanySegmentReport::create([
+        $companySegmentReport = CompanySegmentReport::create([
+            'previous_amount' => $this->previousAmount,
+            'date' => $this->date,
+            'company_url' => $this->fullUrl,
             'amount' => $this->amount,
             'link' => $this->link,
-            'image_path' => $this->path,
             'explanations' => $this->explanations,
             'user_id' => auth()->id(),
         ]);
+
+        $companySegmentReport->files()->attach($files_ids);
 
         $this->emit('slide-over.close');
     }
