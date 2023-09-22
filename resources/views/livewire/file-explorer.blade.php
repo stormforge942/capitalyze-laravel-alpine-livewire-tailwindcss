@@ -17,7 +17,7 @@
 
                         <div wire:click.stop="" class="flex h-full flex-col overflow-y-scroll bg-white py-6 shadow-xl">
                             <div class="px-4 sm:px-6">
-                                <h2 class="text-base font-semibold leading-6 text-gray-900" id="slide-over-title">Panel title</h2>
+                                <h2 class="text-base font-semibold leading-6 text-gray-900" id="slide-over-title">File explorer</h2>
                             </div>
                             <div class="relative mt-6 flex-1 px-4 sm:px-6">
                                 @foreach($files as $file)
