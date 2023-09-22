@@ -29,7 +29,7 @@
         <!-- Page Content -->
         <main>
             @if($tab == 'metrics')
-            <livewire:lse-metrics :lse="$lse" :period="$period" />
+            <livewire:lse-metrics :model="$lse" :period="$period" />
             @endif
             @if($tab == 'filings')
             <livewire:lse-filings :lse="$lse" />

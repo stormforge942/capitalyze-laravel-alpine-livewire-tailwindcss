@@ -11,6 +11,6 @@ class HkexMetrics extends BaseMetricsComponent
 
     public function title(): string
     {
-        return "Hkex Metrics - {$this->model->short_name}({$this->model->symbol})";
+        return "HKEX Metrics - {$this->model->short_name}({$this->model->symbol})";
     }
 }
