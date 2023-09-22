@@ -3,10 +3,10 @@
     <div class="fixed inset-0"></div>
 
     <div class="fixed inset-0 overflow-hidden">
-        <div class="absolute inset-0 overflow-hidden">
+        <div wire:click="$emitTo('review-page', 'close-slider')" class="absolute inset-0 overflow-hidden">
             <div class="pointer-events-none fixed inset-y-0 right-0 flex max-w-full pl-10">
                 <div class="pointer-events-auto w-screen max-w-md">
-                    <div class="flex h-full flex-col overflow-y-scroll bg-white py-6 shadow-xl">
+                    <div wire:click.stop class="flex h-full flex-col overflow-y-scroll bg-white py-6 shadow-xl">
                         <div class="px-4 sm:px-6">
                             <div class="flex items-start justify-between">
                                 <h2 class="text-base font-semibold leading-6 text-gray-900" id="slide-over-title">Panel title</h2>
@@ -23,23 +23,23 @@
                         </div>
                         <div class="relative mt-6 flex-1 px-4 sm:px-6">
                             <div class="mb-4">
-                                <label class="block text-gray-700 text-sm font-bold mb-2" for="link">
+                                <label class="label" for="link">
                                     Support engineer
                                 </label>
-                                <input wire:model="supportEngineer" class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline" id="link" type="text" placeholder="Name">
+                                <input wire:model="supportEngineer" class="input" id="link" type="text" placeholder="Name">
                                 @error('supportEngineer')
                                 <span class="validation-error">{{ $message }}</span> @enderror
                             </div>
 
                             <div class="mb-4">
-                                <label class="block text-gray-700 text-sm font-bold mb-2" for="explanations">
+                                <label class="label" for="explanations">
                                     Support engineer comments
                                 </label>
-                                <textarea wire:model="supportEngineerComments" class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline" id="explanations" type="text" placeholder="..."></textarea>
+                                <textarea wire:model="supportEngineerComments" class="input" id="explanations" type="text" placeholder="..."></textarea>
                             </div>
 
                             <div class="mb-4">
-                                <label class="block text-gray-700 text-sm font-bold mb-2" for="explanations">
+                                <label class="label" for="explanations">
                                     Fixed
                                 </label>
                                 <div class="relative inline-block w-10 mr-2 align-middle select-none transition duration-200 ease-in">
@@ -49,7 +49,7 @@
                             </div>
 
                             <div class="mb-4">
-                                <label class="block text-gray-700 text-sm font-bold mb-2" for="explanations">
+                                <label class="label" for="explanations">
                                     Delete old files
                                 </label>
                                 <div class="relative inline-block w-10 mr-2 align-middle select-none transition duration-200 ease-in">
@@ -111,16 +111,13 @@
                                 </div>
                             </div>
 
-
                             <div class="flex flex-row space-x-2">
-                                <x-jet-button wire:click="submit">
-                                    {{ __('Save') }}
-                                </x-jet-button>
-                                <button type="button"
-                                        class="inline-flex w-full justify-center rounded-md bg-gray-200 px-3 py-2 text-sm font-semibold text-gray-900 shadow-sm hover:bg-gray-300 sm:ml-3 sm:w-auto"
-                                        wire:click="$emitTo('review-page', 'close-slider')">
-                                    {{ __('CANCEL') }}
-                                </button>
+                                <div wire:click="submit">
+                                    <livewire:button icon="edit" text="Save" class="secondary"/>
+                                </div>
+                                <div wire:click="$emitTo('review-page', 'close-slider')">
+                                    <livewire:button text="Cancel" class="cancel" />
+                                </div>
                             </div>
                         </div>
                     </div>

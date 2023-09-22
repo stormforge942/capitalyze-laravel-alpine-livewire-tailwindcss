@@ -56,7 +56,7 @@ Route::get('/', function () {
 Route::middleware([])->group(function () {
 
 
-    Route::middleware(['auth', 'approved', 'verified'])->group(function () {
+    Route::middleware(['auth', 'approved', 'verified', 'checkPagePermission'])->group(function () {
         /*
         | Global routes
         */

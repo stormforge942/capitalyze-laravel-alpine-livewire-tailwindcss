@@ -14,20 +14,10 @@ class CheckPagePermission
     {
         $routeName = $request->route()->getName();
 
-        $navbar = Navbar::where('route_name', $routeName)->first();
-
-        $navbarGroupShows = NavbarGroupShows::where('navbar_id', $navbar->id)->get();
-
-        if ($navbar && count($navbarGroupShows) === 0) {
-            return redirect()->route('permission-denied');
+        if (Auth::user()->hasNavbar($routeName)) {
+            return $next($request);
         }
 
-        foreach ($navbarGroupShows as $item) {
-            if ($item && $item->group_id === Auth::user()->group_id && $item->show === false) {
-                return redirect()->route('permission-denied');
-            }
-        }
-
-        return $next($request);
+        return redirect()->route('permission-denied');
     }
 }

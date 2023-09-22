@@ -70,7 +70,9 @@ class User extends Authenticatable implements MustVerifyEmail
 
     public function hasNavbar($routeName): bool
     {
-        return Navbar::where('route_name', $routeName)
+        return
+            $this->isAdmin() ||
+            Navbar::where('route_name', $routeName)
             ->where('is_moddable', true)
             ->whereHas(
                 'navbarGroupShows',

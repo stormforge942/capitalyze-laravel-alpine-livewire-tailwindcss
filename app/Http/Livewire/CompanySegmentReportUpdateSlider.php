@@ -4,6 +4,7 @@ namespace App\Http\Livewire;
 
 use App\Models\CompanySegmentReport;
 use App\Models\File;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Storage;
 use Livewire\Component;
 use Livewire\WithFileUploads;
@@ -17,7 +18,7 @@ class CompanySegmentReportUpdateSlider extends Component
     public $supportEngineerComments = null;
     public $fileName;
     public $fixed = null;
-    public $deleteOldFiles = true;
+    public $deleteOldFiles = false;
     public $images = [];
     public $oldImages = [];
 
@@ -50,7 +51,7 @@ class CompanySegmentReportUpdateSlider extends Component
         if ($reportId)
         {
             $report = CompanySegmentReport::where('id', $reportId)->first();
-            $this->supportEngineer = $report->support_engineer;
+            $this->supportEngineer = $report->support_engineer ?? Auth::user()->name;
             $this->supportEngineerComments = $report->support_engineer_comments;
             $this->fixed = $report->fixed;
             $this->oldImages = $report->reviewFiles;

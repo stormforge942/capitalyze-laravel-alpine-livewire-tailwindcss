@@ -1,23 +1,41 @@
 <x-wire-elements-pro::tailwind.slide-over :content-padding="false">
     <x-slot name="title">
-        Create report for ${{ number_format($previousAmount) }} at {{ $date }}
+        Bug report
     </x-slot>
     <div class="px-4 sm:px-6 h-full flex-col">
         <div class="flex flex-col">
             <div class="mb-4">
-                <label class="block text-gray-700 text-sm font-bold mb-2" for="amount">
+                <label class="label" for="amount">
+                    Date:
+                </label>
+                <div class="display-text">
+                    {{ $date }}
+                </div>
+            </div>
+
+            <div class="mb-4">
+                <label class="label" for="amount">
+                    Correct amount:
+                </label>
+                <div class="display-text">
+                    ${{ number_format($previousAmount) }}
+                </div>
+            </div>
+
+            <div class="mb-4">
+                <label class="label" for="amount">
                     Correct amount
                 </label>
-                <input wire:model="amount" class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline" id="amount" type="text" placeholder="100000.00">
+                <input wire:model="amount" class="input" id="amount" type="text" placeholder="100000.00">
                 @error('amount')
                 <span class="validation-error">{{ $message }}</span> @enderror
             </div>
 
             <div class="mb-4">
-                <label class="block text-gray-700 text-sm font-bold mb-2" for="link">
+                <label class="label" for="link">
                     Link to statement
                 </label>
-                <input wire:model="link" class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline" id="link" type="text" placeholder="https://www.domain.com">
+                <input wire:model="link" class="input" id="link" type="text" placeholder="https://www.domain.com">
                 @error('link')
                 <span class="validation-error">{{ $message }}</span> @enderror
             </div>
@@ -76,22 +94,20 @@
             </div>
 
             <div class="mb-4">
-                <label class="block text-gray-700 text-sm font-bold mb-2" for="explanations">
+                <label class="label" for="explanations">
                     Explanations
                 </label>
-                <textarea wire:model="explanations" class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline" id="explanations" type="text" placeholder="..."></textarea>
+                <textarea wire:model="explanations" class="input" id="explanations" type="text" placeholder="..."></textarea>
             </div>
         </div>
 
         <div class="flex flex-row space-x-2">
-            <x-jet-button wire:click="submit">
-                {{ __('Save') }}
-            </x-jet-button>
-            <button type="button"
-                    class="inline-flex w-full justify-center rounded-md bg-gray-200 px-3 py-2 text-sm font-semibold text-gray-900 shadow-sm hover:bg-gray-300 sm:ml-3 sm:w-auto"
-                    wire:click="$emit('slide-over.close')">
-                {{ __('CANCEL') }}
-            </button>
+            <div wire:click="submit">
+                <livewire:button icon="edit" text="Save" class="secondary"/>
+            </div>
+            <div wire:click="$emit('slide-over.close')">
+                <livewire:button text="Cancel" class="cancel" />
+            </div>
         </div>
     </div>
 </x-wire-elements-pro::tailwind.slide-over>

@@ -75,7 +75,7 @@
                                 </x-jet-dropdown-link>
                             @endif
 
-                            @if (Auth::user() && Auth::user()->isAdmin())
+                            @if (Auth::user() && (Auth::user()->hasNavbar('review')))
                                 <x-jet-dropdown-link href="{{ route('review') }}" :active="request()->routeIs('review')">
                                     {{ __('Review') }}
                                 </x-jet-dropdown-link>
