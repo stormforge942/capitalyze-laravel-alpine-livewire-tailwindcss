@@ -29,7 +29,7 @@
         <!-- Page Content -->
         <main>
             @if($tab == 'metrics')
-            <livewire:hkex-metrics :hkex="$hkex" :period="$period" />
+            <livewire:hkex-metrics :model="$hkex" :period="$period" />
             @endif
             @if($tab == 'filings')
             <livewire:hkex-filings :hkex="$hkex" />
