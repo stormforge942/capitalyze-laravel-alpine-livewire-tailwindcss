@@ -106,9 +106,6 @@ final class CompanySegmentReportTable extends PowerGridComponent
             ->addColumn('user_name', function(CompanySegmentReport $companySegmentReport) {
                 return $companySegmentReport->user->name;
             })
-            ->addColumn('fixed_label', function (CompanySegmentReport $companySegmentReport) {
-                return $this->editButton($companySegmentReport->id, $companySegmentReport->fixed);
-            })
             ->addColumn('support_engineer', fn (CompanySegmentReport $companySegmentReport) =>
              strlen($companySegmentReport->support_engineer)
                 ? $companySegmentReport->support_engineer
@@ -126,6 +123,9 @@ final class CompanySegmentReportTable extends PowerGridComponent
 
                 $ids = json_encode($companySegmentReport->reviewFiles->map(fn ($file) => $file->id)->toArray());
                 return "<button class='btn-secondary' wire:click=\"\$emitTo(&quot;review-page&quot;, &quot;images-show&quot;, [" . $ids . "])\">Open</button>";
+            })
+            ->addColumn('fixed_label', function (CompanySegmentReport $companySegmentReport) {
+                return $this->editButton($companySegmentReport->id, $companySegmentReport->fixed);
             });
     }
 
@@ -141,10 +141,10 @@ final class CompanySegmentReportTable extends PowerGridComponent
             Column::make('Images', 'images'),
             Column::make('Explanations', 'explanations'),
             Column::make('User name', 'user_name'),
-            Column::make('Fixed','fixed_label'),
             Column::make('Support engineer', 'support_engineer'),
             Column::make('Support engineer comments', 'support_engineer_comments'),
             Column::make('Support engineer images', 'support_engineer_images'),
+            Column::make('Fixed','fixed_label'),
         ];
     }
 
