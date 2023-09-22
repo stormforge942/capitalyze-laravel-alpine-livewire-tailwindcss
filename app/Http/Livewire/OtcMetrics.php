@@ -87,6 +87,7 @@ class OtcMetrics extends Component
     {
         $i = 0;
         $class = '';
+        $possibleErrors = [];
         $table = '<table class="table-auto min-w-full data border-collapse"><thead><tr>';
         $table .= '<th scope="col" class="whitespace-nowrap px-2 py-3.5 text-left text-sm font-semibold text-gray-900 bg-blue-300">Date</th>';
         foreach (array_keys($this->metrics) as $date) {
@@ -96,9 +97,19 @@ class OtcMetrics extends Component
         foreach ($this->segments as $segment) {
             $class = ($i % 2 == 0) ? 'class="border border-slate-50 bg-cyan-50 hover:bg-blue-200 dark:bg-slate-700 dark:odd:bg-slate-800 dark:odd:hover:bg-slate-900 dark:hover:bg-slate-700"' : 'class="border border-slate-50 bg-white border-slate-100 dark:border-slate-400 hover:bg-blue-200 dark:bg-slate-700 dark:odd:bg-slate-800 dark:odd:hover:bg-slate-900 dark:hover:bg-slate-700"';
             $table .= '<tr ' . $class . '><td class="break-words max-w-[150px] lg:max-w-[400px] px-2 py-2 text-sm text-gray-900 font-bold">' . preg_replace('/(?<=\w)(?=[A-Z])/', ' ', $segment) . '</td>';
+
             foreach (array_keys($this->metrics) as $date) {
                 if (array_key_exists($segment, $this->metrics[$date])) {
                     $data = $this->metrics[$date][$segment];
+
+                    if (is_float($data) && str_contains((string) $data, "E+")) {
+                        $possibleErrors[] = [
+                            'date' => $date,
+                            'segment' => $segment,
+                            'value' => $data,
+                        ];
+                    }
+
                     $dataSend = array("symbol" => $this->otc->symbol, "source" => 'public.otc_statements', "date" => $date, "value" => $data);
                     $data_json = json_encode($dataSend);
                     $table .= '<td data-value="' . htmlspecialchars($data_json) . '" class="whitespace-nowrap px-2 py-2 text-sm text-gray-900 hover:cursor-pointer hover:underline underline-offset-1 open-slide">' . $data . '</td>';
@@ -106,12 +117,19 @@ class OtcMetrics extends Component
                     $table .= '<td class="whitespace-nowrap px-2 py-2 text-sm text-gray-900"></td>';
                 }
             }
+
             $table .= '</tr>';
             $i++;
         }
         $table .= '</tbody></table>';
 
         $this->table = $table;
+
+        if (count($possibleErrors)) {
+            $this->dispatchBrowserEvent('showinfomodal', [
+                'html' => view('modals.invalid-data', ['errors' => $possibleErrors])->render(),
+            ]);
+        }
     }
 
     public function mount($otc, $period)
