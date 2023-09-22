@@ -29,7 +29,7 @@
         <!-- Page Content -->
         <main>
             @if($tab == 'metrics')
-            <livewire:euronext-metrics :euronext="$euronext" :period="$period" />
+            <livewire:euronext-metrics :model="$euronext" :period="$period" />
             @endif
             @if($tab == 'filings')
             <livewire:euronext-filings :euronext="$euronext" />

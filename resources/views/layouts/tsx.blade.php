@@ -29,7 +29,7 @@
         <!-- Page Content -->
         <main>
             @if($tab == 'metrics')
-            <livewire:tsx-metrics :tsx="$tsx" :period="$period" />
+            <livewire:tsx-metrics :model="$tsx" :period="$period" />
             @endif
             @if($tab == 'filings')
             <livewire:tsx-filings :tsx="$tsx" />
