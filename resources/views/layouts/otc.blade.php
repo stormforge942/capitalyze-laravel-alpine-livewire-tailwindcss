@@ -29,7 +29,7 @@
         <!-- Page Content -->
         <main>
             @if($tab == 'metrics')
-            <livewire:otc-metrics :otc="$otc" :period="$period" />
+            <livewire:otc-metrics :model="$otc" :period="$period" />
             @endif
             @if($tab == 'filings')
             <livewire:otc-filings :otc="$otc" />
