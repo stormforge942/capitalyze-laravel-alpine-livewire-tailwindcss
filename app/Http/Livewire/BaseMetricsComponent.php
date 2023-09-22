@@ -10,13 +10,13 @@ abstract class BaseMetricsComponent extends Component
     public $title;
     public $model;
     public $table;
-    private $metrics;
-    private $segments;
+    protected $metrics;
+    protected $segments;
     public $navbar;
     public $period;
     public $activeIndex = null;
     public $activeSubIndex = null;
-    private $currentNavbar = '';
+    protected $currentNavbar = '';
 
     protected $listeners = ['tabClicked', 'tabSubClicked', 'periodChange'];
 
@@ -24,15 +24,21 @@ abstract class BaseMetricsComponent extends Component
 
     abstract public function title(): string;
 
-    public function getMetrics()
+    public function metricSource(): array
     {
-        $dbResponse = DB::connection('pgsql-xbrl')
+        return DB::connection('pgsql-xbrl')
             ->table('public.' . $this->table())
             ->select('json_result')
             ->where('symbol', '=', $this->model->symbol)
             ->where('is_annual_report', '=', $this->period === 'annual')
             ->orderBy('date', 'desc')
-            ->get()->toArray();
+            ->get()
+            ->toArray();
+    }
+
+    public function getMetrics()
+    {
+        $dbResponse = $this->metricSource();
 
         $cols = [];
         $rows = [];

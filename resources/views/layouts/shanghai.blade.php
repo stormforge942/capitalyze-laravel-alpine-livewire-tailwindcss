@@ -29,7 +29,7 @@
         <!-- Page Content -->
         <main>
             @if($tab == 'metrics')
-            <livewire:shanghai-metrics :shanghai="$shanghai" :period="$period" />
+            <livewire:shanghai-metrics :model="$shanghai" :period="$period" />
             @endif
             @if($tab == 'filings')
             <livewire:shanghai-filings :shanghai="$shanghai" />
