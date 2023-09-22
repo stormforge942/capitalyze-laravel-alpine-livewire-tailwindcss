@@ -81,10 +81,11 @@ final class CompanySegmentReportTable extends PowerGridComponent
             ->addColumn('date')
             ->addColumn('company_url', function(CompanySegmentReport $companySegmentReport) {
                 $link = Config::get('app.url') . '/' .$companySegmentReport->company_url;
-                return ("<a class='text-blue-500' target='_blank' href='$link'>
-                    <svg xmlns='http://www.w3.org/2000/svg' fill='none' viewBox='0 0 24 24' stroke-width='1.5' stroke='currentColor' class='w-6 h-6'>
+                return ("<a class='text-blue-500 flex row items-center space-x-2 cursor-pointer' target='_blank' href='$link'>
+                    <svg xmlns='http://www.w3.org/2000/svg' fill='none' viewBox='0 0 24 24' stroke-width='1.5' stroke='currentColor' class='w-4 h-4'>
                         <path stroke-linecap='round' stroke-linejoin='round' d='M4.5 12h15m0 0l-6.75-6.75M19.5 12l-6.75 6.75' />
                     </svg>
+                    <span>Company link</span>
                 </a>");
             })
             ->addColumn('amount', fn (CompanySegmentReport $companySegmentReport) => number_format($companySegmentReport->amount))
@@ -134,7 +135,7 @@ final class CompanySegmentReportTable extends PowerGridComponent
             Column::make('ID', 'id'),
             Column::make('Previous amount', 'previous_amount'),
             Column::make('Date', 'date'),
-            Column::make('Company link', 'company_url'),
+            Column::make('Page link', 'company_url'),
             Column::make('Amount', 'amount'),
             Column::make('Link', 'link'),
             Column::make('Images', 'images'),
