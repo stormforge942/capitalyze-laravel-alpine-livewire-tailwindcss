@@ -29,7 +29,7 @@
         <!-- Page Content -->
         <main>
             @if($tab == 'metrics')
-            <livewire:japan-metrics :japan="$japan" :period="$period" />
+            <livewire:japan-metrics :model="$japan" :period="$period" />
             @endif
             @if($tab == 'filings')
             <livewire:japan-filings :japan="$japan" />
