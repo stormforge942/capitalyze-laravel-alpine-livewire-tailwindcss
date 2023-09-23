@@ -37,6 +37,7 @@
         </main>
     </div>
 
+    @include('partials.info-modal')
     @stack('modals')
     @livewire('spotlight-pro')
     @livewire('slide-over-pro')
