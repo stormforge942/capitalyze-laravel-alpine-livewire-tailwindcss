@@ -3,28 +3,61 @@
 namespace App\Http\Livewire;
 
 use Livewire\Component;
+use Illuminate\Support\Str;
+use Illuminate\Support\Collection;
 use Illuminate\Support\Facades\DB;
 
 abstract class BaseMetricsComponent extends Component
 {
     public $title;
     public $model;
-    public $table;
-    protected $metrics;
-    protected $segments;
+    public $metrics;
+    public $segments;
     public $navbar;
+    public $tables;
     public $period;
     public $activeIndex = null;
     public $activeSubIndex = null;
-    protected $currentNavbar = '';
+    public $possibleErrors = [];
 
     protected $listeners = ['tabClicked', 'tabSubClicked', 'periodChange'];
 
     abstract public function table(): string;
 
-    abstract public function title(): string;
+    abstract protected function title(): string;
 
-    public function metricSource(): array
+    public function mount($model, $period)
+    {
+        $this->model = $model;
+        $this->period = $period;
+        $this->title = $this->title();
+
+        $data = $this->data()->map(function ($item) {
+            $item->json_result = json_decode($item->json_result, true);
+
+            return (array) $item;
+        })->toArray();
+
+        $this->extractNavbar($data);
+        $this->extractTables($data);
+    }
+
+    public function tabClicked($key)
+    {
+        $this->activeIndex = $key;
+    }
+
+    public function tabSubClicked($key)
+    {
+        $this->activeSubIndex = $key;
+    }
+
+    public function render()
+    {
+        return view('livewire.base-metrics');
+    }
+
+    protected function data(): Collection
     {
         return DB::connection('pgsql-xbrl')
             ->table('public.' . $this->table())
@@ -32,31 +65,88 @@ abstract class BaseMetricsComponent extends Component
             ->where('symbol', '=', $this->model->symbol)
             ->where('is_annual_report', '=', $this->period === 'annual')
             ->orderBy('date', 'desc')
-            ->get()
-            ->toArray();
+            ->get();
     }
 
-    public function getMetrics()
+    protected function extractNavbar($data)
     {
-        $dbResponse = $this->metricSource();
+        $data = $data[0]['json_result'];
 
-        $cols = [];
-        $rows = [];
+        $navbar = [];
 
-        $this->currentNavbar = substr($this->activeSubIndex, strpos($this->activeSubIndex, "-") + 1);
+        foreach ($data as $groups) {
+            foreach ($groups as $key => $value) {
+                $navbar[$key] = [
+                    'id' => $key,
+                    'title' => Str::title(preg_replace('/(?<=\w)(?=[A-Z])/', ' ', $key)),
+                    'child' => [],
+                ];
 
-        foreach ($dbResponse as $dbData) {
-            $data = json_decode($dbData->json_result, true);
-            foreach ($data as $date => $valueLevel0) {
-                $cols[$date] = [];
-                foreach ($valueLevel0 as $valueLevel1) {
-                    foreach ($valueLevel1 as $keyLevel2 => $valueLevel2) {
-                        foreach ($valueLevel2 as $keyLevel3 => $valueLevel3) {
-                            $cols[$date][$keyLevel3] = $valueLevel3;
-                            if ($this->currentNavbar == $keyLevel2) {
-                                if (!in_array($keyLevel3, $rows, true)) {
-                                    $rows[] =  $keyLevel3;
+                $this->activeIndex = $this->activeIndex ?: $key;
+
+                foreach ($value as $sub => $_) {
+                    $id = $key . "-" . $sub;
+
+                    $this->activeSubIndex = $this->activeSubIndex ?: $id;
+
+                    $navbar[$key]['child'][] = [
+                        'id' => $id,
+                        'title' => Str::title(preg_replace('/(?<=\w)(?=[A-Z])/', ' ', $sub)),
+                    ];
+                }
+            }
+        }
+
+        $this->navbar = $navbar;
+    }
+
+    protected function extractTables($data)
+    {
+        $tables = [];
+
+        foreach ($data as $item) {
+            $result = $item['json_result'];
+
+            foreach ($result as $date => $level_0_value) {
+                foreach ($level_0_value as $parentTab => $level_1_value) {
+                    foreach ($level_1_value as $childTab => $level_2_value) {
+                        $key = $parentTab . "-" . $childTab;
+
+                        if (!isset($tables[$key])) {
+                            $tables[$key] = [
+                                'metrics' => [],
+                                'segments' => [],
+                                'possibleErrors' => [],
+                            ];
+                        }
+
+                        foreach ($level_2_value as $segment => $value) {
+                            if (is_float($value)) {
+                                $value = (string) $value;
+
+                                if (str_contains($value, "E+")) {
+                                    $tables[$key]['possibleErrors'][] = [
+                                        'date' => $date,
+                                        'segment' => $segment,
+                                        'value' => $value,
+                                    ];
                                 }
+                            }
+
+                            $value = is_float($value) ? (string) $value : $value;
+
+                            $tables[$key]['metrics'][$date][$segment] = [
+                                'data' => [
+                                    'symbol' => $this->model->symbol,
+                                    'source' => 'public.' . $this->table(),
+                                    'date' => $date,
+                                    'value' => $value,
+                                ],
+                                'value' => $value
+                            ];
+
+                            if (!isset($tables[$key]['segments'][$segment])) {
+                                $tables[$key]['segments'][$segment] = Str::title(preg_replace('/(?<=\w)(?=[A-Z])/', ' ', $segment));
                             }
                         }
                     }
@@ -64,115 +154,22 @@ abstract class BaseMetricsComponent extends Component
             }
         }
 
-        $this->metrics = $cols;
-        $this->segments = $rows;
-    }
+        foreach ($tables as $key => $table) {
+            $possibleErrors = $table['possibleErrors'];
 
-    public function getNavbar()
-    {
-        $data = json_decode(DB::connection('pgsql-xbrl')
-            ->table('public.' . $this->table())
-            ->where('symbol', '=', $this->model->symbol)
-            ->value('json_result'), true);
+            unset($table['possibleErrors']);
 
-
-        $navbar = [];
-
-        foreach ($data as $groups) {
-            foreach ($groups as $key => $value) {
-                $navbar[$key] = [];
-                $this->activeIndex = ($this->activeIndex == null) ? $key : $this->activeIndex;
-                foreach ($value as $sub => $_) {
-                    $id = $key . "-" . $sub;
-                    $this->activeSubIndex = ($this->activeSubIndex == null) ? $id : $this->activeSubIndex;
-                    $navbar[$key][] = ['id' => $id, 'title' => $sub, 'selected' => ($id == $this->activeSubIndex)];
-                }
-            }
-        }
-
-        $this->navbar = $navbar;
-        $this->emit('navbarUpdated', $this->navbar, $this->activeIndex, $this->activeSubIndex);
-    }
-
-    public function renderTable()
-    {
-        $i = 0;
-        $class = '';
-        $possibleErrors = [];
-        $table = '<table class="table-auto min-w-full data border-collapse"><thead><tr>';
-        $table .= '<th scope="col" class="whitespace-nowrap px-2 py-3.5 text-left text-sm font-semibold text-gray-900 bg-blue-300">Date</th>';
-        foreach (array_keys($this->metrics) as $date) {
-            $table .= '<th scope="col" class="whitespace-nowrap px-2 py-3.5 text-left text-sm font-semibold text-slate-950 bg-blue-300">' . $date . '</th>';
-        }
-        $table .= '</thead><tbody class="divide-y bg-white">';
-        foreach ($this->segments as $segment) {
-            $class = ($i % 2 == 0) ? 'class="border border-slate-50 bg-cyan-50 hover:bg-blue-200 dark:bg-slate-700 dark:odd:bg-slate-800 dark:odd:hover:bg-slate-900 dark:hover:bg-slate-700"' : 'class="border border-slate-50 bg-white border-slate-100 dark:border-slate-400 hover:bg-blue-200 dark:bg-slate-700 dark:odd:bg-slate-800 dark:odd:hover:bg-slate-900 dark:hover:bg-slate-700"';
-            $table .= '<tr ' . $class . '><td class="break-words max-w-[150px] lg:max-w-[400px] px-2 py-2 text-sm text-gray-900 font-bold">' . preg_replace('/(?<=\w)(?=[A-Z])/', ' ', $segment) . '</td>';
-
-            foreach (array_keys($this->metrics) as $date) {
-                if (array_key_exists($segment, $this->metrics[$date])) {
-                    $data = $this->metrics[$date][$segment];
-
-                    if (is_float($data) && str_contains((string) $data, "E+")) {
-                        $possibleErrors[] = [
-                            'date' => $date,
-                            'segment' => $segment,
-                            'value' => $data,
-                        ];
-                    }
-
-                    $data_json = json_encode([
-                        "symbol" => $this->model->symbol,
-                        "source" => 'public.' . $this->table(),
-                        "date" => $date,
-                        "value" => $data
-                    ]);
-                    $table .= '<td data-value="' . htmlspecialchars($data_json) . '" class="whitespace-nowrap px-2 py-2 text-sm text-gray-900 hover:cursor-pointer hover:underline underline-offset-1 open-slide">' . $data . '</td>';
-                } else {
-                    $table .= '<td class="whitespace-nowrap px-2 py-2 text-sm text-gray-900"></td>';
-                }
+            $tables[$key]['message'] = null;
+            
+            if (!count($possibleErrors)) {
+                continue;
             }
 
-            $table .= '</tr>';
-            $i++;
+            $tables[$key]['message'] = view('partials.invalid-data', [
+                'errors' => $possibleErrors,
+            ])->render();
         }
-        $table .= '</tbody></table>';
 
-        $this->table = $table;
-
-        if (count($possibleErrors)) {
-            $this->dispatchBrowserEvent('showinfomodal', [
-                'html' => view('modals.invalid-data', ['errors' => $possibleErrors])->render(),
-            ]);
-        }
-    }
-
-    public function mount($model, $period)
-    {
-        $this->model = $model;
-        $this->period = $period;
-        $this->title = $this->title();
-        $this->getNavbar();
-        $this->getMetrics();
-        $this->renderTable();
-    }
-
-    public function tabClicked($key)
-    {
-        $this->activeIndex = $key;
-        $this->getMetrics();
-        $this->renderTable();
-    }
-
-    public function tabSubClicked($key)
-    {
-        $this->activeSubIndex = $key;
-        $this->getMetrics();
-        $this->renderTable();
-    }
-
-    public function render()
-    {
-        return view('livewire.base-metrics');
+        $this->tables = $tables;
     }
 }

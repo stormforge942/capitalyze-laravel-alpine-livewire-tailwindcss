@@ -56,6 +56,33 @@ table.data-report tr:nth-child(even):hover > td:first-child {
     background-color: var(--color-blue-200);
 }
 
+/* fix for alpinejs while doing x-for */
+table.data-alt {
+    position: relative;
+    table-layout: auto;
+    width: 100%;
+}
+
+table.data-alt tr > th:first-child,
+table.data-alt tr > td:first-child {
+    position: sticky;
+    left: 0;
+}
+
+table.data-alt tr:nth-child(even) > td:first-child {
+    background-color: var(--color-cyan-50);
+}
+
+table.data-alt tr:nth-child(odd) > td:first-child {
+    background-color:var(--color-white);
+}
+
+table.data-alt tr:nth-child(even):hover > td:first-child,
+table.data-alt tr:nth-child(odd):hover > td:first-child {
+    background-color: var(--color-blue-200);
+}
+/* end */
+
 @media screen and (max-width: 767px) {
     table.data tr > th:first-child,
     table.data tr > td:first-child {

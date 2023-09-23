@@ -1,8 +1,8 @@
-<p>There is a potential issue with this data:</p>
+<p class="text-lg mb-2 font-semibold">There is a potential issue with this data:</p>
 
 <ul class="space-y-1">
     @foreach ($errors as $error)
-    <li>{{ $error['date'] }}, {{ $error['segment'] }} is {{ $error['value'] }}</li>
+    <li>{{ $error['date'] }}, {{ $error['segment'] }}: {{ $error['value'] }}</li>
     @endforeach
 </ul>
 

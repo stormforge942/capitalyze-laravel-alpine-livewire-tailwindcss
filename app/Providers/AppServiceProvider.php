@@ -185,7 +185,7 @@ class AppServiceProvider extends ServiceProvider
             });
         }
         // log DB request local to termninal for debugging purposes
-        if (App::environment('local')) {
+        if (App::environment('local') && env('DB_LOG') != false) {
             DB::listen(function($query) {
                 Log::debug(
                     "Query: {$query->sql}, Bindings: ".json_encode($query->bindings).", Time: {$query->time}"
