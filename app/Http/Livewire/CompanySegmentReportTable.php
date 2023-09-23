@@ -118,7 +118,7 @@ final class CompanySegmentReportTable extends PowerGridComponent
             )
             ->addColumn('support_engineer_images', function(CompanySegmentReport $companySegmentReport) {
                 if (!$companySegmentReport->reviewFiles->count()) {
-                    return 'N/A';
+                    return $this->editButton($companySegmentReport->id);
                 }
 
                 $ids = json_encode($companySegmentReport->reviewFiles->map(fn ($file) => $file->id)->toArray());
