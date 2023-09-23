@@ -96,7 +96,7 @@ final class CompanySegmentReportTable extends PowerGridComponent
             })
             ->addColumn('images', function(CompanySegmentReport $companySegmentReport) {
                 if (!$companySegmentReport->files->count()) {
-                    return 'N/A';
+                    return $this->editButton($companySegmentReport->id);
                 }
 
                 $ids = json_encode($companySegmentReport->files->map(fn ($file) => $file->id)->toArray());
@@ -145,18 +145,6 @@ final class CompanySegmentReportTable extends PowerGridComponent
             Column::make('Support engineer comments', 'support_engineer_comments'),
             Column::make('Support engineer images', 'support_engineer_images'),
             Column::make('Fixed','fixed_label'),
-        ];
-    }
-
-
-
-    public function actions(): array
-    {
-       return [
-           Button::add('edit')
-               ->caption('Edit')
-               ->class('bg-blue-500 cursor-pointer text-white px-3 py-2.5 m-1 rounded text-sm')
-               ->emitTo('review-page', 'toggle-slider', ['id'])
         ];
     }
 }
