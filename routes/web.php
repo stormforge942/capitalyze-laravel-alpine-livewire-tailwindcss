@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Livewire\ReviewPage;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\CompanyController;
 use App\Http\Controllers\LseController;
@@ -51,10 +52,11 @@ Route::get('/', function () {
     return view('welcome');
 })->name('home');
 
-Route::middleware(['checkPagePermission'])->group(function () {
+//Route::middleware(['checkPagePermission'])->group(function () {
+Route::middleware([])->group(function () {
 
 
-    Route::middleware(['auth', 'approved', 'verified'])->group(function () {
+    Route::middleware(['auth', 'approved', 'verified', 'checkPagePermission'])->group(function () {
         /*
         | Global routes
         */
@@ -73,6 +75,7 @@ Route::middleware(['checkPagePermission'])->group(function () {
         Route::get('/shanghai', Shanghais::class)->name('shanghais');
         Route::get('/japan', Japans::class)->name('japans');
         Route::get('/hkex', Hkexs::class)->name('hkexs');
+        Route::get('/review', ReviewPage::class)->name('review');
         Route::get('/press-release', PressRelease::class)->name('press.release');
 
         /*
@@ -145,6 +148,10 @@ Route::middleware(['checkPagePermission'])->group(function () {
         */
         Route::get('/hkex/{ticker}/', [HkexController::class, 'metrics'])->name('hkex.metrics');
         Route::get('/hkex/{ticker}/filings', [HkexController::class, 'filings'])->name('hkex.filings');
+
+        /*
+            | Review routing
+        */
     });
 });
 

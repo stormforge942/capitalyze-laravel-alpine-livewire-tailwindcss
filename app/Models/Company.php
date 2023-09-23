@@ -29,7 +29,7 @@ class Company extends Model
      *
      * @var string
      */
-    protected $connection = 'pgsql'; 
+    protected $connection = 'pgsql';
 
     /**
      * Indicates if the model's ID is auto-incrementing.
@@ -37,5 +37,4 @@ class Company extends Model
      * @var bool
      */
     public $incrementing = false;
-
 }
