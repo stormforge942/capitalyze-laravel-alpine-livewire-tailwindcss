@@ -4,7 +4,7 @@
         <div class="fixed inset-0 overflow-hidden">
             <div wire:click="$emit('images-hide')" class="absolute inset-0 overflow-hidden">
                 <div class="pointer-events-none fixed inset-y-0 right-0 flex max-w-full pl-10">
-                    <div class="pointer-events-auto relative w-screen max-w-xl">
+                    <div class="pointer-events-auto relative w-screen max-w-6xl">
                         <div class="absolute left-0 top-0 -ml-8 flex pr-2 pt-4 sm:-ml-10 sm:pr-4">
                         </div>
 
