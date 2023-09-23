@@ -70,7 +70,7 @@ abstract class BaseMetricsComponent extends Component
 
     protected function extractNavbar($data)
     {
-        $data = $data[0]['json_result'];
+        $data = data_get($data, '0.json_result', []);
 
         $navbar = [];
 
