@@ -197,5 +197,3 @@ Route::middleware(['guest'])->group(function () {
 
 // Logout route accessible to all users
 Route::post('/logout', [AuthenticatedSessionController::class, 'destroy'])->name('logout');
-
-Route::get('mail', fn () => view('mails.reset-success'));
