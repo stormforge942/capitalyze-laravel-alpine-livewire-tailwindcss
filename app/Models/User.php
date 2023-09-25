@@ -82,4 +82,16 @@ class User extends Authenticatable implements MustVerifyEmail
             )
             ->exists();
     }
+
+    public function getInitialsAttribute()
+    {
+        $nameParts = explode(' ', $this->name);
+        $initials = '';
+
+        foreach ($nameParts as $part) {
+            $initials .= strtoupper(substr($part, 0, 1));
+        }
+
+        return $initials;
+    }
 }
