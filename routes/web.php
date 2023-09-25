@@ -8,6 +8,7 @@ use App\Http\Livewire\Euronexts;
 use App\Http\Livewire\Shanghais;
 use App\Http\Livewire\Delistings;
 use App\Http\Livewire\PressRelease;
+use App\Http\Livewire\ReviewPage;
 use Illuminate\Support\Facades\Route;
 use App\Http\Livewire\EconomicRelease;
 use App\Http\Livewire\FundFilingsPage;
@@ -53,10 +54,11 @@ Route::get('/', function () {
     return view('welcome');
 })->name('home');
 
-Route::middleware(['checkPagePermission'])->group(function () {
+//Route::middleware(['checkPagePermission'])->group(function () {
+Route::middleware([])->group(function () {
 
 
-    Route::middleware(['auth', 'approved', 'verified'])->group(function () {
+    Route::middleware(['auth', 'approved', 'verified', 'checkPagePermission'])->group(function () {
         /*
         | Global routes
         */
@@ -76,6 +78,7 @@ Route::middleware(['checkPagePermission'])->group(function () {
         Route::get('/japan', Japans::class)->name('japans');
         Route::get('/hkex', Hkexs::class)->name('hkexs');
         Route::get('/otc', Otcs::class)->name('otcs');
+        Route::get('/review', ReviewPage::class)->name('review');
         Route::get('/press-release', PressRelease::class)->name('press.release');
 
         /*

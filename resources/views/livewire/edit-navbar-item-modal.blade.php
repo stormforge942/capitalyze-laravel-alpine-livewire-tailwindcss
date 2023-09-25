@@ -10,16 +10,16 @@
                         <div class="sm:flex sm:items-start">
                             <form wire:submit.prevent="updateNavbarItem">
                                 <div class="mb-4">
-                                    <label class="block text-gray-700 text-sm font-bold mb-2" for="name">
+                                    <label class="label" for="name">
                                         Name
                                     </label>
-                                    <input wire:model="navbarItem.name" class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline" id="name" type="text" placeholder="Name">
+                                    <input wire:model="navbarItem.name" class="input" id="name" type="text" placeholder="Name">
                                 </div>
                                 <div class="mb-4">
-                                    <label class="block text-gray-700 text-sm font-bold mb-2">
+                                    <label class="label">
                                         Route Name
                                     </label>
-                                    <input wire:model="navbarItem.route_name" class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline" type="text" placeholder="Route Name" disabled>
+                                    <input wire:model="navbarItem.route_name" class="input" type="text" placeholder="Route Name" disabled>
                                 </div>
                             </form>
                         </div>

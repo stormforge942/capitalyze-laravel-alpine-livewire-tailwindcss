@@ -48,7 +48,7 @@ class CompanyGeographical extends Component
                 }
             }
         }
-        
+
         $this->json = base64_encode($json);
         $this->geographical = $geographical;
         $this->segments = $segments;
