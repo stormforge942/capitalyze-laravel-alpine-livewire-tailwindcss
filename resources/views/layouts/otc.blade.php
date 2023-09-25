@@ -25,14 +25,14 @@
 
     <div class="min-h-screen bg-gray-100">
         @livewire('navigation-menu')
-        <livewire:japan-navbar :japan="$japan" :period="$period" />
+        <livewire:otc-navbar :otc="$otc" :period="$period" />
         <!-- Page Content -->
         <main>
             @if($tab == 'metrics')
-            <livewire:japan-metrics :model="$japan" :period="$period" />
+            <livewire:otc-metrics :model="$otc" :period="$period" />
             @endif
             @if($tab == 'filings')
-            <livewire:japan-filings :japan="$japan" />
+            <livewire:otc-filings :otc="$otc" />
             @endif
         </main>
     </div>

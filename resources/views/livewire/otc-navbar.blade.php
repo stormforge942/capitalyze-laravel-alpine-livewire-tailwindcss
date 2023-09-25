@@ -14,9 +14,9 @@
             </a>
             <ul class="space-y-2 font-medium">
             @foreach ($navbarItems as $navbar)
-               @if ($navbar->is_moddable && $this->showNavbar($navbar->id) && !Str::startsWith($navbar->route_name, ['company.', 'lse.', 'tsx.', 'fund.', 'mutual-fund.', 'shanghai.', 'japan.', 'hkex.', 'otc.', 'euronext.', 'economics-release']))
+               @if ($navbar->is_moddable && $this->showNavbar($navbar->id) && !Str::startsWith($navbar->route_name, ['company.', 'lse.', 'tsx.', 'fund.', 'mutual-fund.', 'shanghai.', 'japan.', 'hkex.', 'otc.', 'euronext.','economics-release']))
                   <li>
-                     <x-jet-nav-link href="{{ route($navbar->route_name, ['ticker' => $euronext->symbol]) }}" :active="request()->routeIs($navbar->route_name)">
+                     <x-jet-nav-link href="{{ route($navbar->route_name) }}" :active="request()->routeIs($navbar->route_name)">
                         {{ __($navbar->name) }}
                      </x-jet-nav-link>
                   </li>
@@ -25,7 +25,7 @@
             </ul>
             <hr class="my-4"> <!-- Separator -->
             <ul class="space-y-2 font-medium">
-                @if(in_array($currentRoute, ['euronext.metrics']))
+                @if(in_array($currentRoute, ['otc.metrics']))
                 <li>
                     <!-- Settings Dropdown -->
                     <div class="relative ml-3">
@@ -37,10 +37,10 @@
                 @endif
 
                 @foreach ($navbarItems as $navbar)
-                    @if ($navbar->is_moddable && $this->showNavbar($navbar->id) && Str::startsWith($navbar->route_name, ['euronext.']))
+                    @if ($navbar->is_moddable && $this->showNavbar($navbar->id) && Str::startsWith($navbar->route_name, ['otc.']))
                         <li>
-                            <livewire:company-navbar-item wire:key="{{ $navbar->route_name }}-{{ $period }}"
-                            href="{{ route($navbar->route_name, ['ticker' => $euronext->symbol, 'period' => $period]) }}" name="{{ $navbar->name }}"
+                            <livewire:company-navbar-item wire:key="{{ $navbar->route_name }}"
+                            href="{{ route($navbar->route_name, ['ticker' => $otc->symbol]) }}" name="{{ $navbar->name }}"
                             :active="$currentRoute === $navbar->route_name" />
                         </li>
                     @endif
