@@ -2,6 +2,10 @@
 
 namespace App\Http\Livewire;
 
+use App\Models\InfoPresentation;
+use Illuminate\Database\ConnectionResolver;
+use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Query\Builder;
 use Livewire\Component;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Http\Request;
@@ -9,6 +13,8 @@ use Illuminate\Support\Collection;
 
 class CompanyReport extends Component
 {
+    use TableFiltersTrait;
+    
     public $company;
     public $ticker;
     public $companyName;
@@ -23,12 +29,7 @@ class CompanyReport extends Component
     public $tableDates = [];
     public $noData = false;
     public $skipNext = false;
-    public $view = 'Common Size';
-    public $unitType = 'Millions';
-    public $template = 'Standart';
-    public $order = 'Latest on the Right';
-    public $freezePanes = 'Top Row';
-    public $decimal = '.00';
+
     protected $request;
     protected $rowCount = 0;
 
@@ -146,18 +147,39 @@ class CompanyReport extends Component
         rsort($dates);
         $this->tableDates = $dates;
         // Start generating the table
+        $this->table = $this->generateTableRows($data, $dates, '', 0);
     }
 
     public function getData() {
         $acronym = ($this->period == 'annual') ? 'arf5drs' : 'qrf5drs';
-        $source = 'info_presentations';
 
-        $query = DB::connection('pgsql-xbrl')
-        ->table($source)
-        ->where('ticker', '=', $this->ticker)
-        ->where('acronym', '=', $acronym)
-        ->where('id', '=', $this->activeSubIndex)
-        ->value('info');
+        $defaultConnectionName = DB::getDefaultConnection();
+        $defaultConnectionResolver = new ConnectionResolver();
+        $defaultConnectionResolver->addConnection(
+            $defaultConnectionName,
+            DB::connection($defaultConnectionName),
+        );
+        $defaultConnectionResolver->setDefaultConnection($defaultConnectionName);
+
+        $remoteConnectionName = 'pgsql-xbrl';
+        $remoteConnectionResolver = new ConnectionResolver();
+        $remoteConnectionResolver->addConnection(
+            $remoteConnectionName,
+            DB::connection($remoteConnectionName),
+        );
+        $remoteConnectionResolver->setDefaultConnection($remoteConnectionName);
+
+        DB::setDefaultConnection($remoteConnectionName);
+        Model::setConnectionResolver($remoteConnectionResolver);
+
+        $query = InfoPresentation::query()
+            ->where('ticker', '=', $this->ticker)
+            ->where('acronym', '=', $acronym)
+            ->where('id', '=', $this->activeSubIndex)
+            ->select('info')->value('info');
+
+        Model::setConnectionResolver($defaultConnectionResolver);
+        DB::setDefaultConnection($defaultConnectionName);
 
         $data = json_decode($query, true);
         $this->data = $data;
@@ -179,7 +201,7 @@ class CompanyReport extends Component
         ->select('statement', 'statement_group', 'id', 'title')->get();
 
         $collection = $query->collect();
-        
+
         foreach($collection as $value) {
             $navbar[$value->statement_group][] = ['statement' => $value->statement,'id' => $value->id, 'title' => $value->title];
         }
