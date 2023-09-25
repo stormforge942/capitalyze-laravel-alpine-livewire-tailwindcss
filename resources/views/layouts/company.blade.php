@@ -18,6 +18,7 @@
         @push('scripts')
         <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
         <script src="https://cdn.jsdelivr.net/npm/luxon"></script>
+            <script src="https://cdnjs.cloudflare.com/ajax/libs/chartjs-adapter-luxon/0.2.1/chartjs-adapter-luxon.min.js"></script>
         <script src="https://cdnjs.cloudflare.com/ajax/libs/flowbite/1.8.1/flowbite.min.js"></script>
         @endpush
     @endonce
@@ -62,7 +63,7 @@
                     @elseif($tab == 'failToDeliver')
                     <livewire:company-fail-to-deliver :company="$company" :ticker="$ticker" :period="$period" />
                     @endif
-                </div> 
+                </div>
             </div>
         </main>
     </div>

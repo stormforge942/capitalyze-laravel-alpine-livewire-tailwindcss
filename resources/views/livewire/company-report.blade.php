@@ -69,11 +69,6 @@
                                     <a href="{{route('company.shareholders', ['ticker' => $company->ticker, 'period' => $period])}}" @class(['tab','px-3', 'active' => $currentRoute === 'company.shareholders'])>Ratios</a>
                                     <a href="{{route('company.executive.compensation', ['ticker' => $company->ticker, 'period' => $period])}}" @class(['tab','px-3', 'active' => $currentRoute === 'company.executive.compensation'])>Consolidated Statements</a>
                                 </div>
-                                <div class="tabs-wrapper flex">
-                                    @foreach(array_keys($navbar) as $value)
-                                        <div @class(['tab','px-3', 'active' => $value == $activeIndex]) wire:click="$emit('tabClicked', '{{$value}}')">{{ Str::title(preg_replace('/\[[^\]]*?\]/', '', $value)) }}</div>
-                                    @endforeach
-                                </div>
                                 <ul class="tabs-wrapper flex flex-nowrap bg-inherit border-transparent">
                                     @foreach($navbar[$activeIndex] as $key => $value)
                                         <li data-tab-id="{{$value['id']}}" class="inline-block whitespace-nowrap min-w-min p-4 border-b-2 max-h-[50px] overflow-hidden rounded-t-lg cursor-pointer border-transparent text-[#828C85] hover:text-[#828C85] hover:border-[#828C85] @if($value['id'] == $activeSubIndex) !text-[#52D3A2] active border-b-2 border-[#52D3A2] font-bold hover:border-[#52D3A2] !cursor-default @endif" wire:click="$emit('tabSubClicked', '{{$value['id']}}')">{{ preg_replace('/\[[^\]]*?\]/', '', $value['title']) }}</li>
@@ -399,50 +394,50 @@
                                     <b class="mr-3">Period Type:</b>
                                     <ul class="flex soft-radio-wrapper big-checked items-center">
                                         <li class="mr-2">
-                                            <label class="flex items-center pl-3">
-                                                <input wire:model="period" @if($period === 'fiscal-annual') checked @endif value="fiscal-annual" id="date-fiscal-annual" type="radio" name="date-range" class="w-5 h-5 ">
+                                            <label class="flex items-center pl-3 cursor-pointer">
+                                                <input wire:model="period" value="arf5drs" id="date-fiscal-annual" type="radio" name="date-range" class="w-5 h-5 ">
                                                 <span class="w-full py-3 ml-2 ">Fiscal Annual</span>
                                             </label>
                                         </li>
                                         <li class="mr-2">
-                                            <label class="flex items-center pl-3">
-                                                <input wire:model="period" @if($period === 'fiscal-quaterly') checked @endif value="fiscal-quaterly" id="date-fiscal-quaterly" type="radio"  name="date-range" class="w-5 h-5 ">
+                                            <label class="flex items-center pl-3 cursor-pointer">
+                                                <input wire:model="period" value="qrf5drs" id="date-fiscal-quaterly" type="radio"  name="date-range" class="w-5 h-5 ">
                                                 <span class="w-full py-3 ml-2 ">Fiscal Quaterly</span>
                                             </label>
                                         </li>
                                         <li class="mr-2">
-                                            <label class="flex items-center pl-3">
-                                                <input wire:model="period" @if($period === 'fiscal-semi-annual') checked @endif value="fiscal-semi-annual" id="date-fiscal-semi-annual" type="radio"  name="date-range" class="w-5 h-5 ">
+                                            <label class="flex items-center pl-3 cursor-pointer">
+                                                <input wire:model="period" value="fiscal-semi-annual" id="date-fiscal-semi-annual" type="radio"  name="date-range" class="w-5 h-5 ">
                                                 <span class="w-full py-3 ml-2 ">Fiscal Semi-Annual</span>
                                             </label>
                                         </li>
                                         <li class="mr-2">
-                                            <label class="flex items-center pl-3">
-                                                <input wire:model="period" @if($period === 'YTD') checked @endif value="YTD" id="date-YTD" type="radio"  name="date-range" class="w-5 h-5 ">
+                                            <label class="flex items-center pl-3 cursor-pointer">
+                                                <input wire:model="period" value="YTD" id="date-YTD" type="radio"  name="date-range" class="w-5 h-5 ">
                                                 <span class="w-full py-3 ml-2 ">YTD</span>
                                             </label>
                                         </li>
                                         <li class="mr-2">
-                                            <label class="flex items-center pl-3">
-                                                <input wire:model="period" @if($period === 'LTM') checked @endif value="LTM" id="date-LTM" type="radio"  name="date-range" class="w-5 h-5 ">
+                                            <label class="flex items-center pl-3 cursor-pointer">
+                                                <input wire:model="period" value="LTM" id="date-LTM" type="radio"  name="date-range" class="w-5 h-5 ">
                                                 <span class="w-full py-3 ml-2 ">LTM</span>
                                             </label>
                                         </li>
                                         <li class="mr-2">
-                                            <label class="flex items-center pl-3">
-                                                <input wire:model="period" @if($period === 'annual') checked @endif value="annual" id="date-annual" id="annual" type="radio" name="date-range" class="w-5 h-5 ">
+                                            <label class="flex items-center pl-3 cursor-pointer">
+                                                <input wire:model="period" value="annual" id="date-annual" id="date-annual" type="radio" name="date-range" class="w-5 h-5 ">
                                                 <span class="w-full py-3 ml-2 ">Calendar Annual</span>
                                             </label>
                                         </li>
                                         <li class="mr-2">
-                                            <label class="flex items-center pl-3">
-                                                <input wire:model="period" @if($period === 'quarterly') checked @endif value="quarterly" id="date-quarterly" type="radio"  name="date-range" class="w-5 h-5 ">
+                                            <label class="flex items-center pl-3 cursor-pointer">
+                                                <input wire:model="period" value="quarterly" id="date-quarterly" type="radio" name="date-range" class="w-5 h-5 ">
                                                 <span class="w-full py-3 ml-2 ">Calendar Quaterly</span>
                                             </label>
                                         </li>
                                         <li class="mr-2">
-                                            <label class="flex items-center pl-3">
-                                                <input wire:model="period" @if($period === 'SA') checked @endif value="SA" id="date-SA" type="radio"  name="date-sa" class="w-5 h-5 ">
+                                            <label class="flex items-center pl-3 cursor-pointer">
+                                                <input wire:model="period" value="SA" id="date-SA" type="radio"  name="date-sa" class="w-5 h-5 ">
                                                 <span class="w-full py-3 ml-2 ">Calendar SA</span>
                                             </label>
                                         </li>
@@ -471,7 +466,7 @@
                                                     <div class="cell">{{ $date }}</div>
                                                 @endforeach
                                             </div>
-                                            {!! $this->generateTableRows($data, $tableDates, '', 0) !!}
+                                            {!! $table !!}
                                         </div>
                                     </div>
                                 </div>
@@ -498,20 +493,34 @@
                 slideOpen = true;
             }
         });
-
-        let rangeMin = 1997;
-        let rangeMax = 2022;
-        //init select year range slider
-        rangeSlider(document.querySelector('#range-slider'), {
-            step: 1,
-            min: rangeMin,
-            max: rangeMax,
-            value: [2017, 2022],
-        });
     });
 
     Livewire.on('slide-over.close', () => {
         slideOpen = false;
+    });
+
+    const annualCheckbox = document.getElementById("date-annual");
+
+    annualCheckbox.addEventListener("click", function() {
+        const currentUrl = window.location.href;
+
+        const separator = currentUrl.includes('?') ? '&' : '?';
+
+        const newUrl = currentUrl + separator + 'period=annual';
+
+        window.location.href = newUrl;
+    });
+    
+    const quarterlyCheckbox = document.getElementById("date-quarterly");
+
+    quarterlyCheckbox.addEventListener("click", function() {
+        const currentUrl = window.location.href;
+
+        const separator = currentUrl.includes('?') ? '&' : '?';
+
+        const newUrl = currentUrl + separator + 'period=quarterly';
+
+        window.location.href = newUrl;
     });
 
     const viewDropdownCloseIcon = document.getElementById("viewClose");
