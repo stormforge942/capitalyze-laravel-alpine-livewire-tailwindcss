@@ -173,7 +173,7 @@ Route::middleware(['auth', 'verified', 'ensureUserIsApproved'])->group(function 
     });
 
     Route::middleware(['auth:sanctum', 'verified', 'ensureUserIsAdmin'])->group(function () {
-        Route::get('/admin/navbar', [AdminController::class, 'navbar'])->name('admin.navbar-management');
+        Route::get('/admin/permission', [AdminController::class, 'permission'])->name('admin.permission-management');
         // You can add more routes here that should be subject to the same middleware
     });
 
