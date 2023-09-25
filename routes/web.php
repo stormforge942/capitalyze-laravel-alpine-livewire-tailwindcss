@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Livewire\LandingPageWaitList;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\CompanyController;
 use App\Http\Controllers\LseController;
@@ -181,6 +182,7 @@ Route::middleware(['auth', 'custom.email.verification'])->group(function () {
 Route::middleware(['guest'])->group(function () {
     Route::get('/login', [AuthenticatedSessionController::class, 'create'])->name('login');
     Route::post('/login', [AuthenticatedSessionController::class, 'store']);
+    Route::get('/join-wait-list', LandingPageWaitList::class)->name('join-wait-list');
 });
 
 // Logout route accessible to all users

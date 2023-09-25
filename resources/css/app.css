@@ -123,3 +123,12 @@ table.data-report tr:nth-child(even):hover > td:first-child {
     border: 1px solid #ccc;
     box-shadow: none;
 }
+
+.wait-list{
+    font-family: IBM Plex Sans, Arial;
+    color: #121A0F;
+}
+
+.wait-list-button-text{
+    color: #52D3A2;
+}
