@@ -83,7 +83,7 @@ class CreateNavbar extends Command
                     || $value === 'home'
                     || $value === 'dashboard'
                     || $value === 'admin.users'
-                    || $value === 'admin.navbar-management'
+                    || $value === 'admin.permission-management'
                     || $value === 'admin.groups-management'
                     || $value === 'waiting-for-approval';
 
