@@ -20,7 +20,7 @@ $title = "OTP Verification";
                 margin: 0;
                 text-align: center;
             ">
-                We noticed you requested to an OTP. Click below to copy your OTP.
+                Login to continue using Capitalyze
             </p>
         </td>
     </tr>
