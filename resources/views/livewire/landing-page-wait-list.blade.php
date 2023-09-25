@@ -1,4 +1,4 @@
-<div class="h-full min-h-screen bg-white wait-list absolute w-full overflow-x-hidden">
+<div class="h-full min-h-screen bg-white wait-list static w-full overflow-x-hidden">
     <div class="w-full absolute flex {{$completed ? 'justify-center' : 'justify-start'}} sm:justify-center lg:justify-start px-6 sm:px-16 top-10">
         <div class="w-[123px] h-[27px] sm:w-[200px] sm:h-[45px]">
             {{ Html::image('img/logo.png', 'features') }}
@@ -20,16 +20,15 @@
                 </div>
             </div>
 
-            <div class="mt-20">
-                <h1 class="whitespace-nowrap text-3xl sm:text-4xl md:text-5xl font-semibold break-words text-center sm:text-start">
+            <div class="mt-20 sm:mt-28 lg:mt-20">
+                <h1 class="whitespace-nowrap text-2xl sm:text-3xl lg:text-5xl font-semibold break-words text-center lg:text-start">
                     The future of financial data
                 </h1>
-                <p class="text-gray-900 text-lg sm:text-2xl font-normal mt-4 text-center sm:text-start">
+                <p class="text-gray-900 sm:mx-48 lg:mx-0 text-lg sm:text-xl lg:text-2xl font-normal mt-4 text-center lg:text-start">
                     Uncover fundamental insights to capitalize on opportunities. Analyze global financial data, revenue, cost structure, capital allocation, and more.
                 </p>
                 <p class="mt-6 text-xs sm:text-xl text-center lg:text-start">
-                    Exciting things you can do with
-                    <b>Capitalyze</b> in the beta program
+                    Exciting things you can do with <b>Capitalyze</b> in the beta program
                 </p>
                 <div class="mt-4 flex flex-col sm:flex-row justify-center lg:justify-start space-x-2 space-y-3 sm:space-y-0">
                     <div class="flex flex-row space-x-2 w-full sm:w-auto justify-center lg:justify-start">
@@ -53,11 +52,11 @@
             </div>
         </div>
 
-        <div class="flex flex-col">
-            <div class="w-full flex flex-row">
+        <div class="flex flex-col z-50">
+            <div class="w-full flex flex-row lg:justify-start justify-center">
 
                 @if(!$completed)
-                <div class="mt-12 sm:mt-36 shadow rounded flex flex-col w-full lg:w-8/12 lg:ml-12 px-4 sm:mx-32 lg:mx-0 py-6">
+                <div class="mt-10 sm:mt-36 shadow rounded flex flex-col w-full lg:w-8/12 lg:ml-12 px-4 sm:mx-36 lg:mx-0 py-6">
                     <div class="text-4xl w-full text-center font-semibold">
                         Join the waitlist
                     </div>
@@ -101,7 +100,7 @@
 
                 @else
                     <div class="mt-12 sm:mt-36 shadow rounded flex flex-col w-full sm:w-8/12 px-4 py-6">
-                        <div class="text-2xl sm:text-4xl w-full text-center font-semibold whitespace-nowrap">
+                        <div class="text-2xl sm:text-3xl w-full text-center font-semibold whitespace-nowrap">
                             Thanks for joining the waitlist
                         </div>
                         <p class="my-4 text-lg w-full text-center">
@@ -114,13 +113,45 @@
                 @endif
 
 
-                <div class="mt-24 ml-10 hidden lg:block">
+                <div class="mt-24 {{$completed ? 'ml-16' : 'ml-6'}} hidden lg:block">
                     {{ Html::image('img/blank.png', 'features') }}
                 </div>
             </div>
         </div>
     </div>
-    <div class="left-16 relative" style="{{$completed ? 'top: 157px' : ''}}">
+    <div class="hidden lg:block left-16 absolute" style="{{$completed ? 'top: 636px' : ''}}">
         {{ Html::image('img/features.png', 'features') }}
     </div>
+    <div class="hidden sm:block lg:hidden left-16 absolute" style="top: 1136px">
+        {{ Html::image('img/features.png', 'features') }}
+    </div>
+    <div style="width: 92px; height: 68px;" class="absolute hidden sm:block lg:hidden top-20 left-[10%]">
+        {{ Html::image('img/check-blank.png', 'features') }}
+    </div>
+    <div style="width: 120px; height: 128px;" class="absolute hidden sm:block lg:hidden top-36 right-24">
+        {{ Html::image('img/blank.png', 'features') }}
+    </div>
+    @if(!$completed)
+        <div style="width: 52px; height: 46px;" class="absolute block sm:hidden top-28 -left-2">
+            {{ Html::image('img/blank.png', 'features') }}
+        </div>
+    @endif
+    @if(!$completed)
+        <div style="width: 72px; height: 46px;" class="absolute block sm:hidden top-28 -right-10">
+            {{ Html::image('img/check-blank.png', 'features') }}
+        </div>
+    @endif
+    @if($completed)
+        <div style="width: 52px; height: 46px;" class="absolute block sm:hidden top-16 left-6">
+            {{ Html::image('img/blank.png', 'features') }}
+        </div>
+    @endif
+    @if($completed)
+        <div style="width: 72px; height: 46px;" class="absolute block sm:hidden top-20 right-6">
+            {{ Html::image('img/check-blank.png', 'features') }}
+        </div>
+    @endif
+
+
+
 </div>
