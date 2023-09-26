@@ -7,7 +7,7 @@ use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Notifications\Messages\MailMessage;
 use Illuminate\Notifications\Notification;
 
-class TestNotification extends Notification
+class WaitlistWelcomeNotification extends Notification implements ShouldQueue
 {
     use Queueable;
 
@@ -16,7 +16,7 @@ class TestNotification extends Notification
      *
      * @return void
      */
-    public function __construct(private string $view, private array $data = [])
+    public function __construct()
     {
         //
     }
@@ -41,7 +41,10 @@ class TestNotification extends Notification
     public function toMail($notifiable)
     {
         return (new MailMessage)
-            ->view('mails.' . $this->view, $this->data);
+                    ->subject('Thanks for signing up!')
+                    ->view('mails.waitlist-welcome', [
+                        'user' => $notifiable,
+                    ]);
     }
 
     /**
