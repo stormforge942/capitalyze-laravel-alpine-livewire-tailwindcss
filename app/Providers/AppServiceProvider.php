@@ -12,6 +12,8 @@ use App\Models\Company;
 use App\Models\Euronext;
 use App\Models\Shanghai;
 use App\Models\MutualFunds;
+use Illuminate\Auth\Notifications\VerifyEmail;
+use Illuminate\Notifications\Messages\MailMessage;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\App;
 use Illuminate\Support\Facades\Log;
@@ -50,36 +52,36 @@ class AppServiceProvider extends ServiceProvider
                 $mutualFunds = MutualFunds::where('registrant_name', 'ilike', "%{$query}%")->orWhere('cik', 'ilike', "%{$query}%")->orWhere('class_id', 'ilike', "%{$query}%")->orWhere('series_id', 'ilike', "%{$query}%")->orWhere('fund_symbol', 'ilike', "%{$query}%")->take(10)->get();
 
                 $euronexts = Euronext::where('registrant_name', 'ilike', "%{$query}%")
-                ->orWhere('symbol', 'ilike', "%{$query}%")
-                ->orWhere('market_full_name', 'ilike', "%{$query}%")
-                ->take(10)->get();
+                    ->orWhere('symbol', 'ilike', "%{$query}%")
+                    ->orWhere('market_full_name', 'ilike', "%{$query}%")
+                    ->take(10)->get();
                 $lses = Lse::where('registrant_name', 'ilike', "%{$query}%")
-                ->orWhere('symbol', 'ilike', "%{$query}%")
-                ->take(10)->get();
+                    ->orWhere('symbol', 'ilike', "%{$query}%")
+                    ->take(10)->get();
                 $hkexs = Hkex::where('short_name', 'ilike', "%{$query}%")
-                ->orWhere('symbol', 'ilike', "%{$query}%")
-                ->take(10)->get();
+                    ->orWhere('symbol', 'ilike', "%{$query}%")
+                    ->take(10)->get();
                 $tsxs = Tsx::where('registrant_name', 'ilike', "%{$query}%")
-                ->orWhere('symbol', 'ilike', "%{$query}%")
-                ->take(10)->get();
+                    ->orWhere('symbol', 'ilike', "%{$query}%")
+                    ->take(10)->get();
                 $shanghais = Shanghai::where('full_name', 'ilike', "%{$query}%")
-                ->orWhere('symbol', 'ilike', "%{$query}%")
-                ->orWhere('short_name', 'ilike', "%{$query}%")
-                ->take(10)->get();
+                    ->orWhere('symbol', 'ilike', "%{$query}%")
+                    ->orWhere('short_name', 'ilike', "%{$query}%")
+                    ->take(10)->get();
                 $japans = Japan::where('registrant_name', 'ilike', "%{$query}%")
-                ->orWhere('symbol', 'ilike', "%{$query}%")
-                ->orWhere('isin', 'ilike', "%{$query}%")
-                ->take(10)->get();
+                    ->orWhere('symbol', 'ilike', "%{$query}%")
+                    ->orWhere('isin', 'ilike', "%{$query}%")
+                    ->take(10)->get();
                 $otcs = Otc::where('company_name', 'ilike', "%{$query}%")
-                ->orWhere('symbol', 'ilike', "%{$query}%")
-                ->take(10)->get();
+                    ->orWhere('symbol', 'ilike', "%{$query}%")
+                    ->take(10)->get();
 
                 foreach ($companies as $company) {
                     $collection->push(
                         SpotlightResult::make()
                             ->setGroup('companies')
                             ->setTitle("$company->name ($company->ticker)")
-                            ->setAction('jump_to', ['path' => '/company/'.$company->ticker])
+                            ->setAction('jump_to', ['path' => '/company/' . $company->ticker])
                     );
                 }
 
@@ -88,7 +90,7 @@ class AppServiceProvider extends ServiceProvider
                         SpotlightResult::make()
                             ->setGroup('funds')
                             ->setTitle($fund->name)
-                            ->setAction('jump_to', ['path' => '/fund/'.$fund->cik])
+                            ->setAction('jump_to', ['path' => '/fund/' . $fund->cik])
                     );
                 }
 
@@ -97,7 +99,7 @@ class AppServiceProvider extends ServiceProvider
                         SpotlightResult::make()
                             ->setGroup('mutual-funds')
                             ->setTitle("$mutualFund->cik | $mutualFund->registrant_name | $mutualFund->fund_symbol | $mutualFund->series_id | $mutualFund->class_id")
-                            ->setAction('jump_to', ['path' => '/mutual-fund/'.$mutualFund->cik.'/'.$mutualFund->fund_symbol.'/'.$mutualFund->series_id.'/'.$mutualFund->class_id])
+                            ->setAction('jump_to', ['path' => '/mutual-fund/' . $mutualFund->cik . '/' . $mutualFund->fund_symbol . '/' . $mutualFund->series_id . '/' . $mutualFund->class_id])
                     );
                 }
 
@@ -106,7 +108,7 @@ class AppServiceProvider extends ServiceProvider
                         SpotlightResult::make()
                             ->setGroup('euronexts')
                             ->setTitle("$euronext->registrant_name | $euronext->symbol | $euronext->market | $euronext->market_full_name | $euronext->isin")
-                            ->setAction('jump_to', ['path' => '/euronext/'.$euronext->symbol])
+                            ->setAction('jump_to', ['path' => '/euronext/' . $euronext->symbol])
                     );
                 }
 
@@ -115,7 +117,7 @@ class AppServiceProvider extends ServiceProvider
                         SpotlightResult::make()
                             ->setGroup('lses')
                             ->setTitle("$lse->registrant_name | $lse->symbol | $lse->market | $lse->market_segment | $lse->isin")
-                            ->setAction('jump_to', ['path' => '/lse/'.$lse->symbol])
+                            ->setAction('jump_to', ['path' => '/lse/' . $lse->symbol])
                     );
                 }
 
@@ -125,7 +127,7 @@ class AppServiceProvider extends ServiceProvider
                         SpotlightResult::make()
                             ->setGroup('hkexs')
                             ->setTitle($search)
-                            ->setAction('jump_to', ['path' => '/hkex/'.$hkex->symbol])
+                            ->setAction('jump_to', ['path' => '/hkex/' . $hkex->symbol])
                     );
                 }
 
@@ -134,7 +136,7 @@ class AppServiceProvider extends ServiceProvider
                         SpotlightResult::make()
                             ->setGroup('tsxs')
                             ->setTitle("$tsx->registrant_name | $tsx->symbol")
-                            ->setAction('jump_to', ['path' => '/tsx/'.$tsx->symbol])
+                            ->setAction('jump_to', ['path' => '/tsx/' . $tsx->symbol])
                     );
                 }
 
@@ -143,7 +145,7 @@ class AppServiceProvider extends ServiceProvider
                         SpotlightResult::make()
                             ->setGroup('shanghais')
                             ->setTitle("$shanghai->full_name | $shanghai->symbol | $shanghai->short_name")
-                            ->setAction('jump_to', ['path' => '/shanghai/'.$shanghai->symbol])
+                            ->setAction('jump_to', ['path' => '/shanghai/' . $shanghai->symbol])
                     );
                 }
 
@@ -152,7 +154,7 @@ class AppServiceProvider extends ServiceProvider
                         SpotlightResult::make()
                             ->setGroup('japans')
                             ->setTitle("$japan->registrant_name | $japan->symbol | $japan->isin")
-                            ->setAction('jump_to', ['path' => '/japan/'.$japan->symbol])
+                            ->setAction('jump_to', ['path' => '/japan/' . $japan->symbol])
                     );
                 }
 
@@ -161,10 +163,10 @@ class AppServiceProvider extends ServiceProvider
                         SpotlightResult::make()
                             ->setGroup('otcs')
                             ->setTitle("$otc->company_name | $otc->symbol")
-                            ->setAction('jump_to', ['path' => '/otc/'.$otc->symbol])
+                            ->setAction('jump_to', ['path' => '/otc/' . $otc->symbol])
                     );
                 }
-            
+
                 return $collection;
             })
         );
@@ -178,19 +180,28 @@ class AppServiceProvider extends ServiceProvider
     public function boot()
     {
         if (App::environment('production')) {
-            DB::listen(function($query) {
+            DB::listen(function ($query) {
                 Log::stack(['papertrail'])->debug(
-                    "Query: {$query->sql}, Bindings: ".json_encode($query->bindings).", Time: {$query->time}"
+                    "Query: {$query->sql}, Bindings: " . json_encode($query->bindings) . ", Time: {$query->time}"
                 );
             });
         }
         // log DB request local to termninal for debugging purposes
         if (App::environment('local') && env('DB_LOG') != false) {
-            DB::listen(function($query) {
+            DB::listen(function ($query) {
                 Log::debug(
-                    "Query: {$query->sql}, Bindings: ".json_encode($query->bindings).", Time: {$query->time}"
+                    "Query: {$query->sql}, Bindings: " . json_encode($query->bindings) . ", Time: {$query->time}"
                 );
             });
         }
+
+        // Customize verify email notification
+        VerifyEmail::toMailUsing(function ($user, $link) {
+            return (new MailMessage)
+                ->view('mails.verify-email', [
+                    'user' => $user,
+                    'link' => $link,
+                ]);
+        });
     }
 }

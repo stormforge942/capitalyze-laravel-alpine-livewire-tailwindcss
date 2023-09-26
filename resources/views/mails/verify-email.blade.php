@@ -2,7 +2,7 @@
 
 $title = 'Welcome to Capitalyze';
 
-$greet = 'Hi Sahil,';
+$greet = "Hi {$user->firstName},";
 
 @endphp
 
@@ -107,7 +107,7 @@ $greet = 'Hi Sahil,';
             ">
                 @include('mails.partials.button', [
                 'text' => 'Confirm Email',
-                'link' => '#'
+                'link' => $link ?? '#'
                 ])
             </p>
         </td>
