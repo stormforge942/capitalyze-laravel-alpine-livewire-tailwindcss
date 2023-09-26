@@ -12,6 +12,7 @@ use App\Models\Company;
 use App\Models\Euronext;
 use App\Models\Shanghai;
 use App\Models\MutualFunds;
+use Illuminate\Auth\Notifications\ResetPassword;
 use Illuminate\Auth\Notifications\VerifyEmail;
 use Illuminate\Notifications\Messages\MailMessage;
 use Illuminate\Support\Facades\DB;
@@ -196,11 +197,23 @@ class AppServiceProvider extends ServiceProvider
         }
 
         // Customize verify email notification
-        VerifyEmail::toMailUsing(function ($user, $link) {
+        VerifyEmail::toMailUsing(function ($user, $url) {
             return (new MailMessage)
                 ->view('mails.verify-email', [
                     'user' => $user,
-                    'link' => $link,
+                    'url' => $url,
+                ]);
+        });
+
+        // customize reset password notification
+        ResetPassword::toMailUsing(function ($user, $token) {
+            return (new MailMessage)
+                ->view('mails.reset-password', [
+                    'user' => $user,
+                    'url' => url(route('password.reset', [
+                        'token' => $token,
+                        'email' => $user->getEmailForPasswordReset(),
+                    ], false)),
                 ]);
         });
     }

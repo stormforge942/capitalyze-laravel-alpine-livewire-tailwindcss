@@ -107,7 +107,7 @@ $greet = "Hi {$user->firstName},";
             ">
                 @include('mails.partials.button', [
                 'text' => 'Confirm Email',
-                'link' => $link ?? '#'
+                'url' => $url ?? '#'
                 ])
             </p>
         </td>

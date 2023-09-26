@@ -1,4 +1,4 @@
-<a href="{{ $link ?? '#' }}" target="_blank" style="
+<a href="{{ $url ?? '#' }}" target="_blank" style="
     font-family: 'Inter', Arial,
         sans-serif;
     font-size: 14px;

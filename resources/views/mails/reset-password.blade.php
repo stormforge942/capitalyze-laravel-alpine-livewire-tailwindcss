@@ -44,7 +44,7 @@ $title = "Reset password";
             ">
                 @include('mails.partials.button', [
                 'text' => 'Confirm Email',
-                'link' => '#'
+                'url' => $url ?? '#'
                 ])
             </p>
         </td>
@@ -61,7 +61,7 @@ $title = "Reset password";
                 margin: 0;
             ">
                 If you don’t use this link within 3 hours, it will expire. To get a new password reset link, visit:
-                <a href="#" style="
+                <a href="{{ url(route('password.request')) }}" style="
                     font-family: 'Inter', Arial, sans-serif;
                     font-size: 14px;
                     color: #3561e7;
@@ -69,7 +69,7 @@ $title = "Reset password";
                     padding: 0;
                     margin: 0;
                 ">
-                    https://capitalyze.com/password_reset
+                    {{ url(route('password.request')) }}
                 </a>
             </p>
         </td>
