@@ -119,7 +119,7 @@
                             <table cellspacing="0" cellpadding="0" width="100%" style="width: 100%">
                                 <tr>
                                     <td style="text-align: center">
-                                        <a href="#">
+                                        <a href="{{ url('/') }}">
                                             <img src="{{ asset('img/logo.png') }}" alt="Capitalyze logo" height="22"
                                                 style="height: 22px;" />
                                         </a>
@@ -150,17 +150,17 @@
                                         <table cellspacing="0" cellpadding="0" width="100%" style="width: 100%">
                                             <tr>
                                                 <td width="50%" style="text-align: right; padding-right: 12px;">
-                                                    <a href="{{ url('/') }}">
+                                                    <a href="{{ url('/') }}" target="_blank">
                                                         <img src="{{ asset('img/twitter.png') }}"
                                                             style="height: 40px; width: 40px; border-radius: 50%; "
                                                             alt="twitter logo">
                                                     </a>
                                                 </td>
                                                 <td width="50%" style="text-align: left; padding-left: 12px;">
-                                                    <a href="#">
+                                                    <a href="{{ url('/') }}" target="_blank">
                                                         <img src="{{ asset('img/linkedin.png') }}"
                                                             style="height: 40px; width: 40px; border-radius: 50%; "
-                                                            alt="twitter logo">
+                                                            alt="linkedin logo">
                                                     </a>
                                                 </td>
                                             </tr>
