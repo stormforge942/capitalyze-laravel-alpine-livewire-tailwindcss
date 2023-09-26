@@ -21,7 +21,6 @@
         input.addEventListener(
             'change',
             e => {
-                console.log(23)
                 if (e.target?.files?.length > 0) {
                     let data = new FormData()
                     data.append('file', e.target.files[0])
