@@ -1,6 +1,6 @@
 @php
 
-$title = "Password reset successful";
+$title = "Congratulations.<br>You've been selected to experience Capitalyze";
 
 @endphp
 

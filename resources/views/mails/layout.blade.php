@@ -72,7 +72,7 @@
                                 padding: 0;
                                 margin: 0;
                             ">
-                                {{ $title }}
+                                {!! $title !!}
                             </h1>
                         </td>
                     </tr>
@@ -146,7 +146,7 @@
                                 </tr>
 
                                 <tr>
-                                    <td style="padding: 24px 0;">
+                                    <td style="padding-top: 24px;">
                                         <table cellspacing="0" cellpadding="0" width="100%" style="width: 100%">
                                             <tr>
                                                 <td width="50%" style="text-align: right; padding-right: 12px;">
@@ -169,7 +169,7 @@
                                 </tr>
 
                                 <tr>
-                                    <td style="text-align: center">
+                                    <td style="text-align: center; padding-top: 24px;">
                                         <p style="
                                             font-family: 'Inter', Arial,
                                                 sans-serif;
@@ -180,6 +180,25 @@
                                             margin: 0;
                                         ">
                                             Los Angeles, California, USA
+                                        </p>
+                                    </td>
+                                </tr>
+
+                                <tr>
+                                    <td style="text-align: center; padding-top: 24px;">
+                                        <p style="
+                                        font-family: 'Inter', Arial,
+                                            sans-serif;
+                                        font-size: 10px;
+                                        color: #fff;
+                                        line-height: 16px;
+                                        padding: 0;
+                                        margin: 0;
+                                    ">
+                                            If you no longer want to receive email from us, you can
+                                            <a style="color: #3561E7;">
+                                                Unsubscribe
+                                            </a>
                                         </p>
                                     </td>
                                 </tr>

@@ -199,6 +199,7 @@ class AppServiceProvider extends ServiceProvider
         // Customize verify email notification
         VerifyEmail::toMailUsing(function ($user, $url) {
             return (new MailMessage)
+                ->subject('Welcome')
                 ->view('mails.verify-email', [
                     'user' => $user,
                     'url' => $url,
@@ -208,6 +209,7 @@ class AppServiceProvider extends ServiceProvider
         // customize reset password notification
         ResetPassword::toMailUsing(function ($user, $token) {
             return (new MailMessage)
+                ->subject('Password change request')
                 ->view('mails.reset-password', [
                     'user' => $user,
                     'url' => url(route('password.reset', [
