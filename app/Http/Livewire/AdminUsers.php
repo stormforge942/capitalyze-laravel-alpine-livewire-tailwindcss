@@ -2,10 +2,11 @@
 
 namespace App\Http\Livewire;
 
-use Livewire\Component;
-use Livewire\WithPagination;
 use App\Models\User;
 use App\Models\Groups;
+use Livewire\Component;
+use Livewire\WithPagination;
+use App\Notifications\AccountApprovedNotification;
 
 class AdminUsers extends Component
 {
@@ -49,6 +50,8 @@ class AdminUsers extends Component
         $user = User::find($userId);
         $user->is_approved = true;
         $user->save();
+
+        $user->notify(new AccountApprovedNotification);
     }
 
     public function disapproveUser($userId)
