@@ -15,5 +15,5 @@ class JoinedUser extends Model
         'likedin_link',
     ];
 
-    protected $table = 'wait_list_users';
+    protected $table = 'joined_users';
 }
