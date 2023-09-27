@@ -25,7 +25,7 @@ module.exports = {
                 primary: colors.blue,
                 success: colors.green,
                 warning: colors.yellow,
-                blue: '#3561E7',
+                blue: {...colors.blue, DEFAULT: '#3561E7' },
                 lightDark: '#464E49',
                 lightBackground: '#828c851a',
                 lightGreen: '#52d3a233',
