@@ -20,3 +20,4 @@ Alpine.start();
 
 import "./range-slider-custom";
 import './css-tables';
+import './report-text-highlighter';
