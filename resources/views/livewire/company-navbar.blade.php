@@ -2,7 +2,7 @@
    <aside id="default-sidebar"
       class="fixed top-0 left-0 z-40 w-64 h-screen pt-10 transition-transform -translate-x-full bg-white border-r border-gray-200 sm:translate-x-0 dark:bg-gray-800 dark:border-gray-700"
       aria-label="Sidebar">
-      <div class="h-full px-6 pb-4 overflow-y-auto bg-white dark:bg-gray-800 flex flex-col">
+      <div class="h-full px-4 pb-4 overflow-y-auto bg-white dark:bg-gray-800 flex flex-col">
          <div class="transition-all duration-250 fixed right-[-12px] cursor-pointer top-[160px]" id="collapse">
             <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
                <path
