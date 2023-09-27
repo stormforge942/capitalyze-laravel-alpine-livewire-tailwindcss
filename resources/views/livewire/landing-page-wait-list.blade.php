@@ -97,21 +97,35 @@
                         <div>
                             <div class="rounded-md px-3 shadow-sm border">
                                 <label for="name" class="block text-base font-medium text-gray-600 ml-3 pt-1 pb-0">Name</label>
-                                <input type="text" name="name" id="name" class="block w-full border-0 pb-1 text-gray-900 pt-0 text-base focus:outline-none focus:ring-0" placeholder="Jane Smith">
+                                <input wire:model="name" type="text" name="name" id="name" class="block w-full border-0 pb-1 text-gray-900 pt-0 text-base focus:outline-none focus:ring-0" placeholder="Jane Smith">
                             </div>
+                            @error('name')
+                                <p class="text-red-600 text-sm font-normal leading-4 ml-4 mt-1">
+                                    {{ $message }}
+                                </p>
+                            @enderror
                         </div>
                         <div>
                             <div class="rounded-md px-3 shadow-sm border">
-                                <label for="name" class="block text-base font-medium text-gray-600 ml-3 pt-1 pb-0">Work email</label>
-                                <input type="text" name="name" id="name" class="block w-full border-0 pb-1 text-gray-900 pt-0 text-base focus:outline-none focus:ring-0" placeholder="sahil@capitalyze.com">
+                                <label for="email" class="block text-base font-medium text-gray-600 ml-3 pt-1 pb-0">Work email</label>
+                                <input wire:model="email" type="text" name="email" id="email" class="block w-full border-0 pb-1 text-gray-900 pt-0 text-base focus:outline-none focus:ring-0" placeholder="sahil@capitalyze.com">
                             </div>
+                            @error('email')
+                                <p class="text-red-600 text-sm font-normal leading-4 ml-4 mt-1">
+                                    {{ $message }}
+                                </p>
+                            @enderror
                         </div>
                         <div>
                             <div class="rounded-md px-3 shadow-sm border">
-                                <label for="name" class="block text-base font-medium text-gray-600 ml-3 pt-1 pb-0">LikedIn</label>
-                                <input type="text" name="name" id="name" class="block w-full border-0 pb-1 text-gray-900 pt-0 text-base focus:outline-none focus:ring-0" placeholder="linkedin.com/sah">
+                                <label for="likenin_link" class="block text-base font-medium text-gray-600 ml-3 pt-1 pb-0">LikedIn</label>
+                                <input wire:model="likedinLink" type="text" name="likenin_link" id="likenin_link" class="block w-full border-0 pb-1 text-gray-900 pt-0 text-base focus:outline-none focus:ring-0" placeholder="linkedin.com/sah">
                             </div>
-                            <p class="text-red-600 text-sm font-normal leading-4 ml-4 mt-1">Please enter a valid linkedin profile link</p>
+                            @error('likedinLink')
+                            <p class="text-red-600 text-sm font-normal leading-4 ml-4 mt-1">
+                                {{ $message }}
+                            </p>
+                            @enderror
                         </div>
                     </div>
                     <button wire:click="submit" style="background: #52D3A2;" class="w-full py-2 rounded font-bold mt-6">
@@ -133,9 +147,7 @@
                     </div>
                 @endif
 
-
                 <div class="mt-24 {{$completed ? 'ml-16' : 'ml-6'}} hidden lg:block">
-
                     <svg width="120" height="128" viewBox="0 0 50 50" fill="none" xmlns="http://www.w3.org/2000/svg">
                         <path d="M25.5942 3.64532L37.6039 22.2264L37.7338 22.92C38.5413 27.7091 39.7277 33.5609 39.7277 33.5609L39.9399 34.6771L26.0693 47.7883L4.09409 21.8659L25.5942 3.64532Z" fill="white" stroke="#15357A" stroke-width="0.12138" stroke-miterlimit="10"/>
                         <path d="M25.5942 3.64532L32.2394 11.4904C35.6674 15.5436 37.158 19.5733 37.7244 22.9125C38.5318 27.7015 35.073 30.5788 35.073 30.5788C35.073 30.5788 39.1093 32.0587 39.7107 33.5628C39.8534 33.9095 39.9298 34.2809 39.9228 34.679C39.8957 35.5113 39.4725 36.4313 38.3215 37.4075L26.0693 47.7883L4.09409 21.8659L25.5942 3.64532Z" fill="#52D3A2" stroke="#15357A" stroke-width="0.12138" stroke-miterlimit="10"/>
