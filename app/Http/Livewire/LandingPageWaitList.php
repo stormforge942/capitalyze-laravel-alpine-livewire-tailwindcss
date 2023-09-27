@@ -19,7 +19,7 @@ class LandingPageWaitList extends Component
             'required',
             'email',
             'unique:users,email',
-            'unique:wait_list_users,email',
+            'unique:joined_users,email',
         ],
         'name' => 'required|min:4',
         'likedinLink' => 'nullable|url',
