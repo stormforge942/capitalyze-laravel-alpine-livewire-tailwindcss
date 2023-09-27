@@ -307,7 +307,7 @@
          </ul>
          <button id="profileButton" data-dropdown-toggle="dropdownProfile" data-dropdown-placement="left-end"
             type="button"
-            class="mt-5 inline-flex items-center font-medium text-[14px] leading-4 focus:outline-none transition">
+            class="mt-5 inline-flex items-center font-semibold text-[14px] leading-4 focus:outline-none transition">
             <div class="bg-[#52D3A2] w-9 h-9 leading-9 rounded-full mr-2">{{ Auth::user()->initials }}
             </div>
 
@@ -324,7 +324,7 @@
          <!-- Dropdown menu -->
          <div id="dropdownProfile"
             class="z-10 hidden bg-white divide-y divide-gray-100 rounded-lg shadow w-44 dark:bg-gray-700">
-            <div class="py-2 text-sm text-gray-700 dark:text-gray-200" aria-labelledby="dropdownTopButton">
+            <div class="py-2 text-gray-700 dark:text-gray-200" aria-labelledby="dropdownTopButton">
                <!-- Account Management -->
                <div class="block px-4 py-2 text-xs text-gray-400">
                   {{ __('Account') }}
