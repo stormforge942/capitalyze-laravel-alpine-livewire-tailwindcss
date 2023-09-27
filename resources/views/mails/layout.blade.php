@@ -150,14 +150,15 @@
                                         <table cellspacing="0" cellpadding="0" width="100%" style="width: 100%">
                                             <tr>
                                                 <td width="50%" style="text-align: right; padding-right: 12px;">
-                                                    <a href="{{ url('/') }}" target="_blank">
+                                                    <a href="https://twitter.com/capitalyzeinc" target="_blank">
                                                         <img src="{{ asset('img/twitter.png') }}"
                                                             style="height: 40px; width: 40px; border-radius: 50%; "
                                                             alt="twitter logo">
                                                     </a>
                                                 </td>
                                                 <td width="50%" style="text-align: left; padding-left: 12px;">
-                                                    <a href="{{ url('/') }}" target="_blank">
+                                                    <a href="https://www.linkedin.com/company/capitalyzeinc"
+                                                        target="_blank">
                                                         <img src="{{ asset('img/linkedin.png') }}"
                                                             style="height: 40px; width: 40px; border-radius: 50%; "
                                                             alt="linkedin logo">
