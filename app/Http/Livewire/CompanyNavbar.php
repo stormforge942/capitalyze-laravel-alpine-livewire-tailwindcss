@@ -43,7 +43,7 @@ class CompanyNavbar extends Component
                 if (
                     !$item->navbar ||
                     !$item->navbar->is_moddable ||
-                    Str::startsWith($item->navbar->route_name, ['company.', 'lse.', 'tsx.', 'fund.', 'otc.', 'mutual-fund.', 'shanghai.', 'japan.', 'hkex.', 'euronext'])
+                    Str::startsWith($item->navbar->route_name, ['company.', 'lse.', 'tsx.', 'fund.', 'otc.', 'mutual-fund.', 'shanghai.', 'japan.', 'hkex.', 'euronext.', 'economics-release', 'create.'])
                 ) {
                     return $carry;
                 }
