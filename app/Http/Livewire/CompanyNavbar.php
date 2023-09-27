@@ -52,7 +52,6 @@ class CompanyNavbar extends Component
         if (!$this->currentRoute) {
             $this->currentRoute = $request->route()->getName();
         }
-        // dd($this->currentRoute);
     }
 }
 

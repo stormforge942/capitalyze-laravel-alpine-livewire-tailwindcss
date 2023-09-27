@@ -22,7 +22,8 @@
         "openspout/openspout": "^4",
         "power-components/livewire-powergrid": "4.3.1",
         "spatie/calendar-links": "^1.8",
-        "wire-elements/pro": "^3.0"
+        "wire-elements/pro": "^3.0",
+        "ext-exif" : "*"
     },
     "require-dev": {
         "fakerphp/faker": "^1.9.1",
@@ -44,7 +45,10 @@
             "App\\": "app/",
             "Database\\Factories\\": "database/factories/",
             "Database\\Seeders\\": "database/seeders/"
-        }
+        },
+        "files": [
+            "app/Helpers/string_functions.php"
+        ]
     },
     "autoload-dev": {
         "psr-4": {

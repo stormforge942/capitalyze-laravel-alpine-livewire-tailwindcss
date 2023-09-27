@@ -4,6 +4,7 @@ namespace App\Models;
 
 use Illuminate\Contracts\Auth\MustVerifyEmail;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
+use Illuminate\Database\Eloquent\Relations\HasManyThrough;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
 use Laravel\Fortify\TwoFactorAuthenticatable;
@@ -66,5 +67,32 @@ class User extends Authenticatable implements MustVerifyEmail
     public function isAdmin()
     {
         return $this->is_admin === true;
+    }
+
+    public function hasNavbar($routeName): bool
+    {
+        return
+            $this->isAdmin() ||
+            Navbar::where('route_name', $routeName)
+            ->where('is_moddable', true)
+            ->whereHas(
+                'navbarGroupShows',
+                fn ($query) => $query
+                    ->where('navbar_group_shows.group_id', $this->group_id)
+                    ->where('navbar_group_shows.show', true)
+            )
+            ->exists();
+    }
+
+    public function getInitialsAttribute()
+    {
+        $nameParts = explode(' ', $this->name);
+        $initials = '';
+
+        foreach ($nameParts as $part) {
+            $initials .= strtoupper(substr($part, 0, 1));
+        }
+
+        return $initials;
     }
 }

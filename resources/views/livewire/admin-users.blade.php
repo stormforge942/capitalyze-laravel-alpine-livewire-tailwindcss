@@ -94,21 +94,15 @@
 </div>
 @push('scripts')
 <script>
-    window.addEventListener('swal:confirming-user-deletion', event => {
-        Swal.fire({
-            title: event.detail.title,
-            text: event.detail.text,
-            icon: event.detail.type,
-            showCancelButton: true,
-            confirmButtonColor: '#dc3545',
-            confirmButtonText: event.detail.confirmButtonText,
-            cancelButtonText: event.detail.cancelButtonText,
-        }).then((result) => {
-            if (result.isConfirmed) {
-                Livewire.emit('performUserDeletion');
-            }
-        });
-    });
+    window.livewire.on(‘file-dropped’, (event) => {
+        let files = event.dataTransfer.files;
+        let fileObject = files[0];
+        let reader = new FileReader();
+        reader.onloadend = () => {
+            window.livewire.emit('file-upload', reader.result)
+        }
+        reader.readAsDataURL(fileObject);
+    })
 </script>
 @endpush
 

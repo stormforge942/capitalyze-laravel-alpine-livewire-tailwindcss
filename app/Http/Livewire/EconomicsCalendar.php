@@ -7,7 +7,6 @@ use Carbon\Carbon;
 use Illuminate\Support\Facades\DB;
 use App\Models\Company;
 
-
 class EconomicsCalendar extends Component
 {
     public $startDate;

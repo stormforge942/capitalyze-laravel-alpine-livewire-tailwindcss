@@ -2,10 +2,15 @@
 @import "../../vendor/wire-elements/pro/resources/css/tailwind/spotlight-component.css";
 @import '../../node_modules/flowbite-datepicker/tailwind.css';
 @import '../../node_modules/sweetalert2/dist/sweetalert2.css';
+@import 'css-tables.css';
+@import "company-profile.css";
+@import "company-report.css";
+@import "flowbite-select-custom.css";
+@import "common-styles.css";
+@import "navigation_subtabs.css";
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
-
 
 select {
     -webkit-appearance: none;
