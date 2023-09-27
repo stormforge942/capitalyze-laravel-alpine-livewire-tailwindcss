@@ -2,12 +2,11 @@
 
 namespace App\Http\Livewire;
 
-use Illuminate\Http\Request;
 use Livewire\Component;
-use Illuminate\Support\Facades\Auth;
-use App\Models\Navbar;
+use Illuminate\Support\Str;
+use Illuminate\Http\Request;
 use App\Models\NavbarGroupShows;
-use App\Models\Groups;
+use Illuminate\Support\Facades\Auth;
 
 class CompanyNavbar extends Component
 {
@@ -15,8 +14,6 @@ class CompanyNavbar extends Component
     public $period = "annual";
     public $currentRoute;
     public $navbarItems;
-    public $navbarGroupShows;
-    public $groups;
 
     protected $queryString = [
         'period' => ['except' => 'annual']
@@ -27,31 +24,36 @@ class CompanyNavbar extends Component
     public function changePeriod($period)
     {
         $this->period = $period;
-        return redirect()->route($this->currentRoute, ['ticker'=>$this->company->ticker, 'period' => $period]);
-    }    
+        return redirect()->route($this->currentRoute, ['ticker' => $this->company->ticker, 'period' => $period]);
+    }
 
     public function render()
     {
         return view('livewire.company-navbar');
     }
 
-    public function showNavbar($navbarId) {
-        foreach($this->navbarGroupShows as $show) {
-            if ($show->navbar_id === $navbarId && $show->show && Auth::user()->group_id === $show->group_id) {
-                return true;
-            }
-        }
-        return false;
-    }
-
-    public function mount(Request $request, $route = '', $active = false)
+    public function mount(Request $request)
     {
-        $this->navbarItems = Navbar::get();
-        $this->navbarGroupShows = NavbarGroupShows::get();
-        $this->groups = Groups::get();
+        $this->navbarItems = NavbarGroupShows::query()
+            ->with(['navbar'])
+            ->where('group_id', Auth::user()->group_id)
+            ->where('show', true)
+            ->get()
+            ->reduce(function ($carry, $item) {
+                if (
+                    !$item->navbar ||
+                    !$item->navbar->is_moddable ||
+                    Str::startsWith($item->navbar->route_name, ['company.', 'lse.', 'tsx.', 'fund.', 'otc.', 'mutual-fund.', 'shanghai.', 'japan.', 'hkex.', 'euronext'])
+                ) {
+                    return $carry;
+                }
+
+                $carry[$item->navbar->id] = $item->navbar;
+                return $carry;
+            }, collect([]));
+
         if (!$this->currentRoute) {
             $this->currentRoute = $request->route()->getName();
         }
     }
 }
-
