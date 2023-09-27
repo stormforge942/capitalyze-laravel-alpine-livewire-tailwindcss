@@ -1,8 +1,15 @@
 document.addEventListener('DOMContentLoaded', function() {
     let rangeMin = 1997;
     let rangeMax = 2022;
+
+    const el = document.querySelector('#range-slider');
+
+    if(!el) {
+        return;
+    }
+
     //init select year range slider
-    rangeSlider(document.querySelector('#range-slider'), {
+    rangeSlider(el, {
         step: 1,
         min: rangeMin,
         max: rangeMax,

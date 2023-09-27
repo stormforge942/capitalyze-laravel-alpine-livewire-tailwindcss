@@ -117,7 +117,6 @@
         configDoughnut = generateDoughnut(data[0]);
 
         function generateDoughnut(data) {
-            console.log(data);
             const firstKey = Object.keys(data)[0];
             const values = Object.values(data[firstKey]);
             const sum = values.reduce((acc, val) => +acc + +val);

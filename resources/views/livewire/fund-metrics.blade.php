@@ -109,7 +109,6 @@ document.addEventListener('livewire:load', function () {
                     quarter = 'Q4';
                     break;
             }
-            console.log(quarter + ' ' + year);
             return quarter + ' ' + year;
         });
 
@@ -248,7 +247,6 @@ document.addEventListener('livewire:load', function () {
     });
 
     Livewire.on('renderIndustryDistribution', function (chartData) {
-    console.log(chartData);
     const ctx = document.getElementById('pieChart').getContext('2d');
     const labels = Object.keys(chartData);
     const data = Object.values(chartData);
