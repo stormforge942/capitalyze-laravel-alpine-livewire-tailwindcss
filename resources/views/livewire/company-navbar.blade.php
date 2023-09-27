@@ -219,6 +219,7 @@
                   <div class="tooltip-arrow" data-popper-arrow></div>
                </div>
             </li>
+            @if(count($navbarItems))
             <li>
                <button data-dropdown-toggle="dropdownMore" data-dropdown-placement="left-end"
                   aria-controls="dropdown-more" data-collapse-toggle="dropdown-more" id="nav"
@@ -266,16 +267,12 @@
                </button>
                <ul class="hidden py-2 space-y-2" id="dropdown-more">
                   @foreach ($navbarItems as $navbar)
-                  @if ($navbar->is_moddable && $this->showNavbar($navbar->id) && !Str::startsWith($navbar->route_name,
-                  ['company.', 'lse.', 'tsx.', 'fund.', 'otc.', 'mutual-fund.', 'shanghai.', 'japan.', 'hkex.',
-                  'euronext']))
                   <li>
                      <a class="flex items-center w-full p-2 text-gray-900 transition duration-75 rounded-lg pl-11 group hover:bg-gray-100 dark:text-white dark:hover:bg-gray-700 @if($currentRoute === $navbar->route_name) font-bold @endif"
                         href="{{ route($navbar->route_name) }}">
                         {{ __($navbar->name) }}
                      </a>
                   </li>
-                  @endif
                   @endforeach
                </ul>
                <div id="dropdownMore"
@@ -288,21 +285,18 @@
 
                      <ul>
                         @foreach ($navbarItems as $navbar)
-                        @if ($navbar->is_moddable && $this->showNavbar($navbar->id) &&
-                        !Str::startsWith($navbar->route_name, ['company.', 'lse.', 'tsx.', 'fund.', 'otc.',
-                        'mutual-fund.', 'shanghai.', 'japan.', 'hkex.', 'euronext']))
                         <li>
                            <a class="flex items-center w-full p-2 text-gray-900 transition duration-75 rounded-lg pl-4 group hover:bg-gray-100 dark:text-white dark:hover:bg-gray-700 @if($currentRoute === $navbar->route_name) font-semibold @endif"
                               href="{{ route($navbar->route_name) }}">
                               {{ __($navbar->name) }}
                            </a>
                         </li>
-                        @endif
                         @endforeach
                      </ul>
                   </div>
                </div>
             </li>
+            @endif
          </ul>
          <button id="profileButton" data-dropdown-toggle="dropdownProfile" data-dropdown-placement="left-end"
             type="button"

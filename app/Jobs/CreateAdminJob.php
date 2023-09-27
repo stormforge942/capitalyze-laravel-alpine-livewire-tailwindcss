@@ -2,6 +2,7 @@
 
 namespace App\Jobs;
 
+use App\Models\Groups;
 use App\Models\User;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Bus\Queueable;
@@ -41,6 +42,7 @@ class CreateAdminJob implements ShouldQueue
         $user->email_verified_at = now();
         $user->is_approved = true;
         $user->is_admin = true;
+        $user->group_id = Groups::where('name', 'Admins')->first()?->id ?? 0;
         $user->save();
     }
 }
