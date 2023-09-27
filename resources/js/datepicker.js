@@ -56,7 +56,6 @@ document.addEventListener('DOMContentLoaded', () => {
     const dateRangePickerEl = document.querySelector('.graph-range-picker');
     let dateRangePicker; // Declare dateRangePicker here
 
-    console.log({dateRangePickerEl});
     if(dateRangePickerEl !== null) {
         dateRangePicker = new DateRangePicker(dateRangePickerEl, {
             today: true,
