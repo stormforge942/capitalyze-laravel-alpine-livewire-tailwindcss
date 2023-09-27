@@ -2,7 +2,7 @@
    <aside id="default-sidebar"
       class="fixed top-0 left-0 z-40 w-64 h-screen pt-10 transition-transform -translate-x-full bg-white border-r border-gray-200 sm:translate-x-0 dark:bg-gray-800 dark:border-gray-700"
       aria-label="Sidebar">
-      <div class="h-full px-6 pb-4 overflow-y-auto bg-white dark:bg-gray-800">
+      <div class="h-full px-6 pb-4 overflow-y-auto bg-white dark:bg-gray-800 flex flex-col">
          <div class="transition-all duration-250 fixed right-[-12px] cursor-pointer top-[160px]" id="collapse">
             <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
                <path
@@ -62,7 +62,7 @@
 
             </a>
          </div>
-         <ul class="space-y-2 text-sm">
+         <ul class="space-y-2 text-[14px] flex-1">
             <li id="nav" class="flex items-center p-2 font-semibold rounded-lg group text-blue w-full">
                <svg width="16" height="28" class="fill-current" viewBox="0 0 16 17" fill="none"
                   xmlns="http://www.w3.org/2000/svg">
@@ -120,7 +120,7 @@
                   <span class="ml-3" id="collapsed-span">Financials</span>
                </a>
                <div id="tooltip-Financials" role="tooltip"
-                  class="hidden absolute z-10 invisible inline-block px-3 py-2 text-sm font-medium text-white bg-gray-900 rounded-lg shadow-sm opacity-0 tooltip dark:bg-gray-700">
+                  class="hidden absolute z-10 invisible px-3 py-2 text-xs font-medium text-white bg-gray-900 rounded-lg shadow-sm opacity-0 tooltip dark:bg-gray-700">
                   Financials
                   <div class="tooltip-arrow" data-popper-arrow></div>
                </div>
@@ -148,7 +148,7 @@
                   <span class="ml-3" id="collapsed-span">Analysis</span>
                </a>
                <div id="tooltip-Analysis" role="tooltip"
-                  class="hidden absolute z-10 invisible inline-block px-3 py-2 text-sm font-medium text-white bg-gray-900 rounded-lg shadow-sm opacity-0 tooltip dark:bg-gray-700">
+                  class="hidden absolute z-10 invisible px-3 py-2 text-xs font-medium text-white bg-gray-900 rounded-lg shadow-sm opacity-0 tooltip dark:bg-gray-700">
                   Analysis
                   <div class="tooltip-arrow" data-popper-arrow></div>
                </div>
@@ -166,7 +166,7 @@
                   <span class="ml-3" id="collapsed-span">Filings</span>
                </a>
                <div id="tooltip-Filings" role="tooltip"
-                  class="hidden absolute z-10 invisible inline-block px-3 py-2 text-sm font-medium text-white bg-gray-900 rounded-lg shadow-sm opacity-0 tooltip dark:bg-gray-700">
+                  class="hidden absolute z-10 invisible px-3 py-2 text-xs font-medium text-white bg-gray-900 rounded-lg shadow-sm opacity-0 tooltip dark:bg-gray-700">
                   Filings
                   <div class="tooltip-arrow" data-popper-arrow></div>
                </div>
@@ -190,7 +190,7 @@
                   <span class="ml-3" id="collapsed-span">Ownership</span>
                </a>
                <div id="tooltip-Ownership" role="tooltip"
-                  class="hidden absolute z-10 invisible inline-block px-3 py-2 text-sm font-medium text-white bg-gray-900 rounded-lg shadow-sm opacity-0 tooltip dark:bg-gray-700">
+                  class="hidden absolute z-10 invisible px-3 py-2 text-xs font-medium text-white bg-gray-900 rounded-lg shadow-sm opacity-0 tooltip dark:bg-gray-700">
                   Ownership
                   <div class="tooltip-arrow" data-popper-arrow></div>
                </div>
@@ -215,7 +215,7 @@
                   <span class="ml-3" id="collapsed-span">Settings</span>
                </a>
                <div id="tooltip-Settings" role="tooltip"
-                  class="hidden absolute z-10 invisible inline-block px-3 py-2 text-sm font-medium text-white bg-gray-900 rounded-lg shadow-sm opacity-0 tooltip dark:bg-gray-700">
+                  class="hidden absolute z-10 invisible px-3 py-2 text-xs font-medium text-white bg-gray-900 rounded-lg shadow-sm opacity-0 tooltip dark:bg-gray-700">
                   Settings
                   <div class="tooltip-arrow" data-popper-arrow></div>
                </div>
@@ -280,8 +280,8 @@
                   @endforeach
                </ul>
                <div id="dropdownMore"
-                  class="h-52 overflow-y-scroll invisible h-[0px] w-[0px] hidden bg-white divide-y divide-gray-100 rounded-lg shadow w-44 dark:bg-gray-700">
-                  <div class="py-2 text-sm text-gray-700 dark:text-gray-200" aria-labelledby="dropdownTopButton">
+                  class="h-52 w-44 overflow-y-scroll invisible hidden bg-white divide-y divide-gray-100 rounded-lg shadow dark:bg-gray-700">
+                  <div class="py-2 text-gray-700 dark:text-gray-200" aria-labelledby="dropdownTopButton">
                      <!-- More links -->
                      <div class="block px-4 py-2 text-xs text-gray-400">
                         {{ __('More') }}
@@ -293,7 +293,7 @@
                         !Str::startsWith($navbar->route_name, ['company.', 'lse.', 'tsx.', 'fund.', 'otc.',
                         'mutual-fund.', 'shanghai.', 'japan.', 'hkex.', 'euronext']))
                         <li>
-                           <a class="flex items-center w-full p-2 text-gray-900 transition duration-75 rounded-lg pl-4 group hover:bg-gray-100 dark:text-white dark:hover:bg-gray-700 @if($currentRoute === $navbar->route_name) font-bold @endif"
+                           <a class="flex items-center w-full p-2 text-gray-900 transition duration-75 rounded-lg pl-4 group hover:bg-gray-100 dark:text-white dark:hover:bg-gray-700 @if($currentRoute === $navbar->route_name) font-semibold @endif"
                               href="{{ route($navbar->route_name) }}">
                               {{ __($navbar->name) }}
                            </a>
@@ -307,8 +307,8 @@
          </ul>
          <button id="profileButton" data-dropdown-toggle="dropdownProfile" data-dropdown-placement="left-end"
             type="button"
-            class="mt-5 inline-flex items-center font-bold text-sm leading-4 focus:outline-none transition">
-            <div class="bg-[#52D3A2] w-[36px] h-[36px] leading-9 w-9 h-9 rounded-full mr-2">{{ Auth::user()->initials }}
+            class="mt-5 inline-flex items-center font-medium text-[14px] leading-4 focus:outline-none transition">
+            <div class="bg-[#52D3A2] w-9 h-9 leading-9 rounded-full mr-2">{{ Auth::user()->initials }}
             </div>
 
             <span id="tag-collapsed">{{ Auth::user()->name }}</span>
