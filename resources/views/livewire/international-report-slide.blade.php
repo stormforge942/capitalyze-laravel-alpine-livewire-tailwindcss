@@ -16,50 +16,7 @@
         </div>
     @else
         <script>
-            function __parseText(value, shouldBeNumber = false) {
-                let term = String(value)
-                    .replaceAll(',', '')
-                    .replaceAll('.', '')
-                    .trim()
-                    .replace(/^\$/, '')
-                    .replace(/^¥/, '')
-                    .replace(/¥$/, '')
-                    .trim();
-
-                if (isNaN(Number(term))) {
-                    if (shouldBeNumber) {
-                        return null;
-                    }
-
-                    term = value;
-                }
-
-                return term.replace(/0+$/, '');
-            }
-
-            setTimeout(() => {
-                const phpValue = @json($value);
-
-                const search = __parseText(phpValue);
-
-                const values = document.querySelectorAll('form div p span');
-
-                const regex = new RegExp(`^${search}0*$`)
-
-                for (const value of values) {
-                    if (value.innerText == search) {
-                        value.style.backgroundColor = 'yellow';
-                        continue;
-                    }
-
-                    let text = __parseText(value.innerText, true);
-
-                    if (text && (text === search || regex.test())) {
-                        value.style.backgroundColor = 'yellow';
-                        continue;
-                    }
-                }
-            }, [100])
+            window.reportTextHighlighter.highlight(@json($value), 'form div p span')
         </script>
         @foreach ($data as $table)
             {!! $table !!}
