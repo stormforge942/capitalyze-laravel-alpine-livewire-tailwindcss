@@ -199,7 +199,7 @@ class AppServiceProvider extends ServiceProvider
         // Customize verify email notification
         VerifyEmail::toMailUsing(function ($user, $url) {
             return (new MailMessage)
-                ->subject('Welcome')
+                ->subject('Important: Please verify your email address')
                 ->view('mails.verify-email', [
                     'user' => $user,
                     'url' => $url,

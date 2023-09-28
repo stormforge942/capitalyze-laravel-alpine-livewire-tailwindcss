@@ -13,12 +13,8 @@ return new class extends Migration
      */
     public function up()
     {
-        Schema::create('joined_users', function (Blueprint $table) {
-            $table->id();
-            $table->string('name');
-            $table->string('email')->unique();
-            $table->string('likedin_link')->nullable();
-            $table->timestamps();
+        Schema::table('users', function (Blueprint $table) {
+            $table->string("linkedin_link")->nullable()->after("email");
         });
     }
 
@@ -29,6 +25,8 @@ return new class extends Migration
      */
     public function down()
     {
-        Schema::drop('joined_users');
+        Schema::table('users', function (Blueprint $table) {
+            $table->dropColumn("linkedin_link");
+        });
     }
 };
