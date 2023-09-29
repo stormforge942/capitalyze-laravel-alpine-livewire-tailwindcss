@@ -25,7 +25,7 @@ class AdminUsers extends Component
         $this->groups = Groups::get();
         $users = User::orderBy($this->sortBy, $this->sortDirection)->paginate(10);
         return view('livewire.admin-users', compact('users'));
-    }    
+    }
 
     public function updateUserGroup($userId, $value)
     {
@@ -61,6 +61,13 @@ class AdminUsers extends Component
         $user->save();
     }
 
+    public function updateIsAdmin(User $user, bool $isAdmin)
+    {
+        $user->update([
+            'is_admin' => $isAdmin,
+        ]);
+    }
+
     public function deleteUser($userId)
     {
         $this->userToDelete = User::find($userId);
@@ -71,12 +78,11 @@ class AdminUsers extends Component
             'confirmButtonText' => __('Delete User'),
             'cancelButtonText' => __('Cancel'),
         ]);
-    }    
+    }
 
     public function performUserDeletion()
     {
         $this->userToDelete->delete();
         $this->confirmingUserDeletion = false;
     }
-
 }
