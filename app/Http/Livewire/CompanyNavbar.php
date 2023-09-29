@@ -34,23 +34,17 @@ class CompanyNavbar extends Component
 
     public function mount(Request $request)
     {
-        $this->navbarItems = NavbarGroupShows::query()
-            ->with(['navbar'])
-            ->where('group_id', Auth::user()->group_id)
-            ->where('show', true)
-            ->get()
-            ->reduce(function ($carry, $item) {
+        $this->navbarItems = $request->user()->navbars()
+            ->filter(function ($item) {
                 if (
-                    !$item->navbar ||
-                    !$item->navbar->is_moddable ||
-                    Str::startsWith($item->navbar->route_name, ['company.', 'lse.', 'tsx.', 'fund.', 'otc.', 'mutual-fund.', 'shanghai.', 'japan.', 'hkex.', 'euronext.', 'economics-release', 'create.'])
+                    !$item->is_moddable ||
+                    Str::startsWith($item->route_name, ['company.', 'lse.', 'tsx.', 'fund.', 'otc.', 'mutual-fund.', 'shanghai.', 'japan.', 'hkex.', 'euronext.', 'economics-release', 'create.'])
                 ) {
-                    return $carry;
+                    return false;
                 }
 
-                $carry[$item->navbar->id] = $item->navbar;
-                return $carry;
-            }, collect([]));
+                return true;
+            });
 
         if (!$this->currentRoute) {
             $this->currentRoute = $request->route()->getName();

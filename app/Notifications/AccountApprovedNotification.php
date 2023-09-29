@@ -2,12 +2,15 @@
 
 namespace App\Notifications;
 
+use Illuminate\Support\Str;
 use Illuminate\Bus\Queueable;
+use Illuminate\Support\Facades\DB;
+use Illuminate\Notifications\Notification;
 use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Notifications\Messages\MailMessage;
-use Illuminate\Notifications\Notification;
+use Illuminate\Support\Facades\Password;
 
-class NewUser extends Notification implements ShouldQueue
+class AccountApprovedNotification extends Notification implements ShouldQueue
 {
     use Queueable;
 
@@ -41,9 +44,20 @@ class NewUser extends Notification implements ShouldQueue
     public function toMail($notifiable)
     {
         return (new MailMessage)
-                    ->line('A new user registered on XBRL-Explorer.')
-                    ->action('Review New User', url('/admin/users'))
-                    ->line('Have a great day!');
+                    ->subject("{$notifiable->firstName} - your Capitalyze invite is here")
+                    ->view('mails.account-approved', [
+                        'user' => $notifiable,
+                        'url' => $this->buildPasswordResetLink($notifiable)
+                    ]);
+    }
+
+    private function buildPasswordResetLink($user) {
+        $token = Password::broker()->createToken($user);
+
+        return url(config('app.url').route('password.reset', [
+            'token' => $token, 
+            'email' => $user->email
+        ], false));
     }
 
     /**

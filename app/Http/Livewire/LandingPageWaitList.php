@@ -2,9 +2,10 @@
 
 namespace App\Http\Livewire;
 
-use App\Models\JoinedUser;
-use App\Models\User;
 use Livewire\Component;
+use Illuminate\Support\Str;
+use App\Actions\Fortify\CreateNewUser;
+use Illuminate\Auth\Events\Registered;
 
 class LandingPageWaitList extends Component
 {
@@ -19,7 +20,6 @@ class LandingPageWaitList extends Component
             'required',
             'email',
             'unique:users,email',
-            'unique:joined_users,email',
         ],
         'name' => 'required|min:4',
         'likedinLink' => 'nullable|url',
@@ -29,14 +29,16 @@ class LandingPageWaitList extends Component
     {
         $this->validate();
 
-        JoinedUser::create([
+        $user = app(CreateNewUser::class)->createUser([
             'email' => $this->email,
             'name' => $this->name,
             'likedin_link' => $this->likedinLink,
+            'password' => Str::random(25),
         ]);
 
+        event(new Registered($user));
+        
         $this->completed = true;
-
     }
     public function render()
     {

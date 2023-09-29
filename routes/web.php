@@ -1,15 +1,16 @@
 <?php
 
-use App\Http\Livewire\LandingPageWaitList;
 use App\Http\Livewire\Lses;
+use App\Http\Livewire\Otcs;
 use App\Http\Livewire\Tsxs;
 use App\Http\Livewire\Hkexs;
 use App\Http\Livewire\Japans;
+use Laravel\Fortify\RoutePath;
 use App\Http\Livewire\Euronexts;
 use App\Http\Livewire\Shanghais;
 use App\Http\Livewire\Delistings;
-use App\Http\Livewire\PressRelease;
 use App\Http\Livewire\ReviewPage;
+use App\Http\Livewire\PressRelease;
 use Illuminate\Support\Facades\Route;
 use App\Http\Livewire\EconomicRelease;
 use App\Http\Livewire\FundFilingsPage;
@@ -25,13 +26,14 @@ use App\Http\Controllers\AdminController;
 use App\Http\Controllers\JapanController;
 use App\Http\Livewire\CompanyFilingsPage;
 use App\Http\Livewire\CompanyIdentifiers;
+use App\Http\Livewire\LandingPageWaitList;
 use App\Http\Controllers\CompanyController;
 use App\Http\Controllers\EuronextController;
 use App\Http\Controllers\ShanghaiController;
 use App\Http\Livewire\EconomicReleaseSeries;
 use App\Http\Livewire\MutualFundFilingsPage;
 use App\Http\Controllers\MutualFundController;
-use App\Http\Livewire\Otcs;
+use App\Http\Controllers\VerifyEmailController;
 use Laravel\Fortify\Http\Controllers\AuthenticatedSessionController;
 
 /*
@@ -195,6 +197,11 @@ Route::middleware(['guest'])->group(function () {
     Route::get('/login', [AuthenticatedSessionController::class, 'create'])->name('login');
     Route::post('/login', [AuthenticatedSessionController::class, 'store']);
     Route::get('/join-wait-list', LandingPageWaitList::class)->name('join-wait-list');
+
+    // override fortify route to verify user without needing to login
+    Route::get(RoutePath::for('verification.verify', '/email/verify/{id}/{hash}'), VerifyEmailController::class)
+        ->middleware(['signed', 'throttle:' . config('fortify.limiters.verification', '6,1')])
+        ->name('verification.verify');
 });
 
 // Logout route accessible to all users
