@@ -4,7 +4,6 @@ namespace App\Http\Livewire;
 
 use Livewire\Component;
 use App\Models\Company;
-use Illuminate\Support\Facades\DB;
 
 class PressRelease extends Component
 {

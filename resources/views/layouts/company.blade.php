@@ -23,7 +23,7 @@
         @endpush
     @endonce
 </head>
-<body class="font-sans">
+<body class="font-sans bg-gray-100">
     <x-jet-banner />
 
     <div class="">
