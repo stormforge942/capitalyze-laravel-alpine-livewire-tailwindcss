@@ -7,7 +7,7 @@ use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Notifications\Messages\MailMessage;
 use Illuminate\Notifications\Notification;
 
-class NewUser extends Notification implements ShouldQueue
+class WelcomeNotification extends Notification implements ShouldQueue
 {
     use Queueable;
 
@@ -41,9 +41,10 @@ class NewUser extends Notification implements ShouldQueue
     public function toMail($notifiable)
     {
         return (new MailMessage)
-                    ->line('A new user registered on XBRL-Explorer.')
-                    ->action('Review New User', url('/admin/users'))
-                    ->line('Have a great day!');
+                    ->subject('Thanks for signing up!')
+                    ->view('mails.welcome', [
+                        'user' => $notifiable,
+                    ]);
     }
 
     /**

@@ -276,7 +276,7 @@
                   @endforeach
                </ul>
                <div id="dropdownMore"
-                  class="h-52 w-44 overflow-y-scroll invisible hidden bg-white divide-y divide-gray-100 rounded-lg shadow dark:bg-gray-700">
+                  class="max-h-64 w-44 overflow-y-scroll invisible hidden bg-white divide-y divide-gray-100 rounded-lg shadow dark:bg-gray-700">
                   <div class="py-2 text-gray-700 dark:text-gray-200" aria-labelledby="dropdownTopButton">
                      <!-- More links -->
                      <div class="block px-4 py-2 text-xs text-gray-400">

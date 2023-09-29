@@ -119,7 +119,7 @@
                         <div>
                             <div class="rounded-md px-3 shadow-sm border">
                                 <label for="likenin_link" class="block text-base font-medium text-gray-600 ml-3 pt-1 pb-0">LikedIn</label>
-                                <input wire:model="likedinLink" type="text" name="likenin_link" id="likenin_link" class="block w-full border-0 pb-1 text-gray-900 pt-0 text-base focus:outline-none focus:ring-0" placeholder="linkedin.com/sah">
+                                <input wire:model="likedinLink" type="url" name="likenin_link" id="likenin_link" class="block w-full border-0 pb-1 text-gray-900 pt-0 text-base focus:outline-none focus:ring-0" placeholder="linkedin.com/sah">
                             </div>
                             @error('likedinLink')
                             <p class="text-red-600 text-sm font-normal leading-4 ml-4 mt-1">
