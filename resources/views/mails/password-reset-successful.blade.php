@@ -19,6 +19,7 @@ $title = "Password reset successful";
                 padding: 0;
                 margin: 0;
                 text-align: center;
+                font-weight: 500;
             ">
                 Login to continue using Capitalyze
             </p>

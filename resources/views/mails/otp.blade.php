@@ -35,6 +35,7 @@ $title = "OTP Verification";
                 padding: 0;
                 margin: 0;
                 text-align: center;
+                font-weight: 500;
             ">
                 Copy and paste OTP code
             </p>

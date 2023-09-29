@@ -61,7 +61,7 @@
                         </td>
                     </tr>
                     <tr>
-                        <td style="padding: 16px 0; text-align: center">
+                        <td style="padding-top: 16px 0; text-align: center">
                             <h1 style="
                                 font-family: 'Inter', Arial, sans-serif;
                                 font-size: 24px;
@@ -76,24 +76,6 @@
                             </h1>
                         </td>
                     </tr>
-
-                    @if($greet ?? false)
-                    <tr>
-                        <td>
-                            <p style="
-                                font-family: 'Inter', Arial, sans-serif;
-                                font-size: 14px;
-                                color: #121a0f;
-                                line-height: 24px;
-                                letter-spacing: 0.07px;
-                                padding: 0;
-                                margin: 0;
-                            ">
-                                {{ $greet }}
-                            </p>
-                        </td>
-                    </tr>
-                    @endif
                 </table>
             </td>
         </tr>
@@ -101,7 +83,7 @@
 
         <!-- body -->
         <tr>
-            <td style="padding: 24px 30px" class="container">
+            <td style="padding: 24px 30px 48px 30px" class="container">
                 @yield('content')
             </td>
         </tr>
@@ -109,7 +91,7 @@
         <!-- body end -->
 
         <tr class="footer">
-            <td style="padding-top: 24px">
+            <td>
                 <table cellspacing="0" cellpadding="0" width="100%" style="width: 100%">
                     <tr>
                         <td style="
@@ -197,7 +179,7 @@
                                         margin: 0;
                                     ">
                                             If you no longer want to receive email from us, you can
-                                            <a style="color: #3561E7;">
+                                            <a href="#" style="color: #3561E7; text-decoration: none;">
                                                 Unsubscribe
                                             </a>
                                         </p>

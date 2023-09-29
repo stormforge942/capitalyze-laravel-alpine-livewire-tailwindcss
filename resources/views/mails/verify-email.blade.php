@@ -1,8 +1,6 @@
 @php
 
-$title = 'Welcome to Capitalyze';
-
-$greet = "Hi {$user->firstName},";
+$title = 'Confirm your account';
 
 @endphp
 
@@ -21,6 +19,7 @@ $greet = "Hi {$user->firstName},";
                 padding: 0;
                 margin: 0;
             ">
+                Hi {{ $user->firstName }},<br><br>
                 Thank you for signing up. Click the link below to confirm your email to successfully join the waitlist.
             </p>
         </td>
@@ -36,6 +35,7 @@ $greet = "Hi {$user->firstName},";
                 padding: 0;
                 margin: 0;
                 text-align: center;
+                font-weight: 500;
             ">
                 Click to verify your email address
             </p>

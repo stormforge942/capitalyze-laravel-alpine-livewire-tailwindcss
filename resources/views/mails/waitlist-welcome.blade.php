@@ -2,8 +2,6 @@
 
 $title = 'Welcome to the Future of Financial Data';
 
-$greet = "Hi {$user->firstName},";
-
 @endphp
 
 @extends('mails.layout')
@@ -21,6 +19,7 @@ $greet = "Hi {$user->firstName},";
                 padding: 0;
                 margin: 0;
             ">
+                Hi {{ $user->firstName }},<br><br>
                 Thank you for requesting an invite to Capitalyze! You have successfully joined the waitlist.<br><br>
                 We can't wait to have you onboard soon and share what we have been working on!
             </p>
