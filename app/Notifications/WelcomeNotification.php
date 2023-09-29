@@ -7,7 +7,7 @@ use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Notifications\Messages\MailMessage;
 use Illuminate\Notifications\Notification;
 
-class WaitlistWelcomeNotification extends Notification implements ShouldQueue
+class WelcomeNotification extends Notification implements ShouldQueue
 {
     use Queueable;
 
@@ -42,7 +42,7 @@ class WaitlistWelcomeNotification extends Notification implements ShouldQueue
     {
         return (new MailMessage)
                     ->subject('Thanks for signing up!')
-                    ->view('mails.waitlist-welcome', [
+                    ->view('mails.welcome', [
                         'user' => $notifiable,
                     ]);
     }
