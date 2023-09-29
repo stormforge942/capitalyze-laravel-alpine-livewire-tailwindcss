@@ -28,15 +28,21 @@ class Navbar extends Model
     protected $fillable = [
         'name',
         'route_name',
+        'is_route',
         'is_moddable'
     ];
+
+    public function navbarGroupShows()
+    {
+        return $this->hasMany(NavbarGroupShows::class);
+    }
 
     /**
      * The connection name for the model.
      *
      * @var string
      */
-    protected $connection = 'pgsql'; 
+    protected $connection = 'pgsql';
 
     /**
      * Indicates if the model's ID is auto-incrementing.

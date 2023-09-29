@@ -1,0 +1,13 @@
+.validation-error {
+    margin-top: 0.3rem;
+    font-size: 0.875rem;
+    color: #e53e3e;
+}
+
+.display-text {
+    @apply text-base font-semibold leading-6 text-gray-900;
+}
+
+.label {
+    @apply block text-gray-700 text-sm font-bold mb-2;
+}

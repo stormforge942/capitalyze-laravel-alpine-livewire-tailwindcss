@@ -17,3 +17,7 @@ Alpine.plugin(FormsAlpinePlugin)
 Alpine.plugin(NotificationsAlpinePlugin)
 
 Alpine.start();
+
+import "./range-slider-custom";
+import './css-tables';
+import './report-text-highlighter';

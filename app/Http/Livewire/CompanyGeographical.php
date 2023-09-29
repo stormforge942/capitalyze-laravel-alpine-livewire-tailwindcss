@@ -7,6 +7,8 @@ use Illuminate\Support\Facades\DB;
 
 class CompanyGeographical extends Component
 {
+    use TableFiltersTrait;
+    
     public $company;
     public $ticker;
     public $period;
@@ -14,6 +16,11 @@ class CompanyGeographical extends Component
     public $segments;
     public $table;
     public $json;
+    public $currentRoute;
+
+    public $segmentationTab = 'product';
+
+
     public $noData = false;
     protected $request;
 
@@ -48,7 +55,7 @@ class CompanyGeographical extends Component
                 }
             }
         }
-        
+
         $this->json = base64_encode($json);
         $this->geographical = $geographical;
         $this->segments = $segments;
@@ -59,34 +66,35 @@ class CompanyGeographical extends Component
             return;
         }
         $i = 0;
-        $class = '';
-        $table = '<table class="table-auto min-w-full data"><thead><tr>';
-        $table .= '<th scope="col" class="whitespace-nowrap px-2 py-3.5 text-left text-sm font-semibold text-gray-900 bg-blue-300">Segment</th>';
-        foreach(array_keys($this->geographical) as $date) {
-            $table .= '<th scope="col" class="whitespace-nowrap px-2 py-3.5 text-left text-sm font-semibold text-gray-900 bg-blue-300">'.$date.'</th>';
-        }
-        $table .= '</thead><tbody class="divide-y bg-white">';
-        foreach($this->segments as $segment) {
-            $class = ($i % 2 == 0) ? 'class="border border-slate-50 bg-cyan-50 hover:bg-blue-200"' : 'class="border border-slate-50 bg-white border-slate-100 hover:bg-blue-200"';
-            $table .= '<tr '.$class.'><td class="whitespace-nowrap px-2 py-2 text-sm text-gray-900">'.$segment.'</td>';
-            foreach(array_keys($this->geographical) as $date) {
-                if(array_key_exists($segment, $this->geographical[$date])) {
-                    $table .= '<td class="whitespace-nowrap px-2 py-2 text-sm text-gray-900">$'.number_format($this->geographical[$date][$segment],0).'</td>';
-                } else {
-                    $table .= '<td class="whitespace-nowrap px-2 py-2 text-sm text-gray-900"></td>';
+        $table = '<div class="table">';
+            $table .= '<div class="row row-head">';
+                $table .= '<div class="cell">Segment</div>';
+                foreach(array_keys($this->geographical) as $date) {
+                    $table .= '<div class="cell">'.$date.'</div>';
                 }
-            }
-            $table .= '</tr>';
+            $table .= '</div>';
+
+        foreach($this->segments as $segment) {
+            $table .= '<div class="row">';
+                $table .= '<div class="cell text-gray-900">'.$segment.'</div>';
+                foreach(array_keys($this->geographical) as $date) {
+                    if(array_key_exists($segment, $this->geographical[$date])) {
+                        $table .= '<div class="cell">$'.number_format($this->geographical[$date][$segment],0).'</div>';
+                    } else {
+                        $table .= '<div class="cell"></div>';
+                    }
+                }
+            $table .= '</div>'; //row
             $i++;
         }
-        $table .= '</tbody></table>';
+        $table .= '</div>'; // </table>
 
         $this->table = $table;
    }
 
     public function mount($company, $ticker, $period)
     {
-
+        $this->currentRoute = request()->route()->getName();
         $this->company  = $company;
         $this->ticker = $ticker;
         $this->period = $period;

@@ -14,6 +14,10 @@ window.axios = axios;
 
 window.axios.defaults.headers.common['X-Requested-With'] = 'XMLHttpRequest';
 
+import rangeSlider from 'range-slider-input';
+import 'range-slider-input/dist/style.css';
+window.rangeSlider = rangeSlider;
+
 /**
  * Echo exposes an expressive API for subscribing to channels and listening
  * for events that are broadcast by Laravel. Echo and event broadcasting

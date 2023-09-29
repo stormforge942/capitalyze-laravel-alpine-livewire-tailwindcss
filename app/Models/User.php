@@ -2,13 +2,15 @@
 
 namespace App\Models;
 
-use Illuminate\Contracts\Auth\MustVerifyEmail;
-use Illuminate\Database\Eloquent\Factories\HasFactory;
-use Illuminate\Foundation\Auth\User as Authenticatable;
+use App\Traits\HasNavbar;
+use Laravel\Sanctum\HasApiTokens;
+use Laravel\Jetstream\HasProfilePhoto;
 use Illuminate\Notifications\Notifiable;
 use Laravel\Fortify\TwoFactorAuthenticatable;
-use Laravel\Jetstream\HasProfilePhoto;
-use Laravel\Sanctum\HasApiTokens;
+use Illuminate\Contracts\Auth\MustVerifyEmail;
+use Illuminate\Database\Eloquent\Casts\Attribute;
+use Illuminate\Database\Eloquent\Factories\HasFactory;
+use Illuminate\Foundation\Auth\User as Authenticatable;
 
 class User extends Authenticatable implements MustVerifyEmail
 {
@@ -17,6 +19,7 @@ class User extends Authenticatable implements MustVerifyEmail
     use HasProfilePhoto;
     use Notifiable;
     use TwoFactorAuthenticatable;
+    use HasNavbar;
 
     /**
      * The attributes that are mass assignable.
@@ -29,7 +32,8 @@ class User extends Authenticatable implements MustVerifyEmail
         'password',
         'is_approved',
         'is_admin',
-        'group_id'
+        'group_id',
+        'likedin_link',
     ];
 
     /**
@@ -51,6 +55,7 @@ class User extends Authenticatable implements MustVerifyEmail
      */
     protected $casts = [
         'email_verified_at' => 'datetime',
+        'is_admin' => 'boolean',
     ];
 
     /**
@@ -62,8 +67,29 @@ class User extends Authenticatable implements MustVerifyEmail
         'profile_photo_url',
     ];
 
-    public function isAdmin()
+    public function initials(): Attribute
     {
-        return $this->is_admin === true;
+        return Attribute::make(
+            get: function () {
+                $nameParts = explode(' ', $this->name);
+                $initials = '';
+
+                foreach ($nameParts as $part) {
+                    $initials .= strtoupper(substr($part, 0, 1));
+                }
+
+                return $initials;
+            }
+        );
+    }
+
+    public function firstName(): Attribute
+    {
+        return Attribute::make(get: fn () => explode(' ', $this->name)[0]);
+    }
+
+    public function isAdmin(): bool
+    {
+        return $this->is_admin;
     }
 }

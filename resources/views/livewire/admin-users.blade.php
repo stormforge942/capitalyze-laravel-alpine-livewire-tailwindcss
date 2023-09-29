@@ -7,12 +7,13 @@
                 </div>
             </div>
             <div class="mt-8 flow-root rounded-lg overflow-x-auto">
-                <table class="table-auto min-w-full border-collapse">
+                <table class="table-auto min-w-full border-collapse" x-data>
                     <thead>
                         <tr>
                             <th><a wire:click.prevent="sortBy('id')">ID</a></th>
                             <th><a wire:click.prevent="sortBy('name')">Name</a></th>
                             <th><a wire:click.prevent="sortBy('email')">Email</a></th>
+                            <th><a wire:click.prevent="sortBy('email')">Is Admin</a></th>
                             <th><a wire:click.prevent="sortBy('email')">Group</a></th>
                             <th><a wire:click.prevent="sortBy('approved')">Approved</a></th>
                             <th><a wire:click.prevent="sortBy('created_at')">Registration Date</a></th>
@@ -25,6 +26,9 @@
                             <td class="text-center">{{ $user->id }}</td>
                             <td class="text-center">{{ $user->name }}</td>
                             <td class="text-center">{{ $user->email }}</td>
+                            <td class="">
+                                <input type="checkbox" class="disabled:opacity-50" @change="$wire.updateIsAdmin({{ $user->id }}, $el.checked)" @if($user->is_admin) checked @endif  @if($user->id === auth()->id()) disabled @endif>
+                            </td>
                             <td class="text-center">
                                 <select wire:change="updateUserGroup('{{ $user->id }}', $event.target.value)">
                                     @foreach($groups as $group)
@@ -94,21 +98,15 @@
 </div>
 @push('scripts')
 <script>
-    window.addEventListener('swal:confirming-user-deletion', event => {
-        Swal.fire({
-            title: event.detail.title,
-            text: event.detail.text,
-            icon: event.detail.type,
-            showCancelButton: true,
-            confirmButtonColor: '#dc3545',
-            confirmButtonText: event.detail.confirmButtonText,
-            cancelButtonText: event.detail.cancelButtonText,
-        }).then((result) => {
-            if (result.isConfirmed) {
-                Livewire.emit('performUserDeletion');
-            }
-        });
-    });
+    window.livewire.on('file-dropped', (event) => {
+        let files = event.dataTransfer.files;
+        let fileObject = files[0];
+        let reader = new FileReader();
+        reader.onloadend = () => {
+            window.livewire.emit('file-upload', reader.result)
+        }
+        reader.readAsDataURL(fileObject);
+    })
 </script>
 @endpush
 

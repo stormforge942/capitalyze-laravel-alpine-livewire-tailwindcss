@@ -7,15 +7,19 @@ use Illuminate\Support\Facades\DB;
 
 class CompanyMetrics extends Component
 {
+    use TableFiltersTrait;
+    
     public $company;
     public $ticker;
+    public $currentRoute;
     public $period;
     public $metrics;
     public $segments;
+
     public $navbar;
     public $subnavbar;
     public $activeIndex = 'face';
-    public $activeSubIndex = 'Incomestatement';
+    public $activeSubIndex = 'Balancesheet';
     public $table;
     public $faces;
     protected $request;
@@ -52,7 +56,7 @@ class CompanyMetrics extends Component
             }
         }
     }
-    
+
     $this->metrics = $metrics;
     $this->segments = $segments;
 }
@@ -82,49 +86,48 @@ class CompanyMetrics extends Component
     }
 
     $this->activeIndex = array_keys($navbar)[0];  // or any other logic to determine the active index
-    $this->activeSubIndex = 'face-Income Statement';  // or any other logic to determine the active sub index
+    $this->activeSubIndex = 'face-Balance Sheet';  // or any other logic to determine the active sub index
     $this->navbar = $navbar;
     $this->emit('navbarUpdated', $this->navbar, $this->activeIndex, $this->activeSubIndex);
     }
 
    public function renderTable() {
-        $i = 0;
-        $class = '';
-        $table = '<table class="table-auto min-w-full data border-collapse"><thead><tr>';
-        $table .= '<th scope="col" class="whitespace-nowrap px-2 py-3.5 text-left text-sm font-semibold text-gray-900 bg-blue-300">Date</th>';
-        foreach(array_keys($this->metrics) as $date) {
-            $table .= '<th scope="col" class="whitespace-nowrap px-2 py-3.5 text-left text-sm font-semibold text-slate-950 bg-blue-300">'.$date.'</th>';
-        }
-        $table .= '</thead><tbody class="divide-y bg-white">';
-        foreach($this->segments as $segment) {
-            $class = ($i % 2 == 0) ? 'class="border border-slate-50 bg-cyan-50 hover:bg-blue-200 dark:bg-slate-700 dark:odd:bg-slate-800 dark:odd:hover:bg-slate-900 dark:hover:bg-slate-700"' : 'class="border border-slate-50 bg-white border-slate-100 dark:border-slate-400 hover:bg-blue-200 dark:bg-slate-700 dark:odd:bg-slate-800 dark:odd:hover:bg-slate-900 dark:hover:bg-slate-700"';
-            $table .= '<tr '.$class.'><td class="break-words max-w-[150px] lg:max-w-[400px] px-2 py-2 text-sm text-gray-900 font-bold">'.preg_replace('/(?<=\w)(?=[A-Z])/', ' ', $segment).'</td>';
-            foreach(array_keys($this->metrics) as $date) {
-                if(array_key_exists($segment, $this->metrics[$date])) {
-                    if($this->metrics[$date][$segment][1] == 'USD')
-                        $value = number_format(floatval($this->metrics[$date][$segment][0]),0).' $';                
-                    else
-                        $value = $this->metrics[$date][$segment][0];
-                    $data = array("hash" => $this->metrics[$date][$segment][2], "ticker" => $this->ticker, "period" => $date);
-                    $data_json = json_encode($data);
-                    $table .= '<td class="whitespace-nowrap px-2 py-2 text-sm text-gray-900 hover:cursor-pointer hover:underline underline-offset-1 open-slide" data-value="'.htmlspecialchars($data_json).'">'.$value.'</td>';
-                } else {
-                    $table .= '<td class="whitespace-nowrap px-2 py-2 text-sm text-gray-900"></td>';
-                }
+            $table = '';
+            //collect rows
+            $table .= '<div class="row row-spoiler">';//spoiler control row outside of group
+                $table .= '<div class="cell" >Spoiler test</div>';
+                $table .= str_repeat('<div class="cell" >-</div>', count($this->metrics) );
+            $table .= '</div>';
+            $table .= '<div class="row-group row-group-spoiler">'; //row group spoiler
+            foreach($this->segments as $segment) {
+                $table .= '<div class="row">';
+                    $table .= '<div class="cell break-words font-bold">&nbsp; '.preg_replace('/(?<=\w)(?=[A-Z])/', ' ', $segment).'</div>';
+                    foreach(array_keys($this->metrics) as $date) {
+                        if(array_key_exists($segment, $this->metrics[$date])) {
+                            if($this->metrics[$date][$segment][1] == 'USD')
+                                //$value = number_format(floatval($this->metrics[$date][$segment][0]),0).' $';
+                                $value = $this->formatWithUnitType($this->metrics[$date][$segment][0]);
+                            else
+                                $value = $this->metrics[$date][$segment][0];
+                            $data = array("hash" => $this->metrics[$date][$segment][2], "ticker" => $this->ticker, "period" => $date);
+                            $data_json = json_encode($data);
+                             $table .= '<div class="cell whitespace-nowrap hover:cursor-pointer hover:underline underline-offset-1 open-slide" data-value="'.htmlspecialchars($data_json).'">'.$value.'</div>';
+                        } else {
+                            $table .= '<div class="cell whitespace-nowrap cell"></div>';
+                        }
+                    }
+                $table .= '</div>'; // .row
             }
-            $table .= '</tr>';
-            $i++;
-        }
-        $table .= '</tbody></table>';
+            $table .= '</div>'; // test row group
 
         $this->table = $table;
    }
 
     public function mount($company, $ticker, $period)
     {
-
         $this->company  = $company;
         $this->ticker = $ticker;
+        $this->currentRoute = request()->route()->getName();
         $this->period = $period;
         $this->getNavbar();
         $this->getMetrics();
@@ -135,7 +138,7 @@ class CompanyMetrics extends Component
     {
         $this->activeIndex = $parent;
         $this->activeSubIndex = $face;
-        
+
         $this->getMetrics();
         $this->renderTable();
     }
@@ -146,7 +149,7 @@ class CompanyMetrics extends Component
         $this->getNavbar();
         $this->renderTable();
     }
-    
+
 
     public function tabClicked($key) {
         $this->activeIndex = $key;

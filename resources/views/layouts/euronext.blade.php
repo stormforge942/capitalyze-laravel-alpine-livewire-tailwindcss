@@ -29,7 +29,7 @@
         <!-- Page Content -->
         <main>
             @if($tab == 'metrics')
-            <livewire:euronext-metrics :euronext="$euronext" :period="$period" />
+            <livewire:euronext-metrics :model="$euronext" :period="$period" />
             @endif
             @if($tab == 'filings')
             <livewire:euronext-filings :euronext="$euronext" />
@@ -37,6 +37,7 @@
         </main>
     </div>
 
+    @include('partials.info-modal')
     @stack('modals')
     @livewire('spotlight-pro')
     @livewire('slide-over-pro')

@@ -8,7 +8,8 @@
     <title>{{ config('app.name', 'Laravel') }}</title>
 
     <!-- Fonts -->
-    <link rel="stylesheet" href="https://fonts.bunny.net/css2?family=Nunito:wght@400;600;700&display=swap">
+    <link href="https://fonts.googleapis.com/css?family=Inter:400,500,600,700" rel="stylesheet" />
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/flowbite/1.8.1/flowbite.min.css" rel="stylesheet" />
 
     <!-- Scripts -->
     @vite(['resources/css/app.css', 'resources/js/app.js'])
@@ -17,18 +18,19 @@
         @push('scripts')
         <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
         <script src="https://cdn.jsdelivr.net/npm/luxon"></script>
+            <script src="https://cdnjs.cloudflare.com/ajax/libs/chartjs-adapter-luxon/0.2.1/chartjs-adapter-luxon.min.js"></script>
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/flowbite/1.8.1/flowbite.min.js"></script>
         @endpush
     @endonce
 </head>
-<body>
+<body class="font-sans">
     <x-jet-banner />
 
     <div class="">
-        @livewire('navigation-menu')
         <livewire:company-navbar :company="$company" :period="$period" />
         <!-- Page Content -->
         <main>
-            <div class="p-4 sm:ml-64 pl-0">
+            <div class="p-4 sm:ml-64 pl-0 transition-all" id="main-container">
                 <div class="">
                     @if($tab == 'geographical')
                     <livewire:company-geographical :company="$company" :ticker="$ticker" :period="$period" />
@@ -61,7 +63,7 @@
                     @elseif($tab == 'failToDeliver')
                     <livewire:company-fail-to-deliver :company="$company" :ticker="$ticker" :period="$period" />
                     @endif
-                </div> 
+                </div>
             </div>
         </main>
     </div>

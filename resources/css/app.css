@@ -1,125 +1,24 @@
 @import "../../vendor/wire-elements/pro/resources/css/tailwind/overlay-component.css";
 @import "../../vendor/wire-elements/pro/resources/css/tailwind/spotlight-component.css";
-@import '../../node_modules/flowbite-datepicker/tailwind.css';
-@import '../../node_modules/sweetalert2/dist/sweetalert2.css';
+@import "../../node_modules/flowbite-datepicker/tailwind.css";
+@import "../../node_modules/sweetalert2/dist/sweetalert2.css";
+@import "./components/index.css";
+@import "css-tables.css";
+@import "company-profile.css";
+@import "company-report.css";
+@import "flowbite-select-custom.css";
+@import "common-styles.css";
+@import "navigation_subtabs.css";
+
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
 
-
-select {
-    -webkit-appearance: none;
-       -moz-appearance: none;
-            appearance: none;
-    background-color: #fff;
-    border: none;
-    padding-top: 0.5rem;
-    padding-right: 0.75rem;
-    padding-bottom: 0.5rem;
-    padding-left: 0.75rem;
-    font-size: 1rem;
-    line-height: 1.5rem;
+.wait-list {
+    font-family: IBM Plex Sans, Arial;
+    color: #121a0f;
 }
 
-select#exchange-select {
-    padding-right: 2rem;
-    border-bottom: solid;
-    border-color: var(--color-blue-200);
-}
-
-/* Hide scrollbar for Chrome, Safari and Opera */
-.scrollbar-hide::-webkit-scrollbar {
-    display: none;
-}
-
-/* Hide scrollbar for Firefox */
-.scrollbar-hide {
-    scrollbar-width: none;
-    -ms-overflow-style: none;
-}
-
-table.data {
-    position: relative;
-    table-layout: auto;
-    width: 100%;
-}
-
-table.data tr > th:first-child,
-table.data tr > td:first-child {
-    position: sticky;
-    left: 0;
-}
-
-table.data tr:nth-child(odd) > td:first-child {
-    background-color: var(--color-cyan-50);
-}
-
-table.data tr:nth-child(even) > td:first-child {
-    background-color:var(--color-white);
-}
-
-table.data tr:nth-child(odd):hover > td:first-child,
-table.data tr:nth-child(even):hover > td:first-child,
-table.data-report tr:nth-child(odd):hover > td:first-child,
-table.data-report tr:nth-child(even):hover > td:first-child {
-    background-color: var(--color-blue-200);
-}
-
-@media screen and (max-width: 767px) {
-    table.data tr > th:first-child,
-    table.data tr > td:first-child {
-        position: sticky;
-        left: 0;
-        max-width: 100px;
-        min-width: 100px;
-        word-break: break-word;
-        white-space: break-spaces;
-    }
-}
-
-.wep-modal-content,
-.wep-slide-over-container-inner-wrap {
-    @apply motion-reduce:transition-none;
-}
-
-.wep-modal-backdrop,
-.wep-slide-over-backdrop {
-   @apply backdrop-blur-none;
-}
-
-.wep-slide-over-container-inner {
-    @apply pl-0;
-    @apply md:pl-10;
-}
-
-.input-field {
-    height: 2.5rem;
-    padding: 10px;
-    border: 1px solid #ccc;
-    border-radius: 4px;
-    font-size: 16px;
-    width: 100%;
-}
-
-.result-box {
-    padding: 10px;
-    width: 100%;
-    background-color: white;
-    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
-    cursor: pointer;
-    z-index: 9999;
-}
-.result-box li:hover {
-    background-color: #f7f7f7;
-}
-
-.result-container {
-    max-height: 200px; /* Adjust the height as per your requirements */
-    overflow-y: auto;
-}
-
-.input-field:focus {
-    outline: none;
-    border: 1px solid #ccc;
-    box-shadow: none;
+.wait-list-button-text {
+    color: #52d3a2;
 }
