@@ -30,7 +30,8 @@ class MutualFunds extends Model
         'registrant_name',
         'fund_symbol',
         'series_id',
-        'class_id'
+        'class_id',
+        'class_name',
     ];
 
     /**
