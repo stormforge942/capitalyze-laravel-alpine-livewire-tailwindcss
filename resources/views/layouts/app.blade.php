@@ -29,14 +29,10 @@
         <x-jet-banner />
 
         <div class="min-h-screen bg-gray-100">
-            @auth
-                @if(auth()->user()->is_approved && auth()->user()->hasVerifiedEmail())
-                    @livewire('navigation-menu')
-                @else
-                    @livewire('navigation-menu-guest')
-                @endif
-            @endauth
-
+            @if(!auth()->user()?->is_approved || !auth()->user()?->hasVerifiedEmail())
+                @livewire('navigation-menu-guest')
+            @endif
+            
             <!-- Page Heading -->
             @if (isset($header))
                 <header class="bg-white shadow">
