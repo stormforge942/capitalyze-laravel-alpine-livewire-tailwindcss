@@ -44,16 +44,19 @@ class CreateMutualFunds extends Command
             if (isset($value->cik) && !empty($value->cik)) {
                 Log::debug("CIK is set and not empty: {$value->cik}");
                 try {
-                    $mutualFund = MutualFunds::updateOrCreate(
-                        [
-                            'cik' => $value->cik,
-                            'registrant_name' => $value->registrant_name,
-                            'fund_symbol' => $value->fund_symbol,
-                            'series_id' => $value->series_id,
-                            'class_id' => $value->class_id,
-                            'class_name' => $value->class_name,
-                        ]
-                    );
+                    $mutualFund = MutualFunds::updateOrCreate([
+                        'cik' => $value->cik,
+                        'registrant_name' => $value->registrant_name,
+                        'fund_symbol' => $value->fund_symbol,
+                        'series_id' => $value->series_id,
+                        'class_id' => $value->class_id,
+                    ]);
+
+                    if (!$value->class_name) {
+                        $mutualFund->class_name = $value->class_name;
+                    }
+
+                    $mutualFund->save();
                 } catch (\Exception $e) {
                     Log::error("Error creating or finding company: {$e->getMessage()}");
                 }
