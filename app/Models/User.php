@@ -2,6 +2,7 @@
 
 namespace App\Models;
 
+use App\Traits\HasNavbar;
 use Laravel\Sanctum\HasApiTokens;
 use Laravel\Jetstream\HasProfilePhoto;
 use Illuminate\Notifications\Notifiable;
@@ -18,6 +19,7 @@ class User extends Authenticatable implements MustVerifyEmail
     use HasProfilePhoto;
     use Notifiable;
     use TwoFactorAuthenticatable;
+    use HasNavbar;
 
     /**
      * The attributes that are mass assignable.
@@ -53,6 +55,7 @@ class User extends Authenticatable implements MustVerifyEmail
      */
     protected $casts = [
         'email_verified_at' => 'datetime',
+        'is_admin' => 'boolean',
     ];
 
     /**
@@ -85,23 +88,8 @@ class User extends Authenticatable implements MustVerifyEmail
         return Attribute::make(get: fn () => explode(' ', $this->name)[0]);
     }
 
-    public function isAdmin()
+    public function isAdmin(): bool
     {
-        return $this->is_admin === true;
-    }
-
-    public function hasNavbar($routeName): bool
-    {
-        return
-            $this->isAdmin() ||
-            Navbar::where('route_name', $routeName)
-            ->where('is_moddable', true)
-            ->whereHas(
-                'navbarGroupShows',
-                fn ($query) => $query
-                    ->where('navbar_group_shows.group_id', $this->group_id)
-                    ->where('navbar_group_shows.show', true)
-            )
-            ->exists();
+        return $this->is_admin;
     }
 }
