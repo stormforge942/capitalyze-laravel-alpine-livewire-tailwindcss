@@ -148,11 +148,14 @@
     font-weight: 600;
 }
 
+.graph-wrapper-box {
+    margin-top: 2em;
+}
+
 .graph-wrapper {
     background: white;
     font-size: 0.5em;
     border-radius: 0.666em;
-    margin-top: 2em;
     padding: 3em;
     width: 100%;
 }
