@@ -51,10 +51,11 @@ class AccountApprovedNotification extends Notification implements ShouldQueue
                     ]);
     }
 
-    private function buildPasswordResetLink($user) {
+    private function buildPasswordResetLink($user) 
+    {
         $token = Password::broker()->createToken($user);
 
-        return url(config('app.url').route('password.reset', [
+        return url(route('password.reset', [
             'token' => $token, 
             'email' => $user->email
         ], false));
