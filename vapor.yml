@@ -15,6 +15,7 @@ environments:
             - 'npm ci && npm run build && rm -rf node_modules'
         deploy:
             - 'php artisan migrate --force'
+    
     staging:
         memory: 1024
         cli-memory: 512
