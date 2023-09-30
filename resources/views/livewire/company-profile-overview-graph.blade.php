@@ -124,7 +124,6 @@
                 plugins: [{
                     afterDraw: chart => {
                         if (chart.tooltip?._active?.length) {
-                            // console.log(chart)
                             let x = chart.tooltip._active[0].element.x;
                             let y = chart.tooltip._active[0].element.y;
                             let bottomBarY = chart.tooltip._active[1].element.y;
@@ -184,13 +183,22 @@
                         },
                         tooltip: {
                             // position : 'bottom',
-                            backgroundColor: 'white',
+                            backgroundColor: '#fff',
+                            titleColor: '#3561E7',
+                            titleFont: {
+                                size: 15
+                            },
                             bodyColor: "#3561E7",
                             bodyFont: {
                                 size: 15
                             },
                             displayColors: false,
+                            borderColor: '#F3F3F3',
+                            borderWidth: 1,
                             callbacks: {
+                                title: function (context) {
+                                    return `Date: ${context[0].label}`;
+                                },
                                 label: function (context) {
                                     if (context.dataset.label == "Price") {
                                         return `Price: ${context.raw}`;
