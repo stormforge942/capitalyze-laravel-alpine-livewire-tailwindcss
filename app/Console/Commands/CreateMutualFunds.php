@@ -30,7 +30,7 @@ class CreateMutualFunds extends Command
      */
     public function handle()
     {
-        $query = DB::connection('pgsql-xbrl')
+        $collection = DB::connection('pgsql-xbrl')
             ->table('public.mutual_fund_holdings')
             ->whereNotNull('cik') // make sure 'cik' is not null
             ->whereNotNull('class_name')
@@ -38,30 +38,23 @@ class CreateMutualFunds extends Command
             ->distinct()
             ->get();
 
-        $collection = $query->collect();
-
         foreach ($collection as $value) {
             if (isset($value->cik) && !empty($value->cik)) {
-                Log::debug("CIK is set and not empty: {$value->cik}");
                 try {
-                    $mutualFund = MutualFunds::updateOrCreate([
+                    MutualFunds::create([
                         'cik' => $value->cik,
                         'registrant_name' => $value->registrant_name,
                         'fund_symbol' => $value->fund_symbol,
                         'series_id' => $value->series_id,
                         'class_id' => $value->class_id,
+                        'class_name' => $value->class_name
                     ]);
-
-                    if (!$value->class_name) {
-                        $mutualFund->class_name = $value->class_name;
-                    }
-
-                    $mutualFund->save();
                 } catch (\Exception $e) {
                     Log::error("Error creating or finding company: {$e->getMessage()}");
                 }
             }
         }
+
         $this->info('Mutual Funds import completed');
     }
 }
