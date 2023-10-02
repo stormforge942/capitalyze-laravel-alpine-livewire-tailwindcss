@@ -50,7 +50,10 @@ use Laravel\Fortify\Http\Controllers\AuthenticatedSessionController;
 Route::get('/permission-denied', PermissionDenied::class)->name('permission-denied');
 
 Route::get('/', function () {
-    if (auth()->check() && (auth()->user()->is_approved == false || !auth()->user()->hasVerifiedEmail())) {
+    if (
+        auth()->check() &&
+        (auth()->user()->is_approved == false || !auth()->user()->hasVerifiedEmail())
+    ) {
         return redirect()->route('waiting-for-approval');
     }
 

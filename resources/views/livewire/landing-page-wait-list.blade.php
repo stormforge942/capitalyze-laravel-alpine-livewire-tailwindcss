@@ -21,12 +21,12 @@
         </div>
     </div>
     <div class="w-full absolute flex justify-end items-end px-6 sm:px-16 top-10">
-        <button style="background: #52D3A2;" class="w-[160px] h-[40px] rounded font-bold hidden sm:block">
+        <a href="{{ route('login') }}" style="background: #52D3A2;" class="w-[160px] h-[40px] rounded font-bold hidden sm:flex items-center justify-center">
             Sign in
-        </button>
-        <div style="color: #121A0F;" class="text-sm sm:text-base font-bold {{$completed ? 'hidden' : 'block'}} sm:hidden whitespace-nowrap mt-1 sm:mt-3">
+        </a>
+        <a href="{{ route('login') }}" style="color: #121A0F;" class="text-sm sm:text-base font-bold {{$completed ? 'hidden' : 'block'}} sm:hidden whitespace-nowrap mt-1 sm:mt-3">
             Have an account? Sign In
-        </div>
+        </a>
     </div>
     <div class="grid grid-cols-1 lg:grid-cols-2 mx-8 sm:mx-16 z-50 mt-16">
         <div>
