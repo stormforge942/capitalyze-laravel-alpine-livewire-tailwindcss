@@ -15,6 +15,7 @@
                                 <th scope="col" class="px-6 py-4">Symbol</th>
                                 <th scope="col" class="px-6 py-4">Series</th>
                                 <th scope="col" class="px-6 py-4">Class</th>
+                                <th scope="col" class="px-6 py-4">Class Name</th>
                             </tr>
                         </thead>
                         <tbody>
@@ -26,6 +27,7 @@
                                 <td class="whitespace-nowrap px-6 py-4">{{ $item['fund_symbol'] }}</td>
                                 <td class="whitespace-nowrap px-6 py-4">{{ $item['series_id'] }}</td>
                                 <td class="whitespace-nowrap px-6 py-4">{{ $item['class_id'] }}</td>
+                                <td class="whitespace-nowrap px-6 py-4">{{ $item['class_name'] }}</td>
                             </tr>
                             @endforeach
                         </tbody>

@@ -99,7 +99,7 @@ class AppServiceProvider extends ServiceProvider
                     $collection->push(
                         SpotlightResult::make()
                             ->setGroup('mutual-funds')
-                            ->setTitle("$mutualFund->cik | $mutualFund->registrant_name | $mutualFund->fund_symbol | $mutualFund->series_id | $mutualFund->class_id")
+                            ->setTitle("$mutualFund->cik | $mutualFund->registrant_name | $mutualFund->fund_symbol | $mutualFund->series_id | $mutualFund->class_id | $mutualFund->class_name")
                             ->setAction('jump_to', ['path' => '/mutual-fund/' . $mutualFund->cik . '/' . $mutualFund->fund_symbol . '/' . $mutualFund->series_id . '/' . $mutualFund->class_id])
                     );
                 }
