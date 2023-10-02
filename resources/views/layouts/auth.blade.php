@@ -24,7 +24,7 @@
         <div class="mt-[3.65rem] md:mt-[15vh] mb-5">
             <div class="p-6 pb-11 max-w-[31rem] mx-auto bg-white rounded-lg shadow-xl">
                 @if($component === 'login')
-                <livewire:login></livewire:login>
+                <livewire:auth.login></livewire:auth.login>
                 @else
                 @endif
             </div>
