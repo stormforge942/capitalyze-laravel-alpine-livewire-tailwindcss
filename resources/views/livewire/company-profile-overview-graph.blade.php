@@ -96,8 +96,6 @@
             if (!canvas) return;
             let ctx = document.getElementById('product-profile-chart').getContext("2d");
             let gradientBg = ctx.createLinearGradient(0, 0, 0, canvas.height * 3)
-            // gradientBg.addColorStop(0.8, 'rgba(19,176,91,0.07)')
-            // gradientBg.addColorStop(1, 'rgba(19,176,91,0.22)')
             gradientBg.addColorStop(0.8, 'rgba(19,176,91,0.18)')
             gradientBg.addColorStop(1, 'rgba(19,176,91,0.02)')
             chart = new Chart(ctx, {
