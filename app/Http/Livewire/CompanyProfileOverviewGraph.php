@@ -71,10 +71,39 @@ class CompanyProfileOverviewGraph extends Component
             $divider *= 10;
         }
 
+        while (strlen((string)$volume_avg) >= strlen((string)$adj_close_avg))
+        {
+            $volume_avg /= 5;
+            $volume_avg = round($volume_avg);
+            $divider *= 5;
+        }
+
+        while (round($volume_avg) * 10 >= round($adj_close_avg))
+        {
+            $volume_avg /= 2;
+            $volume_avg = round($volume_avg);
+            $divider *= 2;
+        }
+
+        while (round($volume_avg) * 10 <= round($adj_close_avg))
+        {
+            $volume_avg *= 2;
+            $volume_avg = round($volume_avg);
+            $divider /= 2;
+        }
+
+
         $result->each(function ($item) use ($divider) {
-            $this->chartData['label'][] = Carbon::parse($item->date)->format('m/d/Y');
-            $this->chartData['dataset1'][] = $item->adj_close;
-            $this->chartData['dataset2'][] = $item->volume / $divider;
+            $this->chartData['dataset1'][] = [
+                'x' => Carbon::parse($item->date)->format('Y-m-d'),
+                'y' => $item->adj_close,
+            ];
+
+            $this->chartData['dataset2'][] = [
+                'x' => Carbon::parse($item->date)->format('Y-m-d'),
+                'y' => $item->volume / $divider,
+            ];
+            [$this->chartData['quantity'], $this->chartData['unit']] = $this->calculateDateDifference($this->getPeriod());
             $this->chartData['divider'] = $divider;
         });
 
@@ -106,6 +135,19 @@ class CompanyProfileOverviewGraph extends Component
         }
 
         return [$fromDate, $toDate];
+    }
+
+    public function calculateDateDifference($period) {
+        $fromDateTime = Carbon::parse($period[0]);
+        $toDateTime = Carbon::parse($period[1]);
+
+        $interval = $fromDateTime->diffInMonths($toDateTime);
+
+        if ($interval < 13) {
+            return [$interval + 1, 'month'];
+        } else {
+            return [$fromDateTime->diffInYears($toDateTime) + 1, 'year'];
+        }
     }
 
     public function render()

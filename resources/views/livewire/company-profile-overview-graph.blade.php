@@ -53,7 +53,7 @@
                     </div>
                     <div class="calendar-icon-wrapper icon-wrapper px-4 flex items-center">
                         <svg viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
-                            <path fill-rule="evenodd" clip-rule="evenodd" d="M19 3.81818H20C21.1 3.81818 22 4.63636 22 5.63636V20.1818C22 21.1818 21.1 22 20 22H4C2.9 22 2 21.1818 2 20.1818V5.63636C2 4.63636 2.9 3.81818 4 3.81818H5V2.90909C5 2.40909 5.45 2 6 2C6.55 2 7 2.40909 7 2.90909V3.81818H17V2.90909C17 2.40909 17.45 2 18 2C18.55 2 19 2.40909 19 2.90909V3.81818ZM5 20.1818H19C19.55 20.1818 20 19.7727 20 19.2727V8.36364H4V19.2727C4 19.7727 4.45 20.1818 5 20.1818Z" fill="#3561E7"/>
+                            <path fill-rule="evenodd" clip-rule="evenodd" d="M19 3.81818H20C21.1 3.81818 22 4.63636 22 5.63636V20.1818C22 21.1818 21.1 22 20 22H4C2.9 22 2 21.1818 2 20.1818V5.63636C2 4.63636 2.9 3.81818 4 3.81818H5V2.90909C5 2.40909 5.45 2 6 2C6.55 2 7 2.40909 7 2.90909V3.81818H17V2.90909C17 2.40909 17.45 2 18 2C18.55 2 19 2.40909 19 2.90909V3.81818ZM5 20.1818H19C19.55 20.1818 20 19.7727 20 19.2727V8.36364H4V19.2727C4 19.7727 4.45 20.1818 5 20.1818Z" fill="#52D3A2"/>
                         </svg>
                     </div>
                 </div>
@@ -88,38 +88,18 @@
 
 
         let chart;
-        // Chart.Tooltip.positioners.custom = function(elements, eventPosition) {
-        //     let tooltip = this;
-        //     return {
-        //         x: eventPosition.x,
-        //         y: eventPosition.y
-        //     };
-        // }
-
-        // Chart.Tooltip.positioners.bottom = function(items) {
-        //     const pos = Chart.Tooltip.positioners.average(items);
-        //
-        //     // Happens when nothing is found
-        //     if (pos === false) {
-        //         return false;
-        //     }
-        //
-        //     const chart = this.chart;
-        //
-        //     return {
-        //         x: pos.x,
-        //         y: chart.chartArea.bottom,
-        //         xAlign: 'center',
-        //         yAlign: 'bottom',
-        //     };
-        // };
 
         function initChart() {
+            if (chart) chart.destroy();
             let data = @this.chartData;
             let canvas = document.getElementById("product-profile-chart");
             if (!canvas) return;
-            let ctx = canvas.getContext('2d');
-            if (chart) chart.destroy();
+            let ctx = document.getElementById('product-profile-chart').getContext("2d");
+            let gradientBg = ctx.createLinearGradient(0, 0, 0, canvas.height * 3)
+            // gradientBg.addColorStop(0.8, 'rgba(19,176,91,0.07)')
+            // gradientBg.addColorStop(1, 'rgba(19,176,91,0.22)')
+            gradientBg.addColorStop(0.8, 'rgba(19,176,91,0.18)')
+            gradientBg.addColorStop(1, 'rgba(19,176,91,0.02)')
             chart = new Chart(ctx, {
                 plugins: [{
                     afterDraw: chart => {
@@ -133,7 +113,7 @@
                             ctx.moveTo(x, y);
                             ctx.lineTo(x, bottomBarY);
                             ctx.lineWidth = 1;
-                            ctx.strokeStyle = 'rgba(0, 0, 255, 0.4)';
+                            ctx.strokeStyle = '#13B05BDE';
                             ctx.setLineDash([5, 5])
                             ctx.stroke();
                             ctx.restore();
@@ -144,27 +124,29 @@
                 aspectRatio: 3,
                 type: 'bar',
                 data: {
-                    labels: data.label,
-                    datasets: [{
-                        data: data.dataset1,
-                        label: "Price",
-                        borderColor: "#3561E7",
-                        type: 'line',
-                        pointRadius: 0,
-                        fill: false,
-                        tension: 0.01
-                    }, {
-                        data: data.dataset2,
-                        label: "Volume",
-                        borderColor: "#13B05B",
-                        borderWidth: Number.MAX_VALUE,
-                        borderRadius: Number.MAX_VALUE,
-                        fill: true,
-                    }
+                    // labels: data.labels,
+                    datasets: [
+                        {
+                            data: data.dataset2,
+                            label: "Volume",
+                            borderColor: "#9D9D9D",
+                            backgroundColor: 'rgba(255, 255, 255, 0)',
+                            borderWidth: Number.MAX_VALUE,
+                            fill: true,
+                        },
+                        {
+                            data: data.dataset1,
+                            label: "Price",
+                            borderColor: "#52D3A2",
+                            backgroundColor: gradientBg,
+                            type: 'line',
+                            pointRadius: 0,
+                            fill: true,
+                            tension: 0.5
+                        },
                     ]
                 },
                 options: {
-
                     interaction: {
                         intersect: false,
                         mode: 'index',
@@ -184,11 +166,11 @@
                         tooltip: {
                             // position : 'bottom',
                             backgroundColor: '#fff',
-                            titleColor: '#3561E7',
+                            titleColor: '#52D3A2',
                             titleFont: {
                                 size: 15
                             },
-                            bodyColor: "#3561E7",
+                            bodyColor: "#52D3A2",
                             bodyFont: {
                                 size: 15
                             },
@@ -197,13 +179,17 @@
                             borderWidth: 1,
                             callbacks: {
                                 title: function (context) {
-                                    return `Date: ${context[0].label}`;
+                                    const inputDate = new Date(context[0].label);
+                                    const month = inputDate.getMonth() + 1;
+                                    const day = inputDate.getDate();
+                                    const year = inputDate.getFullYear();
+                                    return `${month.toString().padStart(2, '0')}/${day.toString().padStart(2, '0')}/${year}`;
                                 },
                                 label: function (context) {
                                     if (context.dataset.label == "Price") {
-                                        return `Price: ${context.raw}`;
+                                        return `Price: ${context.raw.y}`;
                                     } else if (context.dataset.label == "Volume") {
-                                        return `Volume: ${context.raw * data.divider}`;
+                                        return `Volume: ${Math.round(context.raw.y * data.divider)}`;
                                     }
                                 }
                             },
@@ -211,9 +197,18 @@
                     },
                     scales: {
                         x: {
+                            offset: false,
                             grid: {
                                 display: false
-                            }
+                            },
+                            type: 'timeseries',
+                            time: {
+                                unit: data.unit,
+                            },
+                            ticks:{
+                                source:'data',
+                                maxTicksLimit: data.quantity,
+                            },
                         },
                     }
                 }
