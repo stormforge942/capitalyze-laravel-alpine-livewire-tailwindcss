@@ -33,7 +33,7 @@
                             @include('livewire.company-profile.companyprofile-overview-top-data')
 
 {{--                            @include('livewire.company-profile.company-profile-overview-graph')--}}
-                            <livewire:company-profile-overview-top-data :ticker="$ticker" />
+                            <livewire:company-profile-overview-graph :ticker="$ticker" />
 
                             @include('livewire.company-profile.company-profile-overview-table')
                         @elseif($infoTabActive == 'business_information')
