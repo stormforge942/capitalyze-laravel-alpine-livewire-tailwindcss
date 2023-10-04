@@ -40,6 +40,7 @@ class LandingPageWaitList extends Component
         
         $this->completed = true;
     }
+
     public function render()
     {
         return view('livewire.landing-page-wait-list');

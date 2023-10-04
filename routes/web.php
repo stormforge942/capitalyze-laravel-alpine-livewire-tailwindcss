@@ -36,24 +36,14 @@ use App\Http\Controllers\MutualFundController;
 use App\Http\Controllers\VerifyEmailController;
 use Laravel\Fortify\Http\Controllers\AuthenticatedSessionController;
 
-/*
-|--------------------------------------------------------------------------
-| Web Routes
-|--------------------------------------------------------------------------
-|
-| Here is where you can register web routes for your application. These
-| routes are loaded by the RouteServiceProvider within a group which
-| contains the "web" middleware group. Now create something great!
-|
-*/
-
 Route::get('/permission-denied', PermissionDenied::class)->name('permission-denied');
 
 Route::get('/', function () {
-    if (
-        auth()->check() &&
-        (auth()->user()->is_approved == false || !auth()->user()->hasVerifiedEmail())
-    ) {
+    if (!auth()->check()) {
+        return redirect()->route('waitlist.join');
+    }
+
+    if (auth()->user()->is_approved == false || !auth()->user()->hasVerifiedEmail()) {
         return redirect()->route('waiting-for-approval');
     }
 
@@ -215,7 +205,7 @@ Route::middleware(['guest'])->group(function () {
         return view('auth.reset-link-sent');
     })->name('password.reset-link.sent');
 
-    Route::get('/join-wait-list', LandingPageWaitList::class)->name('waitlist.join');
+    Route::get('/join-wait-list', fn () => view('waitlist'))->name('waitlist.join');
 
     // override fortify route to verify user without needing to login
     Route::get(RoutePath::for('verification.verify', '/email/verify/{id}/{hash}'), VerifyEmailController::class)

@@ -66,6 +66,10 @@ module.exports = {
             borderRadius: {
                 sm2: "4px",
             },
+            screens: {
+                ...defaultTheme.screens,
+                xs: "430px",
+            }
         },
     },
 
