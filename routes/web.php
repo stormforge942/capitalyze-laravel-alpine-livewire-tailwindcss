@@ -197,9 +197,9 @@ Route::middleware(['auth', 'custom.email.verification'])->group(function () {
 
 // Routes for guests
 Route::middleware(['guest'])->group(function () {
-    // Route::get('/login', [AuthenticatedSessionController::class, 'create'])->name('login');
-    // Route::post('/login', [AuthenticatedSessionController::class, 'store']);
-    Route::get('/join-wait-list', LandingPageWaitList::class)->name('join-wait-list');
+    Route::redirect('register', '/join-wait-list');
+
+    Route::get('/join-wait-list', LandingPageWaitList::class)->name('waitlist.join');
 
     // override fortify route to verify user without needing to login
     Route::get(RoutePath::for('verification.verify', '/email/verify/{id}/{hash}'), VerifyEmailController::class)

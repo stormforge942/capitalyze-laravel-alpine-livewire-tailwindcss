@@ -6,7 +6,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
     <meta name="csrf-token" content="{{ csrf_token() }}">
 
-    <title>{{ $title ?? config('app.name', 'Laravel') }}</title>
+    <title>@yield('title', 'Capitalyze')</title>
 
     <link href="https://fonts.googleapis.com/css?family=Inter:400,500,600,700" rel="stylesheet" />
 
@@ -15,6 +15,8 @@
 </head>
 
 <body class="text-dark text-base font-sans antialiased">
+    <x-jet-banner />
+
     <div class="min-h-screen bg-gray-light p-8">
         <div>
             <a href="/">
@@ -22,11 +24,8 @@
             </a>
         </div>
         <div class="mt-[3.65rem] md:mt-[15vh] mb-5">
-            <div class="p-6 pb-11 max-w-[31rem] mx-auto bg-white rounded-lg shadow-xl">
-                @if($component === 'login')
-                <livewire:auth.login></livewire:auth.login>
-                @else
-                @endif
+            <div class="p-6 max-w-[27rem] mx-auto bg-white rounded-lg shadow-xl">
+                @yield('content')
             </div>
         </div>
     </div>

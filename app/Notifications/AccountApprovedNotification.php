@@ -2,9 +2,7 @@
 
 namespace App\Notifications;
 
-use Illuminate\Support\Str;
 use Illuminate\Bus\Queueable;
-use Illuminate\Support\Facades\DB;
 use Illuminate\Notifications\Notification;
 use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Notifications\Messages\MailMessage;
@@ -57,7 +55,8 @@ class AccountApprovedNotification extends Notification implements ShouldQueue
 
         return url(route('password.reset', [
             'token' => $token, 
-            'email' => $user->email
+            'email' => $user->email,
+            'from' => 'approved-email'
         ], false));
     }
 

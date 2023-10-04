@@ -16,6 +16,47 @@ Alpine.plugin(focus);
 Alpine.plugin(FormsAlpinePlugin);
 Alpine.plugin(NotificationsAlpinePlugin);
 
+document.addEventListener("alpine:init", () => {
+    Alpine.data("passwordReset", () => ({
+        password: "",
+
+        passedRules: {
+            length: false,
+            uppercase: false,
+            lowercase: false,
+            symbol: false,
+        },
+
+        get rulesPassed() {
+            return (
+                this.passedRules.length &&
+                this.passedRules.uppercase &&
+                this.passedRules.lowercase &&
+                this.passedRules.symbol
+            );
+        },
+
+        init() {
+            this.$watch("password", (val) => {
+                this.passedRules = this.checkPassword(val);
+            });
+        },
+
+        checkPassword(password) {
+            let passedRules = {};
+
+            passedRules.length = password.length >= 8;
+            passedRules.uppercase = password.match(/[A-Z]/);
+            passedRules.lowercase = password.match(/[a-z]/);
+            passedRules.symbol = password.match(
+                /[!@#$%^&*()_+\-=\[\]{};':"\\|,.<>\/?]/
+            );
+
+            return passedRules;
+        },
+    }));
+});
+
 Alpine.start();
 
 import "./range-slider-custom";
