@@ -7,7 +7,7 @@
                 <img src="/img/logo.png" class="h-7 sm:h-9 md:h-11 w-auto" alt="Capitalyze logo">
             </a>
 
-            <a href="{{ route('login') }}" class="bg-green-dark px-4 md:px-14 py-3 rounded text-[13px] font-semibold">
+            <a href="{{ route('login') }}" class="bg-green-dark hover:bg-green-light2 px-4 md:px-14 py-3 rounded text-[13px] font-semibold transition">
                 Sign in
             </a>
         </header>

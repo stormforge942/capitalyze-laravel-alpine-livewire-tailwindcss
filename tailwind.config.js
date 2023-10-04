@@ -48,6 +48,7 @@ module.exports = {
                     ...defaultTheme.colors.green,
                     DEFAULT: "#13B05B",
                     light: "#52D3A233",
+                    light2: "#9edfc6",
                     dark: "#52D3A2",
                 },
                 red: {
