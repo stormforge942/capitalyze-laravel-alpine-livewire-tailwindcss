@@ -199,6 +199,14 @@ Route::middleware(['auth', 'custom.email.verification'])->group(function () {
 Route::middleware(['guest'])->group(function () {
     Route::redirect('register', '/join-wait-list');
 
+    Route::get('/reset-password-successful', function () {
+        if (!session()->has('isValid')) {
+            return redirect()->route('login');
+        }
+
+        return view('auth.reset-password-successful');
+    })->name('password.reset.successful');
+
     Route::get('/join-wait-list', LandingPageWaitList::class)->name('waitlist.join');
 
     // override fortify route to verify user without needing to login
