@@ -11,3 +11,21 @@
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
+
+.tooltip-caret:before {
+    content:'';
+    display:block;
+    width:0;
+    height:0;
+    position:absolute;
+
+    border-top: solid 17px #fff;
+    border-left: solid 12px transparent;
+    border-right: solid 12px transparent;
+    border-bottom-right-radius: 50px;
+    left: calc(50% - 12px);
+
+    bottom: -17px;
+}
+
+

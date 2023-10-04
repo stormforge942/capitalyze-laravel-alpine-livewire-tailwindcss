@@ -55,6 +55,12 @@ class CompanyProfileOverviewGraph extends Component
             ->whereBetween('date', $this->getPeriod())
             ->avg('adj_close'));
 
+        $max = round(DB::connection('pgsql-xbrl')
+            ->table('eod_prices')
+            ->where('symbol', strtolower($this->ticker))
+            ->whereBetween('date', $this->getPeriod())
+            ->max('adj_close'));
+
 
         $volume_avg = round(DB::connection('pgsql-xbrl')
             ->table('eod_prices')
@@ -92,22 +98,54 @@ class CompanyProfileOverviewGraph extends Component
             $divider /= 2;
         }
 
+        if ($this->currentChartPeriod == '5yr') {
+            $result = $result->groupBy(function ($item) {
+                return Carbon::parse($item->date)->format('Y-W');
+            });
+        }
+
+        if ($this->currentChartPeriod == 'max') {
+            $result = $result->groupBy(function ($item) {
+                return Carbon::parse($item->date)->format('Y-m');
+            });
+        }
+
+
+
 
         $result->each(function ($item) use ($divider) {
+            $quote = $item;
+            if ($this->currentChartPeriod == '5yr' || $this->currentChartPeriod == 'max') {
+                $quote = $quote[0];
+            }
+
             $this->chartData['dataset1'][] = [
-                'x' => Carbon::parse($item->date)->format('Y-m-d'),
-                'y' => $item->adj_close,
+                'x' => Carbon::parse($quote->date)->format('Y-m-d'),
+                'y' => $quote->adj_close,
             ];
 
             $this->chartData['dataset2'][] = [
-                'x' => Carbon::parse($item->date)->format('Y-m-d'),
-                'y' => $item->volume / $divider,
+                'x' => Carbon::parse($quote->date)->format('Y-m-d'),
+                'y' => number_format($quote->volume / $divider),
+                'source' => number_format($quote->volume)
             ];
-            [$this->chartData['quantity'], $this->chartData['unit']] = $this->calculateDateDifference($this->getPeriod());
-            $this->chartData['divider'] = $divider;
         });
 
+        [$this->chartData['quantity'], $this->chartData['unit']] = $this->calculateDateDifference($this->getPeriod());
+        $this->chartData['divider'] = $divider;
+        $this->chartData['y_axes_max'] = $this->countYPaddingValue($max);
+
         $this->resetChart();
+    }
+
+    public function countYPaddingValue($max)
+    {
+        $height = ceil($max / 100) * 100;
+        if ($height - $max < 50) {
+            $height += 100;
+        }
+
+        return $height;
     }
 
     public function resetChart()
@@ -126,11 +164,22 @@ class CompanyProfileOverviewGraph extends Component
                 return [$fromDate, $toDate];
 
             case '1yr':
-                $fromDate = Carbon::now()->subYears(1);
+                $fromDate = Carbon::now()->subYear();
+                return [$fromDate, $toDate];
+
+            case 'YTD':
+                $fromDate = Carbon::now()->startOfYear();
                 return [$fromDate, $toDate];
 
             case '5yr':
                 $fromDate = Carbon::now()->subYears(5);
+                return [$fromDate, $toDate];
+
+            case 'max':
+                $fromDate = Carbon::parse(
+                    DB::connection('pgsql-xbrl')
+                        ->table('eod_prices')->min('date')
+                );
                 return [$fromDate, $toDate];
         }
 
