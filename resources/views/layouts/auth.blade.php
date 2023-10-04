@@ -20,7 +20,7 @@
     <div class="min-h-screen bg-gray-light p-8">
         <div>
             <a href="/">
-                <img src="/img/logo.png" alt="Capitalyze logo" class="h-9 md:h-14 2xl:h-18">
+                <img src="{{ asset('img/logo.png') }}" alt="Capitalyze logo" class="h-9 md:h-14 2xl:h-18">
             </a>
         </div>
         <div class="mt-[3.65rem] md:mt-[15vh] mb-5">
