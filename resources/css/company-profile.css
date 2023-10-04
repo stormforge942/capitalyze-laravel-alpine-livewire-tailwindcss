@@ -77,6 +77,11 @@
     border-radius: 0.666em;
 }
 
+.radio-filter {
+    color: #121A0F;
+    @apply focus:ring-[#121A0F];
+}
+
 .white-card .title {
     color: #3561E7;
     font-weight: 600;

@@ -61,6 +61,12 @@ class CompanyProfileOverviewGraph extends Component
             ->whereBetween('date', $this->getPeriod())
             ->max('adj_close'));
 
+        $min = round(DB::connection('pgsql-xbrl')
+            ->table('eod_prices')
+            ->where('symbol', strtolower($this->ticker))
+            ->whereBetween('date', $this->getPeriod())
+            ->min('adj_close'));
+
 
         $volume_avg = round(DB::connection('pgsql-xbrl')
             ->table('eod_prices')
@@ -69,13 +75,6 @@ class CompanyProfileOverviewGraph extends Component
             ->avg('volume'));
 
         $divider = 1;
-
-        while (strlen((string)$volume_avg) >= strlen((string)$adj_close_avg))
-        {
-            $volume_avg /= 10;
-            $volume_avg = round($volume_avg);
-            $divider *= 10;
-        }
 
         while (strlen((string)$volume_avg) >= strlen((string)$adj_close_avg))
         {
@@ -111,9 +110,11 @@ class CompanyProfileOverviewGraph extends Component
         }
 
 
+        $y_axes_min = $min * 0.95;
 
 
-        $result->each(function ($item) use ($divider) {
+
+        $result->each(function ($item) use ($divider, $y_axes_min, $volume_avg) {
             $quote = $item;
             if ($this->currentChartPeriod == '5yr' || $this->currentChartPeriod == 'max') {
                 $quote = $quote[0];
@@ -121,12 +122,12 @@ class CompanyProfileOverviewGraph extends Component
 
             $this->chartData['dataset1'][] = [
                 'x' => Carbon::parse($quote->date)->format('Y-m-d'),
-                'y' => $quote->adj_close,
+                'y' => number_format($quote->adj_close, 4),
             ];
 
             $this->chartData['dataset2'][] = [
                 'x' => Carbon::parse($quote->date)->format('Y-m-d'),
-                'y' => number_format($quote->volume / $divider),
+                'y' => (($quote->volume / $divider) * 3 ) / $volume_avg + $y_axes_min,
                 'source' => number_format($quote->volume)
             ];
         });
@@ -134,18 +135,14 @@ class CompanyProfileOverviewGraph extends Component
         [$this->chartData['quantity'], $this->chartData['unit']] = $this->calculateDateDifference($this->getPeriod());
         $this->chartData['divider'] = $divider;
         $this->chartData['y_axes_max'] = $this->countYPaddingValue($max);
+        $this->chartData['y_axes_min'] = $y_axes_min;
 
         $this->resetChart();
     }
 
     public function countYPaddingValue($max)
     {
-        $height = ceil($max / 100) * 100;
-        if ($height - $max < 50) {
-            $height += 100;
-        }
-
-        return $height;
+        return ceil($max / 50) * 50;
     }
 
     public function resetChart()
