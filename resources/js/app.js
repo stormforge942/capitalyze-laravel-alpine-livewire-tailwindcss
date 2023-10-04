@@ -87,7 +87,7 @@ Alpine.start();
         }
 
         // remove error message
-        if (el.nextElementSibling.classList.contains("text-danger")) {
+        if (el.nextElementSibling?.classList?.contains("text-danger")) {
             el.nextElementSibling.remove();
         }
     });
