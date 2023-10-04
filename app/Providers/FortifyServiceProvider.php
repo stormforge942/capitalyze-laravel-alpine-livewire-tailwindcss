@@ -16,7 +16,9 @@ use Laravel\Fortify\Contracts\RegisterResponse;
 use App\Http\Responses\CustomPasswordResetResponse;
 use Laravel\Fortify\Contracts\PasswordResetResponse;
 use App\Actions\Fortify\UpdateUserProfileInformation;
+use App\Http\Responses\CustomSuccessfulPasswordResetLinkRequestResponse;
 use Laravel\Fortify\Contracts\LoginResponse as LoginResponseContract;
+use Laravel\Fortify\Contracts\SuccessfulPasswordResetLinkRequestResponse;
 
 class FortifyServiceProvider extends ServiceProvider
 {
@@ -59,5 +61,6 @@ class FortifyServiceProvider extends ServiceProvider
 
         $this->app->singleton(RegisterResponse::class, CustomRegisterResponse::class);
         $this->app->singleton(PasswordResetResponse::class, CustomPasswordResetResponse::class);
+        $this->app->singleton(SuccessfulPasswordResetLinkRequestResponse::class, CustomSuccessfulPasswordResetLinkRequestResponse::class);
     }
 }

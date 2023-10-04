@@ -1,6 +1,6 @@
 <div>
     <label
-        class="{{ $class ?? '' }} block px-4 py-2 border @if($errors->has($name)) border-danger @else border-[#D1D3D5] @endif focus-within:border-green-dark  rounded relative">
+        class="{{ $class ?? '' }} block px-4 py-2 border @if($errors->has($name)) border-danger @else border-[#D1D3D5] @endif focus-within:border-green-dark  rounded relative duration-100 ease-in-out">
         <input type="{{ $type ?? 'text' }}"
             class="moving-label-input p-0 h-6 w-full text-base mt-4 block border-none focus:ring-0 focus:outline-none peer" name="{{ $name }}" value="{{ old($name) }}" @if($required ?? false) required @endif @if($autofocus ?? false) autofocus @endif @foreach($attrs ?? [] as $aKey => $aVal) {{ $aKey }}="{{ $aVal }}" @endforeach>
 
