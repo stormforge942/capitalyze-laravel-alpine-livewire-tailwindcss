@@ -126,7 +126,7 @@
             </div>
         </div>
 
-        <form class="mt-4" method="post" action="{{ route('password.update') }}" autocomplete="off">
+        <form class="mt-4" method="post" action="{{ route('password.update', ['from' => request('from')]) }}">
             @csrf
 
             <input type="hidden" name="token" value="{{ $request->route('token') }}">
@@ -138,11 +138,14 @@
                 'name' => 'password',
                 'required' => true,
                 'autofocus' => true,
-                'attrs' => ['x-model' => 'password'],
+                'attrs' => ['x-model' => 'password', 'autocomplete' => 'off'],
             ])
 
             @error('email')
-                <p class="mt-1 text-sm text-danger px-4">{{ $message }}</p>
+                <p class="mt-1 text-sm text-danger px-4">
+                    The password reset link has expired. Please request a new one from <a
+                        href="{{ route('password.request') }}" class="underline">here</a>.
+                </p>
             @enderror
 
             @include('partials.input', [
@@ -150,6 +153,7 @@
                 'class' => 'mt-6',
                 'label' => 'Password confirm',
                 'name' => 'password_confirmation',
+                'attrs' => ['autocomplete' => 'off'],
             ])
 
             <div class="mt-6 text-center">

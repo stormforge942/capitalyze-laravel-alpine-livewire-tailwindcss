@@ -13,7 +13,7 @@
             'name' => 'email',
             'required' => true,
             'autofocus' => true,
-            'attrs' => ['x-model' => 'email'],
+            'attrs' => ['x-model' => 'email', 'autocomplete' => 'email'],
         ])
 
         @include('partials.input', [
@@ -21,7 +21,7 @@
             'class' => 'mt-6',
             'label' => 'Password',
             'name' => 'password',
-            'attrs' => ['x-model' => 'password'],
+            'attrs' => ['x-model' => 'password', 'autocomplete' => 'current-password'],
         ])
 
         <div class="mt-4 flex justify-between items-center text-sm">

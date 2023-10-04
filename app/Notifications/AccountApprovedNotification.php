@@ -42,7 +42,7 @@ class AccountApprovedNotification extends Notification implements ShouldQueue
     public function toMail($notifiable)
     {
         return (new MailMessage)
-                    ->subject("{$notifiable->firstName} - your Capitalyze invite is here")
+                    ->subject("Your Capitalyze invite is here")
                     ->view('mails.account-approved', [
                         'user' => $notifiable,
                         'url' => $this->buildPasswordResetLink($notifiable)

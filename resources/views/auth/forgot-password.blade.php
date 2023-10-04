@@ -17,7 +17,7 @@
             'name' => 'email',
             'required' => true,
             'autofocus' => true,
-            'attrs' => ['x-model' => 'email'],
+            'attrs' => ['x-model' => 'email', 'autocomplete' => 'email'],
         ])
 
         <div class="mt-6 text-center">
