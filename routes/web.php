@@ -26,9 +26,9 @@ use App\Http\Controllers\AdminController;
 use App\Http\Controllers\JapanController;
 use App\Http\Livewire\CompanyFilingsPage;
 use App\Http\Livewire\CompanyIdentifiers;
-use App\Http\Livewire\LandingPageWaitList;
 use App\Http\Controllers\CompanyController;
 use App\Http\Controllers\EuronextController;
+use App\Http\Controllers\HomeController;
 use App\Http\Controllers\ShanghaiController;
 use App\Http\Livewire\EconomicReleaseSeries;
 use App\Http\Livewire\MutualFundFilingsPage;
@@ -36,35 +36,12 @@ use App\Http\Controllers\MutualFundController;
 use App\Http\Controllers\VerifyEmailController;
 use Laravel\Fortify\Http\Controllers\AuthenticatedSessionController;
 
-/*
-|--------------------------------------------------------------------------
-| Web Routes
-|--------------------------------------------------------------------------
-|
-| Here is where you can register web routes for your application. These
-| routes are loaded by the RouteServiceProvider within a group which
-| contains the "web" middleware group. Now create something great!
-|
-*/
-
 Route::get('/permission-denied', PermissionDenied::class)->name('permission-denied');
 
-Route::get('/', function () {
-    if (auth()->check() && (auth()->user()->is_approved == false || !auth()->user()->hasVerifiedEmail())) {
-        return redirect()->route('waiting-for-approval');
-    }
+Route::get('/', HomeController::class)->name('home');
 
-    return view('welcome');
-})->name('home');
-
-//Route::middleware(['checkPagePermission'])->group(function () {
 Route::middleware([])->group(function () {
-
-
     Route::middleware(['auth', 'approved', 'verified', 'checkPagePermission'])->group(function () {
-        /*
-        | Global routes
-        */
         Route::get('/calendar/earnings', EarningsCalendar::class)->name('earnings-calendar');
         Route::get('/calendar/economics', EconomicsCalendar::class)->name('economics-calendar');
         Route::get('/calendar/economics/{release_id}/', EconomicRelease::class)->name('economics-release');
@@ -172,17 +149,14 @@ Route::middleware(['auth', 'verified', 'ensureUserIsApproved'])->group(function 
 
     Route::middleware(['auth:sanctum', 'verified', 'ensureUserIsAdmin'])->group(function () {
         Route::get('/admin/users', [AdminController::class, 'index'])->name('admin.users');
-        // You can add more routes here that should be subject to the same middleware
     });
 
     Route::middleware(['auth:sanctum', 'verified', 'ensureUserIsAdmin'])->group(function () {
         Route::get('/admin/permission', [AdminController::class, 'permission'])->name('admin.permission-management');
-        // You can add more routes here that should be subject to the same middleware
     });
 
     Route::middleware(['auth:sanctum', 'verified', 'ensureUserIsAdmin'])->group(function () {
         Route::get('/admin/groups', [AdminController::class, 'groups'])->name('admin.groups-management');
-        // You can add more routes here that should be subject to the same middleware
     });
 });
 
@@ -192,11 +166,26 @@ Route::middleware(['auth', 'custom.email.verification'])->group(function () {
     })->name('waiting-for-approval');
 });
 
-// Routes for guests
 Route::middleware(['guest'])->group(function () {
-    Route::get('/login', [AuthenticatedSessionController::class, 'create'])->name('login');
-    Route::post('/login', [AuthenticatedSessionController::class, 'store']);
-    Route::get('/join-wait-list', LandingPageWaitList::class)->name('join-wait-list');
+    Route::redirect('register', '/join-wait-list');
+
+    Route::get('/reset-password-successful', function () {
+        if (!session()->has('isValid')) {
+            return redirect()->route('login');
+        }
+
+        return view('auth.reset-password-successful');
+    })->name('password.reset.successful');
+
+    Route::get('/reset-link-sent', function () {
+        if (!session()->has('isValid')) {
+            return redirect()->route('password.request');
+        }
+
+        return view('auth.reset-link-sent');
+    })->name('password.reset-link.sent');
+
+    Route::redirect('/waitlist', '/')->name('waitlist.join');
 
     // override fortify route to verify user without needing to login
     Route::get(RoutePath::for('verification.verify', '/email/verify/{id}/{hash}'), VerifyEmailController::class)
@@ -204,5 +193,4 @@ Route::middleware(['guest'])->group(function () {
         ->name('verification.verify');
 });
 
-// Logout route accessible to all users
 Route::post('/logout', [AuthenticatedSessionController::class, 'destroy'])->name('logout');

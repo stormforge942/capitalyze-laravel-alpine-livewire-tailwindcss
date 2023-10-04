@@ -22,3 +22,7 @@
 .wait-list-button-text {
     color: #52d3a2;
 }
+
+input {
+    @apply text-base;
+}
