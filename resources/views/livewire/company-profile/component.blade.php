@@ -12,7 +12,6 @@
                     </div>
                 </div>
 
-
                 @if (!$profile)
                     <div class="no-company-profile-found">
                         Company profile not found
@@ -33,7 +32,8 @@
                         @if ($infoTabActive == 'overview')
                             @include('livewire.company-profile.companyprofile-overview-top-data')
 
-                            @include('livewire.company-profile.company-profile-overview-graph')
+{{--                            @include('livewire.company-profile.company-profile-overview-graph')--}}
+                            <livewire:company-profile-overview-graph :ticker="$ticker" />
 
                             @include('livewire.company-profile.company-profile-overview-table')
                         @elseif($infoTabActive == 'business_information')
