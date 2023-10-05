@@ -7,7 +7,8 @@
                 <img src="{{ asset('img/logo.png') }}" class="h-7 sm:h-9 md:h-11 w-auto" alt="Capitalyze logo">
             </a>
 
-            <a href="{{ route('login') }}" class="bg-green-dark hover:bg-green-light2 px-4 md:px-14 py-3 rounded text-[13px] font-semibold transition">
+            <a href="{{ route('login') }}"
+                class="bg-green-dark hover:bg-green-light2 px-4 md:px-14 py-3 rounded text-[13px] font-semibold transition">
                 Sign in
             </a>
         </header>
@@ -48,15 +49,17 @@
                 <div class="max-w-[27rem] mx-auto px-6 py-8 bg-white rounded-lg z-10"
                     style="box-shadow: 8px 8px 60px 0px rgba(0, 0, 0, 0.25);">
                     <div class="text-center space-y-4">
-                        <h1 class="text-xl leading-10 font-semibold tracking-tight">
+                        <h1 class="text-3xl leading-10 font-semibold tracking-tight">
                             @if ($completed)
                                 Thanks for joining the waitlist
+                            @elseif($verified)
+                                Your email has been verified
                             @else
-                                Join the waitlist
+                                <span class="text-xl">Join the waitlist</span>
                             @endif
                         </h1>
 
-                        @if ($completed)
+                        @if ($completed || $verified)
                             <p class="text-md leading-7">You'll be the first to know once we launch</p>
 
                             <div class="flex justify-center">
@@ -75,7 +78,7 @@
                         @endif
                     </div>
 
-                    @if (!$completed)
+                    @if (!$completed && !$verified)
                         <form class="mt-4 space-y-6" wire:submit.prevent="submit">
                             @include('partials.input', [
                                 'label' => 'Name',
