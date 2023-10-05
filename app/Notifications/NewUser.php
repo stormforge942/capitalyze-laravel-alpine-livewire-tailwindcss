@@ -41,7 +41,7 @@ class NewUser extends Notification implements ShouldQueue
     public function toMail($notifiable)
     {
         return (new MailMessage)
-                    ->line('A new user registered on XBRL-Explorer.')
+                    ->line('A new user registered on Capitalyze.')
                     ->action('Review New User', url('/admin/users'))
                     ->line('Have a great day!');
     }
