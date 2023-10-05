@@ -1,13 +1,15 @@
 @import "../../vendor/wire-elements/pro/resources/css/tailwind/overlay-component.css";
 @import "../../vendor/wire-elements/pro/resources/css/tailwind/spotlight-component.css";
-@import '../../node_modules/flowbite-datepicker/tailwind.css';
-@import '../../node_modules/sweetalert2/dist/sweetalert2.css';
-@import 'css-tables.css';
+@import "../../node_modules/flowbite-datepicker/tailwind.css";
+@import "../../node_modules/sweetalert2/dist/sweetalert2.css";
+@import "./components/index.css";
+@import "css-tables.css";
 @import "company-profile.css";
 @import "company-report.css";
 @import "flowbite-select-custom.css";
 @import "common-styles.css";
 @import "navigation_subtabs.css";
+
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
@@ -29,3 +31,15 @@
 }
 
 
+.wait-list {
+    font-family: IBM Plex Sans, Arial;
+    color: #121a0f;
+}
+
+.wait-list-button-text {
+    color: #52d3a2;
+}
+
+input {
+    @apply text-base;
+}

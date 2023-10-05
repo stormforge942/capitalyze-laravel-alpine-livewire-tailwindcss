@@ -3,6 +3,7 @@
 namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Relations\BelongsTo;
 
 class NavbarGroupShows extends Model
 {
@@ -20,15 +21,19 @@ class NavbarGroupShows extends Model
      */
     protected $table = 'navbar_group_shows';
 
-     /**
+    /**
      * The attributes that are mass assignable.
      *
      * @var string[]
      */
     protected $fillable = [
-        'navbar_id', 
-        'group_id', 
+        'navbar_id',
+        'group_id',
         'show'
+    ];
+
+    protected $casts = [
+        'show' => 'boolean'
     ];
 
     /**
@@ -36,7 +41,7 @@ class NavbarGroupShows extends Model
      *
      * @var string
      */
-    protected $connection = 'pgsql'; 
+    protected $connection = 'pgsql';
 
     /**
      * Indicates if the model's ID is auto-incrementing.
@@ -44,4 +49,14 @@ class NavbarGroupShows extends Model
      * @var bool
      */
     public $incrementing = true;
+
+    public function navbar(): BelongsTo
+    {
+        return $this->belongsTo(Navbar::class);
+    }
+
+    public function group(): BelongsTo
+    {
+        return $this->belongsTo(Groups::class);
+    }
 }

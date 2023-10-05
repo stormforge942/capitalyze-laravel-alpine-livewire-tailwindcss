@@ -46,7 +46,7 @@ table.data tr:nth-child(odd) > td:first-child {
 }
 
 table.data tr:nth-child(even) > td:first-child {
-    background-color:var(--color-white);
+    background-color: var(--color-white);
 }
 
 table.data tr:nth-child(odd):hover > td:first-child,
@@ -74,7 +74,7 @@ table.data-alt tr:nth-child(even) > td:first-child {
 }
 
 table.data-alt tr:nth-child(odd) > td:first-child {
-    background-color:var(--color-white);
+    background-color: var(--color-white);
 }
 
 table.data-alt tr:nth-child(even):hover > td:first-child,
@@ -86,6 +86,16 @@ table.data-alt tr:nth-child(odd):hover > td:first-child {
 @media screen and (max-width: 767px) {
     table.data tr > th:first-child,
     table.data tr > td:first-child {
+        position: sticky;
+        left: 0;
+        max-width: 100px;
+        min-width: 100px;
+        word-break: break-word;
+        white-space: break-spaces;
+    }
+
+    table.data-alt tr > th:first-child,
+    table.data-alt tr > td:first-child {
         position: sticky;
         left: 0;
         max-width: 100px;
@@ -142,9 +152,8 @@ table.data-alt tr:nth-child(odd):hover > td:first-child {
     box-shadow: none;
 }
 
-
 .warning-text {
-    color: #DA680B;
+    color: #da680b;
     display: flex;
     align-items: center;
     font-size: 0.75em;
@@ -154,7 +163,6 @@ table.data-alt tr:nth-child(odd):hover > td:first-child {
     height: 1em;
     width: 1em;
     margin-right: 0.3em;
-
 }
 
 #default-sidebar ul > li {
@@ -169,6 +177,5 @@ table.data-alt tr:nth-child(odd):hover > td:first-child {
 }
 
 #default-sidebar ul > li span {
-    white-space:nowrap;
+    white-space: nowrap;
 }
-

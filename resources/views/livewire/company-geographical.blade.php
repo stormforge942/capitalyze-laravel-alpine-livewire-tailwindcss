@@ -569,8 +569,6 @@
 
         normalizedData.sort((a, b) => DateTime.fromISO(a.date) - DateTime.fromISO(b.date));
 
-        console.log(normalizedData);
-
         let labels = normalizedData
             .filter(item => DateTime.fromISO(item.date) >= sixYearsAgo)
             .map(item => item.date);

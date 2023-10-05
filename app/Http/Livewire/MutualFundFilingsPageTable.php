@@ -149,6 +149,10 @@ final class MutualFundFilingsPageTable extends PowerGridComponent
     {
         return [
             Column::make('CIK', 'cik')->sortable(),
+            Column::make('Fund Symbol', 'fund_symbol')->sortable(),
+            Column::make('Series ID', 'series_id')->sortable(),
+            Column::make('Class ID', 'class_id')->sortable(),
+            Column::make('Class Name', 'class_name')->sortable(),
             Column::make('Acceptance Time', 'acceptance_time')->sortable(),
             Column::make('Period Of Report', 'period_of_report')->sortable(),
         ];
@@ -158,6 +162,10 @@ final class MutualFundFilingsPageTable extends PowerGridComponent
     {
         return [
             Filter::inputText('cik', 'cik')->operators([]),
+            Filter::inputText('fund_symbol', 'fund_symbol')->operators([]),
+            Filter::inputText('series_id', 'series_id')->operators([]),
+            Filter::inputText('class_id', 'class_id')->operators([]),
+            Filter::inputText('class_name', 'class_name')->operators([]),
             Filter::inputText('acceptance_time', 'acceptance_time')->operators([]),
             Filter::inputText('period_of_report', 'period_of_report')->operators([]),
         ];
