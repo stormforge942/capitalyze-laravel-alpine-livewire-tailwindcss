@@ -15,7 +15,7 @@ class HomeController extends Controller
             return view('waitlist');
         }
 
-        if ($user->is_approved || !$user->hasVerifiedEmail()) {
+        if (!$user->is_approved || !$user->hasVerifiedEmail()) {
             return redirect()->route('waiting-for-approval');
         }
 
