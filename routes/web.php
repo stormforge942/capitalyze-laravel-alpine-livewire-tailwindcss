@@ -34,6 +34,8 @@ use App\Http\Controllers\ShanghaiController;
 use App\Http\Livewire\EconomicReleaseSeries;
 use App\Http\Livewire\MutualFundFilingsPage;
 use App\Http\Controllers\MutualFundController;
+use App\Http\Controllers\ResetLinkSentController;
+use App\Http\Controllers\ResetPasswordSuccessfulController;
 use App\Http\Controllers\VerifyEmailController;
 use Laravel\Fortify\Http\Controllers\AuthenticatedSessionController;
 
@@ -174,23 +176,11 @@ Route::middleware(['auth', 'custom.email.verification'])->group(function () {
 });
 
 Route::middleware(['guest'])->group(function () {
-    Route::redirect('register', '/join-wait-list');
+    Route::redirect('register', '/')->name('register');
 
-    Route::get('/reset-password-successful', function () {
-        if (!session()->has('isValid')) {
-            return redirect()->route('login');
-        }
+    Route::get('/reset-password-successful', ResetPasswordSuccessfulController::class)->name('password.reset.successful');
 
-        return view('auth.reset-password-successful');
-    })->name('password.reset.successful');
-
-    Route::get('/reset-link-sent', function () {
-        if (!session()->has('isValid')) {
-            return redirect()->route('password.request');
-        }
-
-        return view('auth.reset-link-sent');
-    })->name('password.reset-link.sent');
+    Route::get('/reset-link-sent', ResetLinkSentController::class)->name('password.reset-link.sent');
 
     Route::redirect('/waitlist', '/')->name('waitlist.join');
 });
