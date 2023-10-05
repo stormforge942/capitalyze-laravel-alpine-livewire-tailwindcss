@@ -37,11 +37,14 @@ class LandingPageWaitList extends Component
         ]);
 
         event(new Registered($user));
-        
+
         $this->completed = true;
     }
+
     public function render()
     {
-        return view('livewire.landing-page-wait-list');
+        return view('livewire.landing-page-wait-list', [
+            'verified' => request('verified') === "1",
+        ]);
     }
 }

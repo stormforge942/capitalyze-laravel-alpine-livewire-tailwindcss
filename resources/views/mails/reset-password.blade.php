@@ -35,7 +35,7 @@ $title = "Reset password";
                 margin: 0;
                 text-align: center;
             ">
-                Click to verify your email address
+                Click to reset your password
             </p>
 
             <p style="
@@ -43,7 +43,7 @@ $title = "Reset password";
                 text-align: center;
             ">
                 @include('mails.partials.button', [
-                'text' => 'Confirm Email',
+                'text' => 'Reset Password',
                 'url' => $url ?? '#'
                 ])
             </p>

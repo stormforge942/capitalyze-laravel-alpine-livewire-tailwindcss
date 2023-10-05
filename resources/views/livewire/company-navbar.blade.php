@@ -73,7 +73,7 @@
             <li>
                <a data-tooltip-target="tooltip-Overwiew" data-tooltip-placement="right" id="nav"
                   href="{{ route('company.profile', ['ticker' => $this->company->ticker]) }}"
-                  class="flex items-center p-2 text-light-dark hover:bg-[#828c851a] @if($currentRoute === 'company.profile') bg-[#52d3a233] font-medium @endif rounded-lg group">
+                  class="flex items-center p-2 text-dark-light hover:bg-[#828c851a] @if($currentRoute === 'company.profile') bg-[#52d3a233] font-medium @endif rounded-lg group">
                   <svg width="16" height="16" viewBox="0 0 16 16" fill="none" xmlns="http://www.w3.org/2000/svg">
                      <path
                         d="M8.66667 14V7.33333H14V14H8.66667ZM2 8.66667V2H7.33333V8.66667H2ZM6 7.33333V3.33333H3.33333V7.33333H6ZM2 14V10H7.33333V14H2ZM3.33333 12.6667H6V11.3333H3.33333V12.6667ZM10 12.6667H12.6667V8.66667H10V12.6667ZM8.66667 2H14V6H8.66667V2ZM10 3.33333V4.66667H12.6667V3.33333H10Z"
@@ -90,7 +90,7 @@
             <li>
                <a data-tooltip-target="tooltip-Financials" data-tooltip-placement="right" id="nav"
                   href="{{ route('company.report', ['ticker' => $this->company->ticker]) }}"
-                  class="flex items-center p-2 text-light-dark hover:bg-[#828c851a] @if($currentRoute === 'company.report') bg-[#52d3a233] font-medium @endif rounded-lg group">
+                  class="flex items-center p-2 text-dark-light hover:bg-[#828c851a] @if($currentRoute === 'company.report') bg-[#52d3a233] font-medium @endif rounded-lg group">
                   <svg width="16" height="16" viewBox="0 0 16 16" fill="none" xmlns="http://www.w3.org/2000/svg">
                      <g clip-path="url(#clip0_312_54067)">
                         <path
@@ -127,7 +127,7 @@
             <li>
                <a data-tooltip-target="tooltip-Analysis" data-tooltip-placement="right" id="nav"
                   href="{{ route('company.profile', ['ticker' => $this->company->ticker]) }}"
-                  class="flex items-center p-2 text-light-dark hover:bg-[#828c851a] @if($currentRoute === 'analysis') bg-[#52d3a233] font-medium @endif rounded-lg group">
+                  class="flex items-center p-2 text-dark-light hover:bg-[#828c851a] @if($currentRoute === 'analysis') bg-[#52d3a233] font-medium @endif rounded-lg group">
                   <svg width="16" height="16" viewBox="0 0 16 16" fill="none" xmlns="http://www.w3.org/2000/svg">
                      <path
                         d="M14.6663 3.66699C14.6663 3.11471 14.2186 2.66699 13.6663 2.66699H2.33301C1.78072 2.66699 1.33301 3.11471 1.33301 3.66699V6.66699H14.6663V3.66699Z"
@@ -155,7 +155,7 @@
             <li>
                <a data-tooltip-target="tooltip-Filings" data-tooltip-placement="right" id="nav"
                   href="{{ route('company.profile', ['ticker' => $this->company->ticker]) }}"
-                  class="flex items-center p-2 text-light-dark hover:bg-[#828c851a] @if($currentRoute === 'filings') bg-[#52d3a233] font-medium @endif rounded-lg group">
+                  class="flex items-center p-2 text-dark-light hover:bg-[#828c851a] @if($currentRoute === 'filings') bg-[#52d3a233] font-medium @endif rounded-lg group">
                   <svg width="16" height="16" viewBox="0 0 16 16" fill="none" xmlns="http://www.w3.org/2000/svg">
                      <path
                         d="M8.66667 14.0002V15.6668L6.66667 14.3335L4.66667 15.6668V14.0002H4.33333C3.04467 14.0002 2 12.9555 2 11.6668V3.3335C2 2.22893 2.89543 1.3335 4 1.3335H13.3333C13.7015 1.3335 14 1.63198 14 2.00016V13.3335C14 13.7017 13.7015 14.0002 13.3333 14.0002H8.66667ZM8.66667 12.6668H12.6667V10.6668H4.33333C3.78105 10.6668 3.33333 11.1146 3.33333 11.6668C3.33333 12.2191 3.78105 12.6668 4.33333 12.6668H4.66667V11.3335H8.66667V12.6668ZM12.6667 9.3335V2.66683H4V9.3571C4.10887 9.34156 4.22016 9.3335 4.33333 9.3335H12.6667ZM4.66667 3.3335H6V4.66683H4.66667V3.3335ZM4.66667 5.3335H6V6.66683H4.66667V5.3335ZM4.66667 7.3335H6V8.66683H4.66667V7.3335Z"
@@ -173,7 +173,7 @@
             <li>
                <a data-tooltip-target="tooltip-Ownership" data-tooltip-placement="right" id="nav"
                   href="{{ route('company.profile', ['ticker' => $this->company->ticker]) }}"
-                  class="flex items-center p-2 text-light-dark hover:bg-[#828c851a] @if($currentRoute === 'ownership') bg-[#52d3a233] font-medium @endif rounded-lg group">
+                  class="flex items-center p-2 text-dark-light hover:bg-[#828c851a] @if($currentRoute === 'ownership') bg-[#52d3a233] font-medium @endif rounded-lg group">
                   <svg width="16" height="16" viewBox="0 0 16 16" fill="none" xmlns="http://www.w3.org/2000/svg">
                      <path
                         d="M8.47852 4.56726V4.56736C8.47852 5.71201 7.34622 6.60718 5.99456 6.60736C5.99442 6.60736 5.99428 6.60736 5.99414 6.60736V6.50736C5.52362 6.51129 5.06058 6.39409 4.6493 6.16779L8.47852 4.56726ZM8.47852 4.56726C8.47841 4.46685 8.4694 4.36674 8.45166 4.2681C9.28372 4.3832 10.0552 4.77288 10.6423 5.37734C11.2405 5.99328 11.6103 6.79405 11.6921 7.64697C11.0262 7.76214 10.0651 8.12445 9.76251 9.16408C9.63036 9.61759 9.30456 9.78967 8.90901 9.99859C8.83346 10.0385 8.75537 10.0797 8.6756 10.1246C8.43263 10.261 8.18376 10.4289 7.97968 10.6971C7.78789 10.9492 7.64035 11.2836 7.56755 11.7516C6.65498 11.6593 5.80595 11.2377 5.18049 10.5639C4.53379 9.86721 4.17374 8.95217 4.17227 8.00158C4.17144 7.39288 4.31905 6.79369 4.60162 6.25569L8.47852 4.56726ZM7.94039 3.4708C5.44203 3.4708 3.40977 5.50339 3.40977 8.00174C3.40977 10.5001 5.44203 12.5327 7.94039 12.5327C10.4387 12.5327 12.4713 10.5001 12.4713 8.00174C12.4713 5.50339 10.4391 3.4708 7.94039 3.4708Z"
@@ -197,7 +197,7 @@
             <li>
                <a data-tooltip-target="tooltip-Settings" data-tooltip-placement="right" id="nav"
                   href="{{ route('company.profile', ['ticker' => $this->company->ticker]) }}"
-                  class="flex items-center p-2 text-light-dark hover:bg-[#828c851a] @if($currentRoute === 'settings') bg-[#52d3a233] font-medium @endif rounded-lg group">
+                  class="flex items-center p-2 text-dark-light hover:bg-[#828c851a] @if($currentRoute === 'settings') bg-[#52d3a233] font-medium @endif rounded-lg group">
                   <svg width="16" height="16" viewBox="0 0 16 16" fill="none" xmlns="http://www.w3.org/2000/svg">
                      <g clip-path="url(#clip0_312_54060)">
                         <path
@@ -223,7 +223,7 @@
             <li>
                <button data-dropdown-toggle="dropdownMore" data-dropdown-placement="left-end"
                   aria-controls="dropdown-more" data-collapse-toggle="dropdown-more" id="nav"
-                  class="w-full flex items-center justify-between p-2 text-light-dark hover:bg-[#828c851a] rounded-lg group">
+                  class="w-full flex items-center justify-between p-2 text-dark-light hover:bg-[#828c851a] rounded-lg group">
                   <div class="flex items-center">
                      <svg width="16" height="16" viewBox="0 0 16 16" fill="none" xmlns="http://www.w3.org/2000/svg">
                         <path
