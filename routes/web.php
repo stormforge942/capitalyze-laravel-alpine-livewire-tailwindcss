@@ -186,11 +186,11 @@ Route::middleware(['guest'])->group(function () {
     })->name('password.reset-link.sent');
 
     Route::redirect('/waitlist', '/')->name('waitlist.join');
-
-    // override fortify route to verify user without needing to login
-    Route::get(RoutePath::for('verification.verify', '/email/verify/{id}/{hash}'), VerifyEmailController::class)
-        ->middleware(['signed', 'throttle:' . config('fortify.limiters.verification', '6,1')])
-        ->name('verification.verify');
 });
+
+// override fortify route to verify user without needing to login
+Route::get(RoutePath::for('verification.verify', '/email/verify/{id}/{hash}'), VerifyEmailController::class)
+    ->middleware(['signed', 'throttle:' . config('fortify.limiters.verification', '6,1')])
+    ->name('verification.verify');
 
 Route::post('/logout', [AuthenticatedSessionController::class, 'destroy'])->name('logout');

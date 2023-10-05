@@ -95,7 +95,7 @@
 
                             @include('partials.input', [
                                 'label' => 'Linkedin',
-                                'name' => 'linkedin_link',
+                                'name' => 'likedinLink',
                                 'type' => 'url',
                                 'attrs' => ['wire:model.defer' => 'likedinLink'],
                             ])

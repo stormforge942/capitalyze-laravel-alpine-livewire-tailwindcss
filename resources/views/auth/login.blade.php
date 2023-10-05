@@ -4,7 +4,7 @@
 
 @section('content')
     @include('partials.auth-header', ['title' => 'Sign In', 'badge' => true])
-    <form class="mt-4" method="post" action="{{ route('login') }}" x-data="{ email: '', password: '' }" autocomplete="on">
+    <form class="mt-4" method="post" action="{{ route('login') }}" x-data="{ email: '{{ old('email') }}', password: '' }" autocomplete="on">
         @csrf
 
         @include('partials.input', [
@@ -27,7 +27,7 @@
         <div class="mt-4 flex justify-between items-center text-sm">
             <label class="flex items-center gap-1.5">
                 <input type="checkbox" class="text-black border-2 border-black h-4 w-4 rounded-sm focus:ring-black"
-                    name="remember">
+                    name="remember" :checked="{{ old('remember') == "on" }}">
                 <span>Remember Me</span>
             </label>
             <a href="{{ route('password.request') }}">Forgot Password?</a>

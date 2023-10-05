@@ -8,7 +8,7 @@
         'title' => 'Forgot Password',
     ])
 
-    <form class="mt-4" method="post" action="{{ route('password.email') }}" x-data="{ email: '' }" autocomplete="on">
+    <form class="mt-4" method="post" action="{{ route('password.email') }}" x-data="{ email: '{{ old('email') }}' }" autocomplete="on">
         @csrf
 
         @include('partials.input', [
