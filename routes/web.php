@@ -29,6 +29,7 @@ use App\Http\Livewire\CompanyIdentifiers;
 use App\Http\Livewire\LandingPageWaitList;
 use App\Http\Controllers\CompanyController;
 use App\Http\Controllers\EuronextController;
+use App\Http\Controllers\FrankfurtController;
 use App\Http\Controllers\ShanghaiController;
 use App\Http\Livewire\EconomicReleaseSeries;
 use App\Http\Livewire\MutualFundFilingsPage;
@@ -160,6 +161,12 @@ Route::middleware([])->group(function () {
         */
         Route::get('/otc/{ticker}/', [OtcController::class, 'metrics'])->name('otc.metrics');
         Route::get('/otc/{ticker}/filings', [OtcController::class, 'filings'])->name('otc.filings');
+
+        /*
+        | Frankfurt routing
+        */
+        Route::get('/frankfurt/{ticker}/', [FrankfurtController::class, 'metrics'])->name('frankfurt.metrics');
+        Route::get('/frankfurt/{ticker}/filings', [FrankfurtController::class, 'filings'])->name('frankfurt.filings');
     });
 });
 
