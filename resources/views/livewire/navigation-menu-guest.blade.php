@@ -78,7 +78,7 @@
                                         {{ __('login') }}
                                     </x-jet-dropdown-link>
 
-                                    <x-jet-dropdown-link href="{{ route('register') }}">
+                                    <x-jet-dropdown-link href="{{ route('waitlist.join') }}">
                                         {{ __('Register') }}
                                     </x-jet-dropdown-link>
 
@@ -133,7 +133,7 @@
                 <x-jet-responsive-nav-link href="{{ route('login') }}" :active="request()->routeIs('login')">
                     {{ __('Login') }}
                 </x-jet-responsive-nav-link>
-                <x-jet-responsive-nav-link href="{{ route('register') }}" :active="request()->routeIs('register')">
+                <x-jet-responsive-nav-link href="{{ route('waitlist.join') }}" :active="request()->routeIs('register')">
                     {{ __('Register') }}
                 </x-jet-responsive-nav-link>
 

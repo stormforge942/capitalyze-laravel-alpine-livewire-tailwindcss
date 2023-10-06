@@ -65,7 +65,6 @@
 <script>
 Livewire.on('renderRevenueEmployeeChart', function (chartData) {
     var ctx = document.getElementById('myChart').getContext('2d');
-    console.log(chartData);
     
     var myChart = new Chart(ctx, {
         type: 'line',
