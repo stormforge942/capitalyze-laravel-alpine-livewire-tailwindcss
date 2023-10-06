@@ -12,6 +12,18 @@ class CompanyProfileOverviewGraph extends Component
     public $currentChartPeriod = "3m";
     public $chartData = [];
     public $visible = true;
+    public $start_at = null;
+    public $end_at = null;
+
+    protected $listeners = ['dateRangeSelected'];
+
+    public function dateRangeSelected($start_at, $end_at)
+    {
+        $this->currentChartPeriod = 'custom';
+        $this->start_at = $start_at;
+        $this->end_at = $end_at;
+        $this->load();
+    }
 
     public function mount($ticker)
     {
@@ -22,7 +34,9 @@ class CompanyProfileOverviewGraph extends Component
     public function updated($propertyName)
     {
         if ($propertyName == 'currentChartPeriod') {
-            $this->load();
+            if ($this->currentChartPeriod != 'custom') {
+                $this->load();
+            }
         }
     }
 
@@ -41,6 +55,7 @@ class CompanyProfileOverviewGraph extends Component
             'dataset1' => [],
             'dataset2' => [],
         ];
+
 
         $result = DB::connection('pgsql-xbrl')
             ->table('eod_prices')
@@ -170,6 +185,11 @@ class CompanyProfileOverviewGraph extends Component
 
             case '5yr':
                 $fromDate = Carbon::now()->subYears(5);
+                return [$fromDate, $toDate];
+
+            case 'custom':
+                $fromDate = Carbon::parse($this->start_at);
+                $toDate = Carbon::parse($this->end_at);
                 return [$fromDate, $toDate];
 
             case 'max':
