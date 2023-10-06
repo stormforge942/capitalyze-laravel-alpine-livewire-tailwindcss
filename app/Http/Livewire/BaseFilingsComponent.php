@@ -8,11 +8,12 @@ use Livewire\Component;
 abstract class BaseFilingsComponent extends Component
 {
     public Model $model;
+    public string $table;
 
     abstract public function title(): string;
-    abstract public function table(): string;
 
-    public function mount($model) {
+    public function mount($model, string $exchange) {
+        $this->table = "{$exchange}.filings-table";
         $this->model = $model;
     }
 
@@ -20,7 +21,6 @@ abstract class BaseFilingsComponent extends Component
     {
         return view('livewire.base-filings', [
             'title' => $this->title(),
-            'table' => $this->table(),
         ]);
     }
 }

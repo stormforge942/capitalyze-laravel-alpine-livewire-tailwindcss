@@ -34,7 +34,7 @@
             @endif
             @if ($tab == 'filings')
                 @sectionMissing('filings')
-                    <livewire:is :component="$exchange . '.filings'" :model="$model" />
+                    <livewire:is :component="$exchange . '.filings'" :model="$model" :exchange="$exchange" />
                 @else
                     @yield('filings')
                 @endif

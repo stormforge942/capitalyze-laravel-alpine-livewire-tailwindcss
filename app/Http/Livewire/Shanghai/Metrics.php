@@ -1,12 +1,13 @@
 <?php
 
-namespace App\Http\Livewire;
+namespace App\Http\Livewire\Shanghai;
 
 use Illuminate\Support\Collection;
 use Illuminate\Support\Facades\DB;
+use App\Http\Livewire\BaseMetricsComponent;
 
-class ShanghaiMetrics extends BaseMetricsComponent
-{    
+class Metrics extends BaseMetricsComponent
+{
     public function table(): string
     {
         return 'shanghai_statements';
