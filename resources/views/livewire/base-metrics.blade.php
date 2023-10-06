@@ -27,14 +27,14 @@
     }
 }">
     @include('partials.international-report-navbar')
-    <div class="py-12">
+    <div class="py-8">
         <div class="mx-auto">
             <div class="px-4 sm:px-6 lg:px-8 bg-white py-4 shadow rounded max-w-5xl mx-auto">
                 <div class="sm:flex sm:items-start flex-col">
                     <div class="block mb-3">
                         <h1 class="text-base font-semibold leading-10 text-gray-900">{{ $title }}</h1>
                     </div>
-                    <div class="mt-8 flow-root rounded-lg overflow-x-auto w-full">
+                    <div class="flow-root rounded-lg overflow-x-auto w-full">
                         <div class="align-middle">
                             <div class="inline-block min-w-full sm:rounded-lg">
                                 <table class="table-auto min-w-full data-alt border-collapse">

@@ -1,5 +1,5 @@
 <div class="p-4 sm:ml-64 pl-0">
-    <div class="py-12">
+    <div class="pb-12">
         <div class="mx-auto">
             <div class="px-4 sm:px-6 lg:px-8 bg-white py-4 shadow mx-4 rounded max-w-5xl mx-auto">
                 <div class="sm:flex sm:items-start flex-col">

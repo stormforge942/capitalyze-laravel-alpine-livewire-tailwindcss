@@ -10,22 +10,20 @@ class HkexController extends BaseController
 {
     public function metrics(Request $request, $ticker)
     {
-        $hkex = Hkex::where('symbol', $ticker)->get()->first();
-
-        return view('layouts.hkex', [
-            'hkex' => $hkex,
+        return view('layouts.stock-exchange', [
+            'model' => Hkex::where('symbol', $ticker)->get()->first(),
             'period' => $request->query('period', 'annual'),
+            'exchange' => 'hkex',
             'tab' => 'metrics'
         ]);
     }
 
     public function filings(Request $request, $ticker)
     {
-        $hkex = Hkex::where('symbol', $ticker)->get()->first();
-
-        return view('layouts.hkex', [
-            'hkex' => $hkex,
+        return view('layouts.stock-exchange', [
+            'model' => Hkex::where('symbol', $ticker)->get()->first(),
             'period' => $request->query('period', 'annual'),
+            'exchange' => 'hkex',
             'tab' => 'filings'
         ]);
     }

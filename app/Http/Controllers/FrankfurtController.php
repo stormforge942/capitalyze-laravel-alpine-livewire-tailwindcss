@@ -12,12 +12,11 @@ class FrankfurtController extends BaseController
     {
         $frankfurt = Frankfurt::where('symbol', $ticker)->get()->first();
 
-        return view('layouts.frankfurt', [
+        return view('layouts.stock-exchange', [
             'model' => $frankfurt,
-            'component' => 'frankfurt-metrics',
             'period' => $request->query('period', 'annual'),
+            'exchange' => 'frankfurt',
             'tab' => 'metrics',
-            'bottomNavKey' => 'frankfurt.',
         ]);
     }
 
@@ -25,9 +24,10 @@ class FrankfurtController extends BaseController
     {
         $frankfurt = Frankfurt::where('symbol', $ticker)->get()->first();
 
-        return view('layouts.frankfurt', [
+        return view('layouts.stock-exchange', [
             'model' => $frankfurt,
             'period' => $request->query('period', 'annual'),
+            'exchange' => 'frankfurt',
             'tab' => 'filings'
         ]);
     }
