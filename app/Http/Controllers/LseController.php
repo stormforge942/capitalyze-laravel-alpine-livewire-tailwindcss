@@ -10,22 +10,20 @@ class LseController extends BaseController
 {
     public function metrics(Request $request, $ticker)
     {
-        $lse = Lse::where('symbol', $ticker)->get()->first();
-
-        return view('layouts.lse', [
-            'lse' => $lse,
+        return view('layouts.stock-exchange', [
+            'model' => Lse::where('symbol', $ticker)->get()->first(),
             'period' => $request->query('period', 'annual'),
+            'exchange' => 'lse',
             'tab' => 'metrics'
         ]);
     }
 
     public function filings(Request $request, $ticker)
     {
-        $lse = Lse::where('symbol', $ticker)->get()->first();
-
-        return view('layouts.lse', [
-            'lse' => $lse,
+        return view('layouts.stock-exchange', [
+            'model' => Lse::where('symbol', $ticker)->get()->first(),
             'period' => $request->query('period', 'annual'),
+            'exchange' => 'lse',
             'tab' => 'filings'
         ]);
     }
