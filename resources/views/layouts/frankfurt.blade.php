@@ -7,21 +7,22 @@
 
     <title>{{ config('app.name', 'Laravel') }}</title>
 
+    <!-- Fonts -->
     <link href="https://fonts.googleapis.com/css?family=Inter:400,500,600,700" rel="stylesheet" />
 
+    <!-- Scripts -->
     @vite(['resources/css/app.css', 'resources/js/app.js'])
-    @livewireStyles
 </head>
 <body>
     <x-jet-banner />
 
     <div class="min-h-screen bg-gray-100">
         @livewire('navigation-menu')
-        {{-- <livewire:otc-navbar :otc="$otc" :period="$period" /> --}}
-
+        <livewire:frankfurt-navbar :model="$model" :period="$period" />
+        <!-- Page Content -->
         <main>
             @if($tab == 'metrics')
-            <livewire:is :component="$component" :model="$model" :period="$period" />
+            <livewire:frankfurt-metrics :model="$model" :period="$period" />
             @endif
             @if($tab == 'filings')
             {{-- <livewire:otc-filings :otc="$otc" /> --}}

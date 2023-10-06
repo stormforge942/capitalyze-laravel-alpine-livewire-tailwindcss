@@ -29,7 +29,12 @@ class Navbar extends Model
         'name',
         'route_name',
         'is_route',
-        'is_moddable'
+        'is_moddable',
+    ];
+
+    protected $casts = [
+        'is_route' => 'boolean',
+        'is_moddable' => 'boolean',
     ];
 
     public function navbarGroupShows()

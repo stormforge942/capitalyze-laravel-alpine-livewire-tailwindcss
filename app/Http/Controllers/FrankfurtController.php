@@ -3,7 +3,6 @@
 namespace App\Http\Controllers;
 
 use App\Models\Frankfurt;
-use App\Models\Otc;
 use Illuminate\Http\Request;
 use Illuminate\Routing\Controller as BaseController;
 
@@ -13,11 +12,12 @@ class FrankfurtController extends BaseController
     {
         $frankfurt = Frankfurt::where('symbol', $ticker)->get()->first();
 
-        return view('layouts.stock-exchange', [
+        return view('layouts.frankfurt', [
             'model' => $frankfurt,
             'component' => 'frankfurt-metrics',
             'period' => $request->query('period', 'annual'),
             'tab' => 'metrics',
+            'bottomNavKey' => 'frankfurt.',
         ]);
     }
 
