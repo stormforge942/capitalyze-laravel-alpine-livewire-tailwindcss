@@ -2,9 +2,9 @@
 
 namespace App\Http\Livewire\Shanghai;
 
-use App\Http\Livewire\BaseNavbar;
+use App\Http\Livewire\BaseNavbarComponent;
 
-class Navbar extends BaseNavbar
+class Navbar extends BaseNavbarComponent
 {
     public function bottomNavKey(): string {
         return 'shanghai.';

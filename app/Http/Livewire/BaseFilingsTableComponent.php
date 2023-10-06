@@ -3,10 +3,9 @@
 namespace App\Http\Livewire;
 
 use Illuminate\Database\Eloquent\Builder;
-use PowerComponents\LivewirePowerGrid\Filters\Filter;
 use PowerComponents\LivewirePowerGrid\Traits\WithExport;
 use PowerComponents\LivewirePowerGrid\Traits\ActionButton;
-use PowerComponents\LivewirePowerGrid\{Column, Footer, Header, PowerGrid, PowerGridComponent, PowerGridEloquent};
+use PowerComponents\LivewirePowerGrid\{Footer, Header, PowerGrid, PowerGridComponent, PowerGridEloquent};
 
 abstract class BaseFilingsTableComponent extends PowerGridComponent
 {
@@ -40,32 +39,16 @@ abstract class BaseFilingsTableComponent extends PowerGridComponent
 
     public function addColumns(): PowerGridEloquent
     {
-        return PowerGrid::eloquent()
-            ->addColumn('fiscal_year')
-            ->addColumn('fiscal_period')
-            ->addColumn('updated_at')
-            ->addColumn('url', function ($item) {
-                return ('<a class="text-blue" target="_blank"  href="' . $item->url . '">More Info</a>');
-            });
+        return PowerGrid::eloquent();
     }
 
     public function columns(): array
     {
-        return [
-            Column::make('Fiscal Year', 'fiscal_year')->sortable(),
-            Column::make('Fiscal Period', 'fiscal_period')->sortable(),
-            Column::make('Updated At', 'updated_at')->sortable(),
-            Column::make('URL', 'url')->sortable(),
-        ];
+        return [];
     }
 
     public function filters(): array
     {
-        return [
-            Filter::inputText('fiscal_year', 'fiscal_year')->operators([]),
-            Filter::inputText('fiscal_period', 'fiscal_period')->operators([]),
-            Filter::inputText('updated_at', 'updated_at')->operators([]),
-            Filter::inputText('url', 'url')->operators([]),
-        ];
+        return [];
     }
 }

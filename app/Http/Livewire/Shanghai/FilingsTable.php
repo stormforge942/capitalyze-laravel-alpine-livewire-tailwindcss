@@ -3,14 +3,14 @@
 namespace App\Http\Livewire\Shanghai;
 
 use App\Models\ShanghaiFilings;
-use App\Http\Livewire\BaseFilingsTable;
+use App\Http\Livewire\BaseFilingsTableComponent;
 use Illuminate\Database\Eloquent\Builder;
 use PowerComponents\LivewirePowerGrid\Column;
 use PowerComponents\LivewirePowerGrid\PowerGrid;
 use PowerComponents\LivewirePowerGrid\Filters\Filter;
 use PowerComponents\LivewirePowerGrid\PowerGridEloquent;
 
-class FilingsTable extends BaseFilingsTable
+class FilingsTable extends BaseFilingsTableComponent
 {
     public function data(): ?Builder
     {
