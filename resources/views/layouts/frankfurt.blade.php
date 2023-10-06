@@ -12,20 +12,21 @@
 
     <!-- Scripts -->
     @vite(['resources/css/app.css', 'resources/js/app.js'])
+    @livewireStyles
 </head>
 <body>
     <x-jet-banner />
 
     <div class="min-h-screen bg-gray-100">
         @livewire('navigation-menu')
-        <livewire:frankfurt-navbar :model="$model" :period="$period" />
+        <livewire:frankfurt.navbar :model="$model" :period="$period" />
         <!-- Page Content -->
         <main>
             @if($tab == 'metrics')
-            <livewire:frankfurt-metrics :model="$model" :period="$period" />
+            <livewire:frankfurt.metrics :model="$model" :period="$period" />
             @endif
             @if($tab == 'filings')
-            {{-- <livewire:otc-filings :otc="$otc" /> --}}
+            <livewire:frankfurt.filings :model="$model" />
             @endif
         </main>
     </div>

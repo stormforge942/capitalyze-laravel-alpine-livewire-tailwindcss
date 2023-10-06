@@ -23,10 +23,10 @@ class FrankfurtController extends BaseController
 
     public function filings(Request $request, $ticker)
     {
-        $otc = Frankfurt::where('symbol', $ticker)->get()->first();
+        $frankfurt = Frankfurt::where('symbol', $ticker)->get()->first();
 
-        return view('layouts.otc', [
-            'otc' => $otc,
+        return view('layouts.frankfurt', [
+            'model' => $frankfurt,
             'period' => $request->query('period', 'annual'),
             'tab' => 'filings'
         ]);

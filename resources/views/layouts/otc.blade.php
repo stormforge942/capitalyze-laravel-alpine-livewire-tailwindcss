@@ -25,14 +25,14 @@
 
     <div class="min-h-screen bg-gray-100">
         @livewire('navigation-menu')
-        <livewire:otc-navbar :otc="$otc" :period="$period" />
+        <livewire:otc.navbar :model="$otc" :period="$period" />
         <!-- Page Content -->
         <main>
             @if($tab == 'metrics')
-            <livewire:otc-metrics :model="$otc" :period="$period" />
+            <livewire:otc.metrics :model="$otc" :period="$period" />
             @endif
             @if($tab == 'filings')
-            <livewire:otc-filings :otc="$otc" />
+            <livewire:otc.filings :model="$otc" />
             @endif
         </main>
     </div>
