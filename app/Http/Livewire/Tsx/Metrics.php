@@ -1,8 +1,10 @@
 <?php
 
-namespace App\Http\Livewire;
+namespace App\Http\Livewire\Tsx;
 
-class TsxMetrics extends BaseMetricsComponent
+use App\Http\Livewire\BaseMetricsComponent;
+
+class Metrics extends BaseMetricsComponent
 {
     public function table(): string
     {

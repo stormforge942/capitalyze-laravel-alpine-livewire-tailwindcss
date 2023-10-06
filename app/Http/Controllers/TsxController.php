@@ -10,22 +10,20 @@ class TsxController extends BaseController
 {
     public function metrics(Request $request, $ticker)
     {
-        $tsx = Tsx::where('symbol', $ticker)->get()->first();
-
-        return view('layouts.tsx', [
-            'tsx' => $tsx,
+        return view('layouts.stock-exchange', [
+            'model' => Tsx::where('symbol', $ticker)->get()->first(),
             'period' => $request->query('period', 'annual'),
+            'exchange' => 'tsx',
             'tab' => 'metrics'
         ]);
     }
 
     public function filings(Request $request, $ticker)
     {
-        $tsx = Tsx::where('symbol', $ticker)->get()->first();
-
-        return view('layouts.tsx', [
-            'tsx' => $tsx,
+        return view('layouts.stock-exchange', [
+            'model' => Tsx::where('symbol', $ticker)->get()->first(),
             'period' => $request->query('period', 'annual'),
+            'exchange' => 'tsx',
             'tab' => 'filings'
         ]);
     }
