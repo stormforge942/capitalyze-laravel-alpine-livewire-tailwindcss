@@ -37,50 +37,50 @@ $title = 'Welcome to the Future of Financial Data';
                 margin: 0;
             ">
                 &bull;
-                <a href="#" target="_blank" style="
+                <span style="
                             color: #3561e7;
                             text-decoration: none;
-                        ">Financials:</a>
+                        ">Financials:</span>
                 “as presented” financials on 50,000+
                 companies globally
                 <br />
 
                 &bull;
-                <a href="#" target="_blank" style="
+                <span style="
                             color: #3561e7;
                             text-decoration: none;
-                        ">Analysis:</a>
+                        ">Analysis:</span>
                 revenue, efficiency, capital allocation,
                 management analysis
                 <br />
 
                 &bull;
-                <a href="#" target="_blank" style="
+                <span style="
                             color: #3561e7;
                             text-decoration: none;
-                        ">Filings:</a>
+                        ">Filings:</span>
                 one-click functionality from financial table
                 to company filing
                 <br />
 
                 &bull;
-                <a href="#" target="_blank" style="
+                <span style="
                     color: #3561e7;
                     text-decoration: none;
                 ">
                     Ownership:
-                </a>
+                </span>
                 track holdings and create watchlists for
                 10,000+ funds
                 <br />
 
                 &bull;
-                <a href="#" target="_blank" style="
+                <span style="
                     color: #3561e7;
                     text-decoration: none;
                 ">
                     and more...
-                </a>
+                </span>
             </p>
         </td>
     </tr>

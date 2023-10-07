@@ -153,6 +153,7 @@
                 'class' => 'mt-6',
                 'label' => 'Password confirm',
                 'name' => 'password_confirmation',
+                'required' => true,
                 'attrs' => ['autocomplete' => 'off'],
             ])
 

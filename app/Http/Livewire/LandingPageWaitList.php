@@ -18,11 +18,18 @@ class LandingPageWaitList extends Component
     protected $rules = [
         'email' => [
             'required',
-            'email',
+            'email:rfc,dns',
             'unique:users,email',
         ],
-        'name' => 'required|min:4',
-        'likedinLink' => 'nullable|url',
+        'name' => ['required', 'min:5'],
+        'likedinLink' => ['nullable', 'url', 'regex:/^(https?:\/\/)?(www\.)?linkedin\.com\/in\/[\w-]+\/?$/i'],
+    ];
+
+    protected $messages =[
+        'email.email' => 'Please enter a valid email address',
+        'email.unique' => 'This email is already registered. Please continue to login',
+        'name.min' => 'Please enter a minimum of 5 characters',
+        'likedinLink.regex' => 'Please enter a valid linkedin profile link',
     ];
 
     public function submit()
