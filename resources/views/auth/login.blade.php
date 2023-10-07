@@ -4,16 +4,16 @@
 
 @section('content')
     @include('partials.auth-header', ['title' => 'Sign In', 'badge' => true])
-    <form class="mt-4" method="post" action="{{ route('login') }}" x-data="{ email: '{{ old('email') }}', password: '' }" autocomplete="on">
+    <form class="mt-4" method="post" action="{{ route('login') }}" autocomplete="on">
         @csrf
 
         @include('partials.input', [
             'type' => 'email',
-            'label' => 'Work Email',
+            'label' => 'Email',
             'name' => 'email',
             'required' => true,
             'autofocus' => true,
-            'attrs' => ['x-model' => 'email', 'autocomplete' => 'email'],
+            'attrs' => ['autocomplete' => 'email'],
         ])
 
         @include('partials.input', [
@@ -21,7 +21,8 @@
             'class' => 'mt-6',
             'label' => 'Password',
             'name' => 'password',
-            'attrs' => ['x-model' => 'password', 'autocomplete' => 'current-password'],
+            'required' => true,
+            'attrs' => ['autocomplete' => 'current-password'],
         ])
 
         <div class="mt-4 flex justify-between items-center text-sm">
@@ -37,7 +38,6 @@
             @include('partials.green-button', [
                 'text' => 'Sign In',
                 'type' => 'submit',
-                'attrs' => [':disabled' => '!email || !password'],
             ])
 
             <a href="{{ route('waitlist.join') }}" class="mt-4 inline-block">
