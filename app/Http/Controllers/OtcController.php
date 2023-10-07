@@ -10,22 +10,20 @@ class OtcController extends BaseController
 {
     public function metrics(Request $request, $ticker)
     {
-        $otc = Otc::where('symbol', $ticker)->get()->first();
-
-        return view('layouts.otc', [
-            'otc' => $otc,
+        return view('layouts.stock-exchange', [
+            'model' => Otc::where('symbol', $ticker)->get()->first(),
             'period' => $request->query('period', 'annual'),
+            'exchange' => 'otc',
             'tab' => 'metrics'
         ]);
     }
 
     public function filings(Request $request, $ticker)
     {
-        $otc = Otc::where('symbol', $ticker)->get()->first();
-
-        return view('layouts.otc', [
-            'otc' => $otc,
+        return view('layouts.stock-exchange', [
+            'model' => Otc::where('symbol', $ticker)->get()->first(),
             'period' => $request->query('period', 'annual'),
+            'exchange' => 'otc',
             'tab' => 'filings'
         ]);
     }

@@ -20,7 +20,7 @@ abstract class BaseMetricsComponent extends Component
     public $activeSubIndex = null;
     public $possibleErrors = [];
 
-    protected $listeners = ['tabClicked', 'tabSubClicked', 'periodChange'];
+    protected $listeners = ['tabClicked', 'tabSubClicked'];
 
     abstract public function table(): string;
 

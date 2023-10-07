@@ -10,22 +10,20 @@ class ShanghaiController extends BaseController
 {
     public function metrics(Request $request, $ticker)
     {
-        $shanghai = Shanghai::where('symbol', $ticker)->get()->first();
-
-        return view('layouts.shanghai', [
-            'shanghai' => $shanghai,
+        return view('layouts.stock-exchange', [
+            'model' => Shanghai::where('symbol', $ticker)->get()->first(),
             'period' => $request->query('period', 'annual'),
+            'exchange' => 'shanghai',
             'tab' => 'metrics'
         ]);
     }
 
     public function filings(Request $request, $ticker)
     {
-        $shanghai = Shanghai::where('symbol', $ticker)->get()->first();
-
-        return view('layouts.shanghai', [
-            'shanghai' => $shanghai,
+        return view('layouts.stock-exchange', [
+            'model' => Shanghai::where('symbol', $ticker)->get()->first(),
             'period' => $request->query('period', 'annual'),
+            'exchange' => 'shanghai',
             'tab' => 'filings'
         ]);
     }
