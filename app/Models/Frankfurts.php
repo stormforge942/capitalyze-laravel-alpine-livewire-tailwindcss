@@ -4,7 +4,7 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
 
-class Frankfurt extends Model
+class Frankfurts extends Model
 {
     /**
      * The "booting" method of the model.

@@ -19,6 +19,6 @@ class Frankfurts extends Component
 
     public function render()
     {
-        return view('livewire.otcs');
+        return view('livewire.frankfurts');
     }
 }
