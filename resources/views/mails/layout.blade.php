@@ -46,7 +46,7 @@
     <!--<![endif]-->
 </head>
 
-<body style="padding: 0; margin: 0; width: 100%; background: #F4F3F6;">
+<body style="padding: 10px 0; margin: 0; width: 100%; background: #F4F3F6;">
     <table cellspacing="0" cellpadding="0" width="100%" align="center" style="max-width: 600px; background: #ffff;">
         <!-- header -->
         <tr>
