@@ -11,8 +11,8 @@ import "./datepicker.js";
 import "./range-slider-custom";
 import "./css-tables";
 import "./report-text-highlighter";
-window.Swal = Swal;
 
+window.Swal = Swal;
 window.Alpine = Alpine;
 
 Alpine.plugin(focus);
@@ -60,8 +60,6 @@ document.addEventListener("alpine:init", () => {
     }));
 });
 
-Alpine.start();
-
 [...document.querySelectorAll(".moving-label-input")].forEach((input) => {
     input.addEventListener("blur", (e) => {
         let el = e.target.nextElementSibling;
@@ -92,3 +90,5 @@ Alpine.start();
         }
     });
 });
+
+Alpine.start();
