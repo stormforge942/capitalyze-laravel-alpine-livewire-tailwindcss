@@ -45,20 +45,20 @@ class AdminUsers extends Component
         $this->sortBy = $field;
     }
 
-    public function approveUser($userId)
+    public function approveUser(User $user)
     {
-        $user = User::find($userId);
-        $user->is_approved = true;
-        $user->save();
+        $user->update([
+            'is_approved' => true,
+        ]);
 
         $user->notify(new AccountApprovedNotification);
     }
 
-    public function disapproveUser($userId)
+    public function disapproveUser(User $user)
     {
-        $user = User::find($userId);
-        $user->is_approved = false;
-        $user->save();
+        $user->update([
+            'is_approved' => false,
+        ]);
     }
 
     public function updateIsAdmin(User $user, bool $isAdmin)
@@ -71,18 +71,19 @@ class AdminUsers extends Component
     public function deleteUser($userId)
     {
         $this->userToDelete = User::find($userId);
-        $this->dispatchBrowserEvent('swal:confirming-user-deletion', [
-            'title' => __('Confirm User Deletion'),
-            'text' => __('Are you sure you want to delete this user?'),
-            'type' => 'warning',
-            'confirmButtonText' => __('Delete User'),
-            'cancelButtonText' => __('Cancel'),
-        ]);
+
+        $this->confirmingUserDeletion = true;
     }
 
     public function performUserDeletion()
     {
+        $self = auth()->id() == $this->userToDelete->id;
+
         $this->userToDelete->delete();
         $this->confirmingUserDeletion = false;
+
+        if ($self) {
+            return redirect()->route('login');
+        }
     }
 }
