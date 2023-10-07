@@ -9,7 +9,7 @@ use Illuminate\Auth\Events\Registered;
 
 class LandingPageWaitList extends Component
 {
-    public $completed = true;
+    public $completed = false;
 
     public $email = '';
     public $name = '';
