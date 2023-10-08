@@ -1,81 +1,5 @@
-<div class="relative graph-wrapper-box w-full">
-    @if($visible)
-        <div class="graph-wrapper">
-            <div class="graph-header">
-                <div class="pr-3">
-                    <b class="title" wire:click="load()">{{$name}}. ({{$ticker}})</b><br>
-                    <small class="text-blue-600">{{$persentage}}% price return over {{$chartPeriods[$currentChartPeriod]}}</small>
-                </div>
-                <div class="select-graph-date-wrapper ml-12 flex">
-                    <ul class="items-center w-full flex">
-                        <li class="w-full mr-2">
-                            <label class="flex items-center pl-3">
-                                <input wire:model="currentChartPeriod" value="3m" id="date-3m" type="radio" name="date-range" class="w-4 h-4 radio-filter" >
-                                <span class="w-full py-3 ml-2 ">3m</span>
-                            </label>
-                        </li>
-                        <li class="w-full mr-2">
-                            <label class="flex items-center pl-3">
-                                <input wire:model="currentChartPeriod" value="6m" id="date-6m" type="radio" name="date-range" class="w-4 h-4 radio-filter">
-                                <span class="w-full py-3 ml-2 ">6m</span>
-                            </label>
-                        </li>
-                        <li class="w-full mr-2">
-                            <label class="flex items-center pl-3">
-                                <input wire:model="currentChartPeriod" value="YTD" id="date-1yr" type="radio" name="date-range" class="w-4 h-4 radio-filter">
-                                <span class="w-full py-3 ml-2 ">YTD</span>
-                            </label>
-                        </li>
-                        <li class="w-full mr-2">
-                            <label class="flex items-center pl-3">
-                                <input wire:model="currentChartPeriod" value="1yr" id="date-1yr" type="radio" name="date-range" class="w-4 h-4 radio-filter">
-                                <span class="w-full py-3 ml-2 ">1yr</span>
-                            </label>
-                        </li>
-                        <li class="w-full mr-2">
-                            <label class="flex items-center pl-3">
-                                <input wire:model="currentChartPeriod" value="5yr" id="date-5yr" type="radio" name="date-range" class="w-4 h-4 radio-filter">
-                                <span class="w-full py-3 ml-2 ">5yr</span>
-                            </label>
-                        </li>
-                        <li class="w-full mr-2">
-                            <label class="flex items-center pl-3">
-                                <input wire:model="currentChartPeriod" value="max" id="date-5yr" type="radio" name="date-range" class="w-4 h-4 radio-filter">
-                                <span class="w-full py-3 ml-2 ">MAX</span>
-                            </label>
-                        </li>
-                        <li class="w-full mr-2">
-                            <label class="flex items-center pl-3">
-                                <input id="date-custom" type="radio" name="date-range" class="w-4 h-4 radio-filter">
-                                <span class="w-full py-3 ml-2 ">Custom</span>
-                            </label>
-                        </li>
-                    </ul>
-                    <livewire:range-calendar />
-                </div>
-            </div>
-            <div class="w-full mt-3" wire:ignore>
-                <canvas id="product-profile-chart" class="w-full"></canvas>
-            </div>
-
-        </div>
-    @endif
-    <button wire:click="toggleVisible" class="flex items-center justify-center rounded-bl rounded-tr bg-blue-50 text-sm px-3 py-1 absolute right-0 top-0">
-        <span>Hide summary</span>
-
-        <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="w-3 h-3 ml-2">
-            @if($visible)
-                <path stroke-linecap="round" stroke-linejoin="round" d="M19.5 8.25l-7.5 7.5-7.5-7.5"/>
-            @else
-                <path stroke-linecap="round" stroke-linejoin="round" d="M4.5 15.75l7.5-7.5 7.5 7.5"/>
-            @endif
-        </svg>
-    </button>
-
-    @if(!$visible)
-        <div style="margin-bottom: 2em"></div>
-    @endif
-
+<div class="w-full mt-3">
+    <canvas id="product-profile-chart" class="w-full"></canvas>
 </div>
 
 @pushonce('scripts')
@@ -212,9 +136,9 @@
             tooltipEl.style.padding = 8 + 'px ' + 19 + 'px';
         };
 
-        function initChart() {
+        function initChart(data) {
             if (chart) chart.destroy();
-            let data = @this.chartData;
+            // let data = data;
             let canvas = document.getElementById("product-profile-chart");
             if (!canvas) return;
             let ctx = document.getElementById('product-profile-chart').getContext("2d");
@@ -338,12 +262,12 @@
             });
         }
 
-
         document.addEventListener('DOMContentLoaded', initChart);
 
         window.addEventListener("resize", initChart);
 
-        Livewire.on("companyChartReset", initChart);
+        Livewire.on("companyChartReset", (data) => initChart(data));
     </script>
 @endpushonce
+
 

@@ -2,6 +2,7 @@
 
 namespace App\Http\Livewire;
 
+use App\Models\Company;
 use Carbon\Carbon;
 use Illuminate\Support\Facades\DB;
 use Livewire\Component;
@@ -17,6 +18,19 @@ class CompanyProfileOverviewGraph extends Component
 
     protected $listeners = ['dateRangeSelected'];
 
+    public $chartPeriods = [
+        '3m' => '3 months',
+        '6m' => '6 months',
+        '1yr' => '1 year',
+        'YTD' => 'current year',
+        '5yr' => '5 years',
+        'max' => 'all time',
+        'custom' => 'custom',
+    ];
+
+    public $name = '';
+    public $persentage = null;
+
     public function dateRangeSelected($start_at, $end_at)
     {
         $this->currentChartPeriod = 'custom';
@@ -27,6 +41,7 @@ class CompanyProfileOverviewGraph extends Component
 
     public function mount($ticker)
     {
+        $this->name = Company::find($ticker)->name;
         $this->ticker = $ticker;
         $this->load();
     }
@@ -90,6 +105,13 @@ class CompanyProfileOverviewGraph extends Component
             ->avg('volume'));
 
         $divider = 1;
+
+        if (count($result) > 1) {
+            $first = $result->first()->adj_close;
+            $last = $result->last()->adj_close;
+            $this->persentage
+                = round((($last - $first) / $last) * 100, 2);
+        }
 
         while (strlen((string)$volume_avg) >= strlen((string)$adj_close_avg))
         {

@@ -9,6 +9,7 @@
 @import "flowbite-select-custom.css";
 @import "common-styles.css";
 @import "navigation_subtabs.css";
+@import "loader.css";
 
 @tailwind base;
 @tailwind components;
