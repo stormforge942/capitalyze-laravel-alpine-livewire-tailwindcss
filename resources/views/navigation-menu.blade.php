@@ -2,7 +2,6 @@
     <!-- Primary Navigation Menu -->
     <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 p-4 sm:ml-64 pt-10 transition-all" id="navigation">
         <div class="flex justify-between h-16">
-
             @if (Request::is('/'))
                 <div class="flex justify-self-stretch">
                     <!-- Logo -->
@@ -15,7 +14,7 @@
                 </div>
             @endif
 
-            <div class="h-12 w-2/3 rounded-lg border border-gray-300 bg-white leading-[3rem] px-3 flex items-center">
+            <div class="h-12 w-full lg:w-2/3 rounded-lg border border-gray-300 bg-white leading-[3rem] px-3 flex items-center">
                 <svg width="25" height="24" viewBox="0 0 25 24" fill="none"
                     xmlns="http://www.w3.org/2000/svg">
                     <path
@@ -27,22 +26,8 @@
                     {{ __('Search Stocks, Tickers ...') }}
                 </button>
             </div>
-
-            <!-- Hamburger -->
-            <div class="-mr-2 flex items-center sm:hidden">
-                <button @click="open = ! open"
-                    class="inline-flex items-center justify-center p-2 rounded-md text-gray-400 hover:text-gray-500 hover:bg-gray-100 focus:outline-none focus:bg-gray-100 focus:text-gray-500 transition">
-                    <svg class="h-6 w-6" stroke="currentColor" fill="none" viewBox="0 0 24 24">
-                        <path :class="{ 'hidden': open, 'inline-flex': !open }" class="inline-flex"
-                            stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                            d="M4 6h16M4 12h16M4 18h16" />
-                        <path :class="{ 'hidden': !open, 'inline-flex': open }" class="hidden" stroke-linecap="round"
-                            stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12" />
-                    </svg>
-                </button>
-            </div>
         </div>
-        <div class="sm:hidden flex justify-center justify-items-stretch m-auto flex-grow h-12">
+        {{-- <div class="sm:hidden flex justify-center justify-items-stretch m-auto flex-grow h-12">
             <button wire:click="$emit('spotlight.toggle')" class="h-8 w-full grid grid-cols-5 mx-auto max-w-md">
                 <span
                     class="border-2 border-gray-200 border-r-0 text-sm font-medium leading-5 text-gray-500 justify-self-stretch col-span-4 text-left h-8 px-2 py-1">
@@ -56,6 +41,6 @@
                     </svg>
                 </div>
             </button>
-        </div>
+        </div> --}}
     </div>
 </nav>

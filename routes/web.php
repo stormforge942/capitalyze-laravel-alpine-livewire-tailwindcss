@@ -81,6 +81,7 @@ Route::middleware([])->group(function () {
         Route::get('/company/{ticker}/restatement', [CompanyController::class, 'restatement'])->name('company.restatement');
         Route::get('/company/{ticker}/employee', [CompanyController::class, 'employee'])->name('company.employee');
         Route::get('/company/{ticker}/fail-to-deliver', [CompanyController::class, 'failToDeliver'])->name('company.fail.to.deliver');
+        Route::get('/company/{ticker}/ownership', [CompanyController::class, 'ownership'])->name('company.ownership');
 
         Route::get('/fund/{cik}/', [FundController::class, 'summary'])->name('fund.summary');
         Route::get('/fund/{cik}/holdings', [FundController::class, 'holdings'])->name('fund.holdings');

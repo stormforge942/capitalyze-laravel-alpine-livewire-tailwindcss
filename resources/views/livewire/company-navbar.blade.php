@@ -172,7 +172,7 @@
             </li>
             <li>
                <a data-tooltip-target="tooltip-Ownership" data-tooltip-placement="right" id="nav"
-                  href="{{ route('company.profile', ['ticker' => $this->company->ticker]) }}"
+                  href="{{ route('company.ownership', ['ticker' => $this->company->ticker]) }}"
                   class="flex items-center p-2 text-dark-light hover:bg-[#828c851a] @if($currentRoute === 'ownership') bg-[#52d3a233] font-medium @endif rounded-lg group">
                   <svg width="16" height="16" viewBox="0 0 16 16" fill="none" xmlns="http://www.w3.org/2000/svg">
                      <path
