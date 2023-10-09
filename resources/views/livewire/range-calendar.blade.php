@@ -1,10 +1,10 @@
 <div class="date-range-select-wrapper flex ml-2 relative"  wire:click="toggle">
     <div class="from-wrapper py-2 px-3 flex flex-col">
-        <label class="label" for="fromCalendar">From</label>
+        <label class="calendar-label" for="fromCalendar">From</label>
         <div class="value">{{\Carbon\Carbon::parse($start_at)->format('M d, Y')}}</div>
     </div>
     <div class="to-wrapper py-2 px-4 flex flex-col">
-        <label class="label" for="toCalendar">To</label>
+        <label class="calendar-label" for="toCalendar">To</label>
         <div class="value">{{\Carbon\Carbon::parse($end_at)->format('M d, Y')}}</div>
     </div>
     <div class="calendar-icon-wrapper icon-wrapper px-4 flex items-center">
@@ -13,8 +13,9 @@
         </svg>
     </div>
     @if($visible)
-        <div wire:click.stop class="absolute top-12 -left-64 md:max-w-[512px] border rounded-md"  style="width: 512px; border-color: #3561E7;">
-            <div id="calendar"></div>
+        <div wire:click.stop class="absolute top-16 -left-64 md:max-w-[556px] border rounded-md flex flex-row justify-between bg-white"  style="width: 556px; border-color: #3561E7;">
+            <div id="fromCalendar"></div>
+            <div id="toCalendar"></div>
         </div>
     @endif
 </div>
@@ -22,30 +23,78 @@
 @pushonce('scripts')
     <script>
 
+        const today = new Date()
+        const tomorrow = new Date(today);
+        tomorrow.setDate(today.getDate() + 1);
+
+        const year = today.getFullYear()
+        const month = String(today.getMonth() + 1).padStart(2, '0')
+        const day = String(today.getDate()).padStart(2, '0')
+
+        const tomorrow_year = tomorrow.getFullYear();
+        const tomorrow_month = String(tomorrow.getMonth() + 1).padStart(2, '0');
+        const tomorrow_day = String(tomorrow.getDate()).padStart(2, '0');
+
+        const tomorrowDisabledDate = `${tomorrow_year}-${tomorrow_month}-${tomorrow_day}:2048-12-31`
+        const todayDisabledDate = `${year}-${month}-${day}:2048-12-31`
+
+        let start_at = null;
+        let end_at = null;
+
         function init() {
-            const calendar = new VanillaCalendar('#calendar', {
-                type: 'multiple',
+            start_at = null;
+            end_at = null;
+            const fromCalendar = new VanillaCalendar('#fromCalendar', {
                 settings: {
-                    selection: {
-                        day: 'multiple-ranged',
+                    visibility: {
+                        weekend: false,
                     },
+                    range: {
+                        disabled: [todayDisabledDate],
+                    }
                 },
                 actions: {
                     clickDay(e, dates) {
-                        if(dates.length && dates[0] !== dates[dates.length - 1]) {
-                        @this.update(dates[0], dates[dates.length - 1])
-                        }
-                        console.log('day', e, dates)
-                    },
+                        return changeDate(e, dates, true)
+                    }
                 }
             })
 
-            calendar.init()
+            const toCalendar = new VanillaCalendar('#toCalendar', {
+                settings: {
+                    visibility: {
+                        weekend: false,
+                    },
+                    range: {
+                        disabled: [tomorrowDisabledDate],
+                    }
+                },
+                actions: {
+                    clickDay(e, dates) {
+                        return changeDate(e, dates, false)
+                    }
+                }
+            })
+
+            fromCalendar.init()
+            toCalendar.init()
+        }
+
+        const changeDate = (e, dates, start) => {
+            if(start) {
+                start_at = dates[0]
+            } else {
+                end_at = dates[0]
+            }
+
+            if (start_at && end_at) {
+                if (new Date(start_at) < new Date(end_at)) {
+                    console.log(start_at, end_at)
+                    @this.update(start_at, end_at)
+                }
+            }
         }
 
         Livewire.on("toggleVisibleCalendar", init);
-
-
-
     </script>
 @endpushonce

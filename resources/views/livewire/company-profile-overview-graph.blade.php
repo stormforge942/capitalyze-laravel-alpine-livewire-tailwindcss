@@ -44,12 +44,6 @@
                                 <span class="w-full py-3 ml-2 ">MAX</span>
                             </label>
                         </li>
-                        <li class="w-full mr-2">
-                            <label class="flex items-center pl-3">
-                                <input id="date-custom" type="radio" name="date-range" class="w-4 h-4 radio-filter">
-                                <span class="w-full py-3 ml-2 ">Custom</span>
-                            </label>
-                        </li>
                     </ul>
                     <livewire:range-calendar />
                 </div>
