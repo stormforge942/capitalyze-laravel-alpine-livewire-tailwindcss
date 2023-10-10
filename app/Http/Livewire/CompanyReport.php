@@ -14,7 +14,7 @@ use Illuminate\Support\Collection;
 class CompanyReport extends Component
 {
     use TableFiltersTrait;
-    
+
     public $company;
     public $ticker;
     public $companyName;
@@ -183,6 +183,7 @@ class CompanyReport extends Component
 
         $data = json_decode($query, true);
         $this->data = $data;
+        dd($data);
         $this->generateTableFromNestedArray($data);
     }
 
