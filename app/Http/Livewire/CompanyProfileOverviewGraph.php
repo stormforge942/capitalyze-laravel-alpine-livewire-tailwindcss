@@ -113,6 +113,11 @@ class CompanyProfileOverviewGraph extends Component
                 = round((($last - $first) / $last) * 100, 2);
         }
 
+        if (!$volume_avg || !$adj_close_avg) {
+            $this->resetChart();
+            return;
+        }
+
         while (strlen((string)$volume_avg) >= strlen((string)$adj_close_avg))
         {
             $volume_avg /= 5;

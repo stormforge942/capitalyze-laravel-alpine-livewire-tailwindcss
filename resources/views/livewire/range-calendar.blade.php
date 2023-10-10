@@ -41,6 +41,12 @@
         let start_at = null;
         let end_at = null;
 
+        let from_calendar_month = new Date().getMonth();
+        let from_calendar_year = new Date().getFullYear();
+
+        let to_calendar_month = new Date().getMonth();
+        let to_calendar_year = new Date().getFullYear();
+
         function init() {
             start_at = null;
             end_at = null;
@@ -48,10 +54,15 @@
                 settings: {
                     visibility: {
                         weekend: false,
+                        today: false,
                     },
                     range: {
                         disabled: [todayDisabledDate],
-                    }
+                    },
+                    selected: {
+                        month: from_calendar_month,
+                        year: from_calendar_year,
+                    },
                 },
                 actions: {
                     clickDay(e, dates) {
@@ -67,7 +78,11 @@
                     },
                     range: {
                         disabled: [tomorrowDisabledDate],
-                    }
+                    },
+                    selected: {
+                        month: to_calendar_month,
+                        year: to_calendar_year,
+                    },
                 },
                 actions: {
                     clickDay(e, dates) {
@@ -88,6 +103,11 @@
             }
 
             if (start_at && end_at) {
+                from_calendar_month = new Date(start_at).getMonth();
+                from_calendar_year = new Date(start_at).getFullYear();
+                to_calendar_month = new Date(end_at).getMonth();
+                to_calendar_year = new Date(end_at).getFullYear();
+
                 if (new Date(start_at) < new Date(end_at)) {
                     console.log(start_at, end_at)
                     @this.update(start_at, end_at)

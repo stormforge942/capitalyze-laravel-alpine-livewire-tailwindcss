@@ -20,7 +20,7 @@
                     <div class="sm:flex sm:items-start flex-col company-profile-page" wire:loading.remove>
                         <div class="page-titles">
                             <b>{{ @$profile['registrant_name'] }}  @if(@$profile['symbol']) ({{ @$profile['symbol'] }}) @endif </b> <br>
-                            <b>$345</b> <small class="text-color-green">(+0.40%)</small>
+                            <b>${{number_format($cost)}}</b> <small class="text-color-green">({{$dynamic > 0 ? '+' : '-'}}{{abs($dynamic)}}%)</small>
                         </div>
 
                         <div class="tabs-wrapper flex">
@@ -32,14 +32,12 @@
                         @if ($infoTabActive == 'overview')
                             @include('livewire.company-profile.companyprofile-overview-top-data')
 
-{{--                            @include('livewire.company-profile.company-profile-overview-graph')--}}
                             <livewire:company-profile-overview-graph :ticker="$ticker" />
 
                             @include('livewire.company-profile.company-profile-overview-table')
                         @elseif($infoTabActive == 'business_information')
                             @include('livewire.company-profile.company-profile-business-information')
                         @endif
-
                     </div>
                 @endif
             </div>
