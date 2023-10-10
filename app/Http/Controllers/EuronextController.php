@@ -10,22 +10,20 @@ class EuronextController extends BaseController
 {
     public function metrics(Request $request, $ticker)
     {
-        $euronext = Euronext::where('symbol', $ticker)->get()->first();
-
-        return view('layouts.euronext', [
-            'euronext' => $euronext,
+        return view('layouts.stock-exchange', [
+            'model' => Euronext::where('symbol', $ticker)->get()->first(),
             'period' => $request->query('period', 'annual'),
+            'exchange' => 'euronext',
             'tab' => 'metrics'
         ]);
     }
 
     public function filings(Request $request, $ticker)
     {
-        $euronext = Euronext::where('symbol', $ticker)->get()->first();
-
-        return view('layouts.euronext', [
-            'euronext' => $euronext,
+        return view('layouts.stock-exchange', [
+            'model' => Euronext::where('symbol', $ticker)->get()->first(),
             'period' => $request->query('period', 'annual'),
+            'exchange' => 'euronext',
             'tab' => 'filings'
         ]);
     }

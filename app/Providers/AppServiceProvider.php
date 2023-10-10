@@ -10,6 +10,7 @@ use App\Models\Hkex;
 use App\Models\Japan;
 use App\Models\Company;
 use App\Models\Euronext;
+use App\Models\Frankfurt;
 use App\Models\Shanghai;
 use App\Models\MutualFunds;
 use Illuminate\Auth\Notifications\ResetPassword;
@@ -42,6 +43,7 @@ class AppServiceProvider extends ServiceProvider
         Spotlight::registerGroup('japans', 'Japan');
         Spotlight::registerGroup('hkexs', 'HKEX');
         Spotlight::registerGroup('otcs', 'OTC');
+        Spotlight::registerGroup('frankfurts', 'Frankfurt');
 
         Spotlight::registerQueries(
             SpotlightQuery::asDefault(function ($query) {
@@ -74,6 +76,9 @@ class AppServiceProvider extends ServiceProvider
                     ->orWhere('isin', 'ilike', "%{$query}%")
                     ->take(10)->get();
                 $otcs = Otc::where('company_name', 'ilike', "%{$query}%")
+                    ->orWhere('symbol', 'ilike', "%{$query}%")
+                    ->take(10)->get();
+                $frankfurts = Frankfurt::where('company_name', 'ilike', "%{$query}%")
                     ->orWhere('symbol', 'ilike', "%{$query}%")
                     ->take(10)->get();
 
@@ -165,6 +170,15 @@ class AppServiceProvider extends ServiceProvider
                             ->setGroup('otcs')
                             ->setTitle("$otc->company_name | $otc->symbol")
                             ->setAction('jump_to', ['path' => '/otc/' . $otc->symbol])
+                    );
+                }
+
+                foreach ($frankfurts as $frankfurt) {
+                    $collection->push(
+                        SpotlightResult::make()
+                            ->setGroup('frankfurts')
+                            ->setTitle("$frankfurt->company_name | $frankfurt->symbol")
+                            ->setAction('jump_to', ['path' => '/frankfurt/' . $frankfurt->symbol])
                     );
                 }
 

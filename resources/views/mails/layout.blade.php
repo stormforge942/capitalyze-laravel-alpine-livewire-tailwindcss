@@ -46,12 +46,12 @@
     <!--<![endif]-->
 </head>
 
-<body style="padding: 0; margin: 0; width: 100%">
-    <table cellspacing="0" cellpadding="0" width="100%" style="width: 100%">
+<body style="padding: 10px 0; margin: 0; width: 100%; background: #F4F3F6;">
+    <table cellspacing="0" cellpadding="0" width="100%" align="center" style="max-width: 600px; background: #ffff;">
         <!-- header -->
         <tr>
-            <td style="padding: 0 30px" class="container">
-                <table cellspacing="0" cellpadding="0" width="100%" style="width: 100%">
+            <td style="padding: 0 30px;" class="container">
+                <table cellspacing="0" cellpadding="0" width="100%" style="width: 100%;">
                     <tr>
                         <td style="padding: 32px 0; text-align: center">
                             <a href="{{ url('/') }}">
@@ -83,7 +83,7 @@
 
         <!-- body -->
         <tr>
-            <td style="padding: 24px 30px 48px 30px" class="container">
+            <td style="padding: 24px 30px 48px 30px;" class="container">
                 @yield('content')
             </td>
         </tr>

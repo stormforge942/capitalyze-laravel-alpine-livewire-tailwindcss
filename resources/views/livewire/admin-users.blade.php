@@ -6,107 +6,131 @@
                     <h1 class="text-base font-semibold leading-6 text-gray-900">User management</h1>
                 </div>
             </div>
-            <div class="mt-8 flow-root rounded-lg overflow-x-auto">
-                <table class="table-auto min-w-full border-collapse" x-data>
+            <div class="mt-8 flow-root rounded-lg overflow-x-auto ">
+                <table class="table-auto min-w-full border-collapse text-left" x-data>
                     <thead>
                         <tr>
-                            <th><a wire:click.prevent="sortBy('id')">ID</a></th>
-                            <th><a wire:click.prevent="sortBy('name')">Name</a></th>
-                            <th><a wire:click.prevent="sortBy('email')">Email</a></th>
-                            <th><a wire:click.prevent="sortBy('email')">Is Admin</a></th>
-                            <th><a wire:click.prevent="sortBy('email')">Group</a></th>
-                            <th><a wire:click.prevent="sortBy('approved')">Approved</a></th>
-                            <th><a wire:click.prevent="sortBy('created_at')">Registration Date</a></th>
-                            <th>Action</th>
+                            <th class="capitalize p-2 whitespace-nowrap bg-gray-100"><a href="#"
+                                    wire:click.prevent="sortBy('id')">ID</a></th>
+                            <th class="capitalize p-2 whitespace-nowrap bg-gray-100"><a href="#"
+                                    wire:click.prevent="sortBy('name')">Name</a></th>
+                            <th class="capitalize p-2 whitespace-nowrap bg-gray-100"><a href="#"
+                                    wire:click.prevent="sortBy('email')">Email</a></th>
+                            <th class="capitalize p-2 whitespace-nowrap bg-gray-100"><a href="#"
+                                    wire:click.prevent="sortBy('email')">Is Admin</a></th>
+                            <th class="capitalize p-2 whitespace-nowrap bg-gray-100"><a href="#"
+                                    wire:click.prevent="sortBy('email')">Group</a></th>
+                            <th class="capitalize p-2 whitespace-nowrap bg-gray-100"><a href="#"
+                                    wire:click.prevent="sortBy('approved')">Approved</a></th>
+                            <th class="capitalize p-2 whitespace-nowrap bg-gray-100"><a href="#"
+                                    wire:click.prevent="sortBy('created_at')">Registration Date</a></th>
+                            <th colspan="2" class="capitalize p-2 whitespace-nowrap bg-gray-100">Action</th>
                         </tr>
                     </thead>
-                    <tbody>
+                    <tbody class="text-sm">
                         @foreach ($users as $index => $user)
-                        <tr class="{{ $index % 2 ? 'bg-gray-200' : '' }}"> <!-- Alternating row colors -->
-                            <td class="text-center">{{ $user->id }}</td>
-                            <td class="text-center">{{ $user->name }}</td>
-                            <td class="text-center">{{ $user->email }}</td>
-                            <td class="">
-                                <input type="checkbox" class="disabled:opacity-50" @change="$wire.updateIsAdmin({{ $user->id }}, $el.checked)" @if($user->is_admin) checked @endif  @if($user->id === auth()->id()) disabled @endif>
-                            </td>
-                            <td class="text-center">
-                                <select wire:change="updateUserGroup('{{ $user->id }}', $event.target.value)">
-                                    @foreach($groups as $group)
-                                        <option value="{{ $group->id }}" @if($user->group_id == $group->id) selected @endif>{{ $group->name }}</option>
-                                    @endforeach
-                                </select>
-                            </td>
-                            <td class="text-center">{{ $user->is_approved ? 'Yes' : 'No' }}</td>
-                            <td class="text-center">{{ $user->created_at->format('m/d/Y') }}</td>
-                            <td class="text-center">
-                                @if(!$user->is_approved)
-                                <button wire:click="approveUser({{ $user->id }})" class="mx-auto bg-green-500 text-white py-1 px-3 rounded hover:bg-green-600"> <!-- Green Approve button -->
-                                    <svg class="inline w-4" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="w-6 h-6">
-  <path stroke-linecap="round" stroke-linejoin="round" d="M4.5 12.75l6 6 9-13.5" />
-</svg> Approve
-                                </button>
-                                @else
-                                <button wire:click="disapproveUser({{ $user->id }})" class="bg-red-500 text-white py-1 px-3 rounded hover:bg-red-600"> <!-- Red Disapprove button -->
-                                    <svg class="inline w-4" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="w-6 h-6">
-  <path stroke-linecap="round" stroke-linejoin="round" d="M6 18L18 6M6 6l12 12" />
-</svg>
- Disapprove
-                                </button>
-                                @endif
-                            </td>
-                            <td class="text-center">
-                                <button wire:click="deleteUser({{ $user->id }})" class="bg-red-500 text-white py-1 px-3 rounded hover:bg-red-600">
-                                <svg class="inline w-4" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="w-6 h-6">
-                                    <path stroke-linecap="round" stroke-linejoin="round" d="M6 18L18 6M6 6l12 12" />
-                                </svg>
-                                Delete
-                                </button>
+                            <tr class="{{ $index % 2 ? 'bg-gray-200' : '' }}"> <!-- Alternating row colors -->
+                                <td class="whitespace-nowrap p-2">{{ $user->id }}</td>
+                                <td class="whitespace-nowrap p-2">{{ $user->name }}</td>
+                                <td class="whitespace-nowrap p-2">{{ $user->email }}</td>
+                                <td class="p-2">
+                                    <input type="checkbox" class="disabled:opacity-50"
+                                        @change="$wire.updateIsAdmin({{ $user->id }}, $el.checked)"
+                                        @if ($user->is_admin) checked @endif
+                                        @if ($user->id === auth()->id()) disabled @endif>
+                                </td>
+                                <td class="p-2">
+                                    <select class="text-sm px-2 py-1 outline outline-1 outline-gray-500"
+                                        wire:change="updateUserGroup('{{ $user->id }}', $event.target.value)">
+                                        @foreach ($groups as $group)
+                                            <option value="{{ $group->id }}"
+                                                @if ($user->group_id == $group->id) selected @endif>{{ $group->name }}
+                                            </option>
+                                        @endforeach
+                                    </select>
+                                </td>
+                                <td class="p-2">{{ $user->is_approved ? 'Yes' : 'No' }}</td>
+                                <td class="p-2">{{ $user->created_at->format('m/d/Y') }}</td>
+                                <td class="p-2">
+                                    @if (!$user->is_approved)
+                                        <button wire:click="approveUser({{ $user->id }})"
+                                            class="mx-auto bg-green-500 text-white py-1 px-3 rounded hover:bg-green-600 flex items-center gap-2 whitespace-nowrap w-full">
+                                            <!-- Green Approve button -->
+                                            <svg class="inline w-4" xmlns="http://www.w3.org/2000/svg" fill="none"
+                                                viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor"
+                                                class="w-6 h-6">
+                                                <path stroke-linecap="round" stroke-linejoin="round"
+                                                    d="M4.5 12.75l6 6 9-13.5" />
+                                            </svg> Approve
+                                        </button>
+                                    @else
+                                        <button wire:click="disapproveUser({{ $user->id }})"
+                                            class="bg-red-500 text-white py-1 px-3 rounded hover:bg-red-600 flex items-center gap-2 whitespace-nowraps">
+                                            <!-- Red Disapprove button -->
+                                            <svg class="inline w-4" xmlns="http://www.w3.org/2000/svg" fill="none"
+                                                viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor"
+                                                class="w-6 h-6">
+                                                <path stroke-linecap="round" stroke-linejoin="round"
+                                                    d="M6 18L18 6M6 6l12 12" />
+                                            </svg>
+                                            Disapprove
+                                        </button>
+                                    @endif
+                                </td>
+                                <td>
+                                    <button wire:click="deleteUser({{ $user->id }})"
+                                        class="bg-red-500 text-white py-1 px-3 rounded hover:bg-red-600 flex items-center gap-2 whitespace-nowrap">
+                                        <svg class="inline w-4" xmlns="http://www.w3.org/2000/svg" fill="none"
+                                            viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor"
+                                            class="w-6 h-6">
+                                            <path stroke-linecap="round" stroke-linejoin="round"
+                                                d="M6 18L18 6M6 6l12 12" />
+                                        </svg>
+                                        Delete
+                                    </button>
 
-                            </td>
-                        </tr>
+                                </td>
+                            </tr>
                         @endforeach
                     </tbody>
                 </table>
-
                 {{ $users->links() }}
             </div>
         </div>
     </div>
 
 
+    <!-- Delete User Confirmation Modal -->
+    <x-jet-dialog-modal wire:model="confirmingUserDeletion" wire:ignore>
+        <x-slot name="title">
+            {{ __('Confirm User Deletion') }}
+        </x-slot>
 
-<!-- Delete User Confirmation Modal -->
-<x-jet-dialog-modal wire:model="confirmingUserDeletion" wire:ignore>
-    <x-slot name="title">
-        {{ __('Confirm User Deletion') }}
-    </x-slot>
+        <x-slot name="content">
+            <p>
+                Are you sure you want to delete this user ({{ $userToDelete?->email }})?
+            </p>
 
-    <x-slot name="content">
-        {{ __('Are you sure you want to delete this user?') }}
-    </x-slot>
+            @if (auth()->id() === $userToDelete?->id)
+                <p class="mt-4 text-yellow-600">
+                    You are deleting yourself. This will log you out and you will not be able to log back in.
+                </p>
+            @endif
+        </x-slot>
 
-    <x-slot name="footer">
-        <x-jet-secondary-button wire:click="$set('confirmingUserDeletion', false)" wire:loading.attr="disabled">
-            {{ __('Cancel') }}
-        </x-jet-secondary-button>
+        <x-slot name="footer">
+            <div class="flex gap-2">
+                <x-jet-secondary-button wire:click="$set('confirmingUserDeletion', false)" wire:loading.attr="disabled">
+                    {{ __('Cancel') }}
+                </x-jet-secondary-button>
 
-        <x-jet-danger-button wire:click="performUserDeletion" wire:loading.attr="disabled">
-            {{ __('Delete User') }}
-        </x-jet-danger-button>
-    </x-slot>
-</x-jet-dialog-modal>
+                <x-jet-danger-button wire:click="performUserDeletion" wire:loading.attr="disabled">
+                    {{ __('Delete User') }}
+                </x-jet-danger-button>
+            </div>
+        </x-slot>
+    </x-jet-dialog-modal>
 </div>
 @push('scripts')
-<script>
-    window.livewire.on('file-dropped', (event) => {
-        let files = event.dataTransfer.files;
-        let fileObject = files[0];
-        let reader = new FileReader();
-        reader.onloadend = () => {
-            window.livewire.emit('file-upload', reader.result)
-        }
-        reader.readAsDataURL(fileObject);
-    })
-</script>
+    <script></script>
 @endpush
-

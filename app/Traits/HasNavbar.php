@@ -23,10 +23,10 @@ trait HasNavbar
             ->exists();
     }
 
-    public function navbars(): Collection
+    public function navbars($moddable = true): Collection
     {
         return NavbarGroupShows::query()
-            ->with(['navbar'])
+            ->with(['navbar' => fn ($q) => $q->where('is_moddable', $moddable)])
             ->when(
                 !$this->is_admin,
                 fn ($q) => $q->where('group_id', $this->group_id)->where('show', true)
