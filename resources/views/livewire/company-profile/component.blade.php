@@ -1,5 +1,5 @@
-<div class="bg-gray-100">
-    <div class="py-12">
+<div class="bg-gray-100" style="margin-top: -40px;">
+    <div>
         <div class="mx-auto">
             <div class="px-4 sm:px-6 lg:px-8 py-4">
                 <div wire:loading.flex class="justify-center items-center min-w-full min-h-100vh company-profile-loading">
