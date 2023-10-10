@@ -10,11 +10,10 @@ class JapanController extends BaseController
 {
     public function metrics(Request $request, $ticker)
     {
-        $japan = Japan::where('symbol', $ticker)->get()->first();
-
-        return view('layouts.japan', [
-            'japan' => $japan,
+        return view('layouts.stock-exchange', [
+            'model' => Japan::where('symbol', $ticker)->get()->first(),
             'period' => $request->query('period', 'annual'),
+            'exchange' => 'japan',
             'tab' => 'metrics'
         ]);
     }
@@ -23,9 +22,10 @@ class JapanController extends BaseController
     {
         $japan = Japan::where('symbol', $ticker)->get()->first();
 
-        return view('layouts.japan', [
-            'japan' => $japan,
+        return view('layouts.stock-exchange', [
+            'model' => Japan::where('symbol', $ticker)->get()->first(),
             'period' => $request->query('period', 'annual'),
+            'exchange' => 'japan',
             'tab' => 'filings'
         ]);
     }

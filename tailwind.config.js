@@ -34,7 +34,7 @@ module.exports = {
                     ...defaultTheme.colors.gray,
                     light: "#F5F5F5",
                     medium: "#D2D6D2",
-                    medium2: "#7C8286",
+                    medium2: "#828C85",
                     dark: "#A6ACA8",
                 },
                 dark: {
