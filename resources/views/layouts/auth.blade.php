@@ -23,7 +23,7 @@
                 <img src="{{ asset('img/logo.png') }}" alt="Capitalyze logo" class="h-9 md:h-14 2xl:h-18">
             </a>
         </div>
-        <div class="mt-[3.65rem] md:mt-[15vh] mb-5">
+        <div class="mt-[15vh] mb-5">
             <div class="p-6 max-w-[27rem] mx-auto bg-white rounded-lg shadow-xl">
                 @yield('content')
             </div>

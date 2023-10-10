@@ -44,8 +44,8 @@
                     </div>
                 </div>
 
-                <svg class="hidden lg:block absolute left-10 xl:left-24 -bottom-10 translate-y-[100%] h-[354px] w-auto -z-50" viewBox="0 0 475 354"
-                    fill="none" xmlns="http://www.w3.org/2000/svg">
+                <svg class="hidden lg:block absolute left-10 xl:left-24 -bottom-10 translate-y-[100%] h-[354px] w-auto -z-50"
+                    viewBox="0 0 475 354" fill="none" xmlns="http://www.w3.org/2000/svg">
                     <path
                         d="M290.331 323.415L371.757 304.568L349.015 206.397L297.613 219.871L283.75 269.56L290.331 323.415Z"
                         fill="white" stroke="#15357A" stroke-width="0.524533" stroke-miterlimit="10" />
@@ -242,7 +242,7 @@
                     <div class="text-center space-y-4">
                         <h1 class="text-3xl leading-10 font-semibold tracking-tight">
                             @if ($completed)
-                                Thanks for joining the waitlist
+                                Thank you for joining the waitlist
                             @elseif($verified)
                                 Your email has been verified
                             @else
@@ -251,7 +251,13 @@
                         </h1>
 
                         @if ($completed || $verified)
-                            <p class="text-md leading-7">You'll be the first to know once we launch</p>
+                            <p class="text-md leading-7">
+                                @if ($completed)
+                                    We have sent you a verification email
+                                @else
+                                    You'll be the first to know when we launch
+                                @endif
+                            </p>
 
                             <div class="flex justify-center">
                                 <svg xmlns="http://www.w3.org/2000/svg" width="80" height="80"
@@ -300,7 +306,7 @@
                                     'type' => 'submit',
                                 ])
 
-                                <a href="{{ route('login') }}" class="mt-4 inline-block">
+                                <a href="{{ route('login') }}" class="mt-4 inline-block hover:underline">
                                     Already have an account? <span class="font-semibold">Sign In</span>
                                 </a>
                             </div>
@@ -312,8 +318,8 @@
     </div>
 
     <svg xmlns="http://www.w3.org/2000/svg"
-        class="absolute sm:right-[6vw] lg:right-0 h-12 w-auto sm:h-32 top-28 lg:top-56 sm:top-34 -z-50" viewBox="0 0 50 50"
-        fill="none">
+        class="absolute sm:right-[6vw] lg:right-0 h-12 w-auto sm:h-32 top-28 lg:top-56 sm:top-34 -z-50"
+        viewBox="0 0 50 50" fill="none">
         <path
             d="M25.5942 3.39788L37.6039 21.979L37.7338 22.6726C38.5413 27.4616 39.7277 33.3135 39.7277 33.3135L39.9399 34.4297L26.0693 47.5409L4.09409 21.6184L25.5942 3.39788Z"
             fill="white" stroke="#15357A" stroke-width="0.12138" stroke-miterlimit="10" />
@@ -367,8 +373,8 @@
             fill="#9BCDFB" stroke="#15357A" stroke-width="0.562618" stroke-miterlimit="10" />
     </svg>
 
-    <svg class="absolute -left-20 -bottom-[152px] lg:hidden h-[354px] w-auto -z-50" viewBox="0 0 475 354" fill="none"
-        xmlns="http://www.w3.org/2000/svg">
+    <svg class="absolute -left-20 -bottom-[152px] lg:hidden h-[354px] w-auto -z-50" viewBox="0 0 475 354"
+        fill="none" xmlns="http://www.w3.org/2000/svg">
         <path d="M290.331 323.415L371.757 304.568L349.015 206.397L297.613 219.871L283.75 269.56L290.331 323.415Z"
             fill="white" stroke="#15357A" stroke-width="0.524533" stroke-miterlimit="10" />
         <path

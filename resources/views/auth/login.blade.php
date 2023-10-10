@@ -31,7 +31,7 @@
                     name="remember" :checked="{{ old('remember') == "on" }}">
                 <span>Remember Me</span>
             </label>
-            <a href="{{ route('password.request') }}">Forgot Password?</a>
+            <a href="{{ route('password.request') }}" class="hover:underline">Forgot Password?</a>
         </div>
 
         <div class="mt-6 text-center">
@@ -40,7 +40,7 @@
                 'type' => 'submit',
             ])
 
-            <a href="{{ route('waitlist.join') }}" class="mt-4 inline-block">
+            <a href="{{ route('waitlist.join') }}" class="mt-4 inline-block hover:underline">
                 Don't have an account? <span class="font-semibold">Join the waitlist</span>
             </a>
         </div>
