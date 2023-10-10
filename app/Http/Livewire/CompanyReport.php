@@ -28,7 +28,7 @@ class CompanyReport extends Component
     public $data;
     public $tableDates = [];
     public $noData = false;
-    public $skipNext = false;
+    // public $skipNext = false;
 
     protected $request;
     protected $rowCount = 0;
@@ -65,11 +65,20 @@ class CompanyReport extends Component
         }
 
         // Only generate a row if the label is not empty and not '#segmentation'
-        if (!empty($label) && !$this->skipNext && $label !== '#segmentation') {
+        // if (!empty($label) && !$this->skipNext ) {
+        if (!empty($label) ) {
 
             $class =  $boldClass;
+            $padding = $depth * 10; // Assuming 20 pixels of padding per depth level
+
             $output .= '<div class=" row ' . $class . '">';
-            $output .= '<div class="cell">' . str_repeat("&nbsp; ", $depth) . $label . '</div>';
+            $output .= '<div class="cell" style="padding-left: ' . $padding . 'px;">' . $label . '</div>';
+
+
+            // if($label != "Net sales" && $label != "#segmentation") {
+            //     dd($output);
+            // }
+       
 
             foreach ($dates as $date) {
                 if (isset($dateValues[$date])) {
@@ -118,12 +127,12 @@ class CompanyReport extends Component
         }
 
 
-        if($label === '#segmentation') {
-            $label = 'Segmentation';
-            $this->skipNext = true;
-        } else {
-            $this->skipNext = false;
-        }
+        // if($label === '#segmentation') {
+        //     $label = 'Segmentation';
+        //     $this->skipNext = true;
+        // } else {
+        //     $this->skipNext = false;
+        // }
         // Recursively generate rows for children
         foreach ($array as $key => $value) {
             if (!preg_match('/\d{4}-\d{2}-\d{2}/', $key) && is_array($value)) {
