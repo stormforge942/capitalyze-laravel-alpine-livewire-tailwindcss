@@ -3,6 +3,7 @@
 namespace App\Http\Livewire;
 
 use App\Models\InfoPresentation;
+use Carbon\Carbon;
 use Illuminate\Database\ConnectionResolver;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Query\Builder;
@@ -15,6 +16,8 @@ class CompanyReport extends Component
 {
     use TableFiltersTrait;
 
+
+    public $rows;
     public $company;
     public $ticker;
     public $companyName;
@@ -78,7 +81,6 @@ class CompanyReport extends Component
             // if($label != "Net sales" && $label != "#segmentation") {
             //     dd($output);
             // }
-       
 
             foreach ($dates as $date) {
                 if (isset($dateValues[$date])) {
@@ -106,12 +108,12 @@ class CompanyReport extends Component
                         <path class="open-slide" data-value="'.htmlspecialchars($data_json).'" d="M0 2a2 2 0 0 1 2-2h12a2 2 0 0 1 2 2v12a2 2 0 0 1-2 2H2a2 2 0 0 1-2-2V2zm15 2h-4v3h4V4zm0 4h-4v3h4V8zm0 4h-4v3h3a1 1 0 0 0 1-1v-2zm-5 3v-3H6v3h4zm-5 0v-3H1v2a1 1 0 0 0 1 1h3zm-4-4h4V8H1v3zm0-4h4V4H1v3zm5-3v3h4V4H6zm4 4H6v3h4V8z"></path>
                       </svg></div>';
                     } else if(strpos($value, '|') !== false) {
-                        list($content, $hash) = explode("|", $dateValues[$date][0], 2);
+                        [$content, $hash] = explode("|", $dateValues[$date][0], 2);
                         $data = array("hash" => $hash, "ticker" => $this->ticker);
                         $data_json = json_encode($data);
                         $value = '<div data-value="'.htmlspecialchars($data_json).'" class="cell">' . strstr($value, '|', true) . '</div>';
                     } else {
-                        list($content, $hash) = explode("|", $dateValues[$date][0], 2);
+                        [$content, $hash] = explode("|", $dateValues[$date][0], 2);
                         $data = array("hash" => $hash, "ticker" => $this->ticker, "value" => $value);
                         $data_json = json_encode($data);
                         $value = '<div data-value="'.htmlspecialchars($data_json).'" class="open-slide cell cursor-pointer hover:underline">' . $value . '</div>';
@@ -192,9 +194,84 @@ class CompanyReport extends Component
 
         $data = json_decode($query, true);
         $this->data = $data;
-        dd($data);
-        $this->generateTableFromNestedArray($data);
+        $this->generateRows($data);
+        $this->generateTableDates();
     }
+
+    public function generateTableDates()
+    {
+        $dates = [];
+        $currentYear = date('Y') - 7;
+
+        for ($i = 0; $i < 8; $i++) {
+            $year = $currentYear + $i;
+            $dates[] = $year;
+        }
+        $this->tableDates = $dates;
+    }
+
+    public function generateRows($data) {
+       $rows = [];
+
+       foreach($data as $key => $value) {
+           $rows[] = $this->generateRow($value, $key);
+       }
+
+       $this->rows = $rows;
+    }
+
+    public function generateRow($data, $title):array {
+        $row = [
+            'title' => $title,
+            'values' => [],
+            'children' => [],
+        ];
+
+        foreach($data as $key => $value) {
+            $isDate = true;
+            try {
+                Carbon::createFromFormat('Y-m-d', $key);
+            } catch (\Exception $e) {
+                $isDate = false;
+            }
+
+
+            if ($isDate) {
+                $row['values'][$key] = $this->parseCell($value);
+            } else{
+                if (in_array($key, ['#segmentation'])) {
+                    foreach($value as $sKey => $sValue) {
+                        $row['children'][] = $this->generateRow($sValue, $sKey);
+                    }
+                } else if ($key != $title) {
+                    $row['children'][] = $this->generateRow($value, $key);
+                }
+            }
+
+        }
+
+        return $row;
+    }
+
+    public function parseCell($data) : array
+    {
+       $response = [];
+       $response['ticker'] = $this->ticker;
+
+         foreach($data as $key => $value) {
+              if (in_array('|', str_split($value))) {
+                  [$value, $hash] = explode('|', $value);
+                $response['value'] = $value;
+                $response['hash'] = $hash;
+              } else {
+                $response[$key] = $value;
+              }
+         }
+
+            return $response;
+    }
+
+
 
     public function updatedPeriod() {
         $this->getData();

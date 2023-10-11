@@ -61,7 +61,7 @@
                                     </div>
                                 </div>
 
-                                <div class="flex w-[90%] overflow-x-auth">
+                                <div class="flex w-[90%] overflow-x-hidden">
                                     <div class="tabs-wrapper flex">
                                         <a href="{{route('company.report', ['ticker' => $company->ticker, 'period' => $period])}}" @class(['tab','px-3', 'active' => $currentRoute === 'company.report'])>Income Statement</a>
                                         <a href="{{route('company.metrics', ['ticker' => $company->ticker, 'period' => $period])}}" @class(['tab','px-3', 'active' => $currentRoute === 'company.metrics'])>Balance Sheet</a>
@@ -71,7 +71,7 @@
                                         <a href="{{route('company.executive.compensation', ['ticker' => $company->ticker, 'period' => $period])}}" @class(['tab','px-3', 'active' => $currentRoute === 'company.executive.compensation'])>Consolidated Statements</a>
                                     </div>
                                 </div>
-                                <div class="flex w-[90%] overflow-x-scroll">
+                                <div class="flex w-[90%] overflow-x-hidden">
                                     <ul class="tabs-wrapper flex flex-nowrap bg-inherit border-transparent">
                                         @foreach($navbar[$activeIndex] as $key => $value)
                                             <li data-tab-id="{{$value['id']}}" class="inline-block whitespace-nowrap min-w-min p-4 border-b-2 max-h-[50px] overflow-hidden rounded-t-lg cursor-pointer border-transparent text-[#828C85] hover:text-[#828C85] hover:border-[#828C85] @if($value['id'] == $activeSubIndex) !text-[#52D3A2] active border-b-2 border-[#52D3A2] font-bold hover:border-[#52D3A2] !cursor-default @endif" wire:click="$emit('tabSubClicked', '{{$value['id']}}')">{{ preg_replace('/\[[^\]]*?\]/', '', $value['title']) }}</li>
@@ -466,13 +466,27 @@
                                     <div class="table-wrapper w-full" style="font-size: 12px;">
                                         <div class="table">
                                             <div class="row-group">
-                                                <div class="row row-head">
-                                                    <div class="cell">Date</div>
-                                                    @foreach ($tableDates as $date)
-                                                        <div class="cell">{{ $date }}</div>
+                                                <div class="flex flex-row bg-gray-200">
+                                                    <div class="w-[300px] font-bold flex py-4 items-center justify-start text-base">
+                                                        <span class="ml-8">
+                                                            {{$companyName}} ({{$ticker}})
+                                                        </span>
+                                                    </div>
+                                                    <div class="w-full flex flex-row bg-gray-200">
+                                                        @foreach ($tableDates as $date)
+                                                            <div class="w-[150px] flex items-center justify-center text-base">
+                                                                <span class="py-4">
+                                                                    {{ $date }}
+                                                                </span>
+                                                            </div>
+                                                        @endforeach
+                                                    </div>
+                                                </div>
+                                                <div class="divide-y">
+                                                    @foreach($rows as $row)
+                                                        <livewire:company-report-table-row :data="$row"/>
                                                     @endforeach
                                                 </div>
-                                                {!! $table !!}
                                             </div>
                                         </div>
                                     </div>
