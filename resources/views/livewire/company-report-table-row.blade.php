@@ -1,5 +1,5 @@
 <div class="flex flex-col divide-y">
-    <div class="flex w-full flex-row ">
+    <div wire:click="select" class="flex w-full flex-row ">
         <div
             class="cursor-default bg-white font-bold py-4 text-base w-[300px] truncate flex flex-row"
             style="padding-left: 10px;"
@@ -24,9 +24,9 @@
         </div>
         <div class="w-full bg-white flex flex-row">
             @foreach($data['values'] as $value)
-                <div class="w-[150px] flex items-center justify-center open-slide bg-white py-4 text-base  cursor-pointer hover:underline" data-value='{"hash":"{{$value['hash']}}","ticker":"{{$value['ticker']}}","value":"${{$value['value']}}"}'>
-                    ${{$value['value']}}
-                </div>
+                    <div class="w-[150px] flex items-center justify-center open-slide bg-white py-4 text-base  cursor-pointer hover:underline" data-value='{"hash":"{{$value['hash']}}","ticker":"{{$value['ticker']}}","value":"${{$value['value']}}"}'>
+                        {{$value['value'] ? '$' : ''}} {{$value['value']}}
+                    </div>
             @endforeach
         </div>
     </div>

@@ -17,9 +17,10 @@ class CompanyReport extends Component
     use TableFiltersTrait;
 
 
-    public $rows;
+    public $rows = [];
     public $company;
     public $ticker;
+    public $chartData = [];
     public $companyName;
     public $currentRoute;
     public $period;
@@ -31,12 +32,60 @@ class CompanyReport extends Component
     public $data;
     public $tableDates = [];
     public $noData = false;
+    public $tableLoading = true;
     // public $skipNext = false;
 
     protected $request;
     protected $rowCount = 0;
+    public $selectedRows = [];
 
-   protected $listeners = ['periodChange', 'tabClicked', 'tabSubClicked'];
+   protected $listeners = ['periodChange', 'tabClicked', 'tabSubClicked', 'selectRow'];
+
+   public function selectRow($title, $data){
+       $this->selectedRows[$title] = $data;
+
+       $this->generateChartData();
+       $this->emit('initCompanyReportChart');
+   }
+
+   public function unselect($title)
+   {
+       unset($this->selectedRows[$title]);
+       if (count($this->selectedRows)){
+         $this->generateChartData();
+         $this->emit('initCompanyReportChart');
+       }
+   }
+
+   public function generateChartData(): void
+   {
+       $chartData = [];
+
+       foreach ($this->selectedRows as $title => $row) {
+           $data = [];
+           foreach ($row as $cell) {
+               $data[] = [
+                   'y' => $cell['value'],
+                   'x' => $cell['date'],
+               ];
+           }
+
+
+           $chartData[] = [
+               'data' => $data,
+               'type' => 'line',
+               'label' => $title,
+               'borderColor' => '#000',
+               'pointRadius' => 6,
+               'pointHoverRadius' => 6,
+               'tension' => 0.5,
+               'pointHoverBorderColor' => '#000',
+               'pointHoverBorderWidth' => 4,
+           ];
+       }
+
+         $this->chartData = $chartData;
+   }
 
    function findDates($array, &$dates) {
         foreach ($array as $key => $value) {
@@ -194,16 +243,34 @@ class CompanyReport extends Component
 
         $data = json_decode($query, true);
         $this->data = $data;
-        $this->generateRows($data);
+        $this->generateUI();
+
+    }
+
+    public function changeDates($dates) {
+       $this->rows = [];
+        if (count($dates) == 2) {
+            $this->tableDates = [];
+            for($i = $dates[0]; $i <= $dates[1]; $i++) {
+                $this->tableDates[] = $i;
+            }
+        }
+
+        $this->generateRows($this->data);
+    }
+
+    public function generateUI(): void
+    {
         $this->generateTableDates();
+        $this->generateRows($this->data);
     }
 
     public function generateTableDates()
     {
         $dates = [];
-        $currentYear = date('Y') - 7;
+        $currentYear = date('Y') - 8;
 
-        for ($i = 0; $i < 8; $i++) {
+        for ($i = 0; $i <= 8; $i++) {
             $year = $currentYear + $i;
             $dates[] = $year;
         }
@@ -211,6 +278,7 @@ class CompanyReport extends Component
     }
 
     public function generateRows($data) {
+       $this->tableLoading = true;
        $rows = [];
 
        foreach($data as $key => $value) {
@@ -218,12 +286,13 @@ class CompanyReport extends Component
        }
 
        $this->rows = $rows;
+       $this->tableLoading = false;
     }
 
     public function generateRow($data, $title):array {
         $row = [
             'title' => $title,
-            'values' => [],
+            'values' => $this->generateEmptyCellsRow(),
             'children' => [],
         ];
 
@@ -237,13 +306,17 @@ class CompanyReport extends Component
 
 
             if ($isDate) {
-                $row['values'][$key] = $this->parseCell($value);
-            } else{
+                $year = Carbon::createFromFormat('Y-m-d', $key)->year;
+                if (in_array($year, $this->tableDates))
+                {
+                    $row['values'][$year] = $this->parseCell($value, $key);
+                }
+            } else {
                 if (in_array($key, ['#segmentation'])) {
                     foreach($value as $sKey => $sValue) {
                         $row['children'][] = $this->generateRow($sValue, $sKey);
                     }
-                } else if ($key != $title) {
+                } else {
                     $row['children'][] = $this->generateRow($value, $key);
                 }
             }
@@ -253,9 +326,11 @@ class CompanyReport extends Component
         return $row;
     }
 
-    public function parseCell($data) : array
+    public function parseCell($data, $key) : array
     {
        $response = [];
+       $response['empty'] = false;
+       $response['date'] = $key;
        $response['ticker'] = $this->ticker;
 
          foreach($data as $key => $value) {
@@ -271,7 +346,22 @@ class CompanyReport extends Component
             return $response;
     }
 
+    public function generateEmptyCellsRow(): array
+    {
+        $response = [];
 
+        foreach ($this->tableDates as $date) {
+            $response[$date] = [
+                'date' => Carbon::createFromFormat('Y', $date)->format('Y-m-d'),
+                'value' => '',
+                'hash' => '',
+                'ticker' => $this->ticker,
+                'empty' => true,
+            ];
+        }
+
+        return $response;
+    }
 
     public function updatedPeriod() {
         $this->getData();

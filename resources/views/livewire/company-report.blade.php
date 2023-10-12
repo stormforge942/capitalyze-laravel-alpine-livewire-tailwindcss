@@ -33,8 +33,8 @@
                                     <span class="sr-only">Loading...</span>
                                 </div>
                             </div>
-                            <div class="py-2" wire:loading.remove>
-                                <div class="flex w-full justify-between">
+                            <div class="py-2"> //wire:loading.remove
+                                <div class="flex w-full justify-between" >
                                     <div class="page-titles">
                                         <b>{{ @$companyName }}  @if(@$ticker) ({{ @$ticker }}) @endif </b> <br>
                                         <b>$345</b> <small class="text-color-green">(+0.40%)</small>
@@ -451,8 +451,42 @@
 
                                 <div class="years-range-wrapper my-2" wire:ignore>
                                     <div class="dots-wrapper"></div>
-                                    <div id="range-slider" class="range-slider"></div>
+                                    <div id="range-slider-company-report" class="range-slider"></div>
                                 </div>
+
+                                @if(count($chartData))
+                                    <div class="my-4 w-full p-5 bg-white flex flex-col">
+                                        <div class="flex justify-between w-[80%] mb-24">
+                                            <div class="text-lg text-indigo-600">
+                                                Apple Inc. (AAPL)
+                                            </div>
+                                            <div class="flex items-start">
+                                                <span class="rounded-full bg-red-500 border-2 text-white w-5 h-5 flex items-center justify-center">
+                                                    <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="w-5 h-5">
+                                                      <path stroke-linecap="round" stroke-linejoin="round" d="M6 18L18 6M6 6l12 12" />
+                                                    </svg>
+                                                </span>
+                                            </div>
+                                        </div>
+                                        <div class="px-6">
+                                            <canvas id="chart-company-report"></canvas>
+                                        </div>
+                                        <div class="w-full flex justify-start space-x-3 px-2 mt-8">
+                                            @foreach($selectedRows as $title => $row)
+                                                <div class="rounded-full border flex justify-between space-x-2 p-2" wire:click="unselect('{{ $title }}')">
+                                                    <span>
+                                                        {{$title}}
+                                                    </span>
+                                                    <span class="rounded-full bg-red-500 border-2 text-white w-5 h-5 flex items-center justify-center">
+                                                        <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="w-5 h-5">
+                                                          <path stroke-linecap="round" stroke-linejoin="round" d="M6 18L18 6M6 6l12 12" />
+                                                        </svg>
+                                                    </span>
+                                                </div>
+                                            @endforeach
+                                        </div>
+                                    </div>
+                                @endif
 
                                 <div class="warning-wrapper mt-5">
                                     <div class="warning-text">
@@ -462,35 +496,37 @@
                                         Click on any of the row(s) to chart the data
                                     </div>
                                 </div>
-                                <div class="flex w-[90%] overflow-x-scroll">
-                                    <div class="table-wrapper w-full" style="font-size: 12px;">
-                                        <div class="table">
-                                            <div class="row-group">
-                                                <div class="flex flex-row bg-gray-200">
-                                                    <div class="w-[300px] font-bold flex py-4 items-center justify-start text-base">
-                                                        <span class="ml-8">
-                                                            {{$companyName}} ({{$ticker}})
-                                                        </span>
+                                    <div class="flex w-[90%] overflow-x-scroll">
+                                        <div class="table-wrapper w-full" style="font-size: 12px;">
+                                            <div class="table">
+                                                <div class="row-group">
+                                                    <div class="flex flex-row bg-gray-200">
+                                                        <div class="w-[300px] font-bold flex py-4 items-center justify-start text-base">
+                                                            <span class="ml-8">
+                                                                {{$companyName}} ({{$ticker}})
+                                                            </span>
+                                                        </div>
+                                                        <div class="w-full flex flex-row bg-gray-200">
+                                                            @foreach ($tableDates as $date)
+                                                                <div class="w-[150px] flex items-center justify-center text-base">
+                                                                    <span class="py-4">
+                                                                        {{ $date }}
+                                                                    </span>
+                                                                </div>
+                                                            @endforeach
+                                                        </div>
                                                     </div>
-                                                    <div class="w-full flex flex-row bg-gray-200">
-                                                        @foreach ($tableDates as $date)
-                                                            <div class="w-[150px] flex items-center justify-center text-base">
-                                                                <span class="py-4">
-                                                                    {{ $date }}
-                                                                </span>
-                                                            </div>
-                                                        @endforeach
+                                                    <div class="divide-y">
+                                                        @if(!$tableLoading)
+                                                            @foreach($rows as $row)
+                                                                <livewire:company-report-table-row :data="$row"/>
+                                                            @endforeach
+                                                        @endif
                                                     </div>
-                                                </div>
-                                                <div class="divide-y">
-                                                    @foreach($rows as $row)
-                                                        <livewire:company-report-table-row :data="$row"/>
-                                                    @endforeach
                                                 </div>
                                             </div>
                                         </div>
                                     </div>
-                                </div>
                             </div>
                         </div>
                     </div>
@@ -514,10 +550,44 @@
                 slideOpen = true;
             }
         });
+
+        const el = document.querySelector('#range-slider-company-report');
+
+        if(!el) {
+            return;
+        }
+
+        const tableDates = @this.tableDates
+        let selectedValue = [];
+
+        if (tableDates.length > 0) {
+            selectedValue = [tableDates[0],tableDates[tableDates.length - 1]]
+        }
+
+        let rangeMin = 1997;
+        let rangeMax = selectedValue[1] ? selectedValue[1] : new Date().getFullYear();
+
+
+        rangeSlider(el, {
+            step: 1,
+            min: rangeMin,
+            max: rangeMax,
+            value: selectedValue,
+            onInput: (value) => {
+                if (value.length === 2 && value !== selectedValue) {
+                    @this.changeDates(value)
+                }
+            }
+        });
     });
 
     Livewire.on('slide-over.close', () => {
         slideOpen = false;
+    });
+
+
+    Livewire.on('initCompanyReportChart', () => {
+        initChart();
     });
 
     const annualCheckbox = document.getElementById("date-annual");
@@ -579,5 +649,129 @@
     decimalDropdownCloseIcon.addEventListener("click", function() {
         document.getElementById('dropdown-Decimal').classList.toggle("hidden");
     });
+
+    let chart = null;
+
+    function initChart() {
+        if (chart) chart.destroy();
+        let data = @this.chartData;
+        let canvas = document.getElementById("chart-company-report");
+        if (!canvas) return;
+        let ctx = document.getElementById('chart-company-report').getContext("2d");
+        console.log(data)
+        chart = new Chart(ctx, {
+            // plugins: [{
+            //     afterDraw: chart => {
+            //         if (chart.tooltip?._active?.length) {
+            //             let x = chart.tooltip._active[0].element.x;
+            //             let y = chart.tooltip._active[0].element.y;
+            //             let bottomBarY = chart.tooltip._active[1].element.y;
+            //             let ctx = chart.ctx;
+            //             ctx.save();
+            //             ctx.beginPath();
+            //             ctx.moveTo(x, y);
+            //             ctx.lineTo(x, bottomBarY + 9);
+            //             ctx.lineWidth = 1;
+            //             ctx.strokeStyle = '#13B05BDE';
+            //             ctx.setLineDash([5, 5])
+            //             ctx.stroke();
+            //             ctx.restore();
+            //         }
+            //     }
+            // }],
+            maintainAspectRatio: true,
+            aspectRatio: 3,
+            type: 'bar',
+            data: {
+                datasets: data
+                //     [
+                //
+                //     {
+                //         data: data.dataset2,
+                //         label: "Volume",
+                //         borderColor: "#9D9D9D",
+                //         backgroundColor: 'rgba(255, 255, 255, 0)',
+                //         borderWidth: Number.MAX_VALUE,
+                //         fill: true,
+                //     },
+                //     {
+                //         data: data.dataset1,
+                //         label: "Price",
+                //         borderColor: "#52D3A2",
+                //         type: 'line',
+                //         pointRadius: 0,
+                //         fill: true,
+                //         tension: 0.5,
+                //         pointHoverRadius: 6,
+                //         pointHoverBackgroundColor: '#52D3A2',
+                //         pointHoverBorderWidth: 4,
+                //         pointHoverBorderColor: '#fff',
+                //     },
+                // ]
+            },
+            options: {
+                interaction: {
+                    intersect: false,
+                    mode: 'index',
+                },
+                title: {
+                    display: false,
+                },
+                elements: {
+                    line: {
+                        tension: 0
+                    }
+                },
+                plugins: {
+                    legend: {
+                        display: false,
+                    },
+                    tooltip: {
+                        bodyFont: {
+                            size: 15
+                        },
+                        // external: externalTooltipHandler,
+                        // enabled: false,
+                        position: 'nearest',
+                        callbacks: {
+                            // title: function (context) {
+                            //     const inputDate = new Date(context[0].label);
+                            //     const month = inputDate.getMonth() + 1;
+                            //     const day = inputDate.getDate();
+                            //     const year = inputDate.getFullYear();
+                            //     return `${year}-${month.toString().padStart(2, '0')}-${day.toString().padStart(2, '0')}`;
+                            // },
+                            // label: function (context) {
+                            //     if (context.dataset.label == "Price") {
+                            //         return `Price|${context.raw.y}`;
+                            //     } else if (context.dataset.label == "Volume") {
+                            //         return `Volume|${context.raw.source}`;
+                            //     }
+                            // }
+                        },
+                    }
+                },
+                scales: {
+                    x: {
+                        offset: false,
+                        grid: {
+                            display: false
+                        },
+                        type: 'timeseries',
+                        time: {
+                            unit: 'year',
+                        },
+                        ticks:{
+                            source:'data',
+                            // maxTicksLimit: data.quantity,
+                            // labelOffset: data.quantity > 20 ? 5 : data.quantity < 5 ? 150 : 30
+                        },
+                        align: 'center',
+                    },
+                }
+            }
+        });
+    }
+
 </script>
 @endpush

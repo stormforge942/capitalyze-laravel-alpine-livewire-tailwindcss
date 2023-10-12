@@ -21,6 +21,22 @@ class CompanyReportTableRow extends Component
         return view('livewire.company-report-table-row');
     }
 
+    public function select()
+    {
+        $notEmpty = false;
+
+        foreach ($this->data['values'] as $value) {
+            if (!$value['empty']) {
+                $notEmpty = true;
+                break;
+            }
+        }
+
+        if ($notEmpty) {
+            $this->emit('selectRow', $this->data['title'], $this->data['values']);
+        }
+    }
+
     public function toggle()
     {
         $this->open = !$this->open;
