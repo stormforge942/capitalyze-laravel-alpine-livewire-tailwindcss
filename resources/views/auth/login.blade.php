@@ -23,6 +23,7 @@
             'name' => 'password',
             'required' => true,
             'attrs' => ['autocomplete' => 'current-password'],
+            'toggle' => true,
         ])
 
         <div class="mt-4 flex justify-between items-center text-sm">

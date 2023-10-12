@@ -139,6 +139,7 @@
                 'required' => true,
                 'autofocus' => true,
                 'attrs' => ['x-model' => 'password', 'autocomplete' => 'off'],
+                'toggle' => true,
             ])
 
             @error('email')
