@@ -54,7 +54,7 @@
                                 <td class="p-2">
                                     @if (!$user->is_approved)
                                         <button wire:click="approveUser({{ $user->id }})"
-                                            class="mx-auto bg-green-500 text-white py-1 px-3 rounded hover:bg-green-600 flex items-center gap-2 whitespace-nowrap w-full">
+                                            class="mx-auto bg-green-500 text-white py-1 px-3 rounded hover:bg-green-600 flex items-center gap-2 whitespace-nowrap">
                                             <!-- Green Approve button -->
                                             <svg class="inline w-4" xmlns="http://www.w3.org/2000/svg" fill="none"
                                                 viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor"

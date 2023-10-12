@@ -100,17 +100,8 @@
                             " class="container">
                             <table cellspacing="0" cellpadding="0" width="100%" style="width: 100%">
                                 <tr>
-                                    <td style="text-align: center">
-                                        <a href="{{ url('/') }}">
-                                            <img src="{{ asset('img/logo.png') }}" alt="Capitalyze logo" height="22"
-                                                style="height: 22px;" />
-                                        </a>
-                                    </td>
-                                </tr>
-                                <tr>
                                     <td style="
                                         text-align: center;
-                                        padding-top: 24px;
                                     ">
                                         <p style="
                                             font-family: 'Inter', Arial,
@@ -128,7 +119,7 @@
                                 </tr>
 
                                 <tr>
-                                    <td style="padding-top: 24px;">
+                                    <td style="padding-top: 20px;">
                                         <table cellspacing="0" cellpadding="0" width="100%" style="width: 100%">
                                             <tr>
                                                 <td width="50%" style="text-align: right; padding-right: 12px;">
