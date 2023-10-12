@@ -306,9 +306,9 @@
                                     'type' => 'submit',
                                 ])
 
-                                <a href="{{ route('login') }}" class="mt-4 inline-block hover:underline">
-                                    Already have an account? <span class="font-semibold">Sign In</span>
-                                </a>
+                                <div class="mt-4 inline-block">
+                                    Already have an account? <a href="{{ route('login') }}" class="font-semibold underline hover:bg-green-light2 rounded p-1 -mx-0.5 transition-all">Sign In</a>
+                                </div>
                             </div>
                         </form>
                     @endif
