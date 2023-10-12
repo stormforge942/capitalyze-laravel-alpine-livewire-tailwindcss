@@ -20,8 +20,7 @@ $passwordToggle = $type === 'password' && ($toggle ?? false);
         class="{{ $class ?? '' }} block px-4 py-2 border @if ($errors->has($name)) border-danger @else border-[#D4DDD7] @endif focus-within:border-green-dark  rounded relative duration-100 ease-in-out">
         <input :type="toggle ? 'text' : '{{ $type }}'"
             class="moving-label-input p-0 @if ($passwordToggle) pr-8 @endif h-6 w-full text-base mt-4 block border-none focus:ring-0 focus:outline-none peer"
-            name="{{ $name }}" value="{{ $value }}" @if ($required ?? false) required @endif
-            @if ($autofocus ?? false) autofocus @endif
+            name="{{ $name }}" value="{{ $value }}" @if ($autofocus ?? false) autofocus @endif
             @foreach ($attrs ?? [] as $aKey => $aVal) {{ $aKey }}="{{ $aVal }}" @endforeach>
 
         <span

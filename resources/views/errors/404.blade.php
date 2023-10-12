@@ -26,9 +26,9 @@
         </svg>
     </div>
 
-    <h1 class="font-bold text-xl md:text-3xl text-center mt-8 md:mt-4">Page Not Found</h1>
+    <h1 class="font-bold text-md md:text-3xl text-center mt-4">Page Not Found</h1>
 
-    <form action="{{ route('home') }}" method="GET" class="mt-8">
+    <form action="{{ route('home') }}" method="GET" class="mt-6 md:mt-8">
         @include('partials.green-button', [
             'text' => 'Go Home',
             'type' => 'submit',

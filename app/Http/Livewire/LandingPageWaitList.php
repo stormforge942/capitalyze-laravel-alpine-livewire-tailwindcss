@@ -26,6 +26,8 @@ class LandingPageWaitList extends Component
     ];
 
     protected $messages =[
+        'email.required' => 'Enter valid email address',
+        'name.required' => 'Enter name',
         'email.email' => 'Please enter a valid email address',
         'email.unique' => 'This email is already registered. Please continue to login',
         'name.min' => 'Please enter a minimum of 5 characters',
