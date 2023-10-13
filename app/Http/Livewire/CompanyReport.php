@@ -76,11 +76,12 @@ class CompanyReport extends Component
                'type' => 'line',
                'label' => $title,
                'borderColor' => '#000',
-               'pointRadius' => 0,
-               'pointHoverRadius' => 6,
+               'pointRadius' => 1,
+               'pointHoverRadius' => 8,
                'tension' => 0.5,
-               'pointHoverBorderColor' => '#000',
+               'pointHoverBorderColor' => '#fff',
                'pointHoverBorderWidth' => 4,
+               'pointHoverBackgroundColor' => 'rgba(104, 104, 104, 0.87)'
            ];
        }
 

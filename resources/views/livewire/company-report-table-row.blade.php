@@ -23,7 +23,7 @@
             </span>
         </div>
         <div class="w-full flex flex-row">
-            @foreach($data['values'] as $value)
+            @foreach($data['values'] as $year => $value)
                     <div class="w-[150px] flex items-center justify-center open-slide py-4 text-base  cursor-pointer hover:underline" data-value='{"hash":"{{$value['hash']}}","ticker":"{{$value['ticker']}}","value":"${{$value['value']}}"}'>
                         {{$value['value'] ? '$' : ''}} {{$value['value']}}
                     </div>
