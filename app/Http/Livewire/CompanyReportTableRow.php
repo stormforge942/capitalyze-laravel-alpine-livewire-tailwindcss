@@ -8,7 +8,8 @@ class CompanyReportTableRow extends Component
 {
     public $data = [];
     public $index = 0;
-    public $open = false;
+    public $open = true;
+    public $selected = false;
 
     public function mount($data, $index = 0)
     {
@@ -23,6 +24,12 @@ class CompanyReportTableRow extends Component
 
     public function select()
     {
+        if ($this->selected) {
+            $this->emit('unselectRow', $this->data['title']);
+            $this->selected = false;
+            return;
+        }
+
         $notEmpty = false;
 
         foreach ($this->data['values'] as $value) {
@@ -34,6 +41,7 @@ class CompanyReportTableRow extends Component
 
         if ($notEmpty) {
             $this->emit('selectRow', $this->data['title'], $this->data['values']);
+            $this->selected = true;
         }
     }
 

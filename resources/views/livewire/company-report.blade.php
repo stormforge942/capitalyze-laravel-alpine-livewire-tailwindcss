@@ -660,25 +660,25 @@
         let ctx = document.getElementById('chart-company-report').getContext("2d");
         console.log(data)
         chart = new Chart(ctx, {
-            // plugins: [{
-            //     afterDraw: chart => {
-            //         if (chart.tooltip?._active?.length) {
-            //             let x = chart.tooltip._active[0].element.x;
-            //             let y = chart.tooltip._active[0].element.y;
-            //             let bottomBarY = chart.tooltip._active[1].element.y;
-            //             let ctx = chart.ctx;
-            //             ctx.save();
-            //             ctx.beginPath();
-            //             ctx.moveTo(x, y);
-            //             ctx.lineTo(x, bottomBarY + 9);
-            //             ctx.lineWidth = 1;
-            //             ctx.strokeStyle = '#13B05BDE';
-            //             ctx.setLineDash([5, 5])
-            //             ctx.stroke();
-            //             ctx.restore();
-            //         }
-            //     }
-            // }],
+            plugins: [{
+                afterDraw: chart => {
+                    if (chart.tooltip?._active?.length) {
+                        let x = chart.tooltip._active[0].element.x;
+                        let y = chart.tooltip._active[0].element.y;
+                        let bottomBarY = chart.tooltip._active[1].element.y;
+                        let ctx = chart.ctx;
+                        ctx.save();
+                        ctx.beginPath();
+                        ctx.moveTo(x, y);
+                        ctx.lineTo(x, bottomBarY);
+                        ctx.lineWidth = 1;
+                        ctx.strokeStyle = '#13B05BDE';
+                        ctx.setLineDash([5, 5])
+                        ctx.stroke();
+                        ctx.restore();
+                    }
+                }
+            }],
             maintainAspectRatio: true,
             aspectRatio: 3,
             type: 'bar',
