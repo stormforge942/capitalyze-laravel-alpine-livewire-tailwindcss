@@ -30,15 +30,6 @@ document.addEventListener("alpine:init", () => {
             symbol: false,
         },
 
-        get rulesPassed() {
-            return (
-                this.passedRules.length &&
-                this.passedRules.uppercase &&
-                this.passedRules.lowercase &&
-                this.passedRules.symbol
-            );
-        },
-
         init() {
             this.$watch("password", (val) => {
                 this.passedRules = this.checkPassword(val);

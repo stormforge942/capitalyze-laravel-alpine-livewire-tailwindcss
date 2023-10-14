@@ -1,6 +1,8 @@
 @extends('layouts.auth')
 
-@section('title', 'Reset Password')
+<?php $title = $request->get('flow') === 'create-password' ? 'Create Password' : 'Reset Password'; ?>
+
+@section('title', $title)
 
 @section('content')
 
@@ -126,7 +128,7 @@
             </div>
         </div>
 
-        <form class="mt-4" method="post" action="{{ route('password.update', ['from' => request('from')]) }}">
+        <form class="mt-4" method="post" action="{{ route('password.update', ['flow' => $request->get('flow')]) }}">
             @csrf
 
             <input type="hidden" name="token" value="{{ $request->route('token') }}">
@@ -160,9 +162,8 @@
 
             <div class="mt-6 text-center">
                 @include('partials.green-button', [
-                    'text' => 'Reset password',
+                    'text' =>  $title,
                     'type' => 'submit',
-                    'attrs' => [':disabled' => '!rulesPassed'],
                 ])
             </div>
         </form>

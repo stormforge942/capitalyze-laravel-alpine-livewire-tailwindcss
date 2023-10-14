@@ -56,7 +56,7 @@ class AccountApprovedNotification extends Notification implements ShouldQueue
         return url(route('password.reset', [
             'token' => $token, 
             'email' => $user->email,
-            'from' => 'approved-email'
+            'flow' => 'create-password'
         ], false));
     }
 
