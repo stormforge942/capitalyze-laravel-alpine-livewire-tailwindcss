@@ -1,6 +1,7 @@
 <div class="flex flex-col divide-y">
-    <div wire:click="select" class="flex w-full flex-row {{$selected ? 'bg-blue-100' : 'bg-white'}}">
+    <div class="flex w-full flex-row {{$selected ? 'bg-blue-100' : 'bg-white'}}">
         <div
+            wire:click.stop="select"
             class="cursor-default font-bold py-4 text-base w-[300px] truncate flex flex-row"
             style="padding-left: 10px;"
             title="{{$data['title']}}">
@@ -33,7 +34,7 @@
 
     @if($open)
         @foreach($data['children'] as $value)
-            <livewire:company-report-table-row :data="$value" :index="$index + 1" :selectedRows="$selectedRows"/>
+            <livewire:company-report-table-row key="{{now()}}" :data="$value" :index="$index + 1" :selectedRows="$selectedRows"/>
         @endforeach
     @endif
 </div>

@@ -471,9 +471,9 @@
                                         <div class="px-6 w-10/12">
                                             <canvas id="chart-company-report"></canvas>
                                         </div>
-                                        <div class="w-full flex justify-start space-x-3 px-2 mt-8">
+                                        <div class="w-full flex flex-wrap justify-start items-end space-x-3 px-2 mt-8 space-y-3">
                                             @foreach($selectedRows as $title => $row)
-                                                <div class="rounded-full border flex justify-between space-x-2 p-2" wire:click="unselect('{{ $title }}')">
+                                                <div class="rounded-full whitespace-nowrap border flex space-x-2 justify-between items-center h-[40px] px-2" wire:click="unselectRow('{{ $title }}')">
                                                     <span>
                                                         {{$title}}
                                                     </span>
@@ -590,8 +590,13 @@
 
 
     Livewire.on('initCompanyReportChart', () => {
-        console.log('initCompanyReportChart');
         initChart();
+    });
+
+    Livewire.on('hideCompanyReportChart', () => {
+        if (chart) {
+            chart.destroy();
+        }
     });
 
     const annualCheckbox = document.getElementById("date-annual");

@@ -33,7 +33,6 @@ class CompanyReport extends Component
     public $tableDates = [];
     public $noData = false;
     public $tableLoading = true;
-    // public $skipNext = false;
 
     protected $request;
     protected $rowCount = 0;
@@ -53,6 +52,9 @@ class CompanyReport extends Component
        unset($this->selectedRows[$title]);
        if (count($this->selectedRows)){
          $this->generateChartData(true);
+       } else {
+            $this->chartData = [];
+            $this->emit('hideCompanyReportChart');
        }
    }
 
