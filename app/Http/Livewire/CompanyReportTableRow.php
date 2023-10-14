@@ -9,12 +9,25 @@ class CompanyReportTableRow extends Component
     public $data = [];
     public $index = 0;
     public $open = true;
-    public $selected = false;
+    public $selected;
+    public $attr = "";
+    public $selectedRows = [];
 
-    public function mount($data, $index = 0)
+    public function mount($data, $index = 0, $selectedRows = [])
     {
         $this->data = $data;
         $this->index = $index;
+        $this->selected = in_array($data['title'], $selectedRows);
+        $this->selectedRows = $selectedRows;
+    }
+
+    public function generateAttribute($value)
+    {
+        if ($value['empty']) {
+            return "";
+        }
+
+        return '{"hash":"' . $value['hash'] . '","ticker":"' . $value['ticker'] . '","value":"$' . $value['value'] . '"}';
     }
 
     public function render()

@@ -33,7 +33,7 @@
                                     <span class="sr-only">Loading...</span>
                                 </div>
                             </div>
-                            <div class="py-2"> //wire:loading.remove
+                            <div class="py-2">
                                 <div class="flex w-full justify-between" >
                                     <div class="page-titles">
                                         <b>{{ @$companyName }}  @if(@$ticker) ({{ @$ticker }}) @endif </b> <br>
@@ -455,9 +455,9 @@
                                 </div>
 
                                 @if(count($chartData))
-                                    <div class="my-4 w-full p-5 bg-white flex flex-col">
-                                        <div class="flex justify-between w-[80%] mb-24">
-                                            <div class="text-lg text-indigo-600">
+                                    <div class="my-4 pb-5 w-full px-5 bg-white flex flex-col">
+                                        <div class="flex justify-between w-10/12 my-12 pl-6 pr-3">
+                                            <div class="text-lg text-indigo-600 font-bold">
                                                 Apple Inc. (AAPL)
                                             </div>
                                             <div class="flex items-start">
@@ -468,7 +468,7 @@
                                                 </span>
                                             </div>
                                         </div>
-                                        <div class="px-6">
+                                        <div class="px-6 w-10/12">
                                             <canvas id="chart-company-report"></canvas>
                                         </div>
                                         <div class="w-full flex justify-start space-x-3 px-2 mt-8">
@@ -519,7 +519,7 @@
                                                     <div class="divide-y">
                                                         @if(!$tableLoading)
                                                             @foreach($rows as $row)
-                                                                <livewire:company-report-table-row :data="$row" key="{{now()}}"/>
+                                                                <livewire:company-report-table-row :data="$row" key="{{now()}}" :selectedRows="array_keys($this->selectedRows)"/>
                                                             @endforeach
                                                         @endif
                                                     </div>
@@ -576,6 +576,9 @@
             onInput: (value) => {
                 if (value.length === 2 && value !== selectedValue) {
                     @this.changeDates(value)
+                    if (chart) {
+                        chart.destroy();
+                    }
                 }
             }
         });
@@ -587,6 +590,7 @@
 
 
     Livewire.on('initCompanyReportChart', () => {
+        console.log('initCompanyReportChart');
         initChart();
     });
 
@@ -774,7 +778,7 @@
         // Display, position, and set styles for font
         tooltipEl.style.opacity = 1;
         tooltipEl.style.left = positionX + tooltip.caretX + 'px';
-        tooltipEl.style.top = positionY + tooltip.caretY - 155 + 'px';
+        tooltipEl.style.top = positionY + tooltip.caretY - 125 + 'px';
         tooltipEl.style.font = tooltip.options.bodyFont.string;
         tooltipEl.style.padding = 8 + 'px ' + 19 + 'px';
     };

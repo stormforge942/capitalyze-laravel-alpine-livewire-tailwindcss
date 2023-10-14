@@ -39,7 +39,7 @@ class CompanyReport extends Component
     protected $rowCount = 0;
     public $selectedRows = [];
 
-   protected $listeners = ['periodChange', 'tabClicked', 'tabSubClicked', 'selectRow'];
+   protected $listeners = ['periodChange', 'tabClicked', 'tabSubClicked', 'selectRow', 'unselectRow'];
 
    public function selectRow($title, $data){
        $this->selectedRows[$title] = $data;
@@ -48,26 +48,32 @@ class CompanyReport extends Component
        $this->emit('initCompanyReportChart');
    }
 
-   public function unselect($title)
+   public function unselectRow($title)
    {
        unset($this->selectedRows[$title]);
        if (count($this->selectedRows)){
-         $this->generateChartData();
-         $this->emit('initCompanyReportChart');
+         $this->generateChartData(true);
        }
    }
 
-   public function generateChartData(): void
+   public function generateChartData($initChart = false): void
    {
        $chartData = [];
 
        foreach ($this->selectedRows as $title => $row) {
            $data = [];
            foreach ($row as $cell) {
-               $data[] = [
-                   'y' => $cell['value'],
-                   'x' => $cell['date'],
-               ];
+               if (!$cell['empty']) {
+                   $data[] = [
+                       'y' => $cell['value'],
+                       'x' => $cell['date'],
+                   ];
+               } else {
+                   $data[] = [
+                       'y' => null,
+                       'x' => null,
+                   ];
+               }
            }
 
 
@@ -86,6 +92,10 @@ class CompanyReport extends Component
        }
 
          $this->chartData = $chartData;
+
+       if ($initChart) {
+           $this->emit('initCompanyReportChart');
+       }
    }
 
    function findDates($array, &$dates) {
@@ -245,7 +255,6 @@ class CompanyReport extends Component
         $data = json_decode($query, true);
         $this->data = $data;
         $this->generateUI();
-
     }
 
     public function changeDates($dates) {
@@ -258,6 +267,10 @@ class CompanyReport extends Component
         }
 
         $this->generateRows($this->data);
+        if (count($this->selectedRows)){
+            $this->generateChartData();
+            $this->emit('initCompanyReportChart');
+        }
     }
 
     public function generateUI(): void
