@@ -102,7 +102,7 @@
     top: 50%;
     transform: translateY(-50%) rotate(-90deg);
     background-image: url('data:image/svg+xml,<svg fill="none" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 16 16"><path d="M14.66 8A6.68 6.68 0 0 0 1.33 8a6.68 6.68 0 0 0 13.33 0ZM7.64 9.86 5.3 7.51a.5.5 0 0 1-.15-.36.5.5 0 0 1 .15-.35c.2-.2.51-.2.7 0l2 2 2-2c.2-.2.52-.2.71 0 .2.2.2.51 0 .7L8.35 9.87a.5.5 0 0 1-.7 0Z" fill="%232F88FF"/></svg>');
-    width: 1.2em;
+    /*width: 1.2em;*/
     height: 1.2em;
     transition: 0.3s ease all;
 }
