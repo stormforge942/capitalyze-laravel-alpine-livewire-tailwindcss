@@ -2,6 +2,7 @@
 
 namespace App\Http\Livewire;
 
+use App\Models\Company;
 use Carbon\Carbon;
 use Illuminate\Support\Facades\DB;
 use Livewire\Component;
@@ -12,9 +13,35 @@ class CompanyProfileOverviewGraph extends Component
     public $currentChartPeriod = "3m";
     public $chartData = [];
     public $visible = true;
+    public $start_at = null;
+    public $end_at = null;
+
+    protected $listeners = ['dateRangeSelected'];
+
+    public $chartPeriods = [
+        '3m' => '3 months',
+        '6m' => '6 months',
+        '1yr' => '1 year',
+        'YTD' => 'current year',
+        '5yr' => '5 years',
+        'max' => 'all time',
+        'custom' => 'custom',
+    ];
+
+    public $name = '';
+    public $persentage = null;
+
+    public function dateRangeSelected($start_at, $end_at)
+    {
+        $this->currentChartPeriod = 'custom';
+        $this->start_at = $start_at;
+        $this->end_at = $end_at;
+        $this->load();
+    }
 
     public function mount($ticker)
     {
+        $this->name = Company::find($ticker)->name;
         $this->ticker = $ticker;
         $this->load();
     }
@@ -22,7 +49,9 @@ class CompanyProfileOverviewGraph extends Component
     public function updated($propertyName)
     {
         if ($propertyName == 'currentChartPeriod') {
-            $this->load();
+            if ($this->currentChartPeriod != 'custom') {
+                $this->load();
+            }
         }
     }
 
@@ -41,6 +70,7 @@ class CompanyProfileOverviewGraph extends Component
             'dataset1' => [],
             'dataset2' => [],
         ];
+
 
         $result = DB::connection('pgsql-xbrl')
             ->table('eod_prices')
@@ -75,6 +105,18 @@ class CompanyProfileOverviewGraph extends Component
             ->avg('volume'));
 
         $divider = 1;
+
+        if (count($result) > 1) {
+            $first = $result->first()->adj_close;
+            $last = $result->last()->adj_close;
+            $this->persentage
+                = round((($last - $first) / $last) * 100, 2);
+        }
+
+        if (!$volume_avg || !$adj_close_avg) {
+            $this->resetChart();
+            return;
+        }
 
         while (strlen((string)$volume_avg) >= strlen((string)$adj_close_avg))
         {
@@ -170,6 +212,11 @@ class CompanyProfileOverviewGraph extends Component
 
             case '5yr':
                 $fromDate = Carbon::now()->subYears(5);
+                return [$fromDate, $toDate];
+
+            case 'custom':
+                $fromDate = Carbon::parse($this->start_at);
+                $toDate = Carbon::parse($this->end_at);
                 return [$fromDate, $toDate];
 
             case 'max':

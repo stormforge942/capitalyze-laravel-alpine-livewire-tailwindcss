@@ -1,3 +1,6 @@
+import rangeSlider from "range-slider-input"
+import "range-slider-input/dist/style.css"
+
 document.addEventListener('DOMContentLoaded', function() {
     let rangeMin = 1997;
     let rangeMax = 2022;

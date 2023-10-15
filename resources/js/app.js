@@ -1,23 +1,22 @@
-import "./bootstrap";
+import "../../vendor/wire-elements/pro/resources/js/overlay-component"
+import "../../vendor/wire-elements/pro/resources/js/spotlight-component"
+import "./../../vendor/power-components/livewire-powergrid/dist/powergrid"
+import "./../../vendor/power-components/livewire-powergrid/dist/powergrid.css"
 
-import Alpine from "alpinejs";
-import focus from "@alpinejs/focus";
-import Swal from "sweetalert2";
-import FormsAlpinePlugin from "../../vendor/filament/forms/dist/module.esm";
-import NotificationsAlpinePlugin from "../../vendor/filament/notifications/dist/module.esm";
-import "./../../vendor/power-components/livewire-powergrid/dist/powergrid";
-import "./../../vendor/power-components/livewire-powergrid/dist/powergrid.css";
-import "./datepicker.js";
-import "./range-slider-custom";
-import "./css-tables";
-import "./report-text-highlighter";
+import Alpine from "alpinejs"
+import focus from "@alpinejs/focus"
+import Swal from "sweetalert2"
 
-window.Swal = Swal;
-window.Alpine = Alpine;
+window.Swal = Swal
+window.Alpine = Alpine
+window.rangeSlider = rangeSlider
 
-Alpine.plugin(focus);
-Alpine.plugin(FormsAlpinePlugin);
-Alpine.plugin(NotificationsAlpinePlugin);
+import "./datepicker.js"
+import "./range-slider"
+import "./css-tables"
+import "./report-text-highlighter"
+
+Alpine.plugin(focus)
 
 document.addEventListener("alpine:init", () => {
     Alpine.data("passwordReset", () => ({
@@ -32,54 +31,55 @@ document.addEventListener("alpine:init", () => {
 
         init() {
             this.$watch("password", (val) => {
-                this.passedRules = this.checkPassword(val);
-            });
+                this.passedRules = this.checkPassword(val)
+            })
         },
 
         checkPassword(password) {
-            let passedRules = {};
+            let passedRules = {}
 
-            passedRules.length = password.length >= 8;
-            passedRules.uppercase = password.match(/[A-Z]/);
-            passedRules.lowercase = password.match(/[a-z]/);
+            passedRules.length = password.length >= 8
+            passedRules.uppercase = password.match(/[A-Z]/)
+            passedRules.lowercase = password.match(/[a-z]/)
             passedRules.symbol = password.match(
                 /[!@#$%^&*()_+\-=\[\]{};':"\\|,.<>\/?]/
-            );
+            )
 
-            return passedRules;
+            return passedRules
         },
-    }));
-});
+    }))
+})
 
-[...document.querySelectorAll(".moving-label-input")].forEach((input) => {
+;[...document.querySelectorAll(".moving-label-input")].forEach((input) => {
     input.addEventListener("blur", (e) => {
-        let el = e.target.nextElementSibling;
+        let el = e.target.nextElementSibling
 
         if (e.target.value) {
-            el.classList.remove("top-[50%]");
-            el.classList.add("top-4");
-            el.classList.add("text-sm");
+            el.classList.remove("top-[50%]")
+            el.classList.add("top-4")
+            el.classList.add("text-sm")
         } else {
-            el.classList.add("top-[50%]");
-            el.classList.remove("top-4");
-            el.classList.remove("text-sm");
+            el.classList.add("top-[50%]")
+            el.classList.remove("top-4")
+            el.classList.remove("text-sm")
         }
-    });
+    })
 
     input.addEventListener("change", (e) => {
-        let el = e.target.parentElement;
+        let el = e.target.parentElement
 
         // remove error border
         if (el.classList.contains("border-danger")) {
-            el.classList.remove("border-danger");
-            el.classList.add("border-[#D1D3D5]");
+            el.classList.remove("border-danger")
+            el.classList.add("border-[#D1D3D5]")
         }
 
         // remove error message
         if (el.nextElementSibling?.classList?.contains("text-danger")) {
-            el.nextElementSibling.remove();
+            el.nextElementSibling.remove()
         }
-    });
-});
+    })
+})
 
-Alpine.start();
+Alpine.start()
+
