@@ -40,16 +40,19 @@ class FortifyServiceProvider extends ServiceProvider
      * @return void
      */
     public function boot()
-    {
+    {        
+        $this->app->singleton(RegisterResponse::class, CustomRegisterResponse::class);
+        $this->app->singleton(TwoFactorLoginResponseContract::class, LoginResponse::class);
+        $this->app->singleton(LoginResponseContract::class, LoginResponse::class);
         $this->app->singleton(PasswordResetResponse::class, CustomPasswordResetResponse::class);
-        
+        $this->app->singleton(ResetPasswordViewResponse::class, CustomResetPasswordViewResponse::class);
+        $this->app->singleton(SuccessfulPasswordResetLinkRequestResponse::class, CustomSuccessfulPasswordResetLinkRequestResponse::class);
+        $this->app->singleton(PasswordResetResponse::class, CustomPasswordResetResponse::class);
+
         Fortify::createUsersUsing(CreateNewUser::class);
         Fortify::updateUserProfileInformationUsing(UpdateUserProfileInformation::class);
         Fortify::updateUserPasswordsUsing(UpdateUserPassword::class);
         Fortify::resetUserPasswordsUsing(ResetUserPassword::class);
-
-        $this->app->singleton(LoginResponseContract::class, LoginResponse::class);
-        $this->app->singleton(TwoFactorLoginResponseContract::class, LoginResponse::class);
 
         RateLimiter::for('login', function (Request $request) {
             $email = (string) $request->email;
@@ -60,10 +63,5 @@ class FortifyServiceProvider extends ServiceProvider
         RateLimiter::for('two-factor', function (Request $request) {
             return Limit::perMinute(5)->by($request->session()->get('login.id'));
         });
-
-        $this->app->singleton(RegisterResponse::class, CustomRegisterResponse::class);
-        $this->app->singleton(ResetPasswordViewResponse::class, CustomResetPasswordViewResponse::class);
-        $this->app->singleton(SuccessfulPasswordResetLinkRequestResponse::class, CustomSuccessfulPasswordResetLinkRequestResponse::class);
-        $this->app->singleton(PasswordResetResponse::class, CustomPasswordResetResponse::class);
     }
 }
