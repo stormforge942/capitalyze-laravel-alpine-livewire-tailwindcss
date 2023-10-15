@@ -13,6 +13,8 @@ class CompanyProfile extends Component
     public $profile;
 
     public $infoTabActive = 'overview';
+    public $cost = null;
+    public $dynamic = null;
 
     public function setInfoActiveTab(string $tab): void {
         $this->infoTabActive = $tab;
@@ -29,6 +31,24 @@ class CompanyProfile extends Component
         $this->company  = $company;
         $this->ticker = $ticker;
         $this->period = $period;
+
+        $first = DB::connection('pgsql-xbrl')
+            ->table('eod_prices')
+            ->where('symbol', strtolower($this->ticker))
+            ->latest('date')->first()?->adj_close;
+
+        $this->cost =  $first;
+
+        $previous = DB::connection('pgsql-xbrl')
+            ->table('eod_prices')
+            ->where('symbol', strtolower($this->ticker))
+            ->latest('date')
+            ->skip(1)->first()?->adj_close;
+
+        if ($previous && $first) {
+            $this->dynamic = round((($first - $previous) / $previous) * 100, 2);
+        }
+
         $this->getCompanyProfile();
     }
 
