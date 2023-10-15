@@ -1,10 +1,12 @@
 @extends('layouts.auth')
 
-@section('title', 'Reset Password Successful')
+<?php $createFlow = ($flow ?? '') === 'create-password'; ?>
+
+@section('title', $createFlow ? 'Create' : 'Reset' . ' Password Successful')
 
 @section('content')
     <p class="leading-10 font-medium text-lg text-center">
-        Password reset successfully
+        Password {{ $createFlow ? 'created' : 'reset' }} successfully
     </p>
 
     <form action="{{ route('login') }}" method="GET">

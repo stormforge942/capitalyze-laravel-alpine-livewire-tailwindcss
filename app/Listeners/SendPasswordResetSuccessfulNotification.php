@@ -15,6 +15,8 @@ class SendPasswordResetSuccessfulNotification
      */
     public function handle(PasswordReset $event)
     {
-        $event->user->notify(new PasswordResetSuccessfulNotification);
+        if (request('flow') !== 'create-password') {
+            $event->user->notify(new PasswordResetSuccessfulNotification);
+        }
     }
 }
