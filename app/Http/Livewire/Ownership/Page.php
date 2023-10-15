@@ -11,7 +11,7 @@ class Page extends Component
 
     public array $tabs = [
         Shareholders::class,
-        CompanyInsiders::class,
+        CompanyInsidersTable::class,
     ];
 
     public function mount(Company $company)

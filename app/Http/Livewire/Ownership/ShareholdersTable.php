@@ -47,7 +47,7 @@ class ShareholdersTable extends BaseTable
                 ->field('investor_name_formated', 'investor_name')
                 ->searchable(),
 
-            Column::make('Shares Held or Principal Amt', 'ssh_prnamt')
+            Column::make('Shares Held', 'ssh_prnamt')
                 ->sortable(),
 
             Column::make('Market Value', 'value')
@@ -86,7 +86,7 @@ class ShareholdersTable extends BaseTable
                 return number_format($companyFilings->ssh_prnamt);
             })
             ->addColumn('value', function (CompanyFilings $companyFilings) {
-                return number_format($companyFilings->value, 0) . ' $';
+                return number_format($companyFilings->value, 4);
             })
             ->addColumn('weight', function (CompanyFilings $companyFilings) {
                 return number_format($companyFilings->weight, 4) . '%';
@@ -95,12 +95,18 @@ class ShareholdersTable extends BaseTable
                 return number_format($companyFilings->last_weight, 4) . '%';
             })
             ->addColumn('change_in_shares', function (CompanyFilings $companyFilings) {
-                return number_format($companyFilings->change_in_shares);
+                if ($companyFilings->change_in_shares > 0) {
+                    return number_format($companyFilings->change_in_shares);
+                }
+
+                return '<span class="text-red">(' . number_format(-1 * $companyFilings->change_in_shares) . ')</span>';
             })
             ->addColumn('ownership', function (CompanyFilings $companyFilings) {
                 return number_format($companyFilings->ownership, 4) . '%';
             })
             ->addColumn('signature_date')
-            ->addColumn('price_paid');
+            ->addColumn('price_paid', function (CompanyFilings $companyFilings) {
+                return number_format($companyFilings->price_paid, 4);
+            });
     }
 }

@@ -10,7 +10,7 @@ module.exports = {
         "./storage/framework/views/*.php",
         "./resources/views/**/*.blade.php",
         "./vendor/power-components/livewire-powergrid/src/Themes/Tailwind.php",
-        "./app/Http/Livewire/*.php",
+        "./app/Http/Livewire/**/*.php",
         "./vendor/wire-elements/pro/config/wire-elements-pro.php",
         "./vendor/wire-elements/pro/**/*.blade.php",
     ],

@@ -16,11 +16,10 @@ class CompanyInsiders extends Component
         $this->ticker = $data['company']['ticker'];
     }
 
-
     public function render()
     {
-        return <<<BLADE
-            <livewire:ownership.company-insiders-table :ticker="\$ticker" />
-        BLADE;
+        return <<<'blade'
+            <livewire:ownership.company-insiders-table :ticker="$ticker" />
+        blade;
     }
 }
