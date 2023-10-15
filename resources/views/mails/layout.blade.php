@@ -10,29 +10,31 @@
     <meta content="telephone=no" name="format-detection" />
     <title>Capitalyze</title>
     <!--[if (mso 16)]>
-            <style type="text/css">
-                a {
-                    text-decoration: none;
-                }
-            </style>
-        <![endif]-->
-    <!--[if gte mso 9
-            ]><style>
-                sup {
-                    font-size: 100% !important;
-                }
-            </style><!
-        [endif]-->
-    <!--[if gte mso 9]>
-            <xml>
-                <o:OfficeDocumentSettings>
-                    <o:AllowPNG></o:AllowPNG>
-                    <o:PixelsPerInch>96</o:PixelsPerInch>
-                </o:OfficeDocumentSettings>
-            </xml>
-        <![endif]-->
-    <!--[if !mso]><!-->
+        <style type="text/css">
+            a {
+                text-decoration: none;
+            }
+        </style>
+    <![endif]-->
 
+    <!--[if gte mso 9]>
+        <style>
+            sup {
+                font-size: 100% !important;
+            }
+        </style>
+    <![endif]-->
+
+    <!--[if gte mso 9]>
+        <xml>
+            <o:OfficeDocumentSettings>
+                <o:AllowPNG></o:AllowPNG>
+                <o:PixelsPerInch>96</o:PixelsPerInch>
+            </o:OfficeDocumentSettings>
+        </xml>
+    <![endif]-->
+
+    <!--[if !mso]><!-->
     <style>
         @media screen and (min-width: 500px) {
             .container {
@@ -47,10 +49,10 @@
 </head>
 
 <body style="padding: 10px 0; margin: 0; width: 100%; background: #F4F3F6;">
-    <table cellspacing="0" cellpadding="0" width="100%" align="center" style="max-width: 600px; background: #ffff;">
+    <table cellspacing="0" cellpadding="0" width="100%" align="center" style="max-width: 600px;">
         <!-- header -->
         <tr>
-            <td style="padding: 0 30px;" class="container">
+            <td style="padding: 0 30px; background: #fff;" class="container">
                 <table cellspacing="0" cellpadding="0" width="100%" style="width: 100%;">
                     <tr>
                         <td style="padding: 32px 0; text-align: center">
@@ -83,7 +85,7 @@
 
         <!-- body -->
         <tr>
-            <td style="padding: 24px 30px 48px 30px;" class="container">
+            <td style="padding: 24px 30px 48px 30px; background: #fff;" class="container">
                 @yield('content')
             </td>
         </tr>
