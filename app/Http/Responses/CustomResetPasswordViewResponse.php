@@ -25,6 +25,7 @@ class CustomResetPasswordViewResponse implements ResetPasswordViewResponse
                 if (!Carbon::now()->greaterThan($createdAt->addMinutes(config('auth.passwords.users.expire')))) {
                     return view('auth.reset-password', [
                         'request' => $request,
+                        'flow' => $request->get('flow'),
                     ]);
                 }
             }

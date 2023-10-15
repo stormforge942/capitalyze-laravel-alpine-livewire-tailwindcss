@@ -1,6 +1,6 @@
 @extends('layouts.auth')
 
-<?php $title = $request->get('flow') === 'create-password' ? 'Create Password' : 'Reset Password'; ?>
+<?php $title = ($flow ?? '') === 'create-password' ? 'Create Password' : 'Reset Password'; ?>
 
 @section('title', $title)
 
@@ -128,7 +128,7 @@
             </div>
         </div>
 
-        <form class="mt-4" method="post" action="{{ route('password.update', ['flow' => $request->get('flow')]) }}">
+        <form class="mt-4" method="post" action="{{ route('password.update', ['flow' => $flow ?? null]) }}">
             @csrf
 
             <input type="hidden" name="token" value="{{ $request->route('token') }}">

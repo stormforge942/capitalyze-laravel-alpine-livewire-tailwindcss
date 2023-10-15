@@ -61,9 +61,9 @@ class FortifyServiceProvider extends ServiceProvider
             return Limit::perMinute(5)->by($request->session()->get('login.id'));
         });
 
-        $this->app->singleton(ResetPasswordViewResponse::class, CustomResetPasswordViewResponse::class);
         $this->app->singleton(RegisterResponse::class, CustomRegisterResponse::class);
-        $this->app->singleton(PasswordResetResponse::class, CustomPasswordResetResponse::class);
+        $this->app->singleton(ResetPasswordViewResponse::class, CustomResetPasswordViewResponse::class);
         $this->app->singleton(SuccessfulPasswordResetLinkRequestResponse::class, CustomSuccessfulPasswordResetLinkRequestResponse::class);
+        $this->app->singleton(PasswordResetResponse::class, CustomPasswordResetResponse::class);
     }
 }
