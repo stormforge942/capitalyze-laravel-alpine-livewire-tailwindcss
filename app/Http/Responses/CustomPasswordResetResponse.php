@@ -11,7 +11,7 @@ class CustomPasswordResetResponse extends PasswordResetResponse
     {
         return $request->wantsJson()
             ? new JsonResponse(['message' => trans($this->status)], 200)
-            : redirect()->route('password.reset.successful')
+            : redirect()->route('password.reset.successful', ['flow' => $request->get('flow')])
             ->with('isValid', true);
     }
 }

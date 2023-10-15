@@ -1,5 +1,6 @@
 <!DOCTYPE html>
 <html lang="{{ str_replace('_', '-', app()->getLocale()) }}">
+
 <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
@@ -13,32 +14,26 @@
     <!-- Scripts -->
     @vite(['resources/css/app.css', 'resources/js/app.js'])
     @livewireStyles
-    @once
-        @push('scripts')
-        <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
-        <script src="https://cdn.jsdelivr.net/npm/luxon"></script>
-        @endpush
-    @endonce
 </head>
+
 <body>
-    <x-jet-banner />
-
     <div class="min-h-screen bg-gray-100">
-        @livewire('navigation-menu')
-        {{-- <livewire:admin-navbar /> --}}
-        <!-- Page Content -->
+        <livewire:admin-navbar />
+
         <main>
-            @if($tab == 'users')
-            <livewire:admin-users />
-            @endif
+            <div class="container px-3 mx-auto pb-5">
+                @if ($tab == 'users')
+                    <livewire:admin-users />
+                @endif
 
-            @if($tab == 'navbar-management')
-            <livewire:admin-navbar-management />
-            @endif
+                @if ($tab == 'navbar-management')
+                    <livewire:admin-navbar-management />
+                @endif
 
-            @if($tab == 'groups-management')
-            <livewire:admin-groups-management />
-            @endif
+                @if ($tab == 'groups-management')
+                    <livewire:admin-groups-management />
+                @endif
+            </div>
         </main>
     </div>
 
@@ -48,4 +43,5 @@
     @livewireScripts
     @stack('scripts')
 </body>
+
 </html>

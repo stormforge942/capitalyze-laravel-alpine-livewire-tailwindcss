@@ -10,8 +10,7 @@
 
     <link href="https://fonts.googleapis.com/css?family=Inter:400,500,600,700" rel="stylesheet" />
 
-    @livewireStyles
-    @vite(['resources/css/app.css', 'resources/js/app.js'])
+    @vite(['resources/css/app.css'])
 </head>
 
 <body class="text-dark text-base font-sans antialiased">
@@ -24,7 +23,7 @@
             </a>
         </div>
         <div class="mt-[15vh] mb-5">
-            <div class="p-6 max-w-[27rem] mx-auto bg-white rounded-lg shadow-xl">
+            <div class="p-6 md:p-8 max-w-[50rem] mx-auto bg-white rounded-lg shadow-xl">
                 @yield('content')
             </div>
         </div>
