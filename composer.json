@@ -17,7 +17,7 @@
         "laravel/vapor-core": "^2.31",
         "livewire/livewire": "^2.12",
         "openspout/openspout": "^4",
-        "power-components/livewire-powergrid": "4.3.1",
+        "power-components/livewire-powergrid": "^4.9",
         "wire-elements/pro": "^3.0",
         "ext-exif" : "*"
     },
