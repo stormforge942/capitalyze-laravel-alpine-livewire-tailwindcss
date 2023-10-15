@@ -7,6 +7,9 @@ import Alpine from "alpinejs"
 import focus from "@alpinejs/focus"
 import Swal from "sweetalert2"
 
+import rangeSlider from "range-slider-input"
+import "range-slider-input/dist/style.css"
+
 window.Swal = Swal
 window.Alpine = Alpine
 window.rangeSlider = rangeSlider
