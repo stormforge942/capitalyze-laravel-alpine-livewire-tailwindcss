@@ -20,8 +20,8 @@
     </div>
 
     <div class="mt-6">
-        <div wire:loading>
-            Loading...
+        <div class="place-items-center" wire:loading.grid>
+            <span class="mx-auto simple-loader !text-green-dark"></span>
         </div>
 
         <div wire:loading.remove>

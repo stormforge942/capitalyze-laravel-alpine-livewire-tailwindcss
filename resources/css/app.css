@@ -13,6 +13,7 @@
 @import "loader.css";
 @import "calendar.css";
 @import "calendar-base.css";
+@import "loaders.css";
 
 @tailwind base;
 @tailwind components;
