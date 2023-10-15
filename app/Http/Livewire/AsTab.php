@@ -2,10 +2,9 @@
 
 namespace App\Http\Livewire;
 
-use Livewire\Component;
 use Illuminate\Support\Str;
 
-abstract class Tab extends Component
+trait AsTab
 {
     protected array $data = [];
 
@@ -17,10 +16,5 @@ abstract class Tab extends Component
     public static function key(): string
     {
         return Str::kebab(class_basename(get_called_class()));
-    }
-
-    public function mount(array $data = [])
-    {
-        $this->data = $data;
     }
 }

@@ -9,5 +9,5 @@
         </select>
     </label>
 
-    <livewire:ownership.shareholders-table :ticker="$company['ticker']" :quarter="$quarter" />
+    <livewire:ownership.shareholders-table :ticker="$ticker" :quarter="$quarter" />
 </div>

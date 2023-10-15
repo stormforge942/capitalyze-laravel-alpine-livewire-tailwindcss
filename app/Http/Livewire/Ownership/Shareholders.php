@@ -2,23 +2,26 @@
 
 namespace App\Http\Livewire\Ownership;
 
-use App\Http\Livewire\Tab;
+use App\Http\Livewire\AsTab;
+use Livewire\Component;
 use App\Models\CompanyFilings;
 use Illuminate\Support\Carbon;
 
-class Shareholders extends Tab
+class Shareholders extends Component
 {
+    use AsTab;
+
     protected $queryString = [
         'quarter',
     ];
 
-    public $company;
+    public string $ticker;
     public $quarters;
     public string $quarter = '';
 
     public function mount(array $data = [])
     {
-        $this->company = $data['company'];
+        $this->ticker = $data['company']['ticker'];
         $this->quarters = $this->quarters();
 
         if (!array_key_exists($this->quarter, $this->quarters)) {
@@ -41,7 +44,7 @@ class Shareholders extends Tab
     private function quarters(): array
     {
         $quarters = [];
-        $oldestFiling = CompanyFilings::query()->where('symbol', $this->company['ticker'])->min('report_calendar_or_quarter');
+        $oldestFiling = CompanyFilings::query()->where('symbol', $this->ticker)->min('report_calendar_or_quarter');
         $startYear = Carbon::parse($oldestFiling)->year;
         $startQuarter = Carbon::parse($oldestFiling)->quarter;
         $currentYear = now()->year;
