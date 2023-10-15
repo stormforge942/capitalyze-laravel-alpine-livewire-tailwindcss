@@ -158,7 +158,7 @@
                                     </td>
                                 </tr>
 
-                                <tr>
+                                {{-- <tr>
                                     <td style="text-align: center; padding-top: 24px;">
                                         <p style="
                                         font-family: 'Inter', Arial,
@@ -175,7 +175,7 @@
                                             </a>
                                         </p>
                                     </td>
-                                </tr>
+                                </tr> --}}
                             </table>
                         </td>
                     </tr>
