@@ -4,7 +4,7 @@ namespace App\Http\Livewire;
 
 use Livewire\Component;
 
-class CompanyInsider extends Component
+class CompanyInsiders extends Component
 {
     public $company;
     public $ticker;
@@ -17,6 +17,6 @@ class CompanyInsider extends Component
 
     public function render()
     {
-        return view('livewire.company-insider');
+        return view('livewire.company-insiders');
     }
 }

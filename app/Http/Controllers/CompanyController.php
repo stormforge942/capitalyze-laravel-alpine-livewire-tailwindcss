@@ -199,4 +199,14 @@ class CompanyController extends BaseController
             'tab' => 'ownership'
         ]);
     }
+
+    public function shareholder(string $ticker, string $shareholder)
+    {
+        return view('layouts.company', [
+            'tab' => 'shareholder',
+            'company' => Company::query()
+                ->where('ticker', $ticker)
+                ->firstOrFail(),
+        ]);
+    }
 }

@@ -72,6 +72,8 @@
                     <livewire:company-fail-to-deliver :company="$company" :ticker="$ticker" :period="$period" />
                 @elseif($tab == 'ownership')
                     <livewire:ownership.page :company="$company" />
+                @elseif($tab == 'shareholder')
+                    <livewire:ownership.shareholder />
                 @endif
             </div>
         </main>

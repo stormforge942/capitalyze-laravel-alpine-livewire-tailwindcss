@@ -21,6 +21,6 @@
     </div>
 
     <div class="mt-6">
-        <livewire:tabs :tabs="$tabs">
+        <livewire:tabs :tabs="$tabs" :data="['company' => $company]">
     </div>
 </div>

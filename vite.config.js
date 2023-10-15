@@ -8,11 +8,11 @@ export default defineConfig({
                 'resources/css/app.css',
                 'resources/js/app.js',
             ],
-            refresh: [
-                ...refreshPaths,
-                'app/Http/Livewire/**',
-                'app/Tables/Columns/**',
-            ],
+            // refresh: [
+            //     ...refreshPaths,
+            //     'app/Http/Livewire/**',
+            //     'app/Tables/Columns/**',
+            // ],
         }),
     ],
 });
