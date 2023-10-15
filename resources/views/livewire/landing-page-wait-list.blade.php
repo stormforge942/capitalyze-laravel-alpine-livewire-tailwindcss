@@ -21,12 +21,14 @@
                                 The future of financial data
                             </h1>
                             <p class="mt-2.5 mx-6 lg:mx-0 text-base md:text-lg leading-4 md:leading-7">
-                                Uncover fundamental insights to capitalize on opportunities. Analyze global financial data,
+                                Uncover fundamental insights to capitalize on opportunities. Analyze global financial
+                                data,
                                 revenue,
                                 cost structure, capital allocation, and more.
                             </p>
                             <p class="mt-4 lg:mt-8 text-[13px] md:text-md">
-                                Exciting things you can do with <span class="font-semibold">Capitalyze</span> in the beta
+                                Exciting things you can do with <span class="font-semibold">Capitalyze</span> in the
+                                beta
                                 program
                             </p>
                         </div>
@@ -38,13 +40,13 @@
                                     {{ $item }}
                                 </div>
                             @endforeach
-    
+
                             <div class="flex-1 mx-auto py-2 whitespace-nowrap hidden sm:block">
                                 and more...
                             </div>
                         </div>
                     </div>
-    
+
                     <svg class="hidden lg:block absolute left-10 xl:left-24 -bottom-20 translate-y-[100%] h-[354px] w-auto -z-50"
                         viewBox="0 0 475 354" fill="none" xmlns="http://www.w3.org/2000/svg">
                         <path
@@ -71,8 +73,8 @@
                             fill="#E6E6E6" stroke="#15357A" stroke-width="0.524533" stroke-miterlimit="10" />
                         <path d="M302.52 266.484L306.92 251.18L317.551 263.057" stroke="#15357A" stroke-width="0.524533"
                             stroke-miterlimit="10" stroke-linejoin="round" />
-                        <path d="M327.676 260.721L332.115 245.417L342.707 257.333" stroke="#15357A" stroke-width="0.524533"
-                            stroke-miterlimit="10" stroke-linejoin="round" />
+                        <path d="M327.676 260.721L332.115 245.417L342.707 257.333" stroke="#15357A"
+                            stroke-width="0.524533" stroke-miterlimit="10" stroke-linejoin="round" />
                         <path
                             d="M327.715 260.954L342.746 257.527C343.603 261.266 340.955 265.121 336.788 266.055C332.582 267.029 328.572 264.731 327.715 260.954Z"
                             stroke="#15357A" stroke-width="0.524533" stroke-miterlimit="10" stroke-linejoin="round" />
@@ -99,7 +101,8 @@
                             fill="#F5F9FF" stroke="#15357A" stroke-width="0.524533" stroke-miterlimit="10"
                             stroke-linejoin="round" />
                         <path d="M203.728 30.5308L192.902 32.4778L191.072 22.1974L203.728 30.5308Z" fill="#F5F9FF"
-                            stroke="#15357A" stroke-width="0.524533" stroke-miterlimit="10" stroke-linejoin="round" />
+                            stroke="#15357A" stroke-width="0.524533" stroke-miterlimit="10"
+                            stroke-linejoin="round" />
                         <path d="M181.688 38.0851L199.795 34.853" stroke="#15357A" stroke-width="0.524533"
                             stroke-miterlimit="10" stroke-linejoin="round" />
                         <path d="M182.311 41.6679L200.418 38.4358" stroke="#15357A" stroke-width="0.524533"
@@ -111,7 +114,8 @@
                             fill="#F5F9FF" stroke="#15357A" stroke-width="0.524533" stroke-miterlimit="10" />
                         <path
                             d="M185.853 34.386C185.385 34.4639 184.918 34.0745 184.49 33.9966C184.022 33.9576 183.477 34.1913 183.088 33.9966C182.698 33.8019 182.543 33.2178 182.231 32.9452C181.881 32.6726 181.296 32.5558 181.102 32.2053C180.907 31.8548 181.141 31.3096 181.063 30.8813C180.985 30.4529 180.557 30.0246 180.634 29.6352C180.712 29.2068 181.219 28.8953 181.452 28.5448C181.647 28.1554 181.569 27.5713 181.881 27.2598C182.192 26.9482 182.815 26.9872 183.205 26.7925C183.594 26.5978 183.905 26.0526 184.334 25.9747C184.801 25.8968 185.268 26.2862 185.697 26.3641C186.164 26.4031 186.709 26.1694 187.099 26.3641C187.488 26.5588 187.644 27.1429 187.955 27.4155C188.306 27.6881 188.89 27.8049 189.085 28.1554C189.279 28.5059 189.046 29.0511 189.124 29.4794C189.201 29.9078 189.63 30.3361 189.552 30.7255C189.474 31.1539 188.968 31.4654 188.734 31.8159C188.539 32.2053 188.617 32.7894 188.306 33.1009C187.994 33.4125 187.371 33.3735 186.982 33.5682C186.592 33.8019 186.32 34.3081 185.853 34.386Z"
-                            stroke="#15357A" stroke-width="0.524533" stroke-miterlimit="10" stroke-linejoin="round" />
+                            stroke="#15357A" stroke-width="0.524533" stroke-miterlimit="10"
+                            stroke-linejoin="round" />
                         <path
                             d="M185.582 32.8674C187.139 32.5948 188.191 31.1539 187.918 29.6742C187.645 28.1944 186.166 27.2209 184.608 27.4935C183.05 27.7661 181.999 29.2069 182.272 30.6867C182.544 32.1664 184.024 33.1399 185.582 32.8674Z"
                             fill="#9BCDFB" stroke="#15357A" stroke-width="0.524533" stroke-miterlimit="10"
@@ -162,7 +166,8 @@
                             d="M65.6826 140.748L36.5547 134.712L35.9316 137.671L65.0595 143.746L65.6826 140.748Z"
                             fill="#15357A" />
                         <path d="M75.2229 113.333L65.916 111.386L68.2525 100.054L75.2229 113.333Z" fill="#D5E3FC"
-                            stroke="#15357A" stroke-width="0.524533" stroke-linecap="round" stroke-linejoin="round" />
+                            stroke="#15357A" stroke-width="0.524533" stroke-linecap="round"
+                            stroke-linejoin="round" />
                         <path
                             d="M54.7788 115.397L42.084 112.632C43.408 110.802 45.5887 109.712 47.8862 109.751C46.3285 108.816 45.4329 106.947 45.8223 105.039C46.3675 102.702 48.665 101.184 51.0015 101.729C51.0793 101.729 51.1572 101.768 51.2351 101.768H51.2741C51.8971 101.923 52.4034 102.235 52.9096 102.624C54.1168 103.598 54.7009 105.272 54.3504 106.869C53.9221 108.738 52.3644 110.062 50.5731 110.257C51.2351 110.568 51.8582 110.919 52.4034 111.386C52.5591 111.542 52.7928 111.698 52.9485 111.892C53.6884 112.671 54.2336 113.606 54.5451 114.618C54.623 114.891 54.7009 115.124 54.7788 115.397Z"
                             fill="#EAF1FE" stroke="#15357A" stroke-width="0.524533" stroke-miterlimit="10"
@@ -199,7 +204,8 @@
                             fill="white" stroke="#15357A" stroke-width="0.524533" stroke-miterlimit="10"
                             stroke-linecap="round" stroke-linejoin="round" />
                         <path d="M79.4239 293.932L48.8942 276.72L33.7461 303.629L64.2759 320.841L79.4239 293.932Z"
-                            stroke="#15357A" stroke-width="0.478217" stroke-miterlimit="10" stroke-linejoin="round" />
+                            stroke="#15357A" stroke-width="0.478217" stroke-miterlimit="10"
+                            stroke-linejoin="round" />
                         <path
                             d="M204.149 266.528C126.93 237.105 134.385 138.663 134.385 138.663C175.91 108.626 231.38 108.626 272.949 138.663C272.949 138.663 279.79 236.491 204.149 266.528Z"
                             fill="#52D3A2" stroke="#15357A" stroke-width="0.590651" stroke-miterlimit="10"
@@ -278,11 +284,20 @@
                     </div>
 
                     @if (!$completed && !$verified)
-                        <form class="mt-4 space-y-6" wire:submit.prevent="submit">
+                        <form class="mt-4 space-y-6" wire:submit.prevent="submit" x-data>
                             @include('partials.input', [
                                 'label' => 'Full Name',
                                 'name' => 'name',
-                                'attrs' => ['wire:model.defer' => 'name'],
+                                'attrs' => [
+                                    'wire:model.defer' => 'name',
+                                    '@input' => '(e) => {
+                                        const inputText = e.target.value;
+                                        const sanitizedText = inputText.replace(/[^A-Za-z -\.]/g, "");
+                                        if (inputText !== sanitizedText) {
+                                            e.target.value = sanitizedText;
+                                        }
+                                    }',
+                                ],
                                 'autofocus' => true,
                                 'required' => true,
                             ])
@@ -309,7 +324,9 @@
                                 ])
 
                                 <div class="mt-4 inline-block">
-                                    Already have an account? <a href="{{ route('login') }}" class="font-semibold underline hover:bg-green-light2 rounded p-1 -mx-0.5 transition-all">Sign In</a>
+                                    Already have an account? <a href="{{ route('login') }}"
+                                        class="font-semibold underline hover:bg-green-light2 rounded p-1 -mx-0.5 transition-all">Sign
+                                        In</a>
                                 </div>
                             </div>
                         </form>
