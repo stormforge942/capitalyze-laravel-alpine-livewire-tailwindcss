@@ -12,7 +12,6 @@ use PowerComponents\LivewirePowerGrid\PowerGridEloquent;
 
 class ShareholdersTable extends BaseTable
 {
-    public int $perPage = 25;
     public string $ticker = '';
     public string $quarter = '';
     public string $sortField = 'ownership';
@@ -46,8 +45,7 @@ class ShareholdersTable extends BaseTable
             Column::add()
                 ->title('Fund')
                 ->field('investor_name_formated', 'investor_name')
-                ->searchable()
-                ->sortable(),
+                ->searchable(),
 
             Column::make('Shares Held or Principal Amt', 'ssh_prnamt')
                 ->sortable(),
