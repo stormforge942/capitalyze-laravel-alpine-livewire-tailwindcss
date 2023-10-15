@@ -4,11 +4,11 @@ const colors = require("tailwindcss/colors");
 /** @type {import('tailwindcss').Config} */
 module.exports = {
     content: [
+        "./app/Powergrid/CustomTheme.php",
         "./vendor/laravel/framework/src/Illuminate/Pagination/resources/views/*.blade.php",
         "./vendor/laravel/jetstream/**/*.blade.php",
         "./storage/framework/views/*.php",
         "./resources/views/**/*.blade.php",
-        "./vendor/power-components/livewire-powergrid/resources/views/**/*.php",
         "./vendor/power-components/livewire-powergrid/src/Themes/Tailwind.php",
         "./app/Http/Livewire/*.php",
         "./vendor/wire-elements/pro/config/wire-elements-pro.php",
@@ -30,6 +30,7 @@ module.exports = {
                     DEFAULT: "#3561E7",
                     light: "#52C6FF1A",
                 },
+                'pg-primary': colors.gray,
                 gray: {
                     ...defaultTheme.colors.gray,
                     light: "#F5F5F5",

@@ -5,35 +5,37 @@ namespace App\Http\Livewire\Ownership;
 use App\Http\Livewire\Tab;
 use App\Models\CompanyFilings;
 use Illuminate\Support\Carbon;
-use Livewire\WithPagination;
 
 class Shareholders extends Tab
 {
-    use WithPagination;
-    
+    protected $queryString = [
+        'quarter',
+    ];
+
     public $company;
-    public array $quarters = [];
+    public $quarters;
     public string $quarter = '';
 
     public function mount(array $data = [])
     {
         $this->company = $data['company'];
         $this->quarters = $this->quarters();
+
+        if (!array_key_exists($this->quarter, $this->quarters)) {
+            $this->quarter = array_key_first($this->quarters);
+        }
     }
 
     public function render()
     {
-        $filings = CompanyFilings::query()
-            ->where('symbol', '=', $this->company['ticker'])
-            ->when(
-                $this->quarter,
-                fn ($q) => $q->where('report_calendar_or_quarter', '=', $this->quarter)
-            )
-            ->paginate(10);
-
         return view('livewire.ownership.shareholders', [
-            'filings' => $filings,
+            'quarters' => $this->quarters,
         ]);
+    }
+
+    public function updatedQuarter()
+    {
+        $this->emit('quarterChanged', $this->quarter)->to(ShareholdersTable::class);
     }
 
     private function quarters(): array
