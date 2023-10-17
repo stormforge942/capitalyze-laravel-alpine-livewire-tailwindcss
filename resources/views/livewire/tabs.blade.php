@@ -1,6 +1,5 @@
-<div>
-    <div class="border border-[#D4DDD7] rounded bg-white w-full flex items-center gap-2 p-1 overflow-x-auto"
-        x-data="{ active: $wire.active }" x-cloak>
+<div x-data="{ active: $wire.active }" x-init="$dispatch('tab-changed', $wire.tabs[active])" x-cloak>
+    <div class="border border-[#D4DDD7] rounded bg-white w-full flex items-center gap-2 p-1 overflow-x-auto">
         @foreach ($tabs as $key => $tab)
             <button class="min-w-[250px] px-3 py-1.5 text-center rounded transition"
                 :class="{
@@ -12,8 +11,10 @@
                 @click="(e) => {
                     active = '{{ $key }}'; 
                     $wire.changeTab('{{ $key }}');
+                    $dispatch('tab-changed', JSON.parse(e.target.dataset.tab))
                     e.target.scrollIntoView({behavior: 'smooth' , block: 'center' })
-                }">
+                }"
+                data-tab='@json($tab)'>
                 {{ $tab['title'] }}
             </button>
         @endforeach

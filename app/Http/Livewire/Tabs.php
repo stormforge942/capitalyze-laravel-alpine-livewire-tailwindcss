@@ -29,8 +29,11 @@ class Tabs extends Component
             $this->tabs[$tab::key()] = [
                 'title' => $tab::title(),
                 'component' => $tab,
+                'key' => $tab::key(),
             ];
         }
+
+        $active = $this->active ?: $active;
 
         if (!in_array($active, array_keys($this->tabs))) {
             $active = array_key_first($this->tabs);

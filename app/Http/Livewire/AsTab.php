@@ -15,6 +15,6 @@ trait AsTab
 
     public static function key(): string
     {
-        return Str::kebab(class_basename(get_called_class()));
+        return Str::kebab(static::title());
     }
 }

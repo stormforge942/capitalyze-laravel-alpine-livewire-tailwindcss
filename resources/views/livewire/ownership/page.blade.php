@@ -1,8 +1,11 @@
-<div class="px-8">
+<div class="px-8" x-data="{ tab: null }" @tab-changed="tab = $event.detail; console.log(tab)">
     <div class="flex items-center gap-2 text-dark-light2 font-medium">
         <span class="px-2 py-1">Ownership</span>
         <span class="grid place-items-center text-dark-lighter">/</span>
-        <span class="px-2 py-1">Shareholders</span>
+        <a :href="'{{ route('company.ownership', $company->ticker) }}?tab=' + tab.key">
+            <span class="px-2 py-1" x-text="tab?.title"></span>
+
+        </a>
     </div>
 
     <div class="mt-6">

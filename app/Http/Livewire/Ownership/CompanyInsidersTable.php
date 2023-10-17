@@ -17,6 +17,11 @@ class CompanyInsidersTable extends BaseTable
     public string $ticker;
     public string $sortField = 'acceptance_time';
 
+    public static function title(): string
+    {
+        return 'Company Insiders';
+    }
+
     public function mount(array $data = []): void
     {
         parent::mount();
