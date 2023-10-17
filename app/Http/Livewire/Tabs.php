@@ -10,6 +10,13 @@ class Tabs extends Component
     public ?string $active = null;
     public array $data = [];
 
+    protected function queryString()
+    {
+        return [
+            'active' => ['as' => 'tab'],
+        ];
+    }
+
     public function mount(
         array $tabs = [],
         string $active = null,
