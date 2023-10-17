@@ -67,10 +67,10 @@ class CompanyReportSlide extends SlideOver
             // Trap the users focus inside the slide-over (e.g. input autofocus and going back and forth between input fields)
             'trap-focus' => true,
             // Remove all unsaved changes once someone closes the slide-over
-            'remove-state-on-close' => false,
+            'remove-state-on-close' => true,
         ];
     }
- 
+
     public static function attributes(): array
     {
         return [

@@ -23,10 +23,12 @@
                 {{$data['title']}}
             </span>
         </div>
-        <div class="w-full flex flex-row">
-            @foreach($data['values'] as $year => $value)
+        <div class="w-full flex flex-row" wire:key="{{now()}}">
+            @foreach($reverse ? array_reverse($data['values'], true) : $data['values'] as $year => $value)
                     <div class="w-[150px] flex items-center justify-center open-slide py-4 text-base  cursor-pointer hover:underline" data-value='{{$this->generateAttribute($value)}}'>
-                        {{$value['value'] ? '$' : ''}} {{$value['value']}}
+                        @if(!$value['empty'])
+                            {{$value['value'] ? '$' : ''}} {{$value['present']}}
+                        @endif
                     </div>
             @endforeach
         </div>
@@ -34,7 +36,7 @@
 
     @if($open)
         @foreach($data['children'] as $value)
-            <livewire:company-report-table-row key="{{now()}}" :data="$value" :index="$index + 1" :selectedRows="$selectedRows"/>
+            <livewire:company-report-table-row key="{{now()}}" :data="$value" :index="$index + 1" :selectedRows="$selectedRows" :reverse="$reverse"/>
         @endforeach
     @endif
 </div>

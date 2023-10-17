@@ -19,14 +19,18 @@ class CompanyReport extends Component
 
     public $rows = [];
     public $company;
+    public $decimal = '0';
     public $ticker;
     public $chartData = [];
     public $companyName;
+    public $unitType = 'Millions';
     public $currentRoute;
+    public $order = "Latest on the Right";
     public $period;
     public $table;
     public $navbar;
     public $subnavbar;
+    public $reverse = false;
     public $activeIndex = '';
     public $activeSubIndex = '';
     public $data;
@@ -47,6 +51,11 @@ class CompanyReport extends Component
        $this->emit('initCompanyReportChart');
    }
 
+   public function regenareteTableChart(): void
+   {
+       $this->generateUI();
+   }
+
    public function unselectRow($title)
    {
        unset($this->selectedRows[$title]);
@@ -56,6 +65,11 @@ class CompanyReport extends Component
             $this->chartData = [];
             $this->emit('hideCompanyReportChart');
        }
+   }
+
+   public function toggleReverse() {
+       $this->reverse = !$this->reverse;
+       $this->regenareteTableChart();
    }
 
    public function generateChartData($initChart = false): void
@@ -259,7 +273,14 @@ class CompanyReport extends Component
         $this->generateUI();
     }
 
+    public function closeChart() {
+        $this->chartData = [];
+        $this->selectedRows = [];
+        $this->emit('hideCompanyReportChart');
+    }
+
     public function changeDates($dates) {
+       $this->tableLoading = true;
        $this->rows = [];
         if (count($dates) == 2) {
             $this->tableDates = [];
@@ -268,11 +289,16 @@ class CompanyReport extends Component
             }
         }
 
+//        if ($this->order != "Latest on the Right") {
+//            $this->tableDates = array_reverse($this->tableDates);
+//        }
+
         $this->generateRows($this->data);
         if (count($this->selectedRows)){
             $this->generateChartData();
             $this->emit('initCompanyReportChart');
         }
+        $this->tableLoading = false;
     }
 
     public function generateUI(): void
@@ -290,6 +316,19 @@ class CompanyReport extends Component
             $year = $currentYear + $i;
             $dates[] = $year;
         }
+
+//        if ($this->order == "Latest on the Right") {
+//            for ($i = 0; $i <= 8; $i++) {
+//                $year = $currentYear + $i;
+//                $dates[] = $year;
+//            }
+//        } else {
+//            for ($i = 8; $i >= 0; $i--) {
+//                $year = $currentYear + $i;
+//                $dates[] = $year;
+//            }
+//        }
+
         $this->tableDates = $dates;
     }
 
@@ -342,6 +381,35 @@ class CompanyReport extends Component
         return $row;
     }
 
+    public function generatePresent($value)
+    {
+        $unitType = $this->unitType;
+        $units = [
+            'Thousands' => 'T',
+            'Millions' => 'M',
+            'Billions' => 'B',
+        ];
+
+        $decimal = intval($this->decimal);
+
+        if (!isset($units[$unitType])) {
+            return number_format($value, $decimal);
+        }
+
+        $unitAbbreviation = $units[$unitType];
+
+        // Determine the appropriate unit based on the number
+        if ($unitAbbreviation == 'B') {
+            return number_format($value / 1000000000) . $unitAbbreviation;
+        } elseif ($unitAbbreviation == 'M') {
+            return number_format($value / 1000000) . $unitAbbreviation;
+        } elseif ($unitAbbreviation == 'T') {
+            return number_format($value / 1000) . $unitAbbreviation;
+        } else {
+            return number_format($value);
+        }
+    }
+
     public function parseCell($data, $key) : array
     {
        $response = [];
@@ -353,13 +421,14 @@ class CompanyReport extends Component
               if (in_array('|', str_split($value))) {
                   [$value, $hash] = explode('|', $value);
                 $response['value'] = $value;
+                $response['present'] = $this->generatePresent($value);
                 $response['hash'] = $hash;
               } else {
                 $response[$key] = $value;
               }
          }
 
-            return $response;
+         return $response;
     }
 
     public function generateEmptyCellsRow(): array
@@ -377,6 +446,17 @@ class CompanyReport extends Component
         }
 
         return $response;
+    }
+
+    public function updated($propertyName): void
+    {
+        if (
+            $propertyName === 'unitType'
+            || $propertyName === 'order'
+            || $propertyName === 'decimal'
+        ) {
+            $this->regenareteTableChart();
+        }
     }
 
     public function updatedPeriod() {

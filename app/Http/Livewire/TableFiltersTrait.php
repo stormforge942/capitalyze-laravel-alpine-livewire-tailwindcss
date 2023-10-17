@@ -23,5 +23,4 @@ trait TableFiltersTrait
                 return number_format(floatval($value) / 1000 ,0).'T';
         }
     }
-    public $decimal = '.00';
 }

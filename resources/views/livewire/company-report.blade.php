@@ -18,21 +18,12 @@
             <div class="px-4 sm:px-6 lg:px-8 py-4">
                 <div class="sm:flex sm:items-start flex-col">
                     <div class="block">
-                        <h1 wire:loading.remove class="text-base font-semibold leading-6 text-gray-900">{{ Str::title(preg_replace('/\[[^\]]*?\]/', '', $activeIndex)) }} - {{ Str::title($period) }}</h1>
+                        <h1 class="text-base font-semibold leading-6 text-gray-900">{{ Str::title(preg_replace('/\[[^\]]*?\]/', '', $activeIndex)) }} - {{ Str::title($period) }}</h1>
                     </div>
                 </div>
                 <div class="mt-8 flow-root company-profile-loading overflow-x-hidden">
                     <div class="align-middle">
                         <div class="inline-block min-w-full sm:rounded-lg">
-                            <div wire:loading.flex class="justify-center items-center">
-                                 <div class="grid place-content-center h-full" role="status">
-                                    <svg aria-hidden="true" class="w-12 h-12 mr-2 text-gray-200 animate-spin dark:text-gray-600 fill-blue-600" viewBox="0 0 100 101" fill="none" xmlns="http://www.w3.org/2000/svg">
-                                        <path d="M100 50.5908C100 78.2051 77.6142 100.591 50 100.591C22.3858 100.591 0 78.2051 0 50.5908C0 22.9766 22.3858 0.59082 50 0.59082C77.6142 0.59082 100 22.9766 100 50.5908ZM9.08144 50.5908C9.08144 73.1895 27.4013 91.5094 50 91.5094C72.5987 91.5094 90.9186 73.1895 90.9186 50.5908C90.9186 27.9921 72.5987 9.67226 50 9.67226C27.4013 9.67226 9.08144 27.9921 9.08144 50.5908Z" fill="currentColor"/>
-                                        <path d="M93.9676 39.0409C96.393 38.4038 97.8624 35.9116 97.0079 33.5539C95.2932 28.8227 92.871 24.3692 89.8167 20.348C85.8452 15.1192 80.8826 10.7238 75.2124 7.41289C69.5422 4.10194 63.2754 1.94025 56.7698 1.05124C51.7666 0.367541 46.6976 0.446843 41.7345 1.27873C39.2613 1.69328 37.813 4.19778 38.4501 6.62326C39.0873 9.04874 41.5694 10.4717 44.0505 10.1071C47.8511 9.54855 51.7191 9.52689 55.5402 10.0491C60.8642 10.7766 65.9928 12.5457 70.6331 15.2552C75.2735 17.9648 79.3347 21.5619 82.5849 25.841C84.9175 28.9121 86.7997 32.2913 88.1811 35.8758C89.083 38.2158 91.5421 39.6781 93.9676 39.0409Z" fill="currentFill"/>
-                                    </svg>
-                                    <span class="sr-only">Loading...</span>
-                                </div>
-                            </div>
                             <div class="py-2">
                                 <div class="flex w-full justify-between" >
                                     <div class="page-titles">
@@ -182,6 +173,18 @@
                                                     <li>
                                                         <div class="flex p-2 rounded hover:bg-[#52D3A233] cursor-pointer">
                                                             <div class="flex items-center h-5 cursor-pointer">
+                                                                <input wire:model="unitType" @if($view === 'None') checked @endif id="unitType-radio-1" name="unitType-radio" type="radio" value="None" class="cursor-pointer w-4 h-4 text-[#686868] bg-transpearent border-[#686868] border-2">
+                                                            </div>
+                                                            <div class="ml-4 text-sm cursor-pointer">
+                                                                <label for="unitType-radio-1" class="cursor-pointer font-medium text-gray-900 dark:text-gray-300">
+                                                                    <div>None</div>
+                                                                </label>
+                                                            </div>
+                                                        </div>
+                                                    </li>
+                                                    <li>
+                                                        <div class="flex p-2 rounded hover:bg-[#52D3A233] cursor-pointer">
+                                                            <div class="flex items-center h-5 cursor-pointer">
                                                                 <input wire:model="unitType" @if($view === 'Thousands') checked @endif id="unitType-radio-1" name="unitType-radio" type="radio" value="Thousands" class="cursor-pointer w-4 h-4 text-[#686868] bg-transpearent border-[#686868] border-2">
                                                             </div>
                                                             <div class="ml-4 text-sm cursor-pointer">
@@ -257,7 +260,7 @@
                                         </div>
                                         <div class="ml-3 flex items-center">Order
                                             <button type="submit" id="dropdownOrderButton" data-dropdown-toggle="dropdown-Order" class="flex items-center flowbite-select bg-gray-50 border border-gray-700 text-gray-900 text-sm ml-2 p-2.5" name="view" id="">
-                                                {{$order}}
+                                                {{$reverse ? 'Latest on the Left' : 'Latest on the Right'}}
                                                 <svg width="16" height="16" viewBox="0 0 16 16" fill="none" xmlns="http://www.w3.org/2000/svg">
                                                     <path d="M10.3083 6.19514L7.72167 8.78378L5.135 6.19514C5.01045 6.07021 4.84135 6 4.665 6C4.48865 6 4.31955 6.07021 4.195 6.19514C3.935 6.45534 3.935 6.87566 4.195 7.13585L7.255 10.1982C7.515 10.4584 7.935 10.4584 8.195 10.1982L11.255 7.13585C11.515 6.87566 11.515 6.45534 11.255 6.19514C10.995 5.94161 10.5683 5.93494 10.3083 6.19514Z" fill="#121A0F"/>
                                                 </svg>
@@ -274,7 +277,7 @@
                                                     <li>
                                                         <div class="flex p-2 rounded hover:bg-[#52D3A233] cursor-pointer">
                                                             <div class="flex items-center h-5 cursor-pointer">
-                                                                <input wire:model="order" @if($order === 'Latest on the Right') checked @endif id="order-radio-1" name="order-radio" type="radio" value="Latest on the Right" class="cursor-pointer w-4 h-4 text-[#686868] bg-transpearent border-[#686868] border-2">
+                                                                <input wire:click="toggleReverse" @if($reverse === false) checked @endif id="order-radio-1" name="order-radio" type="radio" value="false" class="cursor-pointer w-4 h-4 text-[#686868] bg-transpearent border-[#686868] border-2">
                                                             </div>
                                                             <div class="ml-4 text-sm cursor-pointer">
                                                                 <label for="order-radio-1" class="cursor-pointer font-medium text-gray-900 dark:text-gray-300">
@@ -286,7 +289,7 @@
                                                     <li>
                                                         <div class="flex p-2 rounded hover:bg-[#52D3A233] cursor-pointer">
                                                             <div class="flex items-center h-5 cursor-pointer">
-                                                                <input wire:model="order" @if($order === 'Latest on the Left') checked @endif id="order-radio-1" name="order-radio" type="radio" value="Latest on the Left" class="cursor-pointer w-4 h-4 text-[#686868] bg-transpearent border-[#686868] border-2">
+                                                                <input wire:model="reverse" @if($reverse) checked @endif id="order-radio-1" name="order-radio" type="radio" value="true" class="cursor-pointer w-4 h-4 text-[#686868] bg-transpearent border-[#686868] border-2">
                                                             </div>
                                                             <div class="ml-4 text-sm cursor-pointer">
                                                                 <label for="order-radio-1" class="cursor-pointer font-medium text-gray-900 dark:text-gray-300">
@@ -361,7 +364,7 @@
                                         </div>
                                         <div class="ml-3 flex items-center">Decimal
                                             <button type="submit" id="dropdownDecimalButton" data-dropdown-toggle="dropdown-Decimal" class="flex items-center flowbite-select bg-gray-50 border border-gray-700 text-gray-900 text-sm ml-2 p-2.5" name="view" id="">
-                                                {{$decimal}}
+                                                {{$decimal == 2 ? '.00' : ($decimal == 3 ? '.000' : 'auto')}}
                                                 <svg width="16" height="16" viewBox="0 0 16 16" fill="none" xmlns="http://www.w3.org/2000/svg">
                                                     <path d="M10.3083 6.19514L7.72167 8.78378L5.135 6.19514C5.01045 6.07021 4.84135 6 4.665 6C4.48865 6 4.31955 6.07021 4.195 6.19514C3.935 6.45534 3.935 6.87566 4.195 7.13585L7.255 10.1982C7.515 10.4584 7.935 10.4584 8.195 10.1982L11.255 7.13585C11.515 6.87566 11.515 6.45534 11.255 6.19514C10.995 5.94161 10.5683 5.93494 10.3083 6.19514Z" fill="#121A0F"/>
                                                 </svg>
@@ -378,11 +381,35 @@
                                                     <li>
                                                         <div class="flex p-2 rounded hover:bg-[#52D3A233] cursor-pointer">
                                                             <div class="flex items-center h-5 cursor-pointer">
-                                                                <input wire:model="decimal" @if($view === '.00') checked @endif id="decimal-radio-1" name="decimal-radio" type="radio" value=".00" class="cursor-pointer w-4 h-4 text-[#686868] bg-transpearent border-[#686868] border-2">
+                                                                <input wire:model="decimal" @if($decimal === '0') checked @endif id="decimal-radio-1" name="decimal-radio" type="radio" value="0" class="cursor-pointer w-4 h-4 text-[#686868] bg-transpearent border-[#686868] border-2">
+                                                            </div>
+                                                            <div class="ml-4 text-sm cursor-pointer">
+                                                                <label for="decimal-radio-1" class="cursor-pointer font-medium text-gray-900 dark:text-gray-300">
+                                                                    <div>auto</div>
+                                                                </label>
+                                                            </div>
+                                                        </div>
+                                                    </li>
+                                                    <li>
+                                                        <div class="flex p-2 rounded hover:bg-[#52D3A233] cursor-pointer">
+                                                            <div class="flex items-center h-5 cursor-pointer">
+                                                                <input wire:model="decimal" @if($decimal === '2') checked @endif id="decimal-radio-1" name="decimal-radio" type="radio" value="2" class="cursor-pointer w-4 h-4 text-[#686868] bg-transpearent border-[#686868] border-2">
                                                             </div>
                                                             <div class="ml-4 text-sm cursor-pointer">
                                                                 <label for="decimal-radio-1" class="cursor-pointer font-medium text-gray-900 dark:text-gray-300">
                                                                     <div>.00</div>
+                                                                </label>
+                                                            </div>
+                                                        </div>
+                                                    </li>
+                                                    <li>
+                                                        <div class="flex p-2 rounded hover:bg-[#52D3A233] cursor-pointer">
+                                                            <div class="flex items-center h-5 cursor-pointer">
+                                                                <input wire:model="decimal" @if($decimal === '3') checked @endif id="decimal-radio-1" name="decimal-radio" type="radio" value="3" class="cursor-pointer w-4 h-4 text-[#686868] bg-transpearent border-[#686868] border-2">
+                                                            </div>
+                                                            <div class="ml-4 text-sm cursor-pointer">
+                                                                <label for="decimal-radio-1" class="cursor-pointer font-medium text-gray-900 dark:text-gray-300">
+                                                                    <div>.000</div>
                                                                 </label>
                                                             </div>
                                                         </div>
@@ -461,7 +488,7 @@
                                                 Apple Inc. (AAPL)
                                             </div>
                                             <div class="flex items-start">
-                                                <span class="rounded-full bg-red-500 border-2 text-white w-5 h-5 flex items-center justify-center">
+                                                <span wire:click="closeChart" class="rounded-full bg-red-500 border-2 text-white w-5 h-5 flex items-center justify-center">
                                                     <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="w-5 h-5">
                                                       <path stroke-linecap="round" stroke-linejoin="round" d="M6 18L18 6M6 6l12 12" />
                                                     </svg>
@@ -507,7 +534,7 @@
                                                             </span>
                                                         </div>
                                                         <div class="w-full flex flex-row bg-gray-200">
-                                                            @foreach ($tableDates as $date)
+                                                            @foreach ($reverse ? array_reverse($tableDates) : $tableDates as $date)
                                                                 <div class="w-[150px] flex items-center justify-center text-base">
                                                                     <span class="py-4">
                                                                         {{ $date }}
@@ -519,7 +546,7 @@
                                                     <div class="divide-y">
                                                         @if(!$tableLoading)
                                                             @foreach($rows as $row)
-                                                                <livewire:company-report-table-row :data="$row" key="{{now()}}" :selectedRows="array_keys($this->selectedRows)"/>
+                                                                <livewire:company-report-table-row :data="$row" key="{{now()}}" :selectedRows="array_keys($this->selectedRows)" :reverse="$reverse"/>
                                                             @endforeach
                                                         @endif
                                                     </div>
@@ -561,7 +588,11 @@
         let selectedValue = [];
 
         if (tableDates.length > 0) {
-            selectedValue = [tableDates[0],tableDates[tableDates.length - 1]]
+            if(tableDates[0] > tableDates[tableDates.length - 1]){
+                tableDates.reverse();
+            }
+
+            selectedValue = [tableDates[0], tableDates[tableDates.length - 1]]
         }
 
         let rangeMin = 1997;
