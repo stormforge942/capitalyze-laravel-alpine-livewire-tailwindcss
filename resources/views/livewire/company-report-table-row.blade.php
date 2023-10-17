@@ -2,7 +2,7 @@
     <div class="flex w-full flex-row {{$selected ? 'bg-blue-100' : (count($data['children']) == 0 ? 'bg-[#52C6FF]/10' : 'bg-white')}}">
         <div
             wire:click.stop="select"
-            class="cursor-default py-2 text-base w-[300px] truncate flex flex-row"
+            class="cursor-default py-2 text-base w-[300px] truncate flex flex-row items-center"
             style="{{count($data['children']) == 0 ? 'padding-left: 20px;' : 'padding-left: 10px;'}}"
             title="{{$data['title']}}">
             <span class="whitespace-nowrap truncate">
@@ -24,7 +24,7 @@
                 @endif
             </div>
         </div>
-        <div class="w-full flex flex-row" wire:key="{{now()}}">
+        <div class="w-full flex flex-row">
             @foreach($reverse ? array_reverse($data['values'], true) : $data['values'] as $year => $value)
                     <div class="w-[150px] flex items-center justify-center open-slide py-4 text-base  cursor-pointer hover:underline" data-value='{{$this->generateAttribute($value)}}'>
                         @if(!$value['empty'])
