@@ -2,6 +2,7 @@
 
 namespace App\Http\Livewire;
 
+use App\Models\Company;
 use App\Models\InfoPresentation;
 use Carbon\Carbon;
 use Illuminate\Database\ConnectionResolver;
@@ -19,7 +20,7 @@ class CompanyReport extends Component
 
     public $rows = [];
     public $company;
-    public $decimal = '0';
+    public $decimalDisplay = '0';
     public $ticker;
     public $chartData = [];
     public $companyName;
@@ -390,10 +391,10 @@ class CompanyReport extends Component
             'Billions' => 'B',
         ];
 
-        $decimal = intval($this->decimal);
+        $decimalDisplay = intval($this->decimalDisplay);
 
         if (!isset($units[$unitType])) {
-            return number_format($value, $decimal);
+            return number_format($value, $decimalDisplay);
         }
 
         $unitAbbreviation = $units[$unitType];
@@ -453,7 +454,7 @@ class CompanyReport extends Component
         if (
             $propertyName === 'unitType'
             || $propertyName === 'order'
-            || $propertyName === 'decimal'
+            || $propertyName === 'decimalDisplay'
         ) {
             $this->regenareteTableChart();
         }

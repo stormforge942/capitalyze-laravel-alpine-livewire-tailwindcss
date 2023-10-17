@@ -6,6 +6,7 @@ trait TableFiltersTrait
 {
     public $view = 'Common Size';
     public $unitType = 'Millions';
+    public $decimal = '0';
     public $template = 'Standart';
     public $order = 'Latest on the Right';
     public $freezePanes = 'Top Row';
