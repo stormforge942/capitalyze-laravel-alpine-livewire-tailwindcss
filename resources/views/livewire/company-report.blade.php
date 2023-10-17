@@ -62,13 +62,6 @@
                                         <a href="{{route('company.executive.compensation', ['ticker' => $company->ticker, 'period' => $period])}}" @class(['tab','px-3', 'active' => $currentRoute === 'company.executive.compensation'])>Consolidated Statements</a>
                                     </div>
                                 </div>
-                                <div class="flex w-[90%] overflow-x-hidden">
-                                    <ul class="tabs-wrapper flex flex-nowrap bg-inherit border-transparent">
-                                        @foreach($navbar[$activeIndex] as $key => $value)
-                                            <li data-tab-id="{{$value['id']}}" class="inline-block whitespace-nowrap min-w-min p-4 border-b-2 max-h-[50px] overflow-hidden rounded-t-lg cursor-pointer border-transparent text-[#828C85] hover:text-[#828C85] hover:border-[#828C85] @if($value['id'] == $activeSubIndex) !text-[#52D3A2] active border-b-2 border-[#52D3A2] font-bold hover:border-[#52D3A2] !cursor-default @endif" wire:click="$emit('tabSubClicked', '{{$value['id']}}')">{{ preg_replace('/\[[^\]]*?\]/', '', $value['title']) }}</li>
-                                        @endforeach
-                                    </ul>
-                                </div>
 
                                 <div class="filters-row">
                                     <div class="select-wrapper flex items-center">
@@ -595,7 +588,7 @@
             selectedValue = [tableDates[0], tableDates[tableDates.length - 1]]
         }
 
-        let rangeMin = 1997;
+        let rangeMin = selectedValue[0];
         let rangeMax = selectedValue[1] ? selectedValue[1] : new Date().getFullYear();
 
 

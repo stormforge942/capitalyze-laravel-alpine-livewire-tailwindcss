@@ -307,27 +307,31 @@ class CompanyReport extends Component
         $this->generateRows($this->data);
     }
 
+    function traverseArray($array) {
+        foreach ($array as $key => $value) {
+            if (is_array($value)) {
+                if (strtotime($key) !== false) {
+                    $this->tableDates[] = date('Y', strtotime($key));
+                }
+                $this->traverseArray($value);
+            } else {
+                break;
+            }
+        }
+    }
+
     public function generateTableDates()
     {
-        $dates = [];
-        $currentYear = date('Y') - 8;
+        $this->traverseArray($this->data);
 
-        for ($i = 0; $i <= 8; $i++) {
-            $year = $currentYear + $i;
+        $dates = [];
+        $minYear = (int) min(array_unique($this->tableDates));
+        $maxYear = (int) max(array_unique($this->tableDates));
+
+        for ($i = 0; $minYear + $i <= $maxYear; $i++) {
+            $year = $minYear + $i;
             $dates[] = $year;
         }
-
-//        if ($this->order == "Latest on the Right") {
-//            for ($i = 0; $i <= 8; $i++) {
-//                $year = $currentYear + $i;
-//                $dates[] = $year;
-//            }
-//        } else {
-//            for ($i = 8; $i >= 0; $i--) {
-//                $year = $currentYear + $i;
-//                $dates[] = $year;
-//            }
-//        }
 
         $this->tableDates = $dates;
     }
