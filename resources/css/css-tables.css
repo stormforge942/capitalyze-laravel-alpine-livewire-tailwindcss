@@ -18,11 +18,13 @@
 .table-wrapper .table .cell {
     display: table-cell;
     background: white;
-    font-weight: bold;
-    padding: 0.95em 1.3em;
-    border-top: 1px solid #e6e6e6;
-    border-bottom: 1px solid #e6e6e6;
+    /*font-weight: bold;*/
+    padding: 0.5rem 0.625rem;
+    /*border-top: 1px solid #e6e6e6;*/
+    /*border-bottom: 1px solid #e6e6e6;*/
     font-size: 1.17em;
+    text-align: center;
+    vertical-align: middle;
 }
 .table-wrapper .table .row-group .row:first-child .cell { border-top: none; }
 .table-wrapper .row-head .cell {background: #e5e5e5;}
