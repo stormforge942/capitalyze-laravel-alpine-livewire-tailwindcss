@@ -8,7 +8,7 @@ use Illuminate\Support\Facades\DB;
 class CompanyMetrics extends Component
 {
     use TableFiltersTrait;
-    
+
     public $company;
     public $ticker;
     public $currentRoute;
@@ -101,7 +101,7 @@ class CompanyMetrics extends Component
             $table .= '<div class="row-group row-group-spoiler">'; //row group spoiler
             foreach($this->segments as $segment) {
                 $table .= '<div class="row">';
-                    $table .= '<div class="cell break-words font-bold">&nbsp; '.preg_replace('/(?<=\w)(?=[A-Z])/', ' ', $segment).'</div>';
+                    $table .= '<div class="cell break-words">&nbsp; '.preg_replace('/(?<=\w)(?=[A-Z])/', ' ', $segment).'</div>';
                     foreach(array_keys($this->metrics) as $date) {
                         if(array_key_exists($segment, $this->metrics[$date])) {
                             if($this->metrics[$date][$segment][1] == 'USD')

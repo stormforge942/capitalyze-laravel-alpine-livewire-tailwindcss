@@ -436,9 +436,9 @@
                                 <div class="table-wrapper" style="font-size: 12px;">
                                     <div class="table min-w-full data border-collapse">
                                         <div class="row row-head">
-                                            <div class="cell">Date</div>
+                                            <div class="cell font-bold">Date</div>
                                             @foreach(array_keys($this->metrics) as $date)
-                                                <div class="cell">{{ $date }}</div>
+                                                <div class="cell font-bold">{{ date('Y', strtotime($date)) }}</div>
                                             @endforeach
                                         </div>
                                         {!! $table !!}
