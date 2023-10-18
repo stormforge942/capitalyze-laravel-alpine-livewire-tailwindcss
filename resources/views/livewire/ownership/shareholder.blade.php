@@ -50,6 +50,6 @@
     </div>
 
     <div class="mt-6">
-        <livewire:tabs :tabs="$tabs" :data="['company' => $company]">
+        <livewire:tabs :tabs="$tabs" :data="['fund' => $activeFund]">
     </div>
 </div>

@@ -42,7 +42,7 @@ class Shareholder extends Component
     public function render()
     {
         return view('livewire.ownership.shareholder', [
-            'activeFund' => $this->funds->firstWhere('cik', $this->active)
+            'activeFund' => $this->funds->firstWhere('cik', $this->active),
         ]);
     }
 
