@@ -16,14 +16,14 @@
     <div class="py-12 bg-gray-100">
         <div class="mx-auto">
             <div class="px-4 sm:px-6 lg:px-8 py-4">
-                <div class="sm:flex sm:items-start flex-col">
+                <div class="flex items-start flex-col">
                     <div class="block">
                         <h1 class="text-base font-semibold leading-6 text-gray-900">{{ Str::title(preg_replace('/\[[^\]]*?\]/', '', $activeIndex)) }} - {{ Str::title($period) }}</h1>
                     </div>
                 </div>
                 <div class="mt-8 flow-root company-profile-loading overflow-x-hidden">
                     <div class="align-middle">
-                        <div class="inline-block min-w-full sm:rounded-lg">
+                        <div class="block min-w-full sm:rounded-lg">
                             <div class="py-2">
                                 <div class="flex w-full justify-between" >
                                     <div class="page-titles">
@@ -52,7 +52,7 @@
                                     </div>
                                 </div>
 
-                                <div class="flex w-[90%] overflow-x-hidden">
+                                <div class="flex w-full overflow-x-hidden">
                                     <div class="tabs-wrapper flex">
                                         <a href="{{route('company.report', ['ticker' => $company->ticker, 'period' => $period])}}" @class(['tab','px-3', 'active' => $currentRoute === 'company.report'])>Income Statement</a>
                                         <a href="{{route('company.metrics', ['ticker' => $company->ticker, 'period' => $period])}}" @class(['tab','px-3', 'active' => $currentRoute === 'company.metrics'])>Balance Sheet</a>
@@ -66,7 +66,7 @@
                                 <div class="filters-row">
                                     <div class="select-wrapper flex items-center">
                                         <div class="ml-3 flex items-center">View
-                                            <button type="submit" id="dropdownViewButton" data-dropdown-toggle="dropdown-View" class="flex items-center flowbite-select bg-gray-50 border border-gray-700 text-gray-900 text-sm ml-2 p-2.5" name="view" id="">
+                                            <button type="submit" id="dropdownViewButton" data-dropdown-toggle="dropdown-View" class="flex items-center flowbite-select bg-gray-50 border border-gray-700 text-gray-900 text-sm ml-2 p-1" name="view" id="">
                                                 {{$view}}
                                                 <svg width="16" height="16" viewBox="0 0 16 16" fill="none" xmlns="http://www.w3.org/2000/svg">
                                                     <path d="M10.3083 6.19514L7.72167 8.78378L5.135 6.19514C5.01045 6.07021 4.84135 6 4.665 6C4.48865 6 4.31955 6.07021 4.195 6.19514C3.935 6.45534 3.935 6.87566 4.195 7.13585L7.255 10.1982C7.515 10.4584 7.935 10.4584 8.195 10.1982L11.255 7.13585C11.515 6.87566 11.515 6.45534 11.255 6.19514C10.995 5.94161 10.5683 5.93494 10.3083 6.19514Z" fill="#121A0F"/>
@@ -148,7 +148,7 @@
                                             </div>
                                         </div>
                                         <div class="ml-3 flex items-center">Unit Type
-                                            <button type="submit" id="dropdownUnitTypeButton" data-dropdown-toggle="dropdown-UnitType" class="flex items-center flowbite-select bg-gray-50 border border-gray-700 text-gray-900 text-sm ml-2 p-2.5" name="view" id="">
+                                            <button type="submit" id="dropdownUnitTypeButton" data-dropdown-toggle="dropdown-UnitType" class="flex items-center flowbite-select bg-gray-50 border border-gray-700 text-gray-900 text-sm ml-2 p-1" name="view" id="">
                                                 {{$unitType}}
                                                 <svg width="16" height="16" viewBox="0 0 16 16" fill="none" xmlns="http://www.w3.org/2000/svg">
                                                     <path d="M10.3083 6.19514L7.72167 8.78378L5.135 6.19514C5.01045 6.07021 4.84135 6 4.665 6C4.48865 6 4.31955 6.07021 4.195 6.19514C3.935 6.45534 3.935 6.87566 4.195 7.13585L7.255 10.1982C7.515 10.4584 7.935 10.4584 8.195 10.1982L11.255 7.13585C11.515 6.87566 11.515 6.45534 11.255 6.19514C10.995 5.94161 10.5683 5.93494 10.3083 6.19514Z" fill="#121A0F"/>
@@ -218,7 +218,7 @@
                                             </div>
                                         </div>
                                         <div class="ml-3 flex items-center">Template
-                                            <button type="submit" id="dropdownTemplateButton" data-dropdown-toggle="dropdown-Template" class="flex items-center flowbite-select bg-gray-50 border border-gray-700 text-gray-900 text-sm ml-2 p-2.5" name="view" id="">
+                                            <button type="submit" id="dropdownTemplateButton" data-dropdown-toggle="dropdown-Template" class="flex items-center flowbite-select bg-gray-50 border border-gray-700 text-gray-900 text-sm ml-2 p-1" name="view" id="">
                                                 {{$template}}
                                                 <svg width="16" height="16" viewBox="0 0 16 16" fill="none" xmlns="http://www.w3.org/2000/svg">
                                                     <path d="M10.3083 6.19514L7.72167 8.78378L5.135 6.19514C5.01045 6.07021 4.84135 6 4.665 6C4.48865 6 4.31955 6.07021 4.195 6.19514C3.935 6.45534 3.935 6.87566 4.195 7.13585L7.255 10.1982C7.515 10.4584 7.935 10.4584 8.195 10.1982L11.255 7.13585C11.515 6.87566 11.515 6.45534 11.255 6.19514C10.995 5.94161 10.5683 5.93494 10.3083 6.19514Z" fill="#121A0F"/>
@@ -252,7 +252,7 @@
                                             </div>
                                         </div>
                                         <div class="ml-3 flex items-center">Order
-                                            <button type="submit" id="dropdownOrderButton" data-dropdown-toggle="dropdown-Order" class="flex items-center flowbite-select bg-gray-50 border border-gray-700 text-gray-900 text-sm ml-2 p-2.5" name="view" id="">
+                                            <button type="submit" id="dropdownOrderButton" data-dropdown-toggle="dropdown-Order" class="flex items-center flowbite-select bg-gray-50 border border-gray-700 text-gray-900 text-sm ml-2 p-1" name="view" id="">
                                                 {{$reverse ? 'Latest on the Left' : 'Latest on the Right'}}
                                                 <svg width="16" height="16" viewBox="0 0 16 16" fill="none" xmlns="http://www.w3.org/2000/svg">
                                                     <path d="M10.3083 6.19514L7.72167 8.78378L5.135 6.19514C5.01045 6.07021 4.84135 6 4.665 6C4.48865 6 4.31955 6.07021 4.195 6.19514C3.935 6.45534 3.935 6.87566 4.195 7.13585L7.255 10.1982C7.515 10.4584 7.935 10.4584 8.195 10.1982L11.255 7.13585C11.515 6.87566 11.515 6.45534 11.255 6.19514C10.995 5.94161 10.5683 5.93494 10.3083 6.19514Z" fill="#121A0F"/>
@@ -298,7 +298,7 @@
                                             </div>
                                         </div>
                                         <div class="ml-3 flex items-center">Freeze Panes
-                                            <button type="submit" id="dropdownFreezePanesButton" data-dropdown-toggle="dropdown-FreezePanes" class="flex items-center flowbite-select bg-gray-50 border border-gray-700 text-gray-900 text-sm ml-2 p-2.5" name="view" id="">
+                                            <button type="submit" id="dropdownFreezePanesButton" data-dropdown-toggle="dropdown-FreezePanes" class="flex items-center flowbite-select bg-gray-50 border border-gray-700 text-gray-900 text-sm ml-2 p-1" name="view" id="">
                                                 {{$freezePanes}}
                                                 <svg width="16" height="16" viewBox="0 0 16 16" fill="none" xmlns="http://www.w3.org/2000/svg">
                                                     <path d="M10.3083 6.19514L7.72167 8.78378L5.135 6.19514C5.01045 6.07021 4.84135 6 4.665 6C4.48865 6 4.31955 6.07021 4.195 6.19514C3.935 6.45534 3.935 6.87566 4.195 7.13585L7.255 10.1982C7.515 10.4584 7.935 10.4584 8.195 10.1982L11.255 7.13585C11.515 6.87566 11.515 6.45534 11.255 6.19514C10.995 5.94161 10.5683 5.93494 10.3083 6.19514Z" fill="#121A0F"/>
@@ -356,7 +356,7 @@
                                             </div>
                                         </div>
                                         <div class="ml-3 flex items-center">Decimal
-                                            <button type="submit" id="dropdownDecimalButton" data-dropdown-toggle="dropdown-Decimal" class="flex items-center flowbite-select bg-gray-50 border border-gray-700 text-gray-900 text-sm ml-2 p-2.5" name="view" id="">
+                                            <button type="submit" id="dropdownDecimalButton" data-dropdown-toggle="dropdown-Decimal" class="flex items-center flowbite-select bg-gray-50 border border-gray-700 text-gray-900 text-sm ml-2 p-1" name="view" id="">
                                                 {{$decimalDisplay == 2 ? '.00' : ($decimalDisplay == 3 ? '.000' : 'auto')}}
                                                 <svg width="16" height="16" viewBox="0 0 16 16" fill="none" xmlns="http://www.w3.org/2000/svg">
                                                     <path d="M10.3083 6.19514L7.72167 8.78378L5.135 6.19514C5.01045 6.07021 4.84135 6 4.665 6C4.48865 6 4.31955 6.07021 4.195 6.19514C3.935 6.45534 3.935 6.87566 4.195 7.13585L7.255 10.1982C7.515 10.4584 7.935 10.4584 8.195 10.1982L11.255 7.13585C11.515 6.87566 11.515 6.45534 11.255 6.19514C10.995 5.94161 10.5683 5.93494 10.3083 6.19514Z" fill="#121A0F"/>
@@ -415,7 +415,7 @@
                                         </div>
                                     </div>
                                 </div>
-                                <div class="filters-row flex items-center mt-2">
+                                <div class="filters-row flex items-center mt-2 text-sm">
                                     <b class="mr-3">Period Type:</b>
                                     <ul class="flex soft-radio-wrapper big-checked items-center">
                                         <li class="mr-2">
@@ -470,7 +470,11 @@
                                 </div>
 
                                 <div class="years-range-wrapper my-2" wire:ignore>
-                                    <div class="dots-wrapper"></div>
+                                    <div class="dots-wrapper">
+                                        @foreach($tableDates as $key => $date)
+                                            <span id="{{$date}}" class="inactive-dots"></span>
+                                        @endforeach
+                                    </div>
                                     <div id="range-slider-company-report" class="range-slider"></div>
                                 </div>
 
@@ -516,7 +520,7 @@
                                         Click on any of the row(s) to chart the data
                                     </div>
                                 </div>
-                                    <div class="flex w-[90%] overflow-x-scroll">
+                                    <div class="flex w-full overflow-x-scroll">
                                         <div class="table-wrapper w-full" style="font-size: 12px;">
                                             <div class="table">
                                                 <div class="row-group">
@@ -560,6 +564,50 @@
 <script>
     let slideOpen = false;
 
+    function generateRangeArray(inputArray) {
+        if (inputArray.length !== 2) {
+            return [];
+        }
+
+        let start = inputArray[0];
+        let end = inputArray[1];
+        let rangeArray = [];
+
+        if (start <= end) {
+            for (let i = start; i <= end; i++) {
+                rangeArray.push(i);
+            }
+        } else {
+            for (let i = start; i >= end; i--) {
+                rangeArray.push(i);
+            }
+        }
+
+        return rangeArray;
+    }
+
+    function recognizeDotsStatus(value) {
+        const tableDates = @this.tableDates
+        let activeYears = generateRangeArray(value)
+        let intersection = tableDates.filter(x => !activeYears.includes(x));
+
+        activeYears.forEach(id => {
+            let element = document.getElementById(id);
+            if (element) {
+                element.classList.add('active-dots');
+                element.classList.remove('inactive-dots');
+            }
+        })
+
+        intersection.forEach(id => {
+            let element = document.getElementById(id);
+            if (element) {
+                element.classList.remove('active-dots');
+                element.classList.add('inactive-dots');
+            }
+        })
+    }
+
     document.addEventListener('DOMContentLoaded', function() {
         document.body.addEventListener('click', function(event) {
             var element = event.target;
@@ -590,16 +638,22 @@
 
         let rangeMin = selectedValue[0];
         let rangeMax = selectedValue[1] ? selectedValue[1] : new Date().getFullYear();
+        selectedValue[0] = rangeMax - 4;
 
+        recognizeDotsStatus(selectedValue)
+        @this.changeDates(selectedValue)
 
         rangeSlider(el, {
             step: 1,
             min: rangeMin,
             max: rangeMax,
             value: selectedValue,
+            rangeSlideDisabled: true,
             onInput: (value) => {
                 if (value.length === 2 && value !== selectedValue) {
+                    recognizeDotsStatus(value)
                     @this.changeDates(value)
+
                     if (chart) {
                         chart.destroy();
                     }

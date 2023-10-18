@@ -119,3 +119,27 @@
 .row-spoiler.active + .row-group-spoiler {
     display: table-row-group;
 }
+.dots-wrapper {
+    display: flex;
+    justify-content: space-between;
+    position: relative;
+    z-index: 2;
+    top: 7px;
+    pointer-events: none;
+}
+
+.dots-wrapper .active-dots {
+    width: 10px;
+    height: 10px;
+    background: black;
+    border-radius: 5px;
+    display: inline-block;
+}
+
+.dots-wrapper .inactive-dots {
+    width: 10px;
+    height: 10px;
+    background: #D1D3D5;
+    border-radius: 5px;
+    display: inline-block;
+}
