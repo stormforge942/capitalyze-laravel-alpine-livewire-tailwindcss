@@ -5,7 +5,7 @@ namespace App\Http\Livewire;
 trait TableFiltersTrait
 {
     public $view = 'Common Size';
-    public $unitType = 'Millions';
+    public $unitType = 'Thousands';
     public $decimal = '0';
     public $template = 'Standart';
     public $order = 'Latest on the Right';

@@ -24,7 +24,7 @@ class CompanyReport extends Component
     public $ticker;
     public $chartData = [];
     public $companyName;
-    public $unitType = 'Millions';
+    public $unitType = 'Thousands';
     public $currentRoute;
     public $order = "Latest on the Right";
     public $period;
@@ -341,8 +341,24 @@ class CompanyReport extends Component
        $this->tableLoading = true;
        $rows = [];
 
-       foreach($data as $key => $value) {
-           $rows[] = $this->generateRow($value, $key);
+       $index = 0; // Initialize the index
+
+        foreach($data as $key => $value) {
+    
+            if($index == 0 && $key == 'Income Statement') {
+
+
+                
+                $keyn = array_keys($data[$key])[0];
+                $valuen = $data[$key][$keyn];
+                $keynn = array_keys($valuen)[0];
+                $valuenn = $valuen[$keynn];
+
+                $rows[] = $this->generateRow($valuenn, $keynn);
+                $index++; 
+            } else {
+                // $rows[] = $this->generateRow($value, $key);
+            }
        }
 
        $this->rows = $rows;
@@ -409,11 +425,11 @@ class CompanyReport extends Component
 
         // Determine the appropriate unit based on the number
         if ($unitAbbreviation == 'B') {
-            return number_format($value / 1000000000) . $unitAbbreviation;
+            return number_format($value / 1000000000);
         } elseif ($unitAbbreviation == 'M') {
-            return number_format($value / 1000000) . $unitAbbreviation;
+            return number_format($value / 1000000);
         } elseif ($unitAbbreviation == 'T') {
-            return number_format($value / 1000) . $unitAbbreviation;
+            return number_format($value / 1000);
         } else {
             return number_format($value);
         }
