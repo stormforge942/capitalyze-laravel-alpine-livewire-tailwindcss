@@ -44,7 +44,7 @@
                     @elseif($tab == 'splits')
                         <livewire:company-splits :company="$company" :ticker="$ticker" :period="$period" />
                     @elseif($tab == 'metrics')
-                        <livewire:company-metrics :company="$company" :ticker="$ticker" :period="$period" />
+                        <livewire:company-report :company="$company" :ticker="$ticker" :period="$period" />
                     @elseif($tab == 'chart')
                         <livewire:company-chart :company="$company" :ticker="$ticker" :period="$period" />
                     @elseif($tab == 'executiveCompensation')

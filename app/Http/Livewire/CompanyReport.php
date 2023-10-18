@@ -488,8 +488,14 @@ class CompanyReport extends Component
             return;
         }
 
+        $selectedSubIndex = match (\Route::currentRouteName()) {
+            'company.report' => 0,
+            'company.metrics' => 1,
+            default => 0,
+        };
+
         $this->activeIndex = 'Financial Statements [Financial Statements]';
-        $this->activeSubIndex = $navbar[$this->activeIndex][0]['id'];
+        $this->activeSubIndex = $navbar[$this->activeIndex][$selectedSubIndex]['id'];
         $this->navbar = $navbar;
         $this->emit('navbarUpdated', $this->navbar, $this->activeIndex, $this->activeSubIndex);
    }
