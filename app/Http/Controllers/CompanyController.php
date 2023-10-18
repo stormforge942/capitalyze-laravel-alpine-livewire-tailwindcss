@@ -188,7 +188,7 @@ class CompanyController extends BaseController
         ]);
     }
 
-    public function ownership(string $ticker)
+    public function ownership(Request $request, string $ticker)
     {
         $company = Company::query()
             ->where('ticker', $ticker)
@@ -196,17 +196,23 @@ class CompanyController extends BaseController
 
         return view('layouts.company', [
             'company' => $company,
+            'ticker' => $ticker,
+            'period' => $request->query('period', 'annual'),
             'tab' => 'ownership'
         ]);
     }
 
-    public function shareholder(string $ticker, string $shareholder)
+    public function shareholder(Request $request, string $ticker)
     {
+        $company = Company::query()
+            ->where('ticker', $ticker)
+            ->firstOrFail();
+
         return view('layouts.company', [
+            'company' => $company,
+            'ticker' => $ticker,
+            'period' => $request->query('period', 'annual'),
             'tab' => 'shareholder',
-            'company' => Company::query()
-                ->where('ticker', $ticker)
-                ->firstOrFail(),
         ]);
     }
 }
