@@ -374,7 +374,11 @@ class CompanyReport extends Component
             } else {
                 if (in_array($key, ['#segmentation'])) {
                     foreach($value as $sKey => $sValue) {
-                        $row['children'][] = $this->generateRow($sValue, $sKey);
+                        $keyn = array_keys($value[$sKey])[0];
+                        $valuen = $sValue[$keyn];
+                        $keynn = array_keys($valuen)[0];
+                        $valuenn = $valuen[$keynn];
+                        $row['children'][] = $this->generateRow($valuenn, $keynn);
                     }
                 } else {
                     $row['children'][] = $this->generateRow($value, $key);
@@ -488,14 +492,8 @@ class CompanyReport extends Component
             return;
         }
 
-        $selectedSubIndex = match (\Route::currentRouteName()) {
-            'company.report' => 0,
-            'company.metrics' => 1,
-            default => 0,
-        };
-
         $this->activeIndex = 'Financial Statements [Financial Statements]';
-        $this->activeSubIndex = $navbar[$this->activeIndex][$selectedSubIndex]['id'];
+        $this->activeSubIndex = $navbar[$this->activeIndex][0]['id'];
         $this->navbar = $navbar;
         $this->emit('navbarUpdated', $this->navbar, $this->activeIndex, $this->activeSubIndex);
    }
@@ -518,6 +516,7 @@ class CompanyReport extends Component
         if (!$this->currentRoute) {
             $this->currentRoute = $request->route()->getName();
         }
+
     }
 
     public function periodChange($period) {

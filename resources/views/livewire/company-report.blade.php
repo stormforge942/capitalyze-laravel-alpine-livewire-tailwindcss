@@ -13,18 +13,13 @@
         </div>
     @else
 
-    <div class="py-12 bg-gray-100">
+    <div class="py-0 bg-gray-100">
         <div class="mx-auto">
-            <div class="px-4 sm:px-6 lg:px-8 py-4">
-                <div class="flex items-start flex-col">
-                    <div class="block">
-                        <h1 class="text-base font-semibold leading-6 text-gray-900">{{ Str::title(preg_replace('/\[[^\]]*?\]/', '', $activeIndex)) }} - {{ Str::title($period) }}</h1>
-                    </div>
-                </div>
-                <div class="mt-8 flow-root company-profile-loading overflow-x-hidden">
+            <div class="px-4 sm:px-6 lg:px-8 py-0">
+                <div class="mt-0 flow-root company-profile-loading overflow-x-hidden">
                     <div class="align-middle">
                         <div class="block min-w-full sm:rounded-lg">
-                            <div class="py-2">
+                            <div class="py-0">
                                 <div class="flex w-full justify-between" >
                                     <div class="page-titles">
                                         <b>{{ @$companyName }}  @if(@$ticker) ({{ @$ticker }}) @endif </b> <br>
@@ -52,16 +47,28 @@
                                     </div>
                                 </div>
 
-                                <div class="flex w-full overflow-x-hidden">
+                                <!-- <div class="flex w-full overflow-x-hidden">
                                     <div class="tabs-wrapper flex">
                                         <a href="{{route('company.report', ['ticker' => $company->ticker, 'period' => $period])}}" @class(['tab','px-3', 'active' => $currentRoute === 'company.report'])>Income Statement</a>
-                                        <a href="{{route('company.metrics', ['ticker' => $company->ticker, 'period' => $period])}}" @class(['tab','px-3', 'active' => $currentRoute === 'company.metrics'])>Balance Sheet</a>
-                                        <a href="{{route('company.filings', ['ticker' => $company->ticker, 'period' => $period])}}" @class(['tab','px-3', 'active' => $currentRoute === 'company.filings'])>Cash Flow</a>
+                                        <a href="{{route('company.report', ['ticker' => $company->ticker, 'period' => $period])}}" @class(['tab','px-3' => $currentRoute === 'company.report'])>Balance Sheet</a>
+                                        <a href="{{route('company.report', ['ticker' => $company->ticker, 'period' => $period])}}" @class(['tab','px-3' => $currentRoute === 'company.report'])>Cash Flow</a>
                                         <a href="{{route('company.geographic', ['ticker' => $company->ticker, 'period' => $period])}}" @class(['tab','px-3', 'active' => $currentRoute === 'company.geographic'])>Segments</a>
                                         <a href="{{route('company.shareholders', ['ticker' => $company->ticker, 'period' => $period])}}" @class(['tab','px-3', 'active' => $currentRoute === 'company.shareholders'])>Ratios</a>
                                         <a href="{{route('company.executive.compensation', ['ticker' => $company->ticker, 'period' => $period])}}" @class(['tab','px-3', 'active' => $currentRoute === 'company.executive.compensation'])>Consolidated Statements</a>
                                     </div>
+                                </div> -->
+
+                                <div class="flex w-full overflow-x-hidden">
+                                    <div class="tabs-container" style="overflow-x: auto; white-space: nowrap;">
+                                        <ul class="tabs-wrapper flex">
+                                            @foreach($navbar[$activeIndex] as $key => $value)
+                                                <li data-tab-id="{{$value['id']}}" class="whitespace-nowrap min-w-min p-4 border-b-2 max-h-[50px] overflow-hidden rounded-t-lg cursor-pointer border-transparent text-[#828C85] hover:text-[#828C85] px-6 tab @if($value['id'] == $activeSubIndex) active @endif" wire:click="$emit('tabSubClicked', '{{$value['id']}}')">{{ preg_replace('/\[[^\]]*?\]/', '', $value['title']) }}</li>
+                                            @endforeach
+                                        </ul>
+                                    </div>
                                 </div>
+
+
 
                                 <div class="filters-row">
                                     <div class="select-wrapper flex items-center">
