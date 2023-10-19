@@ -23,15 +23,16 @@
             'name' => 'password',
             'required' => true,
             'attrs' => ['autocomplete' => 'current-password'],
+            'toggle' => true,
         ])
 
         <div class="mt-4 flex justify-between items-center text-sm">
             <label class="flex items-center gap-1.5">
                 <input type="checkbox" class="text-black border-2 border-black h-4 w-4 rounded-sm focus:ring-black"
-                    name="remember" :checked="{{ old('remember') == "on" }}">
+                    name="remember" :checked="{{ old('remember') == 'on' }}">
                 <span>Remember Me</span>
             </label>
-            <a href="{{ route('password.request') }}">Forgot Password?</a>
+            <a href="{{ route('password.request') }}" class="hover:underline">Forgot Password?</a>
         </div>
 
         <div class="mt-6 text-center">
@@ -40,9 +41,10 @@
                 'type' => 'submit',
             ])
 
-            <a href="{{ route('waitlist.join') }}" class="mt-4 inline-block">
-                Don't have an account? <span class="font-semibold">Join the waitlist</span>
-            </a>
+            <div class="mt-4 inline-block">
+                Don't have an account? <a href="{{ route('waitlist.join') }}" class="font-semibold underline hover:bg-green-light2 rounded p-1 -mx-0.5 transition-all">Join the
+                    waitlist</a>
+            </div>
         </div>
     </form>
 @endsection

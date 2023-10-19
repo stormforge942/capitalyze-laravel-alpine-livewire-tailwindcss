@@ -5,11 +5,13 @@ namespace App\Http\Livewire;
 use Livewire\Component;
 use Illuminate\Support\Str;
 use App\Actions\Fortify\CreateNewUser;
+use App\Models\User;
 use Illuminate\Auth\Events\Registered;
 
 class LandingPageWaitList extends Component
 {
     public $completed = false;
+    public $alreadyOnWaitlist = false;
 
     public $email = '';
     public $name = '';
@@ -19,15 +21,17 @@ class LandingPageWaitList extends Component
         'email' => [
             'required',
             'email:rfc,dns',
-            'unique:users,email',
+            // 'unique:users,email',
         ],
         'name' => ['required', 'min:5'],
         'likedinLink' => ['nullable', 'url', 'regex:/^(https?:\/\/)?(www\.)?linkedin\.com\/in\/[\w-]+\/?$/i'],
     ];
 
-    protected $messages =[
+    protected $messages = [
+        'email.required' => 'Enter valid email address',
+        'name.required' => 'Enter name',
         'email.email' => 'Please enter a valid email address',
-        'email.unique' => 'This email is already registered. Please continue to login',
+        // 'email.unique' => 'This email is already registered. Please continue to login',
         'name.min' => 'Please enter a minimum of 5 characters',
         'likedinLink.regex' => 'Please enter a valid linkedin profile link',
     ];
@@ -35,6 +39,11 @@ class LandingPageWaitList extends Component
     public function submit()
     {
         $this->validate();
+
+        if (User::query()->where('email', $this->email)->exists()) {
+            $this->alreadyOnWaitlist = true;
+            return;
+        }
 
         $user = app(CreateNewUser::class)->createUser([
             'email' => $this->email,

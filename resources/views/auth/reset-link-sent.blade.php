@@ -1,10 +1,10 @@
 @extends('layouts.auth')
 
-@section('title', 'Reset Password Successful')
+@section('title', 'Reset Link Sent')
 
 @section('content')
 
-<p class="leading-10 font-semibold text-md text-center">We have sent a verification link to your email</p>
+<p class="leading-10 font-semibold text-md text-center">We have sent a reset link to your email</p>
 
 <form action="{{ route('login') }}" method="GET">
     <svg class="mt-4 mx-auto" xmlns="http://www.w3.org/2000/svg" width="80" height="80" viewBox="0 0 80 80" fill="none">

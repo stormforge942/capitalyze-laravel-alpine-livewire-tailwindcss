@@ -10,6 +10,8 @@ class ResetPasswordSuccessfulController extends Controller
             return redirect()->route('login');
         }
 
-        return view('auth.reset-password-successful');
+        return view('auth.reset-password-successful',[
+            'flow' => request('flow')
+        ]);
     }
 }

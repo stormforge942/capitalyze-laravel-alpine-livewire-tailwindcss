@@ -22,7 +22,7 @@ $title = "Welcome to the Capitalyze Beta";
 
                 Thanks for hanging in there! We're so excited to finally welcome you to the Capitalyze Beta.<br><br>
 
-                Capitalyze is the future of financial data. We can't wait to show you wait we have been working
+                Capitalyze is the future of financial data. We can't wait to show you what we have been working
                 on!<br><br>
 
                 Best,<br>
