@@ -16,6 +16,7 @@ class CompanyInsidersTable extends BaseTable
 
     public string $ticker;
     public string $sortField = 'acceptance_time';
+    public string $sortDirection = 'desc';
 
     public static function title(): string
     {

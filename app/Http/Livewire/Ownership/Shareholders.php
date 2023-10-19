@@ -11,8 +11,8 @@ class Shareholders extends Component
 {
     use AsTab;
 
-    protected $queryString = [
-        'quarter',
+    public $queryString = [
+        'quarter' => ['except' => ''],
     ];
 
     public string $ticker;

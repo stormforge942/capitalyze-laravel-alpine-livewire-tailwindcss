@@ -7,8 +7,6 @@ use Illuminate\Support\Str;
 use App\Http\Livewire\AsTab;
 use Illuminate\Support\Carbon;
 use Illuminate\Support\Facades\DB;
-use Illuminate\Support\Facades\Log;
-
 class ShareholderSummary extends Component
 {
     use AsTab;
@@ -72,7 +70,7 @@ class ShareholderSummary extends Component
 
     public function getHoldingSummary()
     {
-        $summary = DB::connection('pgsql-xbrl')
+        return DB::connection('pgsql-xbrl')
             ->table('filings')
             ->select('weight', 'symbol', 'name_of_issuer')
             ->where('cik', '=', $this->cik)
@@ -85,9 +83,8 @@ class ShareholderSummary extends Component
                     'name' => Str::title($item->name_of_issuer) . ($item->symbol ? " ({$item->symbol})" : ''),
                     'weight' => number_format($item->weight, 2),
                 ];
-            });
-
-        return $summary->toArray();
+            })
+            ->toArray();
     }
 
     public function getOverTimeMarketValue()

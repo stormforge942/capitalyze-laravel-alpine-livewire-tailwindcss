@@ -15,6 +15,7 @@ class ShareholdersTable extends BaseTable
     public string $ticker = '';
     public string $quarter = '';
     public string $sortField = 'ownership';
+    public string $sortDirection = 'desc';
 
     protected function getListeners(): array
     {
