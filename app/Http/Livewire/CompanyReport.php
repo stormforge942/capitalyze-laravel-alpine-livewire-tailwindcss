@@ -341,24 +341,34 @@ class CompanyReport extends Component
        $this->tableLoading = true;
        $rows = [];
 
-       $index = 0; // Initialize the index
+       if (
+        isset($data['Income Statement']) &&
+        is_array($data['Income Statement']) &&
+        isset($data['Income Statement']['Statement']) &&
+        is_array($data['Income Statement']['Statement']) &&
+        isset($data['Income Statement']['Statement']['Statement'])
+        ) {
+            $data = $data['Income Statement']['Statement']['Statement'];
+        } 
 
-        foreach($data as $key => $value) {
+        if (
+            isset($data['Statement of Financial Position']) &&
+            is_array($data['Statement of Financial Position'])
+            ) {
+                $data = $data['Statement of Financial Position'];
+        } 
+
+        if (
+            isset($data['Statement of Cash Flows']) &&
+            is_array($data['Statement of Cash Flows'])
+            ) {
+                $data = $data['Statement of Cash Flows'];
+        } 
+        
     
-            if($index == 0 && $key == 'Income Statement') {
-
-
-                
-                $keyn = array_keys($data[$key])[0];
-                $valuen = $data[$key][$keyn];
-                $keynn = array_keys($valuen)[0];
-                $valuenn = $valuen[$keynn];
-
-                $rows[] = $this->generateRow($valuenn, $keynn);
-                $index++; 
-            } else {
-                // $rows[] = $this->generateRow($value, $key);
-            }
+        foreach($data as $key => $value) {
+            $rows[] = $this->generateRow($value, $key);
+            
        }
 
        $this->rows = $rows;
@@ -366,6 +376,7 @@ class CompanyReport extends Component
     }
 
     public function generateRow($data, $title):array {
+
         $row = [
             'title' => $title,
             'values' => $this->generateEmptyCellsRow(),
