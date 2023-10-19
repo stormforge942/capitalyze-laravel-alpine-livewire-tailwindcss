@@ -17,6 +17,7 @@ class ShareholderSummary extends Component
     public $topBuys;
     public $topSells;
     public $summary;
+    public $overTimeMarketValue;
 
     public static function title(): string
     {
@@ -29,6 +30,8 @@ class ShareholderSummary extends Component
 
         $this->quarter = $this->getLatestQuarter();
 
+        $this->overTimeMarketValue = $this->getOverTimeMarketValue();
+
         $this->activity = DB::connection('pgsql-xbrl')
             ->table('filings')
             ->select('weight', 'symbol', 'name_of_issuer')
@@ -39,7 +42,7 @@ class ShareholderSummary extends Component
             ->get()
             ->toArray();
 
-        $this->topBuys =  DB::connection('pgsql-xbrl')
+        $this->topBuys = DB::connection('pgsql-xbrl')
             ->table('filings')
             ->select('change_in_shares', 'change_in_value', 'symbol', 'name_of_issuer')
             ->where('cik', '=', $this->cik)
@@ -139,5 +142,29 @@ class ShareholderSummary extends Component
         }
 
         return $summary;
+    }
+
+    private function getOverTimeMarketValue()
+    {
+        $totalValues = DB::connection('pgsql-xbrl')
+            ->table('filings_summary')
+            ->where('cik', '=', $this->cik)
+            ->select('date', 'total_value')
+            ->orderBy('total_value')
+            ->get();
+
+        $chartData = [];
+
+        foreach ($totalValues as $value) {
+            $date = Carbon::parse($value->date);
+
+            $chartData[] = [
+                'date' => $value->date,
+                'quarter' => "Q{$date->quarter}-{$date->year}",
+                'total' => $value->total_value
+            ];
+        }
+
+        return $chartData;
     }
 }

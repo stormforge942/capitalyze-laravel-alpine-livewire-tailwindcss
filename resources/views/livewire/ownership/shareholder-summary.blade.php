@@ -2,17 +2,11 @@
     <div class="grid grid-cols-12 gap-6">
         <div class="col-span-8 2xl:col-span-9">
             <div class="bg-white rounded">
-                <div class="flex items-center justify-between py-3 px-6 border-b">
+                <div class="py-3 px-6 border-b">
                     <h3 class="text-md font-medium">Market Value Overtime</h3>
-
-                    <select class="bg-gray-light rounded px-2.5 py-1.5">
-                        <option value="" selected>This month</option>
-                    </select>
                 </div>
                 <div class="p-6">
-                    <div class="chart-here bg-gray-200 w-full h-80">
-
-                    </div>
+                    <canvas id="overTimeMarketValue"></canvas>
                 </div>
             </div>
         </div>
@@ -23,13 +17,13 @@
 
                 <div class="space-y-4">
                     @foreach ($activity as $key => $value)
-                    <div class="flex gap-5 items-center justify-between">
-                        <span class="text-sm">{{ Str::title($value->name_of_issuer) }} @if ($value->symbol)
-                            ({{ $value->symbol }})
-                            @endif
-                        </span>
-                        <span class="font-semibold">{{ number_format($value->weight, 2) }}%</span>
-                    </div>
+                        <div class="flex gap-5 items-center justify-between">
+                            <span class="text-sm">{{ Str::title($value->name_of_issuer) }} @if ($value->symbol)
+                                    ({{ $value->symbol }})
+                                @endif
+                            </span>
+                            <span class="font-semibold">{{ number_format($value->weight, 2) }}%</span>
+                        </div>
                     @endforeach
                 </div>
 
@@ -44,55 +38,55 @@
         <div class="col-span-6">
             <x-tabs :tabs="['Top Buys', 'Top Sells']" class="bg-white p-6 rounded">
                 <div class="space-y-4" :class="active == 0 ? 'block' : 'hidden'">
-                    <?php 
-                        $topBuys = collect($topBuys);
-                        $max = $topBuys->max('change_in_shares');
-                        $min = $topBuys->min('change_in_shares');
-
-                        $topBuys = $topBuys->map(function ($item, $key) use ($max, $min) {
-                            $item->width = (($item->change_in_shares - $min) / ($max - $min)) * 80;
-                            $item->width += 10;
-                            return $item;
-                        });
+                    <?php
+                    $topBuys = collect($topBuys);
+                    $max = $topBuys->max('change_in_shares');
+                    $min = $topBuys->min('change_in_shares');
+                    
+                    $topBuys = $topBuys->map(function ($item, $key) use ($max, $min) {
+                        $item->width = (($item->change_in_shares - $min) / ($max - $min)) * 80;
+                        $item->width += 10;
+                        return $item;
+                    });
                     ?>
 
                     @foreach ($topBuys as $item)
-                    <div class="grid grid-cols-12 items-center gap-4 ">
-                        <div class="col-span-8 xl:col-span-9 px-2 py-1.5 bg-[#F0F6FF] rounded-[40px]">
-                            <div class="h-2 rounded-[40px] bg-blue" style="width: {{ $item->width }}%">
-                            </div>
+                        <div class="grid grid-cols-12 items-center gap-4 ">
+                            <div class="col-span-8 xl:col-span-9 px-2 py-1.5 bg-[#F0F6FF] rounded-[40px]">
+                                <div class="h-2 rounded-[40px] bg-blue" style="width: {{ $item->width }}%">
+                                </div>
 
+                            </div>
+                            <span class="col-span-4 xl:col-span-3 text-dark-light2">
+                                {{ \Str::title($item->name_of_issuer) }}
+                            </span>
                         </div>
-                        <span class="col-span-4 xl:col-span-3 text-dark-light2">
-                            {{ \Str::title($item->name_of_issuer) }}
-                        </span>
-                    </div>
                     @endforeach
                 </div>
 
                 <div class="space-y-4" :class="active == 1 ? 'block' : 'hidden'">
-                    <?php 
-                        $topSells = collect($topSells);
-                        $max = $topSells->max('change_in_shares');
-                        $min = $topSells->min('change_in_shares');
-                        
-                        $topSells = $topSells->map(function ($item, $key) use ($max, $min) {
-                            $item->width = 90 - ((($item->change_in_shares - $min) / ($max - $min)) * 80);
-                            return $item;
-                        });
+                    <?php
+                    $topSells = collect($topSells);
+                    $max = $topSells->max('change_in_shares');
+                    $min = $topSells->min('change_in_shares');
+                    
+                    $topSells = $topSells->map(function ($item, $key) use ($max, $min) {
+                        $item->width = 90 - (($item->change_in_shares - $min) / ($max - $min)) * 80;
+                        return $item;
+                    });
                     ?>
 
                     @foreach ($topSells as $item)
-                    <div class="grid grid-cols-12 items-center gap-4 ">
-                        <div class="col-span-8 xl:col-span-9 px-2 py-1.5 bg-[#F0F6FF] rounded-[40px]">
-                            <div class="h-2 rounded-[40px] bg-blue" style="width: {{ $item->width }}%">
-                            </div>
+                        <div class="grid grid-cols-12 items-center gap-4 ">
+                            <div class="col-span-8 xl:col-span-9 px-2 py-1.5 bg-[#F0F6FF] rounded-[40px]">
+                                <div class="h-2 rounded-[40px] bg-blue" style="width: {{ $item->width }}%">
+                                </div>
 
+                            </div>
+                            <span class="col-span-4 xl:col-span-3 text-dark-light2">
+                                {{ \Str::title($item->name_of_issuer) }}
+                            </span>
                         </div>
-                        <span class="col-span-4 xl:col-span-3 text-dark-light2">
-                            {{ \Str::title($item->name_of_issuer) }}
-                        </span>
-                    </div>
                     @endforeach
                 </div>
             </x-tabs>
@@ -126,22 +120,117 @@
                 <h3 class="text-blue text-sm mb-4 font-semibold">13F Activity</h3>
 
                 <div class="grid grid-cols-2 2xl:grid-cols-4 gap-4">
-                    @foreach($summary as $key => $value)
-                    <div>
-                        <p class="text-dark-light2 text-sm">{{ str_replace('_', ' ', Str::title($key)) }}</p>
+                    @foreach ($summary as $key => $value)
+                        <div>
+                            <p class="text-dark-light2 text-sm">{{ str_replace('_', ' ', Str::title($key)) }}</p>
 
-                        <p class="font-semibold">
-                            @if(Str::startsWith($value, 'https'))
-                            <a href="{{ $value }}" class="underline text-blue" target="_blank">{{
-                                getSiteNameFromUrl($value) }}</a>
-                            @else
-                            {{ $value }}
-                            @endif
-                        </p>
-                    </div>
+                            <p class="font-semibold">
+                                @if (Str::startsWith($value, 'https'))
+                                    <a href="{{ $value }}" class="underline text-blue"
+                                        target="_blank">{{ getSiteNameFromUrl($value) }}</a>
+                                @else
+                                    {{ $value }}
+                                @endif
+                            </p>
+                        </div>
                     @endforeach
                 </div>
             </div>
         </div>
     </div>
 </div>
+
+@push('scripts')
+    <script>
+        renderOverTimeMarketValueChart(@json($overTimeMarketValue))
+
+        function renderOverTimeMarketValueChart(data) {
+            data = data.sort((a, b) => new Date(a.date) - new Date(b.date))
+
+            const canvas = document.getElementById('overTimeMarketValue');
+
+            new Chart(canvas, {
+                type: 'line',
+                data: {
+                    labels: data.map(item => item.quarter),
+                    datasets: [{
+                        data: data.map(item => item.total),
+                        borderColor: "#0E5FD9",
+                        pointRadius: 0,
+                        fill: true,
+                        tension: 0.5,
+                        pointHoverRadius: 6,
+                        pointHoverBackgroundColor: '#0E5FD9',
+                        pointHoverBorderWidth: 4,
+                        pointHoverBorderColor: '#fff',
+                        backgroundColor(context) {
+                            if (!context.chart.chartArea) {
+                                return
+                            }
+
+                            const {
+                                top,
+                                bottom
+                            } = context.chart.chartArea;
+
+                            const gradient = context.chart.ctx.createLinearGradient(0, top, 0, bottom);
+
+                            gradient.addColorStop(0.5, '#CFDFF7')
+                            gradient.addColorStop(1, 'rgba(207, 223, 247, 0.00)')
+
+                            return gradient;
+                        },
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    aspectRatio: 4,
+                    onResize: function(chart, size) {
+                        if (size.width < 768) {
+                            chart.options.aspectRatio = 2;
+                        } else {
+                            chart.options.aspectRatio = 3;
+                        }
+                    },
+                    plugins: {
+                        legend: {
+                            display: false,
+                        },
+                    },
+                    scales: {
+                        y: {
+                            beginAtZero: true,
+                            grid: {
+                                display: false
+                            },
+                            ticks: {
+                                callback: function(value, index, values) {
+                                    if (value >= 1e9) {
+                                        value = (value / 1e9).toFixed(1) + 'B';
+                                    } else if (value >= 1e6) {
+                                        value = (value / 1e6).toFixed(1) + 'M';
+                                    } else if (value >= 1e3) {
+                                        value = (value / 1e3).toFixed(1) + 'k';
+                                    } else {
+                                        value = value.toString();
+                                    }
+
+                                    if (value.indexOf('.0') > -1) {
+                                        value = value.replace('.0', '');
+                                    }
+
+                                    return value;
+                                }
+                            }
+                        },
+                        x: {
+                            grid: {
+                                display: false
+                            }
+                        }
+                    }
+                }
+            });
+        }
+    </script>
+@endpush
