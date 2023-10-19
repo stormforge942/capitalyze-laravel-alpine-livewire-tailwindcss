@@ -202,7 +202,7 @@ class CompanyController extends BaseController
         ]);
     }
 
-    public function shareholder(Request $request, string $ticker)
+    public function fund(Request $request, string $ticker)
     {
         $company = Company::query()
             ->where('ticker', $ticker)
@@ -212,7 +212,7 @@ class CompanyController extends BaseController
             'company' => $company,
             'ticker' => $ticker,
             'period' => $request->query('period', 'annual'),
-            'tab' => 'shareholder',
+            'tab' => 'company-fund',
         ]);
     }
 }

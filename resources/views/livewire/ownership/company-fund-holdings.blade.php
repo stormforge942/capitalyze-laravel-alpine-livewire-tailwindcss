@@ -9,5 +9,5 @@
         </select>
     </label>
 
-    <livewire:ownership.shareholder-holdings-table :cik="$cik" :quarter="$quarter" />
+    <livewire:ownership.company-fund-holdings-table :cik="$cik" :quarter="$quarter" />
 </div>

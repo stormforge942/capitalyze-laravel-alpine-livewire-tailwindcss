@@ -9,7 +9,7 @@ use PowerComponents\LivewirePowerGrid\Column;
 use PowerComponents\LivewirePowerGrid\PowerGrid;
 use PowerComponents\LivewirePowerGrid\PowerGridEloquent;
 
-class ShareholderHoldingsTable extends BaseTable
+class CompanyFundHoldingsTable extends BaseTable
 {
     public string $quarter = '';
     public string $cik = '';
@@ -47,7 +47,7 @@ class ShareholderHoldingsTable extends BaseTable
         return PowerGrid::eloquent()
             ->addColumn('name_of_issuer')
             ->addColumn('investor_name_formated', function (CompanyFilings $companyFilings) {
-                return '<button class="text-blue">' .$companyFilings->symbol . (!empty($companyFilings->name_of_issuer) ? ' <span class="text-xs font-light">(' . $companyFilings->name_of_issuer . ')<span>' : '') . '</button>';
+                return '<a href=" ' . route('company.ownership', $companyFilings->symbol) . ' " class="text-blue">' . $companyFilings->symbol . (!empty($companyFilings->name_of_issuer) ? ' <span class="text-xs font-light">(' . $companyFilings->name_of_issuer . ')<span>' : '') . '</button>';
             })
             ->addColumn('ssh_prnamt', function (CompanyFilings $companyFilings) {
                 return number_format($companyFilings->ssh_prnamt);
@@ -57,10 +57,10 @@ class ShareholderHoldingsTable extends BaseTable
             })
             ->addColumn('weight', function (CompanyFilings $companyFilings) {
                 return number_format($companyFilings->weight, 4) . '%';
-            }) 
+            })
             ->addColumn('last_weight', function (CompanyFilings $companyFilings) {
                 return number_format($companyFilings->last_weight, 4) . '%';
-            }) 
+            })
             ->addColumn('change_in_shares', function (CompanyFilings $companyFilings) {
                 if ($companyFilings->change_in_shares > 0) {
                     return number_format($companyFilings->change_in_shares);
@@ -71,7 +71,7 @@ class ShareholderHoldingsTable extends BaseTable
             ->addColumn('ownership', function (CompanyFilings $companyFilings) {
                 return number_format($companyFilings->ownership, 4) . '%';
             })
-            ->addColumn('signature_date') 
+            ->addColumn('signature_date')
             ->addColumn('report_calendar_or_quarter');
     }
 

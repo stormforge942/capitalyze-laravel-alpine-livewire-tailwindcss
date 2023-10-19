@@ -7,7 +7,7 @@ use App\Http\Livewire\AsTab;
 use App\Models\CompanyFilings;
 use Illuminate\Support\Carbon;
 
-class ShareholderHoldings extends Component
+class CompanyFundHoldings extends Component
 {
     use AsTab;
 
@@ -36,7 +36,7 @@ class ShareholderHoldings extends Component
 
     public function render()
     {
-        return view('livewire.ownership.shareholder-holdings');
+        return view('livewire.ownership.company-fund-holdings');
     }
 
     public function updatedQuarter()

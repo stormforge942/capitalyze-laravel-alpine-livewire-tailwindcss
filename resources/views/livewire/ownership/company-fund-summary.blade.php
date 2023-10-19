@@ -1,4 +1,4 @@
-{{-- Check resources/views/livewire/ownership/shareholder.blade.php for js code --}}
+{{-- Check resources/views/livewire/ownership/company-fund.blade.php for js code --}}
 <div>
     <div class="grid grid-cols-12 gap-6">
         <div class="col-span-8 2xl:col-span-9">
