@@ -16,6 +16,7 @@ class ShareholderSummary extends Component
     public $cik;
     public $topBuys;
     public $topSells;
+    public $summary;
 
     public static function title(): string
     {
@@ -44,6 +45,7 @@ class ShareholderSummary extends Component
             ->where('cik', '=', $this->cik)
             ->where('report_calendar_or_quarter', '=', $this->quarter)
             ->orderByDesc('change_in_shares')
+            ->where('change_in_shares', '>', 0)
             ->limit(8)
             ->get()
             ->toArray();
@@ -57,6 +59,8 @@ class ShareholderSummary extends Component
             ->limit(8)
             ->get()
             ->toArray();
+
+        $this->summary = $this->getSummary();
     }
 
     public function render()
@@ -64,7 +68,7 @@ class ShareholderSummary extends Component
         return view('livewire.ownership.shareholder-summary');
     }
 
-    public function getLatestQuarter()
+    private function getLatestQuarter()
     {
         $latestFiling = Carbon::parse(DB::connection('pgsql-xbrl')
             ->table('filings_summary')
@@ -105,5 +109,35 @@ class ShareholderSummary extends Component
         }
 
         return "$year-" . str_pad(($quarter * 3), 2, "0", STR_PAD_LEFT) . "-{$quarterEnd[$quarter]}";
+    }
+
+    private function getSummary()
+    {
+        $data = DB::connection('pgsql-xbrl')
+            ->table('filings_summary')
+            ->select('cik', 'investor_name', 'portfolio_size', 'added_securities', 'removed_securities', 'total_value', 'last_value', 'change_in_total_value', 'change_in_total_value_percentage', 'turnover', 'turnover_alt_sell', 'turnover_alt_buy', 'average_holding_period', 'average_holding_period_top10', 'average_holding_period_top20', 'url')
+            ->where('cik', '=', $this->cik)
+            ->where('date', '=', $this->quarter)
+            ->limit(1)
+            ->get();
+
+        $summary = $data->isEmpty() ? [] : (array) $data->first();
+
+        if (!empty($summary)) {
+            $percentageFields = [
+                'change_in_total_value_percentage',
+                'turnover',
+                'turnover_alt_sell',
+                'turnover_alt_buy'
+            ];
+
+            foreach ($percentageFields as $field) {
+                if (isset($summary[$field])) {
+                    $summary[$field] = number_format($summary[$field], 2) . ' %';
+                }
+            }
+        }
+
+        return $summary;
     }
 }
