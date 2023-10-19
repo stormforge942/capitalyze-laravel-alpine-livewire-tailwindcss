@@ -3,21 +3,18 @@
 namespace App\Http\Livewire\Ownership;
 
 use Livewire\Component;
+use Illuminate\Support\Str;
 use App\Http\Livewire\AsTab;
 use Illuminate\Support\Carbon;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Log;
 
 class ShareholderSummary extends Component
 {
     use AsTab;
 
     public string $quarter = '';
-    public $activity;
     public $cik;
-    public $topBuys;
-    public $topSells;
-    public $summary;
-    public $overTimeMarketValue;
 
     public static function title(): string
     {
@@ -29,20 +26,99 @@ class ShareholderSummary extends Component
         $this->cik = $data['fund']['cik'];
 
         $this->quarter = $this->getLatestQuarter();
+    }
 
-        $this->overTimeMarketValue = $this->getOverTimeMarketValue();
+    public function render()
+    {
+        return view('livewire.ownership.shareholder-summary');
+    }
 
-        $this->activity = DB::connection('pgsql-xbrl')
+    public function getSummary()
+    {
+        $summary = (array) DB::connection('pgsql-xbrl')
+            ->table('filings_summary')
+            ->select('cik', 'investor_name', 'portfolio_size', 'added_securities', 'removed_securities', 'total_value', 'last_value', 'change_in_total_value', 'change_in_total_value_percentage', 'turnover', 'turnover_alt_sell', 'turnover_alt_buy', 'average_holding_period', 'average_holding_period_top10', 'average_holding_period_top20', 'url')
+            ->where('cik', '=', $this->cik)
+            ->where('date', '=', $this->quarter)
+            ->first() ?? [];
+
+        $percentageFields = [
+            'change_in_total_value_percentage',
+            'turnover',
+            'turnover_alt_sell',
+            'turnover_alt_buy'
+        ];
+
+        foreach ($summary as $key => $value) {
+            if (in_array($key, $percentageFields)) {
+                $value = number_format($value, 2) . ' %';
+            }
+
+            $type = Str::startsWith($value, 'https') ? 'link' : 'text';
+
+            if ($key === 'url') {
+                $value = getSiteNameFromUrl($value);
+            }
+
+            $summary[$key] = [
+                'title' => str_replace('_', ' ', Str::title($key)),
+                'value' => $value ?? 'N/A',
+                'type' => $type
+            ];
+        }
+
+        return $summary;
+    }
+
+    public function getHoldingSummary()
+    {
+        $summary = DB::connection('pgsql-xbrl')
             ->table('filings')
             ->select('weight', 'symbol', 'name_of_issuer')
             ->where('cik', '=', $this->cik)
             ->where('report_calendar_or_quarter', '=', $this->quarter)
             ->orderByDesc('weight')
-            ->limit(4)
+            ->limit(5)
             ->get()
-            ->toArray();
+            ->map(function ($item) {
+                return [
+                    'name' => Str::title($item->name_of_issuer) . ($item->symbol ? " ({$item->symbol})" : ''),
+                    'weight' => number_format($item->weight, 2),
+                ];
+            });
 
-        $this->topBuys = DB::connection('pgsql-xbrl')
+        return $summary->toArray();
+    }
+
+    public function getOverTimeMarketValue()
+    {
+        $totalValues = DB::connection('pgsql-xbrl')
+            ->table('filings_summary')
+            ->where('cik', '=', $this->cik)
+            ->select('date', 'total_value')
+            ->orderBy('total_value')
+            ->get();
+
+        $chartData = [];
+
+        foreach ($totalValues as $value) {
+            $date = Carbon::parse($value->date);
+
+            $chartData[] = [
+                'date' => $value->date,
+                'quarter' => "Q{$date->quarter}-{$date->year}",
+                'total' => $value->total_value
+            ];
+        }
+
+        $this->emit('overTimeMarketValue', $chartData);
+
+        return $chartData;
+    }
+
+    public function getTopBuySells()
+    {
+        $topBuys = DB::connection('pgsql-xbrl')
             ->table('filings')
             ->select('change_in_shares', 'change_in_value', 'symbol', 'name_of_issuer')
             ->where('cik', '=', $this->cik)
@@ -51,9 +127,20 @@ class ShareholderSummary extends Component
             ->where('change_in_shares', '>', 0)
             ->limit(8)
             ->get()
-            ->toArray();
+            ->map(function ($item) {
+                $item->name_of_issuer = Str::title($item->name_of_issuer);
+                return $item;
+            });
 
-        $this->topSells = DB::connection('pgsql-xbrl')
+        $max = $topBuys->max('change_in_shares');
+        $min = $topBuys->min('change_in_shares');
+
+        $topBuys = $topBuys->map(function ($item) use ($max, $min) {
+            $item->width = ((($item->change_in_shares - $min) / ($max - $min)) * 80) + 10;
+            return $item;
+        });
+
+        $topSells = DB::connection('pgsql-xbrl')
             ->table('filings')
             ->select('change_in_shares', 'change_in_value', 'symbol', 'name_of_issuer')
             ->where('cik', '=', $this->cik)
@@ -61,14 +148,23 @@ class ShareholderSummary extends Component
             ->orderBy('change_in_shares')
             ->limit(8)
             ->get()
-            ->toArray();
+            ->map(function ($item) {
+                $item->name_of_issuer = Str::title($item->name_of_issuer);
+                return $item;
+            });
 
-        $this->summary = $this->getSummary();
-    }
+        $max = $topSells->max('change_in_shares');
+        $min = $topSells->min('change_in_shares');
 
-    public function render()
-    {
-        return view('livewire.ownership.shareholder-summary');
+        $topSells = $topSells->map(function ($item) use ($max, $min) {
+            $item->width = 90 - (($item->change_in_shares - $min) / ($max - $min)) * 80;
+            return $item;
+        });
+
+        return [
+            'topBuys' => $topBuys,
+            'topSells' => $topSells
+        ];
     }
 
     private function getLatestQuarter()
@@ -112,59 +208,5 @@ class ShareholderSummary extends Component
         }
 
         return "$year-" . str_pad(($quarter * 3), 2, "0", STR_PAD_LEFT) . "-{$quarterEnd[$quarter]}";
-    }
-
-    private function getSummary()
-    {
-        $data = DB::connection('pgsql-xbrl')
-            ->table('filings_summary')
-            ->select('cik', 'investor_name', 'portfolio_size', 'added_securities', 'removed_securities', 'total_value', 'last_value', 'change_in_total_value', 'change_in_total_value_percentage', 'turnover', 'turnover_alt_sell', 'turnover_alt_buy', 'average_holding_period', 'average_holding_period_top10', 'average_holding_period_top20', 'url')
-            ->where('cik', '=', $this->cik)
-            ->where('date', '=', $this->quarter)
-            ->limit(1)
-            ->get();
-
-        $summary = $data->isEmpty() ? [] : (array) $data->first();
-
-        if (!empty($summary)) {
-            $percentageFields = [
-                'change_in_total_value_percentage',
-                'turnover',
-                'turnover_alt_sell',
-                'turnover_alt_buy'
-            ];
-
-            foreach ($percentageFields as $field) {
-                if (isset($summary[$field])) {
-                    $summary[$field] = number_format($summary[$field], 2) . ' %';
-                }
-            }
-        }
-
-        return $summary;
-    }
-
-    private function getOverTimeMarketValue()
-    {
-        $totalValues = DB::connection('pgsql-xbrl')
-            ->table('filings_summary')
-            ->where('cik', '=', $this->cik)
-            ->select('date', 'total_value')
-            ->orderBy('total_value')
-            ->get();
-
-        $chartData = [];
-
-        foreach ($totalValues as $value) {
-            $date = Carbon::parse($value->date);
-
-            $chartData[] = [
-                'date' => $value->date,
-                'quarter' => "Q{$date->quarter}-{$date->year}",
-                'total' => $value->total_value
-            ];
-        }
-
-        return $chartData;
     }
 }

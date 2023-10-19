@@ -6,7 +6,9 @@
                     <h3 class="text-md font-medium">Market Value Overtime</h3>
                 </div>
                 <div class="p-6">
-                    <canvas id="overTimeMarketValue"></canvas>
+                    <x-defer-data-loading on-init="getOverTimeMarketValue" class="h-80">
+                        <canvas id="overTimeMarketValue"></canvas>
+                    </x-defer-data-loading>
                 </div>
             </div>
         </div>
@@ -15,80 +17,56 @@
             <div class="bg-white p-6 rounded">
                 <h3 class="text-blue text-sm mb-4 font-semibold">13F Holding Summary</h3>
 
-                <div class="space-y-4">
-                    @foreach ($activity as $key => $value)
-                        <div class="flex gap-5 items-center justify-between">
-                            <span class="text-sm">{{ Str::title($value->name_of_issuer) }} @if ($value->symbol)
-                                    ({{ $value->symbol }})
-                                @endif
-                            </span>
-                            <span class="font-semibold">{{ number_format($value->weight, 2) }}%</span>
-                        </div>
-                    @endforeach
-                </div>
+                <x-defer-data-loading use-alpine="true" on-init="getHoldingSummary" class="h-32">
+                    <div class="space-y-4">
+                        <template x-for="item in result">
+                            <div class="flex gap-5 items-center justify-between">
+                                <span class="text-sm" x-text="item.name"></span>
+                                <span class="font-semibold" x-text="`${item.weight}%`"></span>
+                            </div>
+                        </template>
+                    </div>
 
-                <div class="mt-6 flex justify-center">
-                    <a href="#" class="text-sm font-semibold hover:underline">
-                        View All Holdings
-                    </a>
-                </div>
+                    <template x-if="result?.length == 5">
+                        <div class="mt-6 flex justify-center">
+                            <a href="#" class="text-sm font-semibold hover:underline">
+                                View All Holdings
+                            </a>
+                        </div>
+                    </template>
+                </x-defer-data-loading>
             </div>
         </div>
 
         <div class="col-span-6">
             <x-tabs :tabs="['Top Buys', 'Top Sells']" class="bg-white p-6 rounded">
-                <div class="space-y-4" :class="active == 0 ? 'block' : 'hidden'">
-                    <?php
-                    $topBuys = collect($topBuys);
-                    $max = $topBuys->max('change_in_shares');
-                    $min = $topBuys->min('change_in_shares');
-                    
-                    $topBuys = $topBuys->map(function ($item, $key) use ($max, $min) {
-                        $item->width = (($item->change_in_shares - $min) / ($max - $min)) * 80;
-                        $item->width += 10;
-                        return $item;
-                    });
-                    ?>
-
-                    @foreach ($topBuys as $item)
-                        <div class="grid grid-cols-12 items-center gap-4 ">
-                            <div class="col-span-8 xl:col-span-9 px-2 py-1.5 bg-[#F0F6FF] rounded-[40px]">
-                                <div class="h-2 rounded-[40px] bg-blue" style="width: {{ $item->width }}%">
+                <x-defer-data-loading use-alpine="true" on-init="getTopBuySells" class="h-48">
+                    <div class="space-y-4" :class="active == 0 ? 'block' : 'hidden'" :data-active="active">
+                        <template x-for="item in result.topBuys">
+                            <div class="grid grid-cols-12 items-center gap-4 ">
+                                <div class="col-span-8 xl:col-span-9 px-2 py-1.5 bg-[#F0F6FF] rounded-[40px]">
+                                    <div class="h-2 rounded-[40px] bg-blue" :style="`width: ${item.width}%`">
+                                    </div>
                                 </div>
-
+                                <span class="col-span-4 xl:col-span-3 text-dark-light2" x-text="item.name_of_issuer">
+                                </span>
                             </div>
-                            <span class="col-span-4 xl:col-span-3 text-dark-light2">
-                                {{ \Str::title($item->name_of_issuer) }}
-                            </span>
-                        </div>
-                    @endforeach
-                </div>
+                        </template>
+                    </div>
 
-                <div class="space-y-4" :class="active == 1 ? 'block' : 'hidden'">
-                    <?php
-                    $topSells = collect($topSells);
-                    $max = $topSells->max('change_in_shares');
-                    $min = $topSells->min('change_in_shares');
-                    
-                    $topSells = $topSells->map(function ($item, $key) use ($max, $min) {
-                        $item->width = 90 - (($item->change_in_shares - $min) / ($max - $min)) * 80;
-                        return $item;
-                    });
-                    ?>
-
-                    @foreach ($topSells as $item)
-                        <div class="grid grid-cols-12 items-center gap-4 ">
-                            <div class="col-span-8 xl:col-span-9 px-2 py-1.5 bg-[#F0F6FF] rounded-[40px]">
-                                <div class="h-2 rounded-[40px] bg-blue" style="width: {{ $item->width }}%">
+                    <div class="space-y-4" :class="active == 1 ? 'block' : 'hidden'">
+                        <template x-for="item in result.topSells">
+                            <div class="grid grid-cols-12 items-center gap-4 ">
+                                <div class="col-span-8 xl:col-span-9 px-2 py-1.5 bg-[#F0F6FF] rounded-[40px]">
+                                    <div class="h-2 rounded-[40px] bg-blue" :style="`width: ${item.width}%`">
+                                    </div>
                                 </div>
-
+                                <span class="col-span-4 xl:col-span-3 text-dark-light2" x-text="item.name_of_issuer">
+                                </span>
                             </div>
-                            <span class="col-span-4 xl:col-span-3 text-dark-light2">
-                                {{ \Str::title($item->name_of_issuer) }}
-                            </span>
-                        </div>
-                    @endforeach
-                </div>
+                        </template>
+                    </div>
+                </x-defer-data-loading>
             </x-tabs>
         </div>
 
@@ -119,22 +97,25 @@
             <div class="bg-white p-6 rounded">
                 <h3 class="text-blue text-sm mb-4 font-semibold">13F Activity</h3>
 
-                <div class="grid grid-cols-2 2xl:grid-cols-4 gap-4">
-                    @foreach ($summary as $key => $value)
-                        <div>
-                            <p class="text-dark-light2 text-sm">{{ str_replace('_', ' ', Str::title($key)) }}</p>
+                <x-defer-data-loading use-alpine="true" on-init="getSummary" class="h-48">
+                    <div class="grid grid-cols-2 2xl:grid-cols-4 gap-4">
+                        <template x-for="item in result">
+                            <div>
+                                <p class="text-dark-light2 text-sm" x-text="item.title"></p>
 
-                            <p class="font-semibold">
-                                @if (Str::startsWith($value, 'https'))
-                                    <a href="{{ $value }}" class="underline text-blue"
-                                        target="_blank">{{ getSiteNameFromUrl($value) }}</a>
-                                @else
-                                    {{ $value }}
-                                @endif
-                            </p>
-                        </div>
-                    @endforeach
-                </div>
+                                <p class="font-semibold">
+                                    <template x-if="item.type === 'link'">
+                                        <a :href="item.value" class="underline text-blue" target="_blank"
+                                            x-text="item.value"></a>
+                                    </template>
+                                    <template x-if="item.type === 'text'">
+                                        <span x-text="item.value"></span>
+                                    </template>
+                                </p>
+                            </div>
+                        </template>
+                    </div>
+                </x-defer-data-loading>
             </div>
         </div>
     </div>
@@ -142,7 +123,7 @@
 
 @push('scripts')
     <script>
-        renderOverTimeMarketValueChart(@json($overTimeMarketValue))
+        Livewire.on('overTimeMarketValue', renderOverTimeMarketValueChart)
 
         function renderOverTimeMarketValueChart(data) {
             data = data.sort((a, b) => new Date(a.date) - new Date(b.date))
