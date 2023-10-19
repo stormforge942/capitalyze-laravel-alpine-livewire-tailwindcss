@@ -5,7 +5,8 @@ namespace App\Http\Livewire;
 trait TableFiltersTrait
 {
     public $view = 'Common Size';
-    public $unitType = 'Millions';
+    public $unitType = 'Thousands';
+    public $decimal = '0';
     public $template = 'Standart';
     public $order = 'Latest on the Right';
     public $freezePanes = 'Top Row';
@@ -23,5 +24,4 @@ trait TableFiltersTrait
                 return number_format(floatval($value) / 1000 ,0).'T';
         }
     }
-    public $decimal = '.00';
 }

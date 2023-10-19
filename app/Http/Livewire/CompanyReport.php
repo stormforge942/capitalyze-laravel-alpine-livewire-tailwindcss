@@ -2,6 +2,7 @@
 
 namespace App\Http\Livewire;
 
+use App\Models\Company;
 use App\Models\InfoPresentation;
 use Carbon\Carbon;
 use Illuminate\Database\ConnectionResolver;
@@ -19,14 +20,18 @@ class CompanyReport extends Component
 
     public $rows = [];
     public $company;
+    public $decimalDisplay = '0';
     public $ticker;
     public $chartData = [];
     public $companyName;
+    public $unitType = 'Thousands';
     public $currentRoute;
+    public $order = "Latest on the Right";
     public $period;
     public $table;
     public $navbar;
     public $subnavbar;
+    public $reverse = false;
     public $activeIndex = '';
     public $activeSubIndex = '';
     public $data;
@@ -47,6 +52,11 @@ class CompanyReport extends Component
        $this->emit('initCompanyReportChart');
    }
 
+   public function regenareteTableChart(): void
+   {
+       $this->generateUI();
+   }
+
    public function unselectRow($title)
    {
        unset($this->selectedRows[$title]);
@@ -56,6 +66,11 @@ class CompanyReport extends Component
             $this->chartData = [];
             $this->emit('hideCompanyReportChart');
        }
+   }
+
+   public function toggleReverse() {
+       $this->reverse = !$this->reverse;
+       $this->regenareteTableChart();
    }
 
    public function generateChartData($initChart = false): void
@@ -259,7 +274,14 @@ class CompanyReport extends Component
         $this->generateUI();
     }
 
+    public function closeChart() {
+        $this->chartData = [];
+        $this->selectedRows = [];
+        $this->emit('hideCompanyReportChart');
+    }
+
     public function changeDates($dates) {
+       $this->tableLoading = true;
        $this->rows = [];
         if (count($dates) == 2) {
             $this->tableDates = [];
@@ -268,11 +290,16 @@ class CompanyReport extends Component
             }
         }
 
+//        if ($this->order != "Latest on the Right") {
+//            $this->tableDates = array_reverse($this->tableDates);
+//        }
+
         $this->generateRows($this->data);
         if (count($this->selectedRows)){
             $this->generateChartData();
             $this->emit('initCompanyReportChart');
         }
+        $this->tableLoading = false;
     }
 
     public function generateUI(): void
@@ -281,15 +308,32 @@ class CompanyReport extends Component
         $this->generateRows($this->data);
     }
 
+    function traverseArray($array) {
+        foreach ($array as $key => $value) {
+            if (is_array($value)) {
+                if (strtotime($key) !== false) {
+                    $this->tableDates[] = date('Y', strtotime($key));
+                }
+                $this->traverseArray($value);
+            } else {
+                break;
+            }
+        }
+    }
+
     public function generateTableDates()
     {
-        $dates = [];
-        $currentYear = date('Y') - 8;
+        $this->traverseArray($this->data);
 
-        for ($i = 0; $i <= 8; $i++) {
-            $year = $currentYear + $i;
+        $dates = [];
+        $minYear = (int) min(array_unique($this->tableDates));
+        $maxYear = (int) max(array_unique($this->tableDates));
+
+        for ($i = 0; $minYear + $i <= $maxYear; $i++) {
+            $year = $minYear + $i;
             $dates[] = $year;
         }
+
         $this->tableDates = $dates;
     }
 
@@ -297,8 +341,34 @@ class CompanyReport extends Component
        $this->tableLoading = true;
        $rows = [];
 
-       foreach($data as $key => $value) {
-           $rows[] = $this->generateRow($value, $key);
+       if (
+        isset($data['Income Statement']) &&
+        is_array($data['Income Statement']) &&
+        isset($data['Income Statement']['Statement']) &&
+        is_array($data['Income Statement']['Statement']) &&
+        isset($data['Income Statement']['Statement']['Statement'])
+        ) {
+            $data = $data['Income Statement']['Statement']['Statement'];
+        } 
+
+        if (
+            isset($data['Statement of Financial Position']) &&
+            is_array($data['Statement of Financial Position'])
+            ) {
+                $data = $data['Statement of Financial Position'];
+        } 
+
+        if (
+            isset($data['Statement of Cash Flows']) &&
+            is_array($data['Statement of Cash Flows'])
+            ) {
+                $data = $data['Statement of Cash Flows'];
+        } 
+        
+    
+        foreach($data as $key => $value) {
+            $rows[] = $this->generateRow($value, $key);
+            
        }
 
        $this->rows = $rows;
@@ -306,6 +376,7 @@ class CompanyReport extends Component
     }
 
     public function generateRow($data, $title):array {
+
         $row = [
             'title' => $title,
             'values' => $this->generateEmptyCellsRow(),
@@ -330,7 +401,11 @@ class CompanyReport extends Component
             } else {
                 if (in_array($key, ['#segmentation'])) {
                     foreach($value as $sKey => $sValue) {
-                        $row['children'][] = $this->generateRow($sValue, $sKey);
+                        $keyn = array_keys($value[$sKey])[0];
+                        $valuen = $sValue[$keyn];
+                        $keynn = array_keys($valuen)[0];
+                        $valuenn = $valuen[$keynn];
+                        $row['children'][] = $this->generateRow($valuenn, $keynn);
                     }
                 } else {
                     $row['children'][] = $this->generateRow($value, $key);
@@ -340,6 +415,35 @@ class CompanyReport extends Component
         }
 
         return $row;
+    }
+
+    public function generatePresent($value)
+    {
+        $unitType = $this->unitType;
+        $units = [
+            'Thousands' => 'T',
+            'Millions' => 'M',
+            'Billions' => 'B',
+        ];
+
+        $decimalDisplay = intval($this->decimalDisplay);
+
+        if (!isset($units[$unitType])) {
+            return number_format($value, $decimalDisplay);
+        }
+
+        $unitAbbreviation = $units[$unitType];
+
+        // Determine the appropriate unit based on the number
+        if ($unitAbbreviation == 'B') {
+            return number_format($value / 1000000000);
+        } elseif ($unitAbbreviation == 'M') {
+            return number_format($value / 1000000);
+        } elseif ($unitAbbreviation == 'T') {
+            return number_format($value / 1000);
+        } else {
+            return number_format($value);
+        }
     }
 
     public function parseCell($data, $key) : array
@@ -353,13 +457,14 @@ class CompanyReport extends Component
               if (in_array('|', str_split($value))) {
                   [$value, $hash] = explode('|', $value);
                 $response['value'] = $value;
+                $response['present'] = $this->generatePresent($value);
                 $response['hash'] = $hash;
               } else {
                 $response[$key] = $value;
               }
          }
 
-            return $response;
+         return $response;
     }
 
     public function generateEmptyCellsRow(): array
@@ -377,6 +482,17 @@ class CompanyReport extends Component
         }
 
         return $response;
+    }
+
+    public function updated($propertyName): void
+    {
+        if (
+            $propertyName === 'unitType'
+            || $propertyName === 'order'
+            || $propertyName === 'decimalDisplay'
+        ) {
+            $this->regenareteTableChart();
+        }
     }
 
     public function updatedPeriod() {
@@ -427,6 +543,7 @@ class CompanyReport extends Component
         if (!$this->currentRoute) {
             $this->currentRoute = $request->route()->getName();
         }
+
     }
 
     public function periodChange($period) {

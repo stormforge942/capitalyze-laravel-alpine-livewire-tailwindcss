@@ -33,7 +33,7 @@
         <livewire:company-navbar :company="$company" :period="$period" />
         <!-- Page Content -->
         <main>
-            <div class="p-4 sm:ml-64 pl-0 transition-all" id="main-container">
+            <div class="p-4 sm:ml-64 pl-0 transition-all py-0" id="main-container">
                 <div class="">
                     @if ($tab == 'geographical')
                         <livewire:company-geographical :company="$company" :ticker="$ticker" :period="$period" />

@@ -18,11 +18,13 @@
 .table-wrapper .table .cell {
     display: table-cell;
     background: white;
-    font-weight: bold;
-    padding: 0.95em 1.3em;
-    border-top: 1px solid #e6e6e6;
-    border-bottom: 1px solid #e6e6e6;
+    /*font-weight: bold;*/
+    padding: 0.5rem 0.625rem;
+    /*border-top: 1px solid #e6e6e6;*/
+    /*border-bottom: 1px solid #e6e6e6;*/
     font-size: 1.17em;
+    text-align: center;
+    vertical-align: middle;
 }
 .table-wrapper .table .row-group .row:first-child .cell { border-top: none; }
 .table-wrapper .row-head .cell {background: #e5e5e5;}
@@ -116,4 +118,28 @@
 
 .row-spoiler.active + .row-group-spoiler {
     display: table-row-group;
+}
+.dots-wrapper {
+    display: flex;
+    justify-content: space-between;
+    position: relative;
+    z-index: 2;
+    top: 7px;
+    pointer-events: none;
+}
+
+.dots-wrapper .active-dots {
+    width: 10px;
+    height: 10px;
+    background: black;
+    border-radius: 5px;
+    display: inline-block;
+}
+
+.dots-wrapper .inactive-dots {
+    width: 10px;
+    height: 10px;
+    background: #D1D3D5;
+    border-radius: 5px;
+    display: inline-block;
 }
