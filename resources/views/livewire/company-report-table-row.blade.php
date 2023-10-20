@@ -24,7 +24,7 @@
                 @endif
             </div>
         </div>
-        <div class="w-full flex flex-row">
+        <div class="w-full flex flex-row justify-end">
             @foreach($reverse ? array_reverse($data['values'], true) : $data['values'] as $year => $value)
                     <div class="w-[150px] flex items-center justify-center open-slide py-4 text-base  cursor-pointer hover:underline" data-value='{{$this->generateAttribute($value)}}'>
                         @if(!$value['empty'])

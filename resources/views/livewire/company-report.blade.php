@@ -537,7 +537,7 @@
                                                                 {{$companyName}} ({{$ticker}})
                                                             </span>
                                                         </div>
-                                                        <div class="w-full flex flex-row bg-gray-200">
+                                                        <div class="w-full flex flex-row bg-gray-200 justify-end">
                                                             @foreach ($reverse ? array_reverse($tableDates) : $tableDates as $date)
                                                                 <div class="w-[150px] flex items-center justify-center text-base">
                                                                     <span class="py-4">
