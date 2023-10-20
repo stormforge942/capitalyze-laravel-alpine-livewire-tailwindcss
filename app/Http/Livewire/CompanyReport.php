@@ -349,36 +349,35 @@ class CompanyReport extends Component
         isset($data['Income Statement']['Statement']['Statement'])
         ) {
             $data = $data['Income Statement']['Statement']['Statement'];
-        } 
+        }
 
         if (
             isset($data['Statement of Financial Position']) &&
             is_array($data['Statement of Financial Position'])
             ) {
                 $data = $data['Statement of Financial Position'];
-        } 
+        }
 
         if (
             isset($data['Statement of Cash Flows']) &&
             is_array($data['Statement of Cash Flows'])
             ) {
                 $data = $data['Statement of Cash Flows'];
-        } 
-        
-    
+        }
         foreach($data as $key => $value) {
             $rows[] = $this->generateRow($value, $key);
-            
+
        }
 
        $this->rows = $rows;
        $this->tableLoading = false;
     }
 
-    public function generateRow($data, $title):array {
-
+    public function generateRow($data, $title, $isSegmentation = false):array {
         $row = [
+            'id' => md5(serialize($data)),
             'title' => $title,
+            'segmentation' => false,
             'values' => $this->generateEmptyCellsRow(),
             'children' => [],
         ];
@@ -390,7 +389,6 @@ class CompanyReport extends Component
             } catch (\Exception $e) {
                 $isDate = false;
             }
-
 
             if ($isDate) {
                 $year = Carbon::createFromFormat('Y-m-d', $key)->year;
@@ -405,14 +403,16 @@ class CompanyReport extends Component
                         $valuen = $sValue[$keyn];
                         $keynn = array_keys($valuen)[0];
                         $valuenn = $valuen[$keynn];
-                        $row['children'][] = $this->generateRow($valuenn, $keynn);
+                        $row['children'][] = $this->generateRow($valuenn, $keynn, true);
                     }
                 } else {
-                    $row['children'][] = $this->generateRow($value, $key);
+                    $row['children'][] = $this->generateRow($value, $key, $isSegmentation);
                 }
             }
 
         }
+
+        $row['segmentation'] = $isSegmentation && count($row['children']) === 0;
 
         return $row;
     }

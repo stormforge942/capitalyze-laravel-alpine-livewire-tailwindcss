@@ -529,7 +529,7 @@
                                 </div>
                                     <div class="flex w-full overflow-x-scroll">
                                         <div class="table-wrapper w-full" style="font-size: 12px;">
-                                            <div class="table">
+                                            <div class="table" wire:key="{{now()}}">
                                                 <div class="row-group">
                                                     <div class="flex flex-row bg-gray-200">
                                                         <div class="w-[300px] font-bold flex py-4 items-center justify-start text-base">
@@ -548,9 +548,9 @@
                                                         </div>
                                                     </div>
                                                     <div class="divide-y">
-                                                        @if(!$tableLoading)
+                                                        @if(!$tableLoading && isset($rows) && count($rows) > 0)
                                                             @foreach($rows as $row)
-                                                                <livewire:company-report-table-row :data="$row" key="{{now()}}" :selectedRows="array_keys($this->selectedRows)" :reverse="$reverse"/>
+                                                                <livewire:company-report-table-row :data="$row" wire:key="{{$row['id']}}}" :selectedRows="array_keys($this->selectedRows)" :reverse="$reverse"/>
                                                             @endforeach
                                                         @endif
                                                     </div>
@@ -593,10 +593,10 @@
         return rangeArray;
     }
 
-    function recognizeDotsStatus(value) {
-        const tableDates = @this.tableDates
+    function recognizeDotsStatus(value, baseArray) {
+        let base = generateRangeArray(baseArray)
         let activeYears = generateRangeArray(value)
-        let intersection = tableDates.filter(x => !activeYears.includes(x));
+        let intersection = base.filter(x => !activeYears.includes(x));
 
         activeYears.forEach(id => {
             let element = document.getElementById(id);
@@ -645,9 +645,9 @@
 
         let rangeMin = selectedValue[0];
         let rangeMax = selectedValue[1] ? selectedValue[1] : new Date().getFullYear();
-        selectedValue[0] = rangeMax - 4;
+        selectedValue[0] = rangeMax - 6;
 
-        recognizeDotsStatus(selectedValue)
+        recognizeDotsStatus(selectedValue, [rangeMin, rangeMax]);
         @this.changeDates(selectedValue)
 
         rangeSlider(el, {
@@ -658,7 +658,7 @@
             rangeSlideDisabled: true,
             onInput: (value) => {
                 if (value.length === 2 && value !== selectedValue) {
-                    recognizeDotsStatus(value)
+                    recognizeDotsStatus(value, [rangeMin, rangeMax]);
                     @this.changeDates(value)
 
                     if (chart) {
