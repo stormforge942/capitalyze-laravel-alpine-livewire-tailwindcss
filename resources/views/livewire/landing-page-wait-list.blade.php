@@ -248,17 +248,19 @@
                 <div class="max-w-[27rem] mx-auto px-6 py-8 bg-white rounded-lg"
                     style="box-shadow: 8px 8px 60px 0px rgba(0, 0, 0, 0.25);">
                     <div class="text-center space-y-4">
-                        <h1 class="text-3xl leading-10 font-semibold tracking-tight">
+                        <h1 class="text-[32px] leading-10 font-semibold tracking-tight">
                             @if ($completed)
                                 Thank you for joining the waitlist
                             @elseif($verified)
                                 Your email has been verified
+                            @elseif($alreadyOnWaitlist)
+                                You've signed up previously
                             @else
                                 <span class="text-xl">Join the waitlist</span>
                             @endif
                         </h1>
 
-                        @if ($completed || $verified)
+                        @if ($completed || $verified || $alreadyOnWaitlist)
                             <p class="text-md leading-7">
                                 @if ($completed)
                                     We have sent you a verification email
@@ -283,7 +285,7 @@
                         @endif
                     </div>
 
-                    @if (!$completed && !$verified)
+                    @if (!$completed && !$verified && !$alreadyOnWaitlist)
                         <form class="mt-4 space-y-6" wire:submit.prevent="submit" x-data>
                             @include('partials.input', [
                                 'label' => 'Full Name',
