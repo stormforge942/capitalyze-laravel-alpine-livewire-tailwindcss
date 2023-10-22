@@ -7,6 +7,7 @@ use Illuminate\Support\Str;
 use App\Http\Livewire\AsTab;
 use Illuminate\Support\Carbon;
 use Illuminate\Support\Facades\DB;
+
 class CompanyFundSummary extends Component
 {
     use AsTab;
@@ -66,6 +67,57 @@ class CompanyFundSummary extends Component
         }
 
         return $summary;
+    }
+
+    public function getSectiorAllocationData()
+    {
+        $investments = DB::connection('pgsql-xbrl')
+            ->table('industry_summary')
+            ->where('cik', '=', $this->cik)
+            ->groupBy('date')
+            ->select(DB::raw('SUM(weight) as weight'), 'date')
+            ->orderBy('date')
+            ->get()
+            ->map(function ($item) {
+                $date = Carbon::parse($item->date);
+                return [
+                    'date' => $item->date,
+                    'quarter' => "Q{$date->quarter}-{$date->year}",
+                    'weight' => number_format($item->weight, 2),
+                ];
+            });
+
+        $lastQuarterSectorAllocation = null;
+        if ($investments->count()) {
+            $lastestQuarter = $investments->last()['date'];
+
+            $lastQuarterSectorAllocation = DB::connection('pgsql-xbrl')
+                ->table('industry_summary')
+                ->where('cik', '=', $this->cik)
+                ->where('date', '=', $lastestQuarter)
+                ->select('industry_title', 'weight', 'performance_percentage')
+                ->orderBy('weight', 'desc')
+                ->limit(15)
+                ->get()
+                ->map(function ($item) {
+                    return [
+                        'name' => Str::title($item->industry_title),
+                        'weight' => number_format($item->weight, 2),
+                        'conversionRate' => $item->performance_percentage,
+                    ];
+                });
+        }
+
+        return [
+            'overTimeSectorAllocation' => $investments->toArray(),
+            'lastQuarterSectorAllocation' => $lastQuarterSectorAllocation?->toArray(),
+            'conversionRate' => $lastQuarterSectorAllocation
+                ? number_format($lastQuarterSectorAllocation->sum('conversionRate') / $lastQuarterSectorAllocation->count(), 2)
+                : 0,
+            'sectorAllocationChangePercentage' => $investments->count() < 2
+                ? 0
+                : number_format($investments->last()['weight'] - $investments->first()['weight']),
+        ];
     }
 
     public function getHoldingSummary()

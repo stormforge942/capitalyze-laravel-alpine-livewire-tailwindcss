@@ -40,7 +40,9 @@
 
 @push('scripts')
     <script>
-        Livewire.on('overTimeMarketValue', renderOverTimeMarketValueChart)
+        document.addEventListener('livewire:load', function() {
+            Livewire.on('overTimeMarketValue', renderOverTimeMarketValueChart)
+        })
 
         function renderOverTimeMarketValueChart(data) {
             data = data.sort((a, b) => new Date(a.date) - new Date(b.date))
@@ -58,9 +60,9 @@
                         fill: true,
                         tension: 0.5,
                         pointHoverRadius: 6,
-                        pointHoverBackgroundColor: '#0E5FD9',
+                        pointHoverBackgroundColor: '#fff',
                         pointHoverBorderWidth: 4,
-                        pointHoverBorderColor: '#fff',
+                        pointHoverBorderColor: '#0E5FD9',
                         backgroundColor(context) {
                             if (!context.chart.chartArea) {
                                 return
@@ -81,6 +83,10 @@
                     }]
                 },
                 options: {
+                    interaction: {
+                        mode: 'index',
+                        intersect: false,
+                    },
                     responsive: true,
                     aspectRatio: 4,
                     onResize: function(chart, size) {
@@ -94,11 +100,18 @@
                         legend: {
                             display: false,
                         },
+                        tooltip: {
+                            displayColors: false,
+                            backgroundColor: '#fff',
+                            titleColor: '#121A0F',
+                            bodyColor: '#121A0F',
+                        }
                     },
                     scales: {
                         y: {
                             beginAtZero: true,
-                            grid: {
+                            border: {
+                                dash: [8, 4],
                                 display: false
                             },
                             ticks: {
@@ -124,11 +137,107 @@
                         x: {
                             grid: {
                                 display: false
+                            },
+                            border: {
+                                display: false
                             }
                         }
                     }
                 }
             });
+        }
+
+        function renderOverTimeSectorAllocation(data) {
+            const canvas = document.getElementById('overTimeSectorAllocation');
+
+            new Chart(canvas, {
+                type: 'bar',
+                data: {
+                    labels: data.map(item => item.quarter),
+                    datasets: [{
+                        data: data.map(item => item.weight),
+                        backgroundColor: '#FFD599',
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    aspectRatio: 2.7,
+                    plugins: {
+                        legend: {
+                            display: false,
+                        },
+                    },
+                    scales: {
+                        y: {
+                            beginAtZero: true,
+                            grid: {
+                                display: false
+                            },
+                            ticks: {
+                                callback: function(value) {
+                                    return value + '%';
+                                },
+                                display: false
+                            },
+                            border: {
+                                display: false
+                            }
+                        },
+                        x: {
+                            grid: {
+                                display: false
+                            },
+                            ticks: {
+                                display: false
+                            },
+                            border: {
+                                display: false
+                            }
+                        }
+                    }
+                }
+            })
+        }
+
+        function renderLastQuarterSectorAllocation(data) {
+            const canvas = document.getElementById('lastQuarterSectorAllocation');
+
+            new Chart(canvas, {
+                type: 'doughnut',
+                data: {
+                    labels: data.map(item => item.name),
+                    datasets: [{
+                        data: data.map(item => item.weight),
+                        backgroundColors: [
+                            'rgb(168,236,29)',
+                            'rgb(3,23,49)',
+                            'rgb(223,223,212)',
+                            'rgb(179,74,15)',
+                            'rgb(35,7,82)',
+                            'rgb(74,38,144)',
+                            'rgb(19,253,206)',
+                            'rgb(44,137,109)',
+                            'rgb(89,79,129)',
+                            'rgb(42,142,221)',
+                            'rgb(164,130,131)',
+                            'rgb(152,245,1)',
+                            'rgb(224,30,164)',
+                            'rgb(105,49,128)',
+                            'rgb(127,22,217)',
+                            'rgb(179,178,237)',
+                        ],
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    aspectRatio: 2,
+                    plugins: {
+                        legend: {
+                            display: false,
+                        },
+                    },
+                }
+            })
         }
     </script>
 @endpush
