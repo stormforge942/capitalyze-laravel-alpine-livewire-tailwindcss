@@ -15,7 +15,7 @@
                 </div>
             @endif
 
-            <div class="h-12 w-2/3 rounded-lg border border-gray-300 bg-white leading-[3rem] px-3 flex items-center">
+            <div class="h-[56px] w-[984px] rounded-lg border border-gray-300 bg-white leading-[3rem] px-3 flex items-center">
                 <svg width="25" height="24" viewBox="0 0 25 24" fill="none"
                     xmlns="http://www.w3.org/2000/svg">
                     <path

@@ -1,6 +1,6 @@
 <div>
    <aside id="default-sidebar"
-      class="fixed top-0 left-0 z-40 w-64 h-screen pt-10 transition-transform -translate-x-full bg-white border-r border-gray-200 sm:translate-x-0 dark:bg-gray-800 dark:border-gray-700"
+      class="fixed top-0 left-0 z-40 w-[232px] h-screen pt-10 transition-transform -translate-x-full bg-white border-r border-gray-200 sm:translate-x-0 dark:bg-gray-800 dark:border-gray-700"
       aria-label="Sidebar">
       <div class="h-full px-6 pb-4 overflow-y-auto bg-white dark:bg-gray-800 flex flex-col">
          <div class="transition-all duration-250 fixed right-[-12px] cursor-pointer top-[160px]" id="collapse">
@@ -398,7 +398,7 @@
             document.getElementById('logo').classList.remove('hidden');
             document.getElementById('collapsed-logo').classList.add('hidden');
             document.getElementById('default-sidebar').classList.remove('w-20');
-            document.getElementById('default-sidebar').classList.add('w-64');
+            document.getElementById('default-sidebar').classList.add('w-[232px]');
             document.getElementById('dropdown-more').classList.remove('invisible');
             document.getElementById('dropdown-more').classList.remove('h-[0px]');
             document.getElementById('dropdownMore').classList.add('invisible');
@@ -437,7 +437,7 @@
             document.getElementById('logo').classList.add('hidden');
             document.getElementById('collapsed-logo').classList.remove('hidden');
             document.getElementById('default-sidebar').classList.add('w-20');
-            document.getElementById('default-sidebar').classList.remove('w-64');
+            document.getElementById('default-sidebar').classList.remove('w-[232px]');
             document.getElementById('dropdown-more').classList.add('hidden');
             document.getElementById('dropdown-more').classList.add('invisible');
             document.getElementById('dropdown-more').classList.add('h-[0px]');

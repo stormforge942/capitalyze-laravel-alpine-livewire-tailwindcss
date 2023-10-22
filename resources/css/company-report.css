@@ -1,12 +1,18 @@
 .download-buttons-wrapper {
+    color: #121A0F;
+    text-align: center;
+    font-size: 13px;
+    font-style: normal;
+    font-weight: 500;
+    line-height: 16px;
+    text-transform: capitalize;
     background: #EAEAEA;
-    font-size: 0.8em;
     border-radius: 0.7em;
 }
 .download-button {
     display: flex;
     height: 4em;
-    padding: 1em 2em;
+    padding: 1em 2.3em;
     display: flex;
     align-items: center;
     border-radius: inherit;
@@ -69,5 +75,5 @@ div.range-slider .range-slider__range {
 
 .years-range-wrapper {
     position: relative;
-    width: 70%;
+    width: 80%;
 }
