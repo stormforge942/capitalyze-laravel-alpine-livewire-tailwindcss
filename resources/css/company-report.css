@@ -18,13 +18,9 @@
     border-radius: inherit;
     transition: 0.3s ease background-color;
 }
-.download-button:not(:last-child) {
-    margin-right: -1em;
-}
 
 .download-button:hover {
     background: #cacaca;
-    font-weight: bold;
 }
 .download-button:active {
     background: black;
@@ -76,4 +72,12 @@ div.range-slider .range-slider__range {
 .years-range-wrapper {
     position: relative;
     width: 80%;
+}
+
+.currency-font {
+    color: #121A0F;
+    font-size: 14px;
+    font-style: normal;
+    font-weight: 400;
+    line-height: 24px;
 }

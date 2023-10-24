@@ -23,7 +23,7 @@
                                 <div class="flex w-full justify-between" >
                                     <div class="page-titles">
                                         <b class="company-name">{{ @$companyName }}  @if(@$ticker) ({{ @$ticker }}) @endif </b> <br>
-                                        <b>$345</b> <small class="text-color-green">(+0.40%)</small>
+                                        <b class="text-[24px]">$345</b> <small class="text-color-green">(+0.40%)</small>
                                     </div>
                                     <div class="download-buttons-wrapper flex">
                                         <a class="download-button" href="#">
@@ -393,10 +393,10 @@
                                                     <li>
                                                         <div class="flex p-2 rounded hover:bg-[#52D3A233] cursor-pointer">
                                                             <div class="flex items-center h-5 cursor-pointer">
-                                                                <input wire:model="decimalDisplay" @if($decimalDisplay === '2') checked @endif id="decimal-radio-1" name="decimal-radio" type="radio" value="2" class="cursor-pointer w-4 h-4 text-[#686868] bg-transpearent border-[#686868] border-2">
+                                                                <input wire:model="decimalDisplay" @if($decimalDisplay === '2') checked @endif id="decimal-radio-2" name="decimal-radio" type="radio" value="2" class="cursor-pointer w-4 h-4 text-[#686868] bg-transpearent border-[#686868] border-2">
                                                             </div>
                                                             <div class="ml-4 text-sm cursor-pointer">
-                                                                <label for="decimal-radio-1" class="cursor-pointer font-medium text-gray-900 dark:text-gray-300">
+                                                                <label for="decimal-radio-2" class="cursor-pointer font-medium text-gray-900 dark:text-gray-300">
                                                                     <div>.00</div>
                                                                 </label>
                                                             </div>
@@ -405,10 +405,10 @@
                                                     <li>
                                                         <div class="flex p-2 rounded hover:bg-[#52D3A233] cursor-pointer">
                                                             <div class="flex items-center h-5 cursor-pointer">
-                                                                <input wire:model="decimalDisplay" @if($decimalDisplay === '3') checked @endif id="decimal-radio-1" name="decimal-radio" type="radio" value="3" class="cursor-pointer w-4 h-4 text-[#686868] bg-transpearent border-[#686868] border-2">
+                                                                <input wire:model="decimalDisplay" @if($decimalDisplay === '3') checked @endif id="decimal-radio-3" name="decimal-radio" type="radio" value="3" class="cursor-pointer w-4 h-4 text-[#686868] bg-transpearent border-[#686868] border-2">
                                                             </div>
                                                             <div class="ml-4 text-sm cursor-pointer">
-                                                                <label for="decimal-radio-1" class="cursor-pointer font-medium text-gray-900 dark:text-gray-300">
+                                                                <label for="decimal-radio-3" class="cursor-pointer font-medium text-gray-900 dark:text-gray-300">
                                                                     <div>.000</div>
                                                                 </label>
                                                             </div>
@@ -487,29 +487,35 @@
 
                                 @if(count($chartData))
                                     <div class="my-4 pb-5 w-full px-5 bg-white flex flex-col">
-                                        <div class="flex justify-between w-10/12 my-12 pl-6 pr-3">
+                                        <div class="flex justify-between w-full my-12 pl-6 pr-3">
                                             <div class="text-lg text-indigo-600 font-bold">
                                                 Apple Inc. (AAPL)
                                             </div>
                                             <div class="flex items-start">
-                                                <span wire:click="closeChart" class="rounded-full bg-red-500 border-2 text-white w-5 h-5 flex items-center justify-center">
-                                                    <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="w-5 h-5">
+                                                <span wire:click="closeChart" class="rounded-full bg-red-500 text-white w-5 h-5 flex items-center justify-center">
+                                                    <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="4" stroke="currentColor" class="w-3 h-3">
                                                       <path stroke-linecap="round" stroke-linejoin="round" d="M6 18L18 6M6 6l12 12" />
                                                     </svg>
                                                 </span>
                                             </div>
                                         </div>
-                                        <div class="px-6 w-10/12">
+                                        <div class="px-6 w-full">
                                             <canvas id="chart-company-report"></canvas>
                                         </div>
                                         <div class="w-full flex flex-wrap justify-start items-end space-x-3 px-2 mt-8 space-y-3">
                                             @foreach($selectedRows as $title => $row)
-                                                <div class="rounded-full whitespace-nowrap border flex space-x-2 justify-between items-center h-[40px] px-2" wire:click="unselectRow('{{ $title }}')">
+                                                <div class="rounded-full whitespace-nowrap border flex space-x-2 justify-between items-center h-[40px] px-2">
                                                     <span>
                                                         {{$title}}
                                                     </span>
-                                                    <span class="rounded-full bg-red-500 border-2 text-white w-5 h-5 flex items-center justify-center">
-                                                        <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="w-5 h-5">
+
+                                                    <select data-index="{{array_search($title, array_keys($selectedRows))}}" onchange="changeChartType()" name="chart-type">
+                                                        <option value="line">Line</option>
+                                                        <option value="bar">Bar</option>
+                                                    </select>
+
+                                                    <span wire:click="unselectRow('{{ $title }}')" class="rounded-full bg-white border-2 border-red-500 text-red-500 w-5 h-5 flex items-center justify-center">
+                                                        <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="4" stroke="currentColor" class="w-3 h-3">
                                                           <path stroke-linecap="round" stroke-linejoin="round" d="M6 18L18 6M6 6l12 12" />
                                                         </svg>
                                                     </span>
@@ -526,6 +532,14 @@
                                         </svg>
                                         Click on any of the row(s) to chart the data
                                     </div>
+                                </div>
+                                <div class="flex justify-end items-baseline">
+                                    <span class="currency-font">Currency: &nbsp;</span>
+                                    <select wire:model="currency" id="currency-select" class="inline-flex font-bold !pr-8 bg-transparent">
+                                        <option value="USD">USD</option>
+                                        <option value="CAD">CAD</option>
+                                        <option value="EUR">EUR</option>
+                                    </select>
                                 </div>
                                     <div class="flex w-full overflow-x-scroll">
                                         <div class="table-wrapper w-full" style="font-size: 12px;">
@@ -550,7 +564,7 @@
                                                     <div class="divide-y">
                                                         @if(!$tableLoading && isset($rows) && count($rows) > 0)
                                                             @foreach($rows as $row)
-                                                                <livewire:company-report-table-row :data="$row" wire:key="{{$row['id']}}}" :selectedRows="array_keys($this->selectedRows)" :reverse="$reverse"/>
+                                                                <livewire:company-report-table-row :data="$row" wire:key="{{$row['id']}}" :selectedRows="$selectedRows" :reverse="$reverse"/>
                                                             @endforeach
                                                         @endif
                                                     </div>
@@ -744,6 +758,12 @@
         document.getElementById('dropdown-Decimal').classList.toggle("hidden");
     });
 
+    const currencyDropdownCloseIcon = document.getElementById("currencyClose");
+
+    decimalDropdownCloseIcon.addEventListener("click", function() {
+        document.getElementById('dropdown-Currency').classList.toggle("hidden");
+    });
+
     let chart = null;
 
     const getOrCreateTooltip = (chart) => {
@@ -873,9 +893,22 @@
         tooltipEl.style.padding = 8 + 'px ' + 19 + 'px';
     };
 
+    function changeChartType() {
+        if (chart) chart.destroy();
+        let data =  @this.chartData
+
+        let index = event.target.dataset.index;
+        let type = event.target.value
+
+        data[index].type = type
+
+        initChart()
+    }
+
     function initChart() {
         if (chart) chart.destroy();
         let data = @this.chartData;
+        let limitedData = data.slice(0, 5);
         let canvas = document.getElementById("chart-company-report");
         if (!canvas) return;
         let ctx = document.getElementById('chart-company-report').getContext("2d");
@@ -901,9 +934,9 @@
             }],
             maintainAspectRatio: true,
             aspectRatio: 3,
-            type: 'bar',
+            type: 'line',
             data: {
-                datasets: data
+                datasets: limitedData
             },
             options: {
                 interaction: {

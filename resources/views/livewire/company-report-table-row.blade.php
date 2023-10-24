@@ -1,5 +1,10 @@
 <div class="flex flex-col">
-    <div class="flex w-full flex-row {{$selected ? 'bg-blue-100' : ($data['segmentation'] ? 'bg-[#52C6FF]/10' : 'bg-white')}}">
+    <div class="flex w-full flex-row {{$selected ? 'bg-[#52D3A2]/20' : ($data['segmentation'] ? 'bg-[#52C6FF]/10' : 'bg-white')}}">
+        @if($selected)
+            <div class="flex justify-center items-center ml-2">
+                <input type="checkbox" wire:click.stop="select" checked name="selected-chart-{{$data['id']}}">
+            </div>
+        @endif
         <div
             wire:click.stop="select"
             class="cursor-default py-2 text-base w-[300px] truncate flex flex-row items-center"

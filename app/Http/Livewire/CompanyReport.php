@@ -2,16 +2,13 @@
 
 namespace App\Http\Livewire;
 
-use App\Models\Company;
 use App\Models\InfoPresentation;
 use Carbon\Carbon;
 use Illuminate\Database\ConnectionResolver;
 use Illuminate\Database\Eloquent\Model;
-use Illuminate\Database\Query\Builder;
 use Livewire\Component;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Http\Request;
-use Illuminate\Support\Collection;
 
 class CompanyReport extends Component
 {
@@ -25,12 +22,12 @@ class CompanyReport extends Component
     public $chartData = [];
     public $companyName;
     public $unitType = 'Thousands';
+    public $currency = 'USD';
     public $currentRoute;
     public $order = "Latest on the Right";
     public $period;
     public $table;
     public $navbar;
-    public $subnavbar;
     public $reverse = false;
     public $activeIndex = '';
     public $activeSubIndex = '';
@@ -42,11 +39,15 @@ class CompanyReport extends Component
     protected $request;
     protected $rowCount = 0;
     public $selectedRows = [];
+    protected $chartType = 'line';
 
    protected $listeners = ['periodChange', 'tabClicked', 'tabSubClicked', 'selectRow', 'unselectRow'];
 
    public function selectRow($title, $data){
-       $this->selectedRows[$title] = $data;
+       if (count($this->selectedRows) < 5) {
+           $this->selectedRows[$title]['dates'] = $data;
+           $this->selectedRows[$title]['type'] = $this->chartType;
+       }
 
        $this->generateChartData();
        $this->emit('initCompanyReportChart');
@@ -76,7 +77,6 @@ class CompanyReport extends Component
    public function generateChartData($initChart = false): void
    {
        $chartData = [];
-
        foreach ($this->selectedRows as $title => $row) {
            $data = [];
            foreach ($row as $cell) {
@@ -93,12 +93,11 @@ class CompanyReport extends Component
                }
            }
 
-
            $chartData[] = [
                'data' => $data,
                'type' => 'line',
                'label' => $title,
-               'borderColor' => '#000',
+               'borderColor' => ['#5a5a5a', '#737373', '#8d8d8d', '#a6a6a6', '#949494'],
                'pointRadius' => 1,
                'pointHoverRadius' => 8,
                'tension' => 0.5,
@@ -108,7 +107,7 @@ class CompanyReport extends Component
            ];
        }
 
-         $this->chartData = $chartData;
+       $this->chartData = $chartData;
 
        if ($initChart) {
            $this->emit('initCompanyReportChart');
@@ -290,11 +289,8 @@ class CompanyReport extends Component
             }
         }
 
-//        if ($this->order != "Latest on the Right") {
-//            $this->tableDates = array_reverse($this->tableDates);
-//        }
-
         $this->generateRows($this->data);
+
         if (count($this->selectedRows)){
             $this->generateChartData();
             $this->emit('initCompanyReportChart');
@@ -392,8 +388,7 @@ class CompanyReport extends Component
 
             if ($isDate) {
                 $year = Carbon::createFromFormat('Y-m-d', $key)->year;
-                if (in_array($year, $this->tableDates))
-                {
+                if (in_array($year, $this->tableDates)) {
                     $row['values'][$year] = $this->parseCell($value, $key);
                 }
             } else {
