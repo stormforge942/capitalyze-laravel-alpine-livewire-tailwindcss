@@ -20,7 +20,7 @@
                     <div class="align-middle">
                         <div class="block min-w-full sm:rounded-lg">
                             <div class="py-0">
-                                <div class="flex w-full justify-between" >
+                                <div class="flex w-full justify-between items-center" >
                                     <div class="page-titles">
                                         <b class="company-name">{{ @$companyName }}  @if(@$ticker) ({{ @$ticker }}) @endif </b> <br>
                                         <b class="text-[24px]">$345</b> <small class="text-color-green">(+0.40%)</small>
