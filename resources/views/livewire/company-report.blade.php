@@ -509,7 +509,7 @@
                                                         {{$title}}
                                                     </span>
 
-                                                    <select data-index="{{array_search($title, array_keys($selectedRows))}}" onchange="changeChartType()" name="chart-type">
+                                                    <select data-title="{{$title}}" onchange="changeChartType()" name="chart-type">
                                                         <option value="line">Line</option>
                                                         <option value="bar">Bar</option>
                                                     </select>
@@ -893,14 +893,11 @@
         tooltipEl.style.padding = 8 + 'px ' + 19 + 'px';
     };
 
-    function changeChartType() {
-        if (chart) chart.destroy();
-        let data =  @this.chartData
+   async function changeChartType() {
+        let title = event.target.dataset.title;
+        let type = event.target.value;
 
-        let index = event.target.dataset.index;
-        let type = event.target.value
-
-        data[index].type = type
+        await @this.changeChartType(title, type)
 
         initChart()
     }
@@ -908,6 +905,7 @@
     function initChart() {
         if (chart) chart.destroy();
         let data = @this.chartData;
+        console.log(data);
         let limitedData = data.slice(0, 5);
         let canvas = document.getElementById("chart-company-report");
         if (!canvas) return;

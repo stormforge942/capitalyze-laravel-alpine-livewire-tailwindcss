@@ -6,6 +6,7 @@ use App\Models\InfoPresentation;
 use Carbon\Carbon;
 use Illuminate\Database\ConnectionResolver;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Support\Facades\Log;
 use Livewire\Component;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Http\Request;
@@ -39,14 +40,13 @@ class CompanyReport extends Component
     protected $request;
     protected $rowCount = 0;
     public $selectedRows = [];
-    protected $chartType = 'line';
 
    protected $listeners = ['periodChange', 'tabClicked', 'tabSubClicked', 'selectRow', 'unselectRow'];
 
-   public function selectRow($title, $data){
+   public function selectRow($title, $data) {
        if (count($this->selectedRows) < 5) {
            $this->selectedRows[$title]['dates'] = $data;
-           $this->selectedRows[$title]['type'] = $this->chartType;
+           $this->selectedRows[$title]['type'] = 'line';
        }
 
        $this->generateChartData();
@@ -74,12 +74,19 @@ class CompanyReport extends Component
        $this->regenareteTableChart();
    }
 
+   public function changeChartType($title, $type)
+   {
+       $this->selectedRows[$title]['type'] = $type;
+
+       $this->generateChartData();
+   }
+
    public function generateChartData($initChart = false): void
    {
        $chartData = [];
        foreach ($this->selectedRows as $title => $row) {
            $data = [];
-           foreach ($row as $cell) {
+           foreach ($row['dates'] as $cell) {
                if (!$cell['empty']) {
                    $data[] = [
                        'y' => $cell['value'],
@@ -93,9 +100,10 @@ class CompanyReport extends Component
                }
            }
 
+           Log::info($row);
            $chartData[] = [
                'data' => $data,
-               'type' => 'line',
+               'type' => $row['type'],
                'label' => $title,
                'borderColor' => ['#5a5a5a', '#737373', '#8d8d8d', '#a6a6a6', '#949494'],
                'pointRadius' => 1,
