@@ -109,6 +109,7 @@ class CompanyReport extends Component
                'pointRadius' => 1,
                'pointHoverRadius' => 8,
                'tension' => 0.5,
+               'fill' => true,
                'pointHoverBorderColor' => '#fff',
                'pointHoverBorderWidth' => 4,
                'pointHoverBackgroundColor' => 'rgba(104, 104, 104, 0.87)'
