@@ -19,6 +19,7 @@ class ComapnyOwnership extends Component
     
     public function render()
     {
+        $this->loading = true;
         return view('livewire.comapny-ownership');
     }
 }

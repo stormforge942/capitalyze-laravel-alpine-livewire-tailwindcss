@@ -10,24 +10,32 @@
                     <span class="sr-only">Loading...</span>
                 </div>
             </div>
-            <div class="page-titles flex justify-start content-start mb-0 mt-2 mx-2">
-                <div> <h4 class="font-sm font-semi-bold pr-3 mt-2 mb-2">Track Investors</h4></div>
-                <div class="font-sm font-semi-bold pr-3 mt-2 mb-2"> > </div>
-                <div> <h5 class="font-sm font-semi-bold pr-3 mt-2 mb-2">Discover</h5></div>
-            </div>
-            <div class="sm:flex sm:items-start flex-col company-profile-page mt-0 mx-2" wire:loading.remove>
+            <div class="sm:flex sm:items-start flex-col company-profile-page mt-0 mx-0" wire:loading.remove>
+                <div>
+                    <div class="page-titles flex justify-start content-start mb-0 mt-2 mx-2">
+                        <div> <h4 class="font-sm font-semi-bold pr-3 mt-2 mb-2">Track Investors</h4></div>
+                        <div class="font-sm font-semi-bold pr-3 mt-2 mb-2"> > </div>
+                        <div> <h5 class="font-sm font-semi-bold pr-3 mt-2 mb-2">Discover</h5></div>
+                    </div> 
+                </div>   
                 <div class="tabs-wrapper flex">
                     <div @class(['tab', 'active' => $infoTabActive == 'discover']) wire:click="setInfoActiveTab('discover')">Discover</div>
                     <div @class(['tab', 'active' => $infoTabActive == 'my-favorites']) wire:click="setInfoActiveTab('my-favorites')">My Favorites</div>
                 </div>
+                @if(!$loading)
+                    <div class="">
+                        No data is loding
+                    </div>
+                @else
+                    @if ($infoTabActive == 'discover')
+                    <div>
+                        <livewire:discover.fund/>
+                    </div>
+                    @elseif($infoTabActive == 'my-favorites')
+                        <livewire:discover.favorites/>
+                    @endif
+                @endif
             </div>
-            @if ($infoTabActive == 'discover')
-            <div>
-                <livewire:discover.fund/>
-            </div>
-            @elseif($infoTabActive == 'my-favorites')
-                <livewire:discover.favorites/>
-            @endif
         </div>
     </div>
 </div>
