@@ -133,3 +133,9 @@ transition: all 0.2s ease-in-out;
     background: white;
     border-radius: 0.666em;
 }
+.key-values-wrapper__item{
+    margin-bottom: 15px;
+}
+.key-values-wrapper__item .key-values-none {
+    background: none !important;
+}
