@@ -116,6 +116,17 @@ class CompanyController extends BaseController
         ]);
     }
 
+    public function ownerShip(Request $request, $ticker){
+        $company = Company::where('ticker', $ticker)->get()->first();
+
+        return view('layouts.company', [
+            'company' => $company,
+            'ticker' => $ticker,
+            'period' => $request->query('period', 'annual'),
+            'tab' => 'ownership'
+        ]);
+    }
+
     public function shareholders(Request $request, $ticker)
     {
         $company = Company::where('ticker', $ticker)->get()->first();
