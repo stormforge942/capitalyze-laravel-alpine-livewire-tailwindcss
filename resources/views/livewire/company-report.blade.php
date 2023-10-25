@@ -478,7 +478,7 @@
 
                                 <div class="years-range-wrapper my-2" wire:ignore>
                                     <div class="dots-wrapper">
-                                        @foreach($tableDates as $key => $date)
+                                        @foreach($rangeDates as $key => $date)
                                             <span id="{{$date}}" class="inactive-dots"></span>
                                         @endforeach
                                     </div>
@@ -562,9 +562,9 @@
                                                         </div>
                                                     </div>
                                                     <div class="divide-y">
-                                                        @if(!$tableLoading && isset($rows) && count($rows) > 0)
+                                                        @if(!$tableLoading)
                                                             @foreach($rows as $row)
-                                                                <livewire:company-report-table-row :data="$row" wire:key="{{$row['id']}}" :selectedRows="$selectedRows" :reverse="$reverse"/>
+                                                                <livewire:company-report-table-row :data="$row" wire:key="{{$row['id'] . now() }}" :selectedRows="$selectedRows" :reverse="$reverse"/>
                                                             @endforeach
                                                         @endif
                                                     </div>
@@ -646,15 +646,15 @@
             return;
         }
 
-        const tableDates = @this.tableDates
+        const rangeDates = @this.rangeDates
         let selectedValue = [];
 
-        if (tableDates.length > 0) {
-            if(tableDates[0] > tableDates[tableDates.length - 1]){
-                tableDates.reverse();
+        if (rangeDates.length > 0) {
+            if(rangeDates[0] > rangeDates[rangeDates.length - 1]){
+                rangeDates.reverse();
             }
 
-            selectedValue = [tableDates[0], tableDates[tableDates.length - 1]]
+            selectedValue = [rangeDates[0], rangeDates[rangeDates.length - 1]]
         }
 
         let rangeMin = selectedValue[0];
