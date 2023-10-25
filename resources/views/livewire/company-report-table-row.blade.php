@@ -42,7 +42,7 @@
 
     @if($open)
         @foreach($data['children'] as $key => $value)
-            <livewire:company-report-table-row wire:key="{{$value['id'] . now() }}" :data="$value" :index="$index + 1" :selectedRows="$selectedRows" :reverse="$reverse"/>
+            <livewire:company-report-table-row wire:key="{{$value['id']}}" :data="$value" :index="$index + 1" :selectedRows="$selectedRows" :reverse="$reverse"/>
         @endforeach
     @endif
 </div>

@@ -564,7 +564,7 @@
                                                     <div class="divide-y">
                                                         @if(!$tableLoading)
                                                             @foreach($rows as $row)
-                                                                <livewire:company-report-table-row :data="$row" wire:key="{{$row['id'] . now() }}" :selectedRows="$selectedRows" :reverse="$reverse"/>
+                                                                <livewire:company-report-table-row :data="$row" wire:key="{{$row['id'] }}" :selectedRows="$selectedRows" :reverse="$reverse"/>
                                                             @endforeach
                                                         @endif
                                                     </div>

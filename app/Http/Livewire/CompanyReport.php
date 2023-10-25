@@ -62,6 +62,8 @@ class CompanyReport extends Component
    public function unselectRow($title)
    {
        unset($this->selectedRows[$title]);
+       $this->emit('resetSelection', $title);
+
        if (count($this->selectedRows)){
          $this->generateChartData(true);
        } else {
@@ -270,7 +272,6 @@ class CompanyReport extends Component
 
     public function generateRow($data, $title, $isSegmentation = false):array {
         $row = [
-            'id' => md5(serialize($data)),
             'title' => $title,
             'segmentation' => false,
             'values' => $this->generateEmptyCellsRow(),
@@ -307,6 +308,7 @@ class CompanyReport extends Component
         }
 
         $row['segmentation'] = $isSegmentation && count($row['children']) === 0;
+        $row['id'] = serialize($row);
 
         return $row;
     }
