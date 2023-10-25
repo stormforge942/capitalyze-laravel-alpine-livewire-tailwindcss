@@ -1,7 +1,7 @@
 <div id="business-information" class="cards-wrapper wide-cards-wrapper">
 
-    <div class="flex nav-top">
-        <div class="basis-3/4 ">
+    <div class="flex flex-wrap lg:flex-nowrap nav-top">
+        <div class=" basis-full order-2 lg:order-1  lg:basis-3/4">
             <div class="white-card-nav">
                 <ul class="nav-top-list">
                     <li><a href="" class="active">Business</a></li>
@@ -13,12 +13,12 @@
                 </ul>
             </div>
         </div>
-        <div class="bussiness-information-right basis-1/4">
+        <div class="bussiness-information-right order-1 lg:order-2 basis-full lg:basis-1/4">
         </div>
     </div>
 
-    <div class="flex flex-row bussiness-information">
-        <div class="bussiness-information-left basis-3/4 ">
+    <div class="flex flex-row bussiness-information  flex-wrap lg:flex-nowrap">
+        <div class="bussiness-information-left order-2 lg:order-1 basis-full  lg:basis-3/4 ">
 
             <div class="white-card">
                 <p class="title">
@@ -55,7 +55,7 @@
 
 
       </div>
-      <div class="bussiness-information-right basis-1/4">
+      <div class="bussiness-information-right order-1 lg:order-2 basis-full lg:basis-1/4">
 
         <div class="white-card">
 

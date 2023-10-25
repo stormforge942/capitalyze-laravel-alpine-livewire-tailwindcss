@@ -103,6 +103,7 @@ transition: all 0.2s ease-in-out;
 .nav-top-list {
     display: flex;
     align-items: center;
+    flex-wrap: wrap;
     gap: 20px;
     list-style: none;
     padding: 0px;
@@ -115,6 +116,7 @@ transition: all 0.2s ease-in-out;
     border-radius: 20px;
     font-size: 14px;
     border: 1px solid #ddd;
+    white-space: nowrap;
 }
 .nav-top-list li a:hover {
     background-color: #52D3A233;
@@ -127,7 +129,7 @@ transition: all 0.2s ease-in-out;
 }
 .white-card-nav {
     font-size: 0.5em;
-    padding: 1em 2em;
+    padding: 1.4em 2em;
     background: white;
     border-radius: 0.666em;
 }
