@@ -25,7 +25,8 @@
                 $businessContent = $menuLinks['business'];
                 $businessContent = preg_replace('/\s+/', ' ', $businessContent);
                 $businessContent = str_replace('\n', '', $businessContent);
-                $businessContent = str_replace('\t', '', $businessContent);
+                $businessContent = str_replace('\n', '', $businessContent);
+                $businessContent = str_replace('Item 1.', '', $businessContent);
                 $businessContent = preg_replace('/class="(.?)+"/i','', $businessContent);
                 $businessContent = preg_replace('/business(?=\<) /i', "<p class='title'>Business</p>" , $businessContent, 1);
                 $businessContent=preg_replace('/business</i', "<p class='title'>Business</p><" , $businessContent, 1);
