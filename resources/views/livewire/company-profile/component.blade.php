@@ -18,8 +18,11 @@
                     </div>
                 @else
                     <div class="sm:flex sm:items-start flex-col company-profile-page" wire:loading.remove>
-                        <div class="page-titles">
-                            <b>{{ @$profile['registrant_name'] }}  @if(@$profile['symbol']) ({{ @$profile['symbol'] }}) @endif </b> <br>
+                        <div class="page-titles mt-4">
+                            <b>{{ @$profile['registrant_name'] }}  @if(@$profile['symbol']) ({{ @$profile['symbol'] }}) @endif </b>
+
+                        </div>
+                        <div class="page-titles mt-2">
                             <b>${{number_format($cost)}}</b> <small class="text-color-green">({{$dynamic > 0 ? '+' : '-'}}{{abs($dynamic)}}%)</small>
                         </div>
 

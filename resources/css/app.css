@@ -154,3 +154,13 @@ transition: all 0.2s ease-in-out;
 .title_smal {
     font-size: 12px;
 }
+.tabs-wrapper {
+    margin: 1.4em 0;
+}
+.page-titles {
+    font-size: 24px;
+    line-height: 31px;
+}
+.table-wrapper .cell:first-child {
+    padding-left: 22px;
+}
