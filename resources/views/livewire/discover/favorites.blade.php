@@ -1,5 +1,5 @@
 <div class="discover flex-1 mb-10">
-    <div class="flex sm:flex-col md:flex content-between items-center justify-between">
+    <div class="flex flex-col md:flex-row content-between items-center justify-between">
         <div class="title font-semibold">Discover Funds</div>
         <div class="search">
             <label for="default-search" class="mb-2 text-sm font-medium text-gray-900 sr-only dark:text-white">Search</label>
