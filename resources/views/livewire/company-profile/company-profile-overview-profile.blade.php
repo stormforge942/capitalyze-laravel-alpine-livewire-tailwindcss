@@ -12,7 +12,7 @@
 <div class="white-card w-full mt-4">
     <div class="title px-2">
         <span class="title_small">Company Profile</span>
-        <a href="#" wire:click="toggleFullProfile()" class="title-spoiler title_smal">@if ($showFullProfile) Hide full profile
+        <a wire:click="toggleFullProfile()" class="title-spoiler title_smal">@if ($showFullProfile) Hide full profile
             @else View full profile @endif</a>
     </div>
     <div class="flex key-values-wrapper__item_parent  flex-wrap mt-4 px-2">
