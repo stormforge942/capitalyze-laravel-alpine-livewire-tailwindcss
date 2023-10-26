@@ -164,3 +164,6 @@ transition: all 0.2s ease-in-out;
 .table-wrapper .cell:first-child {
     padding-left: 22px;
 }
+.white-card a,a {
+    cursor: pointer;
+}
