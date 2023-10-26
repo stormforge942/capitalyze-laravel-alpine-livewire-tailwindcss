@@ -1,6 +1,6 @@
 <div class="white-card w-full mt-4">
     <div class="title">
-        <div>Business Information</div>
+        <div class="title_small">Business Information</div>
     </div>
     <div class="flex key-values-wrapper__item_parent  flex-wrap mt-4">
         <div class="text-info">
@@ -10,12 +10,12 @@
 </div>
 </div>
 <div class="white-card w-full mt-4">
-    <div class="title">
+    <div class="title px-2">
         <span class="title_small">Company Profile</span>
         <a href="#" wire:click="toggleFullProfile()" class="title-spoiler title_smal">@if ($showFullProfile) Hide full profile
             @else View full profile @endif</a>
     </div>
-    <div class="flex key-values-wrapper__item_parent  flex-wrap mt-4">
+    <div class="flex key-values-wrapper__item_parent  flex-wrap mt-4 px-2">
         <div class="key-values-wrapper__item basis-3/6 lg:basis-1/6">
             <div>
                 <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 16 16" fill="none">

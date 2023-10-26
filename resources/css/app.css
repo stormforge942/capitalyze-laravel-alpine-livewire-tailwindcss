@@ -139,3 +139,18 @@ transition: all 0.2s ease-in-out;
 .key-values-wrapper__item .key-values-none {
     background: none !important;
 }
+.row-head-fonts-sm .cell {
+    font-size: 13px !important;
+}
+.white-card .key{
+    font-size: 11px;
+}
+.white-card .value{
+    font-size: 12px;
+}
+.title_small {
+    font-size: 14px;
+}
+.title_smal {
+    font-size: 12px;
+}
