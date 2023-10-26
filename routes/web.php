@@ -66,10 +66,9 @@ Route::middleware([])->group(function () {
         Route::get('/review', ReviewPage::class)->name('review');
         Route::get('/press-release', PressRelease::class)->name('press.release');
 
-        
         Route::get('/company/{ticker}/', [CompanyController::class, 'profile'])->name('company.product');
         Route::get('/company/{ticker}/profile', [CompanyController::class, 'profile'])->name('company.profile');
-        Route::get('/company/{ticker}/ownership', [CompanyController::class, 'ownerShip'])->name('company.ownership');
+        Route::get('/company/{ticker}/track-investor', [CompanyController::class, 'trackInvestor'])->name('company.track-investor');
         Route::get('/company/{ticker}/executive-compensation', [CompanyController::class, 'executiveCompensation'])->name('company.executive.compensation');
         Route::get('/company/{ticker}/chart', [CompanyController::class, 'chart'])->name('company.chart');
         Route::get('/company/{ticker}/splits', [CompanyController::class, 'splits'])->name('company.splits');

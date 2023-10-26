@@ -58,7 +58,7 @@
                         <livewire:company-summary :company="$company" :ticker="$ticker" :period="$period" />
                     @elseif($tab == 'filings')
                         <livewire:company-filings :company="$company" :ticker="$ticker" :period="$period" />
-                    @elseif($tab == 'ownership')
+                    @elseif($tab == 'track-investor')
                         <livewire:comapny-ownership :comapany="$company" :tinker="$ticker" :period="$period"/>
                     @elseif($tab == 'insider')
                         <livewire:company-insider :company="$company" :ticker="$ticker" :period="$period" />

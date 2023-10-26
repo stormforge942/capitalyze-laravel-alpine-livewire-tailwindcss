@@ -172,7 +172,7 @@
             </li>
             <li>
                <a data-tooltip-target="tooltip-Ownership" data-tooltip-placement="right" id="nav"
-                  href="{{ route('company.ownership', ['ticker' => $this->company->ticker]) }}"
+                  href="{{ route('company.profile', ['ticker' => $this->company->ticker]) }}"
                   class="flex items-center p-2 text-dark-light hover:bg-[#828c851a] @if($currentRoute === 'ownership') bg-[#52d3a233] font-medium @endif rounded-lg group">
                   <svg width="16" height="16" viewBox="0 0 16 16" fill="none" xmlns="http://www.w3.org/2000/svg">
                      <path
@@ -266,6 +266,12 @@
                   </svg>
                </button>
                <ul class="hidden py-2 space-y-2" id="dropdown-more">
+                  <li>
+                     <a class="flex items-center w-full p-2 text-gray-900 transition duration-75 rounded-lg pl-11 group hover:bg-gray-100 dark:text-white dark:hover:bg-gray-700 @if($currentRoute === 'track-investor') font-bold @endif"
+                        href="{{ route('company.track-investor', ['ticker' => $this->company->ticker]) }}">
+                        Track Investors
+                     </a>
+                  </li>
                   @foreach ($navbarItems as $navbar)
                   <li>
                      <a class="flex items-center w-full p-2 text-gray-900 transition duration-75 rounded-lg pl-11 group hover:bg-gray-100 dark:text-white dark:hover:bg-gray-700 @if($currentRoute === $navbar->route_name) font-bold @endif"
