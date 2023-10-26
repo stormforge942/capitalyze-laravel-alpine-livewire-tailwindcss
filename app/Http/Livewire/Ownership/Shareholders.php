@@ -17,7 +17,7 @@ class Shareholders extends Component
 
     public string $ticker;
     public $quarters;
-    public string $quarter = '';
+    public $quarter = null;
 
     public function mount(array $data = [])
     {

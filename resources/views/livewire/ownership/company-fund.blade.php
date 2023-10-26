@@ -88,14 +88,7 @@
                         intersect: false,
                     },
                     responsive: true,
-                    aspectRatio: 4,
-                    onResize: function(chart, size) {
-                        if (size.width < 768) {
-                            chart.options.aspectRatio = 2;
-                        } else {
-                            chart.options.aspectRatio = 3;
-                        }
-                    },
+                    aspectRatio: 3,
                     plugins: {
                         legend: {
                             display: false,
@@ -111,7 +104,6 @@
                         y: {
                             beginAtZero: true,
                             border: {
-                                dash: [8, 4],
                                 display: false
                             },
                             ticks: {

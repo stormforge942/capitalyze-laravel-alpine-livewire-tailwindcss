@@ -13,7 +13,7 @@ use PowerComponents\LivewirePowerGrid\PowerGridEloquent;
 class ShareholdersTable extends BaseTable
 {
     public string $ticker = '';
-    public string $quarter = '';
+    public $quarter = null;
     public string $sortField = 'ownership';
     public string $sortDirection = 'desc';
 

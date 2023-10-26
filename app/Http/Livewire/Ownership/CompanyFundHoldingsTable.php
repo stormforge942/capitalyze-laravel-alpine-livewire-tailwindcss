@@ -11,7 +11,7 @@ use PowerComponents\LivewirePowerGrid\PowerGridEloquent;
 
 class CompanyFundHoldingsTable extends BaseTable
 {
-    public string $quarter = '';
+    public $quarter = null;
     public string $cik = '';
     public string $sortField = 'ownership';
     public string $sortDirection = 'desc';
@@ -32,14 +32,11 @@ class CompanyFundHoldingsTable extends BaseTable
 
     public function datasource(): ?Builder
     {
-        $query = CompanyFilings::query()
-            ->where('cik', '=', $this->cik);
-
-        if ($this->quarter !== '') {
-            $query = $query->where('report_calendar_or_quarter', '=', $this->quarter);
-        }
-
-        return $query;
+        return CompanyFilings::query()
+            ->where('cik', '=', $this->cik)
+            ->when($this->quarter, function ($query) {
+                return $query->where('report_calendar_or_quarter', '=', $this->quarter);
+            });
     }
 
     public function addColumns(): PowerGridEloquent

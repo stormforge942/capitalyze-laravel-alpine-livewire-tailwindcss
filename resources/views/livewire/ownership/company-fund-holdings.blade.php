@@ -1,4 +1,5 @@
 <div>
+    @if(count($quarters))
     <label class="flex items-center gap-1 text-sm">
         <span>Quarter to view</span>
         <select class="border-[0.5px] border-solid border-[#93959880] p-2 rounded-full" wire:model="quarter">
@@ -8,6 +9,7 @@
             @endforeach
         </select>
     </label>
+    @endif
 
     <livewire:ownership.company-fund-holdings-table :cik="$cik" :quarter="$quarter" />
 </div>

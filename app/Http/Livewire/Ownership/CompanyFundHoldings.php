@@ -17,7 +17,7 @@ class CompanyFundHoldings extends Component
 
     public $cik;
     public $quarters;
-    public string $quarter = '';
+    public $quarter = null;
 
     public static function title(): string
     {

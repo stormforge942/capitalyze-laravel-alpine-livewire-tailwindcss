@@ -1,7 +1,7 @@
 {{-- Check resources/views/livewire/ownership/company-fund.blade.php for js code --}}
 <div>
     <div class="grid grid-cols-12 gap-6">
-        <div class="col-span-8 2xl:col-span-9">
+        <div class="col-span-12 xl:col-span-8 2xl:col-span-9 order-1">
             <div class="bg-white rounded">
                 <div class="py-3 px-6 border-b">
                     <h3 class="text-md font-medium">Market Value Overtime</h3>
@@ -14,7 +14,7 @@
             </div>
         </div>
 
-        <div class="col-span-4 2xl:col-span-3">
+        <div class="col-span-6 xl:col-span-4 2xl:col-span-3 order-3 xl:order-2">
             <div class="bg-white p-6 rounded">
                 <h3 class="text-blue text-sm mb-4 font-semibold">13F Holding Summary</h3>
 
@@ -39,9 +39,9 @@
             </div>
         </div>
 
-        <div class="col-span-6">
+        <div class="col-span-6 order-2 xl:order-3">
             <x-tabs :tabs="['Top Buys', 'Top Sells']" class="bg-white p-6 rounded">
-                <x-defer-data-loading use-alpine="true" on-init="getTopBuySells" class="h-48">
+                <x-defer-data-loading use-alpine="true" on-init="getTopBuySells" class="h-80">
                     <div class="space-y-4" :class="active == 0 ? 'block' : 'hidden'" :data-active="active">
                         <template x-for="item in result.topBuys">
                             <div class="grid grid-cols-12 items-center gap-4 ">
@@ -71,7 +71,7 @@
             </x-tabs>
         </div>
 
-        <div class="col-span-6">
+        <div class="col-span-12 xl:col-span-6 order-4">
             <div class="bg-white p-6 rounded">
                 <x-tabs :tabs="['13F Sector Allocation Overtime', '13F Sector Allocation last Quarter']">
                     <x-defer-data-loading use-alpine="true" on-init="getSectiorAllocationData" class="h-80"
@@ -112,12 +112,12 @@
             </div>
         </div>
 
-        <div class="col-span-6">
+        <div class="col-span-12 xl:col-span-6 order-5">
             <div class="bg-white p-6 rounded">
                 <h3 class="text-blue text-sm mb-4 font-semibold">13F Activity</h3>
 
                 <x-defer-data-loading use-alpine="true" on-init="getSummary" class="h-48">
-                    <div class="grid grid-cols-2 2xl:grid-cols-4 gap-4">
+                    <div class="grid grid-cols-5 xl:grid-cols-2 2xl:grid-cols-4 gap-4">
                         <template x-for="item in result">
                             <div>
                                 <p class="text-dark-light2 text-sm" x-text="item.title"></p>
