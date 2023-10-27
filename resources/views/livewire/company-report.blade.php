@@ -479,7 +479,7 @@
                                 <div class="years-range-wrapper my-2" wire:ignore>
                                     <div class="dots-wrapper">
                                         @foreach($rangeDates as $key => $date)
-                                            <span id="{{$date}}" class="inactive-dots"></span>
+                                            <span id="{{date('Y', strtotime($date))}}" class="inactive-dots"></span>
                                         @endforeach
                                     </div>
                                     <div id="range-slider-company-report" class="range-slider"></div>
@@ -504,15 +504,41 @@
                                         </div>
                                         <div class="w-full flex flex-wrap justify-start items-end space-x-3 px-2 mt-8 space-y-3">
                                             @foreach($selectedRows as $title => $row)
-                                                <div class="rounded-full whitespace-nowrap border flex space-x-2 justify-between items-center h-[40px] px-2">
-                                                    <span>
+                                                <div class="rounded-full relative whitespace-nowrap border flex space-x-2 justify-between items-center h-[40px] px-2">
+                                                    <span wire:click="toggleChartType('{{$title}}')" class="flex items-center justify-center hover:cursor-pointer">
                                                         {{$title}}
+                                                        <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 16 16" fill="none">
+                                                           <path d="M10.3083 6.19514L7.72167 8.78378L5.135 6.19514C5.01045 6.07021 4.84135 6 4.665 6C4.48865 6 4.31955 6.07021 4.195 6.19514C3.935 6.45534 3.935 6.87566 4.195 7.13585L7.255 10.1982C7.515 10.4584 7.935 10.4584 8.195 10.1982L11.255 7.13585C11.515 6.87566 11.515 6.45534 11.255 6.19514C10.995 5.94161 10.5683 5.93494 10.3083 6.19514Z" fill="#464E49"/>
+                                                        </svg>
                                                     </span>
-
-                                                    <select data-title="{{$title}}" onchange="changeChartType()" name="chart-type">
-                                                        <option value="line">Line</option>
-                                                        <option value="bar">Bar</option>
-                                                    </select>
+                                                    @if($isOpen === $title)
+                                                        <div class="absolute z-20 bg-white top-[45px] right-[-30px] border-[#D4DDD7] shadow-md rounded-lg">
+                                                            <ul class="px-4 py-2">
+                                                                <li onclick="changeChartType('{{$title}}', 'line')" class="flex p-2 items-center hover:cursor-pointer">
+                                                                    <svg xmlns="http://www.w3.org/2000/svg" width="13" height="12" viewBox="0 0 13 12" fill="none">
+                                                                        <path d="M1.33333 0V10.6667H12V12H0V0H1.33333ZM11.2929 1.95956L12.7071 3.37377L8.66667 7.4142L6.66667 5.414L4.04044 8.04047L2.62623 6.6262L6.66667 2.58579L8.66667 4.586L11.2929 1.95956Z" fill="#3561E7"/>
+                                                                    </svg>
+                                                                    <p class="ml-2 mr-3">Line Chart</p>
+                                                                    @if($chartType === 'line')
+                                                                        <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 16 16" fill="none">
+                                                                            <path d="M7.99967 14.6668C4.31777 14.6668 1.33301 11.682 1.33301 8.00016C1.33301 4.31826 4.31777 1.3335 7.99967 1.3335C11.6815 1.3335 14.6663 4.31826 14.6663 8.00016C14.6663 11.682 11.6815 14.6668 7.99967 14.6668ZM7.99967 13.3335C10.9452 13.3335 13.333 10.9457 13.333 8.00016C13.333 5.05464 10.9452 2.66683 7.99967 2.66683C5.05415 2.66683 2.66634 5.05464 2.66634 8.00016C2.66634 10.9457 5.05415 13.3335 7.99967 13.3335ZM7.33474 10.6668L4.50633 7.83843L5.44915 6.89556L7.33474 8.78123L11.106 5.00998L12.0488 5.95278L7.33474 10.6668Z" fill="#13B05B"/>
+                                                                        </svg>
+                                                                    @endif
+                                                                </li>
+                                                                <li onclick="changeChartType('{{$title}}', 'bar')" class="flex p-2 items-center hover:cursor-pointer">
+                                                                    <svg xmlns="http://www.w3.org/2000/svg" width="14" height="12" viewBox="0 0 14 12" fill="none">
+                                                                        <path d="M0.333008 6.66667H4.33301V12H0.333008V6.66667ZM4.99967 0H8.99967V12H4.99967V0ZM9.66634 3.33333H13.6663V12H9.66634V3.33333Z" fill="#3561E7"/>
+                                                                    </svg>
+                                                                    <p class="ml-2 mr-3">Bar Chart</p>
+                                                                    @if($chartType === 'bar')
+                                                                        <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 16 16" fill="none">
+                                                                            <path d="M7.99967 14.6668C4.31777 14.6668 1.33301 11.682 1.33301 8.00016C1.33301 4.31826 4.31777 1.3335 7.99967 1.3335C11.6815 1.3335 14.6663 4.31826 14.6663 8.00016C14.6663 11.682 11.6815 14.6668 7.99967 14.6668ZM7.99967 13.3335C10.9452 13.3335 13.333 10.9457 13.333 8.00016C13.333 5.05464 10.9452 2.66683 7.99967 2.66683C5.05415 2.66683 2.66634 5.05464 2.66634 8.00016C2.66634 10.9457 5.05415 13.3335 7.99967 13.3335ZM7.33474 10.6668L4.50633 7.83843L5.44915 6.89556L7.33474 8.78123L11.106 5.00998L12.0488 5.95278L7.33474 10.6668Z" fill="#13B05B"/>
+                                                                        </svg>
+                                                                    @endif
+                                                                </li>
+                                                            </ul>
+                                                        </div>
+                                                    @endif
 
                                                     <span wire:click="unselectRow('{{ $title }}')" class="rounded-full bg-white border-2 border-red-500 text-red-500 w-5 h-5 flex items-center justify-center">
                                                         <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="4" stroke="currentColor" class="w-3 h-3">
@@ -555,7 +581,7 @@
                                                             @foreach ($reverse ? array_reverse($tableDates) : $tableDates as $date)
                                                                 <div class="w-[150px] flex items-center justify-center text-base">
                                                                     <span class="py-4">
-                                                                        {{ $date }}
+                                                                        {{ date('M Y', strtotime($date)) }}
                                                                     </span>
                                                                 </div>
                                                             @endforeach
@@ -640,6 +666,10 @@
             }
         });
 
+        Livewire.hook('element.updated', () => {
+            initChart()
+        })
+
         const el = document.querySelector('#range-slider-company-report');
 
         if(!el) {
@@ -657,12 +687,12 @@
             selectedValue = [rangeDates[0], rangeDates[rangeDates.length - 1]]
         }
 
-        let rangeMin = selectedValue[0];
-        let rangeMax = selectedValue[1] ? selectedValue[1] : new Date().getFullYear();
+        let rangeMin = new Date(selectedValue[0]).getFullYear();
+        let rangeMax = selectedValue[1] ? new Date(selectedValue[1]).getFullYear() : new Date().getFullYear();
         selectedValue[0] = rangeMax - 6;
+        selectedValue[1] = rangeMax;
 
         recognizeDotsStatus(selectedValue, [rangeMin, rangeMax]);
-        @this.changeDates(selectedValue)
 
         rangeSlider(el, {
             step: 1,
@@ -671,6 +701,7 @@
             value: selectedValue,
             rangeSlideDisabled: true,
             onInput: (value) => {
+                console.log(value)
                 if (value.length === 2 && value !== selectedValue) {
                     recognizeDotsStatus(value, [rangeMin, rangeMax]);
                     @this.changeDates(value)
@@ -893,10 +924,8 @@
         tooltipEl.style.padding = 8 + 'px ' + 19 + 'px';
     };
 
-   async function changeChartType() {
-        let title = event.target.dataset.title;
-        let type = event.target.value;
-
+   async function changeChartType(title, type) {
+       console.log(title, type);
         await @this.changeChartType(title, type)
 
         initChart()
@@ -905,7 +934,6 @@
     function initChart() {
         if (chart) chart.destroy();
         let data = @this.chartData;
-        console.log(data);
         let limitedData = data.slice(0, 5);
         let canvas = document.getElementById("chart-company-report");
         if (!canvas) return;
@@ -941,6 +969,9 @@
                     intersect: false,
                     mode: 'nearest',
                     axis: 'xy'
+                },
+                animation: {
+                    duration: 0,
                 },
                 title: {
                     display: false,

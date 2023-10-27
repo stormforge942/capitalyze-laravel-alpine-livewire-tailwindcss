@@ -4,6 +4,7 @@ namespace App\Http\Livewire;
 
 use App\Models\InfoPresentation;
 use Carbon\Carbon;
+use DateTime;
 use Illuminate\Database\ConnectionResolver;
 use Illuminate\Database\Eloquent\Model;
 use Livewire\Component;
@@ -41,8 +42,20 @@ class CompanyReport extends Component
     protected $rowCount = 0;
     public $selectedRows = [];
     public $selectedValue = [];
+    public $chartType = 'line';
+    public $isOpen = false;
 
    protected $listeners = ['periodChange', 'tabClicked', 'tabSubClicked', 'selectRow', 'unselectRow'];
+
+   public function toggleChartType($title) {
+       if($this->isOpen === $title) {
+           $this->isOpen = null;
+       } else {
+           $this->isOpen = $title;
+       }
+
+
+   }
 
    public function selectRow($title, $data) {
        if (count($this->selectedRows) < 5) {
@@ -80,6 +93,8 @@ class CompanyReport extends Component
    public function changeChartType($title, $type)
    {
        $this->selectedRows[$title]['type'] = $type;
+
+       $this->chartType = $type;
 
        $this->generateChartData();
    }
@@ -172,8 +187,23 @@ class CompanyReport extends Component
        $this->rows = [];
         if (count($dates) == 2) {
             $this->tableDates = [];
-            for($i = $dates[0]; $i <= $dates[1]; $i++) {
-                $this->tableDates[] = $i;
+
+            if (gettype($dates[0]) === 'integer') {
+                $date = new DateTime($dates[0].'-09-09');
+                $dates[0] = $date->format('Y-m-d');
+            }
+
+            if (gettype($dates[1]) === 'integer') {
+                $date = new DateTime($dates[1].'-09-09');
+                $dates[1] = $date->format('Y-m-d');
+            }
+
+            $minYear = strtotime($dates[0]);
+            $maxYear = strtotime($dates[1]);
+            $year = 365 * 24 * 60 * 60;
+
+            for ($currentDate = $minYear; $currentDate <= $maxYear; $currentDate += $year) {
+                $this->tableDates[] = date('Y-m-d', $currentDate);
             }
         }
 
@@ -196,7 +226,7 @@ class CompanyReport extends Component
         foreach ($array as $key => $value) {
             if (is_array($value)) {
                 if (strtotime($key) !== false) {
-                    $this->tableDates[] = date('Y', strtotime($key));
+                    $this->tableDates[] = date('Y-m-d', strtotime($key));
                 }
                 $this->traverseArray($value);
             } else {
@@ -210,12 +240,12 @@ class CompanyReport extends Component
         $this->traverseArray($this->data);
 
         $dates = [];
-        $minYear = (int) min(array_unique($this->tableDates));
-        $maxYear = (int) max(array_unique($this->tableDates));
+        $minYear = strtotime(min(array_unique($this->tableDates)));
+        $maxYear = strtotime(max(array_unique($this->tableDates)));
+        $year = 365 * 24 * 60 * 60;
 
-        for ($i = 0; $minYear + $i <= $maxYear; $i++) {
-            $year = $minYear + $i;
-            $dates[] = $year;
+        for ($currentDate = $minYear; $currentDate <= $maxYear; $currentDate += $year) {
+            $dates[] = date('Y-m-d', $currentDate);
         }
 
         $this->rangeDates = $dates;
@@ -225,11 +255,11 @@ class CompanyReport extends Component
                 $this->rangeDates = array_reverse($this->rangeDates);
             }
 
-            $this->selectedValue = [$this->rangeDates[0], $this->rangeDates[count($this->rangeDates)- 1]];
+            $this->selectedValue = [$this->rangeDates[0], $this->rangeDates[count($this->rangeDates) - 1]];
         }
 
-        $rangeMax = $this->selectedValue[1] ?: Carbon::now()->year;
-        $this->selectedValue[0] = $rangeMax - 6;
+        $rangeMax = strtotime($this->selectedValue[1]) ?: strtotime(now());
+        $this->selectedValue[0] = date('Y-m-d', $rangeMax - 6 * 365 * 24 * 60 * 60);
         $this->changeDates($this->selectedValue);
     }
 
@@ -287,9 +317,14 @@ class CompanyReport extends Component
             }
 
             if ($isDate) {
-                $year = Carbon::createFromFormat('Y-m-d', $key)->year;
-                if (in_array($year, $this->tableDates)) {
-                    $row['values'][$year] = $this->parseCell($value, $key);
+                $year = Carbon::createFromFormat('Y-m-d', $key)->format('Y-m');
+
+                foreach ($this->tableDates as $date) {
+                    $datePart = substr($date, 0, 7);
+                    if ($datePart == $year) {
+                        $row['values'][$date] = $this->parseCell($value, $key);
+                        break;
+                    }
                 }
             } else {
                 if (in_array($key, ['#segmentation'])) {
@@ -369,7 +404,7 @@ class CompanyReport extends Component
 
         foreach ($this->tableDates as $date) {
             $response[$date] = [
-                'date' => Carbon::createFromFormat('Y', $date)->format('Y-m-d'),
+                'date' => Carbon::createFromFormat('Y-m-d', $date)->format('Y-m-d'),
                 'value' => '',
                 'hash' => '',
                 'ticker' => $this->ticker,
