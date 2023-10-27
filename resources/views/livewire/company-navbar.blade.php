@@ -1,9 +1,10 @@
 <div>
     <aside id="default-sidebar"
-        class="fixed top-0 left-0 z-40 w-64 h-screen pt-10 transition-transform -translate-x-full bg-white border-r border-gray-200 sm:translate-x-0 dark:bg-gray-800 dark:border-gray-700"
+        class="fixed top-0 left-0 z-40 w-64 h-screen pt-10 transition-transform -translate-x-full bg-white border-r border-gray-200 lg:translate-x-0 dark:bg-gray-800 dark:border-gray-700"
         aria-label="Sidebar">
-        <div class="h-full px-6 pb-4 bg-white dark:bg-gray-800 flex flex-col">
-            <div class="transition-all duration-250 fixed right-[-12px] cursor-pointer top-[160px] hidden lg:block" id="collapse">
+        <div class="flex flex-col h-full px-6 pb-4 bg-white dark:bg-gray-800">
+            <div class="transition-all duration-250 fixed right-[-12px] cursor-pointer top-[160px] hidden lg:block"
+                id="collapse">
                 <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
                     <path
                         d="M12 2C6.48 2 2 6.48 2 12C2 17.52 6.48 22 12 22C17.52 22 22 17.52 22 12C22 6.48 17.52 2 12 2ZM12 11H16V13H12V16L8 12L12 8V11Z"
@@ -64,7 +65,7 @@
             </div>
             <ul class="space-y-2 text-[14px] flex-1 overflow-y-auto overflow-x-hidden">
                 <li id="nav"
-                    class="flex items-center p-2 font-semibold rounded-lg group text-blue rounded w-full">
+                    class="flex items-center w-full p-2 font-semibold rounded group text-blue">
                     <svg width="16" height="28" class="fill-current" viewBox="0 0 16 17" fill="none"
                         xmlns="http://www.w3.org/2000/svg">
                         <path
@@ -85,7 +86,7 @@
                         <span class="ml-3" id="collapsed-span">Overwiew</span>
                     </a>
                     <div id="tooltip-Overwiew" role="tooltip"
-                        class="hidden absolute z-10 invisible px-3 py-2 text-xs text-white bg-gray-900 rounded-lg shadow-sm opacity-0 tooltip dark:bg-gray-700">
+                        class="absolute z-10 invisible hidden px-3 py-2 text-xs text-white bg-gray-900 rounded-lg shadow-sm opacity-0 tooltip dark:bg-gray-700">
                         Overwiew
                         <div class="tooltip-arrow" data-popper-arrow></div>
                     </div>
@@ -123,7 +124,7 @@
                         <span class="ml-3" id="collapsed-span">Financials</span>
                     </a>
                     <div id="tooltip-Financials" role="tooltip"
-                        class="hidden absolute z-10 invisible px-3 py-2 text-xs font-medium text-white bg-gray-900 rounded-lg shadow-sm opacity-0 tooltip dark:bg-gray-700">
+                        class="absolute z-10 invisible hidden px-3 py-2 text-xs font-medium text-white bg-gray-900 rounded-lg shadow-sm opacity-0 tooltip dark:bg-gray-700">
                         Financials
                         <div class="tooltip-arrow" data-popper-arrow></div>
                     </div>
@@ -155,7 +156,7 @@
                         <span class="ml-3" id="collapsed-span">Analysis</span>
                     </a>
                     <div id="tooltip-Analysis" role="tooltip"
-                        class="hidden absolute z-10 invisible px-3 py-2 text-xs font-medium text-white bg-gray-900 rounded-lg shadow-sm opacity-0 tooltip dark:bg-gray-700">
+                        class="absolute z-10 invisible hidden px-3 py-2 text-xs font-medium text-white bg-gray-900 rounded-lg shadow-sm opacity-0 tooltip dark:bg-gray-700">
                         Analysis
                         <div class="tooltip-arrow" data-popper-arrow></div>
                     </div>
@@ -174,7 +175,7 @@
                         <span class="ml-3" id="collapsed-span">Filings</span>
                     </a>
                     <div id="tooltip-Filings" role="tooltip"
-                        class="hidden absolute z-10 invisible px-3 py-2 text-xs font-medium text-white bg-gray-900 rounded-lg shadow-sm opacity-0 tooltip dark:bg-gray-700">
+                        class="absolute z-10 invisible hidden px-3 py-2 text-xs font-medium text-white bg-gray-900 rounded-lg shadow-sm opacity-0 tooltip dark:bg-gray-700">
                         Filings
                         <div class="tooltip-arrow" data-popper-arrow></div>
                     </div>
@@ -199,7 +200,7 @@
                         <span class="ml-3" id="collapsed-span">Ownership</span>
                     </a>
                     <div id="tooltip-Ownership" role="tooltip"
-                        class="hidden absolute z-10 invisible px-3 py-2 text-xs font-medium text-white bg-gray-900 rounded-lg shadow-sm opacity-0 tooltip dark:bg-gray-700">
+                        class="absolute z-10 invisible hidden px-3 py-2 text-xs font-medium text-white bg-gray-900 rounded-lg shadow-sm opacity-0 tooltip dark:bg-gray-700">
                         Ownership
                         <div class="tooltip-arrow" data-popper-arrow></div>
                     </div>
@@ -225,7 +226,7 @@
                         <span class="ml-3" id="collapsed-span">Settings</span>
                     </a>
                     <div id="tooltip-Settings" role="tooltip"
-                        class="hidden absolute z-10 invisible px-3 py-2 text-xs font-medium text-white bg-gray-900 rounded-lg shadow-sm opacity-0 tooltip dark:bg-gray-700">
+                        class="absolute z-10 invisible hidden px-3 py-2 text-xs font-medium text-white bg-gray-900 rounded-lg shadow-sm opacity-0 tooltip dark:bg-gray-700">
                         Settings
                         <div class="tooltip-arrow" data-popper-arrow></div>
                     </div>
@@ -297,7 +298,7 @@
                             @endforeach
                         </ul>
                         <div id="dropdownMore"
-                            class="max-h-64 w-44 overflow-y-scroll invisible hidden bg-white divide-y divide-gray-100 rounded-lg shadow dark:bg-gray-700">
+                            class="invisible hidden overflow-y-scroll bg-white divide-y divide-gray-100 rounded-lg shadow max-h-64 w-44 dark:bg-gray-700">
                             <div class="py-2 text-gray-700 dark:text-gray-200" aria-labelledby="dropdownTopButton">
                                 <!-- More links -->
                                 <div class="block px-4 py-2 text-xs text-gray-400">
@@ -420,8 +421,13 @@
                 if (!collapsed) {
                     // uncollapsed
                     collapseButton.classList.remove('rotate-180');
+
+                    document.getElementById('main-container').classList.remove('lg:ml-20')
+                    document.getElementById('navigation').classList.remove('lg:ml-20');
+
                     document.getElementById('main-container').classList.add('lg:ml-64');
                     document.getElementById('navigation').classList.add('lg:ml-64');
+
                     document.getElementById('logo').classList.remove('hidden');
                     document.getElementById('collapsed-logo').classList.add('hidden');
                     document.getElementById('default-sidebar').classList.remove('w-20');
@@ -459,8 +465,13 @@
                 } else {
                     // collapsed
                     collapseButton.classList.add('rotate-180');
-                    document.getElementById('main-container').style.marginLeft = '5rem';
-                    document.getElementById('navigation').style.marginLeft = '5rem';
+
+                    document.getElementById('main-container').classList.remove('lg:ml-64')
+                    document.getElementById('navigation').classList.remove('lg:ml-64');
+
+                    document.getElementById('main-container').classList.add('lg:ml-20');
+                    document.getElementById('navigation').classList.add('lg:ml-20');
+
                     document.getElementById('logo').classList.add('hidden');
                     document.getElementById('collapsed-logo').classList.remove('hidden');
                     document.getElementById('default-sidebar').classList.add('w-20');

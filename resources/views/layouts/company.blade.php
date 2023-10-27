@@ -26,23 +26,23 @@
     @livewireStyles
     @once
         @push('scripts')
-         <script src="https://cdn.jsdelivr.net/npm/@uvarov.frontend/vanilla-calendar/build/vanilla-calendar.min.js"></script>
-        <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
-        <script src="https://cdn.jsdelivr.net/npm/luxon"></script>
-        <script src="https://cdnjs.cloudflare.com/ajax/libs/chartjs-adapter-luxon/0.2.1/chartjs-adapter-luxon.min.js"></script>
-        <script src="https://cdnjs.cloudflare.com/ajax/libs/flowbite/1.8.1/flowbite.min.js"></script>
+            <script src="https://cdn.jsdelivr.net/npm/@uvarov.frontend/vanilla-calendar/build/vanilla-calendar.min.js"></script>
+            <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+            <script src="https://cdn.jsdelivr.net/npm/luxon"></script>
+            <script src="https://cdnjs.cloudflare.com/ajax/libs/chartjs-adapter-luxon/0.2.1/chartjs-adapter-luxon.min.js"></script>
+            <script src="https://cdnjs.cloudflare.com/ajax/libs/flowbite/1.8.1/flowbite.min.js"></script>
         @endpush
     @endonce
 </head>
 
-<body class="text-dark text-base font-sans antialiased min-h-screen bg-gray-light">
+<body class="min-h-screen font-sans text-base antialiased text-dark bg-gray-light">
     <x-jet-banner />
 
     <div class="">
         <livewire:company-navbar :company="$company" />
         <!-- Page Content -->
         <main>
-            <div class="px-4 lg:ml-64 pl-0 transition-all pb-10" id="main-container">
+            <div class="px-4 pb-10 transition-all lg:ml-64" id="main-container">
                 @if ($tab == 'geographical')
                     <livewire:company-geographical :company="$company" :ticker="$ticker" :period="$period" />
                 @elseif($tab == 'products')
