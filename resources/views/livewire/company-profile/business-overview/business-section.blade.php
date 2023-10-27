@@ -11,12 +11,12 @@
             $businessContent = preg_replace('/Item 1([a-z]?)./i', '', $businessContent);
             $businessContent = preg_replace('/class="(.?)+"/i','', $businessContent);
             // style(.?)=(.?)"(.?)[a-z':#0123456789;,\-%]+"
-            $stylePatteren = '/style(.?)=(.?)"' . "(.?)[a-z':#0123456789;,\-%.]+" . '"/i';
+            // $stylePatteren = '/style(.?)=(.?)"' . "(.?)[a-z':#0123456789;,\-%.]+" . '"/i';
             $businessContent = preg_replace('/<div/i', "<p" , $businessContent);
             $businessContent = preg_replace('/<div(.?)(i?)(d?)=[a-z"0-9_-]+\/>/i', "<p>" , $businessContent);
             $businessContent = preg_replace('/<\/div>/i', "</p>" , $businessContent);
 
-            $businessContent = preg_replace($stylePatteren,'', $businessContent);
+            // $businessContent = preg_replace($stylePatteren,'', $businessContent);
             $businessContent = preg_replace('/business(?=\<) /i', "<p class='title'>Business</p>" , $businessContent, 1);
             $businessContent=preg_replace('/business</i', "<p class='title'>Business</p><" , $businessContent, 1);
             $businessContent=preg_replace('/>company background</i', "><br><p id='business-information-company-background' class='subtitle'>Company Background</p><" ,$businessContent, 1);

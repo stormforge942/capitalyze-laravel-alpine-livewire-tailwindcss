@@ -15,7 +15,7 @@
                 $businessContent = preg_replace('/<div(.?)(i?)(d?)=[a-z"0-9_-]+\/>/i', "<p>" , $businessContent);
                 $businessContent = preg_replace('/<\/div>/i', "</p>" , $businessContent);
                 $businessContent = preg_replace('/<hr(.?)\/>/i', "" , $businessContent);
-                $businessContent = preg_replace($stylePatteren,'', $businessContent);
+                // $businessContent = preg_replace($stylePatteren,'', $businessContent);
 
                 $businessContent = preg_replace('/Risk Factors(?=\<) /i', "<p class='title'>Risk Factors</p>" , $businessContent, 1);
                 $businessContent = preg_replace('/Risk Factors</i', "<p class='title'>Risk Factors</p><" , $businessContent, 1);

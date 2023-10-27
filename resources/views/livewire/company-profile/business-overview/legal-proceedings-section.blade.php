@@ -15,7 +15,7 @@
     $businessContent = preg_replace('/<div(.?)(i?)(d?)=[a-z"0-9_-]+\/>/i', "<p>" , $businessContent);
     $businessContent = preg_replace('/<\/div>/i', "</p>" , $businessContent);
 
-    $businessContent = preg_replace($stylePatteren,'', $businessContent);
+    // $businessContent = preg_replace($stylePatteren,'', $businessContent);
     $businessContent = preg_replace('/Legal Proceedings(?=\<) /i', "<p class='title'>Legal Proceedings</p>" , $businessContent, 1);
     $businessContent=preg_replace('/Legal Proceedings</i', "<p class='title'>Legal Proceedings</p><" , $businessContent, 1);
     $businessContent=preg_replace('/>Epic Games</i', "><br><p id='business-information-epic-games' class='subtitle'>Epic Games</p><" ,$businessContent, 1);

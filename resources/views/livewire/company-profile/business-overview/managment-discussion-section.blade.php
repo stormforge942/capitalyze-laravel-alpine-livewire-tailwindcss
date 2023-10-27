@@ -15,7 +15,7 @@
     $businessContent = preg_replace('/<div(.?)(i?)(d?)=[a-z"0-9_-]+\/>/i', "<p>" , $businessContent);
     $businessContent = preg_replace('/<\/div>/i', "</p>" , $businessContent);
 
-    $businessContent = preg_replace($stylePatteren,'', $businessContent);
+    // $businessContent = preg_replace($stylePatteren,'', $businessContent);
     $businessContent = preg_replace('/Management’s Discussion and Analysis of Financial Condition and Results of Operations(?=\<) /i', "<p class='title'>Management’s Discussion and Analysis of Financial Condition and Results of Operations</p>" , $businessContent, 1);
     $businessContent=preg_replace('/Management’s Discussion and Analysis of Financial Condition and Results of Operations</i', "<p class='title'>Management’s Discussion and Analysis of Financial Condition and Results of Operations</p><" , $businessContent, 1);
     $businessContent=preg_replace('/>Fiscal Year Highlights</i', "><br><p id='business-information-fiscal-year-highlights' class='subtitle'>Fiscal Year Highlights</p><" ,$businessContent, 1);
