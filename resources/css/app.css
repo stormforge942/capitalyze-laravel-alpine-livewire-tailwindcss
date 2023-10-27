@@ -167,3 +167,9 @@ transition: all 0.2s ease-in-out;
 .white-card a,a {
     cursor: pointer;
 }
+.main-tab {
+    max-width: 240px;
+    width: 100%;
+    font-weight: 600;
+
+}

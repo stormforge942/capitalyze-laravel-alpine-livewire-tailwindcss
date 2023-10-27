@@ -17,6 +17,7 @@ class CompanyProfile extends Component
     public $infoTabActive = 'overview';
     public $cost = null;
     public $dynamic = null;
+    public $activeBusinessSection = 'business';
 
     public function setInfoActiveTab(string $tab): void {
         $this->infoTabActive = $tab;

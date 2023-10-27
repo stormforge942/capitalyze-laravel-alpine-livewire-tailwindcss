@@ -27,7 +27,7 @@
                         </div>
 
                         <div class="tabs-wrapper flex">
-                            <div @class(['tab', 'active' => $infoTabActive == 'overview']) wire:click="setInfoActiveTab('overview')">Overview</div>
+                            <div @class(['tab main-tab', 'active' => $infoTabActive == 'overview']) wire:click="setInfoActiveTab('overview')">Company Overview</div>
                             <div @class(['tab', 'active' => $infoTabActive == 'business_information']) wire:click="setInfoActiveTab('business_information')">Business Information</div>
                         </div>
 
