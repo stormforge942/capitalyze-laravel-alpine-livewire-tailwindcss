@@ -1,23 +1,9 @@
-<div class="discover flex-1 mb-10">
-    <div class="flex flex-col md:flex-row content-between items-center justify-between">
-        <div class="title font-semibold">Discover Funds</div>
-        <div class="search">
-            <label for="default-search" class="mb-2 text-sm font-medium text-gray-900 sr-only dark:text-white">Search</label>
-            <div class="relative p-0 m-0 sm:mt-3 md:mt-3">
-                <div class="absolute inset-y-0 left-0 flex items-center pl-3 pointer-events-none">
-                    <svg class="w-4 h-4 text-gray-500 dark:text-gray-400" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 20 20">
-                        <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="m19 19-4-4m0-7A7 7 0 1 1 1 8a7 7 0 0 1 14 0Z"/>
-                    </svg>
-                </div>
-                <input type="search" id="default-search" class="block w-full p-4 pl-10 text-sm text-gray-900 border-b-2 border-t-0 border-l-0 border-r-0 border-gray-300 rounded-lg bg-gray-50 focus:ring-blue-500 focus:border-blue-500 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500" placeholder="Search Discover items..." required>
-            </div>
-        </div>
-    </div>
+<div class="discover flex flex-col">
     @if($loading)
         <div class="flex-1 mt-6 ml-0 mr-0">
             <div class="grid gap-y-2 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 2xl:grid-cols-5">
                 @foreach($discover as $item)
-                    <div class="box shadow-md bg-[#ffffff] p-3 m-2 border-r-0.5">
+                    <div class="box shadow-md bg-[#ffffff] p-3 m-2 border-0.5 rounded border-[#D4DDD7]">
                         <div class="flex content-center justify-between items-center">
                             <div>
                                 <h4 class="text-sm font-semibold text-[#3561E7]">{{$item['title']}}</h4>
@@ -28,7 +14,7 @@
                                 </svg>
                             </div>
                         </div>
-                        <div class="grid grid-cols-4 gap-y-3 md:grid-cols-2">
+                        <div class="grid grid-cols-4 gap-y-0 md:grid-cols-2">
                             @foreach($item['items'] as $value)
                                 <div class="m-0 p-2">
                                     <label class="font-normal text-xs">{{$value['label']}}</label>
