@@ -19,17 +19,17 @@
             // $businessContent = preg_replace($stylePatteren,'', $businessContent);
             $businessContent = preg_replace('/business(?=\<) /i', "<p class='title'>Business</p>" , $businessContent, 1);
             $businessContent=preg_replace('/business</i', "<p class='title'>Business</p><" , $businessContent, 1);
-            $businessContent=preg_replace('/>company background</i', "><br><p id='business-information-company-background' class='subtitle'>Company Background</p><" ,$businessContent, 1);
-            $businessContent=preg_replace('/>products</i', "><br><p id='business-information-products' class='subtitle'>Products</p><" ,$businessContent, 1);
-            $businessContent=preg_replace('/>services</i', "><br><p id='business-information-services' class='subtitle'>Services</p><" , $businessContent, 1);
-            $businessContent=preg_replace('/>markets and distribution</i', "><br><p id='business-information-market-distribution' class='subtitle'>Markets and Distribution</p><" , $businessContent,1);
-            $businessContent=preg_replace('/>competition</i', "><br><p id='business-information-competition' class='subtitle'>Competition</p><" ,$businessContent, 1);
-            $businessContent=preg_replace('/>supply of components</i', "><br><p id='business-information-supply-of-components' class='subtitle'>Supply of Components</p><" , $businessContent, 1);
-            $businessContent=preg_replace('/>research and development</i', "><br><p id='business-information-rnd' class='subtitle'>Research and Development</p><" , $businessContent, 1);
-            $businessContent=preg_replace('/>intellectual property</i', "><br><p id='business-information-intellectual-property' class='subtitle'>Intellectual Property</p><" , $businessContent, 1);
-            $businessContent=preg_replace('/>business seasonality and product introductions</i', "><br><p id='business-information-business-seasonality' class='subtitle'>Business Seasonality and Product Introductions</p><" , $businessContent, 1);
-            $businessContent=preg_replace('/>human capital</i', "><br><p id='business-information-human-capital' class='subtitle'>Human Capital</p><" ,$businessContent, 1);
-            $businessContent=preg_replace('/>available information</i', "><br><p id='business-information-available-information' class='subtitle'>Available Information</p><" , $businessContent, 1);
+            $businessContent=preg_replace('/>company background</i', "><span class='anchor' id='business-information-company-background'></span><p class='subtitle'>Company Background</p><" ,$businessContent, 1);
+            $businessContent=preg_replace('/>products</i', "><span class='anchor' id='business-information-products'></span><p class='subtitle'>Products</p><" ,$businessContent, 1);
+            $businessContent=preg_replace('/>services</i', "><span class='anchor' id='business-information-services'></span><p class='subtitle'>Services</p><" , $businessContent, 1);
+            $businessContent=preg_replace('/>markets and distribution</i', "><span class='anchor' id='business-information-market-distribution'></span><p class='subtitle'>Markets and Distribution</p><" , $businessContent,1);
+            $businessContent=preg_replace('/>competition</i', "><span class='anchor' id='business-information-competition'></span><p class='subtitle'>Competition</p><" ,$businessContent, 1);
+            $businessContent=preg_replace('/>supply of components</i', "><span class='anchor' id='business-information-supply-of-components'></span><p class='subtitle'>Supply of Components</p><" , $businessContent, 1);
+            $businessContent=preg_replace('/>research and development</i', "><span class='anchor' id='business-information-rnd'></span><p class='subtitle'>Research and Development</p><" , $businessContent, 1);
+            $businessContent=preg_replace('/>intellectual property</i', "><span class='anchor' id='business-information-intellectual-property'></span><p class='subtitle'>Intellectual Property</p><" , $businessContent, 1);
+            $businessContent=preg_replace('/>business seasonality and product introductions</i', "><span class='anchor' id='business-information-business-seasonality'></span><p class='subtitle'>Business Seasonality and Product Introductions</p><" , $businessContent, 1);
+            $businessContent=preg_replace('/>human capital</i', "><span class='anchor' id='business-information-human-capital'></span><p class='subtitle'>Human Capital</p><" ,$businessContent, 1);
+            $businessContent=preg_replace('/>available information</i', "><span class='anchor' id='business-information-available-information'></span><p class='subtitle'>Available Information</p><" , $businessContent, 1);
             @endphp
             {!!$businessContent!!}
 
@@ -107,7 +107,7 @@
     </div>
     <div class="bussiness-information-right order-1 lg:order-2 basis-full lg:basis-1/4">
 
-        <div class="white-card">
+        <div class="white-card sticky-sidebar">
 
             <ul class="list-items" x-data="{
                 activeLink: ''

@@ -18,8 +18,8 @@
     // $businessContent = preg_replace($stylePatteren,'', $businessContent);
     $businessContent = preg_replace('/Legal Proceedings(?=\<) /i', "<p class='title'>Legal Proceedings</p>" , $businessContent, 1);
     $businessContent=preg_replace('/Legal Proceedings</i', "<p class='title'>Legal Proceedings</p><" , $businessContent, 1);
-    $businessContent=preg_replace('/>Epic Games</i', "><br><p id='business-information-epic-games' class='subtitle'>Epic Games</p><" ,$businessContent, 1);
-    $businessContent=preg_replace('/>Other Legal Proceedings</i', "><br><p id='business-information-other-legal-proceedings' class='subtitle'>Other Legal Proceedings</p><" ,$businessContent, 1);
+    $businessContent=preg_replace('/>Epic Games</i', "><span class='anchor' id='business-information-epic-games'></span><p class='subtitle'>Epic Games</p><" ,$businessContent, 1);
+    $businessContent=preg_replace('/>Other Legal Proceedings</i', "><span class='anchor' id='business-information-other-legal-proceedings'></span><p class='subtitle'>Other Legal Proceedings</p><" ,$businessContent, 1);
     @endphp
     {!!$businessContent!!}
     @php
@@ -41,7 +41,7 @@
 </div>
 <div class="bussiness-information-right order-1 lg:order-2 basis-full lg:basis-1/4">
 
-<div class="white-card">
+<div class="white-card sticky-sidebar">
 
     <ul class="list-items" x-data="{
         activeLink: ''

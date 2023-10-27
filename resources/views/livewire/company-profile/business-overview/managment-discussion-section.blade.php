@@ -18,16 +18,16 @@
     // $businessContent = preg_replace($stylePatteren,'', $businessContent);
     $businessContent = preg_replace('/Management’s Discussion and Analysis of Financial Condition and Results of Operations(?=\<) /i', "<p class='title'>Management’s Discussion and Analysis of Financial Condition and Results of Operations</p>" , $businessContent, 1);
     $businessContent=preg_replace('/Management’s Discussion and Analysis of Financial Condition and Results of Operations</i', "<p class='title'>Management’s Discussion and Analysis of Financial Condition and Results of Operations</p><" , $businessContent, 1);
-    $businessContent=preg_replace('/>Fiscal Year Highlights</i', "><br><p id='business-information-fiscal-year-highlights' class='subtitle'>Fiscal Year Highlights</p><" ,$businessContent, 1);
-    $businessContent=preg_replace('/>Products and Services Performance</i', "><br><p id='business-information-products-services-performance' class='subtitle'>Products and Services Performance</p><" ,$businessContent, 1);
-    $businessContent=preg_replace('/>Segment Operating Performance</i', "><br><p id='business-information-segment-operating-performance' class='subtitle'>Segment Operating Performance</p><" ,$businessContent, 1);
-    $businessContent=preg_replace('/>Gross Margin</i', "><br><p id='business-information-gross-margin' class='subtitle'>Gross Margin</p><" ,$businessContent, 1);
-    $businessContent=preg_replace('/>Operating Expenses</i', "><br><p id='business-information-operating-expenses' class='subtitle'>Operating Expenses</p><" ,$businessContent, 1);
-    $businessContent=preg_replace('/>Other Income\/[(]Expense[)], Net</i', "><br><p id='business-information-other-income' class='subtitle'>Other Income/(Expense), Net</p><" ,$businessContent, 1);
-    $businessContent=preg_replace('/>Provision for Income Taxes</i', "><br><p id='business-information-provision-income-taxes' class='subtitle'>Provision for Income Taxes</p><" ,$businessContent, 1);
-    $businessContent=preg_replace('/>Liquidity and Capital Resources</i', "><br><p id='business-information-liquidity-capital' class='subtitle'>Liquidity and Capital Resources</p><" ,$businessContent, 1);
-    $businessContent=preg_replace('/>Manufacturing Purchase Obligations</i', "><br><p id='business-information-manufacturing-purchase' class='subtitle'>Manufacturing Purchase Obligations</p><" ,$businessContent, 1);
-    $businessContent=preg_replace('/>Critical Accounting Estimates</i', "><br><p id='business-information-critical-accounting' class='subtitle'>Critical Accounting Estimates</p><" ,$businessContent, 1);
+    $businessContent=preg_replace('/>Fiscal Year Highlights</i', "><span class='anchor' id='business-information-fiscal-year-highlights'></span><p class='subtitle'>Fiscal Year Highlights</p><" ,$businessContent, 1);
+    $businessContent=preg_replace('/>Products and Services Performance</i', "><span class='anchor' id='business-information-products-services-performance'></span><p class='subtitle'>Products and Services Performance</p><" ,$businessContent, 1);
+    $businessContent=preg_replace('/>Segment Operating Performance</i', "><span class='anchor' id='business-information-segment-operating-performance'></span><p class='subtitle'>Segment Operating Performance</p><" ,$businessContent, 1);
+    $businessContent=preg_replace('/>Gross Margin</i', "><span class='anchor' id='business-information-gross-margin'></span><p class='subtitle'>Gross Margin</p><" ,$businessContent, 1);
+    $businessContent=preg_replace('/>Operating Expenses</i', "><span class='anchor' id='business-information-operating-expenses'></span><p class='subtitle'>Operating Expenses</p><" ,$businessContent, 1);
+    $businessContent=preg_replace('/>Other Income\/[(]Expense[)], Net</i', "><span class='anchor' id='business-information-other-income'></span><p class='subtitle'>Other Income/(Expense), Net</p><" ,$businessContent, 1);
+    $businessContent=preg_replace('/>Provision for Income Taxes</i', "><span class='anchor' id='business-information-provision-income-taxes'></span><p class='subtitle'>Provision for Income Taxes</p><" ,$businessContent, 1);
+    $businessContent=preg_replace('/>Liquidity and Capital Resources</i', "><span class='anchor' id='business-information-liquidity-capital'></span><p class='subtitle'>Liquidity and Capital Resources</p><" ,$businessContent, 1);
+    $businessContent=preg_replace('/>Manufacturing Purchase Obligations</i', "><span class='anchor' id='business-information-manufacturing-purchase'></span><p class='subtitle'>Manufacturing Purchase Obligations</p><" ,$businessContent, 1);
+    $businessContent=preg_replace('/>Critical Accounting Estimates</i', "><span class='anchor' id='business-information-critical-accounting'></span><p class='subtitle'>Critical Accounting Estimates</p><" ,$businessContent, 1);
     @endphp
     {!!$businessContent!!}
     @php
@@ -97,7 +97,7 @@
 </div>
 <div class="bussiness-information-right order-1 lg:order-2 basis-full lg:basis-1/4">
 
-<div class="white-card">
+<div class="white-card sticky-sidebar">
 
     <ul class="list-items" x-data="{
         activeLink: ''

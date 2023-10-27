@@ -20,11 +20,11 @@
                 $businessContent = preg_replace('/Risk Factors(?=\<) /i', "<p class='title'>Risk Factors</p>" , $businessContent, 1);
                 $businessContent = preg_replace('/Risk Factors</i', "<p class='title'>Risk Factors</p><" , $businessContent, 1);
 
-                $businessContent=preg_replace('/>Macroeconomic and Industry Risks</i', "><br><p id='business-information-macroeconomic' class='subtitle'>Macroeconomic and Industry Risks</p><" , $businessContent, 1);
-                $businessContent=preg_replace('/>Business Risks</i', "><br><p id='business-information-business-risks' class='subtitle'>Business Risks</p><" , $businessContent, 1);
-                $businessContent=preg_replace('/>Legal and Regulatory Compliance Risks</i', "><br><p id='business-information-compliance-risk' class='subtitle'>Legal and Regulatory Compliance Risks</p><" , $businessContent, 1);
-                $businessContent=preg_replace('/>Financial Risks</i', "><br><p id='business-information-financial-risks' class='subtitle'>Financial Risks</p><" , $businessContent, 1);
-                $businessContent=preg_replace('/>General Risks</i', "><br><p id='business-information-general-risks' class='subtitle'>General Risks</p><" , $businessContent, 1);
+                $businessContent=preg_replace('/>Macroeconomic and Industry Risks</i', "><span class='anchor' id='business-information-macroeconomic'></span><p class='subtitle'>Macroeconomic and Industry Risks</p><" , $businessContent, 1);
+                $businessContent=preg_replace('/>Business Risks</i', "><span class='anchor' id='business-information-business-risks'></span><p class='subtitle'>Business Risks</p><" , $businessContent, 1);
+                $businessContent=preg_replace('/>Legal and Regulatory Compliance Risks</i', "><span class='anchor' id='business-information-compliance-risk'></span><p class='subtitle'>Legal and Regulatory Compliance Risks</p><" , $businessContent, 1);
+                $businessContent=preg_replace('/>Financial Risks</i', "><span class='anchor' id='business-information-financial-risks'></span><p class='subtitle'>Financial Risks</p><" , $businessContent, 1);
+                $businessContent=preg_replace('/>General Risks</i', "><span class='anchor' id='business-information-general-risks'></span><p class='subtitle'>General Risks</p><" , $businessContent, 1);
             @endphp
             {!!$businessContent!!}
             @php
@@ -64,7 +64,7 @@
     </div>
     <div class="bussiness-information-right order-1 lg:order-2 basis-full lg:basis-1/4">
 
-        <div class="white-card">
+        <div class="white-card sticky-sidebar">
 
             <ul class="list-items" x-data="{
                 activeLink: ''

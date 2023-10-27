@@ -173,3 +173,15 @@ transition: all 0.2s ease-in-out;
     font-weight: 600;
 
 }
+
+.sticky-sidebar {
+    position: sticky;
+    top: 20px;
+}
+
+.anchor {
+    display: block;
+    height: 30px !important;
+    margin-top: -30px;
+    visibility: hidden;
+}
