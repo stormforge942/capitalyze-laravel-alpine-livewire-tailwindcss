@@ -44,3 +44,144 @@
 input {
     @apply text-base;
 }
+.bussiness-information  {
+    gap: 20px;
+}
+/* .bussiness-information .bussiness-information-left {
+flex: 0 0 70%;
+}
+.bussiness-information .bussiness-information-right {
+    flex: 0 0 28%;
+} */
+.bussiness-information .bussiness-information-left .title {
+    font-size: 24px;
+    line-height: 29px;
+    color: #121A0F;
+    margin-bottom: 15px;
+}
+.bussiness-information .bussiness-information-left .subtitle {
+    font-size: 16px;
+    line-height: 19px;
+    color: #3561E7;
+    margin-bottom: 15px;
+}
+.bussiness-information .bussiness-information-left .text-info {
+    font-size: 14px;
+    line-height: 22px;
+    color: #121A0F;
+    margin-bottom: 15px;
+}
+.bussiness-information .bussiness-information-right  .list-items {
+    display: flex;
+    flex-direction: column;
+    list-style: none;
+    margin: 0px;
+    padding: 0px;
+    gap: 10px;
+}
+.bussiness-information .bussiness-information-right  .list-items li a {
+font-weight: 400;
+display: block;
+font-size: 14px;
+line-height: 24px;
+color: #2C71F0;
+padding: 8px 16px;
+border-radius: 8px;
+transition: all 0.2s ease-in-out;
+}
+.bussiness-information .bussiness-information-right  .list-items li a:hover {
+    background-color: #52D3A233;
+    color: #01090F;
+}
+.bussiness-information .bussiness-information-right  .list-items li a.active {
+    background-color: #52D3A233;
+    color: #01090F;
+}
+.nav-top {
+    gap: 20px;
+}
+.nav-top-list {
+    display: flex;
+    align-items: center;
+    flex-wrap: wrap;
+    gap: 20px;
+    list-style: none;
+    padding: 0px;
+    margin: 0px;
+}
+.nav-top-list li a {
+    color: #030e17;
+    text-decoration: none;
+    padding: 8px 10px;
+    border-radius: 20px;
+    font-size: 14px;
+    border: 1px solid #ddd;
+    white-space: nowrap;
+}
+.nav-top-list li a:hover {
+    background-color: #52D3A233;
+    color: #01090F;
+}
+.nav-top-list li a.active {
+    background-color: #52D3A233;
+    font-weight: 600;
+    color: #01090F;
+}
+.white-card-nav {
+    font-size: 0.5em;
+    padding: 1.4em 2em;
+    background: white;
+    border-radius: 0.666em;
+}
+.key-values-wrapper__item{
+    margin-bottom: 15px;
+}
+.key-values-wrapper__item .key-values-none {
+    background: none !important;
+}
+.row-head-fonts-sm .cell {
+    font-size: 13px !important;
+}
+.white-card .key{
+    font-size: 11px;
+}
+.white-card .value{
+    font-size: 12px;
+}
+.title_small {
+    font-size: 14px;
+}
+.title_smal {
+    font-size: 12px;
+}
+.tabs-wrapper {
+    margin: 1.4em 0;
+}
+.page-titles {
+    font-size: 24px;
+    line-height: 31px;
+}
+.table-wrapper .cell:first-child {
+    padding-left: 22px;
+}
+.white-card a,a {
+    cursor: pointer;
+}
+.main-tab {
+    max-width: 240px;
+    width: 100%;
+    font-weight: 600;
+
+}
+
+.sticky-sidebar {
+    position: sticky;
+    top: 20px;
+}
+
+.anchor {
+    display: block;
+    height: 30px !important;
+    margin-top: -30px;
+    visibility: hidden;
+}

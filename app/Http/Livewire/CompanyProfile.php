@@ -2,6 +2,7 @@
 
 namespace App\Http\Livewire;
 
+use App\Models\CompanyPresentation;
 use Livewire\Component;
 use Illuminate\Support\Facades\DB;
 
@@ -11,10 +12,12 @@ class CompanyProfile extends Component
     public $ticker;
     public $period;
     public $profile;
+    public $menuLinks;
 
     public $infoTabActive = 'overview';
     public $cost = null;
     public $dynamic = null;
+    public $activeBusinessSection = 'business';
 
     public function setInfoActiveTab(string $tab): void {
         $this->infoTabActive = $tab;
@@ -50,6 +53,11 @@ class CompanyProfile extends Component
         }
 
         $this->getCompanyProfile();
+        $this->getMenu();
+    }
+
+    public function getMenu(){
+        $this->menuLinks = CompanyPresentation::where('business', '!=', null)->where('symbol', $this->ticker)->orderByDesc('acceptance_time')->first()?->toArray();
     }
 
     public function getCompanyProfile() {
