@@ -25,6 +25,7 @@
         @endif
         <!-- Page Content -->
         <main>
+            @json($tab)
             @if ($tab == 'metrics')
                 @sectionMissing('metrics')
                     <livewire:is :component="$exchange . '.metrics'" :model="$model" :period="$period" />
@@ -37,6 +38,13 @@
                     <livewire:is :component="$exchange . '.filings'" :model="$model" :exchange="$exchange" />
                 @else
                     @yield('filings')
+                @endif
+            @endif
+            @if ($tab == 'profile')
+                @sectionMissing('profile')
+                    <livewire:is :component="$exchange . '.profile'" :model="$model" :exchange="$exchange" />
+                @else
+                    @yield('profile')
                 @endif
             @endif
             @yield('content')

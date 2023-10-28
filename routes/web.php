@@ -96,6 +96,7 @@ Route::middleware([])->group(function () {
         Route::get('/euronext/{ticker}/filings', [EuronextController::class, 'filings'])->name('euronext.filings');
 
         Route::get('/lse/{ticker}/', [LseController::class, 'metrics'])->name('lse.metrics');
+        Route::get('/lse/{ticker}/profile', [LseController::class, 'profile'])->name('lse.profile');
         Route::get('/lse/{ticker}/filings', [LseController::class, 'filings'])->name('lse.filings');
 
         Route::get('/tsx/{ticker}/', [TsxController::class, 'metrics'])->name('tsx.metrics');
