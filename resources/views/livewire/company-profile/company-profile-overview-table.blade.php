@@ -4,12 +4,9 @@
         <div class="row-group row-head-fonts-sm">
             <div class="row row-head ">
                 <div class="cell font-bold">Apple Inc. (AAPL)</div>
-                <div class="cell font-bold">2018</div>
-                <div class="cell font-bold">2019</div>
-                <div class="cell font-bold">2020</div>
-                <div class="cell font-bold">2021</div>
-                <div class="cell font-bold">2022</div>
-                <div class="cell font-bold">‘18 - ‘22 CAGR</div>
+                @foreach(array_keys($products) as $date)
+                <div class="cell font-bold">{{ $date }}</div>
+                @endforeach
             </div>
             <div class="row ">
                 <div class="cell font-bold">Segment 1 Revenues</div>
