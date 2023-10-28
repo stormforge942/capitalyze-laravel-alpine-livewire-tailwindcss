@@ -14,6 +14,7 @@ class CompanyFundSummary extends Component
 
     public string $quarter = '';
     public $cik;
+    public $ticker;
 
     public static function title(): string
     {
@@ -23,6 +24,7 @@ class CompanyFundSummary extends Component
     public function mount(array $data)
     {
         $this->cik = $data['fund']['cik'];
+        $this->ticker = $data['ticker'];
 
         $this->quarter = $this->getLatestQuarter();
     }

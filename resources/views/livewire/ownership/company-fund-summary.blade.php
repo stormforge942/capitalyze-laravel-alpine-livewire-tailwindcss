@@ -30,7 +30,7 @@
 
                     <template x-if="result?.length == 5">
                         <div class="flex justify-center mt-6">
-                            <a href="#" class="text-sm font-semibold hover:underline">
+                            <a href="{{ route('company.fund', [$ticker, $cik, 'tab' => 'holdings']) }}" class="text-sm font-semibold hover:underline">
                                 View All Holdings
                             </a>
                         </div>
