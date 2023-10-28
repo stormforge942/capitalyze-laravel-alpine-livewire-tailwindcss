@@ -1,4 +1,4 @@
-<div class="lg:px-8" x-data="{ tab: null }" @tab-changed="tab = $event.detail;">
+<div class="lg:px-8" x-data="{ tab: null }" @tab-changed="tab = $event.detail;" >
     <div class="flex items-center gap-2 font-medium text-dark-light2">
         <span class="px-2 py-1">Ownership</span>
         <span class="grid place-items-center text-dark-lighter">/</span>
@@ -27,6 +27,8 @@
     </div>
 
     <div class="mt-6">
-        <livewire:tabs :tabs="$tabs" :data="['company' => $company]">
+        <div id="ownership-tab">
+            <livewire:tabs :tabs="$tabs" :data="['company' => $company]">
+        </div>
     </div>
 </div>

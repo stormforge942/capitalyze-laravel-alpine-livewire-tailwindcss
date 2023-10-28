@@ -1,13 +1,8 @@
 <div>
     @if(count($quarters))
-    <label class="flex items-center gap-1 text-sm">
+    <label class="items-center hidden gap-1 text-sm lg:flex">
         <span>Quarter to view</span>
-        <select class="border-[0.5px] border-solid border-[#93959880] p-2 rounded-full" wire:model="quarter">
-            <option value="">Select a quarter</option>
-            @foreach ($quarters as $key => $label)
-                <option value="{{ $key }}">{{ $label }}</option>
-            @endforeach
-        </select>
+        <x-select :options="$quarters" placeholder="Select a quarter" wire:model="quarter"></x-select>
     </label>
     @endif
 
