@@ -17,6 +17,7 @@ class CustomTheme extends Tailwind
             ->thead('font-sm font-semibold capitalize bg-[#E6E6E680] rounded-t-md')
             ->th('pl-6 py-2 text-dark whitespace-nowrap first:flex first:text-left last:pr-6')
             ->tbody('divide-y-2')
-            ->tdBody('pl-6 py-4 whitespace-nowrap first:text-left last:pr-6');
+            ->tdBody('pl-6 py-4 whitespace-nowrap first:text-left last:pr-6')
+            ->tdBodyEmpty('text-center py-4 text-dark-light');
     }
 }
