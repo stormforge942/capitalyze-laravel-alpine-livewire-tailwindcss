@@ -1,4 +1,5 @@
 <div>
+    {{-- desktop sidebar --}}
     <aside id="default-sidebar" x-data="{
         collapsed: localStorage.getItem('sidebarCollapsed') === 'true',
         toggle(toggle = true) {
@@ -30,9 +31,8 @@
         class="fixed top-0 left-0 z-40 hidden h-screen pt-10 bg-white border-r border-gray-200 lg:block dark:bg-gray-800 dark:border-gray-700"
         :class="collapsed ? 'w-20' : 'w-64'" aria-label="Sidebar">
         <div class="flex flex-col h-full px-6 pb-4 bg-white dark:bg-gray-800">
-            <button class="absolute -right-3 top-40"  :class="collapsed ? 'rotate-180' : ''" @click="toggle">
-                <svg width="24" height="24" viewBox="0 0 24 24"
-                    fill="none" xmlns="http://www.w3.org/2000/svg">
+            <button class="absolute -right-3 top-40" :class="collapsed ? 'rotate-180' : ''" @click="toggle">
+                <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
                     <path
                         d="M12 2C6.48 2 2 6.48 2 12C2 17.52 6.48 22 12 22C17.52 22 22 17.52 22 12C22 6.48 17.52 2 12 2ZM12 11H16V13H12V16L8 12L12 8V11Z"
                         fill="#121A0F" />
@@ -40,8 +40,8 @@
             </button>
             <div class="mb-10">
                 <a href="{{ route('home') }}">
-                    <svg id="logo" class="inline" x-show="!collapsed" width="145" height="32"
-                        viewBox="0 0 145 32" fill="none" xmlns="http://www.w3.org/2000/svg">
+                    <svg class="inline" x-show="!collapsed" width="145" height="32" viewBox="0 0 145 32"
+                        fill="none" xmlns="http://www.w3.org/2000/svg">
                         <path
                             d="M54.4995 11.7754C55.1375 13.0003 55.4565 14.4355 55.4565 16.0823C55.4565 17.6871 55.1375 19.102 54.4995 20.327C53.8615 21.5519 52.9756 22.4986 51.8431 23.1669C50.7107 23.8352 49.4245 24.17 47.9832 24.17C46.8102 24.17 45.7908 23.954 44.9266 23.522C44.0624 23.09 43.3722 22.5029 42.8575 21.7621V30.1601H39.5225V8.17874H42.4254L42.827 10.5258C44.103 8.83834 45.8227 7.99463 47.9847 7.99463C49.426 7.99463 50.7121 8.3179 51.8446 8.96736C52.977 9.61681 53.8615 10.5504 54.4995 11.7754ZM52.0592 16.0823C52.0592 14.5181 51.6314 13.2526 50.7774 12.2856C49.9233 11.3187 48.8068 10.8345 47.4264 10.8345C46.0475 10.8345 44.9353 11.3129 44.0914 12.2697C43.2475 13.2265 42.8256 14.4775 42.8256 16.0214C42.8256 17.6059 43.2475 18.8918 44.0914 19.8805C44.9353 20.8677 46.0475 21.362 47.4264 21.362C48.8054 21.362 49.9219 20.8677 50.7774 19.8805C51.6329 18.8932 52.0592 17.6262 52.0592 16.0823Z"
                             fill="black" />
@@ -77,9 +77,8 @@
                             fill="black" />
                     </svg>
 
-                    <svg id="collapsed-logo" x-show="collapsed" width="32" height="32" viewBox="0 0 32 32"
-                        fill="none" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink"
-                        x-cloak>
+                    <svg x-show="collapsed" width="32" height="32" viewBox="0 0 32 32" fill="none"
+                        xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" x-cloak>
                         <rect width="32" height="32" rx="4" fill="url(#pattern0)" />
                         <defs>
                             <pattern id="pattern0" patternContentUnits="objectBoundingBox" width="1"
@@ -93,7 +92,7 @@
                 </a>
             </div>
             <ul class="text-[14px] flex-1 overflow-x-hidden space-y-2">
-                <li id="nav" class="flex items-center w-full p-2 font-semibold rounded group text-blue">
+                <li class="flex items-center w-full p-2 font-semibold rounded group text-blue">
                     <svg width="16" height="28" class="fill-current" viewBox="0 0 16 17" fill="none"
                         xmlns="http://www.w3.org/2000/svg">
                         <path
@@ -109,7 +108,7 @@
                     ?>
                     <li @if ($hasChild) x-data="{open: false}" @endif>
                         <{{ $tag }} data-tooltip-target="tooltip-{{ $item['title'] }}"
-                            data-tooltip-placement="right" id="nav" href="{{ $item['url'] ?? '#' }}"
+                            data-tooltip-placement="right" href="{{ $item['url'] ?? '#' }}"
                             class="w-full flex items-center justify-between p-2 text-dark-light @if ($item['active'] ?? false) bg-green-light font-medium @else hover:bg-[#828c851a] @endif rounded group"
                             @if ($hasChild) data-dropdown-toggle="dropdownMore" data-dropdown-placement="left-end" @click.prevent="open = !open" @endif>
                             <div class="flex items-center gap-2">
@@ -218,7 +217,8 @@
 
                     <li @if ($hasChild) x-data="{open: false}" @endif>
                         <a href="{{ $item['url'] ?? '#' }}"
-                            class="flex items-center justify-between w-full {{ $item['active'] ?? false ? 'font-semibold text-dark' : 'text-dark-light2' }}">
+                            class="flex items-center justify-between w-full {{ $item['active'] ?? false ? 'font-semibold text-dark' : 'text-dark-light2' }} hover:text-dark"
+                            @if ($hasChild) @click.prevent="open = !open" @endif>
                             <div class="flex items-center gap-2">
                                 {!! $item['icon'] !!}
 
@@ -234,6 +234,19 @@
                                 </svg>
                             @endif
                         </a>
+
+                        @if ($hasChild)
+                            <ul class="mt-4 ml-6 space-y-4" x-show="open" x-transition.opacity x-cloak>
+                                @foreach ($child as $childItem)
+                                    <li class="space-y-2">
+                                        <a href="{{ $childItem['url'] ?? '#' }}"
+                                            class="@if ($childItem['active'] ?? false) text-dark font-semibold @else text-dark-light2 hover:text-dark @endif">
+                                            {{ $childItem['title'] }}
+                                        </a>
+                                    </li>
+                                @endforeach
+                            </ul>
+                        @endif
                     </li>
                 @endforeach
             </ul>
