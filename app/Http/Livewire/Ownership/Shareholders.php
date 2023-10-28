@@ -11,6 +11,8 @@ class Shareholders extends Component
 {
     use AsTab;
 
+    protected $listeners = ['update:quarter' => 'updateQuarter'];
+
     public $queryString = [
         'quarter' => ['except' => ''],
     ];
@@ -34,6 +36,11 @@ class Shareholders extends Component
         return view('livewire.ownership.shareholders', [
             'quarters' => $this->quarters,
         ]);
+    }
+
+    public function updateQuarter($quarter) {
+        $this->quarter = $quarter;
+        $this->updatedQuarter();
     }
 
     public function updatedQuarter()

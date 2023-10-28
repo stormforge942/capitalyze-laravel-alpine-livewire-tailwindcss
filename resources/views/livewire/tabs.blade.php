@@ -16,10 +16,10 @@
     }
 }" x-init="$dispatch('tab-changed', activeTab);
 dropdown = new Dropdown($refs.dropdown, $refs.dropdownBtn)" x-cloak>
-    <div class="flex items-center lg:hidden">
+    <div class="flex items-center justify-between gap-2 lg:hidden">
         <div>
             <button x-ref="dropdownBtn"
-                class="min-w-[190px] bg-green-dark font-semibold rounded px-4 py-2.5 flex items-center justify-between gap-x-2"
+                class="sm:min-w-[190px] bg-green-dark font-semibold rounded px-4 py-2.5 flex items-center justify-between gap-x-2"
                 type="button">
                 <span x-text="activeTab.title"></span>
                 <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 16 16" fill="none">
@@ -46,11 +46,7 @@ dropdown = new Dropdown($refs.dropdown, $refs.dropdownBtn)" x-cloak>
             </div>
         </div>
 
-        <div class="tab-slot">
-            @if ($slotView ?? false)
-                {!! view($slotView)->render() !!}
-            @endif
-        </div>
+        <div class="tab-slot"></div>
     </div>
 
     <div class="hidden lg:flex border border-[#D4DDD7] rounded bg-white w-full items-center gap-2 p-1 overflow-x-auto">
