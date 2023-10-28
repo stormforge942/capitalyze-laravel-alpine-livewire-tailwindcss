@@ -91,7 +91,7 @@
         </div>
     </div>
 
-    <div class="px-4 pt-4 pb-4 mx-auto transition-all lg:pt-10 max-w-7xl sm:px-6 lg:px-8 sm:ml-64" id="navigation">
+    <div class="px-4 pt-4 pb-4 mx-auto transition-all lg:pt-8 max-w-7xl sm:px-6 lg:px-8 sm:ml-64" id="navigation">
         <div
             class="h-14 w-full lg:w-2/3 rounded-lg border border-gray-300 bg-white leading-[3rem] px-3 flex items-center">
             <svg width="25" height="24" viewBox="0 0 25 24" fill="none" xmlns="http://www.w3.org/2000/svg">

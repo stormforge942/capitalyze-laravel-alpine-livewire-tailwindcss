@@ -63,7 +63,7 @@
                     </svg>
                 </a>
             </div>
-            <ul class="space-y-2 text-[14px] flex-1 overflow-y-auto overflow-x-hidden">
+            <ul class="text-[14px] flex-1 overflow-x-hidden h-0 min-h-0" data-simplebar>
                 <li id="nav"
                     class="flex items-center w-full p-2 font-semibold rounded group text-blue">
                     <svg width="16" height="28" class="fill-current" viewBox="0 0 16 17" fill="none"
@@ -298,7 +298,7 @@
                             @endforeach
                         </ul>
                         <div id="dropdownMore"
-                            class="invisible hidden overflow-y-scroll bg-white divide-y divide-gray-100 rounded-lg shadow max-h-64 w-44 dark:bg-gray-700">
+                            class="invisible hidden overflow-y-auto bg-white divide-y divide-gray-100 rounded-lg shadow max-h-64 w-44 dark:bg-gray-700">
                             <div class="py-2 text-gray-700 dark:text-gray-200" aria-labelledby="dropdownTopButton">
                                 <!-- More links -->
                                 <div class="block px-4 py-2 text-xs text-gray-400">
