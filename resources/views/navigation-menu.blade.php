@@ -1,8 +1,8 @@
-<div>
+<div class="lg:ml-64" id="navigation">
     <div class="flex items-center justify-between px-4 py-8 bg-white lg:hidden">
         <div class="flex items-center justify-between gap-1">
             @auth
-                <button class="p-1">
+                <button class="p-1" x-data @click="$dispatch('toggle-mobile-nav')">
                     <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
                         <path
                             d="M19.3333 11H4.66667C4.26667 11 4 11.2667 4 11.6667V13C4 13.4 4.26667 13.6667 4.66667 13.6667H19.3333C19.7333 13.6667 20 13.4 20 13V11.6667C20 11.2667 19.7333 11 19.3333 11Z"
@@ -16,7 +16,9 @@
                     </svg>
                 </button>
             @endauth
-            <img src="/img/logo.png" alt="Capitalyze logo" class="w-auto h-6">
+            <a href="{{ route('home') }}">
+                <img src="/img/logo.png" alt="Capitalyze logo" class="w-auto h-6">
+            </a>
         </div>
 
         <div>
@@ -91,7 +93,7 @@
         </div>
     </div>
 
-    <div class="px-4 pt-4 pb-4 mx-auto transition-all lg:pt-8 max-w-7xl sm:px-6 lg:px-8 sm:ml-64" id="navigation">
+    <div class="px-4 pt-4 pb-6 transition-all md:px-6 lg:px-8 lg:pt-8 lg:max-w-7xl">
         <div
             class="h-14 w-full lg:w-2/3 rounded-lg border border-gray-300 bg-white leading-[3rem] px-3 flex items-center">
             <svg width="25" height="24" viewBox="0 0 25 24" fill="none" xmlns="http://www.w3.org/2000/svg">

@@ -11,6 +11,8 @@ class CompanyFundHoldings extends Component
 {
     use AsTab;
 
+    protected $listeners = ['update:quarter' => 'updateQuarter'];
+
     public $queryString = [
         'quarter' => ['except' => ''],
     ];
@@ -37,6 +39,11 @@ class CompanyFundHoldings extends Component
     public function render()
     {
         return view('livewire.ownership.company-fund-holdings');
+    }
+
+    public function updateQuarter($quarter) {
+        $this->quarter = $quarter;
+        $this->updatedQuarter();
     }
 
     public function updatedQuarter()

@@ -30,7 +30,6 @@ class CompanyFund extends Component
     public function getFormTypes()
     {
         return CompanyInsider::query()
-            ->where('symbol', $this->company->ticker)
             ->where('cik', $this->fund->cik)
             ->distinct()
             ->pluck('form_type')

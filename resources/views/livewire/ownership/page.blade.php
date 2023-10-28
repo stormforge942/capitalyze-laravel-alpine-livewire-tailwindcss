@@ -1,5 +1,5 @@
-<div class="lg:px-8" x-data="{ tab: null }" @tab-changed="tab = $event.detail;">
-    <h2 class="block text-xl font-semibold lg:hidden hiddmb-4 text-blue">Ownership</h2>
+<div x-data="{ tab: null }" @tab-changed="tab = $event.detail;">
+    <h2 class="block mb-4 text-xl font-semibold lg:hidden text-blue">Ownership</h2>
 
     <div class="flex items-center gap-2 font-medium text-dark-light2">
         <span class="py-1 pr-2">Ownership</span>
@@ -24,7 +24,7 @@
             @if (count($formTypes))
                 <div class="border rounded border-blue border-opacity-50 px-1.5 py-0.5">
                     FORM TYPE:
-                    <span class="font-semibold text-blue">{{ implode(', ', $formTypes) }}</span>
+                    <span class="font-semibold text-blue">{{ implode(',', $formTypes) }}</span>
                 </div>
             @endif
         </div>

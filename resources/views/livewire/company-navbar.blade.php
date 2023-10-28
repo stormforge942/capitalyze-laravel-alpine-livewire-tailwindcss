@@ -11,7 +11,7 @@
                         fill="#121A0F" />
                 </svg>
             </div>
-            <div class="mb-12">
+            <div class="mb-10">
                 <a href="{{ route('home') }}">
                     <svg id="logo" class="inline" width="145" height="32" viewBox="0 0 145 32" fill="none"
                         xmlns="http://www.w3.org/2000/svg">
@@ -63,9 +63,8 @@
                     </svg>
                 </a>
             </div>
-            <ul class="text-[14px] flex-1 overflow-x-hidden h-0 min-h-0" data-simplebar>
-                <li id="nav"
-                    class="flex items-center w-full p-2 font-semibold rounded group text-blue">
+            <ul class="text-[14px] flex-1 overflow-x-hidden space-y-2">
+                <li id="nav" class="flex items-center w-full p-2 font-semibold rounded group text-blue">
                     <svg width="16" height="28" class="fill-current" viewBox="0 0 16 17" fill="none"
                         xmlns="http://www.w3.org/2000/svg">
                         <path
