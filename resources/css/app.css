@@ -19,6 +19,13 @@
 @tailwind components;
 @tailwind utilities;
 
+.nav-collapsed #default-sidebar .tag-collapsed {
+    display: none !important;
+}
+.nav-collapsed #default-sidebar [role="tooltip"] {
+    display: block !important;
+}
+
 .tooltip-caret:before {
     content: "";
     display: block;

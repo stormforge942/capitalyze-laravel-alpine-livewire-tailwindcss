@@ -16,7 +16,7 @@
     }
 }" x-init="$dispatch('tab-changed', activeTab);
 dropdown = new Dropdown($refs.dropdown, $refs.dropdownBtn)" x-cloak>
-    <div class="flex items-center justify-between gap-2 lg:hidden">
+    <div class="flex flex-wrap items-center justify-between gap-2 lg:hidden">
         <div>
             <button x-ref="dropdownBtn"
                 class="sm:min-w-[190px] bg-green-dark font-semibold rounded px-4 py-2.5 flex items-center justify-between gap-x-2"

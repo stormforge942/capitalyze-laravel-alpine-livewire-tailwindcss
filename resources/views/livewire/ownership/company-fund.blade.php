@@ -92,7 +92,8 @@
                         intersect: false,
                     },
                     responsive: true,
-                    aspectRatio: 3,
+                    aspectRatio: 1,
+                    maintainAspectRatio: false,
                     plugins: {
                         legend: {
                             display: false,
@@ -158,6 +159,7 @@
                 options: {
                     responsive: true,
                     aspectRatio: 2.7,
+                    maintainAspectRatio: true,
                     plugins: {
                         legend: {
                             display: false,

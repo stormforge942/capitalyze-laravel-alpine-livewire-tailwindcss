@@ -1,10 +1,10 @@
 {{-- Check resources/views/livewire/ownership/company-fund.blade.php for js code --}}
 <div>
     <div class="grid grid-cols-12 gap-6">
-        <div class="col-span-12 xl:col-span-8 2xl:col-span-9 order-1">
+        <div class="order-1 col-span-12 xl:col-span-8 2xl:col-span-9">
             <div class="bg-white rounded">
-                <div class="py-3 px-6 border-b">
-                    <h3 class="text-md font-medium">Market Value Overtime</h3>
+                <div class="px-6 py-3 border-b">
+                    <h3 class="font-medium text-md">Market Value Overtime</h3>
                 </div>
                 <div class="p-6">
                     <x-defer-data-loading on-init="getOverTimeMarketValue" class="h-80">
@@ -14,14 +14,14 @@
             </div>
         </div>
 
-        <div class="col-span-6 xl:col-span-4 2xl:col-span-3 order-3 xl:order-2">
-            <div class="bg-white p-6 rounded">
-                <h3 class="text-blue text-sm mb-4 font-semibold">13F Holding Summary</h3>
+        <div class="order-2 col-span-12 md:col-span-6 md:order-3 xl:col-span-4 2xl:col-span-3 xl:order-2">
+            <div class="p-6 bg-white rounded">
+                <h3 class="mb-4 text-sm font-semibold text-blue">13F Holding Summary</h3>
 
                 <x-defer-data-loading use-alpine="true" on-init="getHoldingSummary" class="h-32">
                     <div class="space-y-4">
                         <template x-for="item in result">
-                            <div class="flex gap-5 items-center justify-between">
+                            <div class="flex items-center justify-between gap-5">
                                 <span class="text-sm" x-text="item.name"></span>
                                 <span class="font-semibold" x-text="`${item.weight}%`"></span>
                             </div>
@@ -29,7 +29,7 @@
                     </div>
 
                     <template x-if="result?.length == 5">
-                        <div class="mt-6 flex justify-center">
+                        <div class="flex justify-center mt-6">
                             <a href="#" class="text-sm font-semibold hover:underline">
                                 View All Holdings
                             </a>
@@ -39,12 +39,12 @@
             </div>
         </div>
 
-        <div class="col-span-6 order-2 xl:order-3">
-            <x-tabs :tabs="['Top Buys', 'Top Sells']" class="bg-white p-6 rounded">
+        <div class="order-3 col-span-12 md:col-span-6 md:order-2 xl:order-3">
+            <x-tabs :tabs="['Top Buys', 'Top Sells']" class="p-6 bg-white rounded">
                 <x-defer-data-loading use-alpine="true" on-init="getTopBuySells" class="h-80">
                     <div class="space-y-4" :class="active == 0 ? 'block' : 'hidden'" :data-active="active">
                         <template x-for="item in result.topBuys">
-                            <div class="grid grid-cols-12 items-center gap-4 ">
+                            <div class="grid items-center grid-cols-12 gap-4 ">
                                 <div class="col-span-8 xl:col-span-9 px-2 py-1.5 bg-[#F0F6FF] rounded-[40px]">
                                     <div class="h-2 rounded-[40px] bg-blue" :style="`width: ${item.width}%`">
                                     </div>
@@ -57,7 +57,7 @@
 
                     <div class="space-y-4" :class="active == 1 ? 'block' : 'hidden'">
                         <template x-for="item in result.topSells">
-                            <div class="grid grid-cols-12 items-center gap-4 ">
+                            <div class="grid items-center grid-cols-12 gap-4 ">
                                 <div class="col-span-8 xl:col-span-9 px-2 py-1.5 bg-[#F0F6FF] rounded-[40px]">
                                     <div class="h-2 rounded-[40px] bg-blue" :style="`width: ${item.width}%`">
                                     </div>
@@ -71,8 +71,8 @@
             </x-tabs>
         </div>
 
-        <div class="col-span-12 xl:col-span-6 order-4">
-            <div class="bg-white p-6 rounded">
+        <div class="order-4 col-span-12 xl:col-span-6">
+            <div class="p-6 bg-white rounded">
                 <x-tabs :tabs="['13F Sector Allocation Overtime', '13F Sector Allocation last Quarter']">
                     <x-defer-data-loading use-alpine="true" on-init="getSectiorAllocationData" class="h-80"
                         @ready="$nextTick(() => {
@@ -80,10 +80,10 @@
                             renderLastQuarterSectorAllocation(result.lastQuarterSectorAllocation);
                         })">
                         <div :class="active == 0 ? 'block' : 'hidden'">
-                            <div class="mt-14 mb-16 grid grid-cols-2 items-start" style="font-family: 'Public Sans', sans-serif">
+                            <div class="grid items-start grid-cols-2 mb-16 mt-14" style="font-family: 'Public Sans', sans-serif">
                                 <div>
-                                    <p class="text-dark-light2 text-md uppercase">Conversion Rate</p>
-                                    <p class="text-4xl font-semibold mt-3">
+                                    <p class="uppercase text-dark-light2 text-md">Conversion Rate</p>
+                                    <p class="mt-3 text-4xl font-semibold">
                                         <span x-text="result.conversionRate"></span>%
                                     </p>
                                 </div>
@@ -112,15 +112,15 @@
             </div>
         </div>
 
-        <div class="col-span-12 xl:col-span-6 order-5">
-            <div class="bg-white p-6 rounded">
-                <h3 class="text-blue text-sm mb-4 font-semibold">13F Activity</h3>
+        <div class="order-5 col-span-12 xl:col-span-6">
+            <div class="p-6 bg-white rounded">
+                <h3 class="mb-4 text-sm font-semibold text-blue">13F Activity</h3>
 
                 <x-defer-data-loading use-alpine="true" on-init="getSummary" class="h-48">
-                    <div class="grid grid-cols-5 xl:grid-cols-2 2xl:grid-cols-4 gap-4">
+                    <div class="grid grid-cols-2 gap-4 md:grid-cols-5 xl:grid-cols-2 2xl:grid-cols-4">
                         <template x-for="item in result">
                             <div>
-                                <p class="text-dark-light2 text-sm" x-text="item.title"></p>
+                                <p class="text-sm text-dark-light2" x-text="item.title"></p>
 
                                 <p class="font-semibold">
                                     <template x-if="item.type === 'link'">
