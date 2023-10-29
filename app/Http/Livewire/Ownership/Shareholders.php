@@ -13,10 +13,6 @@ class Shareholders extends Component
 
     protected $listeners = ['update:quarter' => 'updateQuarter'];
 
-    public $queryString = [
-        'quarter' => ['except' => ''],
-    ];
-
     public string $ticker;
     public $quarters;
     public $quarter = null;
