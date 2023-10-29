@@ -1,24 +1,7 @@
 <div>
     <h2 class="block mb-4 text-xl font-semibold lg:hidden text-blue">Ownership</h2>
 
-    <div class="flex items-center gap-2 text-sm font-medium text-dark-light2">
-        <span class="py-1 pr-2">Ownership</span>
-
-        <span class="grid place-items-center text-dark-lighter">/</span>
-
-        <a href="{{ route('company.ownership', $company->ticker) }}">
-            <span class="px-2 py-1">Shareholders</span>
-        </a>
-
-        <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 16 16" fill="none">
-            <path d="M10.2536 8L6.25365 12L5.32031 11.0667L8.38698 8L5.32031 4.93333L6.25365 4L10.2536 8Z"
-                fill="#464E49" />
-        </svg>
-
-        <a href="{{ route('company.fund', [$company->ticker, $fund->cik]) }}">
-            <span class="px-2 py-1 text-blue">{{ $fund->name }}</span>
-        </a>
-    </div>
+    @livewire('ownership.breadcrumb', ['company' => $company->ticker])
 
     <div class="mt-6">
         <h1 class="text-xl font-bold">{{ $fund->name }}</h1>

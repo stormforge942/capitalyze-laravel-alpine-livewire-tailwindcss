@@ -5,6 +5,7 @@ namespace App\Http\Livewire\Ownership;
 use App\Models\Company;
 use Livewire\Component;
 use App\Models\CompanyInsider;
+use App\Services\OwnershipHistoryService;
 
 class Page extends Component
 {
@@ -19,6 +20,12 @@ class Page extends Component
     public function mount(Company $company)
     {
         $this->company = $company;
+
+        OwnershipHistoryService::push([
+            'name' => $this->company->name,
+            'type' => 'company',
+            'url' => request()->url(),
+        ]);
 
         $this->formTypes = $this->getFormTypes();
     }

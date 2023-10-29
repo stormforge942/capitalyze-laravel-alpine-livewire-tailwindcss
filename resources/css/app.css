@@ -19,6 +19,25 @@
 @tailwind components;
 @tailwind utilities;
 
+/* ownership breadcrumb border */
+.ownership-active-bread-link {
+    position: relative;
+    padding-bottom: 8px;
+    text-align: center;
+}
+
+.ownership-active-bread-link::after {
+    content: "";
+    position: absolute;
+    bottom: 0;
+    left: 50%;
+    transform: translateX(-50%);
+    width: 24px;
+    height: 2px;
+    background-color: #3561e7;
+}
+/* ownership breadcrumb border */
+
 .nav-collapsed #default-sidebar .tag-collapsed {
     display: none !important;
 }

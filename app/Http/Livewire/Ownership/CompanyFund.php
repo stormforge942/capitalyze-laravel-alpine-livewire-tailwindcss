@@ -6,6 +6,7 @@ use App\Models\Fund;
 use App\Models\Company;
 use Livewire\Component;
 use App\Models\CompanyInsider;
+use App\Services\OwnershipHistoryService;
 
 class CompanyFund extends Component
 {
@@ -23,6 +24,12 @@ class CompanyFund extends Component
         $this->company = $company;
 
         $this->fund = Fund::where('cik', request()->route('fund'))->firstOrFail();
+
+        OwnershipHistoryService::push([
+            'name' => $this->fund->name,
+            'type' => 'fund',
+            'url' => request()->url(),
+        ]);
 
         $this->formTypes = $this->getFormTypes();
     }
