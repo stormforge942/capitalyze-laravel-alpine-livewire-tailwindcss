@@ -3,7 +3,7 @@
     <div @class([
         'justify-between' => data_get($setUp, 'footer.perPage'),
         'justify-end'  => blank(data_get($setUp, 'footer.perPage')),
-        'flex w-full items-center py-2 bg-white rounded overflow-y-auto pl-2 pr-2 relative
+        'flex flex-col md:flex-row w-full items-center py-2 bg-white rounded overflow-y-auto pl-2 pr-2 relative
          dark:bg-pg-primary-700' => blank(data_get($setUp, 'footer.pagination')),
 ])>
         @if(data_get($setUp, 'footer.perPage') && count(data_get($setUp, 'footer.perPageValues')) > 1 && blank(data_get($setUp, 'footer.pagination')))
