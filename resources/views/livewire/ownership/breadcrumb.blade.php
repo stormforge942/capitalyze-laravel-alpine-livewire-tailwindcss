@@ -11,11 +11,11 @@
         <path d="M10.2536 8L6.25365 12L5.32031 11.0667L8.38698 8L5.32031 4.93333L6.25365 4L10.2536 8Z" fill="#464E49" />
     </svg>
 
-    <div class="items-center hidden gap-6 md:flex">
+    <div class="items-center hidden gap-6 md:flex text-[#7C8286]">
         @foreach (array_slice($historyItems, 0, 2) as $item)
             <div class="flex items-center gap-2">
                 <a href="{{ $item['url'] }}"
-                    class="whitespace-nowrap overflow-hidden text-ellipsis max-w-[100px] lg:max-w-full @if ($item['active']) pt-2 text-blue ownership-active-bread-link @endif">{{ $item['name'] }}
+                    class="hover:text-dark-light2 whitespace-nowrap overflow-hidden text-ellipsis max-w-[100px] lg:max-w-full @if ($item['active']) pt-2 text-blue ownership-active-bread-link @endif">{{ $item['name'] }}
                 </a>
 
                 <button wire:click="removeHistory('{{ $item['url'] }}')">
@@ -32,7 +32,7 @@
         @if (count($historyItems) > 2)
             <div x-data="{ dropdown: null }" x-init="dropdown = new Dropdown($refs.dropdown, $refs.button)">
                 <button class="flex items-center gap-2" x-ref="button">
-                    <span>More</span>
+                    <span class="hover:text-dark-light2">More</span>
                     <span
                         class="flex items-center justify-center w-4 h-4 text-xs text-white rounded-full bg-blue">{{ count($historyItems) - 2 }}</span>
                     <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 16 16"
@@ -46,7 +46,8 @@
                 <div class="hidden w-64 px-4 py-4 bg-white divide-y rounded shadow" x-ref="dropdown">
                     @foreach (array_slice($historyItems, 2) as $item)
                         <div class="flex items-center justify-between gap-2 py-2 first:pt-0 last:pb-0">
-                            <a href="{{ $item['url'] }}" class="@if ($item['active']) text-blue @endif">
+                            <a href="{{ $item['url'] }}"
+                                class="@if ($item['active']) text-blue @else hover:text-dark-light2 @endif">
                                 {{ $item['name'] }}
                             </a>
 
@@ -71,11 +72,11 @@
         @endif
     </div>
 
-    <div class="flex items-center gap-4 md:hidden">
+    <div class="flex items-center gap-4 md:hidden text-[#7C8286]">
         @foreach (array_slice($historyItems, 0, 1) as $item)
             <div class="flex items-center gap-2">
                 <a href="{{ $item['url'] }}"
-                    class="whitespace-nowrap overflow-hidden text-ellipsis max-w-[100px] lg:max-w-full @if ($item['active']) pt-2 text-blue ownership-active-bread-link @endif">{{ $item['name'] }}
+                    class="hover:text-dark-light2 whitespace-nowrap overflow-hidden text-ellipsis max-w-[100px] lg:max-w-full @if ($item['active']) pt-2 text-blue ownership-active-bread-link @endif">{{ $item['name'] }}
                 </a>
 
                 <button wire:click="removeHistory('{{ $item['url'] }}', '{{ $item['type'] }}')">
@@ -92,7 +93,7 @@
         @if (count($historyItems) > 1)
             <div x-data="{ dropdown: null }" x-init="dropdown = new Dropdown($refs.dropdown, $refs.button)">
                 <button class="flex items-center gap-2" x-ref="button">
-                    <span>More</span>
+                    <span class="hover:text-dark-light2">More</span>
                     <span
                         class="flex items-center justify-center w-4 h-4 text-xs text-white rounded-full bg-blue">{{ count($historyItems) - 2 }}</span>
                     <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 16 16"
@@ -106,7 +107,8 @@
                 <div class="hidden w-64 px-4 py-4 bg-white divide-y rounded shadow" x-ref="dropdown">
                     @foreach (array_slice($historyItems, 1) as $item)
                         <div class="flex items-center justify-between gap-2 py-2 first:pt-0 last:pb-0">
-                            <a href="{{ $item['url'] }}" class="@if ($item['active']) text-blue @endif">
+                            <a href="{{ $item['url'] }}"
+                                class="@if ($item['active']) text-blue @else hover:text-dark-light2 @endif">
                                 {{ $item['name'] }}
                             </a>
 
