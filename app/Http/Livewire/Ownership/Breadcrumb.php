@@ -21,9 +21,9 @@ class Breadcrumb extends Component
         ]);
     }
 
-    public function removeHistory($url, $type)
+    public function removeHistory($url)
     {
-        $lastItem = OwnershipHistoryService::remove(['url' => $url, 'type' => $type]);
+        $lastItem = OwnershipHistoryService::remove($url);
 
         if ($lastItem) {
             return redirect($lastItem['url']);

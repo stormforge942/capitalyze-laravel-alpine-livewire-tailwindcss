@@ -42,11 +42,11 @@ class OwnershipHistoryService
         ]);
     }
 
-    public static function remove($item): ?array
+    public static function remove($url): ?array
     {
         $history = static::get();
-        $history = Arr::where($history, function ($historyItem) use ($item) {
-            return $historyItem['url'] !== $item['url'];
+        $history = Arr::where($history, function ($historyItem) use ($url) {
+            return $historyItem['url'] !== $url;
         });
 
         session()->put('ownership-history.items', $history);

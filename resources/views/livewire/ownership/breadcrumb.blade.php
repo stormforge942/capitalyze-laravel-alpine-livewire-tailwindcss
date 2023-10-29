@@ -15,10 +15,10 @@
         @foreach (array_slice($historyItems, 0, 2) as $item)
             <div class="flex items-center gap-2">
                 <a href="{{ $item['url'] }}"
-                    class="whitespace-nowrap overflow-hidden text-ellipsis max-w-[100px] md:max-w-full @if ($item['active']) pt-2 text-blue ownership-active-bread-link @endif">{{ $item['name'] }}
+                    class="whitespace-nowrap overflow-hidden text-ellipsis max-w-[100px] lg:max-w-full @if ($item['active']) pt-2 text-blue ownership-active-bread-link @endif">{{ $item['name'] }}
                 </a>
 
-                <button wire:click="removeHistory('{{ $item['url'] }}', '{{ $item['type'] }}')">
+                <button wire:click="removeHistory('{{ $item['url'] }}')">
                     <svg xmlns="http://www.w3.org/2000/svg" width="10" height="10" viewBox="0 0 10 10"
                         fill="none">
                         <path
@@ -30,8 +30,8 @@
         @endforeach
 
         @if (count($historyItems) > 2)
-            <div>
-                <button class="flex items-center gap-2">
+            <div x-data="{ dropdown: null }" x-init="dropdown = new Dropdown($refs.dropdown, $refs.button)">
+                <button class="flex items-center gap-2" x-ref="button">
                     <span>More</span>
                     <span
                         class="flex items-center justify-center w-4 h-4 text-xs text-white rounded-full bg-blue">{{ count($historyItems) - 2 }}</span>
@@ -42,6 +42,25 @@
                             fill="#464E49" />
                     </svg>
                 </button>
+
+                <div class="hidden w-64 px-4 py-4 bg-white divide-y rounded shadow" x-ref="dropdown">
+                    @foreach (array_slice($historyItems, 2) as $item)
+                        <div class="flex items-center justify-between gap-2 py-2 first:pt-0 last:pb-0">
+                            <a href="{{ $item['url'] }}" class="@if ($item['active']) text-blue @endif">
+                                {{ $item['name'] }}
+                            </a>
+
+                            <button wire:click="removeHistory('{{ $item['url'] }}')">
+                                <svg xmlns="http://www.w3.org/2000/svg" width="10" height="10"
+                                    viewBox="0 0 10 10" fill="none">
+                                    <path
+                                        d="M5 10C2.23857 10 0 7.7614 0 5C0 2.23857 2.23857 0 5 0C7.7614 0 10 2.23857 10 5C10 7.7614 7.7614 10 5 10ZM5 9C7.20915 9 9 7.20915 9 5C9 2.79086 7.20915 1 5 1C2.79086 1 1 2.79086 1 5C1 7.20915 2.79086 9 5 9ZM5 4.2929L6.4142 2.87868L7.1213 3.58578L5.7071 5L7.1213 6.4142L6.4142 7.1213L5 5.7071L3.58578 7.1213L2.87868 6.4142L4.2929 5L2.87868 3.58578L3.58578 2.87868L5 4.2929Z"
+                                        fill="#C22929" />
+                                </svg>
+                            </button>
+                        </div>
+                    @endforeach
+                </div>
             </div>
         @endif
 
@@ -56,7 +75,7 @@
         @foreach (array_slice($historyItems, 0, 1) as $item)
             <div class="flex items-center gap-2">
                 <a href="{{ $item['url'] }}"
-                    class="whitespace-nowrap overflow-hidden text-ellipsis max-w-[100px] md:max-w-full @if ($item['active']) pt-2 text-blue ownership-active-bread-link @endif">{{ $item['name'] }}
+                    class="whitespace-nowrap overflow-hidden text-ellipsis max-w-[100px] lg:max-w-full @if ($item['active']) pt-2 text-blue ownership-active-bread-link @endif">{{ $item['name'] }}
                 </a>
 
                 <button wire:click="removeHistory('{{ $item['url'] }}', '{{ $item['type'] }}')">
@@ -71,11 +90,11 @@
         @endforeach
 
         @if (count($historyItems) > 1)
-            <div>
-                <button class="flex items-center gap-2">
+            <div x-data="{ dropdown: null }" x-init="dropdown = new Dropdown($refs.dropdown, $refs.button)">
+                <button class="flex items-center gap-2" x-ref="button">
                     <span>More</span>
                     <span
-                        class="flex items-center justify-center w-4 h-4 text-xs text-white rounded-full bg-blue">{{ count($historyItems) - 1 }}</span>
+                        class="flex items-center justify-center w-4 h-4 text-xs text-white rounded-full bg-blue">{{ count($historyItems) - 2 }}</span>
                     <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 16 16"
                         fill="none">
                         <path
@@ -83,6 +102,25 @@
                             fill="#464E49" />
                     </svg>
                 </button>
+
+                <div class="hidden w-64 px-4 py-4 bg-white divide-y rounded shadow" x-ref="dropdown">
+                    @foreach (array_slice($historyItems, 1) as $item)
+                        <div class="flex items-center justify-between gap-2 py-2 first:pt-0 last:pb-0">
+                            <a href="{{ $item['url'] }}" class="@if ($item['active']) text-blue @endif">
+                                {{ $item['name'] }}
+                            </a>
+
+                            <button wire:click="removeHistory('{{ $item['url'] }}')">
+                                <svg xmlns="http://www.w3.org/2000/svg" width="10" height="10"
+                                    viewBox="0 0 10 10" fill="none">
+                                    <path
+                                        d="M5 10C2.23857 10 0 7.7614 0 5C0 2.23857 2.23857 0 5 0C7.7614 0 10 2.23857 10 5C10 7.7614 7.7614 10 5 10ZM5 9C7.20915 9 9 7.20915 9 5C9 2.79086 7.20915 1 5 1C2.79086 1 1 2.79086 1 5C1 7.20915 2.79086 9 5 9ZM5 4.2929L6.4142 2.87868L7.1213 3.58578L5.7071 5L7.1213 6.4142L6.4142 7.1213L5 5.7071L3.58578 7.1213L2.87868 6.4142L4.2929 5L2.87868 3.58578L3.58578 2.87868L5 4.2929Z"
+                                        fill="#C22929" />
+                                </svg>
+                            </button>
+                        </div>
+                    @endforeach
+                </div>
             </div>
         @endif
     </div>
