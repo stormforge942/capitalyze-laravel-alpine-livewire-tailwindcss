@@ -24,7 +24,6 @@
                 <b>{{ @$profile['registrant_name'] }} @if (@$profile['symbol'])
                         ({{ @$profile['symbol'] }})
                     @endif </b>
-
             </div>
             <div class="mt-2 page-titles">
                 <b>${{ number_format($cost) }}</b> <small
@@ -32,11 +31,11 @@
             </div>
 
             <div class="flex tabs-wrapper">
-                <div @class(['tab main-tab', 'active' => $infoTabActive == 'overview']) wire:click="setInfoActiveTab('overview')">Company Overview</div>
-                <div @class(['tab', 'active' => $infoTabActive == 'business_information']) wire:click="setInfoActiveTab('business_information')">Business
-                    Information</div>
+                <div @class(['tab main-tab', 'active' => $infoTabActive == 'overview']) wire:click="setInfoActiveTab('overview')">Company Overview
+                </div>
+                <div @class(['tab', 'active' => $infoTabActive == 'business_information']) wire:click="setInfoActiveTab('business_information')">
+                    Business Information</div>
             </div>
-
 
             @if ($infoTabActive == 'overview')
                 @include('livewire.company-profile.companyprofile-overview-top-data')
