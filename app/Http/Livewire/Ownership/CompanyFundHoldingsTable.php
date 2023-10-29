@@ -59,7 +59,7 @@ class CompanyFundHoldingsTable extends BaseTable
                 return number_format($companyFilings->last_weight, 4) . '%';
             })
             ->addColumn('change_in_shares', function (CompanyFilings $companyFilings) {
-                if ($companyFilings->change_in_shares > 0) {
+                if ($companyFilings->change_in_shares >= 0) {
                     return number_format($companyFilings->change_in_shares);
                 }
 
