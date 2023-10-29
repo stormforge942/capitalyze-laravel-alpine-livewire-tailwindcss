@@ -1,21 +1,20 @@
-<div class="white-card w-full mt-4">
+<div class="w-full mt-4 white-card">
     <div class="title">
         <div class="title_small">Business Information</div>
     </div>
-    <div class="flex key-values-wrapper__item_parent  flex-wrap mt-4">
+    <div class="flex flex-wrap mt-4 key-values-wrapper__item_parent">
         <div class="text-info">
             {{ @$profile['description'] ?: 'Description not found' }}
         </div>
     </div>
 </div>
-</div>
-<div class="white-card w-full mt-4">
-    <div class="title px-2">
+<div class="w-full mt-4 white-card">
+    <div class="px-2 title">
         <span class="title_small">Company Profile</span>
         <a wire:click="toggleFullProfile()" class="title-spoiler title_smal">@if ($showFullProfile) Hide full profile
             @else View full profile @endif</a>
     </div>
-    <div class="flex key-values-wrapper__item_parent  flex-wrap mt-4 px-2">
+    <div class="flex flex-wrap px-2 mt-4 key-values-wrapper__item_parent">
         <div class="key-values-wrapper__item basis-3/6 lg:basis-1/6">
             <div>
                 <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 16 16" fill="none">
@@ -376,5 +375,4 @@
         @endif
 
     </div>
-</div>
 </div>

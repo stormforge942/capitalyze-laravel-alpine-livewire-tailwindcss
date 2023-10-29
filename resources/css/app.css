@@ -1,4 +1,5 @@
 @import "../../vendor/wire-elements/pro/resources/css/tailwind/overlay-component.css";
+@import "./../../vendor/power-components/livewire-powergrid/dist/powergrid.css";
 @import "../../vendor/wire-elements/pro/resources/css/tailwind/spotlight-component.css";
 @import "../../node_modules/flowbite-datepicker/tailwind.css";
 @import "../../node_modules/sweetalert2/dist/sweetalert2.css";
@@ -12,17 +13,44 @@
 @import "loader.css";
 @import "calendar.css";
 @import "calendar-base.css";
+@import "loaders.css";
 
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
 
+/* ownership breadcrumb border */
+.ownership-active-bread-link {
+    position: relative;
+    padding-bottom: 8px;
+    text-align: center;
+}
+
+.ownership-active-bread-link::after {
+    content: "";
+    position: absolute;
+    bottom: 0;
+    left: 50%;
+    transform: translateX(-50%);
+    width: 24px;
+    height: 2px;
+    background-color: #3561e7;
+}
+/* ownership breadcrumb border */
+
+.nav-collapsed #default-sidebar .tag-collapsed {
+    display: none !important;
+}
+.nav-collapsed #default-sidebar [role="tooltip"] {
+    display: block !important;
+}
+
 .tooltip-caret:before {
-    content:'';
-    display:block;
-    width:0;
-    height:0;
-    position:absolute;
+    content: "";
+    display: block;
+    width: 0;
+    height: 0;
+    position: absolute;
     border-top: solid 17px #fff;
     border-left: solid 12px transparent;
     border-right: solid 12px transparent;
@@ -30,7 +58,6 @@
     left: calc(50% - 12px);
     bottom: -17px;
 }
-
 
 .wait-list {
     font-family: IBM Plex Sans, Arial;

@@ -1,4 +1,4 @@
-<div class="cards-wrapper ">
+<div class="cards-wrapper">
     <div class="white-card">
         <div class="title">Market Data</div>
         <div class="key-values-wrapper">

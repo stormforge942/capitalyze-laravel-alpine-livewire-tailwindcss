@@ -8,69 +8,75 @@
 
     <title>{{ config('app.name', 'Laravel') }}</title>
 
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+
     <!-- Fonts -->
     <link href="https://fonts.googleapis.com/css?family=Inter:400,500,600,700" rel="stylesheet" />
+    <link href="https://fonts.googleapis.com/css?family=Public+Sans:400,500,600" rel="stylesheet" />
     <link href="https://cdnjs.cloudflare.com/ajax/libs/flowbite/1.8.1/flowbite.min.css" rel="stylesheet" />
 
     <!-- Scripts -->
     @vite(['resources/css/app.css', 'resources/js/app.js'])
+    <style>
+        [x-cloak] {
+            display: none;
+        }
+    </style>
+
     @livewireStyles
     @once
         @push('scripts')
-         <script src="https://cdn.jsdelivr.net/npm/@uvarov.frontend/vanilla-calendar/build/vanilla-calendar.min.js"></script>
-        <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
-        <script src="https://cdn.jsdelivr.net/npm/luxon"></script>
-        <script src="https://cdnjs.cloudflare.com/ajax/libs/chartjs-adapter-luxon/0.2.1/chartjs-adapter-luxon.min.js"></script>
-        <script src="https://cdnjs.cloudflare.com/ajax/libs/flowbite/1.8.1/flowbite.min.js"></script>
+            <script src="https://cdn.jsdelivr.net/npm/@uvarov.frontend/vanilla-calendar/build/vanilla-calendar.min.js"></script>
+            <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+            <script src="https://cdn.jsdelivr.net/npm/luxon"></script>
+            <script src="https://cdnjs.cloudflare.com/ajax/libs/chartjs-adapter-luxon/0.2.1/chartjs-adapter-luxon.min.js"></script>
+            <script src="https://cdnjs.cloudflare.com/ajax/libs/flowbite/1.8.1/flowbite.min.js"></script>
         @endpush
     @endonce
 </head>
 
-<body class="text-dark text-base font-sans antialiased min-h-screen bg-gray-light">
+<body class="min-h-screen font-sans text-base antialiased text-dark bg-gray-light">
     <x-jet-banner />
 
-    <div class="">
-        <livewire:company-navbar :company="$company" :period="$period" />
-        <!-- Page Content -->
-        <main>
-            <div class="p-4 sm:ml-64 pl-0 transition-all py-0" id="main-container">
-                <div class="">
-                    @if ($tab == 'geographical')
-                        <livewire:company-geographical :company="$company" :ticker="$ticker" :period="$period" />
-                    @elseif($tab == 'products')
-                        <livewire:company-products :company="$company" :ticker="$ticker" :period="$period" />
-                    @elseif($tab == 'profile')
-                        <livewire:company-profile :company="$company" :ticker="$ticker" :period="$period" />
-                    @elseif($tab == 'splits')
-                        <livewire:company-splits :company="$company" :ticker="$ticker" :period="$period" />
-                    @elseif($tab == 'metrics')
-                        <livewire:company-metrics :company="$company" :ticker="$ticker" :period="$period" />
-                    @elseif($tab == 'chart')
-                        <livewire:company-chart :company="$company" :ticker="$ticker" :period="$period" />
-                    @elseif($tab == 'executiveCompensation')
-                        <livewire:company-executive-compensation :company="$company" :ticker="$ticker"
-                            :period="$period" />
-                    @elseif($tab == 'report')
-                        <livewire:company-report :company="$company" :ticker="$ticker" :period="$period" />
-                    @elseif($tab == 'shareholders')
-                        <livewire:company-shareholders :company="$company" :ticker="$ticker" :period="$period" />
-                    @elseif($tab == 'summary')
-                        <livewire:company-summary :company="$company" :ticker="$ticker" :period="$period" />
-                    @elseif($tab == 'filings')
-                        <livewire:company-filings :company="$company" :ticker="$ticker" :period="$period" />
-                    @elseif($tab == 'insider')
-                        <livewire:company-insider :company="$company" :ticker="$ticker" :period="$period" />
-                    @elseif($tab == 'restatement')
-                        <livewire:company-restatement :company="$company" :ticker="$ticker" :period="$period" />
-                    @elseif($tab == 'employee')
-                        <livewire:company-employee-count :company="$company" :ticker="$ticker" :period="$period" />
-                    @elseif($tab == 'failToDeliver')
-                        <livewire:company-fail-to-deliver :company="$company" :ticker="$ticker" :period="$period" />
-                    @endif
-                </div>
-            </div>
-        </main>
-    </div>
+    <livewire:company-navbar :company="$company" />
+
+    <main class="px-4 pb-10 transition-all md:px-6 lg:px-8 lg:ml-64" id="main-container">
+        @if ($tab == 'geographical')
+            <livewire:company-geographical :company="$company" :ticker="$ticker" :period="$period" />
+        @elseif($tab == 'products')
+            <livewire:company-products :company="$company" :ticker="$ticker" :period="$period" />
+        @elseif($tab == 'profile')
+            <livewire:company-profile :company="$company" :ticker="$ticker" :period="$period" />
+        @elseif($tab == 'splits')
+            <livewire:company-splits :company="$company" :ticker="$ticker" :period="$period" />
+        @elseif($tab == 'metrics')
+            <livewire:company-metrics :company="$company" :ticker="$ticker" :period="$period" />
+        @elseif($tab == 'chart')
+            <livewire:company-chart :company="$company" :ticker="$ticker" :period="$period" />
+        @elseif($tab == 'executiveCompensation')
+            <livewire:company-executive-compensation :company="$company" :ticker="$ticker" :period="$period" />
+        @elseif($tab == 'report')
+            <livewire:company-report :company="$company" :ticker="$ticker" :period="$period" />
+        @elseif($tab == 'shareholders')
+            <livewire:company-shareholders :company="$company" :ticker="$ticker" :period="$period" />
+        @elseif($tab == 'summary')
+            <livewire:company-summary :company="$company" :ticker="$ticker" :period="$period" />
+        @elseif($tab == 'filings')
+            <livewire:company-filings :company="$company" :ticker="$ticker" :period="$period" />
+        @elseif($tab == 'insider')
+            <livewire:company-insider :company="$company" :ticker="$ticker" :period="$period" />
+        @elseif($tab == 'restatement')
+            <livewire:company-restatement :company="$company" :ticker="$ticker" :period="$period" />
+        @elseif($tab == 'employee')
+            <livewire:company-employee-count :company="$company" :ticker="$ticker" :period="$period" />
+        @elseif($tab == 'failToDeliver')
+            <livewire:company-fail-to-deliver :company="$company" :ticker="$ticker" :period="$period" />
+        @elseif($tab == 'ownership')
+            <livewire:ownership.page :company="$company" :ticker="$ticker" :period="$period" />
+        @elseif($tab == 'company-fund')
+            <livewire:ownership.company-fund :company="$company" :ticker="$ticker" :period="$period" />
+        @endif
+    </main>
 
     @stack('modals')
     @livewire('spotlight-pro')
