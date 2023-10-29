@@ -9,16 +9,18 @@ class CompanyReportTableRow extends Component
     public $data = [];
     public $index = 0;
     public $open = true;
+    public $reverse = false;
     public $selected;
     public $attr = "";
     public $selectedRows = [];
 
-    public function mount($data, $index = 0, $selectedRows = [])
+    public function mount($data, $index = 0, $selectedRows = [], $reverse = false)
     {
         $this->data = $data;
         $this->index = $index;
         $this->selected = in_array($data['title'], $selectedRows);
         $this->selectedRows = $selectedRows;
+        $this->reverse = $reverse;
     }
 
     public function generateAttribute($value)

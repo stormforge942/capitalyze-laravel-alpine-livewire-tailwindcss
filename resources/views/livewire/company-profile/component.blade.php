@@ -20,18 +20,21 @@
         </div>
     @else
         <div class="flex-col sm:flex sm:items-start company-profile-page" wire:loading.remove>
-            <div class="page-titles">
+            <div class="mt-4 page-titles">
                 <b>{{ @$profile['registrant_name'] }} @if (@$profile['symbol'])
                         ({{ @$profile['symbol'] }})
-                    @endif </b> <br>
+                    @endif </b>
+
+            </div>
+            <div class="mt-2 page-titles">
                 <b>${{ number_format($cost) }}</b> <small
                     class="text-color-green">({{ $dynamic > 0 ? '+' : '-' }}{{ abs($dynamic) }}%)</small>
             </div>
 
             <div class="flex tabs-wrapper">
-                <div @class(['tab', 'active' => $infoTabActive == 'overview']) wire:click="setInfoActiveTab('overview')">Overview</div>
-                <div @class(['tab', 'active' => $infoTabActive == 'business_information']) wire:click="setInfoActiveTab('business_information')">
-                    Business Information</div>
+                <div @class(['tab main-tab', 'active' => $infoTabActive == 'overview']) wire:click="setInfoActiveTab('overview')">Company Overview</div>
+                <div @class(['tab', 'active' => $infoTabActive == 'business_information']) wire:click="setInfoActiveTab('business_information')">Business
+                    Information</div>
             </div>
 
 
@@ -39,7 +42,7 @@
                 @include('livewire.company-profile.companyprofile-overview-top-data')
 
                 <livewire:company-profile-overview-graph :ticker="$ticker" />
-
+                @include('livewire.company-profile.company-profile-overview-profile')
                 @include('livewire.company-profile.company-profile-overview-table')
             @elseif($infoTabActive == 'business_information')
                 @include('livewire.company-profile.company-profile-business-information')

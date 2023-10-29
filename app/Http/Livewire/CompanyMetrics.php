@@ -8,7 +8,7 @@ use Illuminate\Support\Facades\DB;
 class CompanyMetrics extends Component
 {
     use TableFiltersTrait;
-    
+
     public $company;
     public $ticker;
     public $currentRoute;
@@ -18,11 +18,14 @@ class CompanyMetrics extends Component
 
     public $navbar;
     public $subnavbar;
+    public $dates = [];
+    public $tableDates = [];
     public $activeIndex = 'face';
     public $activeSubIndex = 'Balancesheet';
     public $table;
     public $faces;
     protected $request;
+    public $tableLoading = true;
 
    protected $listeners = ['periodChange', 'metricChange', 'tabClicked', 'tabSubClicked'];
 
@@ -57,6 +60,7 @@ class CompanyMetrics extends Component
         }
     }
 
+    $this->tableDates = $dates;
     $this->metrics = $metrics;
     $this->segments = $segments;
 }
@@ -94,14 +98,10 @@ class CompanyMetrics extends Component
    public function renderTable() {
             $table = '';
             //collect rows
-            $table .= '<div class="row row-spoiler">';//spoiler control row outside of group
-                $table .= '<div class="cell" >Spoiler test</div>';
-                $table .= str_repeat('<div class="cell" >-</div>', count($this->metrics) );
-            $table .= '</div>';
-            $table .= '<div class="row-group row-group-spoiler">'; //row group spoiler
+            $table .= '<div class="row-group">'; //row group spoiler
             foreach($this->segments as $segment) {
                 $table .= '<div class="row">';
-                    $table .= '<div class="cell break-words font-bold">&nbsp; '.preg_replace('/(?<=\w)(?=[A-Z])/', ' ', $segment).'</div>';
+                    $table .= '<div class="cell break-words pl-1">&nbsp; '.preg_replace('/(?<=\w)(?=[A-Z])/', ' ', $segment).'</div>';
                     foreach(array_keys($this->metrics) as $date) {
                         if(array_key_exists($segment, $this->metrics[$date])) {
                             if($this->metrics[$date][$segment][1] == 'USD')
@@ -132,6 +132,7 @@ class CompanyMetrics extends Component
         $this->getNavbar();
         $this->getMetrics();
         $this->renderTable();
+        $this->generateTableDates();
     }
 
     public function metricChange($face, $parent)
@@ -162,6 +163,67 @@ class CompanyMetrics extends Component
         $this->getMetrics();
         $this->renderTable();
     }
+
+    function traverseArray($array) {
+        foreach ($array as $key => $value) {
+            if (is_array($value)) {
+                if (strtotime($key) !== false) {
+                    $this->dates[] = date('Y', strtotime($key));
+                }
+                $this->traverseArray($value);
+            } else {
+                break;
+            }
+        }
+    }
+    public function changeDates($dates) {
+        $this->tableLoading = true;
+
+        if (count($dates) == 2) {
+            $this->tableDates = [];
+            for($i = $dates[0]; $i <= $dates[1]; $i++) {
+                $this->tableDates[] = $i;
+            }
+        }
+
+        $this->generateRows($this->metrics);
+
+        $this->tableLoading = false;
+    }
+
+
+    public function generateRows($data) {
+        $this->traverseArray($data);
+
+        $dates = [];
+
+        $minYear = (int) min(array_unique($this->tableDates));
+        $maxYear = (int) max(array_unique($this->tableDates));
+
+        for ($i = 0; $minYear + $i <= $maxYear; $i++) {
+            $year = $minYear + $i;
+            $dates[] = $year;
+        }
+
+        $this->tableDates = $dates;
+    }
+
+    public function generateTableDates()
+    {
+        $this->traverseArray($this->metrics);
+
+        $dates = [];
+        $minYear = (int) min(array_unique($this->dates));
+        $maxYear = (int) max(array_unique($this->dates));
+
+        for ($i = 0; $minYear + $i <= $maxYear; $i++) {
+            $year = $minYear + $i;
+            $dates[] = $year;
+        }
+
+        $this->tableDates = $dates;
+    }
+
     public function render()
     {
         return view('livewire.company-metrics');
