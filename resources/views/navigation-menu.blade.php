@@ -17,7 +17,7 @@
                 </button>
             @endauth
             <a href="{{ route('home') }}">
-                <img src="/img/logo.png" alt="Capitalyze logo" class="w-auto h-6">
+                <img src="{{ asset('img/logo.png') }}" alt="Capitalyze logo" class="w-auto h-6">
             </a>
         </div>
 
