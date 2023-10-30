@@ -1,16 +1,14 @@
 <div>
     {{-- desktop sidebar --}}
     <aside id="default-sidebar" x-data="{
-        collapsed: localStorage.getItem('sidebarCollapsed') === 'true',
-        toggle(toggle = true) {
-            if (toggle) {
-                this.collapsed = !this.collapsed
-            }
-    
-            localStorage.setItem('sidebarCollapsed', this.collapsed ? 'true' : 'false')
+        collapsed: false,
+        toggle() {
+            this.collapsed = !this.collapsed
     
             if (this.collapsed) {
                 document.body.classList.add('nav-collapsed')
+                
+                document.getElementById('default-sidebar').classList.remove('w-64')
     
                 document.getElementById('main-container').classList.remove('lg:ml-64')
                 document.getElementById('main-container').classList.add('lg:ml-20');
@@ -27,8 +25,8 @@
                 document.getElementById('navigation').classList.add('lg:ml-64');
             }
         }
-    }" x-init="toggle(false)"
-        class="fixed top-0 left-0 z-40 hidden h-screen pt-10 bg-white border-r border-gray-200 lg:block dark:bg-gray-800 dark:border-gray-700"
+    }"
+        class="fixed top-0 left-0 z-40 hidden h-screen pt-10 bg-white border-r border-gray-200 lg:block dark:bg-gray-800 dark:border-gray-700 w-64"
         :class="collapsed ? 'w-20' : 'w-64'" aria-label="Sidebar">
         <div class="flex flex-col h-full px-6 pb-4 bg-white dark:bg-gray-800">
             <button class="absolute -right-3 top-40" :class="collapsed ? 'rotate-180' : ''" @click="toggle">
