@@ -40,12 +40,8 @@
                     @yield('filings')
                 @endif
             @endif
-            @if ($tab == 'profile')
-                @sectionMissing('profile')
-                    <livewire:is :component="$exchange . '.profile'" :model="$model" :exchange="$exchange" />
-                @else
-                    @yield('profile')
-                @endif
+            @if ($tab == 'profile') 
+                <livewire:lse.profile :model="$model" :exchange="$exchange" />
             @endif
             @yield('content')
         </main>
