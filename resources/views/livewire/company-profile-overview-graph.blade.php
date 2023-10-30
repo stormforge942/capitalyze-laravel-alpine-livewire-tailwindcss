@@ -48,10 +48,13 @@
                     <livewire:range-calendar />
                 </div>
             </div>
-            <div class="w-full mt-3" wire:ignore>
-                <canvas id="product-profile-chart" class="w-full"></canvas>
+            <div class="place-items-center h-96" wire:loading.grid>
+                <span class="mx-auto simple-loader !text-green-dark"></span>
             </div>
-
+    
+            <div class="mt-3" wire:loading.remove>
+                <canvas id="product-profile-chart" class="w-full"></canvas>
+            </div>    
         </div>
     @endif
     <button wire:click="toggleVisible" class="flex items-center justify-center rounded-bl rounded-tr bg-blue-50 text-sm px-3 py-1 absolute right-0 top-0">
