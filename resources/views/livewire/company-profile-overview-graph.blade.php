@@ -1,78 +1,78 @@
-<div class="relative graph-wrapper-box w-full">
-    @if($visible)
-        <div class="graph-wrapper">
-            <div class="graph-header">
-                <div class="pr-3">
-                    <b class="title" wire:click="load()">{{$name}}. ({{$ticker}})</b><br>
-                    <small class="text-blue-600">{{$persentage}}% price return over {{$chartPeriods[$currentChartPeriod]}}</small>
-                </div>
-                <div class="select-graph-date-wrapper ml-12 flex">
-                    <ul class="items-center w-full flex">
-                        <li class="w-full mr-2">
-                            <label class="flex items-center pl-3">
-                                <input wire:model="currentChartPeriod" value="3m" id="date-3m" type="radio" name="date-range" class="w-4 h-4 radio-filter" >
-                                <span class="w-full py-3 ml-2 ">3m</span>
-                            </label>
-                        </li>
-                        <li class="w-full mr-2">
-                            <label class="flex items-center pl-3">
-                                <input wire:model="currentChartPeriod" value="6m" id="date-6m" type="radio" name="date-range" class="w-4 h-4 radio-filter">
-                                <span class="w-full py-3 ml-2 ">6m</span>
-                            </label>
-                        </li>
-                        <li class="w-full mr-2">
-                            <label class="flex items-center pl-3">
-                                <input wire:model="currentChartPeriod" value="YTD" id="date-1yr" type="radio" name="date-range" class="w-4 h-4 radio-filter">
-                                <span class="w-full py-3 ml-2 ">YTD</span>
-                            </label>
-                        </li>
-                        <li class="w-full mr-2">
-                            <label class="flex items-center pl-3">
-                                <input wire:model="currentChartPeriod" value="1yr" id="date-1yr" type="radio" name="date-range" class="w-4 h-4 radio-filter">
-                                <span class="w-full py-3 ml-2 ">1yr</span>
-                            </label>
-                        </li>
-                        <li class="w-full mr-2">
-                            <label class="flex items-center pl-3">
-                                <input wire:model="currentChartPeriod" value="5yr" id="date-5yr" type="radio" name="date-range" class="w-4 h-4 radio-filter">
-                                <span class="w-full py-3 ml-2 ">5yr</span>
-                            </label>
-                        </li>
-                        <li class="w-full mr-2">
-                            <label class="flex items-center pl-3">
-                                <input wire:model="currentChartPeriod" value="max" id="date-5yr" type="radio" name="date-range" class="w-4 h-4 radio-filter">
-                                <span class="w-full py-3 ml-2 ">MAX</span>
-                            </label>
-                        </li>
-                    </ul>
-                    <livewire:range-calendar />
-                </div>
+<div class="relative graph-wrapper-box w-full" x-data="{ collapse: false }">
+    <div class="graph-wrapper" x-show="!collapse">
+        <div class="graph-header">
+            <div class="pr-3">
+                <b class="title" wire:click="load()">{{ $name }}. ({{ $ticker }})</b><br>
+                <small class="text-blue-600">{{ $persentage }}% price return over
+                    {{ $chartPeriods[$currentChartPeriod] }}</small>
             </div>
-            <div class="place-items-center h-96" wire:loading.grid>
-                <span class="mx-auto simple-loader !text-green-dark"></span>
+            <div class="select-graph-date-wrapper ml-12 flex">
+                <ul class="items-center w-full flex">
+                    <li class="w-full mr-2">
+                        <label class="flex items-center pl-3">
+                            <input wire:model="currentChartPeriod" value="3m" id="date-3m" type="radio"
+                                name="date-range" class="w-4 h-4 radio-filter">
+                            <span class="w-full py-3 ml-2 ">3m</span>
+                        </label>
+                    </li>
+                    <li class="w-full mr-2">
+                        <label class="flex items-center pl-3">
+                            <input wire:model="currentChartPeriod" value="6m" id="date-6m" type="radio"
+                                name="date-range" class="w-4 h-4 radio-filter">
+                            <span class="w-full py-3 ml-2 ">6m</span>
+                        </label>
+                    </li>
+                    <li class="w-full mr-2">
+                        <label class="flex items-center pl-3">
+                            <input wire:model="currentChartPeriod" value="YTD" id="date-1yr" type="radio"
+                                name="date-range" class="w-4 h-4 radio-filter">
+                            <span class="w-full py-3 ml-2 ">YTD</span>
+                        </label>
+                    </li>
+                    <li class="w-full mr-2">
+                        <label class="flex items-center pl-3">
+                            <input wire:model="currentChartPeriod" value="1yr" id="date-1yr" type="radio"
+                                name="date-range" class="w-4 h-4 radio-filter">
+                            <span class="w-full py-3 ml-2 ">1yr</span>
+                        </label>
+                    </li>
+                    <li class="w-full mr-2">
+                        <label class="flex items-center pl-3">
+                            <input wire:model="currentChartPeriod" value="5yr" id="date-5yr" type="radio"
+                                name="date-range" class="w-4 h-4 radio-filter">
+                            <span class="w-full py-3 ml-2 ">5yr</span>
+                        </label>
+                    </li>
+                    <li class="w-full mr-2">
+                        <label class="flex items-center pl-3">
+                            <input wire:model="currentChartPeriod" value="max" id="date-5yr" type="radio"
+                                name="date-range" class="w-4 h-4 radio-filter">
+                            <span class="w-full py-3 ml-2 ">MAX</span>
+                        </label>
+                    </li>
+                </ul>
+                <livewire:range-calendar />
             </div>
-    
-            <div class="mt-3" wire:loading.remove>
-                <canvas id="product-profile-chart" class="w-full"></canvas>
-            </div>    
         </div>
-    @endif
-    <button wire:click="toggleVisible" class="flex items-center justify-center rounded-bl rounded-tr bg-blue-50 text-sm px-3 py-1 absolute right-0 top-0">
+        <div class="place-items-center h-96" wire:loading.grid>
+            <span class="mx-auto simple-loader !text-green-dark"></span>
+        </div>
+
+        <div class="mt-3" wire:loading.remove>
+            <canvas id="product-profile-chart" class="w-full"></canvas>
+        </div>
+    </div>
+    <button @click="collapse = !collapse"
+        class="flex items-center justify-center rounded-bl rounded-tr bg-blue-50 text-sm px-3 py-1 absolute right-0 top-0">
         <span>Hide summary</span>
 
-        <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="w-3 h-3 ml-2">
-            @if($visible)
-                <path stroke-linecap="round" stroke-linejoin="round" d="M19.5 8.25l-7.5 7.5-7.5-7.5"/>
-            @else
-                <path stroke-linecap="round" stroke-linejoin="round" d="M4.5 15.75l7.5-7.5 7.5 7.5"/>
-            @endif
+        <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5"
+            stroke="currentColor" class="w-3 h-3 ml-2 transition-transform" :class="collapse ? 'rotate-180' : ''">
+            <path stroke-linecap="round" stroke-linejoin="round" d="M19.5 8.25l-7.5 7.5-7.5-7.5" />
         </svg>
     </button>
 
-    @if(!$visible)
-        <div style="margin-bottom: 2em"></div>
-    @endif
-
+    <div style="margin-bottom: 2em" x-show="collapse" x-cloak></div>
 </div>
 
 @pushonce('scripts')
@@ -93,7 +93,8 @@
                 tooltipEl.style.transform = 'translate(-50%, 0)';
                 tooltipEl.style.transition = 'all .1s ease';
                 tooltipEl.style.minWidth = '230px';
-                tooltipEl.style.filter = 'drop-shadow(0px 10.732307434082031px 21.464614868164062px rgba(50, 50, 71, 0.06)) drop-shadow(0px 10.732307434082031px 10.732307434082031px rgba(50, 50, 71, 0.08))';
+                tooltipEl.style.filter =
+                    'drop-shadow(0px 10.732307434082031px 21.464614868164062px rgba(50, 50, 71, 0.06)) drop-shadow(0px 10.732307434082031px 10.732307434082031px rgba(50, 50, 71, 0.08))';
                 tooltipEl.classList.add('tooltip-caret')
 
                 const table = document.createElement('table');
@@ -108,7 +109,10 @@
 
         const externalTooltipHandler = (context) => {
             // Tooltip Element
-            const {chart, tooltip} = context;
+            const {
+                chart,
+                tooltip
+            } = context;
             const tooltipEl = getOrCreateTooltip(chart);
 
             // Hide if no tooltip
@@ -199,7 +203,10 @@
                 tableRoot.appendChild(tableBody);
             }
 
-            const {offsetLeft: positionX, offsetTop: positionY} = chart.canvas;
+            const {
+                offsetLeft: positionX,
+                offsetTop: positionY
+            } = chart.canvas;
 
             // Display, position, and set styles for font
             tooltipEl.style.opacity = 1;
@@ -240,10 +247,10 @@
                 }],
                 maintainAspectRatio: true,
                 aspectRatio: 3,
+                responsive: true,
                 type: 'bar',
                 data: {
-                    datasets: [
-                        {
+                    datasets: [{
                             data: data.dataset2,
                             label: "Volume",
                             borderColor: "#9D9D9D",
@@ -292,14 +299,14 @@
                             enabled: false,
                             position: 'nearest',
                             callbacks: {
-                                title: function (context) {
+                                title: function(context) {
                                     const inputDate = new Date(context[0].label);
                                     const month = inputDate.getMonth() + 1;
                                     const day = inputDate.getDate();
                                     const year = inputDate.getFullYear();
                                     return `${year}-${month.toString().padStart(2, '0')}-${day.toString().padStart(2, '0')}`;
                                 },
-                                label: function (context) {
+                                label: function(context) {
                                     if (context.dataset.label == "Price") {
                                         return `Price|${context.raw.y}`;
                                     } else if (context.dataset.label == "Volume") {
@@ -323,8 +330,8 @@
                             time: {
                                 unit: data.unit,
                             },
-                            ticks:{
-                                source:'data',
+                            ticks: {
+                                source: 'data',
                                 maxTicksLimit: data.quantity,
                                 labelOffset: data.quantity > 20 ? 5 : data.quantity < 5 ? 150 : 30
                             },
@@ -343,4 +350,3 @@
         Livewire.on("companyChartReset", initChart);
     </script>
 @endpushonce
-
