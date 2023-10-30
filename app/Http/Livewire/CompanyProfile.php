@@ -14,6 +14,10 @@ class CompanyProfile extends Component
     public $profile;
     public $menuLinks;
 
+    public $products;
+
+    public $segments;
+
     public $infoTabActive = 'overview';
     public $cost = null;
     public $dynamic = null;
@@ -54,6 +58,7 @@ class CompanyProfile extends Component
 
         $this->getCompanyProfile();
         $this->getMenu();
+        $this->getProducts();
     }
 
     public function getMenu(){
@@ -65,6 +70,43 @@ class CompanyProfile extends Component
             ->where('symbol', $this->ticker)
             ->first()
             ?->toArray();
+    }
+
+    public function getProducts()
+    {
+        $source = ($this->period == 'annual') ? 'arps' : 'qrps';
+        $json = DB::connection('pgsql-xbrl')
+            ->table('as_reported_sec_segmentation_api')
+            ->where('ticker', '=', $this->ticker)
+            ->where('endpoint', '=', $source)
+            ->value('api_return_open_ai');
+
+        $data = json_decode($json, true);
+        $products = [];
+        $dates = [];
+        $segments = [];
+
+        if ($json === null) {
+            $this->noData = true;
+
+            return;
+        }
+
+        foreach ($data as $date) {
+            $key = array_key_first($date);
+            $dates[] = $key;
+            $products[$key] = $date[$key];
+            $keys = array_keys($products[$key]);
+            foreach ($keys as $subkey) {
+                if (! in_array($subkey, $segments, true)) {
+                    $segments[] = $subkey;
+                }
+            }
+        }
+
+        $this->json = base64_encode($json);
+        $this->products = array_slice($products, 0, 6);
+        $this->segments = array_slice($segments, 0, 6);
     }
 
     public function render()
