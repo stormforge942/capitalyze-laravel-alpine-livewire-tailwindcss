@@ -1,5 +1,5 @@
 <div class="cards-wrapper">
-    <div class="white-card">
+    <div class="white-card market-card-holder">
         <div class="title">Market Data</div>
         <div class="key-values-wrapper">
 
