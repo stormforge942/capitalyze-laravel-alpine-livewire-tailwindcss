@@ -9,42 +9,42 @@
             <div class="select-graph-date-wrapper ml-12 flex">
                 <ul class="items-center w-full flex">
                     <li class="w-full mr-2">
-                        <label class="flex items-center pl-3">
+                        <label class="flex items-center pl-3 cursor-pointer">
                             <input wire:model="currentChartPeriod" value="3m" id="date-3m" type="radio"
                                 name="date-range" class="w-4 h-4 radio-filter">
                             <span class="w-full py-3 ml-2 ">3m</span>
                         </label>
                     </li>
                     <li class="w-full mr-2">
-                        <label class="flex items-center pl-3">
+                        <label class="flex items-center pl-3 cursor-pointer">
                             <input wire:model="currentChartPeriod" value="6m" id="date-6m" type="radio"
                                 name="date-range" class="w-4 h-4 radio-filter">
                             <span class="w-full py-3 ml-2 ">6m</span>
                         </label>
                     </li>
                     <li class="w-full mr-2">
-                        <label class="flex items-center pl-3">
+                        <label class="flex items-center pl-3 cursor-pointer">
                             <input wire:model="currentChartPeriod" value="YTD" id="date-1yr" type="radio"
                                 name="date-range" class="w-4 h-4 radio-filter">
                             <span class="w-full py-3 ml-2 ">YTD</span>
                         </label>
                     </li>
                     <li class="w-full mr-2">
-                        <label class="flex items-center pl-3">
+                        <label class="flex items-center pl-3 cursor-pointer">
                             <input wire:model="currentChartPeriod" value="1yr" id="date-1yr" type="radio"
                                 name="date-range" class="w-4 h-4 radio-filter">
                             <span class="w-full py-3 ml-2 ">1yr</span>
                         </label>
                     </li>
                     <li class="w-full mr-2">
-                        <label class="flex items-center pl-3">
+                        <label class="flex items-center pl-3 cursor-pointer">
                             <input wire:model="currentChartPeriod" value="5yr" id="date-5yr" type="radio"
                                 name="date-range" class="w-4 h-4 radio-filter">
                             <span class="w-full py-3 ml-2 ">5yr</span>
                         </label>
                     </li>
                     <li class="w-full mr-2">
-                        <label class="flex items-center pl-3">
+                        <label class="flex items-center pl-3 cursor-pointer">
                             <input wire:model="currentChartPeriod" value="max" id="date-5yr" type="radio"
                                 name="date-range" class="w-4 h-4 radio-filter">
                             <span class="w-full py-3 ml-2 ">MAX</span>
