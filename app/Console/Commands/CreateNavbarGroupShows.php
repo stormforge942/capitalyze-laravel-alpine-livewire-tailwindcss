@@ -49,6 +49,7 @@ class CreateNavbarGroupShows extends Command
             || $navbar->route_name === 'hkexs'
             || $navbar->route_name === 'otcs'
             || $navbar->route_name === 'frankfurts'
+            || $navbar->route_name === 'shenzhens'
             || $navbar->route_name === 'press.release';
 
             if ($isBottomNavbar || $isUpperNavbar) {
