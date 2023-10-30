@@ -12,7 +12,6 @@ class CompanyProfileOverviewGraph extends Component
     public $ticker = "";
     public $currentChartPeriod = "3m";
     public $chartData = [];
-    public $visible = true;
     public $start_at = null;
     public $end_at = null;
 
@@ -52,14 +51,6 @@ class CompanyProfileOverviewGraph extends Component
             if ($this->currentChartPeriod != 'custom') {
                 $this->load();
             }
-        }
-    }
-
-    public function toggleVisible()
-    {
-        $this->visible = !$this->visible;
-        if ($this->visible) {
-            $this->load();
         }
     }
 
