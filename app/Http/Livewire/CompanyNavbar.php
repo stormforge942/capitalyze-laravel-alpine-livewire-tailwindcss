@@ -52,7 +52,7 @@ class CompanyNavbar extends Component
                 </svg>
                 ICON,
                 'url' => route('company.profile', ['ticker' => $this->company->ticker]),
-                'active' => request()->routeIs('company.profile')
+                'active' => request()->routeIs('company.profile', 'company.product')
             ],
             [
                 'title' => 'Financials',
