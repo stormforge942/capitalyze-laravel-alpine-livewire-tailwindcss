@@ -45,102 +45,106 @@ class CompanyReport extends Component
     public $chartType = 'line';
     public $isOpen = false;
 
-   protected $listeners = ['periodChange', 'tabClicked', 'tabSubClicked', 'selectRow', 'unselectRow'];
+    protected $listeners = ['periodChange', 'tabClicked', 'tabSubClicked', 'selectRow', 'unselectRow'];
 
-   public function toggleChartType($title) {
-       if($this->isOpen === $title) {
-           $this->isOpen = null;
-       } else {
-           $this->isOpen = $title;
-       }
+    public function toggleChartType($title)
+    {
+        if ($this->isOpen === $title) {
+            $this->isOpen = null;
+        } else {
+            $this->isOpen = $title;
+        }
 
 
-   }
+    }
 
-   public function selectRow($title, $data) {
-       if (count($this->selectedRows) < 5) {
-           $this->selectedRows[$title]['dates'] = $data;
-           $this->selectedRows[$title]['type'] = 'line';
-       }
+    public function selectRow($title, $data)
+    {
+        if (count($this->selectedRows) < 5) {
+            $this->selectedRows[$title]['dates'] = $data;
+            $this->selectedRows[$title]['type'] = 'line';
+        }
 
-       $this->generateChartData();
-       $this->emit('initCompanyReportChart');
-   }
+        $this->generateChartData();
+        $this->emit('initCompanyReportChart');
+    }
 
-   public function regenareteTableChart(): void
-   {
-       $this->generateUI();
-   }
+    public function regenareteTableChart(): void
+    {
+        $this->generateUI();
+    }
 
-   public function unselectRow($title)
-   {
-       unset($this->selectedRows[$title]);
-       $this->emit('resetSelection', $title);
+    public function unselectRow($title)
+    {
+        unset($this->selectedRows[$title]);
+        $this->emit('resetSelection', $title);
 
-       if (count($this->selectedRows)){
-         $this->generateChartData(true);
-       } else {
+        if (count($this->selectedRows)) {
+            $this->generateChartData(true);
+        } else {
             $this->chartData = [];
             $this->emit('hideCompanyReportChart');
-       }
-   }
+        }
+    }
 
-   public function toggleReverse() {
-       $this->reverse = !$this->reverse;
-       $this->regenareteTableChart();
-   }
+    public function toggleReverse()
+    {
+        $this->reverse = !$this->reverse;
+        $this->regenareteTableChart();
+    }
 
-   public function changeChartType($title, $type)
-   {
-       $this->selectedRows[$title]['type'] = $type;
+    public function changeChartType($title, $type)
+    {
+        $this->selectedRows[$title]['type'] = $type;
 
-       $this->chartType = $type;
+        $this->chartType = $type;
 
-       $this->generateChartData();
-   }
+        $this->generateChartData();
+    }
 
-   public function generateChartData($initChart = false): void
-   {
-       $chartData = [];
-       foreach ($this->selectedRows as $title => $row) {
-           $data = [];
-           foreach ($row['dates'] as $cell) {
-               if (!$cell['empty']) {
-                   $data[] = [
-                       'y' => $cell['value'],
-                       'x' => $cell['date'],
-                   ];
-               } else {
-                   $data[] = [
-                       'y' => null,
-                       'x' => null,
-                   ];
-               }
-           }
+    public function generateChartData($initChart = false): void
+    {
+        $chartData = [];
+        foreach ($this->selectedRows as $title => $row) {
+            $data = [];
+            foreach ($row['dates'] as $cell) {
+                if (!$cell['empty']) {
+                    $data[] = [
+                        'y' => $cell['value'],
+                        'x' => $cell['date'],
+                    ];
+                } else {
+                    $data[] = [
+                        'y' => null,
+                        'x' => null,
+                    ];
+                }
+            }
 
-           $chartData[] = [
-               'data' => $data,
-               'type' => $row['type'],
-               'label' => $title,
-               'borderColor' => ['#5a5a5a', '#737373', '#8d8d8d', '#a6a6a6', '#949494'],
-               'pointRadius' => 1,
-               'pointHoverRadius' => 8,
-               'tension' => 0.5,
-               'fill' => true,
-               'pointHoverBorderColor' => '#fff',
-               'pointHoverBorderWidth' => 4,
-               'pointHoverBackgroundColor' => 'rgba(104, 104, 104, 0.87)'
-           ];
-       }
+            $chartData[] = [
+                'data' => $data,
+                'type' => $row['type'],
+                'label' => $title,
+                'borderColor' => ['#5a5a5a', '#737373', '#8d8d8d', '#a6a6a6', '#949494'],
+                'pointRadius' => 1,
+                'pointHoverRadius' => 8,
+                'tension' => 0.5,
+                'fill' => true,
+                'pointHoverBorderColor' => '#fff',
+                'pointHoverBorderWidth' => 4,
+                'pointHoverBackgroundColor' => 'rgba(104, 104, 104, 0.87)'
+            ];
+        }
 
-       $this->chartData = $chartData;
+        $this->chartData = $chartData;
 
-       if ($initChart) {
-           $this->emit('initCompanyReportChart');
-       }
-   }
+        if ($initChart) {
+            $this->emit('initCompanyReportChart');
+        }
+    }
 
-    public function getData() {
+    public function getData()
+    {
         $acronym = ($this->period == 'annual') ? 'arf5drs' : 'qrf5drs';
 
         $defaultConnectionName = DB::getDefaultConnection();
@@ -176,40 +180,48 @@ class CompanyReport extends Component
         $this->generateUI();
     }
 
-    public function closeChart() {
+    public function closeChart()
+    {
         $this->chartData = [];
         $this->selectedRows = [];
         $this->emit('hideCompanyReportChart');
     }
 
-    public function changeDates($dates) {
-       $this->tableLoading = true;
-       $this->rows = [];
-        if (count($dates) == 2) {
-            $this->tableDates = [];
+    public function changeDates($dates)
+    {
+        $this->tableLoading = true;
+        $this->rows = [];
+        if ($this->period === 'annual') {
+            if (count($dates) == 2) {
+                $this->tableDates = [];
 
-            if (gettype($dates[0]) === 'integer') {
-                $date = new DateTime($dates[0].'-09-09');
-                $dates[0] = $date->format('Y-m-d');
+                if (gettype($dates[0]) === 'integer') {
+                    $date = new DateTime($dates[0] . '-09-09');
+                    $dates[0] = $date->format('Y-m-d');
+                }
+
+                if (gettype($dates[1]) === 'integer') {
+                    $date = new DateTime($dates[1] . '-09-09');
+                    $dates[1] = $date->format('Y-m-d');
+                }
+
+                $minYear = strtotime($dates[0]);
+                $maxYear = strtotime($dates[1]);
+                $year = 365 * 24 * 60 * 60;
+
+                for ($currentDate = $minYear; $currentDate <= $maxYear; $currentDate += $year) {
+                    $this->tableDates[] = date('Y-m-d', $currentDate);
+                }
             }
+        }
 
-            if (gettype($dates[1]) === 'integer') {
-                $date = new DateTime($dates[1].'-09-09');
-                $dates[1] = $date->format('Y-m-d');
-            }
-
-            $minYear = strtotime($dates[0]);
-            $maxYear = strtotime($dates[1]);
-            $year = 365 * 24 * 60 * 60;
-
-            for ($currentDate = $minYear; $currentDate <= $maxYear; $currentDate += $year) {
-                $this->tableDates[] = date('Y-m-d', $currentDate);
-            }
+        if ($this->period === 'quarterly') {
+            $this->tableDates = array_unique($this->tableDates);
         }
 
         $this->generateRows($this->data);
 
-        if (count($this->selectedRows)){
+        if (count($this->selectedRows)) {
             $this->generateChartData();
             $this->emit('initCompanyReportChart');
         }
@@ -251,7 +263,7 @@ class CompanyReport extends Component
         $this->rangeDates = $dates;
 
         if (count($this->rangeDates) > 0) {
-            if($this->rangeDates[0] > $this->rangeDates[count($this->rangeDates) - 1]){
+            if ($this->rangeDates[0] > $this->rangeDates[count($this->rangeDates) - 1]) {
                 $this->rangeDates = array_reverse($this->rangeDates);
             }
 
@@ -263,16 +275,17 @@ class CompanyReport extends Component
         $this->changeDates($this->selectedValue);
     }
 
-    public function generateRows($data) {
-       $this->tableLoading = true;
-       $rows = [];
+    public function generateRows($data)
+    {
+        $this->tableLoading = true;
+        $rows = [];
 
-       if (
-        isset($data['Income Statement']) &&
-        is_array($data['Income Statement']) &&
-        isset($data['Income Statement']['Statement']) &&
-        is_array($data['Income Statement']['Statement']) &&
-        isset($data['Income Statement']['Statement']['Statement'])
+        if (
+            isset($data['Income Statement']) &&
+            is_array($data['Income Statement']) &&
+            isset($data['Income Statement']['Statement']) &&
+            is_array($data['Income Statement']['Statement']) &&
+            isset($data['Income Statement']['Statement']['Statement'])
         ) {
             $data = $data['Income Statement']['Statement']['Statement'];
         }
@@ -280,27 +293,28 @@ class CompanyReport extends Component
         if (
             isset($data['Statement of Financial Position']) &&
             is_array($data['Statement of Financial Position'])
-            ) {
-                $data = $data['Statement of Financial Position'];
+        ) {
+            $data = $data['Statement of Financial Position'];
         }
 
         if (
             isset($data['Statement of Cash Flows']) &&
             is_array($data['Statement of Cash Flows'])
-            ) {
-                $data = $data['Statement of Cash Flows'];
+        ) {
+            $data = $data['Statement of Cash Flows'];
         }
 
-        foreach($data as $key => $value) {
+        foreach ($data as $key => $value) {
             $rows[] = $this->generateRow($value, $key);
 
-       }
+        }
 
-       $this->rows = $rows;
-       $this->tableLoading = false;
+        $this->rows = $rows;
+        $this->tableLoading = false;
     }
 
-    public function generateRow($data, $title, $isSegmentation = false):array {
+    public function generateRow($data, $title, $isSegmentation = false): array
+    {
         $row = [
             'title' => $title,
             'segmentation' => false,
@@ -308,7 +322,7 @@ class CompanyReport extends Component
             'children' => [],
         ];
 
-        foreach($data as $key => $value) {
+        foreach ($data as $key => $value) {
             $isDate = true;
             try {
                 Carbon::createFromFormat('Y-m-d', $key);
@@ -328,7 +342,7 @@ class CompanyReport extends Component
                 }
             } else {
                 if (in_array($key, ['#segmentation'])) {
-                    foreach($value as $sKey => $sValue) {
+                    foreach ($value as $sKey => $sValue) {
                         $keyn = array_keys($value[$sKey])[0];
                         $valuen = $sValue[$keyn];
                         $keynn = array_keys($valuen)[0];
@@ -377,25 +391,25 @@ class CompanyReport extends Component
         }
     }
 
-    public function parseCell($data, $key) : array
+    public function parseCell($data, $key): array
     {
-       $response = [];
-       $response['empty'] = false;
-       $response['date'] = $key;
-       $response['ticker'] = $this->ticker;
+        $response = [];
+        $response['empty'] = false;
+        $response['date'] = $key;
+        $response['ticker'] = $this->ticker;
 
-         foreach($data as $key => $value) {
-              if (in_array('|', str_split($value))) {
-                  [$value, $hash] = explode('|', $value);
+        foreach ($data as $key => $value) {
+            if (in_array('|', str_split($value))) {
+                [$value, $hash] = explode('|', $value);
                 $response['value'] = $value;
                 $response['present'] = $this->generatePresent($value);
                 $response['hash'] = $hash;
-              } else {
+            } else {
                 $response[$key] = $value;
-              }
-         }
+            }
+        }
 
-         return $response;
+        return $response;
     }
 
     public function generateEmptyCellsRow(): array
@@ -426,24 +440,26 @@ class CompanyReport extends Component
         }
     }
 
-    public function updatedPeriod() {
+    public function updatedPeriod()
+    {
         $this->getData();
     }
 
-   public function getNavbar() {
+    public function getNavbar()
+    {
         $navbar = [];
         $acronym = ($this->period == 'annual') ? 'arf5drs' : 'qrf5drs';
         $source = 'info_presentations';
         $query = DB::connection('pgsql-xbrl')
-        ->table($source)
-        ->where('ticker', '=', $this->ticker)
-        ->where('acronym', '=', $acronym)
-        ->select('statement', 'statement_group', 'id', 'title')->get();
+            ->table($source)
+            ->where('ticker', '=', $this->ticker)
+            ->where('acronym', '=', $acronym)
+            ->select('statement', 'statement_group', 'id', 'title')->get();
 
         $collection = $query->collect();
 
-        foreach($collection as $value) {
-            $navbar[$value->statement_group][] = ['statement' => $value->statement,'id' => $value->id, 'title' => $value->title];
+        foreach ($collection as $value) {
+            $navbar[$value->statement_group][] = ['statement' => $value->statement, 'id' => $value->id, 'title' => $value->title];
         }
         if ($navbar === []) {
             $this->noData = true;
@@ -454,12 +470,12 @@ class CompanyReport extends Component
         $this->activeSubIndex = $navbar[$this->activeIndex][0]['id'];
         $this->navbar = $navbar;
         $this->emit('navbarUpdated', $this->navbar, $this->activeIndex, $this->activeSubIndex);
-   }
+    }
 
     public function mount(Request $request, $company, $ticker, $period)
     {
         $this->emit('periodChange', 'annual');
-        $this->company  = $company;
+        $this->company = $company;
         $this->ticker = $ticker;
         $this->period = $period;
         $this->companyName = $this->ticker;
@@ -477,18 +493,21 @@ class CompanyReport extends Component
 
     }
 
-    public function periodChange($period) {
+    public function periodChange($period)
+    {
         $this->period = $period;
         $this->getNavbar();
         $this->getData();
     }
 
-    public function tabClicked($key) {
+    public function tabClicked($key)
+    {
         $this->activeIndex = $key;
         $this->getData();
     }
 
-    public function tabSubClicked($key) {
+    public function tabSubClicked($key)
+    {
         $this->activeSubIndex = $key;
         $this->getData();
     }
