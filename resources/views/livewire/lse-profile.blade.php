@@ -15,7 +15,7 @@
                         Company Profile
                     </div>
                     <div>
-                        <a href="#" wire:click.prevent="viewProfile">{{!$profile ? 'View full' : 'Hide full'}} profile</a>
+                        <a href="#" wire:click.prevent="viewProfile">{{!$profile ? 'View full' : 'Hide full'}} {{$this->getURL()? 'international': ''}} profile</a>
                     </div>
                 </div>
                 <div class="grid sm:grid-cols-2 md:grid-cols-3 lg:grid-clos-4 xl:grid-cols-5 2xl:grid-cols-6 gap-y-1 gap-x-2 mt-4 p-4">

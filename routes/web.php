@@ -93,6 +93,7 @@ Route::middleware([])->group(function () {
         Route::get('/mutual-fund/{cik}/{fund_symbol}/{series_id}/{class_id}/returns', [MutualFundController::class, 'returns'])->name('mutual-fund.returns');
 
         Route::get('/euronext/{ticker}/', [EuronextController::class, 'metrics'])->name('euronext.metrics');
+        Route::get('/euronext/{ticker}/profile', [EuronextController::class, 'profile'])->name('euronext.profile');
         Route::get('/euronext/{ticker}/filings', [EuronextController::class, 'filings'])->name('euronext.filings');
 
         Route::get('/lse/{ticker}/', [LseController::class, 'metrics'])->name('lse.metrics');
@@ -100,21 +101,27 @@ Route::middleware([])->group(function () {
         Route::get('/lse/{ticker}/filings', [LseController::class, 'filings'])->name('lse.filings');
 
         Route::get('/tsx/{ticker}/', [TsxController::class, 'metrics'])->name('tsx.metrics');
+        Route::get('/tsx/{ticker}/profile', [TsxController::class, 'profile'])->name('tsx.profile');
         Route::get('/tsx/{ticker}/filings', [TsxController::class, 'filings'])->name('tsx.filings');
 
         Route::get('/shanghai/{ticker}/', [ShanghaiController::class, 'metrics'])->name('shanghai.metrics');
+        Route::get('/shanghai/{ticker}/profile', [ShanghaiController::class, 'profile'])->name('shanghai.profile');
         Route::get('/shanghai/{ticker}/filings', [ShanghaiController::class, 'filings'])->name('shanghai.filings');
 
         Route::get('/japan/{ticker}/', [JapanController::class, 'metrics'])->name('japan.metrics');
+        Route::get('/japan/{ticker}/profile', [JapanController::class, 'profile'])->name('japan.profile');
         Route::get('/japan/{ticker}/filings', [JapanController::class, 'filings'])->name('japan.filings');
 
         Route::get('/hkex/{ticker}/', [HkexController::class, 'metrics'])->name('hkex.metrics');
+        Route::get('/hkex/{ticker}/profile', [HkexController::class, 'profile'])->name('hkex.profile');
         Route::get('/hkex/{ticker}/filings', [HkexController::class, 'filings'])->name('hkex.filings');
 
         Route::get('/otc/{ticker}/', [OtcController::class, 'metrics'])->name('otc.metrics');
+        Route::get('/otc/{ticker}/profile', [OtcController::class, 'profile'])->name('otc.profile');
         Route::get('/otc/{ticker}/filings', [OtcController::class, 'filings'])->name('otc.filings');
 
         Route::get('/frankfurt/{ticker}/', [FrankfurtController::class, 'metrics'])->name('frankfurt.metrics');
+        Route::get('/frankfurt/{ticker}/profile', [FrankfurtController::class, 'profile'])->name('frankfurt.profile');
         Route::get('/frankfurt/{ticker}/filings', [FrankfurtController::class, 'filings'])->name('frankfurt.filings');
     });
 });
