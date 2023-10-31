@@ -106,9 +106,9 @@
 
         <li>
             <a
+            onclick="smoothScroll('{{$item['link']}}'.replace('#', ''))"
             :class="{'active': activeLink == '{{$item['link']}}'}"
-            x-on:click="activeLink = '{{$item['link']}}'"
-                href="{{$item['link']}}">
+            x-on:click="activeLink = '{{$item['link']}}'">
                 {{$item['anchorText']}}
             </a>
         </li>

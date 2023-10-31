@@ -167,7 +167,7 @@ transition: all 0.2s ease-in-out;
     background: none !important;
 }
 .tabs-wrapper {
-    margin: 1.4em 0;
+    margin: 24px 0;
 }
 .page-titles {
     font-size: 24px;
@@ -207,12 +207,12 @@ transition: all 0.2s ease-in-out;
     margin-top: -30px;
     visibility: hidden;
 }
-[type="radio"]:checked,
-[type="radio"]:not(:checked) {
+.graph-wrapper [type="radio"]:checked,
+.graph-wrapper [type="radio"]:not(:checked) {
     position: absolute;
     left: -9999px;
 }
-[type="radio"]:checked + label
+.graph-wrapper [type="radio"]:checked + label
 {
     position: relative;
     padding-left: 25px;
@@ -222,7 +222,7 @@ transition: all 0.2s ease-in-out;
     color: #000;
     font-size: 12px;
 }
-[type="radio"]:not(:checked) + label
+.graph-wrapper [type="radio"]:not(:checked) + label
 {
     position: relative;
     padding-left: 25px;
@@ -232,7 +232,7 @@ transition: all 0.2s ease-in-out;
     color: #828C85;
     font-size: 12px;
 }
-[type="radio"]:not(:checked) + label:before {
+.graph-wrapper [type="radio"]:not(:checked) + label:before {
     content: '';
     position: absolute;
     left: 0;
@@ -243,7 +243,7 @@ transition: all 0.2s ease-in-out;
     border-radius: 100%;
     background: #fff;
 }
-[type="radio"]:checked + label:before {
+.graph-wrapper [type="radio"]:checked + label:before {
     content: '';
     position: absolute;
     left: 0;
@@ -254,8 +254,8 @@ transition: all 0.2s ease-in-out;
     border-radius: 100%;
     background: #fff;
 }
-[type="radio"]:checked + label:after,
-[type="radio"]:not(:checked) + label:after {
+.graph-wrapper [type="radio"]:checked + label:after,
+.graph-wrapper [type="radio"]:not(:checked) + label:after {
     content: '';
     width: 6px;
     height: 6px;
@@ -269,12 +269,12 @@ transition: all 0.2s ease-in-out;
     -webkit-transition: all 0.2s ease;
     transition: all 0.2s ease;
 }
-[type="radio"]:not(:checked) + label:after {
+.graph-wrapper [type="radio"]:not(:checked) + label:after {
     opacity: 0;
     -webkit-transform: scale(0);
     transform: scale(0);
 }
-[type="radio"]:checked + label:after {
+.graph-wrapper [type="radio"]:checked + label:after {
     opacity: 1;
     -webkit-transform: scale(1);
     transform: scale(1);
@@ -313,4 +313,101 @@ transition: all 0.2s ease-in-out;
     background: #fff;
     border-radius: 0.66em;
     position: relative;
+}
+.c-profile-card .key {
+    font-weight: 400;
+    font-size: 12px;
+    line-height: 1;
+}
+.c-profile-card .value {
+    font-size: 14px;
+    font-weight: 500;
+}
+.c-profile-card .title a {
+    color: #121A0F;
+    font-size: 14px;
+    font-weight: 700;
+}
+.b-info-card, .c-profile-card {
+    margin-top: 24px !important;
+}
+.table-bottom-sec {
+    display: block;
+    width: 100%;
+    padding: 10px;
+    background: #fff;
+    border-radius: 4px;
+}
+.table-bottom-sec .table-wrapper{
+    margin-top: 0 !important;
+}
+.custom-drop-down-button {
+    width: 24px;
+    height: 24px;
+    border: 2px solid #121A0F;
+    color: #121A0F;
+    position: relative;
+    outline: none;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    border-radius: 6px;
+    transition: all 0.43s ease-in-out;
+
+}
+.custom-drop-down-button:focus svg{
+    transition: display 0.43s ease-in-out;
+}
+.custom-drop-down-button svg {
+    transition: display 0.43s ease-in-out;
+}
+.custom-dropdown-absolute-wrapper {
+    position: absolute;
+    top: 0;
+    right: 0;
+    z-index: 55;
+}
+.custom-drop-down {
+    width: 208px;
+    border-radius: 8px;
+    border: 1px solid #E9F5F1;
+    box-shadow: 0px 4px 8px 0px #00000814;
+    padding: 16px 0px;
+    top: 25px;
+
+}
+.custom-drop-down .links-wrapper {
+    padding: 0px 16px;
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+}
+.custom-drop-down .menu_link {
+    color: #121A0F;
+    font-size: 13px;
+    line-height: 16px;
+    font-weight: 400;
+    padding: 8px;
+    border-radius: 4px;
+
+    display: flex;
+    align-items: center;
+    gap: 10px;
+}
+.custom-drop-down hr {
+    border-bottom: 1px solid #E9F5F1 !important;
+    height: 1px;
+    background: #E9F5F1 !important;
+}
+.custom-drop-down .menu_link svg {
+    width: 16px;
+    height: 16px;
+}
+/* .bussiness-information-left ,.bussiness-information-right{
+    transition: all 0.5s ease-in-out;
+    scroll-behavior: smooth;
+} */
+
+.company-profile-overview-chart {
+    max-height: 450px !important;
 }

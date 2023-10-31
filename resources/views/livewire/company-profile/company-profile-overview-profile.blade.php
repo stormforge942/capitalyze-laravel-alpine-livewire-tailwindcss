@@ -227,14 +227,16 @@
             <div class="key-values-none">
 
             </div>
-            <div class="key">Sec Filings URL</div>
-            <div class="value">
-                @if (@@$profile['sec_filings_url'])
-                <a target="_blank" href="{{ @$profile['sec_filings_url'] }}">{{
-                    getSiteNameFromUrl(@$profile['sec_filings_url']) }}</a>
-                @else
-                -
-                @endif
+            <div class="key-value">
+                <div class="key">Sec Filings URL</div>
+                <div class="value">
+                    @if (@@$profile['sec_filings_url'])
+                    <a target="_blank" href="{{ @$profile['sec_filings_url'] }}">{{
+                        getSiteNameFromUrl(@$profile['sec_filings_url']) }}</a>
+                    @else
+                    -
+                    @endif
+                </div>
             </div>
         </div>
         <div class="key-values-wrapper__item basis-3/6 lg:basis-1/6">

@@ -49,3 +49,17 @@
         </div>
     @endif
 </div>
+@push("scripts")
+<script>
+    function smoothScroll(id) {
+        let e = document.getElementById(id);
+        if(e){
+            e.scrollIntoView({
+              block: 'start',
+              behavior: 'smooth',
+              inline: 'start'
+            });
+        }
+      }
+</script>
+@endpush

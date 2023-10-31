@@ -3,12 +3,11 @@
     max-width: calc(100vw - 8rem);
     overflow-x: auto;
     font-size: 0.5em;
-    margin-top: 0.5em;
+    margin-top: 24px;
 }
 .table-wrapper .table {
     display: table;
     width: 100%;
-    margin: 1.5em 0;
     border-collapse: separate;
     border-radius: 0.66em;
     overflow: hidden;
@@ -47,7 +46,6 @@
 
 .table-wrapper .row-group {
     display: table-row-group;
-    margin: 1em 0;
     border-radius: 0.66em;
     overflow: hidden;
 }
@@ -59,7 +57,7 @@
 }
 
 .table-wrapper .row-spacer {
-    height: 1.3em;
+    height:24px;
     background: transparent;
 }
 
@@ -143,3 +141,4 @@
     border-radius: 5px;
     display: inline-block;
 }
+

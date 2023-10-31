@@ -62,9 +62,7 @@
                 <div class="cell">6.3%</div>
             </div>
         </div>
-
-        <div class="row row-spacer"></div>
-
+        <div class="row row-spacer "></div>
         <div class="row-group row-head-fonts-sm table-header-border">
             <div class="row ">
                 <div class="font-bold cell">EBIT</div>
@@ -108,28 +106,32 @@
         </div>
 
         <div class="row row-spacer"></div>
-        <div class="row-group row-group-blue row-head-fonts-sm">
-            <div class="row ">
-                <div class="font-bold cell">Adj. Diluted EPS</div>
-                <div class="font-bold cell">0.09</div>
-                <div class="font-bold cell">0.09</div>
-                <div class="font-bold cell">0.09</div>
-                <div class="font-bold cell">0.09</div>
-                <div class="font-bold cell">0.09</div>
-                <div class="font-bold cell">6.3%</div>
-            </div>
+    </div>
+</div>
+<div class="table-bottom-sec">
+    <div class="table-wrapper ">
+        <div class="table">
+            <div class="row-group row-group-blue row-head-fonts-sm">
+                <div class="row ">
+                    <div class="font-bold cell">Adj. Diluted EPS</div>
+                    <div class="font-bold cell">0.09</div>
+                    <div class="font-bold cell">0.09</div>
+                    <div class="font-bold cell">0.09</div>
+                    <div class="font-bold cell">0.09</div>
+                    <div class="font-bold cell">0.09</div>
+                    <div class="font-bold cell">6.3%</div>
+                </div>
 
-            <div class="row row-sub">
-                <div class="font-bold cell">% Change YoY</div>
-                <div class="cell">14.9%</div>
-                <div class="cell">5.3%</div>
-                <div class="cell">3.2%</div>
-                <div class="cell">34.7%</div>
-                <div class="cell">6.3%</div>
-                <div class="cell"></div>
+                <div class="row row-sub">
+                    <div class="font-bold cell">% Change YoY</div>
+                    <div class="cell">14.9%</div>
+                    <div class="cell">5.3%</div>
+                    <div class="cell">3.2%</div>
+                    <div class="cell">34.7%</div>
+                    <div class="cell">6.3%</div>
+                    <div class="cell"></div>
+                </div>
             </div>
         </div>
-
     </div>
-
 </div>
