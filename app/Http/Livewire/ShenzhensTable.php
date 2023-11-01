@@ -83,7 +83,7 @@ final class ShenzhensTable extends PowerGridComponent
     {
         return PowerGrid::eloquent()
             ->addColumn('symbol', function (Shenzhens $model) {
-                return ("<a class='text-blue-500' href='/shenzhens/$model->symbol'>$model->symbol</a>");
+                return ("<a class='text-blue-500' href='/shenzhen/$model->symbol'>$model->symbol</a>");
             })
             ->addColumn('company_name')
             ->addColumn('date')

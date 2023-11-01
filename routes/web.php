@@ -40,6 +40,7 @@ use App\Http\Controllers\VerifyEmailController;
 use App\Http\Controllers\ResetLinkSentController;
 use App\Http\Middleware\RememberOwnershipHistory;
 use App\Http\Controllers\ResetPasswordSuccessfulController;
+use App\Http\Controllers\ShenzhenController;
 use Laravel\Fortify\Http\Controllers\AuthenticatedSessionController;
 
 Route::get('/permission-denied', PermissionDenied::class)->name('permission-denied');
@@ -123,6 +124,9 @@ Route::middleware([])->group(function () {
 
         Route::get('/frankfurt/{ticker}/', [FrankfurtController::class, 'metrics'])->name('frankfurt.metrics');
         Route::get('/frankfurt/{ticker}/filings', [FrankfurtController::class, 'filings'])->name('frankfurt.filings');
+
+        Route::get('/shenzhen/{ticker}/', [ShenzhenController::class, 'metrics'])->name('shenzhen.metrics');
+        Route::get('/shenzhen/{ticker}/filings', [ShenzhenController::class, 'filings'])->name('shenzhen.filings');
     });
 });
 
