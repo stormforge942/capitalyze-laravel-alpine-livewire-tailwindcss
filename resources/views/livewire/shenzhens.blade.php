@@ -1,7 +1,7 @@
 <div>
     <div>
         <livewire:company-navbar :company="$company ?? ['ticker' => 'aapl']" :period="$period ?? 'annual'" />
-        <!-- Page Content Begin -->
+
         <main>
             <div class="p-4 sm:ml-64 pl-0">
                 <div class="py-2">
@@ -21,7 +21,7 @@
                                     <span class="sr-only">Loading...</span>
                                 </div>
                             </div>
-                            <livewire:frankfurts-table />
+                            <livewire:shenzhens-table />
                         </div>
                     </div>
                 </div>

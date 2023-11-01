@@ -4,11 +4,14 @@ namespace App\Powergrid;
 
 use PowerComponents\LivewirePowerGrid\Themes\Theme;
 use PowerComponents\LivewirePowerGrid\Themes\Tailwind;
+use PowerComponents\LivewirePowerGrid\Themes\Components\Cols;
 use PowerComponents\LivewirePowerGrid\Themes\Components\Table;
 
 class CustomTheme extends Tailwind
 {
     public string $name = 'tailwind';
+
+    public bool $rightAlign = true;
 
     public function table(): Table
     {
@@ -19,5 +22,11 @@ class CustomTheme extends Tailwind
             ->tbody('divide-y-2')
             ->tdBody('pl-6 py-4 whitespace-nowrap first:text-left last:pr-6')
             ->tdBodyEmpty('text-center py-4 text-dark-light');
+    }
+
+    public function cols(): Cols {
+        return Theme::cols()
+            ->div('select-none justify-end')
+            ->clearFilter('', '');
     }
 }
