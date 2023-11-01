@@ -1,10 +1,9 @@
 <?php
 
-namespace App\Http\Livewire\Lse;
+namespace App\Http\Livewire\Otc;
 
 use App\Http\Livewire\BaseProfileComponent;
 use Illuminate\Database\Eloquent\Model;
-use App\Models\LseProfile;
 use Request;
 
 class Profile extends BaseProfileComponent
@@ -12,15 +11,9 @@ class Profile extends BaseProfileComponent
     public $exchange;
     public Model $model;
 
-    public function title(): string
-    {
-        return "LSE Profile - {$this->model->registrant_name} ({$this->model->symbol})";
-    }
-
     public function render(){
-        return view('livewire.lse-profile', [
+        return view('livewire.frankfurt-profile', [
             'exchange' => $this->exchange,
-            // 'model' => $this->model,
             'symbol'=> $this->model->symbol
         ]);
     }
