@@ -8,11 +8,17 @@
         </div>
     </div>
 </div>
-<div class="w-full mt-4 white-card c-profile-card">
+<div class="w-full mt-4 white-card c-profile-card" x-data="{
+    openProfile: false
+}">
     <div class="title">
         <span class="title_small">Company Profile</span>
-        <a wire:click="toggleFullProfile()" class="title-spoiler title_smal">@if ($showFullProfile) Hide full profile
-            @else View full profile @endif</a>
+        <a class="title-spoiler title_smal" x-show="openProfile" @click="openProfile = !openProfile">
+            Hide full profile
+        </a>
+        <a class="title-spoiler title_smal" x-show="!openProfile" @click="openProfile = !openProfile">
+            View full profile
+        </a>
     </div>
     <div class="flex flex-wrap mt-4 key-values-wrapper__item_parent">
         <div class="key-values-wrapper__item basis-3/6 lg:basis-1/6">
@@ -149,9 +155,8 @@
                 </div>
             </div>
         </div>
-        @if ($showFullProfile)
 
-        <div class="key-values-wrapper__item basis-3/6 lg:basis-1/6">
+        <div class="key-values-wrapper__item basis-3/6 lg:basis-1/6" x-show="openProfile">
             <div class="key-values-none">
 
             </div>
@@ -160,7 +165,7 @@
                 <div class="value">{{ @$profile['cik'] ?: '-' }}</div>
             </div>
         </div>
-        <div class="key-values-wrapper__item basis-3/6 lg:basis-1/6">
+        <div class="key-values-wrapper__item basis-3/6 lg:basis-1/6" x-show="openProfile">
             <div class="key-values-none">
 
             </div>
@@ -169,7 +174,7 @@
                 <div class="value">{{ @$profile['sic_code'] ?: '-' }}</div>
             </div>
         </div>
-        <div class="key-values-wrapper__item basis-3/6 lg:basis-1/6">
+        <div class="key-values-wrapper__item basis-3/6 lg:basis-1/6" x-show="openProfile">
             <div class="key-values-none">
 
             </div>
@@ -178,7 +183,7 @@
                 <div class="value">{{ @$profile['sic_group'] ?: '-' }}</div>
             </div>
         </div>
-        <div class="key-values-wrapper__item basis-3/6 lg:basis-1/6">
+        <div class="key-values-wrapper__item basis-3/6 lg:basis-1/6" x-show="openProfile">
             <div class="key-values-none">
 
             </div>
@@ -187,7 +192,7 @@
                 <div class="value">{{ @$profile['isin'] ?: '-' }}</div>
             </div>
         </div>
-        <div class="key-values-wrapper__item basis-3/6 lg:basis-1/6">
+        <div class="key-values-wrapper__item basis-3/6 lg:basis-1/6" x-show="openProfile">
             <div class="key-values-none">
 
             </div>
@@ -196,7 +201,7 @@
                 <div class="value">{{ @$profile['phone_number'] ?: '-' }}</div>
             </div>
         </div>
-        <div class="key-values-wrapper__item basis-3/6 lg:basis-1/6">
+        <div class="key-values-wrapper__item basis-3/6 lg:basis-1/6" x-show="openProfile">
             <div class="key-values-none">
 
             </div>
@@ -205,7 +210,7 @@
                 <div class="value">{{ @$profile['lei'] ?: '-' }}</div>
             </div>
         </div>
-        <div class="key-values-wrapper__item basis-3/6 lg:basis-1/6">
+        <div class="key-values-wrapper__item basis-3/6 lg:basis-1/6" x-show="openProfile">
             <div class="key-values-none">
 
             </div>
@@ -214,7 +219,7 @@
                 <div class="value">{{ @$profile['postal_code'] ?: '-' }}</div>
             </div>
         </div>
-        <div class="key-values-wrapper__item basis-3/6 lg:basis-1/6">
+        <div class="key-values-wrapper__item basis-3/6 lg:basis-1/6" x-show="openProfile">
             <div class="key-values-none">
 
             </div>
@@ -223,7 +228,7 @@
                 <div class="value">{{ @$profile['exchange'] ?: '-' }}</div>
             </div>
         </div>
-        <div class="key-values-wrapper__item basis-3/6 lg:basis-1/6">
+        <div class="key-values-wrapper__item basis-3/6 lg:basis-1/6" x-show="openProfile">
             <div class="key-values-none">
 
             </div>
@@ -239,7 +244,7 @@
                 </div>
             </div>
         </div>
-        <div class="key-values-wrapper__item basis-3/6 lg:basis-1/6">
+        <div class="key-values-wrapper__item basis-3/6 lg:basis-1/6" x-show="openProfile">
             <div class="key-values-none">
 
             </div>
@@ -248,7 +253,7 @@
                 <div class="value">{{ @$profile['one_year_beta'] ?: '-' }}</div>
             </div>
         </div>
-        <div class="key-values-wrapper__item basis-3/6 lg:basis-1/6">
+        <div class="key-values-wrapper__item basis-3/6 lg:basis-1/6" x-show="openProfile">
             <div class="key-values-none">
 
             </div>
@@ -257,7 +262,7 @@
                 <div class="value">{{ @$profile['three_year_beta'] ?: '-' }}</div>
             </div>
         </div>
-        <div class="key-values-wrapper__item basis-3/6 lg:basis-1/6">
+        <div class="key-values-wrapper__item basis-3/6 lg:basis-1/6" x-show="openProfile">
             <div class="key-values-none">
 
             </div>
@@ -266,7 +271,7 @@
                 <div class="value">{{ @$profile['five_year_beta'] ?: '-' }}</div>
             </div>
         </div>
-        <div class="key-values-wrapper__item basis-3/6 lg:basis-1/6">
+        <div class="key-values-wrapper__item basis-3/6 lg:basis-1/6" x-show="openProfile">
             <div class="key-values-none">
 
             </div>
@@ -275,7 +280,7 @@
                 <div class="value">{{ @$profile['seven_year_beta'] ?: '-' }}</div>
             </div>
         </div>
-        <div class="key-values-wrapper__item basis-3/6 lg:basis-1/6">
+        <div class="key-values-wrapper__item basis-3/6 lg:basis-1/6" x-show="openProfile">
             <div class="key-values-none">
 
             </div>
@@ -284,7 +289,7 @@
                 <div class="value">{{ @$profile['ten_year_beta'] ?: '-' }}</div>
             </div>
         </div>
-        <div class="key-values-wrapper__item basis-3/6 lg:basis-1/6">
+        <div class="key-values-wrapper__item basis-3/6 lg:basis-1/6" x-show="openProfile">
             <div class="key-values-none">
 
             </div>
@@ -293,7 +298,7 @@
                 <div class="value">{{ @$profile['fiftytwo_week_range'] ?: '-' }}</div>
             </div>
         </div>
-        <div class="key-values-wrapper__item basis-3/6 lg:basis-1/6">
+        <div class="key-values-wrapper__item basis-3/6 lg:basis-1/6" x-show="openProfile">
             <div class="key-values-none">
 
             </div>
@@ -302,7 +307,7 @@
                 <div class="value">{{ @$profile['is_active'] ?: '-' }}</div>
             </div>
         </div>
-        <div class="key-values-wrapper__item basis-3/6 lg:basis-1/6">
+        <div class="key-values-wrapper__item basis-3/6 lg:basis-1/6" x-show="openProfile">
             <div class="key-values-none">
 
             </div>
@@ -311,7 +316,7 @@
                 <div class="value">{{ @$profile['asset_type'] ?: '-' }}</div>
             </div>
         </div>
-        <div class="key-values-wrapper__item basis-3/6 lg:basis-1/6">
+        <div class="key-values-wrapper__item basis-3/6 lg:basis-1/6" x-show="openProfile">
             <div class="key-values-none">
 
             </div>
@@ -320,7 +325,7 @@
                 <div class="value">{{ @$profile['open_figi_composite'] ?: '-' }}</div>
             </div>
         </div>
-        <div class="key-values-wrapper__item basis-3/6 lg:basis-1/6">
+        <div class="key-values-wrapper__item basis-3/6 lg:basis-1/6" x-show="openProfile">
             <div class="key-values-none">
 
             </div>
@@ -329,7 +334,7 @@
                 <div class="value">{{ @$profile['price_currency'] ?: '-' }}</div>
             </div>
         </div>
-        <div class="key-values-wrapper__item basis-3/6 lg:basis-1/6">
+        <div class="key-values-wrapper__item basis-3/6 lg:basis-1/6" x-show="openProfile">
             <div class="key-values-none">
 
             </div>
@@ -338,7 +343,7 @@
                 <div class="value">{{ @$profile['market_sector'] ?: '-' }}</div>
             </div>
         </div>
-        <div class="key-values-wrapper__item basis-3/6 lg:basis-1/6">
+        <div class="key-values-wrapper__item basis-3/6 lg:basis-1/6" x-show="openProfile">
             <div class="key-values-none">
 
             </div>
@@ -347,7 +352,7 @@
                 <div class="value">{{ @$profile['security_type'] ?: '-' }}</div>
             </div>
         </div>
-        <div class="key-values-wrapper__item basis-3/6 lg:basis-1/6">
+        <div class="key-values-wrapper__item basis-3/6 lg:basis-1/6" x-show="openProfile">
             <div class="key-values-none">
 
             </div>
@@ -356,7 +361,7 @@
                 <div class="value">{{ @$profile['is_fund'] ?: '-' }}</div>
             </div>
         </div>
-        <div class="key-values-wrapper__item basis-3/6 lg:basis-1/6">
+        <div class="key-values-wrapper__item basis-3/6 lg:basis-1/6" x-show="openProfile">
             <div class="key-values-none">
 
             </div>
@@ -365,7 +370,7 @@
                 <div class="value">{{ @$profile['is_etf'] ?: '-' }}</div>
             </div>
         </div>
-        <div class="key-values-wrapper__item basis-3/6 lg:basis-1/6">
+        <div class="key-values-wrapper__item basis-3/6 lg:basis-1/6" x-show="openProfile">
             <div class="key-values-none">
 
             </div>
@@ -374,7 +379,6 @@
                 <div class="value">{{ @$profile['is_adr'] ?: '-' }}</div>
             </div>
         </div>
-        @endif
 
     </div>
 </div>

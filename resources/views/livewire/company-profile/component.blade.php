@@ -60,6 +60,9 @@
               inline: 'start'
             });
         }
-      }
+    }
+    function scrollToTop() {
+        window.scrollTo({top: 0, behavior: 'smooth'});
+    }
 </script>
 @endpush
