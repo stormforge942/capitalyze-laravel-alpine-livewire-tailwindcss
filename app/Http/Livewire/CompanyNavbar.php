@@ -148,7 +148,7 @@ class CompanyNavbar extends Component
                     ->filter(function ($item) {
                         if (
                             !$item->is_moddable ||
-                            Str::startsWith($item->route_name, ['company.', 'lse.', 'tsx.', 'fund.', 'otc.', 'mutual-fund.', 'shanghai.', 'japan.', 'hkex.', 'euronext.', 'economics-release', 'create.', 'frankfurt.'])
+                            Str::startsWith($item->route_name, ['company.', 'lse.', 'tsx.', 'fund.', 'otc.', 'mutual-fund.', 'shanghai.', 'japan.', 'hkex.', 'euronext.', 'economics-release', 'create.', 'frankfurt.', 'shenzhen.'])
                         ) {
                             return false;
                         }

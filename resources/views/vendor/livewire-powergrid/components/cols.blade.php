@@ -18,7 +18,7 @@
     <div @class([
         'flex items-center gap-1',
         $theme->cols->divClass,
-        str_contains($theme->cols->divClass, 'justify-end') ? '' : 'pl-[19px] pr-3'
+        str_contains($theme->cols->divClass, 'justify-end') ? '' : 'px-3'
     ]) style="{{ $theme->cols->divStyle }}" @if ($column->sortable)
         wire:click="sortBy('{{ $field }}')"
         @endif>

@@ -15,6 +15,6 @@ class Metrics extends BaseMetricsComponent
 
     public function title(): string
     {
-        return "Frankfurt Metrics - {$this->model->company_name}({$this->model->symbol})";
+        return "Shenzhen Metrics - {$this->model->company_name}({$this->model->symbol})";
     }
 }

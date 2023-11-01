@@ -126,7 +126,6 @@ Route::middleware([])->group(function () {
         Route::get('/frankfurt/{ticker}/filings', [FrankfurtController::class, 'filings'])->name('frankfurt.filings');
 
         Route::get('/shenzhen/{ticker}/', [ShenzhenController::class, 'metrics'])->name('shenzhen.metrics');
-        Route::get('/shenzhen/{ticker}/filings', [ShenzhenController::class, 'filings'])->name('shenzhen.filings');
     });
 });
 
