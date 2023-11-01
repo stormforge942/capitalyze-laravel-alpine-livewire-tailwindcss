@@ -167,17 +167,15 @@ class CompanyReport extends Component
         DB::setDefaultConnection($remoteConnectionName);
         Model::setConnectionResolver($remoteConnectionResolver);
 
-        if ($this->view === 'Common Size') {
+        if ($this->view === 'Standardised Template') {
+            $query = InfoTikrPresentation::query()
+                ->where('ticker', '=', $this->ticker)
+                ->select('info')->value('info');
+        } else {
             $query = InfoPresentation::query()
                 ->where('ticker', '=', $this->ticker)
                 ->where('acronym', '=', $acronym)
                 ->where('id', '=', $this->activeSubIndex)
-                ->select('info')->value('info');
-        }
-
-        if ($this->view === 'Standardised Template') {
-            $query = InfoTikrPresentation::query()
-                ->where('ticker', '=', $this->ticker)
                 ->select('info')->value('info');
         }
 
@@ -298,7 +296,7 @@ class CompanyReport extends Component
         $this->tableLoading = true;
         $rows = [];
 
-        if ($this->view === 'Common Size') {
+        if ($this->view !== 'Standardised Template') {
             if (
                 isset($data['Income Statement']) &&
                 is_array($data['Income Statement']) &&
