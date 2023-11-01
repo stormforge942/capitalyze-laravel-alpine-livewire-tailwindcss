@@ -26,8 +26,8 @@
                     <livewire:admin-users />
                 @endif
 
-                @if ($tab == 'navbar-management')
-                    <livewire:admin-navbar-management />
+                @if ($tab == 'permission-management')
+                    <livewire:admin-permission-management />
                 @endif
 
                 @if ($tab == 'groups-management')
