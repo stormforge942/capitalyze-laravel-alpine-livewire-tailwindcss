@@ -50,23 +50,10 @@
                         pointHoverBackgroundColor: '#fff',
                         pointHoverBorderWidth: 4,
                         pointHoverBorderColor: '#0E5FD9',
-                        backgroundColor(context) {
-                            if (!context.chart.chartArea) {
-                                return
-                            }
-
-                            const {
-                                top,
-                                bottom
-                            } = context.chart.chartArea;
-
-                            const gradient = context.chart.ctx.createLinearGradient(0, top, 0, bottom);
-
-                            gradient.addColorStop(0.5, '#CFDFF7')
-                            gradient.addColorStop(1, 'rgba(207, 223, 247, 0.00)')
-
-                            return gradient;
-                        },
+                        backgroundColor: chartJsPlugins.makeLinearGradientBackgroundColor([
+                            [0.5, '#CFDFF7'],
+                            [1, 'rgba(207, 223, 247, 0.00)'],
+                        ]),
                     }]
                 },
                 plugins: [chartJsPlugins.pointLine],

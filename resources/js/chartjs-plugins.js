@@ -1,6 +1,6 @@
 window.chartJsPlugins = {
     pointLine: {
-        id: 'pointLine',
+        id: "pointLine",
         afterDraw: (chart, _, options) => {
             if (chart.tooltip?._active?.length) {
                 let x = chart.tooltip._active[0].element.x
@@ -18,5 +18,27 @@ window.chartJsPlugins = {
                 ctx.restore()
             }
         },
+    },
+    makeLinearGradientBackgroundColor: (colors) => {
+        return (context) => {
+            if (!context.chart.chartArea) {
+                return
+            }
+
+            const { top, bottom } = context.chart.chartArea
+
+            const gradient = context.chart.ctx.createLinearGradient(
+                0,
+                top,
+                0,
+                bottom
+            )
+
+            colors.forEach(([offset, color]) => {
+                gradient.addColorStop(offset, color)
+            })
+
+            return gradient
+        }
     },
 }
