@@ -69,6 +69,7 @@
                         },
                     }]
                 },
+                plugins: [chartJsPlugins.pointLine],
                 options: {
                     interaction: {
                         mode: 'index',
@@ -86,6 +87,10 @@
                             backgroundColor: '#fff',
                             titleColor: '#121A0F',
                             bodyColor: '#121A0F',
+                            yAlign: 'bottom',
+                        },
+                        pointLine: {
+                            color: '#0E5FD9',
                         }
                     },
                     scales: {

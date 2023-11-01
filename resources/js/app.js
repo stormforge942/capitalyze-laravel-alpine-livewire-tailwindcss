@@ -18,6 +18,7 @@ import "./datepicker.js"
 import "./range-slider"
 import "./css-tables"
 import "./report-text-highlighter"
+import './chartjs-plugins'
 
 Alpine.plugin(focus)
 
