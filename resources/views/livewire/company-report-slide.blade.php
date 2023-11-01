@@ -10,6 +10,33 @@
             <span class="sr-only">Loading...</span>
         </div>
     @else
+        @if(array_key_exists('formula', $result))
+            <h1 class="text-[21px] font-bold mb-2">{{$result['formula']['metric']}}</h1>
+            <div class="block px-4 py-2">
+                <span class="w-[100px] inline-block font-bold">Expression</span>
+                <span>{{$result['formula']['expression']}}</span>
+            </div>
+            <div class="block px-4 py-2">
+                <span class="w-[100px] inline-block font-bold">Simplified</span>
+                <span>{{$result['formula']['canonized']}}</span>
+            </div>
+            <div class="block px-4 py-2">
+                <span class="w-[100px] inline-block font-bold">Resolved</span>
+                <span class="{{str_contains($this->result['formula']['resolved'], '229234000000')
+                    || str_contains($this->result['formula']['resolved'], '21563900000') ? 'text-yellow-500' : 'text-black'}}">
+                    {{$result['formula']['resolved']}}
+                </span>
+            </div>
+            <div class="block px-4 py-2">
+                <span class="w-[100px] inline-block font-bold">Result</span>
+                <span>{{$result['formula']['result']}}</span>
+            </div>
+        @endif
+
+        @if(array_key_exists('body', $result))
+            <livewire:company-report-slide-row :data="$result['body']"/>
+        @endif
+
         @foreach($data as $table)
             {!! $table !!}
         @endforeach

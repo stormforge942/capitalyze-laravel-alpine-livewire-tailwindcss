@@ -3,6 +3,7 @@
 namespace App\Http\Livewire;
 
 use App\Models\InfoPresentation;
+use App\Models\InfoTikrPresentation;
 use Carbon\Carbon;
 use DateTime;
 use Illuminate\Database\ConnectionResolver;
@@ -69,7 +70,7 @@ class CompanyReport extends Component
         $this->emit('initCompanyReportChart');
     }
 
-    public function regenareteTableChart(): void
+    public function regenerateTableChart(): void
     {
         $this->generateUI();
     }
@@ -90,7 +91,7 @@ class CompanyReport extends Component
     public function toggleReverse()
     {
         $this->reverse = !$this->reverse;
-        $this->regenareteTableChart();
+        $this->regenerateTableChart();
     }
 
     public function changeChartType($title, $type)
@@ -166,11 +167,19 @@ class CompanyReport extends Component
         DB::setDefaultConnection($remoteConnectionName);
         Model::setConnectionResolver($remoteConnectionResolver);
 
-        $query = InfoPresentation::query()
-            ->where('ticker', '=', $this->ticker)
-            ->where('acronym', '=', $acronym)
-            ->where('id', '=', $this->activeSubIndex)
-            ->select('info')->value('info');
+        if ($this->view === 'Common Size') {
+            $query = InfoPresentation::query()
+                ->where('ticker', '=', $this->ticker)
+                ->where('acronym', '=', $acronym)
+                ->where('id', '=', $this->activeSubIndex)
+                ->select('info')->value('info');
+        }
+
+        if ($this->view === 'Standardised Template') {
+            $query = InfoTikrPresentation::query()
+                ->where('ticker', '=', $this->ticker)
+                ->select('info')->value('info');
+        }
 
         Model::setConnectionResolver($defaultConnectionResolver);
         DB::setDefaultConnection($defaultConnectionName);
@@ -216,7 +225,15 @@ class CompanyReport extends Component
         }
 
         if ($this->period === 'quarterly') {
+
             $this->tableDates = array_unique($this->tableDates);
+
+            $filteredDates = array_filter($this->tableDates, function ($date) use ($dates) {
+                $year = intval(date('Y', strtotime($date)));
+                return $year >= $dates[0] && $year <= $dates[1];
+            });
+
+            $this->tableDates = $filteredDates;
         }
 
         $this->generateRows($this->data);
@@ -234,7 +251,8 @@ class CompanyReport extends Component
         $this->generateRows($this->data);
     }
 
-    function traverseArray($array) {
+    function traverseArray($array)
+    {
         foreach ($array as $key => $value) {
             if (is_array($value)) {
                 if (strtotime($key) !== false) {
@@ -280,28 +298,50 @@ class CompanyReport extends Component
         $this->tableLoading = true;
         $rows = [];
 
-        if (
-            isset($data['Income Statement']) &&
-            is_array($data['Income Statement']) &&
-            isset($data['Income Statement']['Statement']) &&
-            is_array($data['Income Statement']['Statement']) &&
-            isset($data['Income Statement']['Statement']['Statement'])
-        ) {
-            $data = $data['Income Statement']['Statement']['Statement'];
+        if ($this->view === 'Common Size') {
+            if (
+                isset($data['Income Statement']) &&
+                is_array($data['Income Statement']) &&
+                isset($data['Income Statement']['Statement']) &&
+                is_array($data['Income Statement']['Statement']) &&
+                isset($data['Income Statement']['Statement']['Statement'])
+            ) {
+                $data = $data['Income Statement']['Statement']['Statement'];
+            }
+
+            if (
+                isset($data['Statement of Financial Position']) &&
+                is_array($data['Statement of Financial Position'])
+            ) {
+                $data = $data['Statement of Financial Position'];
+            }
+
+            if (
+                isset($data['Statement of Cash Flows']) &&
+                is_array($data['Statement of Cash Flows'])
+            ) {
+                $data = $data['Statement of Cash Flows'];
+            }
         }
 
-        if (
-            isset($data['Statement of Financial Position']) &&
-            is_array($data['Statement of Financial Position'])
-        ) {
-            $data = $data['Statement of Financial Position'];
-        }
+        if ($this->view === 'Standardised Template') {
+            if ($this->period === 'annual') {
+                $data = $data['annual'];
+            }
 
-        if (
-            isset($data['Statement of Cash Flows']) &&
-            is_array($data['Statement of Cash Flows'])
-        ) {
-            $data = $data['Statement of Cash Flows'];
+            if ($this->period === 'quarterly') {
+                $data = $data['quarterly'];
+            }
+            foreach ($this->navbar[$this->activeIndex] as $tab) {
+                if ($tab['id'] === $this->activeSubIndex) {
+                    $data = match ($tab['title']) {
+                        'Income Statement' => $data['Income Statement'],
+                        'Balance Sheet Statement' => $data['Balance Sheet'],
+                        'Cash Flow Statement' => $data['Cash Flow Statement'],
+                        default => $data
+                    };
+                }
+            }
         }
 
         foreach ($data as $key => $value) {
@@ -373,6 +413,16 @@ class CompanyReport extends Component
 
         $decimalDisplay = intval($this->decimalDisplay);
 
+        if (str_contains($value, '%') || str_contains($value, '-') || !is_numeric($value)) {
+            return $value;
+        }
+
+        if (str_contains($value, '.') || str_contains($value, ',')) {
+            $float = floatval(str_replace(',', '', $value));
+
+            $value = intval($float);
+        }
+
         if (!isset($units[$unitType])) {
             return number_format($value, $decimalDisplay);
         }
@@ -400,10 +450,16 @@ class CompanyReport extends Component
 
         foreach ($data as $key => $value) {
             if (in_array('|', str_split($value))) {
-                [$value, $hash] = explode('|', $value);
-                $response['value'] = $value;
-                $response['present'] = $this->generatePresent($value);
-                $response['hash'] = $hash;
+                $array = explode('|', $value);
+
+                $response['value'] = $array[0];
+                $response['present'] = $this->generatePresent($array[0]);
+                $response['hash'] = $array[1];
+
+                if (array_key_exists(2, $array)) {
+                    $response['secondHash'] = $array[2];
+                }
+
             } else {
                 $response[$key] = $value;
             }
@@ -436,7 +492,11 @@ class CompanyReport extends Component
             || $propertyName === 'order'
             || $propertyName === 'decimalDisplay'
         ) {
-            $this->regenareteTableChart();
+            $this->regenerateTableChart();
+        }
+
+        if ($propertyName === 'view') {
+            $this->getData();
         }
     }
 

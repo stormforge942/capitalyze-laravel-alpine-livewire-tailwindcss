@@ -27,11 +27,17 @@ class CompanyReportTableRow extends Component
 
     public function generateAttribute($value)
     {
+        $string = '';
+
         if ($value['empty']) {
             return "";
         }
 
-        return '{"hash":"' . $value['hash'] . '","ticker":"' . $value['ticker'] . '","value":"$' . $value['value'] . '"}';
+        if (array_key_exists('secondHash', $value)) {
+            $string = ',"secondHash":"' . $value['secondHash'] . '"';
+        }
+
+        return '{"hash":"' . $value['hash'] . '"' . $string . ',"ticker":"' . $value['ticker'] . '","value":"$' . $value['value'] . '"}';
     }
 
     public function render()

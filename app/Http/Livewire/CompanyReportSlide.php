@@ -8,7 +8,9 @@ use Illuminate\Support\Facades\DB;
 class CompanyReportSlide extends SlideOver
 {
     public $hash;
+    public $secondHash;
     public $data;
+    public $result;
     public $value;
     public $ticker;
     public $json;
@@ -23,6 +25,16 @@ class CompanyReportSlide extends SlideOver
         ->where('ticker', '=', $this->ticker)
         ->where('info', 'ilike', '%' . $this->hash . '%')
         ->value('info');
+
+        if (isset($this->secondHash)) {
+            $result = DB::connection('pgsql-xbrl')
+                ->table('public.tikr_text_block_content')
+                ->where('ticker', '=', $this->ticker)
+                ->where('fact_hash', '=', $this->secondHash)
+                ->value('content');
+
+            $this->result = json_decode($result, true);
+        }
 
         $decodedQuery = json_decode($query, true); // Decoding JSON into an associative array
 
@@ -46,10 +58,11 @@ class CompanyReportSlide extends SlideOver
         }
     }
 
-    public function mount($hash, $ticker, $value) {
+    public function mount($hash, $ticker, $value, $secondHash) {
         $this->hash = $hash;
         $this->ticker = $ticker;
         $this->value = $value;
+        $this->secondHash = $secondHash;
     }
 
     public function render()
