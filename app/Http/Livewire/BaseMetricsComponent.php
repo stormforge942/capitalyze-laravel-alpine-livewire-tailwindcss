@@ -19,6 +19,7 @@ abstract class BaseMetricsComponent extends Component
     public $activeIndex = null;
     public $activeSubIndex = null;
     public $possibleErrors = [];
+    public $hasPeriod = true;
 
     protected $listeners = ['tabClicked', 'tabSubClicked'];
 
@@ -62,8 +63,8 @@ abstract class BaseMetricsComponent extends Component
         return DB::connection('pgsql-xbrl')
             ->table('public.' . $this->table())
             ->select('json_result')
-            ->where('symbol', '=', $this->model->symbol)
-            ->where('is_annual_report', '=', $this->period === 'annual')
+            ->where('symbol', $this->model->symbol)
+            ->when($this->hasPeriod , fn($q) => $q->where('is_annual_report', $this->period === 'annual'))
             ->orderBy('date', 'desc')
             ->get();
     }
