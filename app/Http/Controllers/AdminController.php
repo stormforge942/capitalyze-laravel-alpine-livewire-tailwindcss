@@ -22,7 +22,7 @@ class AdminController extends Controller
     public function permission()
     {
         return view('layouts.admin', [
-            'tab' => 'navbar-management'
+            'tab' => 'permission-management'
         ]);
     }
 
