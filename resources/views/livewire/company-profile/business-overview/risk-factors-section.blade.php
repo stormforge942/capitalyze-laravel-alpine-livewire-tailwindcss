@@ -38,6 +38,7 @@
                 $businessContent=preg_replace('/>Financial Risks</i', "><span class='anchor' id='business-information-financial-risks'></span><p class='subtitle'>Financial Risks</p><" , $businessContent, 1);
                 $businessContent=preg_replace('/>General Risks</i', "><span class='anchor' id='business-information-general-risks'></span><p class='subtitle'>General Risks</p><" , $businessContent, 1);
                 $businessContent = str_replace('<p style="padding-left:45pt;text-align:justify;text-indent:-45pt"><span style="color:#000000;font-family:\'Helvetica\',sans-serif;font-size:9pt;font-weight:700;line-height:120%"><p class=\'title\'>Risk Factors</p></span></p>', '<p class=\'title\'>Risk Factors</p>', $businessContent);
+                $businessContent = str_replace('9pt', '14px', $businessContent);
                 @endphp
             {!!$businessContent!!}
             @php

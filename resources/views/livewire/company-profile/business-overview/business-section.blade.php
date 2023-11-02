@@ -38,6 +38,7 @@
             $businessContent=preg_replace('/>business seasonality and product introductions</i', "><span class='anchor' id='business-information-business-seasonality'></span><p class='subtitle'>Business Seasonality and Product Introductions</p><" , $businessContent, 1);
             $businessContent=preg_replace('/>human capital</i', "><span class='anchor' id='business-information-human-capital'></span><p class='subtitle'>Human Capital</p><" ,$businessContent, 1);
             $businessContent=preg_replace('/>available information</i', "><span class='anchor' id='business-information-available-information'></span><p class='subtitle'>Available Information</p><" , $businessContent, 1);
+            $businessContent = str_replace('9pt', '14px', $businessContent);
             @endphp
             {!!$businessContent!!}
 

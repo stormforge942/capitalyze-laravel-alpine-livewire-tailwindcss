@@ -31,6 +31,7 @@
     $businessContent=preg_replace('/>Epic Games</i', "><span class='anchor' id='business-information-epic-games'></span><p class='subtitle'>Epic Games</p><" ,$businessContent, 1);
     $businessContent=preg_replace('/>Other Legal Proceedings</i', "><span class='anchor' id='business-information-other-legal-proceedings'></span><p class='subtitle'>Other Legal Proceedings</p><" ,$businessContent, 1);
     $businessContent = str_replace('<p style="margin-top:18pt;padding-left:45pt;text-align:justify;text-indent:-45pt"><span style="color:#000000;font-family:\'Helvetica\',sans-serif;font-size:9pt;font-weight:700;line-height:120%"><p class=\'title\'>Legal Proceedings</p></span></p>', '<p class=\'title\'>Legal Proceedings</p>', $businessContent);
+    $businessContent = str_replace('9pt', '14px', $businessContent);
     @endphp
     {!!$businessContent!!}
     @php
