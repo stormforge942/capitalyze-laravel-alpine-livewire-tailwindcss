@@ -47,10 +47,10 @@
                         </svg>
                     </button>
                     <div x-show="dropdownMenu" class="absolute left-0 py-2 mt-2 bg-white  rounded-md shadow-xl w-44">
-                        <a href="javascript;" wire:click.prevent="setInfoActiveTab('discover')" class="block px-4 py-2 text-sm text-gray-300 text-gray-700 hover:bg-gray-400 hover:text-white">
+                        <a href="javascript;" wire:click.prevent="setInfoActiveTab('track-investor')" class="block px-4 py-2 text-sm text-gray-300 text-gray-700 hover:bg-gray-400 hover:text-white">
                             TrackInvestor
                         </a>
-                        <a href="javascript;" wire:click.prevent="setInfoActiveTab('my-favorites')" class="block px-4 py-2 text-sm text-gray-300 text-gray-700 hover:bg-gray-400 hover:text-white">
+                        <a href="javascript;" wire:click.prevent="setInfoActiveTab('other-favorites')" class="block px-4 py-2 text-sm text-gray-300 text-gray-700 hover:bg-gray-400 hover:text-white">
                             Other Favorites
                         </a>
                     </div>
