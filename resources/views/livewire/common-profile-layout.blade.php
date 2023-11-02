@@ -231,6 +231,14 @@
                             <span class="text-[#121A0F] font-medium text-sm">{{$data->etf??'--'}}</span>
                         </div>
                     </div>
+                    <div class="flex felx-col md:flex-row justify-start items-center mt-4">
+                        <div class="mr-4">
+                        </div>
+                        <div>
+                            <h4 class="text-sm font-medium text-[#464E49]">Updated At</h4>
+                            <span class="text-[#121A0F] font-medium text-sm">{{$data->updated_at??'--'}}</span>
+                        </div>
+                    </div>
                 @endif
             </div>
         </div>
