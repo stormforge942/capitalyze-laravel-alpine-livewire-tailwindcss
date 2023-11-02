@@ -86,6 +86,7 @@ flex: 0 0 70%;
     line-height: 28px;
     margin: 0 !important;
     margin-bottom: 16px !important;
+    padding: 0 !important;
 }
 .bussiness-information .bussiness-information-left .subtitle {
     font-size: 16px !important;
@@ -94,6 +95,7 @@ flex: 0 0 70%;
     margin-bottom: 16px !important;
     font-weight: 500 !important;
     line-height: normal;
+
 }
 .bussiness-information .bussiness-information-left .title {
     font-size: 24px !important;
@@ -199,6 +201,10 @@ span.business-footer-text a {
 .page-titles {
     font-size: 24px;
     line-height: 31px;
+}
+.page-titles .brr {
+    display: block;
+    margin-top: 15px;
 }
 .table-wrapper .cell:first-child {
     padding-left: 22px;
@@ -316,7 +322,7 @@ span.business-footer-text a {
     font-weight: 500;
 }
 .c-profile-card .title_small{
-    font: size 14px;
+    font-size: 14px;
     font-weight: 500;
 }
 .b-info-card .text-info {
@@ -447,4 +453,100 @@ span.business-footer-text a {
 
 .company-profile-overview-chart {
     max-height: 450px !important;
+}
+@media(max-width:576px){
+    .white-card .title {
+        margin-bottom: 12px;
+        font-size: 12px
+    }
+    .nav-top-list li a {
+        font-size: 12px;
+        letter-spacing: -.152px;
+        padding: 8px;
+    }
+    .tabs-wrapper {
+        margin-top: 20px;
+    }
+    .white-card-nav {
+        background-color: transparent;
+        padding: 1rem 0rem;
+        padding-bottom: 0px;
+    }
+    .nav-top-list li {
+        margin: 0px;
+        margin-bottom: 10px;
+    }
+    .bussiness-information .bussiness-information-right .list-items li a {
+        padding: 11px 8px;
+        font-size: 13px;
+    }
+    .bussiness-information .bussiness-information-left .subtitle{
+        font-size: 13px !important;
+    }
+    .bussiness-information .bussiness-information-left .title {
+        font-size: 20px !important;
+        margin-bottom: 5px !important;
+    }
+    .nav-top-list {
+        gap: 14px;
+    }
+    .nav-top {
+        gap: 0px;
+    }
+    .cards-wrapper{
+        grid-template-columns: repeat(1, 1fr);
+    }
+    .market-card-holder .key {
+        font-size: 11px;
+        letter-spacing: -0.11px;
+    }
+    .white-card .key-values-wrapper {
+        grid-template-columns: repeat(3, 1fr);
+    }
+    .page-titles {
+        font-size: 20px;
+        line-height: 22px;
+        letter-spacing: 0.1px;
+    }
+    .key-values-wrapper__item .key-values-none {
+        flex-basis: auto;
+        width: 32px !important;
+    }
+    .graph-wrapper .graph-header .title {
+        font-size: 16px;
+    }
+    .graph-wrapper .graph-header div:first-child small {
+        font-size: 11px;
+    }
+    .page-titles .brr {
+        margin-top: 10px;
+    }
+    .header__main {
+        height: 88px;
+    }
+    .b-info-card .title_small,.c-profile-card .title_small,.c-profile-card .title a {
+        font-size: 12px;
+    }
+    .b-info-card .text-info {
+        font-size: 13px;
+    }
+    .c-profile-card .key {
+        font-size: 11px;
+    }
+    .c-profile-card .value {
+        font-size: 13px;
+    }
+    .table-wrapper {
+        max-width: 100%;
+    }
+    .table-wrapper .table .row-head .cell {
+        font-size: 14px;
+        min-width: 153px;
+    }
+    .table-wrapper .table  .cell {
+        font-size: 13px;
+    }
+    .company-profile-page{
+        font-size: small;
+    }
 }

@@ -9,7 +9,15 @@
             $businessContent = str_replace('Item 1.', '', $businessContent);
             $businessContent = str_replace('\u{A0}\u{A0}\u{A0}\u{A0}', '', $businessContent);
             $businessContent = preg_replace('/[\x00-\x1F\x7F-\xFF]/', '', $businessContent);
+            $businessContent = str_replace('style="height:42.75pt;position:relative;width:100%"', '', $businessContent);
+            $businessContent = str_replace('style="bottom:0;position:absolute;width:100%"', '', $businessContent);
+            $businessContent = str_replace('style="min-height:42.75pt;width:100%"', '', $businessContent);
+            $businessContent = str_replace('<br/>', '', $businessContent);
+            $businessContent = preg_replace('/Apple Inc. | 2022 Form 10-K | [0-9]+/i', '', $businessContent);
+            $businessContent = str_replace('||', '', $businessContent);
+            $businessContent = preg_replace('/<hr(.?)\/>/i', "" , $businessContent);
             $businessContent = preg_replace('/Item 1([a-z]?)./i', '', $businessContent);
+            $businessContent = preg_replace('/<hr (.?)[a-z="-:]+\/>/mi', "" , $businessContent);
             $businessContent = preg_replace('/class="(.?)+"/i','', $businessContent);
             $businessContent = preg_replace('/<div/i', "<p" , $businessContent);
             $businessContent = preg_replace('/<div(.?)(i?)(d?)=[a-z"0-9_-]+\/>/i', "<p>" , $businessContent);
