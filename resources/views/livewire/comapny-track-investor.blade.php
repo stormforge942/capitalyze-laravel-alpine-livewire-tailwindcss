@@ -19,11 +19,11 @@
                     </div> 
                 </div>   
                 <div class="hidden md:flex tabs-wrapper w-full">
-                    <div @class(['tab', 'active' => $infoTabActive == 'discover']) wire:click="setInfoActiveTab('discover')">Discover</div>
-                    <div @class(['tab', 'active' => $infoTabActive == 'my-favorites']) wire:click="setInfoActiveTab('my-favorites')">My Favorites</div>
+                    <div @class(['tab', 'active' => $infoTabActive == 'track-investor']) wire:click="setInfoActiveTab('track-investor')">TrackInvestor</div>
+                    <div @class(['tab', 'active' => $infoTabActive == 'other-favorites']) wire:click="setInfoActiveTab('other-favorites')">Other Favorites</div>
                 </div>
                 <div class="hidden md:flex content-between items-center justify-between w-full">
-                    <div class=" title font-semibold">Discover Funds</div>
+                    <div class=" title font-semibold">TrackInvestor Funds</div>
                     <div class="search mr-2">
                         <label for="default-search" class="mb-2 text-sm font-medium text-gray-900 sr-only dark:text-gray-400">Search</label>
                         <div class="relative p-0 m-0 sm:mt-3 md:mt-3">
@@ -48,10 +48,10 @@
                     </button>
                     <div x-show="dropdownMenu" class="absolute left-0 py-2 mt-2 bg-white  rounded-md shadow-xl w-44">
                         <a href="javascript;" wire:click.prevent="setInfoActiveTab('discover')" class="block px-4 py-2 text-sm text-gray-300 text-gray-700 hover:bg-gray-400 hover:text-white">
-                            Discover
+                            TrackInvestor
                         </a>
                         <a href="javascript;" wire:click.prevent="setInfoActiveTab('my-favorites')" class="block px-4 py-2 text-sm text-gray-300 text-gray-700 hover:bg-gray-400 hover:text-white">
-                            My Favorites
+                            Other Favorites
                         </a>
                     </div>
                     <div class="search mr-5">
@@ -72,12 +72,12 @@
                             No data is loding
                         </div>
                     @else
-                        @if ($infoTabActive == 'discover')
+                        @if ($infoTabActive == 'track-investor')
                         <div>
-                            <livewire:discover.fund/>
+                            <livewire:track-investor.fund/>
                         </div>
-                        @elseif($infoTabActive == 'my-favorites')
-                            <livewire:discover.favorites/>
+                        @elseif($infoTabActive == 'other-favorites')
+                            <livewire:track-investor.favorites/>
                         @endif
                     @endif
                 </div>

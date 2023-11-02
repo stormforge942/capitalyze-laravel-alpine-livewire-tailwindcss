@@ -1,18 +1,18 @@
 <?php
 
-namespace App\Http\Livewire\Discover;
+namespace App\Http\Livewire\TrackInvestor;
 
 use Livewire\Component;
 
-class Favorites extends Component
+class Fund extends Component
 {
     public $loading = false;
-
     protected $listeners = ['loadingFire' => 'handleLoadingFire'];
 
     public  function handleLoadingFire(){
         $this->loading = true;
     }
+
     public function render()
     {
         $data = [
@@ -36,13 +36,13 @@ class Favorites extends Component
                 ]
             ]
         ];
-        $favorites = [];
+        $investors = [];
         for($i=0; $i<100; $i++){
-            $favorites[] = $data;
+            $investors[] = $data;
         }
         $this->loading = true;
-        return view('livewire.discover.favorites', [
-            'favorites' => $favorites
+        return view('livewire.track-investor.fund', [
+            'investors' => $investors
         ]);
     }
 }

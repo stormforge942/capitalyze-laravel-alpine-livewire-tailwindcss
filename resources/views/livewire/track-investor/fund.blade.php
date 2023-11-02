@@ -2,7 +2,7 @@
     @if($loading)
         <div class="flex-1 mt-6 ml-0 mr-0">
             <div class="grid gap-y-2 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 2xl:grid-cols-5">
-                @foreach($discover as $item)
+                @foreach($investors as $item)
                     <div class="box shadow-md bg-[#ffffff] p-3 m-2 border-0.5 rounded border-[#D4DDD7]">
                         <div class="flex content-center justify-between items-center">
                             <div>

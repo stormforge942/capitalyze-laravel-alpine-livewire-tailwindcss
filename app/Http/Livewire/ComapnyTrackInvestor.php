@@ -4,12 +4,12 @@ namespace App\Http\Livewire;
 
 use Livewire\Component;
 
-class ComapnyOwnership extends Component
+class ComapnyTrackInvestor extends Component
 {
     public $company;
     public $ticker;
     public $period;
-    public $infoTabActive = "discover"; 
+    public $infoTabActive = "track-investor"; 
     public $loading = false;
 
     public function setInfoActiveTab(string $tab): void {
@@ -20,6 +20,6 @@ class ComapnyOwnership extends Component
     public function render()
     {
         $this->loading = true;
-        return view('livewire.comapny-ownership');
+        return view('livewire.comapny-track-investor');
     }
 }
