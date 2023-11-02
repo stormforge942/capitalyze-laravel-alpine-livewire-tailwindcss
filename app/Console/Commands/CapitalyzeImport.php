@@ -40,6 +40,7 @@ class CapitalyzeImport extends Command
         $this->call('otc:import');
         $this->call('navbar:import');
         $this->call('frankfurt:import');
+        $this->call('shenzhen:import');
         $this->call('groups:import');
         $this->call('navbarGroupShows:create');
     }

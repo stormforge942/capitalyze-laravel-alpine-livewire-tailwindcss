@@ -33,19 +33,18 @@
                 <hr class="my-4">
 
                 <ul class="space-y-2 font-medium">
-                    @if (Str::endsWith($currentRoute, ['.metrics']))
+                    @if (Str::endsWith($currentRoute, ['.metrics']) && ($hasQuarterly ?? true))
                         <li>
                             <div class="relative ml-3">
                                 <button wire:key="navbar-period-annual"
                                     class="@if ($period == 'annual') text-blue-700 @else text-slate-700 pl-0 @endif text-sm appearance-none inline-flex px-3 py-2 leading-tight appearance-none focus:outline-none focus:bg-white focus:border-slate-500 pl-0"
                                     wire:click="changePeriod('annual')">Annual</button>
 
-                                @if ($hasQuarterly ?? true)
-                                    <span class="text-indigo-600">|</span>
-                                    <button wire:key="navbar-period-quarterly"
-                                        class="@if ($period == 'quarterly') text-blue-700 @else text-slate-700 @endif text-sm appearance-none inline-flex px-3 py-2 leading-tight appearance-none focus:outline-none focus:bg-white focus:border-slate-500"
-                                        wire:click="changePeriod('quarterly')">Quarterly</button>
-                                @endif
+                                <span class="text-indigo-600">|</span>
+
+                                <button wire:key="navbar-period-quarterly"
+                                    class="@if ($period == 'quarterly') text-blue-700 @else text-slate-700 @endif text-sm appearance-none inline-flex px-3 py-2 leading-tight appearance-none focus:outline-none focus:bg-white focus:border-slate-500"
+                                    wire:click="changePeriod('quarterly')">Quarterly</button>
                             </div>
                         </li>
                     @endif

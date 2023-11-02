@@ -53,7 +53,9 @@ $passwordToggle = $type === 'password' && ($toggle ?? false);
         @endif
     </label>
 
-    @error($name)
-        <p class="mt-1 text-sm text-danger px-4">{{ $message }}</p>
-    @enderror
+    @if ($showError ?? true)
+        @error($name)
+            <p class="mt-1 text-sm text-danger px-4">{{ $message }}</p>
+        @enderror
+    @endif
 </div>

@@ -8,7 +8,9 @@ use App\Http\Livewire\Japans;
 use Laravel\Fortify\RoutePath;
 use App\Http\Livewire\Euronexts;
 use App\Http\Livewire\Shanghais;
+use App\Http\Livewire\Shenzhens;
 use App\Http\Livewire\Delistings;
+use App\Http\Livewire\Frankfurts;
 use App\Http\Livewire\ReviewPage;
 use App\Http\Livewire\PressRelease;
 use Illuminate\Support\Facades\Route;
@@ -21,6 +23,7 @@ use App\Http\Livewire\EarningsCalendar;
 use App\Http\Livewire\PermissionDenied;
 use App\Http\Controllers\FundController;
 use App\Http\Controllers\HkexController;
+use App\Http\Controllers\HomeController;
 use App\Http\Livewire\EconomicsCalendar;
 use App\Http\Controllers\AdminController;
 use App\Http\Controllers\JapanController;
@@ -28,16 +31,16 @@ use App\Http\Livewire\CompanyFilingsPage;
 use App\Http\Livewire\CompanyIdentifiers;
 use App\Http\Controllers\CompanyController;
 use App\Http\Controllers\EuronextController;
-use App\Http\Controllers\FrankfurtController;
-use App\Http\Controllers\HomeController;
 use App\Http\Controllers\ShanghaiController;
 use App\Http\Livewire\EconomicReleaseSeries;
 use App\Http\Livewire\MutualFundFilingsPage;
+use App\Http\Controllers\FrankfurtController;
 use App\Http\Controllers\MutualFundController;
-use App\Http\Controllers\ResetLinkSentController;
-use App\Http\Controllers\ResetPasswordSuccessfulController;
 use App\Http\Controllers\VerifyEmailController;
-use App\Http\Livewire\Frankfurts;
+use App\Http\Controllers\ResetLinkSentController;
+use App\Http\Middleware\RememberOwnershipHistory;
+use App\Http\Controllers\ResetPasswordSuccessfulController;
+use App\Http\Controllers\ShenzhenController;
 use Laravel\Fortify\Http\Controllers\AuthenticatedSessionController;
 
 Route::get('/permission-denied', PermissionDenied::class)->name('permission-denied');
@@ -63,6 +66,7 @@ Route::middleware([])->group(function () {
         Route::get('/hkex', Hkexs::class)->name('hkexs');
         Route::get('/otc', Otcs::class)->name('otcs');
         Route::get('/frankfurt', Frankfurts::class)->name('frankfurts');
+        Route::get('/shenzhen', Shenzhens::class)->name('shenzhens');
         Route::get('/review', ReviewPage::class)->name('review');
         Route::get('/press-release', PressRelease::class)->name('press.release');
 
@@ -81,6 +85,11 @@ Route::middleware([])->group(function () {
         Route::get('/company/{ticker}/restatement', [CompanyController::class, 'restatement'])->name('company.restatement');
         Route::get('/company/{ticker}/employee', [CompanyController::class, 'employee'])->name('company.employee');
         Route::get('/company/{ticker}/fail-to-deliver', [CompanyController::class, 'failToDeliver'])->name('company.fail.to.deliver');
+
+        Route::middleware(RememberOwnershipHistory::class)->group(function () {
+            Route::get('/company/{ticker}/ownership', [CompanyController::class, 'ownership'])->name('company.ownership');
+            Route::get('/company/{ticker}/ownership/funds/{fund}', [CompanyController::class, 'fund'])->name('company.fund');
+        });
 
         Route::get('/fund/{cik}/', [FundController::class, 'summary'])->name('fund.summary');
         Route::get('/fund/{cik}/holdings', [FundController::class, 'holdings'])->name('fund.holdings');
@@ -123,6 +132,8 @@ Route::middleware([])->group(function () {
         Route::get('/frankfurt/{ticker}/', [FrankfurtController::class, 'metrics'])->name('frankfurt.metrics');
         Route::get('/frankfurt/{ticker}/profile', [FrankfurtController::class, 'profile'])->name('frankfurt.profile');
         Route::get('/frankfurt/{ticker}/filings', [FrankfurtController::class, 'filings'])->name('frankfurt.filings');
+
+        Route::get('/shenzhen/{ticker}/', [ShenzhenController::class, 'metrics'])->name('shenzhen.metrics');
     });
 });
 

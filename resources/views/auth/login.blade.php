@@ -4,26 +4,36 @@
 
 @section('content')
     @include('partials.auth-header', ['title' => 'Sign In', 'badge' => true])
+
+    @if($errors->count())
+        <div class="text-center text-danger mt-4">
+            Email or password is incorrect
+        </div>  
+    @endif
+    
     <form class="mt-4" method="post" action="{{ route('login') }}" autocomplete="on">
         @csrf
 
         @include('partials.input', [
             'type' => 'email',
             'label' => 'Email',
+            'class' => $errors->count() ? 'border-danger' : '',
             'name' => 'email',
             'required' => true,
-            'autofocus' => true,
+            'autofocus' => $errors->count() ? false : true,
             'attrs' => ['autocomplete' => 'email'],
+            'showError' => false,
         ])
 
         @include('partials.input', [
             'type' => 'password',
-            'class' => 'mt-6',
+            'class' => 'mt-6' . ($errors->count() ? ' border-danger' : ''),
             'label' => 'Password',
             'name' => 'password',
             'required' => true,
             'attrs' => ['autocomplete' => 'current-password'],
             'toggle' => true,
+            'showError' => false,
         ])
 
         <div class="mt-4 flex justify-between items-center text-sm">

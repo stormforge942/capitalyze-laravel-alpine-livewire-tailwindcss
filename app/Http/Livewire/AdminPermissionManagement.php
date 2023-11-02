@@ -8,7 +8,7 @@ use App\Models\Navbar;
 use App\Models\Groups;
 use App\Models\NavbarGroupShows;
 
-class AdminNavbarManagement extends Component
+class AdminPermissionManagement extends Component
 {
     public $navbarItems;
     public $groups;
@@ -82,6 +82,6 @@ class AdminNavbarManagement extends Component
 
     public function render()
     {
-        return view('livewire.admin-navbar-management');
+        return view('livewire.admin-permission-management');
     }    
 }

@@ -52,7 +52,6 @@ document.addEventListener("alpine:init", () => {
         },
     }))
 })
-
 ;[...document.querySelectorAll(".moving-label-input")].forEach((input) => {
     input.addEventListener("blur", (e) => {
         let el = e.target.nextElementSibling
@@ -85,4 +84,3 @@ document.addEventListener("alpine:init", () => {
 })
 
 Alpine.start()
-
