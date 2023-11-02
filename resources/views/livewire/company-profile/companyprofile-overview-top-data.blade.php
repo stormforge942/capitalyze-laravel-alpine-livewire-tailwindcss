@@ -1,5 +1,5 @@
-<div class="cards-wrapper">
-    <div class="white-card market-card-holder">
+<div class="cards-wrapper flex">
+    <div class="white-card w-1/4">
         <div class="title">Market Data</div>
         <div class="key-values-wrapper">
 
@@ -29,7 +29,7 @@
         </div>
     </div>
 
-    <div class="white-card market-card-holder">
+    <div class="white-card market-card-holder w-1/4">
         <div class="title">Capital Structure</div>
         <div class="key-values-wrapper">
 
@@ -59,7 +59,7 @@
         </div>
     </div>
 
-    <div class="white-card market-card-holder">
+    <div class="white-card market-card-holder w-1/4">
         <div class="title">Profitability</div>
         <div class="key-values-wrapper">
             <div class="key-value">
@@ -88,7 +88,7 @@
         </div>
     </div>
 
-    <div class="white-card market-card-holder">
+    <div class="white-card market-card-holder w-1/4">
         <div class="title">LTM Valuation</div>
         <div class="key-values-wrapper">
             <div class="key-value">

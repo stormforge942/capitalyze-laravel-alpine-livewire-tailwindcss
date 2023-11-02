@@ -27,4 +27,14 @@ class ShanghaiController extends BaseController
             'tab' => 'filings'
         ]);
     }
+
+    public function profile(Request $request, $ticker)
+    {
+        return view('layouts.stock-exchange', [
+            'model' => Shanghai::where('symbol', $ticker)->get()->first(),
+            'period' => $request->query('period', 'annual'),
+            'exchange' => 'shanghai',
+            'tab' => 'profile'
+        ]);
+    }
 }
