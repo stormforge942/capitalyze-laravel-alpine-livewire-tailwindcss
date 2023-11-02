@@ -29,4 +29,16 @@ class JapanController extends BaseController
             'tab' => 'filings'
         ]);
     }
+
+    public function profile(Request $request, $ticker)
+    {
+        $japan = Japan::where('symbol', $ticker)->get()->first();
+
+        return view('layouts.stock-exchange', [
+            'model' => Japan::where('symbol', $ticker)->get()->first(),
+            'period' => $request->query('period', 'annual'),
+            'exchange' => 'japan',
+            'tab' => 'profile'
+        ]);
+    }
 }

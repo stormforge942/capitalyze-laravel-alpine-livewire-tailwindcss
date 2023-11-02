@@ -31,4 +31,16 @@ class FrankfurtController extends BaseController
             'tab' => 'filings'
         ]);
     }
+
+    public function profile(Request $request, $ticker)
+    {
+        $frankfurt = Frankfurt::where('symbol', $ticker)->get()->first();
+
+        return view('layouts.stock-exchange', [
+            'model' => $frankfurt,
+            'period' => $request->query('period', 'annual'),
+            'exchange' => 'frankfurt',
+            'tab' => 'profile'
+        ]);
+    }
 }

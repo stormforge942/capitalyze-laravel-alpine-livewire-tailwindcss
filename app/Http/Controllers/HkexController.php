@@ -27,4 +27,14 @@ class HkexController extends BaseController
             'tab' => 'filings'
         ]);
     }
+
+    public function profile(Request $request, $ticker)
+    {
+        return view('layouts.stock-exchange', [
+            'model' => Hkex::where('symbol', $ticker)->get()->first(),
+            'period' => $request->query('period', 'annual'),
+            'exchange' => 'hkex',
+            'tab' => 'profile'
+        ]);
+    }
 }
