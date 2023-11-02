@@ -13,7 +13,7 @@
             <div class="flex sm:items-start flex-col company-profile-page m-2" wire:loading.remove>
                 <div>
                     <div class="page-titles flex justify-start content-start mb-0 mt-2 mx-2">
-                        <div> <h4 class="font-sm font-semi-bold pr-3 mt-2 mb-2">Track Investors</h4></div>
+                        <div> <h4 class="font-sm font-semi-bold pr-3 mt-2 mb-2">TrackInvestors</h4></div>
                         <div class="font-sm font-semi-bold pr-3 mt-2 mb-2"> > </div>
                         <div> <h5 class="font-sm font-semi-bold pr-3 mt-2 mb-2">Discover</h5></div>
                     </div> 
@@ -38,7 +38,7 @@
                 </div>
                 <div class="flex md:hidden justify-between relative w-full mt-5 mx-3" x-data="{dropdownMenu: false}" @keydown.window.escape="dropdownMenu = false" @click.away="dropdownMenu = false">
                     <button @click="dropdownMenu = ! dropdownMenu" class="flex items-center p-2 bg-[#52D3A2]  rounded">
-                        <span class="mr-4 font-normal text-sm p-x-4">{{$infoTabActive == 'discover' ? 'Discover' : 'My Favorites'}} </span>
+                        <span class="mr-4 font-normal text-sm p-x-4">{{$infoTabActive == 'track-investor' ? 'TrackInvestor' : 'Other Favorites'}} </span>
                         <svg class="w-5 h-5 text-gray-800 dark:text-white" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20"
                             fill="currentColor">
                             <path fill-rule="evenodd"
