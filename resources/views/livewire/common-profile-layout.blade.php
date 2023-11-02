@@ -23,8 +23,8 @@
                         <img src={{url("/svg/sic.svg")}} alt="sic"/>
                     </div>
                     <div>
-                        <h4 class="text-sm font-medium text-[#464E49]">SIC</h4>
-                        <span class="text-[#121A0F] font-medium text-sm">{{$data->registrant_name ?? '--'}}</span>
+                        <h4 class="text-sm font-medium text-[#464E49]">Symbol</h4>
+                        <span class="text-[#121A0F] font-medium text-sm">{{$data->symbol ?? '--'}}</span>
                     </div>
                 </div>
                 <div class="flex felx-col md:flex-row justify-start items-center">
@@ -41,8 +41,8 @@
                         <img src={{url("/svg/address.svg")}} alt="address"/>
                     </div>
                     <div>
-                        <h4 class="text-sm font-medium text-[#464E49]">Location - HQ</h4>
-                        <span class="text-[#121A0F] font-medium text-sm">{{$data->location_hq ?? '--'}}</span>
+                        <h4 class="text-sm font-medium text-[#464E49]">Adress</h4>
+                        <span class="text-[#121A0F] font-medium text-sm">{{$data->address ?? '--'}}</span>
                     </div>
                 </div>
                 <div class="flex felx-col md:flex-row justify-start items-center">
@@ -73,18 +73,18 @@
                     </div>
                 </div>
                 @if($profile)
-                    <div class="flex felx-col md:flex-row justify-start items-center mt-4">
+                    <!-- <div class="flex felx-col md:flex-row justify-start items-center mt-4">
                         <div class="mr-4"></div>
                         <div>
                             <h4 class="text-sm font-medium text-[#464E49]">CIK</h4>
                             <span class="text-[#121A0F] font-medium text-sm">{{$data->cik ?? '--'}}</span>
                         </div>
-                    </div>
+                    </div> -->
                     <div class="flex felx-col md:flex-row justify-start items-center mt-4">
                         <div class="mr-4"></div>
                         <div>
-                            <h4 class="text-sm font-medium text-[#464E49]">SIC Code</h4>
-                            <span class="text-[#121A0F] font-medium text-sm">{{$data->sic_code ?? '--'}}</span>
+                            <h4 class="text-sm font-medium text-[#464E49]">Registrant Name</h4>
+                            <span class="text-[#121A0F] font-medium text-sm">{{$data->registrant_name ?? '--'}}</span>
                         </div>
                     </div>
                     <div class="flex felx-col md:flex-row justify-start items-center mt-4">
@@ -111,8 +111,15 @@
                     <div class="flex felx-col md:flex-row justify-start items-center mt-4">
                         <div class="mr-4"></div>
                         <div>
-                            <h4 class="text-sm font-medium text-[#464E49]">Postal Code</h4>
-                            <span class="text-[#121A0F] font-medium text-sm">{{$data->postal_code ?? '--'}}</span>
+                            <h4 class="text-sm font-medium text-[#464E49]">Industry</h4>
+                            <span class="text-[#121A0F] font-medium text-sm">{{$data->industry ?? '--'}}</span>
+                        </div>
+                    </div>
+                    <div class="flex felx-col md:flex-row justify-start items-center mt-4">
+                        <div class="mr-4"></div>
+                        <div>
+                            <h4 class="text-sm font-medium text-[#464E49]">Open figi composite</h4>
+                            <span class="text-[#121A0F] font-medium text-sm">{{$data->open_figi_composite ?? '--'}}</span>
                         </div>
                     </div>
                     <div class="flex felx-col md:flex-row justify-start items-center mt-4">
