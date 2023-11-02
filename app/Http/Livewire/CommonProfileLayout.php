@@ -34,9 +34,9 @@ class CommonProfileLayout extends Component
     {
         $query = International::where('symbol',$this->model->symbol);
         
-        if($this->getURL()) {
-            $query->where('exchange', 'London Stock Exchange');
-        }
+        // if($this->getURL()) {
+        //     $query->where('exchange', 'London Stock Exchange');
+        // }
         $data = $query->first();
         return view('livewire.common-profile-layout', [
             'internationProfile' => $this->getURL(),
