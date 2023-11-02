@@ -13,6 +13,7 @@ use App\Models\Euronext;
 use App\Models\Frankfurt;
 use App\Models\Shanghai;
 use App\Models\MutualFunds;
+use App\Models\Shenzhen;
 use Illuminate\Auth\Notifications\ResetPassword;
 use Illuminate\Auth\Notifications\VerifyEmail;
 use Illuminate\Notifications\Messages\MailMessage;
@@ -44,6 +45,7 @@ class AppServiceProvider extends ServiceProvider
         Spotlight::registerGroup('hkexs', 'HKEX');
         Spotlight::registerGroup('otcs', 'OTC');
         Spotlight::registerGroup('frankfurts', 'Frankfurt');
+        Spotlight::registerGroup('shenzhens', 'Shenzhen');
 
         Spotlight::registerQueries(
             SpotlightQuery::asDefault(function ($query) {
@@ -79,6 +81,9 @@ class AppServiceProvider extends ServiceProvider
                     ->orWhere('symbol', 'ilike', "%{$query}%")
                     ->take(10)->get();
                 $frankfurts = Frankfurt::where('company_name', 'ilike', "%{$query}%")
+                    ->orWhere('symbol', 'ilike', "%{$query}%")
+                    ->take(10)->get();
+                $shenzhens = Shenzhen::where('company_name', 'ilike', "%{$query}%")
                     ->orWhere('symbol', 'ilike', "%{$query}%")
                     ->take(10)->get();
 
@@ -179,6 +184,15 @@ class AppServiceProvider extends ServiceProvider
                             ->setGroup('frankfurts')
                             ->setTitle("$frankfurt->company_name | $frankfurt->symbol")
                             ->setAction('jump_to', ['path' => '/frankfurt/' . $frankfurt->symbol])
+                    );
+                }
+
+                foreach ($shenzhens as $shenzhen) {
+                    $collection->push(
+                        SpotlightResult::make()
+                            ->setGroup('shenzhens')
+                            ->setTitle("$shenzhen->company_name | $shenzhen->symbol")
+                            ->setAction('jump_to', ['path' => '/shenzhen/' . $shenzhen->symbol])
                     );
                 }
 
