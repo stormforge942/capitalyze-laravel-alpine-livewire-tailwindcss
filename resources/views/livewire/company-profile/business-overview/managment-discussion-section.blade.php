@@ -1,5 +1,5 @@
 <div class="flex flex-row bussiness-information  flex-wrap lg:flex-nowrap">
-    <div class="bussiness-information-left order-2 lg:order-1 basis-full  lg:basis-3/4 ">
+    <div class="bussiness-information-left order-2 lg:order-1 basis-full  lg:basis-7/12 ">
         <div class="white-card">
     @php
     $businessContent = $menuLinks['managements_discussion'];
@@ -9,13 +9,23 @@
     $businessContent = str_replace('Item 1.', '', $businessContent);
     $businessContent = preg_replace('/Item [0-9]([a-z]?)./i', '', $businessContent);
     $businessContent = preg_replace('/class="(.?)+"/i','', $businessContent);
-    // style(.?)=(.?)"(.?)[a-z':#0123456789;,\-%]+"
     $stylePatteren = '/style(.?)=(.?)"' . "(.?)[a-z':#0123456789;,\-%.]+" . '"/i';
     $businessContent = preg_replace('/<div/i', "<p" , $businessContent);
     $businessContent = preg_replace('/<div(.?)(i?)(d?)=[a-z"0-9_-]+\/>/i', "<p>" , $businessContent);
     $businessContent = preg_replace('/<\/div>/i', "</p>" , $businessContent);
-
-    // $businessContent = preg_replace($stylePatteren,'', $businessContent);
+    $businessContent = str_replace('\u{A0}\u{A0}\u{A0}\u{A0}', '', $businessContent);
+    $businessContent = preg_replace('/[\x00-\x1F\x7F-\xFF]/', '', $businessContent);
+    $businessContent = preg_replace('/class="(.?)+"/i','', $businessContent);
+    $businessContent = preg_replace('/<p[a-z 0-9.;%><:="-\/]+<\/p><\/p>/mi','', $businessContent);
+    $businessContent = preg_replace('/<hr (.?)[a-z="-:]+\/>/mi', "" , $businessContent);
+    $businessContent = str_replace('style="height:42.75pt;position:relative;width:100%"', '', $businessContent);
+    $businessContent = str_replace('style="bottom:0;position:absolute;width:100%"', '', $businessContent);
+    $businessContent = str_replace('style="min-height:42.75pt;width:100%"', '', $businessContent);
+    $businessContent = str_replace('<br/>', '', $businessContent);
+    $businessContent = preg_replace('/Apple Inc. | 2022 Form 10-K | [0-9]+/i', '', $businessContent);
+    $businessContent = str_replace('||', '', $businessContent);
+    $businessContent = preg_replace('/<p+ [a-z]+=("|\')[a-z0-9_-]+("|\')(.?)\/>/mi', "" , $businessContent);
+    $businessContent = str_replace('<p style="padding-left:45pt;text-align:justify;text-indent:-45pt"><span style="color:#000000;font-family:\'Helvetica\',sans-serif;font-size:9pt;font-weight:700;line-height:120%">Managements Discussion and Analysis of Financial Condition and Results of Operations</span></p>', '<p class="title">Managements Discussion and Analysis</p>', $businessContent);
     $businessContent = preg_replace('/Management’s Discussion and Analysis of Financial Condition and Results of Operations(?=\<) /i', "<p class='title'>Management’s Discussion and Analysis of Financial Condition and Results of Operations</p>" , $businessContent, 1);
     $businessContent=preg_replace('/Management’s Discussion and Analysis of Financial Condition and Results of Operations</i', "<p class='title'>Management’s Discussion and Analysis of Financial Condition and Results of Operations</p><" , $businessContent, 1);
     $businessContent=preg_replace('/>Fiscal Year Highlights</i', "><span class='anchor' id='business-information-fiscal-year-highlights'></span><p class='subtitle'>Fiscal Year Highlights</p><" ,$businessContent, 1);
@@ -28,6 +38,7 @@
     $businessContent=preg_replace('/>Liquidity and Capital Resources</i', "><span class='anchor' id='business-information-liquidity-capital'></span><p class='subtitle'>Liquidity and Capital Resources</p><" ,$businessContent, 1);
     $businessContent=preg_replace('/>Manufacturing Purchase Obligations</i', "><span class='anchor' id='business-information-manufacturing-purchase'></span><p class='subtitle'>Manufacturing Purchase Obligations</p><" ,$businessContent, 1);
     $businessContent=preg_replace('/>Critical Accounting Estimates</i', "><span class='anchor' id='business-information-critical-accounting'></span><p class='subtitle'>Critical Accounting Estimates</p><" ,$businessContent, 1);
+    $businessContent = str_replace('9pt', '14px', $businessContent);
     @endphp
     {!!$businessContent!!}
     @php
@@ -95,29 +106,38 @@
     @endphp
 </div>
 </div>
-<div class="bussiness-information-right order-1 lg:order-2 basis-full lg:basis-1/4">
+<div class="bussiness-information-right order-1 lg:order-2 basis-full lg:basis-1/5">
 
 <div class="white-card sticky-sidebar">
 
     <ul class="list-items" x-data="{
         activeLink: ''
     }">
-        @foreach ($sidebarLinks as $item)
+    @foreach ($sidebarLinks as $key => $item)
 
-        <li>
-            <a
-            :class="{'active': activeLink == '{{$item['link']}}'}"
-            x-on:click="activeLink = '{{$item['link']}}'"
-                href="{{$item['link']}}">
-                {{$item['anchorText']}}
-            </a>
-        </li>
+    <li>
+        @if($key == 0)
+        <a
+        onclick="scrollToTop()"
+        :class="{'active': activeLink == '{{$item['link']}}'}"
+        x-on:click="activeLink = '{{$item['link']}}'">
+            {{$item['anchorText']}}
+        </a>
+        @else
+        <a
+        onclick="smoothScroll('{{$item['link']}}'.replace('#', ''))"
+        :class="{'active': activeLink == '{{$item['link']}}'}"
+        x-on:click="activeLink = '{{$item['link']}}'">
+            {{$item['anchorText']}}
+        </a>
+        @endif
+    </li>
 
-        @endforeach
+    @endforeach
     </ul>
     <div class="flex justify-end">
         <span class="business-footer-text">
-            <a href="{{$menuLinks['s3_url']}}">Source: FY {{date('Y', strtotime('acceptance_time'))}} 10-k</a>
+            <a href="{{$menuLinks['s3_url']}}">Source: FY {{date('Y', strtotime($menuLinks['acceptance_time']))}} 10-k</a>
         </span>
     </div>
 </div>

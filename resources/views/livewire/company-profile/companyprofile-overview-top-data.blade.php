@@ -29,12 +29,12 @@
         </div>
     </div>
 
-    <div class="white-card w-1/4">
+    <div class="white-card market-card-holder w-1/4">
         <div class="title">Capital Structure</div>
         <div class="key-values-wrapper">
 
             <div class="key-value">
-                <div class="key">Market Capitalisation</div>
+                <div class="key">Market Capital</div>
                 <div class="value">$133.74</div>
             </div>
             <div class="key-value">
@@ -59,7 +59,7 @@
         </div>
     </div>
 
-    <div class="white-card w-1/4">
+    <div class="white-card market-card-holder w-1/4">
         <div class="title">Profitability</div>
         <div class="key-values-wrapper">
             <div class="key-value">
@@ -88,7 +88,7 @@
         </div>
     </div>
 
-    <div class="white-card w-1/4">
+    <div class="white-card market-card-holder w-1/4">
         <div class="title">LTM Valuation</div>
         <div class="key-values-wrapper">
             <div class="key-value">

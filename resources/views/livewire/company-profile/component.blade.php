@@ -20,15 +20,17 @@
         </div>
     @else
         <div class="flex-col sm:flex sm:items-start company-profile-page" wire:loading.remove>
-            <div class="mt-4 page-titles">
+            <div class="mt-3 lg:mt-4 page-titles">
                 <b>{{ @$profile['registrant_name'] }} @if (@$profile['symbol'])
                         ({{ @$profile['symbol'] }})
                     @endif </b>
-            </div>
-            <div class="mt-2 page-titles">
-                <b>${{ number_format($cost) }}</b> <small
+                    <span class="brr"></span>
+                    <b>${{ number_format($cost) }}</b> <small
                     class="text-color-green">({{ $dynamic > 0 ? '+' : '-' }}{{ abs($dynamic) }}%)</small>
             </div>
+
+
+
 
             <div class="flex tabs-wrapper">
                 <div @class(['tab main-tab', 'active' => $infoTabActive == 'overview']) wire:click="setInfoActiveTab('overview')">Company Overview
@@ -49,3 +51,20 @@
         </div>
     @endif
 </div>
+@push("scripts")
+<script>
+    function smoothScroll(id) {
+        let e = document.getElementById(id);
+        if(e){
+            e.scrollIntoView({
+              block: 'start',
+              behavior: 'smooth',
+              inline: 'start'
+            });
+        }
+    }
+    function scrollToTop() {
+        window.scrollTo({top: 0, behavior: 'smooth'});
+    }
+</script>
+@endpush
