@@ -394,6 +394,20 @@ span.business-footer-text a {
     transition: all 0.43s ease-in-out;
 
 }
+.custom-drop-down-button-lg {
+    min-width: 94px;
+    padding: 8px;
+    border-radius: 4px !important;
+    font-size: 11px;
+    line-height: 16px;
+    font-weight: 400;
+    border: 1.34px solid #ECE9F1;
+    height:32px;
+    display: flex;
+    align-items: center;
+    justify-content: space-around;
+
+}
 .custom-drop-down-button:focus svg{
     transition: display 0.43s ease-in-out;
 }
@@ -454,10 +468,66 @@ span.business-footer-text a {
 .company-profile-overview-chart {
     max-height: 450px !important;
 }
+@media(min-width:576px){
+    .mobile-show {
+        display: none;
+    }
+    .desktop-show {
+        display: flex;
+    }
+}
 @media(max-width:576px){
-    .white-card .title {
-        margin-bottom: 12px;
-        font-size: 12px
+
+    .title__header .title {
+        font-size: 20px !important;
+        line-height: 24px;
+        font-weight: 600;
+        color:#121A0F;
+    }
+    .white-card .text_absolute {
+        position: absolute;
+        font-size: 10px !important;
+        color: #828C85;
+        line-height: 24px;
+        right: 24px;
+        top: 24px;
+        letter-spacing: -0.5%;
+
+
+    }
+    .accordian_header svg {
+        width: 16px;
+        height: 16px;
+    }
+    .accordian_header .title {
+        font-size: 13px !important;
+        font-weight: 400;
+        line-height: 16px;
+    }
+    .accordian_header {
+        color: #3561E7;
+        display: flex;
+        justify-content: space-between;
+        font-size: 13px;
+        font-weight: 400;
+        /* margin-bottom: 17px; */
+        line-height: 16px;
+    }
+    .accordian_body {
+        font-size: 13px;
+        font-weight: 400;
+        letter-spacing: 2%;
+        line-height: 26px;
+        margin-bottom: 17px;
+    }
+    .tab {
+        min-width: 10rem;
+    }
+    .mobile-show {
+        display: block;
+    }
+    .desktop-show {
+        display: none;
     }
     .nav-top-list li a {
         font-size: 12px;
@@ -548,5 +618,14 @@ span.business-footer-text a {
     }
     .company-profile-page{
         font-size: small;
+    }
+    .graph-header {
+        justify-content: space-between;
+    }
+    .graph-header  .custom-drop-down {
+        top: 32px;
+    }
+    .hide-mobile{
+        display: none   ;
     }
 }
