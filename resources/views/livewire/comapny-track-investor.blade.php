@@ -13,17 +13,18 @@
             <div class="flex sm:items-start flex-col company-profile-page m-2" wire:loading.remove>
                 <div>
                     <div class="page-titles flex justify-start content-start mb-0 mt-2 mx-2">
-                        <div> <h4 class="font-sm font-semi-bold pr-3 mt-2 mb-2">TrackInvestors</h4></div>
-                        <div class="font-sm font-semi-bold pr-3 mt-2 mb-2"> > </div>
-                        <div> <h5 class="font-sm font-semi-bold pr-3 mt-2 mb-2">Discover</h5></div>
+                        <div> <h4 class="text-[12px] font-[500] pr-1 mt-2">TrackInvestors</h4></div>
+                        <div class="pr-1 mt-1 mb-1"> <span class="text-[12px] font-[500">/</span> </div>
+                        <div> <h5 class="text-[12px] font-[500] pr-1 mt-2">Discover</h5></div>
+                        <div class="pr-0"><img class="pr-1 mt-3" src="{{url('/svg/chevron.svg')}}" alt=""/> </div>
                     </div> 
                 </div>   
                 <div class="hidden md:flex tabs-wrapper w-full">
-                    <div @class(['tab', 'active' => $infoTabActive == 'track-investor']) wire:click="setInfoActiveTab('track-investor')">TrackInvestor</div>
-                    <div @class(['tab', 'active' => $infoTabActive == 'other-favorites']) wire:click="setInfoActiveTab('other-favorites')">Other Favorites</div>
+                    <div @class(['tab text-[14px] font-[500]', 'active font-[600]' => $infoTabActive == 'track-investor']) wire:click="setInfoActiveTab('track-investor')">TrackInvestor</div>
+                    <div @class(['tab text-[14px] font-[500]', 'active font-[600]' => $infoTabActive == 'other-favorites']) wire:click="setInfoActiveTab('other-favorites')">Other Favorites</div>
                 </div>
                 <div class="hidden md:flex content-between items-center justify-between w-full">
-                    <div class=" title font-semibold">TrackInvestor Funds</div>
+                    <div class=" title font-semibold text-2xl">TrackInvestor Funds</div>
                     <div class="search mr-2">
                         <label for="default-search" class="mb-2 text-sm font-medium text-gray-900 sr-only dark:text-gray-400">Search</label>
                         <div class="relative p-0 m-0 sm:mt-3 md:mt-3">
@@ -32,7 +33,7 @@
                                     <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="m19 19-4-4m0-7A7 7 0 1 1 1 8a7 7 0 0 1 14 0Z"/>
                                 </svg>
                             </div>
-                            <input type="search" id="default-search" class="block h-0 leading-3 w-full p-4 pl-10 text-sm text-gray-900 border-b-2 border-t-0 border-l-0 border-r-0 bg-gray-100 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white" placeholder="Search funds..." required>
+                            <input type="search" id="default-search" class="block h-0 leading-3 w-full p-4 pl-10 text-sm text-gray-900 border-b-2 border-t-0 border-l-0 border-r-0 bg-gray-100 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white" placeholder="Search" required>
                         </div>
                     </div>
                 </div>
@@ -62,7 +63,7 @@
                                     <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="m19 19-4-4m0-7A7 7 0 1 1 1 8a7 7 0 0 1 14 0Z"/>
                                 </svg>
                             </div>
-                            <input type="search" id="default-search" class="block h-0 leading-3 w-full p-4 pl-10 text-sm text-gray-900 border-b-2 border-t-0 border-l-0 border-r-0 bg-gray-100 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white" placeholder="Search funds..." required>
+                            <input type="search" id="default-search" class="block h-0 leading-3 w-full p-4 pl-10 text-sm text-gray-900 border-b-2 border-t-0 border-l-0 border-r-0 bg-gray-100 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white" placeholder="Search" required>
                         </div>
                     </div>
                 </div>

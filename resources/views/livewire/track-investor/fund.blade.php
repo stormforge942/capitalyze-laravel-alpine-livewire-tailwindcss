@@ -1,12 +1,12 @@
 <div class="discover flex flex-col">
     @if($loading)
         <div class="flex-1 mt-6 ml-0 mr-0">
-            <div class="grid gap-y-2 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 2xl:grid-cols-5">
+            <div class="grid gap-y-2 sm:grid-cols-1 md:grid-cols-2 lg:grid-cols-3 2xl:grid-cols-4">
                 @foreach($investors as $item)
                     <div class="box shadow-md bg-[#ffffff] p-3 m-2 border-0.5 rounded border-[#D4DDD7]">
                         <div class="flex content-center justify-between items-center">
                             <div>
-                                <h4 class="text-sm font-semibold text-[#3561E7]">{{$item['title']}}</h4>
+                                <h4 class="text-[14px] font-semibold text-[#3561E7]">{{$item->investor_name}}</h4>
                             </div>
                             <div class="p-1 bg-[width:3px_3px] shadow-sm bg-[#F5F5F5]">
                                 <svg class="w-4 h-4 text-gray-300 dark:text-gray-600" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="currentColor" viewBox="0 0 22 20">
@@ -14,13 +14,23 @@
                                 </svg>
                             </div>
                         </div>
-                        <div class="grid grid-cols-4 gap-y-0 md:grid-cols-2">
-                            @foreach($item['items'] as $value)
-                                <div class="m-0 p-2">
-                                    <label class="font-normal text-xs">{{$value['label']}}</label>
-                                    <div class="font-semibold text-sm">{{$value['value']}}</div>
-                                </div>
-                            @endforeach
+                        <div class="flex flex-wrap justify-between content-between align-center w-full">
+                            <div class="m-0 p-2 w-1/4 md:w-1/2">
+                                <label class="font-normal text-[12px]">Market Value</label>
+                                <div class="font-semibold text-[14px]">{{$item->total_value}}</div>
+                            </div>
+                            <div class="m-0 p-2 w-1/4 md:w-1/2">
+                                <label class="font-normal text-[12px]">Holdings</label>
+                                <div class="font-semibold text-[14px]">{{$item->portfolio_size}}</div>
+                            </div>
+                            <div class="mb-2 p-2 w-1/4 md:w-1/2">
+                                <label class="font-normal text-[12px]">CEO</label>
+                                <div class="font-semibold text-[14px]">Warren Buffet</div>
+                            </div>
+                            <div class="mb-2 p-2 w-1/4 md:w-1/2">
+                                <label class="font-normal text-[12px]">Turnover</label>
+                                <div class="font-semibold text-[14px]">{{$item->change_in_total_value}}</div>
+                            </div>
                         </div>
                     </div>
                 @endforeach

@@ -2,6 +2,7 @@
 
 namespace App\Http\Livewire\TrackInvestor;
 
+use Illuminate\Support\Facades\DB;
 use Livewire\Component;
 
 class Favorites extends Component
@@ -14,35 +15,16 @@ class Favorites extends Component
         $this->loading = true;
     }
     public function render()
-    {
-        $data = [
-            'title' => 'Berkshire Hathaway',
-            'items' => [
-                [
-                    'label' => 'Market Value',
-                    'value' => '$2.78T'
-                ],
-                [
-                    'label' => 'Holdings',
-                    'value' => '1,500'
-                ],
-                [
-                    'label' => 'CEO',
-                    'value' => 'Warren Buffet'
-                ],
-                [
-                    'label' => 'Turnover',
-                    'value' => '$133.74B'
-                ]
-            ]
-        ];
-        $favorites = [];
-        for($i=0; $i<100; $i++){
-            $favorites[] = $data;
-        }
+    {   
+        $data = DB::connection('pgsql-xbrl')
+        ->table('filings_summary')
+        ->select('investor_name','total_value','portfolio_size','change_in_total_value')
+        ->where('investor_name','=', 'Intergy Private Wealth, LLC' )
+        ->orderBy('date', 'desc')
+        ->get();
         $this->loading = true;
         return view('livewire.track-investor.favorites', [
-            'favorites' => $favorites
+            'favorites' => $data
         ]);
     }
 }
