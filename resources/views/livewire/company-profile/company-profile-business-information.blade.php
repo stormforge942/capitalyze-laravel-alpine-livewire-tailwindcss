@@ -18,15 +18,15 @@
 
 
         @if($activeBusinessSection == 'business')
-                @include('livewire.company-profile.business-overview.business-section')
-            @elseif($activeBusinessSection == 'risk-factors')
-                @include('livewire.company-profile.business-overview.risk-factors-section')
-            @elseif($activeBusinessSection == 'managment-discussions')
-                @include('livewire.company-profile.business-overview.managment-discussion-section')
-            @elseif($activeBusinessSection == 'properties')
-                @include('livewire.company-profile.business-overview.properties-section')
-            @elseif($activeBusinessSection == 'legal-proceedings')
-                @include('livewire.company-profile.business-overview.legal-proceedings-section')
+            @include('livewire.company-profile.business-overview.business-section')
+        @elseif($activeBusinessSection == 'risk-factors')
+            @include('livewire.company-profile.business-overview.risk-factors-section')
+        @elseif($activeBusinessSection == 'managment-discussions')
+            @include('livewire.company-profile.business-overview.managment-discussion-section')
+        @elseif($activeBusinessSection == 'properties')
+            @include('livewire.company-profile.business-overview.properties-section')
+        @elseif($activeBusinessSection == 'legal-proceedings')
+            @include('livewire.company-profile.business-overview.legal-proceedings-section')
         @endif
 
 </div>

@@ -173,8 +173,8 @@
 }
 
 .graph-header {
-    display: grid;
-    grid-template-columns: 1fr auto 1fr;
+    display: flex;
+
 }
 .company-profile-page .graph-header {
     white-space: nowrap;
