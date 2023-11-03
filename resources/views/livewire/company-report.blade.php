@@ -62,7 +62,15 @@
                                     <div class="tabs-container" style="overflow-x: auto; white-space: nowrap;">
                                         <ul class="tabs-wrapper flex">
                                             @foreach($navbar[$activeIndex] as $key => $value)
-                                                <li data-tab-id="{{$value['id']}}" class="whitespace-nowrap min-w-min p-4 border-b-2 max-h-[50px] overflow-hidden rounded-t-lg cursor-pointer border-transparent text-[#828C85] hover:text-[#828C85] px-6 tab @if($value['id'] == $activeSubIndex) active @endif" wire:click="$emit('tabSubClicked', '{{$value['id']}}')">{{ preg_replace('/\[[^\]]*?\]/', '', $value['title']) }}</li>
+                                                @if($value['title'] === 'Income Statement')
+                                                    <li data-tab-index="0" class="whitespace-nowrap min-w-min p-4 border-b-2 max-h-[50px] overflow-hidden rounded-t-lg cursor-pointer border-transparent text-[#828C85] hover:text-[#828C85] px-6 tab @if($value['title'] == $activeTitle) active @endif" wire:click="$emit('tabSubClicked', '{{$value['title']}}')">{{ preg_replace('/\[[^\]]*?\]/', '', $value['title']) }}</li>
+                                                @endif
+                                                @if($value['title'] === 'Balance Sheet Statement')
+                                                    <li data-tab-index="1" class="whitespace-nowrap min-w-min p-4 border-b-2 max-h-[50px] overflow-hidden rounded-t-lg cursor-pointer border-transparent text-[#828C85] hover:text-[#828C85] px-6 tab @if($value['title'] == $activeTitle) active @endif" wire:click="$emit('tabSubClicked', '{{$value['title']}}')">{{ preg_replace('/\[[^\]]*?\]/', '', $value['title']) }}</li>
+                                                @endif
+                                                @if($value['title'] === 'Cash Flow Statement')
+                                                    <li data-tab-index="2" class="whitespace-nowrap min-w-min p-4 border-b-2 max-h-[50px] overflow-hidden rounded-t-lg cursor-pointer border-transparent text-[#828C85] hover:text-[#828C85] px-6 tab @if($value['title'] == $activeTitle) active @endif" wire:click="$emit('tabSubClicked', '{{$value['title']}}')">{{ preg_replace('/\[[^\]]*?\]/', '', $value['title']) }}</li>
+                                                @endif
                                             @endforeach
                                         </ul>
                                     </div>
@@ -925,7 +933,6 @@
     };
 
    async function changeChartType(title, type) {
-       console.log(title, type);
         await @this.changeChartType(title, type)
 
         initChart()

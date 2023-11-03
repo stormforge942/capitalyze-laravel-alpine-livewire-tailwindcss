@@ -10,7 +10,7 @@
             <span class="sr-only">Loading...</span>
         </div>
     @else
-        @if(array_key_exists('formula', $result))
+        @if($result && array_key_exists('formula', $result))
             <h1 class="text-[21px] font-bold mb-2">{{$result['formula']['metric']}}</h1>
             <div class="block px-4 py-2">
                 <span class="w-[100px] inline-block font-bold">Expression</span>
@@ -33,8 +33,8 @@
             </div>
         @endif
 
-        @if(array_key_exists('body', $result))
-            <livewire:company-report-slide-row :data="$result['body']"/>
+        @if($result && array_key_exists('body', $result))
+            <livewire:company-report-slide-row wire:key="{{now()}}" :data="$result['body']"/>
         @endif
 
         @foreach($data as $table)
@@ -44,4 +44,19 @@
             window.reportTextHighlighter.highlight(@json($value), 'table tbody tr td')
         </script>
     @endif
+
+    <script>
+        let slideOpen = false;
+
+            document.body.addEventListener('click', function (event) {
+                let element = event.target;
+
+                if (element.classList.contains('open-slide') && !slideOpen) {
+                    var value = element.dataset.value;
+                    value = JSON.parse(value);
+                    window.livewire.emit('slide-over.open', 'company-report-slide', value, {force: true});
+                    slideOpen = true;
+                }
+            });
+    </script>
 </x-wire-elements-pro::tailwind.slide-over>

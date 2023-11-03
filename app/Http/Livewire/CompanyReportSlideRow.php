@@ -9,6 +9,10 @@ class CompanyReportSlideRow extends Component
     public $data;
     public $rows;
     public $tableDates;
+    public $ticker;
+
+    protected $listeners = ['getTicker'];
+
 
     public function mount($data)
     {
@@ -16,6 +20,14 @@ class CompanyReportSlideRow extends Component
         $this->generateRows();
     }
 
+    public function getTicker($ticker) {
+        $this->ticker = $ticker;
+    }
+
+    public function generateAttribute($value)
+    {
+        return '{"hash":"' . $value['hash'] . '","ticker":"' . $this->ticker . '","value":"$' . $value['value'] . '"}';
+    }
     public function generateRows()
     {
         $rows = [];
@@ -47,7 +59,7 @@ class CompanyReportSlideRow extends Component
 
     public function convertToNumber($value)
     {
-        if ( str_contains($value, '-')) {
+        if (str_contains($value, '-')) {
             return $value;
         }
 

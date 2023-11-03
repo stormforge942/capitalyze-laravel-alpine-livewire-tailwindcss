@@ -34,7 +34,7 @@ class CompanyReportTableRow extends Component
         }
 
         if (array_key_exists('secondHash', $value)) {
-            $string = ',"secondHash":"' . $value['secondHash'] . '"';
+            $string = $value['secondHash'] ? ',"secondHash":"' . $value['secondHash'] . '"' : '';
         }
 
         return '{"hash":"' . $value['hash'] . '"' . $string . ',"ticker":"' . $value['ticker'] . '","value":"$' . $value['value'] . '"}';

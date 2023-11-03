@@ -20,13 +20,7 @@ class CompanyReportSlide extends SlideOver
 
     public function loadData()
     {
-        $query = DB::connection('pgsql-xbrl')
-        ->table('public.info_idx_tb')
-        ->where('ticker', '=', $this->ticker)
-        ->where('info', 'ilike', '%' . $this->hash . '%')
-        ->value('info');
-
-        if (isset($this->secondHash)) {
+        if ($this->secondHash) {
             $result = DB::connection('pgsql-xbrl')
                 ->table('public.tikr_text_block_content')
                 ->where('ticker', '=', $this->ticker)
@@ -36,32 +30,40 @@ class CompanyReportSlide extends SlideOver
             $this->result = json_decode($result, true);
         }
 
-        $decodedQuery = json_decode($query, true); // Decoding JSON into an associative array
-
-        $keyToFind = $this->hash;
-
-        if (isset($decodedQuery[$keyToFind])) {
-            $factHashes = $decodedQuery[$keyToFind];
-            foreach($factHashes as $factHash) {
-                $queryHtml = DB::connection('pgsql-xbrl')
-                ->table('public.as_reported_sec_text_block_content')
+        if ($this->hash) {
+            $query = DB::connection('pgsql-xbrl')
+                ->table('public.info_idx_tb')
                 ->where('ticker', '=', $this->ticker)
-                ->where('fact_hash', '=',$factHash)
-                ->value('content');
-                $this->data[] = $queryHtml;
-            }
+                ->where('info', 'ilike', '%' . $this->hash . '%')
+                ->value('info');
 
-            $this->loaded = true;
-        } else {
-            $this->data = ['No Data Available'];
-            $this->loaded = true;
+            $decodedQuery = json_decode($query, true); // Decoding JSON into an associative array
+
+            $keyToFind = $this->hash;
+
+            if (isset($decodedQuery[$keyToFind])) {
+                $factHashes = $decodedQuery[$keyToFind];
+                foreach ($factHashes as $factHash) {
+                    $queryHtml = DB::connection('pgsql-xbrl')
+                        ->table('public.as_reported_sec_text_block_content')
+                        ->where('ticker', '=', $this->ticker)
+                        ->where('fact_hash', '=', $factHash)
+                        ->value('content');
+                    $this->data[] = $queryHtml;
+                }
+                $this->loaded = true;
+            } else {
+                $this->data = ['No Data Available'];
+                $this->loaded = true;
+            }
         }
     }
 
-    public function mount($hash, $ticker, $value, $secondHash) {
-        $this->hash = $hash;
+    public function mount($ticker, $value, $hash = null, $secondHash = null)
+    {
         $this->ticker = $ticker;
         $this->value = $value;
+        $this->hash = $hash;
         $this->secondHash = $secondHash;
     }
 

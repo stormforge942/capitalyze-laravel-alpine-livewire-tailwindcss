@@ -31,11 +31,11 @@
         </div>
         <div class="w-full flex flex-row justify-end">
             @foreach($reverse ? array_reverse($data['values'], true) : $data['values'] as $date => $value)
-                    <div wire:key="{{$date}}" class="{{$value['value'] < 0 ? 'text-red' : 'text-black'}} w-[150px] flex items-center justify-center open-slide py-4 text-base  cursor-pointer hover:underline" data-value='{{$this->generateAttribute($value)}}'>
-                        @if(!$value['empty'])
-                            {{$value['present']}}
-                        @endif
-                    </div>
+                <div wire:key="{{$date}}" class="{{$value['value'] < 0 ? 'text-red' : 'text-black'}} w-[150px] flex items-center justify-center open-slide py-4 text-base  cursor-pointer hover:underline" data-value='{{$this->generateAttribute($value)}}'>
+                    @if(!$value['empty'])
+                        {{$value['present']}}
+                    @endif
+                </div>
             @endforeach
         </div>
     </div>

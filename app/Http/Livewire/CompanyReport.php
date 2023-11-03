@@ -45,6 +45,7 @@ class CompanyReport extends Component
     public $selectedValue = [];
     public $chartType = 'line';
     public $isOpen = false;
+    public $activeTitle = 'Income Statement';
 
     protected $listeners = ['periodChange', 'tabClicked', 'tabSubClicked', 'selectRow', 'unselectRow'];
 
@@ -231,6 +232,8 @@ class CompanyReport extends Component
                 return $year >= $dates[0] && $year <= $dates[1];
             });
 
+            rsort($filteredDates);
+
             $this->tableDates = $filteredDates;
         }
 
@@ -328,7 +331,7 @@ class CompanyReport extends Component
             }
 
             if ($this->period === 'quarterly') {
-                $data = $data['quarterly'];
+                $data = $data['quarter'];
             }
             foreach ($this->navbar[$this->activeIndex] as $tab) {
                 if ($tab['id'] === $this->activeSubIndex) {
@@ -517,7 +520,17 @@ class CompanyReport extends Component
         $collection = $query->collect();
 
         foreach ($collection as $value) {
-            $navbar[$value->statement_group][] = ['statement' => $value->statement, 'id' => $value->id, 'title' => $value->title];
+            if ($value->title === 'Income Statement') {
+                $navbar[$value->statement_group][0] = ['statement' => $value->statement, 'id' => $value->id, 'title' => $value->title];
+            }
+
+            if ($value->title === 'Balance Sheet Statement') {
+                $navbar[$value->statement_group][1] = ['statement' => $value->statement, 'id' => $value->id, 'title' => $value->title];
+            }
+
+            if ($value->title === 'Cash Flow Statement') {
+                $navbar[$value->statement_group][2] = ['statement' => $value->statement, 'id' => $value->id, 'title' => $value->title];
+            }
         }
         if ($navbar === []) {
             $this->noData = true;
@@ -527,6 +540,7 @@ class CompanyReport extends Component
         $this->activeIndex = 'Financial Statements [Financial Statements]';
         $this->activeSubIndex = $navbar[$this->activeIndex][0]['id'];
         $this->navbar = $navbar;
+
         $this->emit('navbarUpdated', $this->navbar, $this->activeIndex, $this->activeSubIndex);
     }
 
@@ -549,6 +563,8 @@ class CompanyReport extends Component
             $this->currentRoute = $request->route()->getName();
         }
 
+        $this->emit('getTicker', $ticker);
+
     }
 
     public function periodChange($period)
@@ -564,9 +580,16 @@ class CompanyReport extends Component
         $this->getData();
     }
 
-    public function tabSubClicked($key)
+    public function tabSubClicked($title)
     {
-        $this->activeSubIndex = $key;
+        $this->activeTitle = $title;
+
+        foreach ($this->navbar[$this->activeIndex] as $nav) {
+            if ($nav['title'] === $title) {
+                $this->activeSubIndex = $nav['id'];
+            }
+        }
+
         $this->getData();
     }
 
