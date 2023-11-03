@@ -3,6 +3,7 @@
 namespace App\Http\Livewire;
 
 use App\Models\CompanyPresentation;
+use App\Models\InfoTikrPresentation;
 use Livewire\Component;
 use Illuminate\Support\Facades\DB;
 
@@ -13,8 +14,12 @@ class CompanyProfile extends Component
     public $period;
     public $profile;
     public $menuLinks;
-
+    public $ebitda;
+    public $adjNetIncome;
+    public $dilutedEPS;
+    public $revenues;
     public $products;
+    public $dilutedSharesOut;
 
     public $segments;
 
@@ -59,10 +64,21 @@ class CompanyProfile extends Component
         $this->getCompanyProfile();
         $this->getMenu();
         $this->getProducts();
+        $this->getTickerPresentation();
     }
 
     public function getMenu(){
         $this->menuLinks = CompanyPresentation::where('business', '!=', null)->where('symbol', $this->ticker)->orderByDesc('acceptance_time')->first()?->toArray();
+    }
+
+    public function getTickerPresentation(){
+        $data = json_decode(InfoTikrPresentation::where('ticker', $this->ticker)->orderByDesc('id')->first()->info, true)['annual'];
+        $this->ebitda = $data['Income Statement']['EBITDA'];
+        $this->adjNetIncome = $data['Income Statement']['Net Income'];
+        $this->dilutedEPS = $data['Income Statement']['Diluted EPS Excl Extra Items'];
+        $this->revenues = $data['Income Statement']['Revenues'];
+        $this->dilutedSharesOut = $data['Income Statement']['Weighted Average Diluted Shares Outstanding'];
+        // dd($this->ebitda, $this->adjNetIncome, $this->dilutedEPS);
     }
 
     public function getCompanyProfile() {
