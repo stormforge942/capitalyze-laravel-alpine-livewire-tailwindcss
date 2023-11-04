@@ -6,6 +6,8 @@ use Illuminate\Database\Eloquent\Model;
 
 class Company extends Model
 {
+    public const DEFAULT_TICKER = 'AAPL';
+    
     /**
      * The primary key associated with the table.
      *
@@ -13,7 +15,7 @@ class Company extends Model
      */
     protected $primaryKey = 'ticker';
 
-     /**
+    /**
      * The attributes that are mass assignable.
      *
      * @var string[]
@@ -37,4 +39,9 @@ class Company extends Model
      * @var bool
      */
     public $incrementing = false;
+
+    public static function default()
+    {
+        return Company::where('ticker', self::DEFAULT_TICKER)->first();
+    }
 }

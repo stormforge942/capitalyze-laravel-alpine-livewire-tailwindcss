@@ -39,15 +39,19 @@
 <body class="min-h-screen font-sans text-base antialiased text-dark bg-gray-light">
     <x-jet-banner />
 
-    <livewire:etf.navbar :etf="$etf" />
+    @if ($tab === 'filings')
+        <livewire:company-navbar :company="$company" period="annual" />
+    @else
+        <livewire:etf.navbar :etf="$etf" />
 
-    <livewire:navigation-menu />
+        <livewire:navigation-menu />
+    @endif
 
     <main class="px-4 pb-10 transition-all md:px-6 lg:px-8 lg:ml-64" id="main-container">
         @if ($tab == 'holdings')
             <livewire:etf.holdings :etf="$etf" />
-        @elseif($tab == 'returns')
-            <livewire:etf.returns :etf="$etf" />
+        @elseif($tab == 'filings')
+            <livewire:etf.filings :company="$company" />
         @endif
     </main>
 

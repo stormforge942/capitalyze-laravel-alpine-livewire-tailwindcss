@@ -57,6 +57,7 @@ Route::middleware([])->group(function () {
         Route::get('/company-filings', CompanyFilingsPage::class)->name('company-filings');
         Route::get('/fund-filings', FundFilingsPage::class)->name('fund-filings');
         Route::get('/mutual-fund-filings', MutualFundFilingsPage::class)->name('mutual-fund-filings');
+        Route::get('/etf-filings', [EtfController::class, 'filings'])->name('etf-filings');
         Route::get('/identifiers', CompanyIdentifiers::class)->name('company-identifiers');
         Route::get('/delistings', Delistings::class)->name('delistings');
         Route::get('/euronext', Euronexts::class)->name('euronexts');

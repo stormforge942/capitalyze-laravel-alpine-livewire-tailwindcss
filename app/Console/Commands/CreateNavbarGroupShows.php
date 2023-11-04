@@ -41,6 +41,7 @@ class CreateNavbarGroupShows extends Command
             || $navbar->route_name === 'earnings-calendar'
             || $navbar->route_name === 'economics-calendar'
             || $navbar->route_name === 'delistings'
+            || $navbar->route_name === 'etf-filings'
             || $navbar->route_name === 'euronexts'
             || $navbar->route_name === 'lses'
             || $navbar->route_name === 'tsxs'

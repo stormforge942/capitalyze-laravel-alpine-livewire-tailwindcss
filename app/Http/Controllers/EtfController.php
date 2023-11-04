@@ -2,11 +2,20 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\Company;
 use App\Models\Etf;
 use Illuminate\Routing\Controller as BaseController;
 
 class EtfController extends BaseController
 {
+    public function filings()
+    {
+        return view('layouts.etf', [
+            'company' => Company::default(),
+            'tab' => 'filings'
+        ]);
+    }
+
     public function holdings($cik, $etf_symbol)
     {
         return view('layouts.etf', [
