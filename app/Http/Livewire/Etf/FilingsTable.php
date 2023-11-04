@@ -71,7 +71,7 @@ final class FilingsTable extends PowerGridComponent
     {
         return PowerGrid::eloquent()
             ->addColumn('cik', function (EtfFilings $etf) {
-                return ('<div data-value="' . $etf->cik . '" onclick="showModal()" class="break-all px-2 w-[80%] cursor-pointer text-blue">' . $etf->cik . '</div>');
+                return ('<a href="' . route('etf.holdings', [$etf->cik, $etf->etf_symbol]) . '" class="break-all px-2 w-[80%] cursor-pointer text-blue">' . $etf->cik . '</a>');
             });
     }
 
