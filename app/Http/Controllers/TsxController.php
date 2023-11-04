@@ -18,6 +18,16 @@ class TsxController extends BaseController
         ]);
     }
 
+    public function profile(Request $request, $ticker){
+        return view('layouts.stock-exchange', [
+            'model' => Tsx::where('symbol', $ticker)->first(),
+            'period' => $request->query('period', 'annual'),
+            'exchange' => 'tsx',
+            'tab' => 'profile'
+        ]);
+
+    }
+
     public function filings(Request $request, $ticker)
     {
         return view('layouts.stock-exchange', [

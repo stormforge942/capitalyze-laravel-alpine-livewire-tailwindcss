@@ -1,12 +1,110 @@
-<div class="relative graph-wrapper-box w-full" x-data="{ collapse: false }">
-    <div class="graph-wrapper" x-show="!collapse">
-        <div class="graph-header">
-            <div class="pr-3">
+<div class="main-graph-wrapper w-full" x-data="{ collapse: false ,showgraph:true}" >
+
+    <div  :class="{ 'custom-dropdown-absolute-wrapper': !showgraph, 'custom-dropdown-absolute-wrapper abs-custom': showgraph }">
+        <div class="relative custom-dropdown-absolute-wrapper-inner flex justify-end" x-data="{
+            chartMenuOpen: false
+        }">
+            <div>
+              <button type="button" @click="chartMenuOpen = !chartMenuOpen" class="custom-drop-down-button hide-mobile" id="menu-button" aria-expanded="true" aria-haspopup="true">
+
+                <svg x-show="!chartMenuOpen" xmlns="http://www.w3.org/2000/svg" fill="#121A0F" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" class="w-6 h-6">
+                    <path stroke-linecap="round" stroke-linejoin="round" d="M12 6.75a.75.75 0 110-1.5.75.75 0 010 1.5zM12 12.75a.75.75 0 110-1.5.75.75 0 010 1.5zM12 18.75a.75.75 0 110-1.5.75.75 0 010 1.5z" />
+                  </svg>
+
+                <svg x-show="chartMenuOpen" xmlns="http://www.w3.org/2000/svg" fill="#121A0F" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" class="w-6 h-6">
+                    <path stroke-linecap="round" stroke-linejoin="round" d="M6.75 12a.75.75 0 11-1.5 0 .75.75 0 011.5 0zM12.75 12a.75.75 0 11-1.5 0 .75.75 0 011.5 0zM18.75 12a.75.75 0 11-1.5 0 .75.75 0 011.5 0z" />
+                  </svg>
+
+              </button>
+            </div>
+
+
+            <div @click.away="chartMenuOpen = false" x-show="chartMenuOpen" class="absolute custom-drop-down right-0 z-10    bg-white  focus:outline-none" role="menu" aria-orientation="vertical" aria-labelledby="menu-button" tabindex="-1">
+              <div class="py-1" role="none">
+                <!-- Active: "bg-gray-100 text-gray-900", Not Active: "text-gray-700" -->
+               <div class="links-wrapper mb-3">
+                <a href="#" x-show="showgraph" @click="showgraph = !showgraph" class="menu_link" role="menuitem" tabindex="-1" id="menu-item-0">Hide Chart</a>
+                <a href="#" x-show="!showgraph" @click="showgraph = !showgraph" class="menu_link" role="menuitem" tabindex="-1" id="menu-item-0">Show Chart</a>
+                <a href="#" class="menu_link" role="menuitem" tabindex="-1" id="menu-item-1">View In Full Screen</a>
+                <a href="#" class="menu_link" role="menuitem" tabindex="-1" id="menu-item-2">Print Chart</a>
+               </div>
+                <hr class="mb-3">
+                <div class="links-wrapper">
+                <a href="#" class="menu_link" role="menuitem" tabindex="-1" id="menu-item-3"> <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="w-6 h-6">
+                    <path stroke-linecap="round" stroke-linejoin="round" d="M3 16.5v2.25A2.25 2.25 0 005.25 21h13.5A2.25 2.25 0 0021 18.75V16.5M16.5 12L12 16.5m0 0L7.5 12m4.5 4.5V3" />
+                  </svg>
+                    Download As PNG</a>
+                <a href="#" class="menu_link" role="menuitem" tabindex="-1" id="menu-item-4"> <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="w-6 h-6">
+                    <path stroke-linecap="round" stroke-linejoin="round" d="M3 16.5v2.25A2.25 2.25 0 005.25 21h13.5A2.25 2.25 0 0021 18.75V16.5M16.5 12L12 16.5m0 0L7.5 12m4.5 4.5V3" />
+                  </svg>
+                    Download As PNG</a>
+                <a href="#" class="menu_link" role="menuitem" tabindex="-1" id="menu-item-5"> <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="w-6 h-6">
+                    <path stroke-linecap="round" stroke-linejoin="round" d="M3 16.5v2.25A2.25 2.25 0 005.25 21h13.5A2.25 2.25 0 0021 18.75V16.5M16.5 12L12 16.5m0 0L7.5 12m4.5 4.5V3" />
+                  </svg>
+                     Download As PNG</a>
+                </div>
+              </div>
+            </div>
+          </div>
+    </div>
+<div class="relative graph-wrapper-box w-full" >
+    <div class="graph-wrapper">
+        <div class="graph-header relative">
+            <div class="pr-3" x-data="{percentage: '{{$persentage}}'}">
                 <b class="title" wire:click="load()">{{ $name }}. ({{ $ticker }})</b><br>
-                <small class="text-blue-600">{{ $persentage }}% price return over
+                <small :class="percentage >= 0 ? 'text-blue-600' : 'text-red-600'">{{ $persentage }}% price return over
                     {{ $chartPeriods[$currentChartPeriod] }}</small>
             </div>
-            <div class="select-graph-date-wrapper ml-12 flex">
+            <div >
+                <div class="relative custom-dropdown-absolute-wrapper-inner mobile-show flex justify-end" x-data="{
+                    openMobileGraph: false
+                }">
+                    <div>
+                      <button  type="button" @click="openMobileGraph = !openMobileGraph" class="custom-drop-down-button-lg" id="menu-button" aria-expanded="true" aria-haspopup="true">
+                        Select
+                        <svg x-show="!openMobileGraph" xmlns="http://www.w3.org/2000/svg" fill="#121A0F" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="w-3 h-6">
+                            <path stroke-linecap="round" stroke-linejoin="round" d="M19.5 8.25l-7.5 7.5-7.5-7.5" />
+                          </svg>
+
+
+
+                          <svg x-show="openMobileGraph" xmlns="http://www.w3.org/2000/svg" fill="#121A0F" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="w-3 h-6">
+                            <path stroke-linecap="round" stroke-linejoin="round" d="M4.5 15.75l7.5-7.5 7.5 7.5" />
+                          </svg>
+
+
+                      </button>
+                    </div>
+
+
+                    <div @click.away="openMobileGraph = false" x-show="openMobileGraph" class="absolute custom-drop-down right-0 z-10    bg-white  focus:outline-none" role="menu" aria-orientation="vertical" aria-labelledby="menu-button" tabindex="-1">
+                      <div class="py-1" role="none">
+                        <!-- Active: "bg-gray-100 text-gray-900", Not Active: "text-gray-700" -->
+                       <div class="links-wrapper mb-3">
+
+                        <a href="#" class="menu_link" role="menuitem" tabindex="-1" id="menu-item-1">View In Full Screen</a>
+                        <a href="#" class="menu_link" role="menuitem" tabindex="-1" id="menu-item-2">Print Chart</a>
+                       </div>
+                        <hr class="mb-3">
+                        <div class="links-wrapper">
+                        <a href="#" class="menu_link" role="menuitem" tabindex="-1" id="menu-item-3"> <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="w-6 h-6">
+                            <path stroke-linecap="round" stroke-linejoin="round" d="M3 16.5v2.25A2.25 2.25 0 005.25 21h13.5A2.25 2.25 0 0021 18.75V16.5M16.5 12L12 16.5m0 0L7.5 12m4.5 4.5V3" />
+                          </svg>
+                            Download As PNG</a>
+                        <a href="#" class="menu_link" role="menuitem" tabindex="-1" id="menu-item-4"> <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="w-6 h-6">
+                            <path stroke-linecap="round" stroke-linejoin="round" d="M3 16.5v2.25A2.25 2.25 0 005.25 21h13.5A2.25 2.25 0 0021 18.75V16.5M16.5 12L12 16.5m0 0L7.5 12m4.5 4.5V3" />
+                          </svg>
+                            Download As PNG</a>
+                        <a href="#" class="menu_link" role="menuitem" tabindex="-1" id="menu-item-5"> <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="w-6 h-6">
+                            <path stroke-linecap="round" stroke-linejoin="round" d="M3 16.5v2.25A2.25 2.25 0 005.25 21h13.5A2.25 2.25 0 0021 18.75V16.5M16.5 12L12 16.5m0 0L7.5 12m4.5 4.5V3" />
+                          </svg>
+                             Download As PNG</a>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+            </div>
+            <div class="select-graph-date-wrapper desktop-show ml-12 flex">
                 <ul class="items-center w-full flex">
                     <li class="w-full mr-6">
                         <input wire:model="currentChartPeriod" value="3m" id="date-3m" type="radio"
@@ -41,28 +139,19 @@
                 </ul>
                 <livewire:range-calendar />
             </div>
-        </div>
+
+           </div>
         <div class="place-items-center h-96" wire:loading.grid>
             <span class="mx-auto simple-loader !text-green-dark"></span>
         </div>
 
-        <div class="mt-3" wire:loading.remove>
-            <canvas id="product-profile-chart" class="w-full"></canvas>
+        <div class="mt-3" wire:loading.remove x-show="showgraph" x-transition>
+            <canvas id="product-profile-chart" class="w-full company-profile-overview-chart"></canvas>
         </div>
     </div>
-    <button @click="collapse = !collapse"
-        class="flex items-center justify-center rounded-bl rounded-tr bg-blue-50 text-sm px-3 py-1 absolute right-0 top-0">
-        <span>Hide summary</span>
-
-        <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5"
-            stroke="currentColor" class="w-3 h-3 ml-2 transition-transform" :class="collapse ? 'rotate-180' : ''">
-            <path stroke-linecap="round" stroke-linejoin="round" d="M19.5 8.25l-7.5 7.5-7.5-7.5" />
-        </svg>
-    </button>
-
     <div style="margin-bottom: 2em" x-show="collapse" x-cloak></div>
 </div>
-
+</div>
 @pushonce('scripts')
     <script>
         let chart;
@@ -233,7 +322,7 @@
                         }
                     }
                 }],
-                maintainAspectRatio: true,
+                maintainAspectRatio: false,
                 aspectRatio: 3,
                 responsive: true,
                 type: 'bar',
