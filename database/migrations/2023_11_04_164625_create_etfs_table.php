@@ -15,10 +15,10 @@ return new class extends Migration
     {
         Schema::create('etfs', function (Blueprint $table) {
             $table->string('cik');
-            $table->string('registrant_name');
+            $table->string('registrant_name')->nullable();
             $table->string('etf_symbol');
             $table->timestamps();
-            $table->unique(['cik', 'registrant_name', 'etf_symbol']);
+            $table->unique(['cik', 'etf_symbol']);
         });
     }
 

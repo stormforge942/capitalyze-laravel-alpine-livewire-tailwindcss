@@ -62,7 +62,7 @@ class Navbar extends Model
         return $navItems->where(function ($nav) {
             return !Str::startsWith(
                 $nav->route_name,
-                ['company.', 'lse.', 'tsx.', 'fund.', 'mutual-fund.', 'shanghai.', 'japan.', 'hkex.', 'otc.', 'frankfurt.', 'euronext.', 'shenzhen.', 'economics-release', 'create.']
+                ['company.', 'lse.', 'tsx.', 'fund.', 'mutual-fund.', 'etf.', 'shanghai.', 'japan.', 'hkex.', 'otc.', 'frankfurt.', 'euronext.', 'shenzhen.', 'economics-release', 'create.']
             );
         });
     }
