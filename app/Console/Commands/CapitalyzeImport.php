@@ -36,6 +36,7 @@ class CapitalyzeImport extends Command
         $this->call('japan:import');
         $this->call('tsx:import');
         $this->call('mutualFunds:import');
+        $this->call('etf:import');
         $this->call('hkex:import');
         $this->call('otc:import');
         $this->call('navbar:import');
