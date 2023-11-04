@@ -18,5 +18,5 @@
         </div>
     </div>
 
-    <livewire:etf.holdings-table :etf="$etf" :quarter="$quarter" wire:key="{{ $quarter }}" />
+    <livewire:etf.holdings-table :etf="$etf" :quarter="$quarter" />
 </div>
