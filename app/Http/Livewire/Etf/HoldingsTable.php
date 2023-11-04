@@ -5,9 +5,8 @@ namespace App\Http\Livewire\Etf;
 use App\Models\Etfs;
 use Illuminate\Database\Eloquent\Builder;
 use PowerComponents\LivewirePowerGrid\Traits\ActionButton;
-use PowerComponents\LivewirePowerGrid\Traits\WithExport;
 use PowerComponents\LivewirePowerGrid\Filters\Filter;
-use PowerComponents\LivewirePowerGrid\{Column, Exportable, Footer, Header, PowerGrid, PowerGridComponent, PowerGridEloquent};
+use PowerComponents\LivewirePowerGrid\{Column, Footer, Header, PowerGrid, PowerGridComponent, PowerGridEloquent};
 
 final class HoldingsTable extends PowerGridComponent
 {
@@ -59,7 +58,7 @@ final class HoldingsTable extends PowerGridComponent
             ->addColumn('registrant_name')
             ->addColumn('symbol')
             ->addColumn('isin')
-            ->addColumn('fund_symbol')
+            ->addColumn('etf_symbol')
             ->addColumn('name')
             ->addColumn('cik')
             ->addColumn('acceptance_time')
@@ -89,7 +88,7 @@ final class HoldingsTable extends PowerGridComponent
             Column::make('Registrant Name', 'registrant_name')->sortable(),
             Column::make('Symbol', 'symbol')->sortable(),
             Column::make('ISIN', 'isin')->sortable(),
-            Column::make('Fund Symbol', 'fund_symbol')->sortable(),
+            Column::make('Etf Symbol', 'etf_symbol')->sortable(),
             Column::make('Name', 'name')->sortable(),
             Column::make('CIK', 'cik')->sortable(),
             Column::make('Acceptance Time', 'acceptance_time')->sortable(),
@@ -121,7 +120,7 @@ final class HoldingsTable extends PowerGridComponent
             Filter::inputText('registrant_name', 'registrant_name')->operators([]),
             Filter::inputText('symbol', 'symbol')->operators([]),
             Filter::inputText('isin', 'isin')->operators([]),
-            Filter::inputText('fund_symbol', 'fund_symbol')->operators([]),
+            Filter::inputText('etf_symbol', 'etf_symbol')->operators([]),
             Filter::inputText('name', 'name')->operators([]),
             Filter::inputText('cik', 'cik')->operators([]),
             Filter::inputText('acceptance_time', 'acceptance_time')->operators([]),
