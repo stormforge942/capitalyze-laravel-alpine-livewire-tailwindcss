@@ -20,7 +20,7 @@
         </div>
     @else
         <div class="flex-col sm:flex sm:items-start company-profile-page" wire:loading.remove>
-            <div class="mt-3 lg:mt-4 page-titles">
+            <div class="mt-2 lg:mt-2 page-titles">
                 <b>{{ @$profile['registrant_name'] }} @if (@$profile['symbol'])
                         ({{ @$profile['symbol'] }})
                     @endif </b>

@@ -50,7 +50,7 @@
 <div class="relative graph-wrapper-box w-full" >
     <div class="graph-wrapper">
         <div class="graph-header relative">
-            <div class="pr-3" x-data="{percentage: '{{$persentage}}'}">
+            <div class="pr-3 pl-5" x-data="{percentage: '{{$persentage}}'}">
                 <b class="title" wire:click="load()">{{ $name }}. ({{ $ticker }})</b><br>
                 <small :class="percentage >= 0 ? 'text-blue-600' : 'text-red-600'">{{ $persentage }}% price return over
                     {{ $chartPeriods[$currentChartPeriod] }}</small>

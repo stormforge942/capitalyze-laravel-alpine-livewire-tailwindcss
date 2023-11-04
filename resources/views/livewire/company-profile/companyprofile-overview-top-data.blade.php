@@ -39,7 +39,7 @@
             </div>
             <div class="key-value">
                 <div class="key">Total Enterprise Value</div>
-                <div class="value">$83.343408245224</div>
+                <div class="value">$83.34</div>
             </div>
 
             <div class="key-value">
@@ -68,7 +68,7 @@
             </div>
             <div class="key-value">
                 <div class="key">EBIT Margin</div>
-                <div class="value">$83.343408245224</div>
+                <div class="value">$83.34</div>
             </div>
 
             <div class="key-value">
@@ -97,7 +97,7 @@
             </div>
             <div class="key-value">
                 <div class="key">LTM EV/Gross Profit</div>
-                <div class="value">$83.343408245224</div>
+                <div class="value">$83.34</div>
             </div>
 
             <div class="key-value">
