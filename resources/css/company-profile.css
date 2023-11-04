@@ -41,7 +41,7 @@
     border: 1px solid #D4DDD7;
     padding: 0.28em;
     width: 100%;
-    margin: 1.68em 0;
+    margin: 0.7em 0px 1.4em 0px !important;
     background: white;
 }
 
@@ -112,6 +112,7 @@
 }
 
 .key-values-wrapper__item {
+    margin-right: 1rem;
     display: flex;
     gap: 15px;
 }
@@ -248,7 +249,7 @@
 .company-profile-page .date-range-select-wrapper .value {
     color: #121A0F;
     font-weight: normal;
-    font-size: 1em;
+    font-size: 0.70rem;
     height: 1em;
     -webkit-appearance: none;
     border: none;
@@ -274,7 +275,7 @@
 
 @media (max-width: 1600px) {
     .cards-wrapper {
-        grid-template-columns: repeat(2, 1fr);
+        grid-template-columns: repeat(4, 1fr);
     }
     .wide-cards-wrapper .key-values-wrapper {
         grid-template-columns: repeat(3, auto);
