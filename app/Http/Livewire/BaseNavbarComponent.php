@@ -54,12 +54,7 @@ abstract class BaseNavbarComponent extends Component
     {
         $navItems = $user->navbars();
 
-        $this->topNav = $navItems->where(function ($nav) {
-            return !Str::startsWith(
-                $nav->route_name,
-                ['company.', 'lse.', 'tsx.', 'fund.', 'mutual-fund.', 'shanghai.', 'japan.', 'hkex.', 'otc.', 'frankfurt.', 'euronext.', 'shenzhen.', 'economics-release', 'create.']
-            );
-        });
+        $this->topNav = \App\Models\Navbar::getPrimaryLinks($navItems);
 
         $this->bottomNav = $navItems->where(function ($nav) {
             return Str::startsWith($nav->route_name, $this->bottomNavKey());
