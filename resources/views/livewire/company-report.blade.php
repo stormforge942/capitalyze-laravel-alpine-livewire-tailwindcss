@@ -74,6 +74,8 @@
                                                     <li data-tab-index="2" class="whitespace-nowrap min-w-min p-4 border-b-2 max-h-[50px] overflow-hidden rounded-t-lg cursor-pointer border-transparent text-[#828C85] hover:text-[#828C85] px-6 tab @if($value['title'] == $activeTitle) active @endif" wire:click="$emit('tabSubClicked', '{{$value['title']}}')">{{ preg_replace('/\[[^\]]*?\]/', '', $value['title']) }}</li>
                                                 @endif
                                             @endforeach
+                                            <li data-tab-index="3" class="whitespace-nowrap min-w-min p-4 border-b-2 max-h-[50px] overflow-hidden rounded-t-lg cursor-pointer border-transparent text-[#828C85] hover:text-[#828C85] px-6 tab" wire:click="$emit('tabSubClicked', '{{$value['title']}}')">Ratios</li>
+                                            <li data-tab-index="4" class="whitespace-nowrap min-w-min p-4 border-b-2 max-h-[50px] overflow-hidden rounded-t-lg cursor-pointer border-transparent text-[#828C85] hover:text-[#828C85] px-6 tab" wire:click="$emit('tabSubClicked', '{{$value['title']}}')">Disclosure</li>
                                         </ul>
                                     </div>
                                 </div>
