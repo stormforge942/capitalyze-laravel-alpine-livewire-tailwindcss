@@ -8,6 +8,7 @@ use Illuminate\Support\Facades\DB;
 class Page extends Component
 {
     public $company;
+    public $period;
 
     public function render()
     {
@@ -20,7 +21,8 @@ class Page extends Component
                 'profile' => \App\Models\CompanyProfile::query()
                     ->where('symbol', $this->company->ticker)
                     ->firstOrFail()
-                    ->toArray()
+                    ->toArray(),
+                'period' => $this->period,
             ],
             ...$this->getCostAndDynamic(),
         ]);

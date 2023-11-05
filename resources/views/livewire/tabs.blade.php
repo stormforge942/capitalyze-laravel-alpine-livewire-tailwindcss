@@ -83,7 +83,7 @@ dropdown = new Dropdown($refs.dropdown, $refs.dropdownBtn)" x-cloak>
         @else
             @foreach ($tabs as $key => $tab)
                 <div x-show="active === '{{ $key }}'" x-cloak>
-                    @livewire($tabs[$active]['component'], ['data' => $data], key($active))
+                    @livewire($tabs[$key]['component'], ['data' => $data])
                 </div>
             @endforeach
         @endif

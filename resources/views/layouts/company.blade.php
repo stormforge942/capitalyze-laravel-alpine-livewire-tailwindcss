@@ -47,7 +47,7 @@
         @elseif($tab == 'products')
             <livewire:company-products :company="$company" :ticker="$ticker" :period="$period" />
         @elseif($tab == 'profile')
-            <livewire:company-profile.page :company="$company" />
+            <livewire:company-profile.page :company="$company" :period="$period" />
         @elseif($tab == 'splits')
             <livewire:company-splits :company="$company" :ticker="$ticker" :period="$period" />
         @elseif($tab == 'metrics')

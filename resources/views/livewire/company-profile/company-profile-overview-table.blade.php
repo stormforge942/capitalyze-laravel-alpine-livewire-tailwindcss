@@ -1,4 +1,4 @@
-<div class="table-wrapper ">
+<div class="table-wrapper">
     <div class="table">
         <div class="row-group row-head-fonts-sm table-border-bottom">
             @php

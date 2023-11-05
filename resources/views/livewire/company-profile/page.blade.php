@@ -10,6 +10,6 @@
     </div>
 
     <div class="mt-7">
-        <livewire:tabs :tabs="$tabs" :data="$tabData">
+        <livewire:tabs :tabs="$tabs" :data="$tabData" :ssr="false">
     </div>
 </div>
