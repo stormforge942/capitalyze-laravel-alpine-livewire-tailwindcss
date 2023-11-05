@@ -4,12 +4,19 @@
     changeTab(e, scroll = true) {
         const tab = JSON.parse(e.target.dataset.tab);
         this.active = tab.key;
-        $wire.changeTab(tab.key);
+        if ($wire.ssr) {
+            $wire.changeTab(tab.key);
+        }
         $dispatch('tab-changed', tab)
 
         if (scroll) {
             e.target.scrollIntoView({ behavior: 'smooth', block: 'center' })
         }
+
+        // update query string
+        const url = new URL(window.location.href);
+        url.searchParams.set('tab', tab.key);
+        window.history.replaceState({}, '', url);
     },
     get activeTab() {
         return $wire.tabs[this.active];
@@ -69,8 +76,16 @@ dropdown = new Dropdown($refs.dropdown, $refs.dropdownBtn)" x-cloak>
             <span class="mx-auto simple-loader !text-green-dark"></span>
         </div>
 
-        <div wire:loading.remove>
-            @livewire($tabs[$active]['component'], ['data' => $data], key($active))
-        </div>
+        @if ($ssr)
+            <div wire:loading.remove>
+                @livewire($tabs[$active]['component'], ['data' => $data], key($active))
+            </div>
+        @else
+            @foreach ($tabs as $key => $tab)
+                <div x-show="active === '{{ $key }}'" x-cloak>
+                    @livewire($tabs[$active]['component'], ['data' => $data], key($active))
+                </div>
+            @endforeach
+        @endif
     </div>
 </div>

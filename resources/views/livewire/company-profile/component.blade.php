@@ -26,7 +26,7 @@
                     @endif </b>
                     <span class="brr"></span>
                     <b>${{ number_format($cost) }}</b> <small
-                    class="text-color-green">({{ $dynamic > 0 ? '+' : '-' }}{{ abs($dynamic) }}%)</small>
+                    class="text-color-green">({{ $dynamic >= 0 ? '+' : '-' }}{{ abs($dynamic) }}%)</small>
             </div>
 
 
