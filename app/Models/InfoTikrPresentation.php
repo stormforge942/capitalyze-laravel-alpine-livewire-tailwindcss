@@ -8,5 +8,7 @@ use Illuminate\Database\Eloquent\Model;
 class InfoTikrPresentation extends Model
 {
     use HasFactory;
-    public $connection = 'pgsql-xbrl';
+    protected $connection = 'pgsql-xbrl';
+    protected $table = 'info_tikr_presentations';
+    public $timestamps = false;
 }

@@ -1,6 +1,9 @@
 <?php
 
-function getLowPriceFromDashRange($lowHighString, $default = '-'): string {
+use Illuminate\Support\Str;
+
+function getLowPriceFromDashRange($lowHighString, $default = '-'): string
+{
     if (!$lowHighString) return $default;
     $result = explode("-", $lowHighString);
     if (count($result) < 2)
@@ -8,7 +11,8 @@ function getLowPriceFromDashRange($lowHighString, $default = '-'): string {
     return $result[1] ? $result[1] : $default;
 }
 
-function getHighPriceFromDashRange($lowHighString, $default = '-'): string {
+function getHighPriceFromDashRange($lowHighString, $default = '-'): string
+{
     if (!$lowHighString) return $default;
     $result = explode("-", $lowHighString);
     if (count($result) < 2)
@@ -16,11 +20,9 @@ function getHighPriceFromDashRange($lowHighString, $default = '-'): string {
     return $result[0] ? $result[0] : $default;
 }
 
-function getSiteNameFromUrl($url, $default = '-') {
-    if (!$url || !is_string($url)) return $default;
-    $result = preg_replace("~^https?\:/~", "", $url);
-    $result = trim($result, " /\\");
-    if (strlen($result) > 15)
-        $result = substr($result, 0, 15) . '...';
-    return $result;
+function getSiteNameFromUrl($url, $default = '-')
+{
+    if (!$url) return $default;
+
+    return Str::limit(parse_url($url)['host'] ?? $default, 15);
 }
