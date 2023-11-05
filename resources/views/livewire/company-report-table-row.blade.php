@@ -7,7 +7,7 @@
         @endif
         <div
             wire:click.stop="select"
-            class="cursor-default py-2 text-sm w-[300px] truncate flex flex-row items-center"
+            class="cursor-default py-2 text-base w-[300px] truncate flex flex-row items-center"
             style="{{count($data['children']) == 0 ? 'padding-left: 20px;' : 'padding-left: 10px;'}}"
             title="{{$data['title']}}">
             <span class="whitespace-nowrap truncate">
@@ -31,7 +31,7 @@
         </div>
         <div class="w-full flex flex-row justify-end">
             @foreach($reverse ? array_reverse($data['values'], true) : $data['values'] as $date => $value)
-                <div wire:key="{{$date}}" class="{{$value['value'] < 0 ? 'text-red' : 'text-black'}} w-[150px] flex items-center justify-center open-slide py-4 text-sm  cursor-pointer hover:underline" data-value='{{$this->generateAttribute($value)}}'>
+                <div wire:key="{{$date}}" class="{{$value['value'] < 0 ? 'text-red' : 'text-black'}} w-[150px] flex items-center justify-center open-slide py-4 text-base  cursor-pointer hover:underline" data-value='{{$this->generateAttribute($value)}}'>
                     @if(!$value['empty'])
                         {{$value['present']}}
                     @endif

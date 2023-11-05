@@ -61,7 +61,7 @@
                                 </div> -->
 
                                 <div class="flex w-full overflow-x-hidden">
-                                    <div class="tabs-container" style="overflow-x: auto; white-space: nowrap;">
+                                    <div class="tabs-container w-full" style="overflow-x: auto; white-space: nowrap;">
                                         <ul class="tabs-wrapper flex">
                                             @foreach($navbar[$activeIndex] as $key => $value)
                                                 @if($value['title'] === 'Income Statement')
@@ -82,8 +82,8 @@
 
                                 <div class="filters-row">
                                     <div class="select-wrapper flex items-center">
-                                        <div class="ml-3 flex items-center">View
-                                            <button type="submit" id="dropdownViewButton" data-dropdown-toggle="dropdown-View" class="flex items-center flowbite-select bg-gray-50 border border-gray-700 text-gray-900 text-sm ml-2 p-2" name="view" id="">
+                                        <div class="ml-3 flex items-center text-xs">View
+                                            <button type="submit" id="dropdownViewButton" data-dropdown-toggle="dropdown-View" class="flex items-center flowbite-select bg-gray-50 border border-gray-700 text-gray-900 text-xs ml-2 p-2" name="view" id="">
                                                 {{$view}}
                                                 <svg width="16" height="16" viewBox="0 0 16 16" fill="none" xmlns="http://www.w3.org/2000/svg">
                                                     <path d="M10.3083 6.19514L7.72167 8.78378L5.135 6.19514C5.01045 6.07021 4.84135 6 4.665 6C4.48865 6 4.31955 6.07021 4.195 6.19514C3.935 6.45534 3.935 6.87566 4.195 7.13585L7.255 10.1982C7.515 10.4584 7.935 10.4584 8.195 10.1982L11.255 7.13585C11.515 6.87566 11.515 6.45534 11.255 6.19514C10.995 5.94161 10.5683 5.93494 10.3083 6.19514Z" fill="#121A0F"/>
@@ -164,8 +164,8 @@
                                                 </div>
                                             </div>
                                         </div>
-                                        <div class="ml-3 flex items-center">Unit Type
-                                            <button type="submit" id="dropdownUnitTypeButton" data-dropdown-toggle="dropdown-UnitType" class="flex items-center flowbite-select bg-gray-50 border border-gray-700 text-gray-900 text-sm ml-2 p-2" name="view" id="">
+                                        <div class="ml-3 flex items-center text-xs">Unit Type
+                                            <button type="submit" id="dropdownUnitTypeButton" data-dropdown-toggle="dropdown-UnitType" class="flex items-center flowbite-select bg-gray-50 border border-gray-700 text-gray-900 text-xs ml-2 p-2" name="view" id="">
                                                 {{$unitType}}
                                                 <svg width="16" height="16" viewBox="0 0 16 16" fill="none" xmlns="http://www.w3.org/2000/svg">
                                                     <path d="M10.3083 6.19514L7.72167 8.78378L5.135 6.19514C5.01045 6.07021 4.84135 6 4.665 6C4.48865 6 4.31955 6.07021 4.195 6.19514C3.935 6.45534 3.935 6.87566 4.195 7.13585L7.255 10.1982C7.515 10.4584 7.935 10.4584 8.195 10.1982L11.255 7.13585C11.515 6.87566 11.515 6.45534 11.255 6.19514C10.995 5.94161 10.5683 5.93494 10.3083 6.19514Z" fill="#121A0F"/>
@@ -234,8 +234,8 @@
                                                 </div>
                                             </div>
                                         </div>
-                                        <div class="ml-3 flex items-center">Template
-                                            <button type="submit" id="dropdownTemplateButton" data-dropdown-toggle="dropdown-Template" class="flex items-center flowbite-select bg-gray-50 border border-gray-700 text-gray-900 text-sm ml-2 p-2" name="view" id="">
+                                        <div class="ml-3 flex items-center text-xs">Template
+                                            <button type="submit" id="dropdownTemplateButton" data-dropdown-toggle="dropdown-Template" class="flex items-center flowbite-select bg-gray-50 border border-gray-700 text-gray-900 text-xs ml-2 p-2" name="view" id="">
                                                 {{$template}}
                                                 <svg width="16" height="16" viewBox="0 0 16 16" fill="none" xmlns="http://www.w3.org/2000/svg">
                                                     <path d="M10.3083 6.19514L7.72167 8.78378L5.135 6.19514C5.01045 6.07021 4.84135 6 4.665 6C4.48865 6 4.31955 6.07021 4.195 6.19514C3.935 6.45534 3.935 6.87566 4.195 7.13585L7.255 10.1982C7.515 10.4584 7.935 10.4584 8.195 10.1982L11.255 7.13585C11.515 6.87566 11.515 6.45534 11.255 6.19514C10.995 5.94161 10.5683 5.93494 10.3083 6.19514Z" fill="#121A0F"/>
@@ -268,8 +268,8 @@
                                                 </div>
                                             </div>
                                         </div>
-                                        <div class="ml-3 flex items-center">Order
-                                            <button type="submit" id="dropdownOrderButton" data-dropdown-toggle="dropdown-Order" class="flex items-center flowbite-select bg-gray-50 border border-gray-700 text-gray-900 text-sm ml-2 p-2" name="view" id="">
+                                        <div class="ml-3 flex items-center text-xs">Order
+                                            <button type="submit" id="dropdownOrderButton" data-dropdown-toggle="dropdown-Order" class="flex items-center flowbite-select bg-gray-50 border border-gray-700 text-gray-900 text-xs ml-2 p-2" name="view" id="">
                                                 {{$reverse ? 'Latest on the Left' : 'Latest on the Right'}}
                                                 <svg width="16" height="16" viewBox="0 0 16 16" fill="none" xmlns="http://www.w3.org/2000/svg">
                                                     <path d="M10.3083 6.19514L7.72167 8.78378L5.135 6.19514C5.01045 6.07021 4.84135 6 4.665 6C4.48865 6 4.31955 6.07021 4.195 6.19514C3.935 6.45534 3.935 6.87566 4.195 7.13585L7.255 10.1982C7.515 10.4584 7.935 10.4584 8.195 10.1982L11.255 7.13585C11.515 6.87566 11.515 6.45534 11.255 6.19514C10.995 5.94161 10.5683 5.93494 10.3083 6.19514Z" fill="#121A0F"/>
@@ -314,8 +314,8 @@
                                                 </div>
                                             </div>
                                         </div>
-                                        <div class="ml-3 flex items-center">Freeze Panes
-                                            <button type="submit" id="dropdownFreezePanesButton" data-dropdown-toggle="dropdown-FreezePanes" class="flex items-center flowbite-select bg-gray-50 border border-gray-700 text-gray-900 text-sm ml-2 p-2" name="view" id="">
+                                        <div class="ml-3 flex items-center text-xs">Freeze Panes
+                                            <button type="submit" id="dropdownFreezePanesButton" data-dropdown-toggle="dropdown-FreezePanes" class="flex items-center flowbite-select bg-gray-50 border border-gray-700 text-gray-900 text-xs ml-2 p-2" name="view" id="">
                                                 {{$freezePanes}}
                                                 <svg width="16" height="16" viewBox="0 0 16 16" fill="none" xmlns="http://www.w3.org/2000/svg">
                                                     <path d="M10.3083 6.19514L7.72167 8.78378L5.135 6.19514C5.01045 6.07021 4.84135 6 4.665 6C4.48865 6 4.31955 6.07021 4.195 6.19514C3.935 6.45534 3.935 6.87566 4.195 7.13585L7.255 10.1982C7.515 10.4584 7.935 10.4584 8.195 10.1982L11.255 7.13585C11.515 6.87566 11.515 6.45534 11.255 6.19514C10.995 5.94161 10.5683 5.93494 10.3083 6.19514Z" fill="#121A0F"/>
@@ -372,8 +372,8 @@
                                                 </div>
                                             </div>
                                         </div>
-                                        <div class="ml-3 flex items-center">Decimal
-                                            <button type="submit" id="dropdownDecimalButton" data-dropdown-toggle="dropdown-Decimal" class="flex items-center flowbite-select bg-gray-50 border border-gray-700 text-gray-900 text-sm ml-2 p-2" name="view" id="">
+                                        <div class="ml-3 flex items-center text-xs">Decimal
+                                            <button type="submit" id="dropdownDecimalButton" data-dropdown-toggle="dropdown-Decimal" class="flex items-center flowbite-select bg-gray-50 border border-gray-700 text-gray-900 text-xs ml-2 p-2" name="view" id="">
                                                 {{$decimalDisplay == 2 ? '.00' : ($decimalDisplay == 3 ? '.000' : 'auto')}}
                                                 <svg width="16" height="16" viewBox="0 0 16 16" fill="none" xmlns="http://www.w3.org/2000/svg">
                                                     <path d="M10.3083 6.19514L7.72167 8.78378L5.135 6.19514C5.01045 6.07021 4.84135 6 4.665 6C4.48865 6 4.31955 6.07021 4.195 6.19514C3.935 6.45534 3.935 6.87566 4.195 7.13585L7.255 10.1982C7.515 10.4584 7.935 10.4584 8.195 10.1982L11.255 7.13585C11.515 6.87566 11.515 6.45534 11.255 6.19514C10.995 5.94161 10.5683 5.93494 10.3083 6.19514Z" fill="#121A0F"/>
@@ -438,49 +438,49 @@
                                         <li class="mr-2">
                                             <label class="flex items-center pl-3 cursor-pointer">
                                                 <input wire:model="period" value="arf5drs" id="date-fiscal-annual" type="radio" name="date-range" class="w-5 h-5 ">
-                                                <span class="w-full py-3 ml-2 ">Fiscal Annual</span>
+                                                <span class="w-full py-3 ml-2 text-xs">Fiscal Annual</span>
                                             </label>
                                         </li>
                                         <li class="mr-2">
                                             <label class="flex items-center pl-3 cursor-pointer">
                                                 <input wire:model="period" value="qrf5drs" id="date-fiscal-quaterly" type="radio"  name="date-range" class="w-5 h-5 ">
-                                                <span class="w-full py-3 ml-2 ">Fiscal Quaterly</span>
+                                                <span class="w-full py-3 ml-2 text-xs">Fiscal Quaterly</span>
                                             </label>
                                         </li>
                                         <li class="mr-2">
                                             <label class="flex items-center pl-3 cursor-pointer">
                                                 <input wire:model="period" value="fiscal-semi-annual" id="date-fiscal-semi-annual" type="radio"  name="date-range" class="w-5 h-5 ">
-                                                <span class="w-full py-3 ml-2 ">Fiscal Semi-Annual</span>
+                                                <span class="w-full py-3 ml-2 text-xs">Fiscal Semi-Annual</span>
                                             </label>
                                         </li>
                                         <li class="mr-2">
                                             <label class="flex items-center pl-3 cursor-pointer">
                                                 <input wire:model="period" value="YTD" id="date-YTD" type="radio"  name="date-range" class="w-5 h-5 ">
-                                                <span class="w-full py-3 ml-2 ">YTD</span>
+                                                <span class="w-full py-3 ml-2 text-xs">YTD</span>
                                             </label>
                                         </li>
                                         <li class="mr-2">
                                             <label class="flex items-center pl-3 cursor-pointer">
                                                 <input wire:model="period" value="LTM" id="date-LTM" type="radio"  name="date-range" class="w-5 h-5 ">
-                                                <span class="w-full py-3 ml-2 ">LTM</span>
+                                                <span class="w-full py-3 ml-2 text-xs">LTM</span>
                                             </label>
                                         </li>
                                         <li class="mr-2">
                                             <label class="flex items-center pl-3 cursor-pointer">
                                                 <input wire:model="period" value="annual" id="date-annual" id="date-annual" type="radio" name="date-range" class="w-5 h-5 ">
-                                                <span class="w-full py-3 ml-2 ">Calendar Annual</span>
+                                                <span class="w-full py-3 ml-2 text-xs">Calendar Annual</span>
                                             </label>
                                         </li>
                                         <li class="mr-2">
                                             <label class="flex items-center pl-3 cursor-pointer">
                                                 <input wire:model="period" value="quarterly" id="date-quarterly" type="radio" name="date-range" class="w-5 h-5 ">
-                                                <span class="w-full py-3 ml-2 ">Calendar Quaterly</span>
+                                                <span class="w-full py-3 ml-2 text-xs">Calendar Quaterly</span>
                                             </label>
                                         </li>
                                         <li class="mr-2">
                                             <label class="flex items-center pl-3 cursor-pointer">
                                                 <input wire:model="period" value="SA" id="date-SA" type="radio"  name="date-sa" class="w-5 h-5 ">
-                                                <span class="w-full py-3 ml-2 ">Calendar SA</span>
+                                                <span class="w-full py-3 ml-2 text-xs">Calendar SA</span>
                                             </label>
                                         </li>
                                     </ul>
@@ -589,7 +589,7 @@
                                                         </div>
                                                         <div class="w-full flex flex-row bg-gray-200 justify-end">
                                                             @foreach ($reverse ? array_reverse($tableDates) : $tableDates as $date)
-                                                                <div class="w-[150px] flex items-center justify-center text-base">
+                                                                <div class="w-[150px] flex items-center justify-center text-sm font-bold">
                                                                     <span class="py-4">
                                                                         {{ date('M Y', strtotime($date)) }}
                                                                     </span>
