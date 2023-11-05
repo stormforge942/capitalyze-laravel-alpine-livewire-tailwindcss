@@ -1,4 +1,4 @@
-<div class="mt-2">
+<div class="mt-2 company-profile-page">
     <div>
         <h1 class="text-lg font-bold md:text-xl">{{ $company->name }} ({{ $company->ticker }})</h1>
         <p class="mt-2 flex items-center gap-1">
@@ -9,7 +9,7 @@
         </p>
     </div>
 
-    <div class="mt-7">
+    <div class="mt-6">
         <livewire:tabs :tabs="$tabs" :data="$tabData" :ssr="false">
     </div>
 </div>
