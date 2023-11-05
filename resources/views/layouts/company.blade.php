@@ -41,7 +41,7 @@
 
     <livewire:company-navbar :company="$company" />
 
-    <main class="px-4 pb-10 transition-all md:px-6 lg:px-8 lg:ml-64" id="main-container">
+    <main class="px-4 pb-10 transition-all md:px-6 lg:px-8 lg:ml-52" id="main-container">
         @if ($tab == 'geographical')
             <livewire:company-geographical :company="$company" :ticker="$ticker" :period="$period" />
         @elseif($tab == 'products')

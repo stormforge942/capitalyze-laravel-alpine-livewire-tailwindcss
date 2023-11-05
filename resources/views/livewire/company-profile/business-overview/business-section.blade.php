@@ -164,7 +164,7 @@
             </ul>
             <div class="flex justify-end">
                 <span class="business-footer-text">
-                    <a href="{{$menuLinks['s3_url']}}">Source: FY {{date('Y', strtotime($menuLinks['acceptance_time']))}} 10-k</a>
+                    <a href="{{$menuLinks['s3_url']}}">Source: FY {{date('Y', strtotime($menuLinks['acceptance_time']))}} 10-K</a>
                 </span>
             </div>
         </div>
@@ -177,7 +177,7 @@
             activeTab: '{{$sidebarLinks[0]['link']}}'
         }">
             <span class="text_absolute">
-                <a href="{{$menuLinks['s3_url']}}">Source: FY {{date('Y', strtotime($menuLinks['acceptance_time']))}} 10-k</a>
+                <a href="{{$menuLinks['s3_url']}}">Source: FY {{date('Y', strtotime($menuLinks['acceptance_time']))}} 10-K</a>
             </span>
             <div class="title__header">
                 <span class="title">

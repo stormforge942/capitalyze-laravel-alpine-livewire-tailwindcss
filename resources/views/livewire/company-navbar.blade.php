@@ -8,26 +8,26 @@
             if (this.collapsed) {
                 document.body.classList.add('nav-collapsed')
                 
-                document.getElementById('default-sidebar').classList.remove('w-64')
+                document.getElementById('default-sidebar').classList.remove('w-52')
     
-                document.getElementById('main-container').classList.remove('lg:ml-64')
+                document.getElementById('main-container').classList.remove('lg:ml-52')
                 document.getElementById('main-container').classList.add('lg:ml-20');
     
-                document.getElementById('navigation').classList.remove('lg:ml-64');
+                document.getElementById('navigation').classList.remove('lg:ml-52');
                 document.getElementById('navigation').classList.add('lg:ml-20');
             } else {
                 document.body.classList.remove('nav-collapsed')
     
                 document.getElementById('main-container').classList.remove('lg:ml-20');
-                document.getElementById('main-container').classList.add('lg:ml-64')
+                document.getElementById('main-container').classList.add('lg:ml-52')
     
                 document.getElementById('navigation').classList.remove('lg:ml-20');
-                document.getElementById('navigation').classList.add('lg:ml-64');
+                document.getElementById('navigation').classList.add('lg:ml-52');
             }
         }
     }"
-        class="fixed top-0 left-0 z-40 hidden h-screen pt-10 bg-white border-r border-gray-200 lg:block dark:bg-gray-800 dark:border-gray-700 w-64"
-        :class="collapsed ? 'w-20' : 'w-64'" aria-label="Sidebar">
+        class="fixed top-0 left-0 z-40 hidden h-screen pt-10 bg-white border-r border-gray-200 lg:block dark:bg-gray-800 dark:border-gray-700 w-52"
+        :class="collapsed ? 'w-20' : 'w-52'" aria-label="Sidebar">
         <div class="flex flex-col h-full px-6 pb-4 bg-white dark:bg-gray-800">
             <button class="absolute -right-3 top-40" :class="collapsed ? 'rotate-180' : ''" @click="toggle">
                 <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
@@ -96,7 +96,7 @@
                         <path
                             d="M7.77966 5.31441C7.19566 5.31441 6.29165 4.65041 5.33965 4.67441C4.08365 4.69041 2.93165 5.40241 2.28365 6.53041C0.979648 8.79441 1.94765 12.1384 3.21965 13.9784C3.84365 14.8744 4.57965 15.8824 5.55565 15.8504C6.49165 15.8104 6.84366 15.2424 7.97966 15.2424C9.10766 15.2424 9.42766 15.8504 10.4197 15.8264C11.4277 15.8104 12.0677 14.9144 12.6837 14.0104C13.3957 12.9704 13.6917 11.9624 13.7077 11.9064C13.6837 11.8984 11.7477 11.1544 11.7237 8.91441C11.7077 7.04241 13.2517 6.14641 13.3237 6.10641C12.4437 4.81841 11.0917 4.67441 10.6197 4.64241C9.38766 4.54641 8.35566 5.31441 7.77966 5.31441ZM9.85966 3.42641C10.3797 2.80241 10.7237 1.93041 10.6277 1.06641C9.88366 1.09841 8.98766 1.56241 8.45166 2.18641C7.97166 2.73841 7.55566 3.62641 7.66766 4.47441C8.49166 4.53841 9.33966 4.05041 9.85966 3.42641Z" />
                     </svg>
-                    <span class="ml-3 tag-collapsed">{{ $company->name }}</span>
+                    <span class="ml-3 tag-collapsed">{{ $company->name }}  ({{ $company->ticker }})</span>
                 </li>
                 @foreach ($navbarItems as $item)
                     <?php
@@ -136,7 +136,7 @@
                                 <ul class="py-2 space-y-2" :class="(!open || collapsed) ? 'hidden' : ''" x-cloak>
                                     @foreach ($child as $childItem)
                                         <li>
-                                            <a class="flex items-center w-full p-2 text-gray-900 transition duration-75 rounded-lg pl-11 group hover:bg-gray-100 dark:text-white dark:hover:bg-gray-700 @if ($childItem['active']) font-bold @endif"
+                                            <a class="flex items-center w-full p-2 text-gray-900 transition duration-75 rounded-lg group hover:bg-gray-100 dark:text-white dark:hover:bg-gray-700 @if ($childItem['active']) font-bold @endif"
                                                 href="{{ $childItem['url'] }}">
                                                 {{ $childItem['title'] }}
                                             </a>
