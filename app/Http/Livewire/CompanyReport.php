@@ -2,16 +2,15 @@
 
 namespace App\Http\Livewire;
 
-use App\Models\Company;
 use App\Models\InfoPresentation;
+use App\Models\InfoTikrPresentation;
 use Carbon\Carbon;
+use DateTime;
 use Illuminate\Database\ConnectionResolver;
 use Illuminate\Database\Eloquent\Model;
-use Illuminate\Database\Query\Builder;
 use Livewire\Component;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Http\Request;
-use Illuminate\Support\Collection;
 
 class CompanyReport extends Component
 {
@@ -25,220 +24,131 @@ class CompanyReport extends Component
     public $chartData = [];
     public $companyName;
     public $unitType = 'Thousands';
+    public $currency = 'USD';
     public $currentRoute;
     public $order = "Latest on the Right";
     public $period;
     public $table;
     public $navbar;
-    public $subnavbar;
     public $reverse = false;
     public $activeIndex = '';
     public $activeSubIndex = '';
     public $data;
     public $tableDates = [];
+    public $rangeDates = [];
     public $noData = false;
     public $tableLoading = true;
+    public $cost = null;
+    public $dynamic = null;
 
     protected $request;
     protected $rowCount = 0;
     public $selectedRows = [];
+    public $selectedValue = [];
+    public $chartType = 'line';
+    public $isOpen = false;
+    public $activeTitle = 'Income Statement';
 
-   protected $listeners = ['periodChange', 'tabClicked', 'tabSubClicked', 'selectRow', 'unselectRow'];
+    protected $listeners = ['periodChange', 'tabClicked', 'tabSubClicked', 'selectRow', 'unselectRow'];
 
-   public function selectRow($title, $data){
-       $this->selectedRows[$title] = $data;
+    public function toggleChartType($title)
+    {
+        if ($this->isOpen === $title) {
+            $this->isOpen = null;
+        } else {
+            $this->isOpen = $title;
+        }
 
-       $this->generateChartData();
-       $this->emit('initCompanyReportChart');
-   }
 
-   public function regenareteTableChart(): void
-   {
-       $this->generateUI();
-   }
+    }
 
-   public function unselectRow($title)
-   {
-       unset($this->selectedRows[$title]);
-       if (count($this->selectedRows)){
-         $this->generateChartData(true);
-       } else {
+    public function selectRow($title, $data)
+    {
+        if (count($this->selectedRows) < 5) {
+            $this->selectedRows[$title]['dates'] = $data;
+            $this->selectedRows[$title]['type'] = 'line';
+        }
+
+        $this->generateChartData();
+        $this->emit('initCompanyReportChart');
+    }
+
+    public function regenerateTableChart(): void
+    {
+        $this->generateUI();
+    }
+
+    public function unselectRow($title)
+    {
+        unset($this->selectedRows[$title]);
+        $this->emit('resetSelection', $title);
+
+        if (count($this->selectedRows)) {
+            $this->generateChartData(true);
+        } else {
             $this->chartData = [];
             $this->emit('hideCompanyReportChart');
-       }
-   }
+        }
+    }
 
-   public function toggleReverse() {
-       $this->reverse = !$this->reverse;
-       $this->regenareteTableChart();
-   }
+    public function toggleReverse()
+    {
+        $this->reverse = !$this->reverse;
+        $this->regenerateTableChart();
+    }
 
-   public function generateChartData($initChart = false): void
-   {
-       $chartData = [];
+    public function changeChartType($title, $type)
+    {
+        $this->selectedRows[$title]['type'] = $type;
 
-       foreach ($this->selectedRows as $title => $row) {
-           $data = [];
-           foreach ($row as $cell) {
-               if (!$cell['empty']) {
-                   $data[] = [
-                       'y' => $cell['value'],
-                       'x' => $cell['date'],
-                   ];
-               } else {
-                   $data[] = [
-                       'y' => null,
-                       'x' => null,
-                   ];
-               }
-           }
+        $this->chartType = $type;
 
+        $this->generateChartData();
+    }
 
-           $chartData[] = [
-               'data' => $data,
-               'type' => 'line',
-               'label' => $title,
-               'borderColor' => '#000',
-               'pointRadius' => 1,
-               'pointHoverRadius' => 8,
-               'tension' => 0.5,
-               'pointHoverBorderColor' => '#fff',
-               'pointHoverBorderWidth' => 4,
-               'pointHoverBackgroundColor' => 'rgba(104, 104, 104, 0.87)'
-           ];
-       }
-
-         $this->chartData = $chartData;
-
-       if ($initChart) {
-           $this->emit('initCompanyReportChart');
-       }
-   }
-
-   function findDates($array, &$dates) {
-        foreach ($array as $key => $value) {
-            if (is_array($value)) {
-                if (preg_match('/(\d{4})-\d{2}-\d{2}/', $key, $m)) {
-                    $year = $m[1];
-                    if (!in_array($key, $dates) && $year > 2016) {
-                        $dates[] = $key;
-                    }
+    public function generateChartData($initChart = false): void
+    {
+        $chartData = [];
+        foreach ($this->selectedRows as $title => $row) {
+            $data = [];
+            foreach ($row['dates'] as $cell) {
+                if (!$cell['empty']) {
+                    $data[] = [
+                        'y' => $cell['value'],
+                        'x' => $cell['date'],
+                    ];
                 } else {
-                    $this->findDates($value, $dates);
-                }
-            }
-        }
-    }
-
-    function generateTableRows($array, $dates, $label = '', $depth = 0, $isBold = false) {
-        $output = '';
-        $dateValues = [];
-        $boldClass = $isBold ? ' font-bold' : '';
-
-
-
-        // If the current array contains any date values, store them in $dateValues
-        foreach ($array as $key => $value) {
-            if (preg_match('/\d{4}-\d{2}-\d{2}/', $key) && is_array($value)) {
-                $dateValues[$key] = $value;
-            }
-        }
-
-        // Only generate a row if the label is not empty and not '#segmentation'
-        // if (!empty($label) && !$this->skipNext ) {
-        if (!empty($label) ) {
-
-            $class =  $boldClass;
-            $padding = $depth * 10; // Assuming 20 pixels of padding per depth level
-
-            $output .= '<div class=" row ' . $class . '">';
-            $output .= '<div class="cell" style="padding-left: ' . $padding . 'px;">' . $label . '</div>';
-
-
-            // if($label != "Net sales" && $label != "#segmentation") {
-            //     dd($output);
-            // }
-
-            foreach ($dates as $date) {
-                if (isset($dateValues[$date])) {
-                    $value = $dateValues[$date][0];
-                    // Check if the value is in USD and format it
-                    if (isset($dateValues[$date][1]) && $dateValues[$date][1] === 'USD') {
-
-                        if(strpos($value, '|') !== false) {
-                            $value = '$' . number_format(strstr($value, '|', true), 2);
-
-                        } else {
-                            $value = '$' . number_format($value, 2);
-                        }
-
-
-                    }
-                    // Check if the value starts with '@@@'
-                    if (substr($value, 0, 3) === '@@@') {
-                        $hash = substr($value, 3).strstr($value, '|'); // Get the value minus the three @
-                        // Add a specific class and a data-hash attribute and display an icon
-                        $data = array("hash" => $hash, "ticker" => $this->ticker);
-                        $data_json = json_encode($data);
-                        $value = '<div class="open-slide cell" data-value="'.htmlspecialchars($data_json).'">
-                        <svg class="w-5 h-5 mx-auto cursor-pointer open-slide" data-value="'.htmlspecialchars($data_json).'" xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" viewBox="0 0 16 16">
-                        <path class="open-slide" data-value="'.htmlspecialchars($data_json).'" d="M0 2a2 2 0 0 1 2-2h12a2 2 0 0 1 2 2v12a2 2 0 0 1-2 2H2a2 2 0 0 1-2-2V2zm15 2h-4v3h4V4zm0 4h-4v3h4V8zm0 4h-4v3h3a1 1 0 0 0 1-1v-2zm-5 3v-3H6v3h4zm-5 0v-3H1v2a1 1 0 0 0 1 1h3zm-4-4h4V8H1v3zm0-4h4V4H1v3zm5-3v3h4V4H6zm4 4H6v3h4V8z"></path>
-                      </svg></div>';
-                    } else if(strpos($value, '|') !== false) {
-                        [$content, $hash] = explode("|", $dateValues[$date][0], 2);
-                        $data = array("hash" => $hash, "ticker" => $this->ticker);
-                        $data_json = json_encode($data);
-                        $value = '<div data-value="'.htmlspecialchars($data_json).'" class="cell">' . strstr($value, '|', true) . '</div>';
-                    } else {
-                        [$content, $hash] = explode("|", $dateValues[$date][0], 2);
-                        $data = array("hash" => $hash, "ticker" => $this->ticker, "value" => $value);
-                        $data_json = json_encode($data);
-                        $value = '<div data-value="'.htmlspecialchars($data_json).'" class="open-slide cell cursor-pointer hover:underline">' . $value . '</div>';
-                    }
-                    $output .= $value;
-                } else {
-                    $output .= '<div class="cell"></div>';
+                    $data[] = [
+                        'y' => null,
+                        'x' => null,
+                    ];
                 }
             }
 
-            $output .= '</div>'; // .row
-            $this->rowCount++;
+            $chartData[] = [
+                'data' => $data,
+                'type' => $row['type'],
+                'label' => $title,
+                'borderColor' => ['#5a5a5a', '#737373', '#8d8d8d', '#a6a6a6', '#949494'],
+                'pointRadius' => 1,
+                'pointHoverRadius' => 8,
+                'tension' => 0.5,
+                'fill' => true,
+                'pointHoverBorderColor' => '#fff',
+                'pointHoverBorderWidth' => 4,
+                'pointHoverBackgroundColor' => 'rgba(104, 104, 104, 0.87)'
+            ];
         }
 
+        $this->chartData = $chartData;
 
-        // if($label === '#segmentation') {
-        //     $label = 'Segmentation';
-        //     $this->skipNext = true;
-        // } else {
-        //     $this->skipNext = false;
-        // }
-        // Recursively generate rows for children
-        foreach ($array as $key => $value) {
-            if (!preg_match('/\d{4}-\d{2}-\d{2}/', $key) && is_array($value)) {
-                $newIsBold = $isBold;
-                if ($key === '#segmentation') {
-                    $newIsBold = true;
-                }
-                $output .= $this->generateTableRows($value, $dates, $key, $depth + 1, $newIsBold);
-            }
+        if ($initChart) {
+            $this->emit('initCompanyReportChart');
         }
-
-        return $output;
     }
 
-    function generateTableFromNestedArray($data) {
-        // Find all unique dates
-        $this->rowCount = 0;
-        $dates = [];
-
-        $this->findDates($data, $dates);
-        rsort($dates);
-        $this->tableDates = $dates;
-        // Start generating the table
-        $this->table = $this->generateTableRows($data, $dates, '', 0);
-    }
-
-    public function getData() {
+    public function getData()
+    {
         $acronym = ($this->period == 'annual') ? 'arf5drs' : 'qrf5drs';
 
         $defaultConnectionName = DB::getDefaultConnection();
@@ -260,11 +170,17 @@ class CompanyReport extends Component
         DB::setDefaultConnection($remoteConnectionName);
         Model::setConnectionResolver($remoteConnectionResolver);
 
-        $query = InfoPresentation::query()
-            ->where('ticker', '=', $this->ticker)
-            ->where('acronym', '=', $acronym)
-            ->where('id', '=', $this->activeSubIndex)
-            ->select('info')->value('info');
+        if ($this->view === 'Standardised Template') {
+            $query = InfoTikrPresentation::query()
+                ->where('ticker', '=', $this->ticker)
+                ->select('info')->value('info');
+        } else {
+            $query = InfoPresentation::query()
+                ->where('ticker', '=', $this->ticker)
+                ->where('acronym', '=', $acronym)
+                ->where('id', '=', $this->activeSubIndex)
+                ->select('info')->value('info');
+        }
 
         Model::setConnectionResolver($defaultConnectionResolver);
         DB::setDefaultConnection($defaultConnectionName);
@@ -274,28 +190,58 @@ class CompanyReport extends Component
         $this->generateUI();
     }
 
-    public function closeChart() {
+    public function closeChart()
+    {
         $this->chartData = [];
         $this->selectedRows = [];
         $this->emit('hideCompanyReportChart');
     }
 
-    public function changeDates($dates) {
-       $this->tableLoading = true;
-       $this->rows = [];
-        if (count($dates) == 2) {
-            $this->tableDates = [];
-            for($i = $dates[0]; $i <= $dates[1]; $i++) {
-                $this->tableDates[] = $i;
+    public function changeDates($dates)
+    {
+        $this->tableLoading = true;
+        $this->rows = [];
+        if ($this->period === 'annual') {
+            if (count($dates) == 2) {
+                $this->tableDates = [];
+
+                if (gettype($dates[0]) === 'integer') {
+                    $date = new DateTime($dates[0] . '-09-09');
+                    $dates[0] = $date->format('Y-m-d');
+                }
+
+                if (gettype($dates[1]) === 'integer') {
+                    $date = new DateTime($dates[1] . '-09-09');
+                    $dates[1] = $date->format('Y-m-d');
+                }
+
+                $minYear = strtotime($dates[0]);
+                $maxYear = strtotime($dates[1]);
+                $year = 365 * 24 * 60 * 60;
+
+                for ($currentDate = $minYear; $currentDate <= $maxYear; $currentDate += $year) {
+                    $this->tableDates[] = date('Y-m-d', $currentDate);
+                }
             }
         }
 
-//        if ($this->order != "Latest on the Right") {
-//            $this->tableDates = array_reverse($this->tableDates);
-//        }
+        if ($this->period === 'quarterly') {
+
+            $this->tableDates = array_unique($this->tableDates);
+
+            $filteredDates = array_filter($this->tableDates, function ($date) use ($dates) {
+                $year = intval(date('Y', strtotime($date)));
+                return $year >= $dates[0] && $year <= $dates[1];
+            });
+
+            rsort($filteredDates);
+
+            $this->tableDates = $filteredDates;
+        }
 
         $this->generateRows($this->data);
-        if (count($this->selectedRows)){
+
+        if (count($this->selectedRows)) {
             $this->generateChartData();
             $this->emit('initCompanyReportChart');
         }
@@ -308,11 +254,12 @@ class CompanyReport extends Component
         $this->generateRows($this->data);
     }
 
-    function traverseArray($array) {
+    function traverseArray($array)
+    {
         foreach ($array as $key => $value) {
             if (is_array($value)) {
                 if (strtotime($key) !== false) {
-                    $this->tableDates[] = date('Y', strtotime($key));
+                    $this->tableDates[] = date('Y-m-d', strtotime($key));
                 }
                 $this->traverseArray($value);
             } else {
@@ -326,64 +273,99 @@ class CompanyReport extends Component
         $this->traverseArray($this->data);
 
         $dates = [];
-        $minYear = (int) min(array_unique($this->tableDates));
-        $maxYear = (int) max(array_unique($this->tableDates));
+        $minYear = strtotime(min(array_unique($this->tableDates)));
+        $maxYear = strtotime(max(array_unique($this->tableDates)));
+        $year = 365 * 24 * 60 * 60;
 
-        for ($i = 0; $minYear + $i <= $maxYear; $i++) {
-            $year = $minYear + $i;
-            $dates[] = $year;
+        for ($currentDate = $minYear; $currentDate <= $maxYear; $currentDate += $year) {
+            $dates[] = date('Y-m-d', $currentDate);
         }
 
-        $this->tableDates = $dates;
+        $this->rangeDates = $dates;
+
+        if (count($this->rangeDates) > 0) {
+            if ($this->rangeDates[0] > $this->rangeDates[count($this->rangeDates) - 1]) {
+                $this->rangeDates = array_reverse($this->rangeDates);
+            }
+
+            $this->selectedValue = [$this->rangeDates[0], $this->rangeDates[count($this->rangeDates) - 1]];
+        }
+
+        $rangeMax = strtotime($this->selectedValue[1]) ?: strtotime(now());
+        $this->selectedValue[0] = date('Y-m-d', $rangeMax - 6 * 365 * 24 * 60 * 60);
+        $this->changeDates($this->selectedValue);
     }
 
-    public function generateRows($data) {
-       $this->tableLoading = true;
-       $rows = [];
+    public function generateRows($data)
+    {
+        $this->tableLoading = true;
+        $rows = [];
 
-       if (
-        isset($data['Income Statement']) &&
-        is_array($data['Income Statement']) &&
-        isset($data['Income Statement']['Statement']) &&
-        is_array($data['Income Statement']['Statement']) &&
-        isset($data['Income Statement']['Statement']['Statement'])
-        ) {
-            $data = $data['Income Statement']['Statement']['Statement'];
-        } 
+        if ($this->view !== 'Standardised Template') {
+            if (
+                isset($data['Income Statement']) &&
+                is_array($data['Income Statement']) &&
+                isset($data['Income Statement']['Statement']) &&
+                is_array($data['Income Statement']['Statement']) &&
+                isset($data['Income Statement']['Statement']['Statement'])
+            ) {
+                $data = $data['Income Statement']['Statement']['Statement'];
+            }
 
-        if (
-            isset($data['Statement of Financial Position']) &&
-            is_array($data['Statement of Financial Position'])
+            if (
+                isset($data['Statement of Financial Position']) &&
+                is_array($data['Statement of Financial Position'])
             ) {
                 $data = $data['Statement of Financial Position'];
-        } 
+            }
 
-        if (
-            isset($data['Statement of Cash Flows']) &&
-            is_array($data['Statement of Cash Flows'])
+            if (
+                isset($data['Statement of Cash Flows']) &&
+                is_array($data['Statement of Cash Flows'])
             ) {
                 $data = $data['Statement of Cash Flows'];
-        } 
-        
-    
-        foreach($data as $key => $value) {
-            $rows[] = $this->generateRow($value, $key);
-            
-       }
+            }
+        }
 
-       $this->rows = $rows;
-       $this->tableLoading = false;
+        if ($this->view === 'Standardised Template') {
+            if ($this->period === 'annual') {
+                $data = $data['annual'];
+            }
+
+            if ($this->period === 'quarterly') {
+                $data = $data['quarter'];
+            }
+            foreach ($this->navbar[$this->activeIndex] as $tab) {
+                if ($tab['id'] === $this->activeSubIndex) {
+                    $data = match ($tab['title']) {
+                        'Income Statement' => $data['Income Statement'],
+                        'Balance Sheet Statement' => $data['Balance Sheet'],
+                        'Cash Flow Statement' => $data['Cash Flow Statement'],
+                        default => $data
+                    };
+                }
+            }
+        }
+
+        foreach ($data as $key => $value) {
+            $rows[] = $this->generateRow($value, $key);
+
+        }
+
+        $this->rows = $rows;
+        $this->tableLoading = false;
     }
 
-    public function generateRow($data, $title):array {
-
+    public function generateRow($data, $title, $isSegmentation = false): array
+    {
         $row = [
             'title' => $title,
+            'segmentation' => false,
             'values' => $this->generateEmptyCellsRow(),
             'children' => [],
         ];
 
-        foreach($data as $key => $value) {
+        foreach ($data as $key => $value) {
             $isDate = true;
             try {
                 Carbon::createFromFormat('Y-m-d', $key);
@@ -391,28 +373,34 @@ class CompanyReport extends Component
                 $isDate = false;
             }
 
-
             if ($isDate) {
-                $year = Carbon::createFromFormat('Y-m-d', $key)->year;
-                if (in_array($year, $this->tableDates))
-                {
-                    $row['values'][$year] = $this->parseCell($value, $key);
+                $year = Carbon::createFromFormat('Y-m-d', $key)->format('Y-m');
+
+                foreach ($this->tableDates as $date) {
+                    $datePart = substr($date, 0, 7);
+                    if ($datePart == $year) {
+                        $row['values'][$date] = $this->parseCell($value, $key);
+                        break;
+                    }
                 }
             } else {
                 if (in_array($key, ['#segmentation'])) {
-                    foreach($value as $sKey => $sValue) {
+                    foreach ($value as $sKey => $sValue) {
                         $keyn = array_keys($value[$sKey])[0];
                         $valuen = $sValue[$keyn];
                         $keynn = array_keys($valuen)[0];
                         $valuenn = $valuen[$keynn];
-                        $row['children'][] = $this->generateRow($valuenn, $keynn);
+                        $row['children'][] = $this->generateRow($valuenn, $keynn, true);
                     }
                 } else {
-                    $row['children'][] = $this->generateRow($value, $key);
+                    $row['children'][] = $this->generateRow($value, $key, $isSegmentation);
                 }
             }
 
         }
+
+        $row['segmentation'] = $isSegmentation && count($row['children']) === 0;
+        $row['id'] = serialize($row);
 
         return $row;
     }
@@ -427,6 +415,16 @@ class CompanyReport extends Component
         ];
 
         $decimalDisplay = intval($this->decimalDisplay);
+
+        if (str_contains($value, '%') || str_contains($value, '-') || !is_numeric($value)) {
+            return $value;
+        }
+
+        if (str_contains($value, '.') || str_contains($value, ',')) {
+            $float = floatval(str_replace(',', '', $value));
+
+            $value = intval($float);
+        }
 
         if (!isset($units[$unitType])) {
             return number_format($value, $decimalDisplay);
@@ -446,25 +444,31 @@ class CompanyReport extends Component
         }
     }
 
-    public function parseCell($data, $key) : array
+    public function parseCell($data, $key): array
     {
-       $response = [];
-       $response['empty'] = false;
-       $response['date'] = $key;
-       $response['ticker'] = $this->ticker;
+        $response = [];
+        $response['empty'] = false;
+        $response['date'] = $key;
+        $response['ticker'] = $this->ticker;
 
-         foreach($data as $key => $value) {
-              if (in_array('|', str_split($value))) {
-                  [$value, $hash] = explode('|', $value);
-                $response['value'] = $value;
-                $response['present'] = $this->generatePresent($value);
-                $response['hash'] = $hash;
-              } else {
+        foreach ($data as $key => $value) {
+            if (in_array('|', str_split($value))) {
+                $array = explode('|', $value);
+
+                $response['value'] = $array[0];
+                $response['present'] = $this->generatePresent($array[0]);
+                $response['hash'] = $array[1];
+
+                if (array_key_exists(2, $array)) {
+                    $response['secondHash'] = $array[2];
+                }
+
+            } else {
                 $response[$key] = $value;
-              }
-         }
+            }
+        }
 
-         return $response;
+        return $response;
     }
 
     public function generateEmptyCellsRow(): array
@@ -473,7 +477,7 @@ class CompanyReport extends Component
 
         foreach ($this->tableDates as $date) {
             $response[$date] = [
-                'date' => Carbon::createFromFormat('Y', $date)->format('Y-m-d'),
+                'date' => Carbon::createFromFormat('Y-m-d', $date)->format('Y-m-d'),
                 'value' => '',
                 'hash' => '',
                 'ticker' => $this->ticker,
@@ -491,28 +495,44 @@ class CompanyReport extends Component
             || $propertyName === 'order'
             || $propertyName === 'decimalDisplay'
         ) {
-            $this->regenareteTableChart();
+            $this->regenerateTableChart();
+        }
+
+        if ($propertyName === 'view') {
+            $this->getData();
         }
     }
 
-    public function updatedPeriod() {
+    public function updatedPeriod()
+    {
         $this->getData();
     }
 
-   public function getNavbar() {
+    public function getNavbar()
+    {
         $navbar = [];
         $acronym = ($this->period == 'annual') ? 'arf5drs' : 'qrf5drs';
         $source = 'info_presentations';
         $query = DB::connection('pgsql-xbrl')
-        ->table($source)
-        ->where('ticker', '=', $this->ticker)
-        ->where('acronym', '=', $acronym)
-        ->select('statement', 'statement_group', 'id', 'title')->get();
+            ->table($source)
+            ->where('ticker', '=', $this->ticker)
+            ->where('acronym', '=', $acronym)
+            ->select('statement', 'statement_group', 'id', 'title')->get();
 
         $collection = $query->collect();
 
-        foreach($collection as $value) {
-            $navbar[$value->statement_group][] = ['statement' => $value->statement,'id' => $value->id, 'title' => $value->title];
+        foreach ($collection as $value) {
+            if ($value->title === 'Income Statement') {
+                $navbar[$value->statement_group][0] = ['statement' => $value->statement, 'id' => $value->id, 'title' => $value->title];
+            }
+
+            if ($value->title === 'Balance Sheet Statement') {
+                $navbar[$value->statement_group][1] = ['statement' => $value->statement, 'id' => $value->id, 'title' => $value->title];
+            }
+
+            if ($value->title === 'Cash Flow Statement') {
+                $navbar[$value->statement_group][2] = ['statement' => $value->statement, 'id' => $value->id, 'title' => $value->title];
+            }
         }
         if ($navbar === []) {
             $this->noData = true;
@@ -522,13 +542,33 @@ class CompanyReport extends Component
         $this->activeIndex = 'Financial Statements [Financial Statements]';
         $this->activeSubIndex = $navbar[$this->activeIndex][0]['id'];
         $this->navbar = $navbar;
+
         $this->emit('navbarUpdated', $this->navbar, $this->activeIndex, $this->activeSubIndex);
-   }
+    }
 
     public function mount(Request $request, $company, $ticker, $period)
     {
+
+        $first = DB::connection('pgsql-xbrl')
+        ->table('eod_prices')
+        ->where('symbol', strtolower($this->ticker))
+        ->latest('date')->first()?->adj_close;
+
+        $this->cost =  $first;
+
+
+        $previous = DB::connection('pgsql-xbrl')
+        ->table('eod_prices')
+        ->where('symbol', strtolower($this->ticker))
+        ->latest('date')
+        ->skip(1)->first()?->adj_close;
+
+        if ($previous && $first) {
+            $this->dynamic = round((($first - $previous) / $previous) * 100, 2);
+        }
+
         $this->emit('periodChange', 'annual');
-        $this->company  = $company;
+        $this->company = $company;
         $this->ticker = $ticker;
         $this->period = $period;
         $this->companyName = $this->ticker;
@@ -544,21 +584,33 @@ class CompanyReport extends Component
             $this->currentRoute = $request->route()->getName();
         }
 
+        $this->emit('getTicker', $ticker);
+
     }
 
-    public function periodChange($period) {
+    public function periodChange($period)
+    {
         $this->period = $period;
         $this->getNavbar();
         $this->getData();
     }
 
-    public function tabClicked($key) {
+    public function tabClicked($key)
+    {
         $this->activeIndex = $key;
         $this->getData();
     }
 
-    public function tabSubClicked($key) {
-        $this->activeSubIndex = $key;
+    public function tabSubClicked($title)
+    {
+        $this->activeTitle = $title;
+
+        foreach ($this->navbar[$this->activeIndex] as $nav) {
+            if ($nav['title'] === $title) {
+                $this->activeSubIndex = $nav['id'];
+            }
+        }
+
         $this->getData();
     }
 

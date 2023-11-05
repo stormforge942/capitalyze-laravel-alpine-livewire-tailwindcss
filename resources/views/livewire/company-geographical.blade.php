@@ -68,7 +68,7 @@
 
                             <div class="filters-row">
                                 <div class="select-wrapper flex items-center">
-                                    <div class="ml-3 flex items-center">View
+                                    <div class="ml-3 flex items-center text-xs">View
                                         <button type="submit" id="dropdownViewButton" data-dropdown-toggle="dropdown-View" class="flex items-center flowbite-select bg-gray-50 border border-gray-700 text-gray-900 text-sm ml-2 p-2.5" name="view" id="">
                                             {{$view}}
                                             <svg width="16" height="16" viewBox="0 0 16 16" fill="none" xmlns="http://www.w3.org/2000/svg">

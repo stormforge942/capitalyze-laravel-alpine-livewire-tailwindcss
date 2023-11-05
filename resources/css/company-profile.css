@@ -20,6 +20,7 @@
 .page-titles .text-color-green {
     color: #13B05B;
     font-weight: 500;
+    font-size: 16px;
 }
 
 .page-titles {
@@ -286,4 +287,12 @@
     .company-profile-page {
         font-size: 1.4vw;  /* base size */
     }
+}
+
+.company-name {
+    color: #121A0F;
+    font-size: 24px;
+    font-style: normal;
+    font-weight: 700;
+    line-height: normal;
 }

@@ -10,6 +10,33 @@
             <span class="sr-only">Loading...</span>
         </div>
     @else
+        @if($result && array_key_exists('formula', $result))
+            <h1 class="text-[21px] font-bold mb-2">{{$result['formula']['metric']}}</h1>
+            <div class="block px-4 py-2">
+                <span class="w-[100px] inline-block font-bold">Expression</span>
+                <span>{{$result['formula']['expression']}}</span>
+            </div>
+            <div class="block px-4 py-2">
+                <span class="w-[100px] inline-block font-bold">Simplified</span>
+                <span>{{$result['formula']['canonized']}}</span>
+            </div>
+            <div class="block px-4 py-2">
+                <span class="w-[100px] inline-block font-bold">Resolved</span>
+                <span class="{{str_contains($this->result['formula']['resolved'], '229234000000')
+                    || str_contains($this->result['formula']['resolved'], '21563900000') ? 'text-yellow-500' : 'text-black'}}">
+                    {{$result['formula']['resolved']}}
+                </span>
+            </div>
+            <div class="block px-4 py-2">
+                <span class="w-[100px] inline-block font-bold">Result</span>
+                <span>{{$result['formula']['result']}}</span>
+            </div>
+        @endif
+
+        @if($result && array_key_exists('body', $result))
+            <livewire:company-report-slide-row wire:key="{{now()}}" :data="$result['body']"/>
+        @endif
+
         @foreach($data as $table)
             {!! $table !!}
         @endforeach
@@ -17,4 +44,19 @@
             window.reportTextHighlighter.highlight(@json($value), 'table tbody tr td')
         </script>
     @endif
+
+    <script>
+        let slideOpen = false;
+
+            document.body.addEventListener('click', function (event) {
+                let element = event.target;
+
+                if (element.classList.contains('open-slide') && !slideOpen) {
+                    var value = element.dataset.value;
+                    value = JSON.parse(value);
+                    window.livewire.emit('slide-over.open', 'company-report-slide', value, {force: true});
+                    slideOpen = true;
+                }
+            });
+    </script>
 </x-wire-elements-pro::tailwind.slide-over>

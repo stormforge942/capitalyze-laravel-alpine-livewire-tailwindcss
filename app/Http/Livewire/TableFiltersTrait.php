@@ -4,7 +4,7 @@ namespace App\Http\Livewire;
 
 trait TableFiltersTrait
 {
-    public $view = 'Common Size';
+    public $view = 'Standardised Template';
     public $unitType = 'Thousands';
     public $decimal = '0';
     public $template = 'Standart';
