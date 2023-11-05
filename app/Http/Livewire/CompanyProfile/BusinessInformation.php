@@ -2,18 +2,26 @@
 
 namespace App\Http\Livewire\CompanyProfile;
 
-use App\Http\Livewire\AsTab;
 use Livewire\Component;
+use App\Http\Livewire\AsTab;
+use App\Models\CompanyPresentation;
 
 class BusinessInformation extends Component
 {
     use AsTab;
 
-    public $profile;
+    public $menuLinks;
 
-    public function mount(array $data = [])
+    public function mount($data = [])
     {
-        $this->profile = $data['profile'];
+        $ticker = $data['profile']['symbol'];
+
+        $this->menuLinks = CompanyPresentation::query()
+            ->where('business', '!=', null)
+            ->where('symbol', $ticker)
+            ->orderByDesc('acceptance_time')
+            ->first()
+            ?->toArray();
     }
 
     public function render()

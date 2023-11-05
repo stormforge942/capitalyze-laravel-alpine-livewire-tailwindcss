@@ -9,9 +9,9 @@
         }
         $dispatch('tab-changed', tab)
 
-        if (scroll) {
+        {{-- if (scroll) {
             e.target.scrollIntoView({ behavior: 'smooth', block: 'center' })
-        }
+        } --}}
 
         // update query string
         const url = new URL(window.location.href);
