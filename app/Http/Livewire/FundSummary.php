@@ -102,7 +102,6 @@ class FundSummary extends Component
         ->table('filings_summary')
         ->where('cik', '=', $this->cik)
         ->min('date');
-
     
         $newestFiling = DB::connection('pgsql-xbrl')
         ->table('filings_summary')

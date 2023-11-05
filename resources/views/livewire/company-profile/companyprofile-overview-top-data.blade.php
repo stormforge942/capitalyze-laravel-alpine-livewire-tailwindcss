@@ -1,5 +1,5 @@
-<div class="cards-wrapper flex">
-    <div class="white-card w-1/4">
+<div class="cards-wrapper ">
+    <div class="white-card market-card-holder">
         <div class="title">Market Data</div>
         <div class="key-values-wrapper">
 
@@ -29,17 +29,17 @@
         </div>
     </div>
 
-    <div class="white-card w-1/4">
+    <div class="white-card market-card-holder ">
         <div class="title">Capital Structure</div>
         <div class="key-values-wrapper">
 
             <div class="key-value">
-                <div class="key">Market Capitalisation</div>
+                <div class="key">Market Capital</div>
                 <div class="value">$133.74</div>
             </div>
             <div class="key-value">
                 <div class="key">Total Enterprise Value</div>
-                <div class="value">$83.343408245224</div>
+                <div class="value">$83.34</div>
             </div>
 
             <div class="key-value">
@@ -59,7 +59,7 @@
         </div>
     </div>
 
-    <div class="white-card w-1/4">
+    <div class="white-card market-card-holder ">
         <div class="title">Profitability</div>
         <div class="key-values-wrapper">
             <div class="key-value">
@@ -68,7 +68,7 @@
             </div>
             <div class="key-value">
                 <div class="key">EBIT Margin</div>
-                <div class="value">$83.343408245224</div>
+                <div class="value">$83.34</div>
             </div>
 
             <div class="key-value">
@@ -88,7 +88,7 @@
         </div>
     </div>
 
-    <div class="white-card w-1/4">
+    <div class="white-card market-card-holder ">
         <div class="title">LTM Valuation</div>
         <div class="key-values-wrapper">
             <div class="key-value">
@@ -97,7 +97,7 @@
             </div>
             <div class="key-value">
                 <div class="key">LTM EV/Gross Profit</div>
-                <div class="value">$83.343408245224</div>
+                <div class="value">$83.34</div>
             </div>
 
             <div class="key-value">

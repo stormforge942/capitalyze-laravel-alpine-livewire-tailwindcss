@@ -16,6 +16,10 @@ class ComapnyTrackInvestor extends Component
         $this->infoTabActive = $tab;
         $this->emit('lodingFire');
     }
+
+    public function filterData($value){
+        $this->emit('seachFilterValue', $value);
+    }
     
     public function render()
     {

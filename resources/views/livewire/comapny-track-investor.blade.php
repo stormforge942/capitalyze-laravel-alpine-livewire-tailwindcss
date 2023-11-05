@@ -1,6 +1,6 @@
 <div class="bg-gray-100" style="margin-top: -40px;">
     <div class="">
-        <div class="px-4 sm:px-6 lg:px-8 py-4">
+        <div class="px-4 sm:px-6 lg:px-8 py-4 mt-7">
             <div wire:loading.flex class="justify-center items-center min-w-full min-h-100vh company-profile-loading">
                 <div class="grid place-content-center h-full" role="status">
                     <svg aria-hidden="true" class="w-12 h-12 mr-2 text-gray-200 animate-spin dark:text-gray-600 fill-blue-600" viewBox="0 0 100 101" fill="none" xmlns="http://www.w3.org/2000/svg">
@@ -16,7 +16,7 @@
                         <div> <h4 class="text-[12px] font-[500] pr-1 mt-2">TrackInvestors</h4></div>
                         <div class="pr-1 mt-1 mb-1"> <span class="text-[12px] font-[500">/</span> </div>
                         <div> <h5 class="text-[12px] font-[500] pr-1 mt-2">Discover</h5></div>
-                        <div class="pr-0"><img class="pr-1 mt-3" src="{{url('/svg/chevron.svg')}}" alt=""/> </div>
+                        <div class="pr-0 mt-1"><img class="pr-1 mt-3" src="{{url('/svg/chevron.svg')}}" alt=""/> </div>
                     </div> 
                 </div>   
                 <div class="hidden md:flex tabs-wrapper w-full">
@@ -33,7 +33,7 @@
                                     <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="m19 19-4-4m0-7A7 7 0 1 1 1 8a7 7 0 0 1 14 0Z"/>
                                 </svg>
                             </div>
-                            <input type="search" id="default-search" class="block h-0 leading-3 w-full p-4 pl-10 text-sm text-gray-900 border-b-2 border-t-0 border-l-0 border-r-0 bg-gray-100 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white" placeholder="Search" required>
+                            <input type="search" id="default-search" wire:change="filterData($event.target.value)" class="block focus:outline-none focus:ring-0 focus:border-blue-500 h-0 leading-3 w-full p-4 pl-10 text-sm text-gray-900 border-b-2 border-t-0 border-l-0 border-r-0 bg-gray-100 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white" placeholder="Search" required>
                         </div>
                     </div>
                 </div>
@@ -63,7 +63,7 @@
                                     <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="m19 19-4-4m0-7A7 7 0 1 1 1 8a7 7 0 0 1 14 0Z"/>
                                 </svg>
                             </div>
-                            <input type="search" id="default-search" class="block h-0 leading-3 w-full p-4 pl-10 text-sm text-gray-900 border-b-2 border-t-0 border-l-0 border-r-0 bg-gray-100 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white" placeholder="Search" required>
+                            <input type="search" wire:change="filterData($event.target.value)" id="default-search" class="block focus:outline-none focus:ring-0 focus:border-blue-500 h-0 leading-3 w-full p-4 pl-10 text-sm text-gray-900 border-b-2 border-t-0 border-l-0 border-r-0 bg-gray-100 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white" placeholder="Search" required>
                         </div>
                     </div>
                 </div>

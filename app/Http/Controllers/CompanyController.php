@@ -198,4 +198,32 @@ class CompanyController extends BaseController
             'tab' => 'employee'
         ]);
     }
+
+    public function ownership(Request $request, string $ticker)
+    {
+        $company = Company::query()
+            ->where('ticker', $ticker)
+            ->firstOrFail();
+
+        return view('layouts.company', [
+            'company' => $company,
+            'ticker' => $ticker,
+            'period' => $request->query('period', 'annual'),
+            'tab' => 'ownership'
+        ]);
+    }
+
+    public function fund(Request $request, string $ticker)
+    {
+        $company = Company::query()
+            ->where('ticker', $ticker)
+            ->firstOrFail();
+
+        return view('layouts.company', [
+            'company' => $company,
+            'ticker' => $ticker,
+            'period' => $request->query('period', 'annual'),
+            'tab' => 'company-fund',
+        ]);
+    }
 }

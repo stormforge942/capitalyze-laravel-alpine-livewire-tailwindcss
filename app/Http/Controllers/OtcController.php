@@ -27,4 +27,14 @@ class OtcController extends BaseController
             'tab' => 'filings'
         ]);
     }
+
+    public function profile(Request $request, $ticker)
+    {
+        return view('layouts.stock-exchange', [
+            'model' => Otc::where('symbol', $ticker)->get()->first(),
+            'period' => $request->query('period', 'annual'),
+            'exchange' => 'otc',
+            'tab' => 'profile'
+        ]);
+    }
 }

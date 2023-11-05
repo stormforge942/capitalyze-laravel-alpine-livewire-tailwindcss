@@ -41,7 +41,7 @@
     border: 1px solid #D4DDD7;
     padding: 0.28em;
     width: 100%;
-    margin: 1.68em 0;
+    margin: 0.7em 0px 1.4em 0px !important;
     background: white;
 }
 
@@ -64,14 +64,14 @@
 
 .cards-wrapper {
     display: grid;
-    grid-gap: 1em;
+    grid-gap: 24px;
     grid-template-columns: repeat(4, 1fr);
     width: 100%;
 }
 
 .white-card {
     font-size: 0.5em;
-    padding: 2em;
+    padding: 1rem;
     background: white;
     border-radius: 0.666em;
 }
@@ -84,7 +84,7 @@
 .white-card .title {
     color: #3561E7;
     font-weight: 600;
-    margin-bottom: 1.33em;
+    margin-bottom: 16px;
     display: flex;
     justify-content: space-between;
 }
@@ -92,7 +92,7 @@
 .white-card .key-values-wrapper {
     display: grid;
     grid-template-columns: auto auto;
-    grid-gap: 1.333em;
+    grid-gap: 16px;
 }
 
 .white-card .key {
@@ -111,6 +111,7 @@
 }
 
 .key-values-wrapper__item {
+    margin-right: 1rem;
     display: flex;
     gap: 15px;
 }
@@ -148,19 +149,19 @@
 
 .title-spoiler {
     color: #121A0F;
-    font-size: 1.17em;
+    font-size: 0.85em;
     font-weight: 600;
 }
 
 .graph-wrapper-box {
-    margin-top: 2em;
+    margin-top: 24px;
 }
 
 .graph-wrapper {
     background: white;
     font-size: 0.5em;
     border-radius: 0.666em;
-    padding: 3em;
+    padding: 24px;
     width: 100%;
 }
 
@@ -172,8 +173,8 @@
 }
 
 .graph-header {
-    display: grid;
-    grid-template-columns: 1fr auto 1fr;
+    display: flex;
+
 }
 .company-profile-page .graph-header {
     white-space: nowrap;
@@ -247,7 +248,7 @@
 .company-profile-page .date-range-select-wrapper .value {
     color: #121A0F;
     font-weight: normal;
-    font-size: 1em;
+    font-size: 0.70rem;
     height: 1em;
     -webkit-appearance: none;
     border: none;
@@ -267,11 +268,13 @@
 .company-profile-page .date-range-select-wrapper .from-wrapper,
 .company-profile-page .date-range-select-wrapper .to-wrapper {
     cursor: pointer;
+    width: 136px !important;
+    padding: 0.25rem 0.25rem 1rem 1rem;
 }
 
 @media (max-width: 1600px) {
     .cards-wrapper {
-        grid-template-columns: repeat(2, 1fr);
+        grid-template-columns: repeat(4, 1fr);
     }
     .wide-cards-wrapper .key-values-wrapper {
         grid-template-columns: repeat(3, auto);
