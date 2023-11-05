@@ -120,7 +120,7 @@
     </div>
 
     {{-- if ssr is disabled, please move this component javascript code to resources/views/livewire/company-profile/page.blade.php  --}}
-    <livewire:company-profile-overview-graph :ticker="$profile['symbol']" />
+    <livewire:company-profile.company-overview-graph :ticker="$profile['symbol']" />
 
     <div class="w-full mt-4 white-card b-info-card">
         <div class="title">
