@@ -23,7 +23,7 @@
     }
 }" x-init="$dispatch('tab-changed', activeTab);
 dropdown = new Dropdown($refs.dropdown, $refs.dropdownBtn)" x-cloak>
-    <div class="flex flex-wrap items-center justify-between gap-2 lg:hidden">
+    <div class="flex flex-wrap items-center justify-between gap-2 lg:hidden text-base">
         <div>
             <button x-ref="dropdownBtn"
                 class="sm:min-w-[190px] bg-green-dark font-semibold rounded px-4 py-2.5 flex items-center justify-between gap-x-2"
@@ -56,7 +56,7 @@ dropdown = new Dropdown($refs.dropdown, $refs.dropdownBtn)" x-cloak>
         <div class="tab-slot"></div>
     </div>
 
-    <div class="hidden lg:flex border border-[#D4DDD7] rounded bg-white w-full items-center gap-2 p-1 overflow-x-auto">
+    <div class="hidden lg:flex border border-[#D4DDD7] rounded bg-white w-full items-center gap-2 p-1 overflow-x-auto text-base">
         @foreach ($tabs as $key => $tab)
             <button class="min-w-[250px] px-3 py-1.5 text-center rounded transition"
                 :class="{
