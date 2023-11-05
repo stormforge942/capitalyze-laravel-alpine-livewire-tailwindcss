@@ -28,13 +28,15 @@ class CompanyProfile extends Component
     public $dynamic = null;
     public $activeBusinessSection = 'business';
 
-    public function setInfoActiveTab(string $tab): void {
+    public function setInfoActiveTab(string $tab): void
+    {
         $this->infoTabActive = $tab;
         $this->emit('updateChart');
     }
 
     public $showFullProfile = false;
-    public function toggleFullProfile(): void {
+    public function toggleFullProfile(): void
+    {
         $this->showFullProfile = !$this->showFullProfile;
     }
 
@@ -47,7 +49,9 @@ class CompanyProfile extends Component
         $first = DB::connection('pgsql-xbrl')
             ->table('eod_prices')
             ->where('symbol', strtolower($this->ticker))
-            ->latest('date')->first()?->adj_close;
+            ->latest('date')
+            ->first()
+            ?->adj_close;
 
         $this->cost =  $first;
 
@@ -55,7 +59,9 @@ class CompanyProfile extends Component
             ->table('eod_prices')
             ->where('symbol', strtolower($this->ticker))
             ->latest('date')
-            ->skip(1)->first()?->adj_close;
+            ->skip(1)
+            ->first()
+            ?->adj_close;
 
         if ($previous && $first) {
             $this->dynamic = round((($first - $previous) / $previous) * 100, 2);
@@ -67,11 +73,13 @@ class CompanyProfile extends Component
         $this->getTickerPresentation();
     }
 
-    public function getMenu(){
+    public function getMenu()
+    {
         $this->menuLinks = CompanyPresentation::where('business', '!=', null)->where('symbol', $this->ticker)->orderByDesc('acceptance_time')->first()?->toArray();
     }
 
-    public function getTickerPresentation(){
+    public function getTickerPresentation()
+    {
         $data = json_decode(InfoTikrPresentation::where('ticker', $this->ticker)->orderByDesc('id')->first()->info, true)['annual'];
         $this->ebitda = $data['Income Statement']['EBITDA'];
         $this->adjNetIncome = $data['Income Statement']['Net Income'];
@@ -81,7 +89,8 @@ class CompanyProfile extends Component
         // dd($this->ebitda, $this->adjNetIncome, $this->dilutedEPS);
     }
 
-    public function getCompanyProfile() {
+    public function getCompanyProfile()
+    {
         $this->profile = \App\Models\CompanyProfile::query()
             ->where('symbol', $this->ticker)
             ->first()
@@ -114,7 +123,7 @@ class CompanyProfile extends Component
             $products[$key] = $date[$key];
             $keys = array_keys($products[$key]);
             foreach ($keys as $subkey) {
-                if (! in_array($subkey, $segments, true)) {
+                if (!in_array($subkey, $segments, true)) {
                     $segments[] = $subkey;
                 }
             }

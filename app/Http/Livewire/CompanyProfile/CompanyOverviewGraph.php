@@ -1,13 +1,13 @@
 <?php
 
-namespace App\Http\Livewire;
+namespace App\Http\Livewire\CompanyProfile;
 
 use App\Models\Company;
 use Carbon\Carbon;
 use Illuminate\Support\Facades\DB;
 use Livewire\Component;
 
-class CompanyProfileOverviewGraph extends Component
+class CompanyOverviewGraph extends Component
 {
     public $ticker = "";
     public $currentChartPeriod = "3m";
@@ -236,6 +236,6 @@ class CompanyProfileOverviewGraph extends Component
 
     public function render()
     {
-        return view('livewire.company-profile-overview-graph');
+        return view('livewire.company-profile.company-overview-graph');
     }
 }

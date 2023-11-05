@@ -2,6 +2,7 @@
 
 namespace App\Models;
 
+use Illuminate\Support\Str;
 use Illuminate\Database\Eloquent\Model;
 
 class Navbar extends Model
@@ -20,7 +21,7 @@ class Navbar extends Model
      */
     protected $table = 'navbars';
 
-     /**
+    /**
      * The attributes that are mass assignable.
      *
      * @var string[]
@@ -55,4 +56,14 @@ class Navbar extends Model
      * @var bool
      */
     public $incrementing = true;
+
+    public static function getPrimaryLinks($navItems)
+    {
+        return $navItems->where(function ($nav) {
+            return !Str::startsWith(
+                $nav->route_name,
+                ['company.', 'lse.', 'tsx.', 'fund.', 'mutual-fund.', 'etf.', 'shanghai.', 'japan.', 'hkex.', 'otc.', 'frankfurt.', 'euronext.', 'shenzhen.', 'economics-release', 'create.']
+            );
+        });
+    }
 }

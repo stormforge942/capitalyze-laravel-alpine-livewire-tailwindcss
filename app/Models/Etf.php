@@ -4,26 +4,34 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
 
-class Company extends Model
+class Etf extends Model
 {
-    public const DEFAULT_TICKER = 'AAPL';
-    
     /**
      * The primary key associated with the table.
      *
      * @var string
      */
-    protected $primaryKey = 'ticker';
+    protected $primaryKey = 'cik';
 
     /**
+     * Table name
+     *
+     * @var string
+     */
+    protected $table = 'etfs';
+
+     /**
      * The attributes that are mass assignable.
      *
      * @var string[]
      */
     protected $fillable = [
-        'ticker',
         'cik',
-        'name',
+        'registrant_name',
+        'etf_symbol',
+        'series_id',
+        'class_id',
+        'class_name',
     ];
 
     /**
@@ -31,7 +39,7 @@ class Company extends Model
      *
      * @var string
      */
-    protected $connection = 'pgsql';
+    protected $connection = 'pgsql'; 
 
     /**
      * Indicates if the model's ID is auto-incrementing.
@@ -39,9 +47,4 @@ class Company extends Model
      * @var bool
      */
     public $incrementing = false;
-
-    public static function default()
-    {
-        return Company::where('ticker', self::DEFAULT_TICKER)->first();
-    }
 }

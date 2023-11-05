@@ -4,7 +4,6 @@ namespace App\Http\Livewire;
 
 use App\Models\Navbar;
 use Livewire\Component;
-use Illuminate\Support\Str;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 
@@ -127,17 +126,7 @@ class CompanyNavbar extends Component
                     <path d="M3.33594 3.99821C3.33594 4.3664 3.63442 4.66488 4.0026 4.66488C4.37079 4.66488 4.66927 4.3664 4.66927 3.99821C4.66927 3.63002 4.37079 3.33154 4.0026 3.33154C3.63442 3.33154 3.33594 3.63002 3.33594 3.99821Z" stroke="#464E49" stroke-width="1.83333" stroke-linecap="round" stroke-linejoin="round"/>
                 </svg>
                 ICON,
-                'child' => Auth::user()->navbars()
-                    ->filter(function ($item) {
-                        if (
-                            !$item->is_moddable ||
-                            Str::startsWith($item->route_name, ['company.', 'lse.', 'tsx.', 'fund.', 'otc.', 'mutual-fund.', 'shanghai.', 'japan.', 'hkex.', 'euronext.', 'economics-release', 'create.', 'frankfurt.', 'shenzhen.'])
-                        ) {
-                            return false;
-                        }
-
-                        return true;
-                    })
+                'child' => Navbar::getPrimaryLinks(Auth::user()->navbars())
                     ->map(function (Navbar $nav) {
                         return [
                             'title' => $nav->name,

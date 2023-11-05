@@ -36,11 +36,12 @@ class CreateNavbarGroupShows extends Command
         $groups = Groups::all();
 
         foreach ($navbars as $navbar) {
-            $isBottomNavbar = Str::startsWith($navbar->route_name, ['company.', 'company-', 'lse.', 'tsx.', 'fund.', 'mutual-fund.', 'fund-', 'mutual-fund-', 'shanghai.', 'japan.', 'hkex.', 'euronext.', 'otc.', 'frankfurt.', 'shenzhen.']);
+            $isBottomNavbar = Str::startsWith($navbar->route_name, ['company.', 'company-', 'lse.', 'tsx.', 'fund.', 'mutual-fund.', 'etf.', 'fund-', 'mutual-fund-', 'shanghai.', 'japan.', 'hkex.', 'euronext.', 'otc.', 'frankfurt.', 'shenzhen.']);
             $isUpperNavbar = $navbar->route_name === '' 
             || $navbar->route_name === 'earnings-calendar'
             || $navbar->route_name === 'economics-calendar'
             || $navbar->route_name === 'delistings'
+            || $navbar->route_name === 'etf-filings'
             || $navbar->route_name === 'euronexts'
             || $navbar->route_name === 'lses'
             || $navbar->route_name === 'tsxs'

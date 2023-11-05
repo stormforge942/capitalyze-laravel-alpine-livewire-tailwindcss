@@ -2,6 +2,7 @@
 
 namespace App\Providers;
 
+use App\Models\Etf;
 use App\Models\Lse;
 use App\Models\Otc;
 use App\Models\Tsx;
@@ -10,17 +11,17 @@ use App\Models\Hkex;
 use App\Models\Japan;
 use App\Models\Company;
 use App\Models\Euronext;
-use App\Models\Frankfurt;
 use App\Models\Shanghai;
-use App\Models\MutualFunds;
 use App\Models\Shenzhen;
-use Illuminate\Auth\Notifications\ResetPassword;
-use Illuminate\Auth\Notifications\VerifyEmail;
-use Illuminate\Notifications\Messages\MailMessage;
+use App\Models\Frankfurt;
+use App\Models\MutualFunds;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\App;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Support\ServiceProvider;
+use Illuminate\Auth\Notifications\VerifyEmail;
+use Illuminate\Auth\Notifications\ResetPassword;
+use Illuminate\Notifications\Messages\MailMessage;
 use WireElements\Pro\Components\Spotlight\Spotlight;
 use WireElements\Pro\Components\Spotlight\SpotlightQuery;
 use WireElements\Pro\Components\Spotlight\SpotlightResult;
@@ -37,6 +38,7 @@ class AppServiceProvider extends ServiceProvider
         Spotlight::registerGroup('companies', 'Companies');
         Spotlight::registerGroup('funds', 'Funds');
         Spotlight::registerGroup('mutual-funds', 'Mutual Funds');
+        Spotlight::registerGroup('etfs', 'Etf');
         Spotlight::registerGroup('euronexts', 'Euronexts');
         Spotlight::registerGroup('lses', 'LSE');
         Spotlight::registerGroup('tsxs', 'TSX');
@@ -55,6 +57,7 @@ class AppServiceProvider extends ServiceProvider
                 $funds = Fund::where('name', 'ilike', "%{$query}%")->orWhere('cik', 'ilike', "%{$query}%")->take(10)->get();
 
                 $mutualFunds = MutualFunds::where('registrant_name', 'ilike', "%{$query}%")->orWhere('cik', 'ilike', "%{$query}%")->orWhere('class_id', 'ilike', "%{$query}%")->orWhere('series_id', 'ilike', "%{$query}%")->orWhere('fund_symbol', 'ilike', "%{$query}%")->take(10)->get();
+                $etfs = Etf::where('registrant_name', 'ilike', "%{$query}%")->orWhere('cik', 'ilike', "%{$query}%")->orWhere('etf_symbol', 'ilike', "%{$query}%")->take(10)->get();
 
                 $euronexts = Euronext::where('registrant_name', 'ilike', "%{$query}%")
                     ->orWhere('symbol', 'ilike', "%{$query}%")
@@ -111,6 +114,15 @@ class AppServiceProvider extends ServiceProvider
                             ->setGroup('mutual-funds')
                             ->setTitle("$mutualFund->cik | $mutualFund->registrant_name | $mutualFund->fund_symbol | $mutualFund->series_id | $mutualFund->class_id | $mutualFund->class_name")
                             ->setAction('jump_to', ['path' => '/mutual-fund/' . $mutualFund->cik . '/' . $mutualFund->fund_symbol . '/' . $mutualFund->series_id . '/' . $mutualFund->class_id])
+                    );
+                }
+
+                foreach ($etfs as $etf) {
+                    $collection->push(
+                        SpotlightResult::make()
+                            ->setGroup('etfs')
+                            ->setTitle("$etf->cik | $etf->registrant_name | $etf->etf_symbol")
+                            ->setAction('jump_to', ['path' => '/etf/' . $etf->cik . '/' . $etf->etf_symbol])
                     );
                 }
 

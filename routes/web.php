@@ -30,6 +30,7 @@ use App\Http\Controllers\JapanController;
 use App\Http\Livewire\CompanyFilingsPage;
 use App\Http\Livewire\CompanyIdentifiers;
 use App\Http\Controllers\CompanyController;
+use App\Http\Controllers\EtfController;
 use App\Http\Controllers\EuronextController;
 use App\Http\Controllers\ShanghaiController;
 use App\Http\Livewire\EconomicReleaseSeries;
@@ -56,6 +57,7 @@ Route::middleware([])->group(function () {
         Route::get('/company-filings', CompanyFilingsPage::class)->name('company-filings');
         Route::get('/fund-filings', FundFilingsPage::class)->name('fund-filings');
         Route::get('/mutual-fund-filings', MutualFundFilingsPage::class)->name('mutual-fund-filings');
+        Route::get('/etf-filings', [EtfController::class, 'filings'])->name('etf-filings');
         Route::get('/identifiers', CompanyIdentifiers::class)->name('company-identifiers');
         Route::get('/delistings', Delistings::class)->name('delistings');
         Route::get('/euronext', Euronexts::class)->name('euronexts');
@@ -100,6 +102,8 @@ Route::middleware([])->group(function () {
 
         Route::get('/mutual-fund/{cik}/{fund_symbol}/{series_id}/{class_id}/', [MutualFundController::class, 'holdings'])->name('mutual-fund.holdings');
         Route::get('/mutual-fund/{cik}/{fund_symbol}/{series_id}/{class_id}/returns', [MutualFundController::class, 'returns'])->name('mutual-fund.returns');
+
+        Route::get('/etf/{cik}/{etf_symbol}', [EtfController::class, 'holdings'])->name('etf.holdings');
 
         Route::get('/euronext/{ticker}/', [EuronextController::class, 'metrics'])->name('euronext.metrics');
         Route::get('/euronext/{ticker}/profile', [EuronextController::class, 'profile'])->name('euronext.profile');

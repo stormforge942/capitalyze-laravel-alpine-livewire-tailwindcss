@@ -9,19 +9,15 @@ class Tabs extends Component
     public array $tabs = [];
     public ?string $active = null;
     public array $data = [];
-
-    protected function queryString()
-    {
-        return [
-            'active' => ['as' => 'tab'],
-        ];
-    }
+    public bool $ssr = true;
 
     public function mount(
         array $tabs = [],
         string $active = null,
-        array $data = []
+        array $data = [],
+        bool $ssr = true,
     ) {
+        $this->ssr = $ssr;
         $this->tabs = [];
         $this->data = $data;
 
@@ -33,7 +29,7 @@ class Tabs extends Component
             ];
         }
 
-        $active = $this->active ?: $active;
+        $active = request()->query('tab', $active);
 
         if (!in_array($active, array_keys($this->tabs))) {
             $active = array_key_first($this->tabs);

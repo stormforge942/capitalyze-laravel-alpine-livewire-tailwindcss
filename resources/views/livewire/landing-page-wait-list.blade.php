@@ -8,7 +8,7 @@
             </a>
 
             <a href="{{ route('login') }}"
-                class="bg-green-dark hover:bg-green-light2 px-4 md:px-14 py-3 rounded text-[13px] font-semibold transition">
+                class="bg-green-dark hover:bg-green-light2 px-4 md:px-14 py-3 rounded text-sm+ font-semibold transition">
                 Sign in
             </a>
         </header>
@@ -26,7 +26,7 @@
                                 revenue,
                                 cost structure, capital allocation, and more.
                             </p>
-                            <p class="mt-4 lg:mt-8 text-[13px] md:text-md">
+                            <p class="mt-4 lg:mt-8 text-sm+ md:text-md">
                                 Exciting things you can do with <span class="font-semibold">Capitalyze</span> in the
                                 beta
                                 program

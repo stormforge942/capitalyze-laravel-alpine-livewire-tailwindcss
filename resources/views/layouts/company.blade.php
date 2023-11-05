@@ -15,13 +15,14 @@
     <link href="https://fonts.googleapis.com/css?family=Public+Sans:400,500,600" rel="stylesheet" />
     <link href="https://cdnjs.cloudflare.com/ajax/libs/flowbite/1.8.1/flowbite.min.css" rel="stylesheet" />
 
-    <!-- Scripts -->
-    @vite(['resources/css/app.css', 'resources/js/app.js'])
     <style>
         [x-cloak] {
             display: none;
         }
     </style>
+    
+    <!-- Scripts -->
+    @vite(['resources/css/app.css', 'resources/js/app.js'])
 
     @livewireStyles
     @once
@@ -46,7 +47,7 @@
         @elseif($tab == 'products')
             <livewire:company-products :company="$company" :ticker="$ticker" :period="$period" />
         @elseif($tab == 'profile')
-            <livewire:company-profile :company="$company" :ticker="$ticker" :period="$period" />
+            <livewire:company-profile.page :company="$company" :period="$period" />
         @elseif($tab == 'splits')
             <livewire:company-splits :company="$company" :ticker="$ticker" :period="$period" />
         @elseif($tab == 'metrics')
@@ -75,6 +76,8 @@
             <livewire:ownership.page :company="$company" :ticker="$ticker" :period="$period" />
         @elseif($tab == 'company-fund')
             <livewire:ownership.company-fund :company="$company" :ticker="$ticker" :period="$period" />
+        @elseif($tab == 'etf-filings')
+            <livewire:etf.filings />
         @endif
     </main>
 

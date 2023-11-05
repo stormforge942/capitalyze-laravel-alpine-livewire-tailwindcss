@@ -1,32 +1,22 @@
 <?php
 
-namespace App\Http\Livewire;
+namespace App\Http\Livewire\Etf;
 
 use Livewire\Component;
 use Illuminate\Support\Str;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 
-class MutualFundNavbar extends Component
+class Navbar extends Component
 {
-    public $fund;
+    public $etf;
     public $currentRoute;
     public $topNav;
     public $bottomNav;
 
     public function render()
     {
-        return view('livewire.mutual-fund-navbar');
-    }
-
-    public function showNavbar($navbarId)
-    {
-        foreach ($this->navbarGroupShows as $show) {
-            if ($show->navbar_id === $navbarId && $show->show && Auth::user()->group_id === $show->group_id) {
-                return true;
-            }
-        }
-        return false;
+        return view('livewire.etf.navbar');
     }
 
     public function mount(Request $request)
@@ -36,7 +26,7 @@ class MutualFundNavbar extends Component
         $this->topNav = \App\Models\Navbar::getPrimaryLinks($navItems);
 
         $this->bottomNav = $navItems->where(function ($nav) {
-            return Str::startsWith($nav->route_name, 'mutual-fund.');
+            return Str::startsWith($nav->route_name, 'etf.');
         });
 
         if (!$this->currentRoute) {

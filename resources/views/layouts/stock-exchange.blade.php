@@ -25,7 +25,6 @@
         @endif
         <!-- Page Content -->
         <main>
-            @json($tab)
             @if ($tab == 'metrics')
                 @sectionMissing('metrics')
                     <livewire:is :component="$exchange . '.metrics'" :model="$model" :period="$period" />

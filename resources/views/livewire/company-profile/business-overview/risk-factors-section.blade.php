@@ -81,7 +81,7 @@
 <div class="flex flex-row bussiness-information desktop-show flex-wrap lg:flex-nowrap">
     <div class="bussiness-information-left order-2 lg:order-1 basis-full  lg:basis-7/12 ">
         <div class="white-card">
-            {{$businessContent}}
+            {!! $businessContent !!}
         </div>
     </div>
     <div class="bussiness-information-right order-1 lg:order-2 basis-full lg:basis-1/5">
@@ -123,7 +123,7 @@
 </div>
 
 <div class="mobile-show">
-    <div class="bussiness-information" x-data="{ collapse: false">
+    <div class="bussiness-information" x-data="{ collapse: false }">
         <div class="white-card relative" x-data="{
             activeTab: '{{$sidebarLinks[0]['link']}}'
         }">

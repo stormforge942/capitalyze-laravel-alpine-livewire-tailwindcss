@@ -172,7 +172,7 @@
 </div>
 
 <div class="mobile-show">
-    <div class="bussiness-information" x-data="{ collapse: false">
+    <div class="bussiness-information" x-data="{ collapse: false }">
         <div class="white-card relative" x-data="{
             activeTab: '{{$sidebarLinks[0]['link']}}'
         }">
