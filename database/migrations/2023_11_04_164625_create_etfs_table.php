@@ -18,7 +18,7 @@ return new class extends Migration
             $table->string('registrant_name')->nullable();
             $table->string('etf_symbol');
             $table->timestamps();
-            $table->unique(['cik', 'etf_symbol']);
+            $table->unique(['cik', 'registrant_name', 'etf_symbol']);
         });
     }
 
