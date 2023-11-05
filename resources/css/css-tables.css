@@ -24,7 +24,7 @@
     font-size:.80rem;
     text-align: center;
     vertical-align: middle;
-    padding: 16px 10px;
+    padding: 0.5rem 0.8rem
 }
 .table-wrapper .table .row-group .row:first-child .cell { border-top: none; }
 .table-wrapper .row-head .cell {background: #e5e5e5;}
