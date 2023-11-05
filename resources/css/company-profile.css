@@ -270,7 +270,7 @@
 .company-profile-page .date-range-select-wrapper .to-wrapper {
     cursor: pointer;
     width: 136px !important;
-    padding: 16px;
+    padding: 0.25rem 0.25rem 1rem 1rem;
 }
 
 @media (max-width: 1600px) {
