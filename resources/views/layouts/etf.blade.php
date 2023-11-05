@@ -44,10 +44,12 @@
     @else
         <livewire:etf.navbar :etf="$etf" />
 
-        <livewire:navigation-menu />
+        <div class="ml-12">
+            <livewire:navigation-menu />
+        </div>
     @endif
 
-    <main class="px-4 pb-10 transition-all md:px-6 lg:px-8 lg:ml-64" id="main-container">
+    <main class="px-4 pb-10 transition-all md:px-6 lg:px-8 {{ $tab === 'filings' ? 'lg:ml-52' : 'lg:ml-64' }}" id="main-container">
         @if ($tab == 'holdings')
             <livewire:etf.holdings :etf="$etf" />
         @elseif($tab == 'filings')

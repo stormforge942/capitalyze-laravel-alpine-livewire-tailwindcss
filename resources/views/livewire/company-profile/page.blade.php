@@ -1,4 +1,4 @@
-<div class="mt-2 company-profile-page">
+<div class="company-profile-page">
     <div class="text-lg md:text-xl">
         <h1 class="font-bold">{{ $company->name }} ({{ $company->ticker }})</h1>
         <p class="mt-2 flex items-center gap-1">

@@ -35,7 +35,7 @@
         </div>
     </div>
 
-    <div class="px-4 pt-4 pb-4 transition-all md:px-6 lg:px-8 lg:pt-8 lg:max-w-7xl">
+    <div class="px-4 pt-4 pb-6 transition-all md:px-6 lg:px-8 lg:pt-8 lg:max-w-7xl">
         <div
             class="h-14 w-full lg:w-2/3 rounded-lg border border-gray-300 bg-white leading-[3rem] px-3 flex items-center">
             <svg width="25" height="24" viewBox="0 0 25 24" fill="none" xmlns="http://www.w3.org/2000/svg">
