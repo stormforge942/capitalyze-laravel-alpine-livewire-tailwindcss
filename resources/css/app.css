@@ -327,7 +327,7 @@ span.business-footer-text a {
     font-weight: 500;
 }
 .b-info-card .text-info {
-    font-size: 14px;
+    font-size: 0.8rem;
     font-weight: 400;
 }
 .table-border-bottom .cell {
@@ -356,17 +356,17 @@ span.business-footer-text a {
 }
 .c-profile-card .key {
     font-weight: 400;
-    font-size: 12px;
+    font-size: .8rem;
     line-height: 1;
 }
 .c-profile-card .value {
-    font-size: 0.85rem;
+    font-size: 0.8rem;
     font-weight: 500;
 }
 .c-profile-card .title a {
     color: #121A0F;
-    font-size: 14px;
-    font-weight: 700;
+    font-size: 0.8rem;
+    font-weight: 600;
 }
 .b-info-card, .c-profile-card {
     margin-top: 24px !important;
@@ -596,7 +596,7 @@ span.business-footer-text a {
         height: 88px;
     }
     .b-info-card .title_small,.c-profile-card .title_small,.c-profile-card .title a {
-        font-size: 12px;
+        font-size: 0.80rem;
     }
     .b-info-card .text-info {
         font-size: 13px;

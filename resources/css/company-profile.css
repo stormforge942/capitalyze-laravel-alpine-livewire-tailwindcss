@@ -72,7 +72,7 @@
 
 .white-card {
     font-size: 0.5em;
-    padding: 24px;
+    padding: 1rem;
     background: white;
     border-radius: 0.666em;
 }
@@ -150,7 +150,7 @@
 
 .title-spoiler {
     color: #121A0F;
-    font-size: 1.17em;
+    font-size: 0.85em;
     font-weight: 600;
 }
 
