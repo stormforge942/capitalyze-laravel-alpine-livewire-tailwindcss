@@ -12,21 +12,20 @@
 @php
     $field = filled($column->dataField) ? $column->dataField : $column->field;
 @endphp
-<th class="{{ $theme->table->thClass .' '. $column->headerClass }}"
-    wire:key="{{ md5($column->field) }}"
-    @if($column->sortable)
-    x-data x-multisort-shift-click="{{ $this->id }}"
-    @endif
-    style="{{ $column->hidden === true ? 'display:none': '' }}; width: max-content; @if($column->sortable) cursor:pointer; @endif {{ $theme->table->thStyle.' '. $column->headerStyle }}">
+<th class="{{ $theme->table->thClass . ' ' . $column->headerClass }}" wire:key="{{ md5($column->field) }}"
+    @if ($column->sortable) x-data x-multisort-shift-click="{{ $this->id }}" @endif
+    style="{{ $column->hidden === true ? 'display:none' : '' }}; width: max-content; @if ($column->sortable) cursor:pointer; @endif {{ $theme->table->thStyle . ' ' . $column->headerStyle }}">
     <div @class([
-            'pl-[11px]' => !$column->sortable && isTailwind(),
-            $theme->cols->divClass
-        ])
-         style="{{ $theme->cols->divStyle }}"
-        @if($column->sortable) wire:click="sortBy('{{ $field }}')" @endif>
-        @if($column->sortable)
+        'flex items-center gap-1',
+        $theme->cols->divClass,
+        str_contains($theme->cols->divClass, 'justify-end') ? '' : 'px-3'
+    ]) style="{{ $theme->cols->divStyle }}" @if ($column->sortable)
+        wire:click="sortBy('{{ $field }}')"
+        @endif>
+        <span>{{ $column->title }}</span>
+        @if ($column->sortable)
             <span>
-                @if($multiSort && array_key_exists($field,$sortArray))
+                @if ($multiSort && array_key_exists($field, $sortArray))
                     @if ($sortArray[$field] == 'desc')
                         &#8595;
                     @else
@@ -36,17 +35,18 @@
                     &#8597;
                 @else
                     @if ($sortField !== $field)
-                        &#8597;
+                        <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16"
+                            viewBox="0 0 16
+                    16" fill="none">
+                            <path d="M12 6L8 2L4 6H12ZM12 10L8 14L4 10H12Z" fill="#464E49" />
+                        </svg>
                     @elseif ($sortDirection == 'desc')
                         &#8593;
                     @else
                         &#8595;
                     @endif
                 @endif
-			</span>
-        @else
-            <span style="width: 6px"></span>
+            </span>
         @endif
-        <span>{{ $column->title }}</span>
     </div>
 </th>

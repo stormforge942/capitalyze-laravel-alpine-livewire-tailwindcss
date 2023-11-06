@@ -39,6 +39,8 @@ class CompanyReport extends Component
     public $rangeDates = [];
     public $noData = false;
     public $tableLoading = true;
+    public $cost = null;
+    public $dynamic = null;
 
     protected $request;
     protected $rowCount = 0;
@@ -547,6 +549,25 @@ class CompanyReport extends Component
 
     public function mount(Request $request, $company, $ticker, $period)
     {
+
+        $first = DB::connection('pgsql-xbrl')
+        ->table('eod_prices')
+        ->where('symbol', strtolower($this->ticker))
+        ->latest('date')->first()?->adj_close;
+
+        $this->cost =  $first;
+
+
+        $previous = DB::connection('pgsql-xbrl')
+        ->table('eod_prices')
+        ->where('symbol', strtolower($this->ticker))
+        ->latest('date')
+        ->skip(1)->first()?->adj_close;
+
+        if ($previous && $first) {
+            $this->dynamic = round((($first - $previous) / $previous) * 100, 2);
+        }
+
         $this->emit('periodChange', 'annual');
         $this->company = $company;
         $this->ticker = $ticker;

@@ -3,12 +3,11 @@
     max-width: calc(100vw - 8rem);
     overflow-x: auto;
     font-size: 0.5em;
-    margin-top: 0.5em;
+    margin-top: 24px;
 }
 .table-wrapper .table {
     display: table;
     width: 100%;
-    margin: 1.5em 0;
     border-collapse: separate;
     border-radius: 0.66em;
     overflow: hidden;
@@ -22,9 +21,10 @@
     padding: 0.5rem 0.625rem;
     /*border-top: 1px solid #e6e6e6;*/
     /*border-bottom: 1px solid #e6e6e6;*/
-    font-size: 1.17em;
+    font-size:.80rem;
     text-align: center;
     vertical-align: middle;
+    padding: 16px 10px;
 }
 .table-wrapper .table .row-group .row:first-child .cell { border-top: none; }
 .table-wrapper .row-head .cell {background: #e5e5e5;}
@@ -47,7 +47,6 @@
 
 .table-wrapper .row-group {
     display: table-row-group;
-    margin: 1em 0;
     border-radius: 0.66em;
     overflow: hidden;
 }
@@ -59,7 +58,7 @@
 }
 
 .table-wrapper .row-spacer {
-    height: 1.3em;
+    height:24px;
     background: transparent;
 }
 
@@ -143,3 +142,4 @@
     border-radius: 5px;
     display: inline-block;
 }
+

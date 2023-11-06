@@ -13,5 +13,6 @@
 }
 
 .calendar-label {
-    @apply block text-gray-700 text-sm font-bold;
+    @apply block text-gray-400 text-sm;
+    font-size: 0.75rem;
 }
