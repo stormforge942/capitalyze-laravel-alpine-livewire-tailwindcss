@@ -50,12 +50,12 @@ class Favorites extends Component
         })
         ->whereIn('fs.investor_name', $investors);
         if($this->search) {
-            $data = $data->where(DB::raw('fs.investor_name'),'like', "%$this->search%")
-            ->orWhere(DB::raw('fs.total_value'),'like', "%$this->search%")
-            ->orWhere(DB::raw('fs.portfolio_size'), 'like', "%$this->search%")
-            ->orWhere(DB::raw('fs.change_in_total_value'), 'like', "%$this->search%")
-            ->orWhere(DB::raw('fs.cik'), 'like', "%$this->search%")
-            ->orWhere(DB::raw('fs.date'),'like', "%$this->search%");
+            $data = $data->where(DB::raw('fs.investor_name'),'like', "%$this->search%");
+            // ->orWhere(DB::raw('fs.total_value'),'like', "%$this->search%")
+            // ->orWhere(DB::raw('fs.portfolio_size'), 'like', "%$this->search%")
+            // ->orWhere(DB::raw('fs.change_in_total_value'), 'like', "%$this->search%")
+            // ->orWhere(DB::raw('fs.cik'), 'like', "%$this->search%")
+            // ->orWhere(DB::raw('fs.date'),'like', "%$this->search%");
         }
         $data = $data
         ->orderBy('total_value', 'desc')
