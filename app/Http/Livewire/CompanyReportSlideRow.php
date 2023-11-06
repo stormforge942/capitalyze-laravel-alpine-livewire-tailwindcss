@@ -13,7 +13,6 @@ class CompanyReportSlideRow extends Component
 
     protected $listeners = ['getTicker'];
 
-
     public function mount($data)
     {
         $this->data = $data;
@@ -26,7 +25,7 @@ class CompanyReportSlideRow extends Component
 
     public function generateAttribute($value)
     {
-        return '{"hash":"' . $value['hash'] . '","ticker":"' . $this->ticker . '","value":"$' . $value['value'] . '"}';
+        return '{"hash":"' . $value['hash'] . '","ticker":"' . 'AAPL' . '","value":"$' . $value['value'] . '"}';
     }
     public function generateRows()
     {

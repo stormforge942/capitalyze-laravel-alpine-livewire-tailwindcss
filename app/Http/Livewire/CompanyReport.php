@@ -8,6 +8,7 @@ use Carbon\Carbon;
 use DateTime;
 use Illuminate\Database\ConnectionResolver;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Support\Str;
 use Livewire\Component;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Http\Request;
