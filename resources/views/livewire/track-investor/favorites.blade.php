@@ -1,6 +1,6 @@
 <div class="discover flex-1 mb-10">
     <div class="place-items-center fixed top-0 left-0 right-0 bottom-0 w-full h-screen z-50 overflow-hidden bg-transparent" wire:loading.grid>
-        <span class="mx-auto simple-loader !text-green-dark"></span>
+        <span class="mx-auto simple-loader !text-blue"></span>
     </div>
     @if(!$loading)
         <div class="flex-1 mt-6 ml-0 mr-0">

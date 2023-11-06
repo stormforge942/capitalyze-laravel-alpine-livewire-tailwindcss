@@ -1,7 +1,7 @@
 <div class="bg-gray-100" style="margin-top: -2.5rem;">
     <div class="px-0 sm:px-6 lg:px-0 py-4 mt-6">
         <div class="place-items-center fixed top-0 left-0 right-0 bottom-0 w-full h-screen z-50 overflow-hidden bg-transparent" wire:loading.grid>
-            <span class="mx-auto simple-loader !text-green-dark"></span>
+            <span class="mx-auto simple-loader !text-blue"></span>
         </div>
         <div class="flex sm:items-start flex-col company-profile-page mt-0 mb-0">
             <div class="page-titles flex justify-start content-start mb-0 mt-2 mx-0">
