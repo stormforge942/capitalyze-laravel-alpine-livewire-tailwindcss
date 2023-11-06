@@ -54,7 +54,7 @@ class Fund extends Component
             $join->on('fs.date', '=', 'latest_dates.max_date');
         });
         if($this->search) {
-            $data = $data->where(DB::raw('fs.investor_name'),'like', "%$this->search%");
+            $data = $data->where(DB::raw('fs.investor_name'),'ilike', "%$this->search%");
             // ->orWhere(DB::raw('fs.total_value'),'like', "%$this->search%")
             // ->orWhere(DB::raw('fs.portfolio_size'), 'like', "%$this->search%")
             // ->orWhere(DB::raw('fs.change_in_total_value'), 'like', "%$this->search%")
