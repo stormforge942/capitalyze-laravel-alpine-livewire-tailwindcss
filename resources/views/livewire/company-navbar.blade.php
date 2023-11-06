@@ -134,6 +134,12 @@
 
                             @if ($hasChild)
                                 <ul class="py-2 space-y-2" :class="(!open || collapsed) ? 'hidden' : ''" x-cloak>
+                                    <li>
+                                        <a class="flex items-center w-full p-2 text-gray-900 transition duration-75 rounded-lg group hover:bg-gray-100 dark:text-white dark:hover:bg-gray-700 @if($currentRoute === 'track-investor') font-bold @endif"
+                                            href="{{ route('company.track-investor', ['ticker' => $this->company->ticker]) }}">
+                                            Track Investors
+                                        </a>
+                                    </li>
                                     @foreach ($child as $childItem)
                                         <li>
                                             <a class="flex items-center w-full p-2 text-gray-900 transition duration-75 rounded-lg group hover:bg-gray-100 dark:text-white dark:hover:bg-gray-700 @if ($childItem['active']) font-bold @endif"
@@ -235,6 +241,12 @@
 
                         @if ($hasChild)
                             <ul class="mt-4 ml-6 space-y-4" x-show="open" x-transition.opacity x-cloak>
+                                <li>
+                                    <a class="flex items-center w-full text-gray-900 transition duration-75 rounded-lg group hover:bg-gray-100 dark:text-white dark:hover:bg-gray-700 @if($currentRoute === 'track-investor') font-bold @endif"
+                                        href="{{ route('company.track-investor', ['ticker' => $this->company->ticker]) }}">
+                                        Track Investors
+                                    </a>
+                                </li>  
                                 @foreach ($child as $childItem)
                                     <li class="space-y-2">
                                         <a href="{{ $childItem['url'] ?? '#' }}"
