@@ -469,6 +469,49 @@ span.business-footer-text a {
 .company-profile-overview-chart {
     max-height: 350px !important;
 }
+.custom-text-xs .text-xs {
+    font-size: 12px;
+}
+.custom-text-xs .flowbite-select {
+    border: 0.5px solid rgba(147, 149, 152, 0.50);
+
+background: #FFF;
+display: flex;
+justify-content: center;
+align-items: center;
+gap: 4px;
+}
+.revenue-tab {
+    display: flex;
+    width: 100%;
+    align-items: center;
+    border-radius: 2px;
+border-bottom: 1px solid #E4E4E4;
+
+background: #F2F2F2;
+margin-bottom: 22px;
+height: 40px;
+}
+.revenue-tab li {
+    cursor: pointer;
+    min-width: 267px;
+    color: #828C85 !important;
+text-align: center;
+height: 40px;
+font-size: 14px;
+font-style: normal;
+border-bottom: 1.67px solid transparent;
+display: flex;
+justify-content: center;
+align-items: center;
+font-weight: 400;
+line-height: normal;
+}
+.revenue-tab li.active{
+    border-bottom: 1.67px solid #13B05B;
+     color: #121A0F !important;
+     font-weight: 600;
+}
 @media(min-width:576px){
     .mobile-show {
         display: none;
