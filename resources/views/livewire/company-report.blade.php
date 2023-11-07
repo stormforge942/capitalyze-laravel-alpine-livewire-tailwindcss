@@ -703,8 +703,8 @@
 
         let rangeMin = new Date(selectedValue[0]).getFullYear();
         let rangeMax = selectedValue[1] ? new Date(selectedValue[1]).getFullYear() : new Date().getFullYear();
-        selectedValue[0] = rangeMax - 6;
-        selectedValue[1] = rangeMax;
+        selectedValue[0] = @this.startDate ?? rangeMax - 6;
+        selectedValue[1] = @this.endDate ?? rangeMax;
 
         recognizeDotsStatus(selectedValue, [rangeMin, rangeMax]);
 
@@ -715,7 +715,6 @@
             value: selectedValue,
             rangeSlideDisabled: true,
             onInput: (value) => {
-                console.log(value)
                 if (value.length === 2 && value !== selectedValue) {
                     recognizeDotsStatus(value, [rangeMin, rangeMax]);
                     @this.changeDates(value)

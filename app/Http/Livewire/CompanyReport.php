@@ -41,7 +41,8 @@ class CompanyReport extends Component
     public $tableLoading = true;
     public $cost = null;
     public $dynamic = null;
-
+    public $startDate = null;
+    public $endDate = null;
     protected $request;
     protected $rowCount = 0;
     public $selectedRows = [];
@@ -55,7 +56,9 @@ class CompanyReport extends Component
         'unitType',
         'reverse',
         'decimalDisplay',
-        'view'
+        'view',
+        'startDate',
+        'endDate',
     ];
 
     public function toggleChartType($title)
@@ -216,6 +219,10 @@ class CompanyReport extends Component
     {
         $this->tableLoading = true;
         $this->rows = [];
+
+        $this->startDate = $dates[0];
+        $this->endDate = $dates[1];
+
         if ($this->period === 'annual') {
             if (count($dates) == 2) {
                 $this->tableDates = [];
@@ -307,7 +314,8 @@ class CompanyReport extends Component
         }
 
         $rangeMax = strtotime($this->selectedValue[1]) ?: strtotime(now());
-        $this->selectedValue[0] = date('Y-m-d', $rangeMax - 6 * 365 * 24 * 60 * 60);
+        $this->selectedValue[0] = $this->startDate ?? date('Y-m-d', $rangeMax - 6 * 365 * 24 * 60 * 60);
+        $this->selectedValue[1] = $this->endDate ?? $this->rangeDates[count($this->rangeDates) - 1];
         $this->changeDates($this->selectedValue);
     }
 
