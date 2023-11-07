@@ -75,7 +75,7 @@ class CompanyProfile extends Component
 
     public function getMenu()
     {
-        $this->menuLinks = CompanyPresentation::where('business', '!=', null)->where('symbol', $this->ticker)->orderByDesc('acceptance_time')->first()?->toArray();
+        $this->menuLinks = CompanyPresentation::where('form_type', '10-K')->where('symbol', $this->ticker)->orderByDesc('acceptance_time')->first()?->toArray();
     }
 
     public function getTickerPresentation()
