@@ -10,6 +10,10 @@
             <span class="sr-only">Loading...</span>
         </div>
     @else
+        @if($result && array_key_exists('Mapping result', $result))
+            <h3 class="text-[21px] font-bold mb-2">{{$result['message']}}</h3>
+            <p>{{$result['Mapping result']}}</p>
+        @endif
         @if($result && array_key_exists('formula', $result))
             <h1 class="text-[21px] font-bold mb-2">{{$result['formula']['metric']}}</h1>
             <div class="block px-4 py-2">
@@ -37,9 +41,14 @@
             <livewire:company-report-slide-row wire:key="{{now()}}" :data="$result['body']"/>
         @endif
 
-        @foreach($data as $table)
-            {!! $table !!}
-        @endforeach
+        @if(is_array($data))
+            @foreach($data as $table)
+                {!! $table !!}
+            @endforeach
+        @endif
+        @if(is_string($data))
+                {!! $data !!}
+        @endif
         <script>
             window.reportTextHighlighter.highlight(@json($value), 'table tbody tr td')
         </script>
