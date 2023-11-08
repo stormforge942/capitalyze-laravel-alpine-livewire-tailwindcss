@@ -364,17 +364,18 @@
                                             <span id="{{date('Y', strtotime($date))}}" class="inactive-dots"></span>
                                         @endforeach
                                     </div>
-                                    <div id="range-slider-company-report" class="range-slider"></div>
+                                    <div id="range-slider-company-analysis" class="range-slider"></div>
                                 </div>
-
-
-                                <div class="warning-wrapper mt-5">
-                                    <div class="warning-text">
-                                        <svg viewBox="0 0 16 16" fill="none" xmlns="http://www.w3.org/2000/svg">
-                                            <path d="M7.99967 14.6663C4.31777 14.6663 1.33301 11.6815 1.33301 7.99967C1.33301 4.31777 4.31777 1.33301 7.99967 1.33301C11.6815 1.33301 14.6663 4.31777 14.6663 7.99967C14.6663 11.6815 11.6815 14.6663 7.99967 14.6663ZM7.99967 13.333C10.9452 13.333 13.333 10.9452 13.333 7.99967C13.333 5.05415 10.9452 2.66634 7.99967 2.66634C5.05415 2.66634 2.66634 5.05415 2.66634 7.99967C2.66634 10.9452 5.05415 13.333 7.99967 13.333ZM7.33301 9.99967H8.66634V11.333H7.33301V9.99967ZM7.33301 4.66634H8.66634V8.66634H7.33301V4.66634Z" fill="#DA680B"/>
-                                        </svg>
-                                        Click on any of the row(s) to chart the data
-                                    </div>
+                                <div>
+                                    @livewire('company-analysis-graph', [
+                                        'years' => $years,
+                                        'minDate' => $minDate,
+                                        'maxDate' => $maxDate,
+                                        'ticker' => $ticker,
+                                        'name' => $company->name,
+                                        'products' => $products,
+                                        'segments' => $segments
+                                        ])
                                 </div>
                                 <div class="flex justify-end items-baseline">
                                     <span class="currency-font">Currency: &nbsp;</span>
@@ -610,7 +611,6 @@
 @push('scripts')
 <script>
     let slideOpen = false;
-
     function generateRangeArray(inputArray) {
         if (inputArray.length !== 2) {
             return [];
@@ -661,16 +661,13 @@
             if (element.classList.contains('open-slide') && !slideOpen) {
                 var value = element.dataset.value;
                 value = JSON.parse(value);
-                window.livewire.emit('slide-over.open', 'company-report-slide', value, {force: true});
+                window.livewire.emit('slide-over.open', 'company-analysis-slide', value, {force: true});
                 slideOpen = true;
             }
         });
 
-        Livewire.hook('element.updated', () => {
-            // initChart()
-        })
 
-        const el = document.querySelector('#range-slider-company-report');
+        const el = document.querySelector('#range-slider-company-analysis');
 
         if(!el) {
             return;
@@ -701,7 +698,6 @@
             value: selectedValue,
             rangeSlideDisabled: true,
             onInput: (value) => {
-                console.log(value)
                 if (value.length === 2 && value !== selectedValue) {
                     recognizeDotsStatus(value, [rangeMin, rangeMax]);
                     Livewire.emit("dateChanged", value)
@@ -716,17 +712,6 @@
 
     Livewire.on('slide-over.close', () => {
         slideOpen = false;
-    });
-
-
-    Livewire.on('initCompanyReportChart', () => {
-        // initChart();
-    });
-
-    Livewire.on('hideCompanyReportChart', () => {
-        if (chart) {
-            chart.destroy();
-        }
     });
 
     const annualCheckbox = document.getElementById("date-annual");
@@ -753,274 +738,12 @@
         window.location.href = newUrl;
     });
 
-    const viewDropdownCloseIcon = document.getElementById("viewClose");
-
-    viewDropdownCloseIcon.addEventListener("click", function() {
-        document.getElementById('dropdown-View').classList.toggle("hidden");
-    });
-
     const unitTypeDropdownCloseIcon = document.getElementById("unitTypeClose");
 
     unitTypeDropdownCloseIcon.addEventListener("click", function() {
         document.getElementById('dropdown-UnitType').classList.toggle("hidden");
     });
-
-    const templateDropdownCloseIcon = document.getElementById("templateClose");
-
-    templateDropdownCloseIcon.addEventListener("click", function() {
-        document.getElementById('dropdown-Template').classList.toggle("hidden");
-    });
-
-    const orderDropdownCloseIcon = document.getElementById("orderClose");
-
-    orderDropdownCloseIcon.addEventListener("click", function() {
-        document.getElementById('dropdown-Order').classList.toggle("hidden");
-    });
-
-    const freezePanesDropdownCloseIcon = document.getElementById("freezePanesClose");
-
-    freezePanesDropdownCloseIcon.addEventListener("click", function() {
-        document.getElementById('dropdown-FreezePanes').classList.toggle("hidden");
-    });
-
-    const decimalDropdownCloseIcon = document.getElementById("decimalClose");
-
-    decimalDropdownCloseIcon.addEventListener("click", function() {
-        document.getElementById('dropdown-Decimal').classList.toggle("hidden");
-    });
-
-    const currencyDropdownCloseIcon = document.getElementById("currencyClose");
-
-    decimalDropdownCloseIcon.addEventListener("click", function() {
-        document.getElementById('dropdown-Currency').classList.toggle("hidden");
-    });
-
-    let chart = null;
-
-    const getOrCreateTooltip = (chart) => {
-        let tooltipEl = chart.canvas.parentNode.querySelector('div');
-
-        if (!tooltipEl) {
-            tooltipEl = document.createElement('div');
-            tooltipEl.style.background = '#fff';
-            tooltipEl.style.borderRadius = '25px';
-            tooltipEl.style.color = 'black';
-            tooltipEl.style.opacity = 1;
-            tooltipEl.style.pointerEvents = 'none';
-            tooltipEl.style.position = 'absolute';
-            tooltipEl.style.transform = 'translate(-50%, 0)';
-            tooltipEl.style.transition = 'all .1s ease';
-            tooltipEl.style.minWidth = '230px';
-            tooltipEl.style.filter = 'drop-shadow(0px 10.732307434082031px 21.464614868164062px rgba(50, 50, 71, 0.06)) drop-shadow(0px 10.732307434082031px 10.732307434082031px rgba(50, 50, 71, 0.08))';
-            tooltipEl.classList.add('tooltip-caret')
-
-            const table = document.createElement('table');
-            table.style.margin = '0px';
-
-            tooltipEl.appendChild(table);
-            chart.canvas.parentNode.appendChild(tooltipEl);
-        }
-
-        return tooltipEl;
-    };
-
-    const externalTooltipHandler = (context) => {
-        // Tooltip Element
-        const {chart, tooltip} = context;
-        const tooltipEl = getOrCreateTooltip(chart);
-
-        // Hide if no tooltip
-        if (tooltip.opacity === 0) {
-            tooltipEl.style.opacity = 0;
-            return;
-        }
-
-        // Set Text
-        if (tooltip.body) {
-            const titleLines = tooltip.title || [];
-            const bodyLines = tooltip.body.map(b => b.lines);
-
-            const tableHead = document.createElement('thead');
-
-            tableHead.style.color = '#3561E7';
-            tableHead.style.textAlign = 'left';
-            tableHead.style.marginBottom = '8px';
-
-            titleLines.forEach(title => {
-                const tr = document.createElement('tr');
-                tr.style.borderWidth = 0;
-
-                const th = document.createElement('th');
-                th.style.borderWidth = 0;
-                const text = document.createTextNode(title);
-
-                th.appendChild(text);
-                tr.appendChild(th);
-                tableHead.appendChild(tr);
-            });
-
-            const tableBody = document.createElement('tbody');
-            bodyLines.reverse().forEach((body, i) => {
-                const [label, value] = body[0].split(': ');
-
-                //label
-                const trLabel = document.createElement('tr');
-                trLabel.style.backgroundColor = 'inherit';
-                trLabel.style.borderWidth = '0';
-                trLabel.style.fontSize = '12px';
-                trLabel.style.fontWeight = '400';
-                trLabel.style.color = '#464E49';
-                trLabel.style.paddingBottom = '0px';
-                trLabel.style.marginBottom = '0px';
-
-                const tdLabel = document.createElement('td');
-                tdLabel.style.borderWidth = 0;
-
-                const textLabel = document.createTextNode(label);
-
-                trLabel.appendChild(textLabel);
-                trLabel.appendChild(tdLabel);
-
-                tableBody.appendChild(trLabel);
-
-                //value
-                const tr = document.createElement('tr');
-                tr.style.backgroundColor = 'inherit';
-                tr.style.borderWidth = '0';
-                tr.style.fontSize = '16px';
-                tr.style.fontWeight = '700';
-                tr.style.color = '#464E49';
-
-                const td = document.createElement('td');
-                td.style.borderWidth = 0;
-
-                const text = document.createTextNode(value);
-
-                td.appendChild(text);
-                tr.appendChild(td);
-
-                tableBody.appendChild(tr);
-            });
-
-            const tableRoot = tooltipEl.querySelector('table');
-
-            // Remove old children
-            while (tableRoot.firstChild) {
-                tableRoot.firstChild.remove();
-            }
-
-            // Add new children
-            tableRoot.appendChild(tableHead);
-            tableRoot.appendChild(tableBody);
-        }
-
-        const {offsetLeft: positionX, offsetTop: positionY} = chart.canvas;
-
-        // Display, position, and set styles for font
-        tooltipEl.style.opacity = 1;
-        tooltipEl.style.left = positionX + tooltip.caretX + 'px';
-        tooltipEl.style.top = positionY + tooltip.caretY - 125 + 'px';
-        tooltipEl.style.font = tooltip.options.bodyFont.string;
-        tooltipEl.style.padding = 8 + 'px ' + 19 + 'px';
-    };
-
-    async function changeChartType(title, type) {
-        await @this.changeChartType(title, type)
-    }
-
-    function initChart() {
-        if (chart) chart.destroy();
-        let data = @this.chartData;
-        let limitedData = data.slice(0, 5);
-        let canvas = document.getElementById("chart-company-report");
-        if (!canvas) return;
-        let ctx = document.getElementById('chart-company-report').getContext("2d");
-        chart = new Chart(ctx, {
-            plugins: [{
-                afterDraw: chart => {
-                    if (chart.tooltip?._active?.length) {
-                        let x = chart.tooltip._active[0].element.x;
-                        let y = chart.tooltip._active[0].element.y;
-                        let yAxis = chart.scales.y;
-                        let ctx = chart.ctx;
-                        ctx.save();
-                        ctx.beginPath();
-                        ctx.moveTo(x, yAxis.bottom);
-                        ctx.lineTo(x, y);
-                        ctx.lineWidth = 1;
-                        ctx.strokeStyle = '#000';
-                        ctx.setLineDash([5, 5])
-                        ctx.stroke();
-                        ctx.restore();
-                    }
-                }
-            }],
-            maintainAspectRatio: true,
-            aspectRatio: 3,
-            type: 'line',
-            data: {
-                datasets: limitedData
-            },
-            options: {
-                interaction: {
-                    intersect: false,
-                    mode: 'nearest',
-                    axis: 'xy'
-                },
-                animation: {
-                    duration: 0,
-                },
-                title: {
-                    display: false,
-                },
-                elements: {
-                    line: {
-                        tension: 0
-                    }
-                },
-                plugins: {
-                    legend: {
-                        display: false,
-                    },
-                    tooltip: {
-                        bodyFont: {
-                            size: 15
-                        },
-                        external: externalTooltipHandler,
-                        enabled: false,
-                        // position: 'nearest',
-                        callbacks: {
-                            title: function (context) {
-                                const inputDate = new Date(context[0].label);
-                                return inputDate.getFullYear();
-                            },
-                            label: function (context) {
-                                return context.dataset.raw
-                            }
-                        },
-                    }
-                },
-                scales: {
-                    x: {
-                        offset: false,
-                        grid: {
-                            display: false
-                        },
-                        type: 'timeseries',
-                        time: {
-                            unit: 'year',
-                        },
-                        ticks:{
-                            source:'data',
-                            // maxTicksLimit: data.quantity,
-                            // labelOffset: data.quantity > 20 ? 5 : data.quantity < 5 ? 150 : 30
-                        },
-                        align: 'center',
-                    },
-                }
-            }
-        });
-    }
-
 </script>
 @endpush
+
+

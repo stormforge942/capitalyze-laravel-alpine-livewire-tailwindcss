@@ -512,6 +512,9 @@ line-height: normal;
      color: #121A0F !important;
      font-weight: 600;
 }
+#range-slider-company-analysis {
+    max-width: 100% !important;
+}
 @media(min-width:576px){
     .mobile-show {
         display: none;
