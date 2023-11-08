@@ -656,6 +656,7 @@
     }
 
     document.addEventListener('DOMContentLoaded', function() {
+        initChart()
         document.body.addEventListener('click', function(event) {
             var element = event.target;
             if (element.classList.contains('open-slide') && !slideOpen) {
