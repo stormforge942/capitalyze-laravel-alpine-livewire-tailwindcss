@@ -53,10 +53,11 @@ dropdown = new Dropdown($refs.dropdown, $refs.dropdownBtn)" x-cloak>
             </div>
         </div>
 
-        <div class="tab-slot"></div>
+        <div class="tab-slot block md:hidden"></div>
     </div>
 
-    <div class="hidden lg:flex border border-[#D4DDD7] rounded bg-white w-full items-center gap-2 p-1 overflow-x-auto text-base">
+    <div
+        class="hidden lg:flex border border-[#D4DDD7] rounded bg-white w-full items-center gap-2 p-1 overflow-x-auto text-base">
         @foreach ($tabs as $key => $tab)
             <button class="min-w-[250px] px-3 py-1.5 text-center rounded transition"
                 :class="{
