@@ -68,9 +68,9 @@
                                     </ul>
                                 </div>
 
-                                <div class="filters-row">
+                                <div class="filters-row mb-3">
                                     <div class="select-wrapper flex items-center custom-text-xs">
-                                        <div class="ml-3 flex items-center text-sm">Unit Type
+                                        <div class="flex items-center text-sm">Unit Type
                                             <button type="submit" id="dropdownUnitTypeButton" data-dropdown-toggle="dropdown-UnitType" class="flex items-center flowbite-select bg-gray-50 border border-gray-700 text-gray-900 text-sm ml-2 p-2" name="view" id="">
                                                 {{$unitType}}
                                                 <svg width="16" height="16" viewBox="0 0 16 16" fill="none" xmlns="http://www.w3.org/2000/svg">
@@ -310,55 +310,55 @@
                                         <li class="mr-2">
                                             <label class="flex items-center pl-3 cursor-pointer">
                                                 <input wire:model="period" value="arf5drs" id="date-fiscal-annual" type="radio" name="date-range" class="w-5 h-5 ">
-                                                <span class="w-full py-3 ml-2 text-sm">Fiscal Annual</span>
+                                                <span class="w-full py-2 ml-2 text-sm">Fiscal Annual</span>
                                             </label>
                                         </li>
                                         <li class="mr-2">
                                             <label class="flex items-center pl-3 cursor-pointer">
                                                 <input wire:model="period" value="qrf5drs" id="date-fiscal-quaterly" type="radio"  name="date-range" class="w-5 h-5 ">
-                                                <span class="w-full py-3 ml-2 text-sm">Fiscal Quaterly</span>
+                                                <span class="w-full py-2 ml-2 text-sm">Fiscal Quaterly</span>
                                             </label>
                                         </li>
                                         <li class="mr-2">
                                             <label class="flex items-center pl-3 cursor-pointer">
                                                 <input wire:model="period" value="fiscal-semi-annual" id="date-fiscal-semi-annual" type="radio"  name="date-range" class="w-5 h-5 ">
-                                                <span class="w-full py-3 ml-2 text-sm">Fiscal Semi-Annual</span>
+                                                <span class="w-full py-2 ml-2 text-sm">Fiscal Semi-Annual</span>
                                             </label>
                                         </li>
                                         <li class="mr-2">
                                             <label class="flex items-center pl-3 cursor-pointer">
                                                 <input wire:model="period" value="YTD" id="date-YTD" type="radio"  name="date-range" class="w-5 h-5 ">
-                                                <span class="w-full py-3 ml-2 text-sm">YTD</span>
+                                                <span class="w-full py-2 ml-2 text-sm">YTD</span>
                                             </label>
                                         </li>
                                         <li class="mr-2">
                                             <label class="flex items-center pl-3 cursor-pointer">
                                                 <input wire:model="period" value="LTM" id="date-LTM" type="radio"  name="date-range" class="w-5 h-5 ">
-                                                <span class="w-full py-3 ml-2 text-sm">LTM</span>
+                                                <span class="w-full py-2 ml-2 text-sm">LTM</span>
                                             </label>
                                         </li>
                                         <li class="mr-2">
                                             <label class="flex items-center pl-3 cursor-pointer">
                                                 <input wire:model="period" value="annual" id="date-annual" id="date-annual" type="radio" name="date-range" class="w-5 h-5 ">
-                                                <span class="w-full py-3 ml-2 text-sm">Calendar Annual</span>
+                                                <span class="w-full py-2 ml-2 text-sm">Calendar Annual</span>
                                             </label>
                                         </li>
                                         <li class="mr-2">
                                             <label class="flex items-center pl-3 cursor-pointer">
                                                 <input wire:model="period" value="quarterly" id="date-quarterly" type="radio" name="date-range" class="w-5 h-5 ">
-                                                <span class="w-full py-3 ml-2 text-sm">Calendar Quaterly</span>
+                                                <span class="w-full py-2 ml-2 text-sm">Calendar Quaterly</span>
                                             </label>
                                         </li>
                                         <li class="mr-2">
                                             <label class="flex items-center pl-3 cursor-pointer">
                                                 <input wire:model="period" value="SA" id="date-SA" type="radio"  name="date-sa" class="w-5 h-5 ">
-                                                <span class="w-full py-3 ml-2 text-sm">Calendar SA</span>
+                                                <span class="w-full py-2 ml-2 text-sm">Calendar SA</span>
                                             </label>
                                         </li>
                                     </ul>
                                 </div>
 
-                                <div class="years-range-wrapper my-2" wire:ignore>
+                                <div class="years-range-wrapper mt-4 mb-8" wire:ignore>
                                     <div class="dots-wrapper">
                                         @foreach($rangeDates as $key => $date)
                                             <span id="{{date('Y', strtotime($date))}}" class="inactive-dots"></span>
@@ -385,10 +385,10 @@
                                         <option value="EUR">EUR</option>
                                     </select>
                                 </div>
-                                <div class="w-full overflow-x-scroll">
+                                <div class="w-full">
                                     <div class="table-wrapper">
                                         <div class="table">
-                                            <div class="row-group row-head-fonts-sm table-border-bottom">
+                                            <div class="row-group row-head-fonts-sm row-border-custom table-border-bottom">
                                                 <div class="row row-head ">
                                                     <div class="cell font-bold">{{$companyName}} ({{$ticker}})</div>
                                                     @foreach ($this->selectedRange as $date)
@@ -400,7 +400,7 @@
                                                         <div class="font-bold cell">
                                                             {{ $segment }}
                                                         </div>
-                                                        @foreach ($this->selectedRange as $date)
+                                                        @foreach ($this->selectedRange as $key => $date)
                                                             @if (array_key_exists($segment, $products[$date]))
                                                                 <div class="font-bold cell">
                                                                     {{ number_format($products[$date][$segment]) }}
@@ -422,178 +422,40 @@
                                                             @endif
                                                         @endforeach
                                                     </div>
+                                                    <div class="row row-sub">
+                                                        <div class="cell">% of Total</div>
+                                                        @foreach ($this->selectedRange as $key => $date)
+                                                            @if (array_key_exists($segment, $products[$date]))
+                                                                <div class="cell">
+                                                                    {{ round((($products[$date][$segment] / array_sum($products[$date])) * 100), 2) }}%
+                                                                </div>
+                                                            @endif
+                                                        @endforeach
+                                                    </div>
+
+                                                    <div class="row row-spacer "></div>
                                                 @endforeach
                                                 <div class="row ">
                                                     <div class="font-bold cell">Total Revenues</div>
                                                     @foreach ($this->selectedRange as $date)
-                                                        <div class="font-bold cell">
-                                                            {{ number_format(array_sum($products[$date])) }}
-                                                        </div>
-                                                    @endforeach
-                                                </div>
-                                                <div class="row row-sub">
-                                                    <div class="cell">% Change YoY</div>
-                                                    @foreach ($this->selectedRange as $key => $date)
-                                                        <div class="cell">
-                                                            @if ($key == 0)
-                                                                0.0%
-                                                            @else
-                                                                {{ round(((array_sum($products[$date]) - array_sum($products[$years[$key - 1]])) / array_sum($products[$date])) * 100, 2) . '%' }}
-                                                            @endif
-                                                        </div>
-                                                    @endforeach
-                                                </div>
-                                            </div>
-                                            <div class="row row-spacer "></div>
-                                            <div class="row-group row-head-fonts-sm table-header-border">
-                                                <div class="row">
-                                                    <div class="font-bold cell">EBITDA</div>
-                                                    @foreach ($this->selectedRange as $key => $date)
-                                                        <div class="font-bold cell">
-                                                            {{ number_format(explode('|', str_replace(',', '', $ebitda[$date][0]))[0]) }}
-                                                        </div>
-                                                    @endforeach
-                                                </div>
-
-                                                <div class="row row-sub">
-                                                    <div class="cell">% Change YoY</div>
-                                                    @foreach ($this->selectedRange as $key => $date)
-                                                        <div class="cell">
-                                                            @if ($key == 0)
-                                                                0.0%
-                                                            @else
-                                                                @php
-                                                                    $currentEbitDA = str_replace(',', '', explode('|', $ebitda[$date][0])[0]);
-                                                                    $previousEbitDA = str_replace(',', '', explode('|', $ebitda[$years[$key - 1]][0])[0]);
-                                                                @endphp
-                                                                {{ round((($currentEbitDA - $previousEbitDA) / $previousEbitDA) * 100, 2) }}%
-                                                            @endif
-                                                        </div>
-                                                    @endforeach
-                                                </div>
-
-                                                <div class="row row-sub">
-                                                    <div class="cell">% Margins</div>
-                                                    @foreach ($this->selectedRange as $key => $date)
-                                                        <div class="cell">
-                                                            @if ($key == 0)
-                                                                0.0%
-                                                            @else
-                                                                @php
-                                                                    $currentEbitda = str_replace(',', '', explode('|', $ebitda[$date][0])[0]);
-                                                                    $currentRevenue = str_replace(',', '', explode('|', $revenues[$date][0])[0]);
-                                                                @endphp
-                                                                {{ round($currentRevenue / $currentEbitda, 2) }}
-                                                            @endif
-                                                        </div>
-                                                    @endforeach
-                                                </div>
-                                            </div>
-
-                                            <div class="row row-spacer"></div>
-
-                                            <div class="row-group row-head-fonts-sm table-header-border">
-                                                <div class="row">
-                                                    <div class="font-bold cell">Adj. Net Income</div>
-                                                    @foreach ($this->selectedRange as $key => $date)
-                                                        <div class="font-bold cell">
-                                                            {{ number_format(explode('|', str_replace(',', '', $adjNetIncome[$date][0]))[0]) }}
-                                                        </div>
-                                                    @endforeach
-                                                </div>
-
-                                                <div class="row row-sub">
-                                                    <div class="cell">% Change YoY</div>
-                                                    @foreach ($this->selectedRange as $key => $date)
-                                                        <div class="cell">
-                                                            @if ($key == 0)
-                                                                0.0%
-                                                            @else
-                                                                @php
-                                                                    $currentAdjNetIncome = str_replace(',', '', explode('|', $adjNetIncome[$date][0])[0]);
-                                                                    $previousAdjNetIncome = str_replace(',', '', explode('|', $adjNetIncome[$years[$key - 1]][0])[0]);
-                                                                @endphp
-                                                                {{ round((($currentAdjNetIncome - $previousAdjNetIncome) / $previousAdjNetIncome) * 100, 2) }}%
-                                                            @endif
-                                                        </div>
-                                                    @endforeach
-                                                </div>
-
-                                                <div class="row row-sub">
-                                                    <div class="cell">% Margins</div>
-                                                    @foreach ($this->selectedRange as $key => $date)
-                                                        <div class="cell">
-                                                            @if ($key == 0)
-                                                                0.0%
-                                                            @else
-                                                                @php
-                                                                    $currentNetIncome = str_replace(',', '', explode('|', $adjNetIncome[$date][0])[0]);
-                                                                    $currentRevenue = str_replace(',', '', explode('|', $revenues[$date][0])[0]);
-                                                                @endphp
-                                                                {{ round($currentRevenue / $currentNetIncome, 2) }}%
-                                                            @endif
-                                                        </div>
-                                                    @endforeach
-                                                </div>
-
-                                                <div class="row row-sub">
-                                                    <div class="cell">Diluted Shares Out</div>
-                                                    @foreach ($this->selectedRange as $key => $date)
-                                                        <div class="cell">
-                                                            {{ str_replace(',', '', explode('|', $dilutedSharesOut[$date][0])[0]) }}
-                                                        </div>
-                                                    @endforeach
-                                                </div>
-                                                <div class="row row-sub">
-                                                    <div class="cell">% Change YoY</div>
-                                                    @foreach ($this->selectedRange as $key => $date)
-                                                        <div class="cell">
-                                                            @if ($key == 0)
-                                                                0.0%
-                                                            @else
-                                                                @php
-                                                                    $currentDilutedSharesOut = str_replace(',', '', explode('|', $dilutedSharesOut[$date][0])[0]);
-                                                                    $previousDilutedSharesOut = str_replace(',', '', explode('|', $dilutedSharesOut[$years[$key - 1]][0])[0]);
-                                                                @endphp
-                                                                {{ round((($currentDilutedSharesOut - $previousDilutedSharesOut) / $previousDilutedSharesOut) * 100, 2) }}%
-                                                            @endif
-                                                        </div>
-                                                    @endforeach
-                                                </div>
-                                            </div>
-                                            <div class="row row-spacer"></div>
-                                        </div>
-                                    </div>
-
-                                    <div class="table-bottom-sec">
-                                        <div class="table-wrapper ">
-                                            <div class="table">
-                                                <div class="row-group row-group-blue row-head-fonts-sm">
-                                                    <div class="row row-head">
-                                                        <div class="font-bold cell">Adj. Diluted EPS</div>
-                                                        @foreach ($this->selectedRange as $key => $date)
+                                                        @if (array_key_exists($segment, $products[$date]))
                                                             <div class="font-bold cell">
-                                                                {{ str_replace(',', '', explode('|', $dilutedEPS[$date][0])[0]) }}
+                                                                {{ number_format(array_sum($products[$date])) }}
                                                             </div>
-                                                        @endforeach
-                                                    </div>
-
-                                                    <div class="row row-sub">
-                                                        <div class="font-bold cell">% Change YoY</div>
-                                                        @foreach ($this->selectedRange as $key => $date)
-                                                            <div class="cell">
-                                                                @if ($key == 0)
-                                                                    0.0%
-                                                                @else
-                                                                    @php
-                                                                        $currentDilutedEPS = str_replace(',', '', explode('|', $dilutedEPS[$date][0])[0]);
-                                                                        $previousDilutedEPS = str_replace(',', '', explode('|', $dilutedEPS[$years[$key - 1]][0])[0]);
-                                                                    @endphp
-                                                                    {{ round((($currentDilutedEPS - $previousDilutedEPS) / $previousDilutedEPS) * 100, 2) }}%
-                                                                @endif
-                                                            </div>
-                                                        @endforeach
-                                                    </div>
+                                                        @endif
+                                                    @endforeach
+                                                </div>
+                                                <div class="row row-sub">
+                                                    <div class="cell">% Change YoY</div>
+                                                    @foreach ($this->selectedRange as $key => $date)
+                                                        <div class="cell">
+                                                            @if ($key == 0)
+                                                                0.0%
+                                                            @else
+                                                                {{ round(((array_sum($products[$date]) - array_sum($products[array_keys($products)[$key - 1]])) / array_sum($products[$date])) * 100, 2) . '%' }}
+                                                            @endif
+                                                        </div>
+                                                    @endforeach
                                                 </div>
                                             </div>
                                         </div>
@@ -702,10 +564,6 @@
                 if (value.length === 2 && value !== selectedValue) {
                     recognizeDotsStatus(value, [rangeMin, rangeMax]);
                     Livewire.emit("dateChanged", value)
-
-                    // if (chart) {
-                    //     chart.destroy();
-                    // }
                 }
             }
         });

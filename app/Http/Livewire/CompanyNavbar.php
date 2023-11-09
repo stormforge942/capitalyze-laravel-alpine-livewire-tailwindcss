@@ -86,7 +86,7 @@ class CompanyNavbar extends Component
                     <path d="M1.33594 6V9" stroke="#464E49" stroke-width="1.33333" stroke-linecap="round" stroke-linejoin="round"/>
                 </svg>
                 ICON,
-                'url' => route('company.profile', ['ticker' => $this->company->ticker]),
+                'url' => route('company.analysis', ['ticker' => $this->company->ticker]),
                 'active' => request()->routeIs('company.analysis')
             ],
             [

@@ -40,6 +40,8 @@ class CompanyAnalysis extends Component
 
     public function dateChanged($value)
     {
+        $this->minDate = $value[0];
+        $this->maxDate = $value[1];
         foreach ($this->years as $key => $year) {
             if (date('Y', strtotime($year)) < $this->minDate) {
                 unset($this->years[$key]);
@@ -49,7 +51,7 @@ class CompanyAnalysis extends Component
             }
         }
         $this->years = array_values($this->years);
-        $this->emit("initChart");
+        $this->emit("initChart", $this->years);
     }
 
     function getSelectedRangeProperty()

@@ -16,22 +16,33 @@ class CompanyAnalysisGraph extends Component
     public $segments;
     public $products;
 
-    protected $listeners = ['dateChanged', 'initChart'];
+    protected $listeners = ['initChart'];
 
-    public function dateChanged(){
-        $this->initChart();
-    }
 
-    public function initChart()
+    public function initChart($selectedYears = null)
     {
+        if($selectedYears){
+            $this->years = $selectedYears;
+        }
         $dataSets = [];
-        foreach ($this->segments as $product) {
+        $colors = [
+            "#464E49",
+            "#9A46CD",
+            "#52D3A2",
+            "#3561E7",
+            "#E38E48",
+        ];
+        foreach ($this->segments as $key => $product) {
             $set = [
                 "label" => $product,
                 "borderRadius" => 2,
                 "fill" => true,
-                "barThickness" => 100
             ];
+
+            if(isset($colors[$key]))
+            {
+                $set['backgroundColor'] = $colors[$key];
+            }
             foreach ($this->products as $date => $data) {
                 if(in_array($date, $this->years)){
                     $set["data"][] = [

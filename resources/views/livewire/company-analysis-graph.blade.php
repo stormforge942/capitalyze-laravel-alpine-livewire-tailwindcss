@@ -1,4 +1,4 @@
-<div class="main-graph-wrapper w-full" x-data="{ showgraph: true }">
+<div class="main-graph-wrapper main-graph-rev w-full" x-data="{ showgraph: true }">
     <div
         :class="{ 'custom-dropdown-absolute-wrapper': !showgraph, 'custom-dropdown-absolute-wrapper abs-custom': showgraph }">
         <div class="relative custom-dropdown-absolute-wrapper-inner flex justify-end" x-data="{
@@ -70,12 +70,13 @@
     </div>
 
     <div class="relative graph-wrapper-box w-full">
-        <div class="graph-wrapper">
-            <div class="graph-header relative">
-                <div class="pr-3 pl-5">
-                    <b class="title" wire:click="load()">{{ $name }}. ({{ $ticker }})</b><br>
-                    Revenue by Product
+        <div class="graph-wrapper graph-wrapper-rev ">
+            <div class="graph-header graph-header-flex relative mb-5">
+                <div class="pr-3">
+                    <p class="title revenue-title" wire:click="load()">{{ $name }}. ({{ $ticker }}) </p>
+                    <p class="revenue-subtitle">Revenue by Product </p>
                 </div>
+
                 <div>
                     <div class="relative custom-dropdown-absolute-wrapper-inner mobile-show flex justify-end" x-data="{
                             openMobileGraph: false
@@ -145,39 +146,32 @@
                     </div>
                 </div>
                 <div class="select-graph-date-wrapper desktop-show ml-12 flex">
-                    <ul class="items-center w-full flex">
-                        <li class="w-full mr-6">
-                            <input wire:model="currentChartPeriod" value="3m" id="date-3m" type="radio"
+                    <ul class="items-center w-full flex custom_radio_wrapper">
+                        <li class="">
+                            <input wire:model="currentChartPeriod" value="Values" id="Values" type="radio"
                                 name="date-range" name="radio-group" checked>
-                            <label for="date-3m">3m</label>
+                            <label for="Values">Values</label>
                         </li>
-                        <li class="w-full mr-6">
-                            <input wire:model="currentChartPeriod" value="6m" id="date-6m" type="radio"
+                        <li class="">
+                            <input wire:model="currentChartPeriod" value="Percentage Mix" id="Percentage" type="radio"
                                 name="date-range" name="radio-group" checked>
-                            <label for="date-6m">6m</label>
+                            <label for="Percentage">Percentage Mix</label>
                         </li>
-                        <li class="w-full mr-6">
-                            <input wire:model="currentChartPeriod" value="YTD" id="date-1yr" type="radio"
-                                name="date-range">
-                            <label for="date-1yr">YTD</label>
-                        </li>
-                        <li class="w-full mr-6">
-                            <input wire:model="currentChartPeriod" value="1yr" id="date-1yr2" type="radio"
-                                name="date-range">
-                            <label for="date-1yr2">1yr</label>
-                        </li>
-                        <li class="w-full mr-6">
-                            <input wire:model="currentChartPeriod" value="5yr" id="date-5yr" type="radio"
-                                name="date-range">
-                            <label for="date-5yr">5yr</label>
-                        </li>
-                        <li class="w-full mr-6">
-                            <input wire:model="currentChartPeriod" value="max" id="date-5yr2" type="radio"
-                                name="date-range">
-                            <label for="date-5yr2">MAX</label>
-                        </li>
+                         <li class="custom_checkbox" x-data="{toggle: false, toggle2: false}">
+                            <button
+                            class="flex items-center transition ease-in-out duration-300 w-7 h-3 bg-gray-200 rounded-full focus:outline-none"
+                            :class="{ 'bg-red-300': toggle2 }"
+                            x-on:click="toggle2 = !toggle2"
+                          >
+                            <div
+                              class="transition ease-in-out duration-300 rounded-full h-4 w-4 bg-white shadow border"
+                              :class="{ 'transform translate-x-full ': toggle2 }"
+                            ></div>
+                          </button> <span class="title">Show Labels</span>
+                         </li>
+
                     </ul>
-                    <livewire:range-calendar />
+
                 </div>
 
             </div>
@@ -432,9 +426,6 @@
                         }
                     },
                     plugins: {
-                        legend: {
-                            display: false,
-                        },
                         tooltip: {
                             bodyFont: {
                                 size: 15
@@ -452,8 +443,16 @@
                                 },
                                 label: function(context) {
                                     return `${context.dataset.label}|${context.raw.y}`;
-                                }
+                                },
                             },
+                        },
+                        legend: {
+                            display: true,
+                            position: 'bottom',
+                            labels: {
+                                boxWidth: 16,
+                                boxHeight: 16
+                            }
                         }
                     },
                     scales: {
@@ -475,6 +474,5 @@
                 }
             });
         }
-        document.addEventListener('DOMContentLoaded', initChart);
 </script>
 @endpush
