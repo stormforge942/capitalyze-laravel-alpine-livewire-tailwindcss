@@ -95,7 +95,10 @@ class CompanyReport extends Component
     public function unselectRow($title)
     {
         unset($this->selectedRows[$title]);
-        $this->emit('resetSelection', $title);
+
+        if (in_array($title, $this->selectedRows)) {
+            $this->emit('resetSelection', $title);
+        }
 
         if (count($this->selectedRows)) {
             $this->generateChartData(true);
