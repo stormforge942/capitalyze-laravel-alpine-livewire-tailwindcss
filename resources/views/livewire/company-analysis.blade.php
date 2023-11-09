@@ -377,14 +377,6 @@
                                         'segments' => $segments
                                         ])
                                 </div>
-                                <div class="flex justify-end items-baseline">
-                                    <span class="currency-font">Currency: &nbsp;</span>
-                                    <select wire:model="currency" id="currency-select" class="inline-flex font-bold !pr-8 bg-transparent">
-                                        <option value="USD">USD</option>
-                                        <option value="CAD">CAD</option>
-                                        <option value="EUR">EUR</option>
-                                    </select>
-                                </div>
                                 <div class="w-full">
                                     <div class="table-wrapper">
                                         <div class="table">
