@@ -148,20 +148,20 @@
                 <div class="select-graph-date-wrapper desktop-show ml-12 flex">
                     <ul class="items-center w-full flex custom_radio_wrapper">
                         <li class="">
-                            <input wire:model="currentChartPeriod" value="Values" id="Values" type="radio"
-                                name="date-range" name="radio-group" checked>
-                            <label for="Values">Values</label>
+                            <input value="Values" id="Values" type="radio"
+                                name="chart-type" name="radio-group" checked>
+                            <label for="Values" onclick="typeChanged('values')">Values</label>
                         </li>
                         <li class="">
-                            <input wire:model="currentChartPeriod" value="Percentage Mix" id="Percentage" type="radio"
-                                name="date-range" name="radio-group" checked>
-                            <label for="Percentage">Percentage Mix</label>
+                            <input value="Percentage Mix" id="Percentage" type="radio"
+                                name="chart-type" name="radio-group">
+                            <label for="Percentage" onclick="typeChanged('percentage')">Percentage Mix</label>
                         </li>
                          <li class="custom_checkbox" x-data="{toggle: false, toggle2: false}">
                             <button
-                            class="flex items-center transition ease-in-out duration-300 w-7 h-3 bg-gray-200 rounded-full focus:outline-none"
-                            :class="{ 'bg-red-300': toggle2 }"
-                            x-on:click="toggle2 = !toggle2"
+                            class="flex items-center transition ease-in-out duration-300 w-7 h-3 bg-gray-custom rounded-full focus:outline-none"
+                            :class="{ 'bg-gray-custom': toggle2 }"
+                            x-on:click="toggle2 = !toggle2; showLabels(toggle2)"
                           >
                             <div
                               class="transition ease-in-out duration-300 rounded-full h-4 w-4 bg-white shadow border"
@@ -175,10 +175,10 @@
                 </div>
 
             </div>
-            <div class="place-items-center h-96" wire:loading.grid>
+            {{-- <div class="place-items-center h-96" wire:loading.grid>
                 <span class="mx-auto simple-loader !text-green-dark"></span>
             </div>
-
+             --}}
             <div class="mt-3 mr-5" wire:loading.remove x-show="showgraph" x-transition>
                 <canvas id="product-profile-chart" wire:ignore></canvas>
             </div>
@@ -227,10 +227,91 @@
 </div>
 
 @push('scripts')
+<script src="https://cdn.jsdelivr.net/npm/chartjs-plugin-datalabels@2.0.0/dist/chartjs-plugin-datalabels.min.js"></script>
 <script>
+    let labelsVisible = false
     let chart = null
-    window.addEventListener("dateschanged", function(data){
-        initChart(data.detail)
+    let data = {!!json_encode($chartData)!!};
+    let reverseData = false;
+    document.addEventListener('DOMContentLoaded', function() {
+        initChart()
+    })
+    let filteredData = {!!json_encode($chartData)!!}
+
+    function showLabels(v){
+        labelsVisible = v
+        initChart(filteredData)
+    }
+    let chartType = 'values'
+    function typeChanged(type){
+        chartType = type
+        filteredData.forEach((value, pindex) => {
+            let finalData = []
+            value.data.forEach((data, cindex) => {
+                if(type == 'percentage'){
+                    data.y = data.percentage
+                }
+                else {
+                    data.y = data.revenue
+                }
+                finalData.push(data)
+            })
+            filteredData[pindex].data = finalData
+        })
+        initChart(filteredData)
+    }
+    Livewire.on("decimalChanged", () => {
+        initChart(filteredData)
+    })
+    Livewire.on('unitChanged', (v) => {
+        filteredData = {!!json_encode($chartData)!!}
+        filteredData.forEach((value, pindex) => {
+            let finalData = []
+            value.data.forEach((data, cindex) => {
+                if(v == 'thousands'){
+                    data.y = parseInt(data.y) / 1000
+                    finalData.push(data)
+                }
+
+                if(v == 'millions'){
+                    data.y = parseInt(data.y) / 1000000
+                    finalData.push(data)
+                }
+
+                if(v == 'billions'){
+                    data.y = parseInt(data.y) / 1000000000
+                    finalData.push(data)
+                }
+
+                if(v == '0'){
+                    finalData.push(data)
+                }
+            })
+            filteredData[pindex].data = finalData
+        })
+
+        console.log(filteredData)
+        initChart(filteredData)
+    })
+    Livewire.on('orderChanged',(v) => {
+        reverseData = v
+        initChart(filteredData)
+    })
+    Livewire.on('analysisDatesChanged', (dates) => {
+        filteredData = {!!json_encode($chartData)!!}
+        let startDate = dates[0]
+        let endDate = dates[1]
+        filteredData.forEach((value, pindex) => {
+            let finalData = []
+            value.data.forEach((data, cindex) => {
+                let currentDate = parseInt(new Date(data.x).getFullYear())
+                if(!(currentDate < parseInt(startDate) || currentDate > parseInt(endDate))){
+                    finalData.push(data)
+                }
+            })
+            filteredData[pindex].data = finalData
+        })
+        initChart(filteredData)
     })
 
     const getOrCreateTooltip = (chart) => {
@@ -370,15 +451,14 @@
             tooltipEl.style.padding = 8 + 'px ' + 19 + 'px';
         };
 
-        function initChart(data = null) {
+        function initChart(filteredData = null) {
             if (chart) chart.destroy();
-            if(!data){
-                data = {!!json_encode($chartData)!!};
+            if(filteredData){
+                data = filteredData
             }
-            else {
-                data = JSON.parse(data)
+            if(reverseData){
+                // data.reverse()
             }
-            console.log(data)
             let canvas = document.getElementById("product-profile-chart");
             if (!canvas) return;
             let ctx = document.getElementById('product-profile-chart').getContext("2d");
@@ -386,7 +466,7 @@
             gradientBg.addColorStop(0.8, 'rgba(19,176,91,0.18)')
             gradientBg.addColorStop(1, 'rgba(19,176,91,0.05)')
             chart = new Chart(ctx, {
-                plugins: [{
+                plugins: [ChartDataLabels, {
                     afterDraw: chart => {
                         if (chart.tooltip?._active?.length) {
                             let x = chart.tooltip._active[0].element.x;
@@ -403,7 +483,7 @@
                             ctx.stroke();
                             ctx.restore();
                         }
-                    }
+                    },
                 }],
                 maintainAspectRatio: false,
                 aspectRatio: 3,
@@ -426,6 +506,24 @@
                         }
                     },
                     plugins: {
+                        datalabels: {
+                            display: labelsVisible,
+                            anchor: 'center',
+                            align: 'center',
+                            formatter: (v) => {
+                                if(chartType == 'values'){
+                                    let value = parseInt(v.y)
+                                        return value.toFixed(decimalPoints ?? 0)
+                                }
+                                else {
+                                    return parseInt(v.y).toFixed(decimalPoints ?? 0) + '%'
+                                }
+                            },
+                            font: {
+                                weight: 400,
+                                size: 12,
+                            }
+                        },
                         tooltip: {
                             bodyFont: {
                                 size: 15
@@ -457,8 +555,8 @@
                     },
                     scales: {
                         y: {
-
                             stacked: true,
+                            display: true,
                         },
                         x: {
                             stacked: true,

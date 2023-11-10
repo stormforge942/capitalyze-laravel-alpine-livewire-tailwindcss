@@ -12,10 +12,9 @@ class CompanyAnalysis extends Component
     use TableFiltersTrait;
 
     public $company;
-    public $decimalDisplay = '0';
     public $ticker;
     public $companyName;
-    public $unitType = 'Thousands';
+    public $unit= 0;
     public $currency = 'USD';
     public $period;
     public $rangeDates = [];
@@ -35,14 +34,33 @@ class CompanyAnalysis extends Component
     public $maxDate;
     public $chartData;
     public $name;
+    public $quarterRange = [];
+    public $decimalPoint = 0;
+    public $reverseOrder = false;
 
-    protected $listeners = ['tabClicked', 'tabSubClicked', 'dateChanged'];
+    protected $listeners = ['tabClicked', 'tabSubClicked', 'analysisDatesChanged', 'decimalChange'];
 
-    public function dateChanged($value)
+    public function decimalChange($decimal){
+        $this->decimalPoint = $decimal;
+    }
+
+    public function unitChanged($unit){
+        $this->unit = $unit;
+    }
+
+    public function getSelectedUnitProperty(){
+        return $this->unit;
+    }
+
+    public function analysisDatesChanged($value)
     {
+        $this->years = array_reverse(array_keys($this->products));
+        if($this->reverseOrder){
+            $this->years = array_keys($this->products);
+        }
         $this->minDate = $value[0];
         $this->maxDate = $value[1];
-        foreach ($this->years as $key => $year) {
+        foreach (array_keys($this->products) as $key => $year) {
             if (date('Y', strtotime($year)) < $this->minDate) {
                 unset($this->years[$key]);
             }
@@ -51,11 +69,13 @@ class CompanyAnalysis extends Component
             }
         }
         $this->years = array_values($this->years);
-        $this->emit("initChart", $this->years);
     }
 
     function getSelectedRangeProperty()
     {
+        if($this->reverseOrder){
+            return array_reverse($this->years);
+        }
         return $this->years;
     }
 
@@ -82,15 +102,24 @@ class CompanyAnalysis extends Component
         $this->getProducts();
         $this->getTickerPresentation();
         $this->rangeDates = array_keys($this->products);
-        $this->years = array_keys($this->products);
 
+        $this->years = array_reverse(array_keys($this->products));
+        if($this->reverseOrder){
+            $this->years = array_keys($this->products);
+        }
+        if($this->period != "annual"){
+            $this->rangeDates = [
+                min($this->rangeDates),
+                max($this->rangeDates)
+            ];
+        }
         $this->minDate = array_reverse($this->years)[0];
         $this->maxDate = $this->years[0];
     }
 
     public function getProducts()
     {
-        $source = ($this->period == 'annual') ? 'arps' : 'qrps';
+        $source = ($this->period == 'annual' || $this->period == 'fiscal-annual') ? 'arps' : 'qrps';
         $json = DB::connection('pgsql-xbrl')
             ->table('as_reported_sec_segmentation_api')
             ->where('ticker', '=', $this->ticker)

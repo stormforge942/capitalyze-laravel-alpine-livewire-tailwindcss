@@ -639,7 +639,9 @@ line-height: normal;
 .row-border-custom div:nth-child(23) .cell:first-child {
     border-bottom-left-radius: 4px !important;
 }
-
+.bg-gray-custom {
+    background-color: #929292;
+}
 @media(min-width:576px){
     .mobile-show {
         display: none;

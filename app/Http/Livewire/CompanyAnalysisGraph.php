@@ -32,6 +32,13 @@ class CompanyAnalysisGraph extends Component
             "#3561E7",
             "#E38E48",
         ];
+        $fontColors = [
+            "#fff",
+            "#fff",
+            "#000",
+            "#fff",
+            "#fff",
+        ];
         foreach ($this->segments as $key => $product) {
             $set = [
                 "label" => $product,
@@ -42,18 +49,22 @@ class CompanyAnalysisGraph extends Component
             if(isset($colors[$key]))
             {
                 $set['backgroundColor'] = $colors[$key];
+                $set['datalabels'] = ['color' => $fontColors[$key]];
             }
+            $set['datalabels']['weight'] = 400;
             foreach ($this->products as $date => $data) {
-                if(in_array($date, $this->years)){
-                    $set["data"][] = [
-                        "x" => $date,
-                        "y" => $data[$product]
-                    ];
-                }
+                $sum = array_sum($this->products[$date]);
+                $set["data"][] = [
+                    "x" => $date,
+                    "y" => $data[$product],
+                    "percentage" => ($data[$product]/$sum) * 100,
+                    "revenue" => $data[$product],
+                    "fontColor" => $fontColors[$key] ?? "#000"
+                ];
             }
             $dataSets[] = $set;
         }
-        $this->dispatchBrowserEvent("dateschanged", json_encode($dataSets));
+        // $this->dispatchBrowserEvent("dateschanged", json_encode($dataSets));
         $this->chartData = $dataSets;
     }
 

@@ -69,16 +69,16 @@
                                 </div>
 
                                 <div class="filters-row mb-3">
-                                    <div class="select-wrapper flex items-center custom-text-xs">
+                                    <div class="select-wrapper flex items-center custom-text-xs" x-data="{unitType: 0}">
                                         <div class="flex items-center text-sm">Unit Type
-                                            <button type="submit" id="dropdownUnitTypeButton" data-dropdown-toggle="dropdown-UnitType" class="flex items-center flowbite-select bg-gray-50 border border-gray-700 text-gray-900 text-sm ml-2 p-2" name="view" id="">
-                                                {{$unitType}}
+                                            <button id="dropdownUnitTypeButton" data-dropdown-toggle="dropdown-UnitType" class="flex items-center flowbite-select bg-gray-50 border border-gray-700 text-gray-900 text-sm ml-2 p-2" name="view" id="">
+                                                <span x-text="unitType == 0 ? 'None' : (unitType == 'thousands' ? 'Thousands' : (unitType == 'millions' ? 'Millions' : (unitType == 'billions' ? 'Billions' : '')))"></span>
                                                 <svg width="16" height="16" viewBox="0 0 16 16" fill="none" xmlns="http://www.w3.org/2000/svg">
                                                     <path d="M10.3083 6.19514L7.72167 8.78378L5.135 6.19514C5.01045 6.07021 4.84135 6 4.665 6C4.48865 6 4.31955 6.07021 4.195 6.19514C3.935 6.45534 3.935 6.87566 4.195 7.13585L7.255 10.1982C7.515 10.4584 7.935 10.4584 8.195 10.1982L11.255 7.13585C11.515 6.87566 11.515 6.45534 11.255 6.19514C10.995 5.94161 10.5683 5.93494 10.3083 6.19514Z" fill="#121A0F"/>
                                                 </svg>
                                             </button>
                                             <!-- Dropdown menu -->
-                                            <div id="dropdown-UnitType" class="z-10 hidden bg-white divide-y divide-gray-100 rounded-lg shadow w-60 dark:bg-gray-700 dark:divide-gray-600">
+                                            <div id="dropdown-UnitType" wire:ignore class="z-10 hidden bg-white divide-y divide-gray-100 rounded-lg shadow w-60 dark:bg-gray-700 dark:divide-gray-600">
                                                 <div class="p-3 text-sm flex items-center justify-between">
                                                     <div>Unit Type</div>
                                                     <svg id="unitTypeClose" width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
@@ -89,7 +89,7 @@
                                                     <li>
                                                         <div class="flex p-2 rounded hover:bg-[#52D3A233] cursor-pointer">
                                                             <div class="flex items-center h-5 cursor-pointer">
-                                                                <input wire:model="unitType" @if($view === 'None') checked @endif id="unitType-radio-1" name="unitType-radio" type="radio" value="None" class="cursor-pointer w-4 h-4 text-[#686868] bg-transpearent border-[#686868] border-2">
+                                                                <input @click="unitType = 0" id="unitType-radio-1" name="unitType-radio" type="radio" value="None" class="cursor-pointer w-4 h-4 text-[#686868] bg-transpearent border-[#686868] border-2">
                                                             </div>
                                                             <div class="ml-4 text-sm cursor-pointer">
                                                                 <label for="unitType-radio-1" class="cursor-pointer font-medium text-gray-900 dark:text-gray-300">
@@ -101,7 +101,7 @@
                                                     <li>
                                                         <div class="flex p-2 rounded hover:bg-[#52D3A233] cursor-pointer">
                                                             <div class="flex items-center h-5 cursor-pointer">
-                                                                <input wire:model="unitType" @if($view === 'Thousands') checked @endif id="unitType-radio-1" name="unitType-radio" type="radio" value="Thousands" class="cursor-pointer w-4 h-4 text-[#686868] bg-transpearent border-[#686868] border-2">
+                                                                <input @click="unitType = 'thousands'" id="unitType-radio-1" name="unitType-radio" type="radio" value="Thousands" class="cursor-pointer w-4 h-4 text-[#686868] bg-transpearent border-[#686868] border-2">
                                                             </div>
                                                             <div class="ml-4 text-sm cursor-pointer">
                                                                 <label for="unitType-radio-1" class="cursor-pointer font-medium text-gray-900 dark:text-gray-300">
@@ -113,7 +113,7 @@
                                                     <li>
                                                         <div class="flex p-2 rounded hover:bg-[#52D3A233] cursor-pointer">
                                                             <div class="flex items-center h-5 cursor-pointer">
-                                                                <input wire:model="unitType" @if($view === 'Millions') checked @endif id="unitType-radio-2" name="unitType-radio" type="radio" value="Millions" class="cursor-pointer w-4 h-4 text-[#686868] bg-transpearent border-[#686868] border-2">
+                                                                <input @click="unitType = 'millions'" id="unitType-radio-2" name="unitType-radio" type="radio" value="Millions" class="cursor-pointer w-4 h-4 text-[#686868] bg-transpearent border-[#686868] border-2">
                                                             </div>
                                                             <div class="ml-4 text-sm cursor-pointer">
                                                                 <label for="unitType-radio-2" class="cursor-pointer font-medium text-gray-900 dark:text-gray-300">
@@ -125,7 +125,7 @@
                                                     <li>
                                                         <div class="flex p-2 rounded hover:bg-[#52D3A233] cursor-pointer">
                                                             <div class="flex items-center h-5 cursor-pointer">
-                                                                <input wire:model="unitType" @if($view === 'Billions') checked @endif id="unitType-radio-3" name="unitType-radio" type="radio" value="Billions" class="cursor-pointer w-4 h-4 text-[#686868] bg-transpearent border-[#686868] border-2">
+                                                                <input @click="unitType = 'billions'" id="unitType-radio-3" name="unitType-radio" type="radio" value="Billions" class="cursor-pointer w-4 h-4 text-[#686868] bg-transpearent border-[#686868] border-2">
                                                             </div>
                                                             <div class="ml-4 text-sm cursor-pointer">
                                                                 <label for="unitType-radio-3" class="cursor-pointer font-medium text-gray-900 dark:text-gray-300">
@@ -136,19 +136,19 @@
                                                     </li>
                                                 </ul>
                                                 <div class="mx-3 my-4">
-                                                    <button class="w-full p-1 text-sm bg-[#52D3A2] rounded text-center" id="unitTypeCloseButton">Show Result</button>
+                                                    <button class="w-full p-1 text-sm bg-[#52D3A2] rounded text-center" id="unitTypeCloseButton" @click="setUnitType(unitType)">Show Result</button>
                                                 </div>
                                             </div>
                                         </div>
-                                        <div class="ml-3 flex items-center text-sm">Order
-                                            <button type="submit" id="dropdownOrderButton" data-dropdown-toggle="dropdown-Order" class="flex items-center flowbite-select bg-gray-50 border border-gray-700 text-gray-900 text-sm ml-2 p-2" name="view" id="">
-                                                {{($reverse ?? '') ? 'Latest on the Left' : 'Latest on the Right'}}
+                                        <div class="ml-3 flex items-center text-sm" x-data="{reverseOrder:false}">Order
+                                            <button id="dropdownOrderButton" data-dropdown-toggle="dropdown-Order" class="flex items-center flowbite-select bg-gray-50 border border-gray-700 text-gray-900 text-sm ml-2 p-2" name="view" id="">
+                                                <span x-text="reverseOrder == false ? 'Latest on Right' : 'Latest on Left'"></span>
                                                 <svg width="16" height="16" viewBox="0 0 16 16" fill="none" xmlns="http://www.w3.org/2000/svg">
                                                     <path d="M10.3083 6.19514L7.72167 8.78378L5.135 6.19514C5.01045 6.07021 4.84135 6 4.665 6C4.48865 6 4.31955 6.07021 4.195 6.19514C3.935 6.45534 3.935 6.87566 4.195 7.13585L7.255 10.1982C7.515 10.4584 7.935 10.4584 8.195 10.1982L11.255 7.13585C11.515 6.87566 11.515 6.45534 11.255 6.19514C10.995 5.94161 10.5683 5.93494 10.3083 6.19514Z" fill="#121A0F"/>
                                                 </svg>
                                             </button>
                                             <!-- Dropdown menu -->
-                                            <div id="dropdown-Order" class="z-10 hidden bg-white divide-y divide-gray-100 rounded-lg shadow w-60 dark:bg-gray-700 dark:divide-gray-600">
+                                            <div id="dropdown-Order" wire:ignore class="z-10 hidden bg-white divide-y divide-gray-100 rounded-lg shadow w-60 dark:bg-gray-700 dark:divide-gray-600">
                                                 <div class="p-3 text-sm flex items-center justify-between">
                                                     <div>Order</div>
                                                     <svg id="orderClose" width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
@@ -159,7 +159,7 @@
                                                     <li>
                                                         <div class="flex p-2 rounded hover:bg-[#52D3A233] cursor-pointer">
                                                             <div class="flex items-center h-5 cursor-pointer">
-                                                                <input wire:click="toggleReverse" @if($reverse === false) checked @endif id="order-radio-1" name="order-radio" type="radio" value="false" class="cursor-pointer w-4 h-4 text-[#686868] bg-transpearent border-[#686868] border-2">
+                                                                <input @click="reverseOrder = false" checked id="order-radio-1" name="order-radio" type="radio"  class="cursor-pointer w-4 h-4 text-[#686868] bg-transpearent border-[#686868] border-2">
                                                             </div>
                                                             <div class="ml-4 text-sm cursor-pointer">
                                                                 <label for="order-radio-1" class="cursor-pointer font-medium text-gray-900 dark:text-gray-300">
@@ -171,7 +171,7 @@
                                                     <li>
                                                         <div class="flex p-2 rounded hover:bg-[#52D3A233] cursor-pointer">
                                                             <div class="flex items-center h-5 cursor-pointer">
-                                                                <input wire:model="reverse" @if($reverse) checked @endif id="order-radio-1" name="order-radio" type="radio" value="true" class="cursor-pointer w-4 h-4 text-[#686868] bg-transpearent border-[#686868] border-2">
+                                                                <input @click="reverseOrder = true" id="order-radio-1" name="order-radio" type="radio" class="cursor-pointer w-4 h-4 text-[#686868] bg-transpearent border-[#686868] border-2">
                                                             </div>
                                                             <div class="ml-4 text-sm cursor-pointer">
                                                                 <label for="order-radio-1" class="cursor-pointer font-medium text-gray-900 dark:text-gray-300">
@@ -182,7 +182,7 @@
                                                     </li>
                                                 </ul>
                                                 <div class="mx-3 my-4">
-                                                    <button class="w-full p-1 text-sm bg-[#52D3A2] rounded text-center" id="orderCloseButton">Show Result</button>
+                                                    <button @click="setReverseOrder(reverseOrder)" class="w-full p-1 text-sm bg-[#52D3A2] rounded text-center" id="orderCloseButton">Show Result</button>
                                                 </div>
                                             </div>
                                         </div>
@@ -244,9 +244,9 @@
                                                 </div>
                                             </div>
                                         </div>
-                                        <div class="ml-3 flex items-center text-sm">Decimal
-                                            <button type="submit" id="dropdownDecimalButton" data-dropdown-toggle="dropdown-Decimal" class="flex items-center flowbite-select bg-gray-50 border border-gray-700 text-gray-900 text-sm ml-2 p-2" name="view" id="">
-                                                {{$decimalDisplay == 2 ? '.00' : ($decimalDisplay == 3 ? '.000' : 'auto')}}
+                                        <div wire:ignore class="ml-3 flex items-center text-sm"  x-data="{round: 0}">Decimal
+                                            <button id="dropdownDecimalButton" data-dropdown-toggle="dropdown-Decimal" class="flex items-center flowbite-select bg-gray-50 border border-gray-700 text-gray-900 text-sm ml-2 p-2" name="view" id="">
+                                                <span x-text='round == 0 ? "auto" : (round == 2 ? ".00" : (round == 3 ? ".00" : ""))'></span>
                                                 <svg width="16" height="16" viewBox="0 0 16 16" fill="none" xmlns="http://www.w3.org/2000/svg">
                                                     <path d="M10.3083 6.19514L7.72167 8.78378L5.135 6.19514C5.01045 6.07021 4.84135 6 4.665 6C4.48865 6 4.31955 6.07021 4.195 6.19514C3.935 6.45534 3.935 6.87566 4.195 7.13585L7.255 10.1982C7.515 10.4584 7.935 10.4584 8.195 10.1982L11.255 7.13585C11.515 6.87566 11.515 6.45534 11.255 6.19514C10.995 5.94161 10.5683 5.93494 10.3083 6.19514Z" fill="#121A0F"/>
                                                 </svg>
@@ -263,10 +263,10 @@
                                                     <li>
                                                         <div class="flex p-2 rounded hover:bg-[#52D3A233] cursor-pointer">
                                                             <div class="flex items-center h-5 cursor-pointer">
-                                                                <input wire:model="decimalDisplay" @if($decimalDisplay === '0') checked @endif id="decimal-radio-1" name="decimal-radio" type="radio" value="0" class="cursor-pointer w-4 h-4 text-[#686868] bg-transpearent border-[#686868] border-2">
+                                                                <input @click="round=0" :checked="round==0" id="decimal-radio-1" name="decimal-radio" type="radio" value="0" class="cursor-pointer w-4 h-4 text-[#686868] bg-transpearent border-[#686868] border-2">
                                                             </div>
                                                             <div class="ml-4 text-sm cursor-pointer">
-                                                                <label for="decimal-radio-1" class="cursor-pointer font-medium text-gray-900 dark:text-gray-300">
+                                                                <label @click="round=0" for="decimal-radio-1" class="cursor-pointer font-medium text-gray-900 dark:text-gray-300">
                                                                     <div>auto</div>
                                                                 </label>
                                                             </div>
@@ -275,10 +275,10 @@
                                                     <li>
                                                         <div class="flex p-2 rounded hover:bg-[#52D3A233] cursor-pointer">
                                                             <div class="flex items-center h-5 cursor-pointer">
-                                                                <input wire:model="decimalDisplay" @if($decimalDisplay === '2') checked @endif id="decimal-radio-2" name="decimal-radio" type="radio" value="2" class="cursor-pointer w-4 h-4 text-[#686868] bg-transpearent border-[#686868] border-2">
+                                                                <input @click="round=2" :checked="round==2" id="decimal-radio-2" name="decimal-radio" type="radio" value="2" class="cursor-pointer w-4 h-4 text-[#686868] bg-transpearent border-[#686868] border-2">
                                                             </div>
                                                             <div class="ml-4 text-sm cursor-pointer">
-                                                                <label for="decimal-radio-2" class="cursor-pointer font-medium text-gray-900 dark:text-gray-300">
+                                                                <label @click="round=2" for="decimal-radio-2" class="cursor-pointer font-medium text-gray-900 dark:text-gray-300">
                                                                     <div>.00</div>
                                                                 </label>
                                                             </div>
@@ -287,10 +287,10 @@
                                                     <li>
                                                         <div class="flex p-2 rounded hover:bg-[#52D3A233] cursor-pointer">
                                                             <div class="flex items-center h-5 cursor-pointer">
-                                                                <input wire:model="decimalDisplay" @if($decimalDisplay === '3') checked @endif id="decimal-radio-3" name="decimal-radio" type="radio" value="3" class="cursor-pointer w-4 h-4 text-[#686868] bg-transpearent border-[#686868] border-2">
+                                                                <input @click="round=3" :checked="round==3" id="decimal-radio-3" name="decimal-radio" type="radio" value="3" class="cursor-pointer w-4 h-4 text-[#686868] bg-transpearent border-[#686868] border-2">
                                                             </div>
                                                             <div class="ml-4 text-sm cursor-pointer">
-                                                                <label for="decimal-radio-3" class="cursor-pointer font-medium text-gray-900 dark:text-gray-300">
+                                                                <label @click="round=3" for="decimal-radio-3" class="cursor-pointer font-medium text-gray-900 dark:text-gray-300">
                                                                     <div>.000</div>
                                                                 </label>
                                                             </div>
@@ -298,7 +298,7 @@
                                                     </li>
                                                 </ul>
                                                 <div class="mx-3 my-4">
-                                                    <button class="w-full p-1 text-sm bg-[#52D3A2] rounded text-center" id="decimalCloseButton">Show Result</button>
+                                                    <button class="w-full p-1 text-sm bg-[#52D3A2] rounded text-center" id="decimalCloseButton" @click="setRound(round)">Show Result</button>
                                                 </div>
                                             </div>
                                         </div>
@@ -309,13 +309,13 @@
                                     <ul class="flex soft-radio-wrapper big-checked items-center">
                                         <li class="mr-2">
                                             <label class="flex items-center pl-3 cursor-pointer">
-                                                <input wire:model="period" value="arf5drs" id="date-fiscal-annual" type="radio" name="date-range" class="w-5 h-5 ">
+                                                <input wire:model="period" value="fiscal-annual" id="date-fiscal-annual" type="radio" name="date-range" class="w-5 h-5 ">
                                                 <span class="w-full py-2 ml-2 text-sm">Fiscal Annual</span>
                                             </label>
                                         </li>
                                         <li class="mr-2">
                                             <label class="flex items-center pl-3 cursor-pointer">
-                                                <input wire:model="period" value="qrf5drs" id="date-fiscal-quaterly" type="radio"  name="date-range" class="w-5 h-5 ">
+                                                <input wire:model="period" value="fiscal-quarterly" id="date-fiscal-quaterly" type="radio"  name="date-range" class="w-5 h-5 ">
                                                 <span class="w-full py-2 ml-2 text-sm">Fiscal Quaterly</span>
                                             </label>
                                         </li>
@@ -364,7 +364,38 @@
                                             <span id="{{date('Y', strtotime($date))}}" class="inactive-dots"></span>
                                         @endforeach
                                     </div>
-                                    <div id="range-slider-company-analysis" class="range-slider"></div>
+                                    <div id="range-slider-company-analysis" class="range-slider" x-init='() => {
+                                        const el = document.querySelector("#range-slider-company-analysis");
+                                        if(!el) {
+                                            return;
+                                        }
+                                        const rangeDates = {!!json_encode($rangeDates)!!}
+                                        console.log(rangeDates)
+                                        let selectedValue = [];
+
+                                        if (rangeDates.length > 0) {
+                                            if(rangeDates[0] > rangeDates[rangeDates.length - 1]){
+                                                rangeDates.reverse();
+                                            }
+                                            selectedValue = [rangeDates[0], rangeDates[rangeDates.length - 1]]
+                                        }
+                                        let rangeMin = new Date(selectedValue[0]).getFullYear();
+                                        let rangeMax = selectedValue[1] ? new Date(selectedValue[1]).getFullYear() : new Date().getFullYear();
+                                        selectedValue[0] = rangeMin
+                                        selectedValue[1] = rangeMax;
+                                        rangeSlider(el, {
+                                            step: 1,
+                                            min: rangeMin,
+                                            max: rangeMax,
+                                            value: selectedValue,
+                                            rangeSlideDisabled: true,
+                                            onInput: (value, e) => {
+                                                if (value.length === 2 && value !== selectedValue) {
+                                                    Livewire.emit("analysisDatesChanged", value)
+                                                }
+                                            },
+                                        });
+                                    }'></div>
                                 </div>
                                 <div>
                                     @livewire('company-analysis-graph', [
@@ -381,7 +412,7 @@
                                     <div class="table-wrapper">
                                         <div class="table">
                                             <div class="row-group row-head-fonts-sm row-border-custom table-border-bottom">
-                                                <div class="row row-head ">
+                                                <div class="row row-head">
                                                     <div class="cell font-bold">{{$companyName}} ({{$ticker}})</div>
                                                     @foreach ($this->selectedRange as $date)
                                                         <div class="cell font-bold">{{ $date }}</div>
@@ -395,7 +426,15 @@
                                                         @foreach ($this->selectedRange as $key => $date)
                                                             @if (array_key_exists($segment, $products[$date]))
                                                                 <div class="font-bold cell">
+                                                                    @if($this->selectedUnit == 0)
                                                                     {{ number_format($products[$date][$segment]) }}
+                                                                    @elseif($this->selectedUnit == 'thousands')
+                                                                    {{ number_format($products[$date][$segment]/1000) }}
+                                                                    @elseif($this->selectedUnit == 'millions')
+                                                                    {{ number_format($products[$date][$segment]/1000000) }}
+                                                                    @elseif($this->selectedUnit == 'billions')
+                                                                    {{ number_format($products[$date][$segment]/1000000000) }}
+                                                                    @endif
                                                                 </div>
                                                             @endif
                                                         @endforeach
@@ -405,6 +444,11 @@
                                                         @foreach ($this->selectedRange as $key => $date)
                                                             @if (array_key_exists($segment, $products[$date]))
                                                                 <div class="cell">
+                                                                    @php
+                                                                        if($reverseOrder){
+                                                                            $key = (count($this->selectedRange) -1) - $key;
+                                                                        }
+                                                                    @endphp
                                                                     @if ($key == 0)
                                                                         0.0%
                                                                     @else
@@ -432,7 +476,15 @@
                                                     @foreach ($this->selectedRange as $date)
                                                         @if (array_key_exists($segment, $products[$date]))
                                                             <div class="font-bold cell">
+                                                                @if($this->selectedUnit == 0)
                                                                 {{ number_format(array_sum($products[$date])) }}
+                                                                @elseif($this->selectedUnit == 'thousands')
+                                                                {{ number_format(array_sum($products[$date])/1000) }}
+                                                                @elseif($this->selectedUnit == 'millions')
+                                                                {{ number_format(array_sum($products[$date])/1000000) }}
+                                                                @elseif($this->selectedUnit == 'billions')
+                                                                {{ number_format(array_sum($products[$date])/1000000000) }}
+                                                                @endif
                                                             </div>
                                                         @endif
                                                     @endforeach
@@ -441,6 +493,11 @@
                                                     <div class="cell">% Change YoY</div>
                                                     @foreach ($this->selectedRange as $key => $date)
                                                         <div class="cell">
+                                                            @php
+                                                                if($reverseOrder){
+                                                                    $key = (count($this->selectedRange) -1) - $key;
+                                                                }
+                                                            @endphp
                                                             @if ($key == 0)
                                                                 0.0%
                                                             @else
@@ -464,6 +521,24 @@
 </div>
 @push('scripts')
 <script>
+    let decimalPoints = 0;
+    let unitType = 0
+    let reversOrder = false
+    function setRound(v){
+        decimalPoints = v
+        Livewire.emit('decimalChanged', decimalPoints)
+        @this.set('decimalPoint', decimalPoints)
+    }
+    function setReverseOrder(v){
+        reversOrder = v
+        Livewire.emit('orderChanged', v)
+        @this.set('reverseOrder', v)
+    }
+    function setUnitType(v){
+        unitType = v
+        Livewire.emit('unitChanged', unitType)
+        @this.set('unit', unitType)
+    }
     let slideOpen = false;
     function generateRangeArray(inputArray) {
         if (inputArray.length !== 2) {
@@ -487,85 +562,46 @@
         return rangeArray;
     }
 
-    function recognizeDotsStatus(value, baseArray) {
-        let base = generateRangeArray(baseArray)
-        let activeYears = generateRangeArray(value)
-        let intersection = base.filter(x => !activeYears.includes(x));
+    // function recognizeDotsStatus(value, baseArray) {
+    //     let base = generateRangeArray(baseArray)
+    //     let activeYears = generateRangeArray(value)
+    //     let intersection = base.filter(x => !activeYears.includes(x));
 
-        activeYears.forEach(id => {
-            let element = document.getElementById(id);
-            if (element) {
-                element.classList.add('active-dots');
-                element.classList.remove('inactive-dots');
-            }
-        })
+    //     activeYears.forEach(id => {
+    //         let element = document.getElementById(id);
+    //         if (element) {
+    //             element.classList.add('active-dots');
+    //             element.classList.remove('inactive-dots');
+    //         }
+    //     })
 
-        intersection.forEach(id => {
-            let element = document.getElementById(id);
-            if (element) {
-                element.classList.remove('active-dots');
-                element.classList.add('inactive-dots');
-            }
-        })
-    }
+    //     intersection.forEach(id => {
+    //         let element = document.getElementById(id);
+    //         if (element) {
+    //             element.classList.remove('active-dots');
+    //             element.classList.add('inactive-dots');
+    //         }
+    //     })
+    // }
 
     document.addEventListener('DOMContentLoaded', function() {
-        initChart()
-        document.body.addEventListener('click', function(event) {
-            var element = event.target;
-            if (element.classList.contains('open-slide') && !slideOpen) {
-                var value = element.dataset.value;
-                value = JSON.parse(value);
-                window.livewire.emit('slide-over.open', 'company-analysis-slide', value, {force: true});
-                slideOpen = true;
-            }
-        });
-
-
-        const el = document.querySelector('#range-slider-company-analysis');
-
-        if(!el) {
-            return;
-        }
-
-        const rangeDates = {!!json_encode($rangeDates)!!}
-        let selectedValue = [];
-
-        if (rangeDates.length > 0) {
-            if(rangeDates[0] > rangeDates[rangeDates.length - 1]){
-                rangeDates.reverse();
-            }
-
-            selectedValue = [rangeDates[0], rangeDates[rangeDates.length - 1]]
-        }
-
-        let rangeMin = new Date(selectedValue[0]).getFullYear();
-        let rangeMax = selectedValue[1] ? new Date(selectedValue[1]).getFullYear() : new Date().getFullYear();
-        selectedValue[0] = rangeMax - 6;
-        selectedValue[1] = rangeMax;
-
-        recognizeDotsStatus(selectedValue, [rangeMin, rangeMax]);
-
-        rangeSlider(el, {
-            step: 1,
-            min: rangeMin,
-            max: rangeMax,
-            value: selectedValue,
-            rangeSlideDisabled: true,
-            onInput: (value) => {
-                if (value.length === 2 && value !== selectedValue) {
-                    recognizeDotsStatus(value, [rangeMin, rangeMax]);
-                    Livewire.emit("dateChanged", value)
-                }
-            }
-        });
-    });
+        // document.body.addEventListener('click', function(event) {
+        //     var element = event.target;
+        //     if (element.classList.contains('open-slide') && !slideOpen) {
+        //         var value = element.dataset.value;
+        //         value = JSON.parse(value);
+        //         window.livewire.emit('slide-over.open', 'company-analysis-slide', value, {force: true});
+        //         slideOpen = true;
+        //     }
+        // });
+    })
 
     Livewire.on('slide-over.close', () => {
         slideOpen = false;
     });
 
     const annualCheckbox = document.getElementById("date-annual");
+    const fiscalAnnualCheckbox = document.getElementById("date-fiscal-annual");
 
     annualCheckbox.addEventListener("click", function() {
         const currentUrl = window.location.href;
@@ -576,8 +612,18 @@
 
         window.location.href = newUrl;
     });
+    fiscalAnnualCheckbox.addEventListener("click", function() {
+        const currentUrl = window.location.href;
 
+        const separator = currentUrl.includes('?') ? '&' : '?';
+
+        const newUrl = currentUrl + separator + 'period=fiscal-annual';
+
+        window.location.href = newUrl;
+    });
+    // date-fiscal-quarterly
     const quarterlyCheckbox = document.getElementById("date-quarterly");
+    const fiscalQuarterlyCheckbox = document.getElementById("date-fiscal-quaterly");
 
     quarterlyCheckbox.addEventListener("click", function() {
         const currentUrl = window.location.href;
@@ -585,6 +631,15 @@
         const separator = currentUrl.includes('?') ? '&' : '?';
 
         const newUrl = currentUrl + separator + 'period=quarterly';
+
+        window.location.href = newUrl;
+    });
+    fiscalQuarterlyCheckbox.addEventListener("click", function() {
+        const currentUrl = window.location.href;
+
+        const separator = currentUrl.includes('?') ? '&' : '?';
+
+        const newUrl = currentUrl + separator + 'period=fiscal-quarterly';
 
         window.location.href = newUrl;
     });
