@@ -11,6 +11,8 @@ class ComapanyFilingsSummary extends Component
     public $ticker;
     public $period;
 
+    protected $listeners = ['handleFilingsSummaryTab' => 'setTabName'];
+
     public function setTabName($tab){
         $this->tabName = $tab;
     }
