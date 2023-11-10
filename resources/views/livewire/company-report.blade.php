@@ -703,8 +703,8 @@
 
         let rangeMin = new Date(selectedValue[0]).getFullYear();
         let rangeMax = selectedValue[1] ? new Date(selectedValue[1]).getFullYear() : new Date().getFullYear();
-        selectedValue[0] = @this.startDate ?? rangeMax - 6;
-        selectedValue[1] = @this.endDate ?? rangeMax;
+        selectedValue[0] = @this.startDate ? new Date(@this.startDate).getFullYear() : rangeMax - 6;
+        selectedValue[1] = @this.endDate ? new Date(@this.endDate).getFullYear() : rangeMax;
 
         recognizeDotsStatus(selectedValue, [rangeMin, rangeMax]);
 
