@@ -1,0 +1,26 @@
+<?php
+
+namespace App\Http\Livewire\FilingsSummary;
+
+use Livewire\Component;
+
+class AllFilings extends Component
+{
+    public $company;
+    public $ticker;
+    public $data=[];
+    public function render()
+    {
+        for($i=0; $i<200; $i++){
+            $this->data[] = [
+                'name'=>'10-K',
+                'desc' => 'Other event, financial statement and exhibits',
+                'date_1' =>'05/04/2023', 
+                'date_2' => '05/04/2023'
+            ];
+        }
+        return view('livewire.filings-summary.all-filings', [
+            'data' => $this->data
+        ]);
+    }
+}

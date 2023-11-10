@@ -199,6 +199,16 @@ class CompanyController extends BaseController
         ]);
     }
 
+    public function filingsSummary(Request $request, $ticker){
+        $company = Company::where('ticker', $ticker)->get()->first();
+        return view('layouts.company', [
+            'company' => $company,
+            'ticker' => $ticker,
+            'period' => $request->query('period', 'annual'),
+            'tab' => 'filings-summary'
+        ]);
+    }
+
     public function ownership(Request $request, string $ticker)
     {
         $company = Company::query()
