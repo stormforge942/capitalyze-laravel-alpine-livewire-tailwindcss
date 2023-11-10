@@ -4,7 +4,7 @@
         <div class="bg-white p-3 rounded w-full lg:w-[calc(50%-1rem)] mr-0 lg-0 {{$i%2 === 0 ? 'lg:mr-3': 'lg:ml-4'}} mb-5">
             <div class="flex justify-between items-center content-center py-2 mx-[-0.75rem] mb-1 border-b border-grey-light">
                 <div>
-                    <h4 class="mx-3 text-base text-[#3561E7]">{{$item['name']}}</h4>
+                    <h4 class="mx-3 text-[#3561E7] font-[600] text-[0.8125rem]">{{$item['name']}}</h4>
                 </div>
                 <!-- <div class="hidden 2xl:flex justify-start items-center content-center">
                     <div class="mx-2">
