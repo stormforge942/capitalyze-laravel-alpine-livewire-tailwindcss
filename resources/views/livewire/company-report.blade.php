@@ -701,10 +701,25 @@
             selectedValue = [rangeDates[0], rangeDates[rangeDates.length - 1]]
         }
 
+        let startDate;
+        let endDate;
+
+        if (@this.startDate && Number.isInteger(@this.startDate)) {
+            startDate = @this.startDate
+        } else {
+            startDate = new Date(@this.startDate).getFullYear()
+        }
+
+        if (@this.endDate && Number.isInteger(@this.endDate)) {
+            endDate = @this.endDate
+        } else {
+            endDate = new Date(@this.endDate).getFullYear()
+        }
+
         let rangeMin = new Date(selectedValue[0]).getFullYear();
         let rangeMax = selectedValue[1] ? new Date(selectedValue[1]).getFullYear() : new Date().getFullYear();
-        selectedValue[0] = @this.startDate ? new Date(@this.startDate).getFullYear() : rangeMax - 6;
-        selectedValue[1] = @this.endDate ? new Date(@this.endDate).getFullYear() : rangeMax;
+        selectedValue[0] = startDate ?? rangeMax - 6;
+        selectedValue[1] = endDate ?? rangeMax;
 
         recognizeDotsStatus(selectedValue, [rangeMin, rangeMax]);
 
