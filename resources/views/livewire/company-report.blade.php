@@ -623,6 +623,7 @@
 </div>
 @push('scripts')
 <script>
+
     let slideOpen = false;
 
     function generateRangeArray(inputArray) {
@@ -680,67 +681,85 @@
             }
         });
 
+        updateRangeSlider();
+
+     
+        Livewire.hook('message.processed', (message, component) => {
+            console.log(message.updateQueue[0].payload.value)
+            if (message.updateQueue.some(update => update.payload.value === 'Standardised Template' || 'As reported (Harmonized)')) {
+                console.log('updateRangeSlider');
+
+                console.log(@this.rangeDates)
+                // Call your updateRangeSlider function here
+                updateRangeSlider();
+            }
+        });
+       
+
         Livewire.hook('element.updated', () => {
             initChart()
         })
 
-        const el = document.querySelector('#range-slider-company-report');
+        function updateRangeSlider() {
+            const el = document.querySelector('#range-slider-company-report');
 
-        if(!el) {
-            return;
-        }
-
-        const rangeDates = @this.rangeDates
-        let selectedValue = [];
-
-        if (rangeDates.length > 0) {
-            if(rangeDates[0] > rangeDates[rangeDates.length - 1]){
-                rangeDates.reverse();
+            if(!el) {
+                return;
             }
 
-            selectedValue = [rangeDates[0], rangeDates[rangeDates.length - 1]]
-        }
+            let rangeDates = @this.rangeDates
+            let selectedValue = [];
 
-        let startDate;
-        let endDate;
+            if (rangeDates.length > 0) {
+                if(rangeDates[0] > rangeDates[rangeDates.length - 1]){
+                    rangeDates.reverse();
+                }
 
-        if (@this.startDate && Number.isInteger(@this.startDate)) {
-            startDate = @this.startDate
-        } else {
-            startDate = new Date(@this.startDate).getFullYear()
-        }
+                selectedValue = [rangeDates[0], rangeDates[rangeDates.length - 1]]
+            }
 
-        if (@this.endDate && Number.isInteger(@this.endDate)) {
-            endDate = @this.endDate
-        } else {
-            endDate = new Date(@this.endDate).getFullYear()
-        }
+            let startDate;
+            let endDate;
 
-        let rangeMin = new Date(selectedValue[0]).getFullYear();
-        let rangeMax = selectedValue[1] ? new Date(selectedValue[1]).getFullYear() : new Date().getFullYear();
-        selectedValue[0] = startDate ?? rangeMax - 6;
-        selectedValue[1] = endDate ?? rangeMax;
+            if (@this.startDate && Number.isInteger(@this.startDate)) {
+                startDate = @this.startDate
+            } else {
+                startDate = new Date(@this.startDate).getFullYear()
+            }
 
-        recognizeDotsStatus(selectedValue, [rangeMin, rangeMax]);
+            if (@this.endDate && Number.isInteger(@this.endDate)) {
+                endDate = @this.endDate
+            } else {
+                endDate = new Date(@this.endDate).getFullYear()
+            }
 
-        rangeSlider(el, {
-            step: 1,
-            min: rangeMin,
-            max: rangeMax,
-            value: selectedValue,
-            rangeSlideDisabled: true,
-            onInput: (value) => {
-                if (value.length === 2 && value !== selectedValue) {
-                    recognizeDotsStatus(value, [rangeMin, rangeMax]);
-                    @this.changeDates(value)
+            let rangeMin = new Date(selectedValue[0]).getFullYear();
+            let rangeMax = selectedValue[1] ? new Date(selectedValue[1]).getFullYear() : new Date().getFullYear();
+            selectedValue[0] = startDate ?? rangeMax - 6;
+            selectedValue[1] = endDate ?? rangeMax;
 
-                    if (chart) {
-                        chart.destroy();
+            recognizeDotsStatus(selectedValue, [rangeMin, rangeMax]);
+
+            rangeSlider(el, {
+                step: 1,
+                min: rangeMin,
+                max: rangeMax,
+                value: selectedValue,
+                rangeSlideDisabled: true,
+                onInput: (value) => {
+                    if (value.length === 2 && value !== selectedValue) {
+                        recognizeDotsStatus(value, [rangeMin, rangeMax]);
+                        @this.changeDates(value)
+
+                        if (chart) {
+                            chart.destroy();
+                        }
                     }
                 }
-            }
-        });
+            });
+        }
     });
+    
 
     Livewire.on('slide-over.close', () => {
         slideOpen = false;

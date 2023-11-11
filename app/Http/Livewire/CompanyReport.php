@@ -527,6 +527,8 @@ class CompanyReport extends Component
         if ($propertyName === 'view') {
             $this->getData();
         }
+
+        dd($this->tableDates);
     }
 
     public function updatedPeriod()
