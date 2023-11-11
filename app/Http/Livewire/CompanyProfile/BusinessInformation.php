@@ -17,7 +17,7 @@ class BusinessInformation extends Component
         $ticker = $data['profile']['symbol'];
 
         $this->menuLinks = CompanyPresentation::query()
-            ->where('business', '!=', null)
+            ->where('form_type', '10-K')
             ->where('symbol', $ticker)
             ->orderByDesc('acceptance_time')
             ->first()
