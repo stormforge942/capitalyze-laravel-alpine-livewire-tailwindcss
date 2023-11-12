@@ -12,13 +12,34 @@ class Summary extends Component
     public function render()
     {
         $this->titles = [
-            ['name' => 'Financials'],
-            ['name' => 'News'],
-            ['name' => 'Registration and Prospectus'],
-            ['name' => 'Proxy Materials'],
-            ['name' => 'Ownership'],
-            ['name' => 'Insider Equity'],
-            ['name' => 'Others']
+            [
+                'name' => 'Financials',
+                'value' => 'financials'
+            ],
+            [
+                'name' => 'News',
+                'value' => 'news'
+            ],
+            [
+                'name' => 'Registration and Prospectus',
+                'value' => 'registrations-and-prospectuses'
+            ],
+            [
+                'name' => 'Proxy Materials',
+                'value' => 'proxy-materials'
+            ],
+            [
+                'name' => 'Ownership',
+                'value' => 'ownership'
+            ],
+            [
+                'name' => 'Insider Equity',
+                'value' => 'insider-equity'
+            ],
+            [
+                'name' => 'Others',
+                'value' => 'other'
+            ]
         ];
         for($i=0; $i<200; $i++){
             $this->data[] = [
@@ -34,7 +55,9 @@ class Summary extends Component
         ]);
     }
 
-    public function handleViewAll(){
-        $this->emit('handleFilingsSummaryTab', 'all-filings');
+    public function handleViewAll($val){
+        //$this->emit('handleAllFilingsTabs', $val);
+        $this->emit('handleFilingsSummaryTab', ['all-filings', $val]);
+        
     }
 }

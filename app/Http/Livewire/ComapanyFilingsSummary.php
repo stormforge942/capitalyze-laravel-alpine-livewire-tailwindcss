@@ -14,7 +14,11 @@ class ComapanyFilingsSummary extends Component
     protected $listeners = ['handleFilingsSummaryTab' => 'setTabName'];
 
     public function setTabName($tab){
-        $this->tabName = $tab;
+        $selectedTab = is_array($tab) ? $tab[0] : $tab;
+        $this->tabName = $selectedTab;
+        if(is_array($tab)){
+            $this->emit('handleAllFilingsTabs', $tab[1]);
+        }
     }
     
     public function render()
