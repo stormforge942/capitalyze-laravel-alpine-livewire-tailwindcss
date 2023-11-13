@@ -12,6 +12,10 @@
     ]" />
 
     <x-primary-tabs class="mt-6" :tabs="['discover' => 'Discover', 'favorite' => 'My Favorites']">
+        <x-slot name="head">
+            @include('livewire.track-investor.search')
+        </x-slot>
+        
         <template x-if="active == 'discover'">
             Hello wold
         </template>
