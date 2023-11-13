@@ -2,6 +2,7 @@
 
 namespace App\Http\Livewire;
 
+use Illuminate\Support\Facades\DB;
 use Livewire\Component;
 
 class CompanyAnalysisGraph extends Component
@@ -15,12 +16,21 @@ class CompanyAnalysisGraph extends Component
     public $name;
     public $segments;
     public $products;
+    public $period;
 
     protected $listeners = ['initChart'];
 
 
-    public function initChart($selectedYears = null)
+    public function initChart($selectedYears = null, $source)
     {
+        $this->getProducts('arps');
+        $this->chartData['annual'] = $this->generateChartData($selectedYears);
+        $this->getProducts('qrps');
+        $this->chartData['quarterly'] = $this->generateChartData($selectedYears);
+        $this->dispatchBrowserEvent('refreshChart', $this->chartData);
+    }
+
+    public function generateChartData($selectedYears = null){
         if($selectedYears){
             $this->years = $selectedYears;
         }
@@ -64,12 +74,55 @@ class CompanyAnalysisGraph extends Component
             }
             $dataSets[] = $set;
         }
-        // $this->dispatchBrowserEvent("dateschanged", json_encode($dataSets));
-        $this->chartData = $dataSets;
+        return $dataSets;
+    }
+
+
+
+    public function getProducts($source)
+    {
+        $json = DB::connection('pgsql-xbrl')
+            ->table('as_reported_sec_segmentation_api')
+            ->where('ticker', '=', $this->ticker)
+            ->where('endpoint', '=', $source)
+            ->value('api_return_open_ai');
+
+        $data = json_decode($json, true);
+        $products = [];
+        $dates = [];
+        $segments = [];
+
+        if ($json === null) {
+            $this->noData = true;
+
+            return;
+        }
+
+        foreach ($data as $date) {
+            $key = array_key_first($date);
+            $dates[] = $key;
+            $products[$key] = $date[$key];
+            $keys = array_keys($products[$key]);
+            foreach ($keys as $subkey) {
+                if (!in_array($subkey, $segments, true)) {
+                    $segments[] = $subkey;
+                }
+            }
+        }
+
+        $this->json = base64_encode($json);
+        if($source == 'arps'){
+            $this->products = array_slice($products, 0, 6);
+            $this->segments = array_slice($segments, 0, 6);
+        }
+        else{
+            $this->products = $products;
+            $this->segments = $segments;
+        }
     }
 
     public function mount(){
-        $this->initChart();
+        $this->initChart(null, 'arps');
     }
 
     public function render()

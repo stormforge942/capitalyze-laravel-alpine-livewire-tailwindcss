@@ -38,7 +38,7 @@ class CompanyAnalysis extends Component
     public $decimalPoint = 0;
     public $reverseOrder = false;
 
-    protected $listeners = ['tabClicked', 'tabSubClicked', 'analysisDatesChanged', 'decimalChange'];
+    protected $listeners = ['tabClicked', 'tabSubClicked', 'analysisDatesChanged', 'decimalChange', 'periodChanged'];
 
     public function decimalChange($decimal){
         $this->decimalPoint = $decimal;
@@ -77,6 +77,26 @@ class CompanyAnalysis extends Component
             return array_reverse($this->years);
         }
         return $this->years;
+    }
+
+    public function periodChanged($period){
+        $this->period = $period == 'arps' ? 'annual' : 'quarterly';
+        $this->getProducts();
+        $this->getTickerPresentation();
+        $this->rangeDates = array_keys($this->products);
+
+        $this->years = array_reverse(array_keys($this->products));
+        if($this->reverseOrder){
+            $this->years = array_keys($this->products);
+        }
+        if($this->period != "annual"){
+            $this->rangeDates = [
+                min($this->rangeDates),
+                max($this->rangeDates)
+            ];
+        }
+        $this->minDate = array_reverse($this->years)[0];
+        $this->maxDate = $this->years[0];
     }
 
     public function mount(Request $request, $company, $ticker, $period)
@@ -150,8 +170,14 @@ class CompanyAnalysis extends Component
         }
 
         $this->json = base64_encode($json);
-        $this->products = array_slice($products, 0, 6);
-        $this->segments = array_slice($segments, 0, 6);
+        if($source == 'arps'){
+            $this->products = array_slice($products, 0, 6);
+            $this->segments = array_slice($segments, 0, 6);
+        }
+        else{
+            $this->products = $products;
+            $this->segments = $segments;
+        }
     }
 
 

@@ -303,6 +303,28 @@ span.business-footer-text a {
     -webkit-transition: all 0.2s ease;
     transition: all 0.2s ease;
 }
+.show-hide-chart-btn {
+    width: 148px;
+height: 32px;
+border-radius: 0px 8px 2px 2px;
+background: rgba(82, 211, 162, 0.20);
+font-size: 12px;
+font-style: normal;
+font-weight: 500;
+line-height: 16px;
+color: #121A0F;
+position: relative;
+}
+.show-hide-chart-btn svg {
+    position: absolute;
+    right: 10px;
+    top: 50%;
+    transform: translateY(-50%);
+    width: 16px;
+    height: 16px;
+    font-size: 16px;
+    color: #121A0F;
+}
 .graph-wrapper [type="radio"]:not(:checked) + label:after {
     opacity: 0;
     -webkit-transform: scale(0);

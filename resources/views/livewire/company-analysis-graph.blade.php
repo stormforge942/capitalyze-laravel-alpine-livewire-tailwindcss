@@ -1,10 +1,10 @@
-<div class="main-graph-wrapper main-graph-rev w-full" x-data="{ showgraph: true }">
-    <div
+<div class="main-graph-wrapper main-graph-rev w-full" x-show="showgraph">
+    <div x-show="showgraph"
         :class="{ 'custom-dropdown-absolute-wrapper': !showgraph, 'custom-dropdown-absolute-wrapper abs-custom': showgraph }">
         <div class="relative custom-dropdown-absolute-wrapper-inner flex justify-end" x-data="{
             chartMenuOpen: false
         }">
-            <div>
+            <div x-show="showgraph">
                 <button type="button" @click="chartMenuOpen = !chartMenuOpen"
                     class="custom-drop-down-button hide-mobile" id="menu-button" aria-expanded="true"
                     aria-haspopup="true">
@@ -31,9 +31,9 @@
                 <div class="py-1" role="none">
                     <!-- Active: "bg-gray-100 text-gray-900", Not Active: "text-gray-700" -->
                     <div class="links-wrapper mb-3">
-                        <a href="#" x-show="showgraph" @click="showgraph = !showgraph" class="menu_link" role="menuitem"
+                        <a href="#" x-show="showgraph" @click="showgraph = !showgraph; chartMenuOpen = false" class="menu_link" role="menuitem"
                             tabindex="-1" id="menu-item-0">Hide Chart</a>
-                        <a href="#" x-show="!showgraph" @click="showgraph = !showgraph" class="menu_link"
+                        <a href="#" x-show="!showgraph" @click="showgraph = !showgraph; chartMenuOpen = false" class="menu_link"
                             role="menuitem" tabindex="-1" id="menu-item-0">Show Chart</a>
                         <a href="#" class="menu_link" role="menuitem" tabindex="-1" id="menu-item-1">View In Full
                             Screen</a>
@@ -231,6 +231,7 @@
 <script>
     let labelsVisible = false
     let chart = null
+    let period = 'arps'
     let data = {!!json_encode($chartData)!!};
     let reverseData = false;
     document.addEventListener('DOMContentLoaded', function() {
@@ -245,7 +246,7 @@
     let chartType = 'values'
     function typeChanged(type){
         chartType = type
-        filteredData.forEach((value, pindex) => {
+        filteredData[period == 'arps' ? 'annual' : 'quarterly'].forEach((value, pindex) => {
             let finalData = []
             value.data.forEach((data, cindex) => {
                 if(type == 'percentage'){
@@ -263,9 +264,15 @@
     Livewire.on("decimalChanged", () => {
         initChart(filteredData)
     })
+
+    Livewire.on('periodChanged', (v) => {
+        period = v
+        initChart(filteredData)
+    })
+
     Livewire.on('unitChanged', (v) => {
         filteredData = {!!json_encode($chartData)!!}
-        filteredData.forEach((value, pindex) => {
+        filteredData[period == 'arps' ? 'annual' : 'quarterly'].forEach((value, pindex) => {
             let finalData = []
             value.data.forEach((data, cindex) => {
                 if(v == 'thousands'){
@@ -287,7 +294,7 @@
                     finalData.push(data)
                 }
             })
-            filteredData[pindex].data = finalData
+            filteredData[period == 'arps' ? 'annual' : 'quarterly'][pindex].data = finalData
         })
 
         console.log(filteredData)
@@ -301,7 +308,7 @@
         filteredData = {!!json_encode($chartData)!!}
         let startDate = dates[0]
         let endDate = dates[1]
-        filteredData.forEach((value, pindex) => {
+        filteredData[period == 'arps' ? 'annual' : 'quarterly'].forEach((value, pindex) => {
             let finalData = []
             value.data.forEach((data, cindex) => {
                 let currentDate = parseInt(new Date(data.x).getFullYear())
@@ -309,8 +316,14 @@
                     finalData.push(data)
                 }
             })
-            filteredData[pindex].data = finalData
+            filteredData[period == 'arps' ? 'annual' : 'quarterly'][pindex].data = finalData
         })
+        initChart(filteredData)
+    })
+
+    document.addEventListener('refreshChart', (data) => {
+        console.log(data)
+        filteredData = data.detail
         initChart(filteredData)
     })
 
@@ -456,9 +469,14 @@
             if(filteredData){
                 data = filteredData
             }
-            if(reverseData){
-                // data.reverse()
+
+            if(period == 'arps'){
+                data = data['annual']
             }
+            else {
+                data = data['quarterly']
+            }
+
             let canvas = document.getElementById("product-profile-chart");
             if (!canvas) return;
             let ctx = document.getElementById('product-profile-chart').getContext("2d");
@@ -507,7 +525,6 @@
                     },
                     plugins: {
                         datalabels: {
-                            display: labelsVisible,
                             anchor: 'center',
                             align: 'center',
                             formatter: (v) => {
@@ -545,7 +562,7 @@
                             },
                         },
                         legend: {
-                            display: true,
+                            display: labelsVisible,
                             position: 'bottom',
                             labels: {
                                 boxWidth: 16,

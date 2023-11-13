@@ -304,7 +304,7 @@
                                         </div>
                                     </div>
                                 </div>
-                                <div class="filters-row flex items-center mt-2 text-sm">
+                                <div wire:ignore class="filters-row flex items-center mt-2 text-sm">
                                     <b class="mr-3">Period Type:</b>
                                     <ul class="flex soft-radio-wrapper big-checked items-center">
                                         <li class="mr-2">
@@ -383,21 +383,52 @@
                                         let rangeMax = selectedValue[1] ? new Date(selectedValue[1]).getFullYear() : new Date().getFullYear();
                                         selectedValue[0] = rangeMin
                                         selectedValue[1] = rangeMax;
+                                        recognizeDotsStatus(selectedValue, [rangeMin, rangeMax]);
                                         rangeSlider(el, {
                                             step: 1,
                                             min: rangeMin,
                                             max: rangeMax,
                                             value: selectedValue,
-                                            rangeSlideDisabled: true,
+                                            rangeSlideDisabled: false,
                                             onInput: (value, e) => {
                                                 if (value.length === 2 && value !== selectedValue) {
+                                                    recognizeDotsStatus(selectedValue, [rangeMin, rangeMax]);
                                                     Livewire.emit("analysisDatesChanged", value)
                                                 }
                                             },
                                         });
+                                        function recognizeDotsStatus(value, baseArray) {
+                                                let base = generateRangeArray(baseArray)
+                                                let activeYears = generateRangeArray(value)
+                                                let intersection = base.filter(x => !activeYears.includes(x));
+
+                                                activeYears.forEach(id => {
+                                                    let element = document.getElementById(id);
+                                                    if (element) {
+                                                        element.classList.add("active-dots");
+                                                        element.classList.remove("inactive-dots");
+                                                    }
+                                                })
+
+                                                intersection.forEach(id => {
+                                                    let element = document.getElementById(id);
+                                                    if (element) {
+                                                        element.classList.remove("active-dots");
+                                                        element.classList.add("inactive-dots");
+                                                    }
+                                                })
+                                            }
                                     }'></div>
                                 </div>
-                                <div>
+                                <div x-data="{ showgraph: false }">
+                                    <div class="flex justify-end" x-show="!showgraph" @click="showgraph = true">
+                                        <button class="show-hide-chart-btn">
+                                            Show Chart
+                                            <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 16 16" fill="none">
+                                                <path d="M10.3083 6.19514L7.72167 8.78378L5.135 6.19514C5.01045 6.07021 4.84135 6 4.665 6C4.48865 6 4.31955 6.07021 4.195 6.19514C3.935 6.45534 3.935 6.87566 4.195 7.13585L7.255 10.1982C7.515 10.4584 7.935 10.4584 8.195 10.1982L11.255 7.13585C11.515 6.87566 11.515 6.45534 11.255 6.19514C10.995 5.94161 10.5683 5.93494 10.3083 6.19514Z" fill="#121A0F"/>
+                                              </svg>
+                                        </button>
+                                    </div>
                                     @livewire('company-analysis-graph', [
                                         'years' => $years,
                                         'minDate' => $minDate,
@@ -405,7 +436,8 @@
                                         'ticker' => $ticker,
                                         'name' => $company->name,
                                         'products' => $products,
-                                        'segments' => $segments
+                                        'segments' => $segments,
+                                        'period' => $period,
                                         ])
                                 </div>
                                 <div class="w-full">
@@ -421,7 +453,7 @@
                                                 @foreach ($segments as $index => $segment)
                                                     <div class="row ">
                                                         <div class="font-bold cell">
-                                                            {{ $segment }}
+                                                            {{ str_replace('[Member]', '', $segment) }}
                                                         </div>
                                                         @foreach ($this->selectedRange as $key => $date)
                                                             @if (array_key_exists($segment, $products[$date]))
@@ -562,27 +594,7 @@
         return rangeArray;
     }
 
-    // function recognizeDotsStatus(value, baseArray) {
-    //     let base = generateRangeArray(baseArray)
-    //     let activeYears = generateRangeArray(value)
-    //     let intersection = base.filter(x => !activeYears.includes(x));
 
-    //     activeYears.forEach(id => {
-    //         let element = document.getElementById(id);
-    //         if (element) {
-    //             element.classList.add('active-dots');
-    //             element.classList.remove('inactive-dots');
-    //         }
-    //     })
-
-    //     intersection.forEach(id => {
-    //         let element = document.getElementById(id);
-    //         if (element) {
-    //             element.classList.remove('active-dots');
-    //             element.classList.add('inactive-dots');
-    //         }
-    //     })
-    // }
 
     document.addEventListener('DOMContentLoaded', function() {
         // document.body.addEventListener('click', function(event) {
@@ -604,44 +616,48 @@
     const fiscalAnnualCheckbox = document.getElementById("date-fiscal-annual");
 
     annualCheckbox.addEventListener("click", function() {
-        const currentUrl = window.location.href;
+        Livewire.emit('periodChanged', 'arps')
+        // const currentUrl = window.location.href;
 
-        const separator = currentUrl.includes('?') ? '&' : '?';
+        // const separator = currentUrl.includes('?') ? '&' : '?';
 
-        const newUrl = currentUrl + separator + 'period=annual';
+        // const newUrl = currentUrl + separator + 'period=annual';
 
-        window.location.href = newUrl;
+        // window.location.href = newUrl;
     });
     fiscalAnnualCheckbox.addEventListener("click", function() {
-        const currentUrl = window.location.href;
+        Livewire.emit('periodChanged', 'arps')
+        // const currentUrl = window.location.href;
 
-        const separator = currentUrl.includes('?') ? '&' : '?';
+        // const separator = currentUrl.includes('?') ? '&' : '?';
 
-        const newUrl = currentUrl + separator + 'period=fiscal-annual';
+        // const newUrl = currentUrl + separator + 'period=fiscal-annual';
 
-        window.location.href = newUrl;
+        // window.location.href = newUrl;
     });
     // date-fiscal-quarterly
     const quarterlyCheckbox = document.getElementById("date-quarterly");
     const fiscalQuarterlyCheckbox = document.getElementById("date-fiscal-quaterly");
 
     quarterlyCheckbox.addEventListener("click", function() {
-        const currentUrl = window.location.href;
+        Livewire.emit('periodChanged', 'qrps')
+        // const currentUrl = window.location.href;
 
-        const separator = currentUrl.includes('?') ? '&' : '?';
+        // const separator = currentUrl.includes('?') ? '&' : '?';
 
-        const newUrl = currentUrl + separator + 'period=quarterly';
+        // const newUrl = currentUrl + separator + 'period=quarterly';
 
-        window.location.href = newUrl;
+        // window.location.href = newUrl;
     });
     fiscalQuarterlyCheckbox.addEventListener("click", function() {
-        const currentUrl = window.location.href;
+        Livewire.emit('periodChanged', 'qrps')
+        // const currentUrl = window.location.href;
 
-        const separator = currentUrl.includes('?') ? '&' : '?';
+        // const separator = currentUrl.includes('?') ? '&' : '?';
 
-        const newUrl = currentUrl + separator + 'period=fiscal-quarterly';
+        // const newUrl = currentUrl + separator + 'period=fiscal-quarterly';
 
-        window.location.href = newUrl;
+        // window.location.href = newUrl;
     });
 
     const unitTypeDropdownCloseIcon = document.getElementById("unitTypeClose");
