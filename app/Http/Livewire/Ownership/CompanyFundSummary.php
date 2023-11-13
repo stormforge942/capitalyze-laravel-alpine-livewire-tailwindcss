@@ -97,7 +97,7 @@ class CompanyFundSummary extends Component
                 ->table('industry_summary')
                 ->where('cik', '=', $this->cik)
                 ->where('date', '=', $lastestQuarter)
-                ->select('industry_title', 'weight', 'performance_percentage')
+                ->select('industry_title', 'weight')
                 ->orderBy('weight', 'desc')
                 ->limit(15)
                 ->get()
@@ -105,7 +105,7 @@ class CompanyFundSummary extends Component
                     return [
                         'name' => Str::title($item->industry_title),
                         'weight' => number_format($item->weight, 2),
-                        'conversionRate' => $item->performance_percentage,
+                        'conversionRate' => number_format($item->weight, 2),
                     ];
                 });
         }
