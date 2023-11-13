@@ -625,6 +625,7 @@
 <script>
 
     let slideOpen = false;
+    const el = document.querySelector('#range-slider-company-report');
 
     function generateRangeArray(inputArray) {
         if (inputArray.length !== 2) {
@@ -688,8 +689,6 @@
             console.log(message.updateQueue[0].payload.value)
             if (message.updateQueue.some(update => update.payload.value === 'Standardised Template' || 'As reported (Harmonized)')) {
                 console.log('updateRangeSlider');
-
-                console.log(@this.rangeDates)
                 // Call your updateRangeSlider function here
                 updateRangeSlider();
             }
@@ -701,7 +700,6 @@
         })
 
         function updateRangeSlider() {
-            const el = document.querySelector('#range-slider-company-report');
 
             if(!el) {
                 return;

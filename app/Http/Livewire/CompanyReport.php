@@ -320,6 +320,7 @@ class CompanyReport extends Component
         $this->selectedValue[0] = $this->startDate ?? date('Y-m-d', $rangeMax - 6 * 365 * 24 * 60 * 60);
         $this->selectedValue[1] = $this->endDate ?? $this->rangeDates[count($this->rangeDates) - 1];
         $this->changeDates($this->selectedValue);
+
     }
 
     public function generateRows($data)
@@ -528,7 +529,6 @@ class CompanyReport extends Component
             $this->getData();
         }
 
-        dd($this->tableDates);
     }
 
     public function updatedPeriod()
