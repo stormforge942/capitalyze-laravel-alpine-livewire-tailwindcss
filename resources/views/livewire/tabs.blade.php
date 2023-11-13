@@ -1,4 +1,4 @@
-<x-primary-tabs :active="$active" :tabs="$tabs" @tab-changed="$wire.changeTab($event.key)">
+<x-primary-tabs :active="$active" :tabs="$tabs" @tab-changed="{{ $ssr ? '$wire.changeTab($event.detail.key)' : '' }}">
     <div class="place-items-center" wire:loading.grid>
         <span class="mx-auto simple-loader !text-green-dark"></span>
     </div>

@@ -1,7 +1,7 @@
 <div x-data="{
     active: '{{ $active }}',
     dropdown: null,
-    tabs: JSON.parse('{{ htmlspecialchars(json_encode($tabs), JSON_HEX_APOS, 'UTF-8') }}'),
+    tabs: @js($tabs),
     changeTab(key) {
         if (this.active === key) return;
 

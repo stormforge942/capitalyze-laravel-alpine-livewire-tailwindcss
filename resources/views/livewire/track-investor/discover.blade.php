@@ -29,7 +29,7 @@
         <div class="grid gap-4 grid-cols-1 md:grid-cols-2 lg:grid-cols-[repeat(auto-fill,minmax(17.19rem,1fr))]" wire:loading.remove wire:target="search">
             @foreach ($funds as $fund)
                 <livewire:track-investor.fund-card :fund="$fund"
-                    :wire:key="$fund['cik'] . $fund['investor_name']" />
+                    :wire:key="($fund['isFavorite'] ? 'fav' : 'normal') . $fund['cik'] . $fund['investor_name']" />
             @endforeach
         </div>
     </div>

@@ -7,5 +7,5 @@
 
     <input type="search"
         class="h-6 w-[9rem] sm:w-auto xl:w-[21.5rem] appearance-none bg-transparent border-0 ring-0 focus:outline-0 focus-within:ring-0 focus-within:outline-0"
-        placeholder="Search funds..." wire:model.debounce="search">
+        placeholder="Search funds..." @change="Livewire.emit('update:search', $event.target.value)">
 </div>
