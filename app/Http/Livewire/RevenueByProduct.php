@@ -36,6 +36,7 @@ class RevenueByProduct extends Component
     public $quarterRange = [];
     public $decimalPoint = 0;
     public $reverseOrder = false;
+    public $chartId = "rbp";
 
     protected $listeners = ['tabClicked', 'tabSubClicked', 'analysisDatesChanged', 'decimalChange', 'periodChanged'];
 
@@ -55,19 +56,17 @@ class RevenueByProduct extends Component
     {
         $this->years = array_reverse(array_keys($this->products));
         if($this->reverseOrder){
-            $this->years = array_keys($this->products);
+            $this->years = array_reverse(array_keys($this->products));
         }
         $this->minDate = $value[0];
         $this->maxDate = $value[1];
-        foreach (array_keys($this->products) as $key => $year) {
-            if (date('Y', strtotime($year)) < $this->minDate) {
-                unset($this->years[$key]);
-            }
-            if (date('Y', strtotime($year)) > $this->maxDate) {
-                unset($this->years[$key]);
+        $range = [];
+        foreach ($this->years as $key => $year) {
+            if (!(date('Y', strtotime($year)) < $this->minDate || date('Y', strtotime($year)) > $this->maxDate)) {
+                $range[] = $year;
             }
         }
-        $this->years = array_values($this->years);
+        $this->years = $range;
     }
 
     function getSelectedRangeProperty()

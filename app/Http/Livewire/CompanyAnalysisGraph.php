@@ -17,6 +17,7 @@ class CompanyAnalysisGraph extends Component
     public $segments;
     public $products;
     public $period;
+    public $chartId;
 
     protected $listeners = ['initChart'];
 

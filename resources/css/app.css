@@ -544,6 +544,9 @@ line-height: normal;
 #range-slider-company-analysis {
     max-width: 100% !important;
 }
+div#range-slider-company-analysis-geography {
+    max-width: 100% !important;
+}
 .graph-header-flex {
     justify-content: space-between;
 }

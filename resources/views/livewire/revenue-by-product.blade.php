@@ -161,7 +161,7 @@
                 <button type="submit" id="dropdownFreezePanesButton" data-dropdown-toggle="dropdown-FreezePanes"
                     class="flex items-center flowbite-select bg-gray-50 border border-gray-700 text-gray-900 text-sm ml-2 p-2"
                     name="view" id="">
-                    {{$freezePanes}}
+                    Top Row
                     <svg width="16" height="16" viewBox="0 0 16 16" fill="none" xmlns="http://www.w3.org/2000/svg">
                         <path
                             d="M10.3083 6.19514L7.72167 8.78378L5.135 6.19514C5.01045 6.07021 4.84135 6 4.665 6C4.48865 6 4.31955 6.07021 4.195 6.19514C3.935 6.45534 3.935 6.87566 4.195 7.13585L7.255 10.1982C7.515 10.4584 7.935 10.4584 8.195 10.1982L11.255 7.13585C11.515 6.87566 11.515 6.45534 11.255 6.19514C10.995 5.94161 10.5683 5.93494 10.3083 6.19514Z"
@@ -185,7 +185,7 @@
                         <li>
                             <div class="flex p-2 rounded hover:bg-[#52D3A233] cursor-pointer">
                                 <div class="flex items-center h-5 cursor-pointer">
-                                    <input wire:model="freezePanes" @if($view==='Top Row' ) checked @endif
+                                    <input wire:model="freezePanes"
                                         id="freezePanes-radio-1" name="freezePanes-radio" type="radio" value="Top Row"
                                         class="cursor-pointer w-4 h-4 text-[#686868] bg-transpearent border-[#686868] border-2">
                                 </div>
@@ -200,7 +200,7 @@
                         <li>
                             <div class="flex p-2 rounded hover:bg-[#52D3A233] cursor-pointer">
                                 <div class="flex items-center h-5 cursor-pointer">
-                                    <input wire:model="freezePanes" @if($view==='First Column' ) checked @endif
+                                    <input wire:model="freezePanes"
                                         id="freezePanes-radio-2" name="freezePanes-radio" type="radio"
                                         value="First Column"
                                         class="cursor-pointer w-4 h-4 text-[#686868] bg-transpearent border-[#686868] border-2">
@@ -216,8 +216,7 @@
                         <li>
                             <div class="flex p-2 rounded hover:bg-[#52D3A233] cursor-pointer">
                                 <div class="flex items-center h-5 cursor-pointer">
-                                    <input wire:model="freezePanes" @if($view==='Top Row & First Column' ) checked
-                                        @endif id="freezePanes-radio-3" name="freezePanes-radio" type="radio"
+                                    <input wire:model="freezePanes"id="freezePanes-radio-3" name="freezePanes-radio" type="radio"
                                         value="Top Row & First Column"
                                         class="cursor-pointer w-4 h-4 text-[#686868] bg-transpearent border-[#686868] border-2">
                                 </div>
@@ -457,6 +456,7 @@
         'products' => $products,
         'segments' => $segments,
         'period' => $period,
+        'chartId' => 'rbp'
         ])
     </div>
     <div class="w-full">

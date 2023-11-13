@@ -31,10 +31,10 @@
                 <div class="py-1" role="none">
                     <!-- Active: "bg-gray-100 text-gray-900", Not Active: "text-gray-700" -->
                     <div class="links-wrapper mb-3">
-                        <a href="#" x-show="showgraph" @click="showgraph = !showgraph; chartMenuOpen = false" class="menu_link" role="menuitem"
-                            tabindex="-1" id="menu-item-0">Hide Chart</a>
-                        <a href="#" x-show="!showgraph" @click="showgraph = !showgraph; chartMenuOpen = false" class="menu_link"
-                            role="menuitem" tabindex="-1" id="menu-item-0">Show Chart</a>
+                        <a href="#" x-show="showgraph" @click="showgraph = !showgraph; chartMenuOpen = false"
+                            class="menu_link" role="menuitem" tabindex="-1" id="menu-item-0">Hide Chart</a>
+                        <a href="#" x-show="!showgraph" @click="showgraph = !showgraph; chartMenuOpen = false"
+                            class="menu_link" role="menuitem" tabindex="-1" id="menu-item-0">Show Chart</a>
                         <a href="#" class="menu_link" role="menuitem" tabindex="-1" id="menu-item-1">View In Full
                             Screen</a>
                         <a href="#" class="menu_link" role="menuitem" tabindex="-1" id="menu-item-2">Print
@@ -148,27 +148,23 @@
                 <div class="select-graph-date-wrapper desktop-show ml-12 flex">
                     <ul class="items-center w-full flex custom_radio_wrapper">
                         <li class="">
-                            <input value="Values" id="Values" type="radio"
-                                name="chart-type" name="radio-group" checked>
+                            <input value="Values" id="Values" type="radio" name="chart-type" name="radio-group" checked>
                             <label for="Values" onclick="typeChanged('values')">Values</label>
                         </li>
                         <li class="">
-                            <input value="Percentage Mix" id="Percentage" type="radio"
-                                name="chart-type" name="radio-group">
+                            <input value="Percentage Mix" id="Percentage" type="radio" name="chart-type"
+                                name="radio-group">
                             <label for="Percentage" onclick="typeChanged('percentage')">Percentage Mix</label>
                         </li>
-                         <li class="custom_checkbox" x-data="{toggle: false, toggle2: false}">
+                        <li class="custom_checkbox" x-data="{toggle: false, toggle2: false}">
                             <button
-                            class="flex items-center transition ease-in-out duration-300 w-7 h-3 bg-gray-custom rounded-full focus:outline-none"
-                            :class="{ 'bg-gray-custom': toggle2 }"
-                            x-on:click="toggle2 = !toggle2; showLabels(toggle2)"
-                          >
-                            <div
-                              class="transition ease-in-out duration-300 rounded-full h-4 w-4 bg-white shadow border"
-                              :class="{ 'transform translate-x-full ': toggle2 }"
-                            ></div>
-                          </button> <span class="title">Show Labels</span>
-                         </li>
+                                class="flex items-center transition ease-in-out duration-300 w-7 h-3 bg-gray-custom rounded-full focus:outline-none"
+                                :class="{ 'bg-gray-custom': toggle2 }"
+                                x-on:click="toggle2 = !toggle2; showLabels(toggle2)">
+                                <div class="transition ease-in-out duration-300 rounded-full h-4 w-4 bg-white shadow border"
+                                    :class="{ 'transform translate-x-full ': toggle2 }"></div>
+                            </button> <span class="title">Show Labels</span>
+                        </li>
 
                     </ul>
 
@@ -178,9 +174,9 @@
             {{-- <div class="place-items-center h-96" wire:loading.grid>
                 <span class="mx-auto simple-loader !text-green-dark"></span>
             </div>
-             --}}
+            --}}
             <div class="mt-3 mr-5" wire:loading.remove x-show="showgraph" x-transition>
-                <canvas id="product-profile-chart" wire:ignore></canvas>
+                <canvas id="{{$chartId}}canvas" wire:ignore></canvas>
             </div>
             <div class="flex justify-end">
                 <div class="mr-5 mt-5">
@@ -227,27 +223,28 @@
 </div>
 
 @push('scripts')
-<script src="https://cdn.jsdelivr.net/npm/chartjs-plugin-datalabels@2.0.0/dist/chartjs-plugin-datalabels.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/chartjs-plugin-datalabels@2.0.0/dist/chartjs-plugin-datalabels.min.js">
+</script>
 <script>
-    let labelsVisible = false
-    let chart = null
-    let period = 'arps'
-    let data = {!!json_encode($chartData)!!};
-    let reverseData = false;
+    let {{$chartId}}labelsVisible = false
+    let {{$chartId}}chart = null
+    let {{$chartId}}period = 'arps'
+    let {{$chartId}}data = {!!json_encode($chartData)!!};
+    let {{$chartId}}reverseData = false;
     document.addEventListener('DOMContentLoaded', function() {
         initChart()
     })
-    let filteredData = {!!json_encode($chartData)!!}
+    let {{$chartId}}filteredData = {!!json_encode($chartData)!!}
 
     function showLabels(v){
         labelsVisible = v
-        initChart(filteredData)
+        initChart({{$chartId}}filteredData)
     }
-    let chartType = 'values'
+    let {{$chartId}}chartType = 'values'
     function typeChanged(type){
-        chartType = type
-        filteredData[period == 'arps' ? 'annual' : 'quarterly'].forEach((value, pindex) => {
-            let finalData = []
+        {{$chartId}}chartType = type
+        {{$chartId}}filteredData[{{$chartId}}period == 'arps' ? 'annual' : 'quarterly'].forEach((value, pindex) => {
+            let {{$chartId}}finalData = []
             value.data.forEach((data, cindex) => {
                 if(type == 'percentage'){
                     data.y = data.percentage
@@ -255,111 +252,111 @@
                 else {
                     data.y = data.revenue
                 }
-                finalData.push(data)
+                {{$chartId}}finalData.push(data)
             })
-            filteredData[pindex].data = finalData
+            {{$chartId}}filteredData[pindex].data = {{$chartId}}finalData
         })
-        initChart(filteredData)
+        initChart({{$chartId}}filteredData)
     }
     Livewire.on("decimalChanged", () => {
-        initChart(filteredData)
+        initChart({{$chartId}}filteredData)
     })
 
     Livewire.on('periodChanged', (v) => {
-        period = v
-        initChart(filteredData)
+        {{$chartId}}period = v
+        initChart({{$chartId}}filteredData)
     })
 
     Livewire.on('unitChanged', (v) => {
-        filteredData = {!!json_encode($chartData)!!}
-        filteredData[period == 'arps' ? 'annual' : 'quarterly'].forEach((value, pindex) => {
-            let finalData = []
+        {{$chartId}}filteredData = {!!json_encode($chartData)!!}
+        {{$chartId}}filteredData[{{$chartId}}period == 'arps' ? 'annual' : 'quarterly'].forEach((value, pindex) => {
+            let {{$chartId}}finalData = []
             value.data.forEach((data, cindex) => {
                 if(v == 'thousands'){
                     data.y = parseInt(data.y) / 1000
-                    finalData.push(data)
+                    {{$chartId}}finalData.push(data)
                 }
 
                 if(v == 'millions'){
                     data.y = parseInt(data.y) / 1000000
-                    finalData.push(data)
+                    {{$chartId}}finalData.push(data)
                 }
 
                 if(v == 'billions'){
                     data.y = parseInt(data.y) / 1000000000
-                    finalData.push(data)
+                    {{$chartId}}finalData.push(data)
                 }
 
                 if(v == '0'){
-                    finalData.push(data)
+                    {{$chartId}}finalData.push(data)
                 }
             })
-            filteredData[period == 'arps' ? 'annual' : 'quarterly'][pindex].data = finalData
+            {{$chartId}}filteredData[{{$chartId}}period == 'arps' ? 'annual' : 'quarterly'][pindex].data = {{$chartId}}finalData
         })
 
-        initChart(filteredData)
+        initChart({{$chartId}}filteredData)
     })
     Livewire.on('orderChanged',(v) => {
-        reverseData = v
-        initChart(filteredData)
+        {{$chartId}}reverseData = v
+        initChart({{$chartId}}filteredData)
     })
     Livewire.on('analysisDatesChanged', (dates) => {
-        filteredData = {!!json_encode($chartData)!!}
-        let startDate = dates[0]
-        let endDate = dates[1]
-        filteredData[period == 'arps' ? 'annual' : 'quarterly'].forEach((value, pindex) => {
-            let finalData = []
+        {{$chartId}}filteredData = {!!json_encode($chartData)!!}
+        let {{$chartId}}startDate = dates[0]
+        let {{$chartId}}endDate = dates[1]
+        {{$chartId}}filteredData[{{$chartId}}period == 'arps' ? 'annual' : 'quarterly'].forEach((value, pindex) => {
+            let {{$chartId}}finalData = []
             value.data.forEach((data, cindex) => {
-                let currentDate = parseInt(new Date(data.x).getFullYear())
+                let {{$chartId}}currentDate = parseInt(new Date(data.x).getFullYear())
                 if(!(currentDate < parseInt(startDate) || currentDate > parseInt(endDate))){
-                    finalData.push(data)
+                    {{$chartId}}finalData.push(data)
                 }
             })
-            filteredData[period == 'arps' ? 'annual' : 'quarterly'][pindex].data = finalData
+            {{$chartId}}filteredData[{{$chartId}}period == 'arps' ? 'annual' : 'quarterly'][pindex].data = {{$chartId}}finalData
         })
-        initChart(filteredData)
+        initChart({{$chartId}}filteredData)
     })
 
     document.addEventListener('refreshChart', (data) => {
-        filteredData = data.detail
-        initChart(filteredData)
+        {{$chartId}}filteredData = data.detail
+        initChart({{$chartId}}filteredData)
     })
 
-    const getOrCreateTooltip = (chart) => {
-            let tooltipEl = chart.canvas.parentNode.querySelector('div');
+    const {{$chartId}}getOrCreateTooltip = (chart) => {
+            let {{$chartId}}tooltipEl = chart.canvas.parentNode.querySelector('div');
 
-            if (!tooltipEl) {
-                tooltipEl = document.createElement('div');
-                tooltipEl.style.background = '#fff';
-                tooltipEl.style.borderRadius = '25px';
-                tooltipEl.style.color = 'black';
-                tooltipEl.style.opacity = 1;
-                tooltipEl.style.pointerEvents = 'none';
-                tooltipEl.style.position = 'absolute';
-                tooltipEl.style.transform = 'translate(-50%, 0)';
-                tooltipEl.style.transition = 'all .1s ease';
-                tooltipEl.style.minWidth = '230px';
-                tooltipEl.style.filter =
+            if (!{{$chartId}}tooltipEl) {
+                {{$chartId}}tooltipEl = document.createElement('div');
+                {{$chartId}}tooltipEl.style.background = '#fff';
+                {{$chartId}}tooltipEl.style.borderRadius = '25px';
+                {{$chartId}}tooltipEl.style.color = 'black';
+                {{$chartId}}tooltipEl.style.opacity = 1;
+                {{$chartId}}tooltipEl.style.pointerEvents = 'none';
+                {{$chartId}}tooltipEl.style.position = 'absolute';
+                {{$chartId}}tooltipEl.style.transform = 'translate(-50%, 0)';
+                {{$chartId}}tooltipEl.style.transition = 'all .1s ease';
+                {{$chartId}}tooltipEl.style.minWidth = '230px';
+                {{$chartId}}tooltipEl.style.filter =
                     'drop-shadow(0px 10.732307434082031px 21.464614868164062px rgba(50, 50, 71, 0.06)) drop-shadow(0px 10.732307434082031px 10.732307434082031px rgba(50, 50, 71, 0.08))';
-                tooltipEl.classList.add('tooltip-caret')
+                {{$chartId}}tooltipEl.classList.add('tooltip-caret')
 
-                const table = document.createElement('table');
+                const {{$chartId}}table = document.createElement('table');
                 table.style.margin = '0px';
 
-                tooltipEl.appendChild(table);
-                chart.canvas.parentNode.appendChild(tooltipEl);
+                {{$chartId}}tooltipEl.appendChild(table);
+                {{$chartId}}chart.canvas.parentNode.appendChild(tooltipEl);
             }
 
-            return tooltipEl;
+            return {{$chartId}}tooltipEl;
         };
 
-        const externalTooltipHandler = (context) => {
+        const {{$chartId}}externalTooltipHandler = (context) => {
             // Tooltip Element
             const {
                 chart,
                 tooltip
             } = context;
-            const tooltipEl = getOrCreateTooltip(chart);
+            const {{$chartId}}tooltipEl = getOrCreateTooltip(chart);
 
             // Hide if no tooltip
             if (tooltip.opacity === 0) {
@@ -369,35 +366,35 @@
 
             // Set Text
             if (tooltip.body) {
-                const titleLines = tooltip.title || [];
-                const bodyLines = tooltip.body.map(b => b.lines);
+                const {{$chartId}}titleLines = tooltip.title || [];
+                const {{$chartId}}bodyLines = tooltip.body.map(b => b.lines);
 
-                const tableHead = document.createElement('thead');
+                const {{$chartId}}tableHead = document.createElement('thead');
 
                 tableHead.style.color = '#3561E7';
                 tableHead.style.textAlign = 'left';
                 tableHead.style.marginBottom = '8px';
 
                 titleLines.forEach(title => {
-                    const tr = document.createElement('tr');
+                    const {{$chartId}}tr = document.createElement('tr');
                     tr.style.borderWidth = 0;
 
-                    const th = document.createElement('th');
+                    const {{$chartId}}th = document.createElement('th');
                     th.style.borderWidth = 0;
-                    const text = document.createTextNode(title);
+                    const {{$chartId}}text = document.createTextNode(title);
 
                     th.appendChild(text);
                     tr.appendChild(th);
                     tableHead.appendChild(tr);
                 });
 
-                const tableBody = document.createElement('tbody');
+                const {{$chartId}}tableBody = document.createElement('tbody');
                 bodyLines.reverse().forEach((body, i) => {
                     const [label, value] = body[0].split('|');
 
                     //label
 
-                    const trLabel = document.createElement('tr');
+                    const {{$chartId}}trLabel = document.createElement('tr');
                     trLabel.style.backgroundColor = 'inherit';
                     trLabel.style.borderWidth = '0';
                     trLabel.style.fontSize = '12px';
@@ -407,10 +404,10 @@
                     trLabel.style.marginBottom = '0px';
 
 
-                    const tdLabel = document.createElement('td');
+                    const {{$chartId}}tdLabel = document.createElement('td');
                     tdLabel.style.borderWidth = 0;
 
-                    const textLabel = document.createTextNode(label);
+                    const {{$chartId}}textLabel = document.createTextNode(label);
 
                     tdLabel.appendChild(textLabel);
                     trLabel.appendChild(tdLabel);
@@ -419,17 +416,17 @@
 
 
                     //value
-                    const tr = document.createElement('tr');
+                    const {{$chartId}}tr = document.createElement('tr');
                     tr.style.backgroundColor = 'inherit';
                     tr.style.borderWidth = '0';
                     tr.style.fontSize = '16px';
                     tr.style.fontWeight = '700';
                     tr.style.color = '#464E49';
 
-                    const td = document.createElement('td');
+                    const {{$chartId}}td = document.createElement('td');
                     td.style.borderWidth = 0;
 
-                    const text = document.createTextNode(value);
+                    const {{$chartId}}text = document.createTextNode(value);
 
                     td.appendChild(text);
                     tr.appendChild(td);
@@ -437,7 +434,7 @@
                     tableBody.appendChild(tr);
                 });
 
-                const tableRoot = tooltipEl.querySelector('table');
+                const {{$chartId}}tableRoot = tooltipEl.querySelector('table');
 
                 // Remove old children
                 while (tableRoot.firstChild) {
@@ -462,42 +459,42 @@
             tooltipEl.style.padding = 8 + 'px ' + 19 + 'px';
         };
 
-        function initChart(filteredData = null) {
-            if (chart) chart.destroy();
-            if(filteredData){
-                data = filteredData
+        function initChart({{$chartId}}filteredData = null) {
+            if ({{$chartId}}chart) {{$chartId}}chart.destroy();
+            if({{$chartId}}filteredData){
+                {{$chartId}}data = {{$chartId}}filteredData
             }
 
-            if(period == 'arps'){
-                data = data['annual']
+            if({{$chartId}}period == 'arps'){
+                {{$chartId}}data = {{$chartId}}data['annual']
             }
             else {
-                data = data['quarterly']
+                {{$chartId}}data = {{$chartId}}data['quarterly']
             }
 
-            let canvas = document.getElementById("product-profile-chart");
-            if (!canvas) return;
-            let ctx = document.getElementById('product-profile-chart').getContext("2d");
-            let gradientBg = ctx.createLinearGradient(0, 0, 0, canvas.height * 2.5)
-            gradientBg.addColorStop(0.8, 'rgba(19,176,91,0.18)')
-            gradientBg.addColorStop(1, 'rgba(19,176,91,0.05)')
-            chart = new Chart(ctx, {
+            let {{$chartId}}canvas = document.getElementById("{{$chartId}}canvas");
+            if (!{{$chartId}}canvas) return;
+            let {{$chartId}}ctx = document.getElementById('{{$chartId}}canvas').getContext("2d");
+            let {{$chartId}}gradientBg = {{$chartId}}ctx.createLinearGradient(0, 0, 0, {{$chartId}}canvas.height * 2.5)
+            {{$chartId}}gradientBg.addColorStop(0.8, 'rgba(19,176,91,0.18)')
+            {{$chartId}}gradientBg.addColorStop(1, 'rgba(19,176,91,0.05)')
+            {{$chartId}}chart = new Chart({{$chartId}}ctx, {
                 plugins: [ChartDataLabels, {
                     afterDraw: chart => {
                         if (chart.tooltip?._active?.length) {
-                            let x = chart.tooltip._active[0].element.x;
-                            let y = chart.tooltip._active[0].element.y;
-                            let bottomBarY = chart.tooltip._active[1].element.y;
-                            let ctx = chart.ctx;
-                            ctx.save();
-                            ctx.beginPath();
-                            ctx.moveTo(x, y);
-                            ctx.lineTo(x, bottomBarY + 9);
-                            ctx.lineWidth = 1;
-                            ctx.strokeStyle = '#13B05BDE';
-                            ctx.setLineDash([5, 5])
-                            ctx.stroke();
-                            ctx.restore();
+                            let {{$chartId}}x = chart.tooltip._active[0].element.x;
+                            let {{$chartId}}y = chart.tooltip._active[0].element.y;
+                            let {{$chartId}}bottomBarY = chart.tooltip._active[1].element.y;
+                            let {{$chartId}}ctx = chart.ctx;
+                            {{$chartId}}ctx.save();
+                            {{$chartId}}ctx.beginPath();
+                            {{$chartId}}ctx.moveTo({{$chartId}}x, {{$chartId}}y);
+                            {{$chartId}}ctx.lineTo({{$chartId}}x, {{$chartId}}bottomBarY + 9);
+                            {{$chartId}}ctx.lineWidth = 1;
+                            {{$chartId}}ctx.strokeStyle = '#13B05BDE';
+                            {{$chartId}}ctx.setLineDash([5, 5])
+                            {{$chartId}}ctx.stroke();
+                            {{$chartId}}ctx.restore();
                         }
                     },
                 }],
@@ -506,7 +503,7 @@
                 responsive: true,
                 type: 'bar',
                 data: {
-                    datasets: data
+                    datasets: {{$chartId}}data
                 },
                 options: {
                     interaction: {
@@ -526,9 +523,9 @@
                             anchor: 'center',
                             align: 'center',
                             formatter: (v) => {
-                                if(chartType == 'values'){
-                                    let value = parseInt(v.y)
-                                        return value.toFixed(decimalPoints ?? 0)
+                                if({{$chartId}}chartType == 'values'){
+                                    let {{$chartId}}value = parseInt(v.y)
+                                        return {{$chartId}}value.toFixed(decimalPoints ?? 0)
                                 }
                                 else {
                                     return parseInt(v.y).toFixed(decimalPoints ?? 0) + '%'
@@ -543,15 +540,15 @@
                             bodyFont: {
                                 size: 15
                             },
-                            external: externalTooltipHandler,
+                            external: {{$chartId}}externalTooltipHandler,
                             enabled: false,
                             position: 'nearest',
                             callbacks: {
                                 title: function(context) {
-                                    const inputDate = new Date(context[0].label);
-                                    const month = inputDate.getMonth() + 1;
-                                    const day = inputDate.getDate();
-                                    const year = inputDate.getFullYear();
+                                    const {{$chartId}}inputDate = new Date(context[0].label);
+                                    const {{$chartId}}month = inputDate.getMonth() + 1;
+                                    const {{$chartId}}day = inputDate.getDate();
+                                    const {{$chartId}}year = inputDate.getFullYear();
                                     return `${year}-${month.toString().padStart(2, '0')}-${day.toString().padStart(2, '0')}`;
                                 },
                                 label: function(context) {
@@ -560,7 +557,7 @@
                             },
                         },
                         legend: {
-                            display: labelsVisible,
+                            display: {{$chartId}}labelsVisible,
                             position: 'bottom',
                             labels: {
                                 boxWidth: 16,
