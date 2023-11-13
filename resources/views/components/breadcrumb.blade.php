@@ -1,13 +1,11 @@
 <div {{ $attributes->merge(['class' => 'flex items-center gap-2 text-sm font-medium text-dark-light2']) }}>
     @foreach ($items as $idx => $item)
-        <?php $class = $loop->first ? 'pr-2' : 'px-2'; ?>
-
         @if ($item['href'] ?? false)
             <a href="{{ $item['href'] }}" class="hover:underline" x-ref="breadItem{{ $idx }}">
-                <span class="{{ $class }} py-1">{{ $item['text'] }}</span>
+                <span class="py-1">{{ $item['text'] }}</span>
             </a>
         @else
-            <span class="{{ $class }}  py-1" x-ref="breadItem{{ $idx }}">{{ $item['text'] }}</span>
+            <span class="py-1" x-ref="breadItem{{ $idx }}">{{ $item['text'] }}</span>
         @endif
 
         @if (!$loop->last)
@@ -16,7 +14,7 @@
     @endforeach
 
     @if ($chevron)
-        <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 16 16" fill="none">
+        <svg class="-ml-1" xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 16 16" fill="none">
             <path d="M10.2536 8L6.25365 12L5.32031 11.0667L8.38698 8L5.32031 4.93333L6.25365 4L10.2536 8Z"
                 fill="#464E49" />
         </svg>

@@ -11,7 +11,13 @@
         ],
     ]" />
 
-    <div class="mt-6" id="track-ownership-tabs">
-        <livewire:tabs :tabs="$tabs" :ssr="false">
-    </div>
+    <x-primary-tabs class="mt-6" :tabs="['discover' => 'Discover', 'favorite' => 'My Favorites']">
+        <template x-if="active == 'discover'">
+            Hello wold
+        </template>
+
+        <template x-if="active === 'favorite'">
+            Hello wold2
+        </template>
+    </x-primary-tabs>
 </div>
