@@ -12,6 +12,8 @@ class Discover extends Component
 {
     use AsTab;
 
+    protected $listeners = ['update' => '$refresh'];
+
     public $perPage = 20;
     public $search = "";
 

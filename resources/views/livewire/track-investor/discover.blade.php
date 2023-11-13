@@ -2,7 +2,9 @@
     <div class="hidden md:flex items-baseline justify-between">
         <h2 class="text-xl font-semibold">Discover Funds</h2>
 
-        @include('livewire.track-investor.search')
+        <div class="hidden md:block">
+            @include('livewire.track-investor.search')
+        </div>
     </div>
 
     <template x-teleport="#track-ownership-tabs .tab-slot">
@@ -10,7 +12,7 @@
     </template>
 
     <div class="mt-6">
-        @if (!count($funds))
+        @if (!count($funds ?? []))
             <div class="text-dark-light2">
                 No funds found @if ($search)
                     for search "{{ $search }}"

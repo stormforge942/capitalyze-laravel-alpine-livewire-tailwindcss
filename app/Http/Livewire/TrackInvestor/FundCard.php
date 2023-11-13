@@ -3,12 +3,12 @@
 namespace App\Http\Livewire\TrackInvestor;
 
 use Livewire\Component;
-use Illuminate\Support\Facades\DB;
 use App\Models\TrackInvestorFavorite;
 
 class FundCard extends Component
 {
     public $fund;
+    public $hideIfNotFavorite = false;
 
     public function toggle(string $name)
     {
@@ -30,6 +30,11 @@ class FundCard extends Component
         $this->fund['isFavorite'] = $isFavorite;
 
         $this->emitTo(Favorites::class, 'update');
+
+        if($this->hideIfNotFavorite) {
+            info("Hello");
+            $this->emitTo(Discover::class, 'update');
+        }
     }
 
 

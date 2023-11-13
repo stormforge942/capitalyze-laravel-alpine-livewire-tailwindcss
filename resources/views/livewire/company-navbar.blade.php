@@ -212,7 +212,7 @@
                 </button>
             </div>
 
-            <ul class="my-6 overflow-y-scroll md:mt-10 space-y-7">
+            <ul class="my-6 overflow-y-auto md:mt-10 space-y-7">
                 @foreach ($navbarItems as $item)
                     <?php
                     $child = $item['child'] ?? [];
