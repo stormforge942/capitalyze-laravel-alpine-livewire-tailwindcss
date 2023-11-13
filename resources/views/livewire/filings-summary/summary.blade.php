@@ -1,4 +1,4 @@
-<div class="flex flex-col lg:flex-row justify-start items-center flex-wrap">
+<div class="flex flex-col lg:flex-row justify-start items-center flex-wrap" x-data="{open: false, id:null}">
     <?php $i = 0;?>
     @foreach($titles as $item)
         <div class="bg-white p-3 rounded w-full lg:w-[calc(50%-1rem)] mr-0 lg-0 {{$i%2 === 0 ? 'lg:mr-3': 'lg:ml-4'}} mb-5">
@@ -39,14 +39,14 @@
                     </div>
                 </div>
                 <div class="mx-3">
-                    <a hre="#" class="text-sm text-[#F78400]" wire:click="handleViewAll()">View All</a>
+                    <a hre="#" class="text-sm text-[#F78400]" wire:click="handleViewAll('{{$item['value']}}')">View All</a>
                 </div>
             </div>
             <div class="overflow-hidden -mt-1 overflow-x-auto border h-[20rem] overflow-y-auto border-gray-200 dark:border-gray-700">    
                 <table class="min-w-full divide-y divide-gray-200 dark:divide-gray-700">
                     <tbody class="bg-white divide-y divide-gray-200 dark:divide-gray-700 dark:bg-gray-900">
                         @foreach($data as $item)
-                            <tr class="hover:bg-gray-50">
+                            <tr class="hover:bg-gray-50" @click="open=true">
                                 <td class="px-4 py-3 text-base  font-[400] text-[#121A0F] whitespace-nowrap">{{$item['name']}}</td>
                                 <td class="px-4 py-3 text-base  font-[400] text-[#121A0F] whitespace-nowrap">{{$item['desc']}}</td>
                                 <td class="px-4 py-3 text-base  font-[400] text-[#121A0F] whitespace-nowrap">{{$item['date_1']}}</td>
@@ -59,4 +59,8 @@
         </div>
         <?php $i++;?>
     @endforeach
+    <!-- Dialog (full screen) -->
+    <div class="absolute top-10  left-0 flex items-center justify-center w-full h-full" style="background-color: rgba(0,0,0,.5);" x-show="open"  >
+        <livewire:filings-summary.view-pop-up-model/>
+    </div>
 </div>

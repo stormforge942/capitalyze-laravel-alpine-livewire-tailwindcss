@@ -1,45 +1,42 @@
-<div class="flex flex-col">
+<div class="flex flex-col" x-data="{ open: false }">
     <div class="hidden md:flex bg-[#F2F2F2] w-full border-b-2 border-[#E4E4E4] justify-between">
-        <div class="mx-3 mt-1 -mb-0.5 text-[#121A0F] text-base innertab-active"><a href="#">All Documents </a></div>
-        <div class="mx-3 mt-1 -mb-0.5 text-[#121A0F] text-base"><a href="#">Financials </a></div>
-        <div class="mx-3 mt-1 -mb-0.5 text-[#121A0F] text-base"><a href="#">News </a></div>
-        <div class="mx-3 mt-1 -mb-0.5 text-[#121A0F] text-base"><a href="#">Registrations and Prospectuses </a></div>
-        <div class="mx-3 mt-1 -mb-0.5 text-[#121A0F] text-base"><a href="#">Proxy Materials</a></div>
-        <div class="mx-3 mt-1 -mb-0.5 text-[#121A0F] text-base"><a href="#">Ownership</a></div>
-        <div class="mx-3 mt-1 -mb-0.5 text-[#121A0F] text-base"><a href="#">Other </a></div>
+        <div wire:click.prevent="handleTabs('all-documents')" class="mx-3 mt-1 -mb-0.5 text-[#121A0F] font-[500] text-base {{$selectedTab === 'all-documents' ? 'innertab-active text-[#121A0F]' : 'text-[#A5A5A5]'}}"><a href="#">All Documents </a></div>
+        <div wire:click.prevent="handleTabs('financials')" class="mx-3 mt-1 -mb-0.5 font-[500] text-base {{$selectedTab === 'financials' ? 'innertab-active text-[#121A0F]' : 'text-[#A5A5A5]'}}"><a href="#">Financials </a></div>
+        <div wire:click.prevent="handleTabs('news')" class="mx-3 mt-1 -mb-0.5 font-[500] text-base {{$selectedTab === 'news' ? 'innertab-active text-[#121A0F]' : 'text-[#A5A5A5]'}}"><a href="#">News </a></div>
+        <div wire:click.prevent="handleTabs('registrations-and-prospectuses')" class="mx-3 mt-1 -mb-0.5 font-[500] text-base {{$selectedTab === 'registrations-and-prospectuses' ? 'innertab-active text-[#121A0F]' : 'text-[#A5A5A5]'}}"><a href="#">Registrations and Prospectuses </a></div>
+        <div wire:click.prevent="handleTabs('proxy-materials')" class="mx-3 mt-1 -mb-0.5 font-[500] text-base {{$selectedTab === 'proxy-materials' ? 'innertab-active text-[#121A0F]' : 'text-[#A5A5A5]'}}"><a href="#">Proxy Materials</a></div>
+        <div wire:click.prevent="handleTabs('ownership')" class="mx-3 mt-1 -mb-0.5 font-[500] text-base {{$selectedTab === 'ownership' ? 'innertab-active text-[#121A0F]' : 'text-[#A5A5A5]'}}"><a href="#">Ownership</a></div>
+        <div wire:click.prevent="handleTabs('other')" class="mx-3 mt-1 -mb-0.5 font-[500] text-base {{$selectedTab === 'other' ? 'innertab-active text-[#121A0F]' : 'text-[#A5A5A5]'}}"><a href="#">Other </a></div>
     </div>
     <div class="md:hidden">
-        <select id="countries" class="change-select-chevron text-[#121A0F] font-[500] focus:outline-none focus:ring-0 h-7 py-0.75 px-3 rounded-full border border-solid border-[#939598] text-sm">
-            <option value="sort_by_date">All Documents</option>
-            <option value="sort_by_title">Financials</option>
-            <option value="sort_by_title">News</option>
-            <!-- <option value="sort_by_title">Registrations and Prospectuses</option> -->
-            <option value="sort_by_title">Proxy Materials</option>
-            <option value="sort_by_title">Ownership</option>
-            <option value="sort_by_title">Other</option>
+    <select id="countries" wire:change="handleTabs($event?.target?.value)" class="change-select-chevron text-[#121A0F] font-[500] focus:outline-none focus:ring-0 h-7 py-0.75 px-3 rounded-full border border-solid border-[#939598] text-sm">
+            <option value="all-documents">All Documents</option>
+            <option value="financials">Financials</option>
+            <option value="news">News</option>
+            <option value="registrations-and-prospectuses">Registrations and Prospectuses</option>
+            <option value="proxy-materials">Proxy Materials</option>
+            <option value="ownership">Ownership</option>
+            <option value="other">Other</option>
         </select>
     </div>
     <!-- just for responsive view  -->
     <div class="mr-2 md:hidden absolute top-[52%] right-[2%] bg-white p-2 rounded-full">
-        <div class="flex justify-between items-center">
+        <div @click="open=true" class="flex justify-between items-center">
             <div><img src="{{url('/svg/filter-list.svg')}}"/></div>
             <h4 class="text-sm ml-2 text-[#121A0F] font-[400]">Table Optios</h4>
         </div>
     </div>
-
     <div class="hidden md:flex justify-between items-center mt-4">
         <div class="flex justify-between items-center">
             <div class="mr-2">
-                <select id="countries" class="h-7  py-0.75 px-3 rounded-full border border-solid border-[#939598] text-sm">
-                    <option selected>Choose a value</option>
+                <select id="countries" class="h-9 outline-none focus:outline  py-0.75 px-3 rounded-full border border-none border-[#939598] text-sm">
                     <option value="sort_by_date">Sort by date</option>
                     <option value="sort_by_title">Sort by title</option>
                 </select>
             </div>
             <div class="ml-2">
-                <select id="countries" class="h-7 py-0.75 px-3 rounded-full border border-solid border-[#939598] text-sm">
-                    <option selected>Choose a value</option>
-                    <option value="sort_by_date">Sort by date</option>
+                <select id="countries" @change="open=true" class="h-9 outline-none focus:outline  py-0.75 px-3 rounded-full border border-none border-[#939598] text-sm">
+                    <option value="sort_by_date">Select Filing Type</option>
                     <option value="sort_by_title">Sort by title</option>
                 </select>
             </div>
@@ -56,28 +53,13 @@
             </div>
         </div>
     </div>
-    <div class="flex flex-col mt-6">
-        <div class="overflow-hidden overflow-x-auto border h-[32rem] overflow-y-auto border-gray-200 dark:border-gray-700 md:rounded-lg">
-            <table class="min-w-full divide-y divide-gray-200 dark:divide-gray-700">
-                <thead class="bg-[#E6E6E6] dark:bg-gray-800 sticky top-0">
-                    <tr>
-                        <th class="py-2.5 px-4 text-left text-base normal-case text-[#121A0F] font-[600] whitespace-nowrap">File name</th>
-                        <th class="py-2.5 px-4 text-left text-base normal-case text-[#121A0F] font-[600] whitespace-nowrap">Description</th>
-                        <th class="py-2.5 px-4 text-left text-base normal-case text-[#121A0F] font-[600] whitespace-nowrap">Filing Date</th>
-                        <th class="py-2.5 px-4 text-left text-base normal-case text-[#121A0F] font-[600] whitespace-nowrap">Period of Report</th>
-                    </tr>
-                </thead>
-                <tbody class="bg-white divide-y divide-gray-200 dark:divide-gray-700 dark:bg-gray-900">
-                    @foreach($data as $item)
-                        <tr class="hover:bg-gray-50">
-                            <td class="px-4 py-3 text-base  font-[400] text-[#121A0F] whitespace-nowrap">{{$item['name']}}</td>
-                            <td class="px-4 py-3 text-base  font-[400] text-[#121A0F] whitespace-nowrap">{{$item['desc']}}</td>
-                            <td class="px-4 py-3 text-base  font-[400] text-[#121A0F] whitespace-nowrap">{{$item['date_1']}}</td>
-                            <td class="px-4 py-3 text-base  font-[400] text-[#121A0F] whitespace-nowrap">{{$item['date_2']}}</td>
-                        </tr>
-                    @endforeach
-                </tbody>
-            </table>
-        </div>
+    @if($selectedTab === 'all-documents')
+        <livewire:is :component="'all-filings.'. $selectedTab"/>
+    @elseif($selectedTab === 'financials')
+        <livewire:is :component="'all-filings.'. $selectedTab"/>
+    @endif
+    <!-- Dialog (full screen) -->
+    <div class="absolute top-10 left-0 flex items-center justify-center w-full h-full" style="background-color: rgba(0,0,0,.5);" x-show="open"  >
+        <livewire:all-filings.filings-pop-up/>
     </div>
 </div>

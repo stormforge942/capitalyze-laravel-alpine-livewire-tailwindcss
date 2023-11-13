@@ -43,14 +43,13 @@ class CompanyReportSlide extends SlideOver
 
             if (isset($decodedQuery[$keyToFind])) {
                 $factHashes = $decodedQuery[$keyToFind];
-                foreach ($factHashes as $factHash) {
-                    $queryHtml = DB::connection('pgsql-xbrl')
-                        ->table('public.as_reported_sec_text_block_content')
-                        ->where('ticker', '=', $this->ticker)
-                        ->where('fact_hash', '=', $factHash)
-                        ->value('content');
-                    $this->data[] = $queryHtml;
-                }
+
+                $this->data = DB::connection('pgsql-xbrl')
+                    ->table('public.as_reported_sec_text_block_content')
+                    ->where('ticker', '=', $this->ticker)
+                    ->whereIn('fact_hash', $factHashes)
+                    ->value('content');
+
                 $this->loaded = true;
             } else {
                 $this->data = ['No Data Available'];

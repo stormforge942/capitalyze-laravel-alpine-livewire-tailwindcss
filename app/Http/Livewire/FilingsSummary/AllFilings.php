@@ -8,19 +8,20 @@ class AllFilings extends Component
 {
     public $company;
     public $ticker;
-    public $data=[];
+    public $model = false;
+    public $selectedTab = "all-documents";
+    protected $listeners = ['handleAllFilingsTabs' => 'handleTabs'];
+
+    public function handleTabs($tab){
+        $this->selectedTab = $tab;
+    }
+
+    public function handleFilingBrowserType($val){
+        $this->emit('handleFilingBrowserType', true);
+    }
+
     public function render()
     {
-        for($i=0; $i<200; $i++){
-            $this->data[] = [
-                'name'=>'10-K',
-                'desc' => 'Other event, financial statement and exhibits',
-                'date_1' =>'05/04/2023', 
-                'date_2' => '05/04/2023'
-            ];
-        }
-        return view('livewire.filings-summary.all-filings', [
-            'data' => $this->data
-        ]);
+        return view('livewire.filings-summary.all-filings');
     }
 }

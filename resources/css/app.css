@@ -24,7 +24,7 @@
 .innertab-active ::after {
     content: ' ';
     width: 120%;
-    border: 1px solid #13B05B;
+    border: 2px solid #13B05B;
     display: flex;
     margin-top: 4px;
     margin-left: -11px;
