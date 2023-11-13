@@ -623,7 +623,9 @@
 </div>
 @push('scripts')
 <script>
+
     let slideOpen = false;
+    const el = document.querySelector('#range-slider-company-report');
 
     function generateRangeArray(inputArray) {
         if (inputArray.length !== 2) {
@@ -680,52 +682,82 @@
             }
         });
 
+        updateRangeSlider();
+
+     
+        Livewire.hook('message.processed', (message, component) => {
+            console.log(message.updateQueue[0].payload.value)
+            if (message.updateQueue.some(update => update.payload.value === 'Standardised Template' || 'As reported (Harmonized)')) {
+                console.log('updateRangeSlider');
+                // Call your updateRangeSlider function here
+                updateRangeSlider();
+            }
+        });
+       
+
         Livewire.hook('element.updated', () => {
             initChart()
         })
 
-        const el = document.querySelector('#range-slider-company-report');
+        function updateRangeSlider() {
 
-        if(!el) {
-            return;
-        }
-
-        const rangeDates = @this.rangeDates
-        let selectedValue = [];
-
-        if (rangeDates.length > 0) {
-            if(rangeDates[0] > rangeDates[rangeDates.length - 1]){
-                rangeDates.reverse();
+            if(!el) {
+                return;
             }
 
-            selectedValue = [rangeDates[0], rangeDates[rangeDates.length - 1]]
-        }
+            let rangeDates = @this.rangeDates
+            let selectedValue = [];
 
-        let rangeMin = new Date(selectedValue[0]).getFullYear();
-        let rangeMax = selectedValue[1] ? new Date(selectedValue[1]).getFullYear() : new Date().getFullYear();
-        selectedValue[0] = @this.startDate ?? rangeMax - 6;
-        selectedValue[1] = @this.endDate ?? rangeMax;
+            if (rangeDates.length > 0) {
+                if(rangeDates[0] > rangeDates[rangeDates.length - 1]){
+                    rangeDates.reverse();
+                }
 
-        recognizeDotsStatus(selectedValue, [rangeMin, rangeMax]);
+                selectedValue = [rangeDates[0], rangeDates[rangeDates.length - 1]]
+            }
 
-        rangeSlider(el, {
-            step: 1,
-            min: rangeMin,
-            max: rangeMax,
-            value: selectedValue,
-            rangeSlideDisabled: true,
-            onInput: (value) => {
-                if (value.length === 2 && value !== selectedValue) {
-                    recognizeDotsStatus(value, [rangeMin, rangeMax]);
-                    @this.changeDates(value)
+            let startDate;
+            let endDate;
 
-                    if (chart) {
-                        chart.destroy();
+            if (@this.startDate && Number.isInteger(@this.startDate)) {
+                startDate = @this.startDate
+            } else {
+                startDate = new Date(@this.startDate).getFullYear()
+            }
+
+            if (@this.endDate && Number.isInteger(@this.endDate)) {
+                endDate = @this.endDate
+            } else {
+                endDate = new Date(@this.endDate).getFullYear()
+            }
+
+            let rangeMin = new Date(selectedValue[0]).getFullYear();
+            let rangeMax = selectedValue[1] ? new Date(selectedValue[1]).getFullYear() : new Date().getFullYear();
+            selectedValue[0] = startDate ?? rangeMax - 6;
+            selectedValue[1] = endDate ?? rangeMax;
+
+            recognizeDotsStatus(selectedValue, [rangeMin, rangeMax]);
+
+            rangeSlider(el, {
+                step: 1,
+                min: rangeMin,
+                max: rangeMax,
+                value: selectedValue,
+                rangeSlideDisabled: true,
+                onInput: (value) => {
+                    if (value.length === 2 && value !== selectedValue) {
+                        recognizeDotsStatus(value, [rangeMin, rangeMax]);
+                        @this.changeDates(value)
+
+                        if (chart) {
+                            chart.destroy();
+                        }
                     }
                 }
-            }
-        });
+            });
+        }
     });
+    
 
     Livewire.on('slide-over.close', () => {
         slideOpen = false;
