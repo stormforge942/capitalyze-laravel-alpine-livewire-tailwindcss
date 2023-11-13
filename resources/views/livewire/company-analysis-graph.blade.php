@@ -297,7 +297,6 @@
             filteredData[period == 'arps' ? 'annual' : 'quarterly'][pindex].data = finalData
         })
 
-        console.log(filteredData)
         initChart(filteredData)
     })
     Livewire.on('orderChanged',(v) => {
@@ -322,7 +321,6 @@
     })
 
     document.addEventListener('refreshChart', (data) => {
-        console.log(data)
         filteredData = data.detail
         initChart(filteredData)
     })

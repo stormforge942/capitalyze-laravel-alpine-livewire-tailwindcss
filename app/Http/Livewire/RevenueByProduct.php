@@ -5,9 +5,8 @@ namespace App\Http\Livewire;
 use Livewire\Component;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Http\Request;
-use PDO;
 
-class CompanyAnalysis extends Component
+class RevenueByProduct extends Component
 {
     use TableFiltersTrait;
 
@@ -56,17 +55,19 @@ class CompanyAnalysis extends Component
     {
         $this->years = array_reverse(array_keys($this->products));
         if($this->reverseOrder){
-            $this->years = array_reverse(array_keys($this->products));
+            $this->years = array_keys($this->products);
         }
         $this->minDate = $value[0];
         $this->maxDate = $value[1];
-        $range = [];
-        foreach ($this->years as $key => $year) {
-            if (!(date('Y', strtotime($year)) < $this->minDate || date('Y', strtotime($year)) > $this->maxDate)) {
-                $range[] = $year;
+        foreach (array_keys($this->products) as $key => $year) {
+            if (date('Y', strtotime($year)) < $this->minDate) {
+                unset($this->years[$key]);
+            }
+            if (date('Y', strtotime($year)) > $this->maxDate) {
+                unset($this->years[$key]);
             }
         }
-        $this->years = $range;
+        $this->years = array_values($this->years);
     }
 
     function getSelectedRangeProperty()
@@ -191,9 +192,8 @@ class CompanyAnalysis extends Component
         $this->dilutedSharesOut = $data['Income Statement']['Weighted Average Diluted Shares Outstanding'];
         // dd($this->ebitda, $this->adjNetIncome, $this->dilutedEPS);
     }
-
     public function render()
     {
-        return view('livewire.company-analysis');
+        return view('livewire.revenue-by-product');
     }
 }
