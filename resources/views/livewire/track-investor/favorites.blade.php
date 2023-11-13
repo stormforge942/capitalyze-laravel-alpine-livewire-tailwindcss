@@ -7,10 +7,6 @@
         </div>
     </div>
 
-    <template x-teleport="#track-ownership-tabs .tab-slot">
-        @include('livewire.track-investor.search')
-    </template>
-
     <div class="mt-6">
         <div wire:loading.block wire:target="search, $refresh">
             <div class="py-10 grid place-items-center">

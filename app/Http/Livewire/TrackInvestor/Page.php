@@ -8,11 +8,6 @@ class Page extends Component
 {
     public function render()
     {
-        return view('livewire.track-investor.page', [
-            'tabs' => [
-                Discover::class,
-                Favorites::class,
-            ],
-        ]);
+        return view('livewire.track-investor.page');
     }
 }

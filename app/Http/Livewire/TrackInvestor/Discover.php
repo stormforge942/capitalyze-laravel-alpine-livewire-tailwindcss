@@ -12,7 +12,10 @@ class Discover extends Component
 {
     use AsTab;
 
-    protected $listeners = ['update' => '$refresh'];
+    protected $listeners = [
+        'update' => '$refresh',
+        'update:search' => 'updatedSearch'
+    ];
 
     public $perPage = 20;
     public $search = "";
@@ -25,7 +28,7 @@ class Discover extends Component
     public function updatedSearch($search)
     {
         $this->search = $search;
-        $this->perPage = 20;
+        $this->reset('perPage');
     }
 
     public function render()

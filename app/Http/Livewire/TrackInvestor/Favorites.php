@@ -11,7 +11,10 @@ class Favorites extends Component
 {
     use AsTab;
 
-    protected $listeners = ['update' => '$refresh'];
+    protected $listeners = [
+        'update' => '$refresh',
+        'update:search' => 'updatedSearch'
+    ];
 
     public static function title(): string
     {
@@ -29,13 +32,13 @@ class Favorites extends Component
     public function updatedSearch($search)
     {
         $this->search = $search;
-        $this->perPage = 20;
+        $this->reset('perPage');
     }
 
     public function render()
     {
         $investors = TrackInvestorFavorite::where('user_id', auth()->user()->id)->pluck('investor_name')->toArray();
-        
+
         $data = DB::connection('pgsql-xbrl')
             ->table('filings_summary')
             ->select('fs.investor_name', 'fs.total_value', 'fs.cik', 'fs.portfolio_size', 'fs.change_in_total_value', 'latest_dates.max_date')

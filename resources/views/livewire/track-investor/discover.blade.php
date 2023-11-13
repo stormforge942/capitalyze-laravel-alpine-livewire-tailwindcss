@@ -6,11 +6,7 @@
             @include('livewire.track-investor.search')
         </div>
     </div>
-
-    <template x-teleport="#track-ownership-tabs .tab-slot">
-        @include('livewire.track-investor.search')
-    </template>
-
+    
     <div class="mt-6">
         @if (!count($funds ?? []))
             <div class="text-dark-light2">
