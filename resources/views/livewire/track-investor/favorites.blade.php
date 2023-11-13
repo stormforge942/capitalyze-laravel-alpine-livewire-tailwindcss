@@ -1,66 +1,61 @@
-<div class="discover flex-1 mb-10">
-    <div class="place-items-center fixed top-0 left-0 right-0 bottom-0 w-full h-screen z-50 overflow-hidden bg-transparent" wire:loading.grid>
-        <span class="mx-auto simple-loader !text-blue"></span>
+<div>
+    <div class="hidden md:flex items-baseline justify-between">
+        <h2 class="text-xl font-semibold">My Favorites</h2>
+
+        @include('livewire.track-investor.search')
     </div>
-    @if(!$loading)
-        <div class="flex-1 mt-6 ml-0 mr-0">
-            <div class="grid gap-y-0 sm:grid-cols-1 md:grid-cols-2 lg:grid-cols-3 2xl:grid-cols-4">
-                @foreach($favorites as $item)
-                    <div class="box shadow-md bg-[#ffffff] p-3 mt-2 mb-2 mr-3 border-r-0.5">
-                        <div class="flex content-center justify-between items-center">
-                            <div>
-                                <h4 class="text-base font-semibold text-[#3561E7]"><a href="{{url('fund/'.$item->cik.'/holdings')}}" class="cursor-pointer">{{$item->investor_name}}</a></h4>
-                            </div>
-                            <div wire:click.prevent="removeFavorite('{{$item->investor_name}}')" class="p-1 bg-[width:3px_3px] shadow-sm bg-[#52D3A2] hover:bg-gray-500 focus:bg-gray-500 cursor-pointer">
-                                <svg class="w-4 h-4 text-gray-300 dark:text-gray-600" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="#fff" viewBox="0 0 22 20">
-                                    <path d="M20.924 7.625a1.523 1.523 0 0 0-1.238-1.044l-5.051-.734-2.259-4.577a1.534 1.534 0 0 0-2.752 0L7.365 5.847l-5.051.734A1.535 1.535 0 0 0 1.463 9.2l3.656 3.563-.863 5.031a1.532 1.532 0 0 0 2.226 1.616L11 17.033l4.518 2.375a1.534 1.534 0 0 0 2.226-1.617l-.863-5.03L20.537 9.2a1.523 1.523 0 0 0 .387-1.575Z"/>
-                                </svg>
-                            </div>
-                        </div>
-                        <div class="grid grid-cols-4 gap-y-0 md:grid-cols-2">
-                            <div class="m-0 p-2">
-                                <label class="font-normal text-sm">Market Value</label>
-                                <div class="font-semibold text-base">{{niceNumber($item->total_value)}}</div>
-                            </div>
-                            <div class="m-0 p-2">
-                                <label class="font-normal text-sm">Holdings</label>
-                                <div class="font-semibold text-base">{{$item->portfolio_size}}</div>
-                            </div>
-                            <div class="m-0 p-2">
-                                <label class="font-normal text-sm">CIK</label>
-                                <div class="font-semibold text-base">{{$item->cik ?? '--'}}</div>
-                            </div>
-                            <div class="m-0 p-2">
-                                <label class="font-normal text-sm">Turnover</label>
-                                <div class="font-semibold text-base">{{niceNumber($item->change_in_total_value)}}</div>
-                            </div>
-                        </div>
-                    </div>
-                @endforeach
-                @if($favorites->hasMorePages())
-                    <button wire:click.prevent="loadMore"></button>
-                    <div
-                        x-data="{
-                            observe () {
-                                let previousY = 0;
-                                let observer = new IntersectionObserver((entries) => {
-                                    entries.forEach(entry => {
-                                        const currentY = window.scrollY;
-                                        if (entry.isIntersecting && currentY > previousY) {
-                                            @this.call('loadMore')
-                                        }
-                                        previousY = currentY;
-                                    })
-                                }, {
-                                    root: null
-                                })
-                                observer.observe(this.$el)
-                            },
-                        }"
-                        x-init="observe"
-                    ></div>
+
+    <template x-teleport="#track-ownership-tabs .tab-slot">
+        @include('livewire.track-investor.search')
+    </template>
+
+    <div class="mt-6">
+        @if (!count($funds))
+            <div class="text-dark-light2">
+                No funds found @if ($search)
+                    for search "{{ $search }}"
                 @endif
             </div>
+        @endif
+
+        <div wire:loading.block wire:target="search">
+            <div class="py-10 grid place-items-center">
+                <span class="mx-auto simple-loader !text-green-dark"></span>
+            </div>
+        </div>
+
+        <div class="grid gap-4 grid-cols-1 md:grid-cols-2 lg:grid-cols-[repeat(auto-fill,minmax(17.19rem,1fr))]"
+            wire:loading.remove wire:target="search">
+            @foreach ($funds as $fund)
+                <livewire:track-investor.fund-card :fund="$fund"
+                    :wire:key="$fund['cik'] . $fund['investor_name']" />
+            @endforeach
+        </div>
+    </div>
+
+    @if ($funds->hasMorePages())
+        <div x-data="{
+            loading: false,
+            observe() {
+                if (this.loading) return;
+        
+                let observer = new IntersectionObserver((entries) => {
+                    entries.forEach(entry => {
+                        if (entry.isIntersecting) {
+                            $wire.call('loadMore').finally(() => {
+                                this.loading = false;
+                            });
+                        }
+                    })
+                }, {
+                    root: null
+                })
+                observer.observe(this.$el)
+            },
+        }" x-init="observe" wire:key="{{ $perPage }}"></div>
+
+        <div class="place-items-center" wire:loading.grid wire:target="loadMore">
+            <span class="mx-auto simple-loader !text-green-dark"></span>
         </div>
     @endif
 </div>
