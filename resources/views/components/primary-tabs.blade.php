@@ -8,6 +8,8 @@
         const tab = this.tabs[key];
         this.active = tab.key;
 
+        $refs.slot.innerHTML = '';
+
         // update query string
         const url = new URL(window.location.href);
         url.searchParams.set('tab', tab.key);
@@ -49,7 +51,7 @@ dropdown = new Dropdown($refs.dropdown, $refs.dropdownBtn)" {{ $attributes }}>
             </div>
         </div>
 
-        <div class="tab-slot block md:hidden">
+        <div class="tab-slot block md:hidden" x-ref="slot">
             {{ $head ?? '' }}
         </div>
     </div>

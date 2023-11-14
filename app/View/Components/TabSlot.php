@@ -11,7 +11,7 @@ class TabSlot extends Component
      *
      * @return void
      */
-    public function __construct(public string $id, public string $tab)
+    public function __construct(public string $id, public ?string $tab = null)
     {
         //
     }
