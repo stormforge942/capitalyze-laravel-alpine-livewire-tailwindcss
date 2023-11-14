@@ -49,30 +49,38 @@ class ShareholdersTable extends BaseTable
                 ->searchable(),
 
             Column::make('Shares Held', 'ssh_prnamt')
-                ->sortable(),
+                ->sortable()
+                ->headerAttribute('[&>div]:justify-end')->bodyAttribute('text-right'),
 
             Column::make('Market Value', 'value')
-                ->sortable(),
+                ->sortable()
+                ->headerAttribute('[&>div]:justify-end')->bodyAttribute('text-right'),
 
             Column::make('% of Portfolio', 'weight')
-                ->sortable(),
+                ->sortable()
+                ->headerAttribute('[&>div]:justify-end')->bodyAttribute('text-right'),
 
             Column::make('Prior % of Portfolio', 'last_weight')
-                ->sortable(),
+                ->sortable()
+                ->headerAttribute('[&>div]:justify-end')->bodyAttribute('text-right'),
 
             Column::make('Change in Shares', 'change_in_shares')
-                ->sortable(),
+                ->sortable()
+                ->headerAttribute('[&>div]:justify-end')->bodyAttribute('text-right'),
 
             Column::make('% Ownership', 'ownership')
-                ->sortable(),
+                ->sortable()
+                ->headerAttribute('[&>div]:justify-end')->bodyAttribute('text-right'),
 
             Column::make('Date reported', 'signature_date')
-                ->sortable(),
+                ->sortable()
+                ->headerAttribute('[&>div]:justify-end')->bodyAttribute('text-right'),
 
             Column::add()
                 ->title('Estimated Avg Price Paid')
                 ->field('price_paid')
-                ->sortable(),
+                ->sortable()
+                ->headerAttribute('[&>div]:justify-end')->bodyAttribute('text-right'),
         ];
     }
 
