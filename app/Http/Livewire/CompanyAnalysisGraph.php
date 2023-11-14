@@ -77,7 +77,7 @@ class CompanyAnalysisGraph extends Component
                 $set["data"][] = [
                     "x" => $date,
                     "y" => $data[$product],
-                    "percentage" => ($data[$product]/$sum) * 100,
+                    "percentage" => count($this->segments) > 1 ? (($data[$product]/$sum) * 100) : 100,
                     "revenue" => $data[$product],
                     "fontColor" => $fontColors[$key] ?? "#000"
                 ];

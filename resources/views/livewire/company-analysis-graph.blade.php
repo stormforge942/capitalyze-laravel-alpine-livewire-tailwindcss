@@ -159,7 +159,7 @@
                         <li class="custom_checkbox" x-data="{toggle: false, toggle2: false}">
                             <button
                                 class="flex items-center transition ease-in-out duration-300 w-7 h-3 bg-gray-custom rounded-full focus:outline-none"
-                                :class="{ 'bg-gray-custom': toggle2 }"
+                                class="bg-gray-custom"
                                 x-on:click="toggle2 = !toggle2; {{$chartId}}showLabels(toggle2)">
                                 <div class="transition ease-in-out duration-300 rounded-full h-4 w-4 bg-white shadow border"
                                     :class="{ 'transform translate-x-full ': toggle2 }"></div>
@@ -479,7 +479,6 @@
         };
 
         function {{$chartId}}initChart({{$chartId}}filteredData = null) {
-            debugger
             if({{$chartId}}data['annual'] == null)return
             if ({{$chartId}}chart) {{$chartId}}chart.destroy();
             let {{$chartId}}finalData;
@@ -562,6 +561,7 @@
                     },
                     plugins: {
                         datalabels: {
+                            display: {{$chartId}}chartType == 'percentage' ? true : false,
                             anchor: 'center',
                             align: 'center',
                             formatter: (v) => {
