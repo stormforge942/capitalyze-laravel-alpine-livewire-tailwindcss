@@ -95,7 +95,10 @@ class CompanyReport extends Component
     public function unselectRow($title)
     {
         unset($this->selectedRows[$title]);
-        $this->emit('resetSelection', $title);
+
+        if (in_array($title, $this->selectedRows)) {
+            $this->emit('resetSelection', $title);
+        }
 
         if (count($this->selectedRows)) {
             $this->generateChartData(true);
@@ -317,6 +320,7 @@ class CompanyReport extends Component
         $this->selectedValue[0] = $this->startDate ?? date('Y-m-d', $rangeMax - 6 * 365 * 24 * 60 * 60);
         $this->selectedValue[1] = $this->endDate ?? $this->rangeDates[count($this->rangeDates) - 1];
         $this->changeDates($this->selectedValue);
+
     }
 
     public function generateRows($data)
@@ -524,6 +528,7 @@ class CompanyReport extends Component
         if ($propertyName === 'view') {
             $this->getData();
         }
+
     }
 
     public function updatedPeriod()

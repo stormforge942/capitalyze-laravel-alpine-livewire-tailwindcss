@@ -88,8 +88,6 @@ class CompanyFilings extends Model
         'last_weight',
         'name_of_issuer',
         'ownership',
-        'performance',
-        'performance_percentage',
         'price_paid',
         'put_call',
         'report_calendar_or_quarter',
