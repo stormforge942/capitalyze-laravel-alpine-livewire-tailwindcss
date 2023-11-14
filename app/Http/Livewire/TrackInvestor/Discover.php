@@ -17,16 +17,16 @@ class Discover extends Component
     ];
 
     public $perPage = 20;
-    public $search = "";
+    public $query = "";
 
     public function loadMore()
     {
         $this->perPage += 20;
     }
 
-    public function updatedSearch($search)
+    public function search($query)
     {
-        $this->search = $search;
+        $this->query = $query;
         $this->reset('perPage');
     }
 
@@ -42,9 +42,9 @@ class Discover extends Component
                 $join->on('fs.investor_name', '=', 'latest_dates.investor_name');
                 $join->on('fs.date', '=', 'latest_dates.max_date');
             })
-            ->when($this->search, function ($q) {
-                return $q->where(DB::raw('fs.investor_name'), 'ilike', "%$this->search%")
-                    ->orWhere(DB::raw('fs.cik'), 'like', "%$this->search%");
+            ->when($this->query, function ($q) {
+                return $q->where(DB::raw('fs.investor_name'), 'ilike', "%$this->query%")
+                    ->orWhere(DB::raw('fs.cik'), 'like', "%$this->query%");
             })
             ->orderBy('total_value', 'desc')
             ->paginate($this->perPage)

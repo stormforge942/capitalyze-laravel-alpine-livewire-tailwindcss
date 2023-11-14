@@ -1,18 +1,16 @@
-<div x-data="{ search: @entangle('search') }">
+<div x-data="{ search: $wire.query }" x-init="$watch('search', (val) => $wire.search(val))">
     <div class="hidden md:flex items-baseline justify-between">
         <h2 class="text-xl font-semibold">Discover Funds</h2>
 
         @include('livewire.track-investor.search')
     </div>
 
-    <template x-teleport="#track-ownership-tabs .tab-slot">
-        <div x-show="active === 'discover'" x-cloak>
-            @include('livewire.track-investor.search')
-        </div>
-    </template>
+    <x-tab-slot id="track-ownership-tabs" tab="discover">
+        @include('livewire.track-investor.search')
+    </x-tab-slot>
 
     <div class="mt-6">
-        <div wire:loading.block wire:target="search,update">
+        <div wire:loading.block wire:target="search">
             <div class="py-10 grid place-items-center">
                 <span class="mx-auto simple-loader !text-green-dark"></span>
             </div>
@@ -21,16 +19,15 @@
         <div wire:loading.remove wire:target="search">
             @if (!count($funds ?? []))
                 <div class="text-dark-light2">
-                    No funds found @if ($search)
-                        for search "{{ $search }}"
+                    No funds found @if ($query)
+                        for search "{{ $query }}"
                     @endif
                 </div>
             @endif
 
             <div class="grid gap-4 grid-cols-1 md:grid-cols-2 lg:grid-cols-[repeat(auto-fill,minmax(17.19rem,1fr))]">
                 @foreach ($funds as $fund)
-                    <livewire:track-investor.fund-card :fund="$fund"
-                        :wire:key="($fund['isFavorite'] ? 'fav' : 'normal') . $fund['cik'] . $fund['investor_name']" />
+                    <livewire:track-investor.fund-card :fund="$fund" :wire:key="Str::random(5)" />
                 @endforeach
             </div>
         </div>

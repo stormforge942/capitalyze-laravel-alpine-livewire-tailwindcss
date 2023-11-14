@@ -29,11 +29,11 @@ class FundCard extends Component
 
         $this->fund['isFavorite'] = $isFavorite;
 
-        $this->emitTo(Favorites::class, 'update');
-
         if($this->hideIfNotFavorite) {
             $this->emitTo(Discover::class, 'update');
         }
+
+        $this->emitTo(Favorites::class, 'update');
     }
 
 
