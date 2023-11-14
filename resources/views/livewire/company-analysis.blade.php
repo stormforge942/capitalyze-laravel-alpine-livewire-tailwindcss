@@ -74,7 +74,6 @@
                                         'ticker' => $ticker,
                                         'cost' => $cost,
                                         'period' => $period,
-                                        'chartId' => 'revenue-by-product'
                                     ])
                                 </div>
                                 <div x-show="currentTab == 'revenue-by-geography'">
@@ -84,18 +83,11 @@
                                         'ticker' => $ticker,
                                         'cost' => $cost,
                                         'period' => $period,
-                                        'chartId' => 'revenue-by-geography'
                                     ])
                                 </div>
-                                {{-- <div x-show="currentTab == 'revenue-by-geography'">
-                                    @livewire('revenue-by-geography', [
-                                        'company' => $company,
-                                        'companyName' => $companyName,
-                                        'ticker' => $ticker,
-                                        'cost' => $cost,
-                                        'period' => $period
-                                    ])
-                                </div> --}}
+                                <div x-show="currentTab == 'revenue-by-employee'">
+
+                                </div>
                             </div>
                         </div>
                     </div>
@@ -105,121 +97,5 @@
     </div>
     @endif
 </div>
-@push('scripts')
-<script>
-    let decimalPoints = 0;
-    let unitType = 0
-    let reversOrder = false
-    function setRound(v){
-        decimalPoints = v
-        Livewire.emit('decimalChanged', decimalPoints)
-        @this.set('decimalPoint', decimalPoints)
-    }
-    function setReverseOrder(v){
-        reversOrder = v
-        Livewire.emit('orderChanged', v)
-        @this.set('reverseOrder', v)
-    }
-    function setUnitType(v){
-        unitType = v
-        Livewire.emit('unitChanged', unitType)
-        @this.set('unit', unitType)
-    }
-    let slideOpen = false;
-    function generateRangeArray(inputArray) {
-        if (inputArray.length !== 2) {
-            return [];
-        }
-
-        let start = inputArray[0];
-        let end = inputArray[1];
-        let rangeArray = [];
-
-        if (start <= end) {
-            for (let i = start; i <= end; i++) {
-                rangeArray.push(i);
-            }
-        } else {
-            for (let i = start; i >= end; i--) {
-                rangeArray.push(i);
-            }
-        }
-
-        return rangeArray;
-    }
-
-
-
-    document.addEventListener('DOMContentLoaded', function() {
-        // document.body.addEventListener('click', function(event) {
-        //     var element = event.target;
-        //     if (element.classList.contains('open-slide') && !slideOpen) {
-        //         var value = element.dataset.value;
-        //         value = JSON.parse(value);
-        //         window.livewire.emit('slide-over.open', 'company-analysis-slide', value, {force: true});
-        //         slideOpen = true;
-        //     }
-        // });
-    })
-
-    Livewire.on('slide-over.close', () => {
-        slideOpen = false;
-    });
-
-    const annualCheckbox = document.getElementById("date-annual");
-    const fiscalAnnualCheckbox = document.getElementById("date-fiscal-annual");
-
-    annualCheckbox.addEventListener("click", function() {
-        Livewire.emit('periodChanged', 'arps')
-        // const currentUrl = window.location.href;
-
-        // const separator = currentUrl.includes('?') ? '&' : '?';
-
-        // const newUrl = currentUrl + separator + 'period=annual';
-
-        // window.location.href = newUrl;
-    });
-    fiscalAnnualCheckbox.addEventListener("click", function() {
-        Livewire.emit('periodChanged', 'arps')
-        // const currentUrl = window.location.href;
-
-        // const separator = currentUrl.includes('?') ? '&' : '?';
-
-        // const newUrl = currentUrl + separator + 'period=fiscal-annual';
-
-        // window.location.href = newUrl;
-    });
-    // date-fiscal-quarterly
-    const quarterlyCheckbox = document.getElementById("date-quarterly");
-    const fiscalQuarterlyCheckbox = document.getElementById("date-fiscal-quaterly");
-
-    quarterlyCheckbox.addEventListener("click", function() {
-        Livewire.emit('periodChanged', 'qrps')
-        // const currentUrl = window.location.href;
-
-        // const separator = currentUrl.includes('?') ? '&' : '?';
-
-        // const newUrl = currentUrl + separator + 'period=quarterly';
-
-        // window.location.href = newUrl;
-    });
-    fiscalQuarterlyCheckbox.addEventListener("click", function() {
-        Livewire.emit('periodChanged', 'qrps')
-        // const currentUrl = window.location.href;
-
-        // const separator = currentUrl.includes('?') ? '&' : '?';
-
-        // const newUrl = currentUrl + separator + 'period=fiscal-quarterly';
-
-        // window.location.href = newUrl;
-    });
-
-    const unitTypeDropdownCloseIcon = document.getElementById("unitTypeClose");
-
-    unitTypeDropdownCloseIcon.addEventListener("click", function() {
-        document.getElementById('dropdown-UnitType').classList.toggle("hidden");
-    });
-</script>
-@endpush
 
 

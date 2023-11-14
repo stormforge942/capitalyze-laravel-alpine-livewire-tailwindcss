@@ -24,11 +24,20 @@ class CompanyAnalysisGraph extends Component
 
     public function initChart($selectedYears = null, $source)
     {
-        $this->getProducts('arps');
+        if($this->chartId == 'rbg'){
+            $this->getProducts('args');
+        }elseif($this->chartId == 'rbp'){
+            $this->getProducts('arps');
+        }
+
         $this->chartData['annual'] = $this->generateChartData($selectedYears);
-        $this->getProducts('qrps');
+        if($this->chartId == 'rbg'){
+            $this->getProducts('qrgs');
+        }elseif($this->chartId == 'rbp'){
+            $this->getProducts('qrps');
+        }
         $this->chartData['quarterly'] = $this->generateChartData($selectedYears);
-        $this->dispatchBrowserEvent('refreshChart', $this->chartData);
+        $this->dispatchBrowserEvent($this->chartId.'refreshChart', $this->chartData);
     }
 
     public function generateChartData($selectedYears = null){
@@ -52,7 +61,7 @@ class CompanyAnalysisGraph extends Component
         ];
         foreach ($this->segments as $key => $product) {
             $set = [
-                "label" => $product,
+                "label" => str_replace('[Member]', '', $product),
                 "borderRadius" => 2,
                 "fill" => true,
             ];
@@ -80,8 +89,19 @@ class CompanyAnalysisGraph extends Component
 
 
 
-    public function getProducts($source)
+    public function getProducts($period = null)
     {
+        if($this->chartId == 'rbg'){
+            $source = ($this->period == 'annual' || $this->period == 'fiscal-annual') ? 'args' : 'qrgs';
+        }
+        elseif($this->chartId == 'rbp') {
+            $source = ($this->period == 'annual' || $this->period == 'fiscal-annual') ? 'arps' : 'qrps';
+        }
+
+        if($period){
+            $source = $period;
+        }
+
         $json = DB::connection('pgsql-xbrl')
             ->table('as_reported_sec_segmentation_api')
             ->where('ticker', '=', $this->ticker)
@@ -111,7 +131,7 @@ class CompanyAnalysisGraph extends Component
             }
         }
 
-        $this->json = base64_encode($json);
+        // $this->json = base64_encode($json);
         if($source == 'arps'){
             $this->products = array_slice($products, 0, 6);
             $this->segments = array_slice($segments, 0, 6);

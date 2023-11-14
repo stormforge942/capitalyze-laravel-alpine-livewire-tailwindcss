@@ -541,7 +541,10 @@ line-height: normal;
      color: #121A0F !important;
      font-weight: 600;
 }
-#range-slider-company-analysis {
+#rbprange-slider-company-analysis {
+    max-width: 100% !important;
+}
+#rbgrange-slider-company-analysis {
     max-width: 100% !important;
 }
 div#range-slider-company-analysis-geography {

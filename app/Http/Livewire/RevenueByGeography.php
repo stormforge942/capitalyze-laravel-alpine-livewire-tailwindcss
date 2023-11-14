@@ -34,15 +34,15 @@ class RevenueByGeography extends Component
     public $quarterRange = [];
     public $decimalPoint = 0;
     public $reverseOrder = false;
-    public $chartId = "rbg";
+    public $chartId = 'rbg';
 
-    protected $listeners = ['tabClicked', 'tabSubClicked', 'analysisDatesChanged', 'decimalChange', 'periodChanged'];
+    protected $listeners = ['tabClicked', 'tabSubClicked', 'rbganalysisDatesChanged', 'rbgdecimalChange', 'rbgperiodChanged', 'rbgunitChanged'];
 
-    public function decimalChange($decimal){
+    public function rbgdecimalChange($decimal){
         $this->decimalPoint = $decimal;
     }
 
-    public function unitChanged($unit){
+    public function rbgunitChanged($unit){
         $this->unit = $unit;
     }
 
@@ -50,7 +50,7 @@ class RevenueByGeography extends Component
         return $this->unit;
     }
 
-    public function analysisDatesChanged($value)
+    public function rbganalysisDatesChanged($value)
     {
         $this->years = array_reverse(array_keys($this->products));
         if($this->reverseOrder){
@@ -75,10 +75,9 @@ class RevenueByGeography extends Component
         return $this->years;
     }
 
-    public function periodChanged($period){
+    public function rbgperiodChanged($period){
         $this->period = $period == 'arps' ? 'annual' : 'quarterly';
         $this->getProducts();
-        $this->getTickerPresentation();
         $this->rangeDates = array_keys($this->products);
 
         $this->years = array_reverse(array_keys($this->products));
@@ -116,7 +115,6 @@ class RevenueByGeography extends Component
         $this->period = $period;
         $this->companyName = $this->ticker;
         $this->getProducts();
-        $this->getTickerPresentation();
         $this->rangeDates = array_keys($this->products);
 
         $this->years = array_reverse(array_keys($this->products));
@@ -165,7 +163,7 @@ class RevenueByGeography extends Component
             }
         }
 
-        $this->json = base64_encode($json);
+        // $this->json = base64_encode($json);
         if($source == 'arps'){
             $this->products = array_slice($products, 0, 6);
             $this->segments = array_slice($segments, 0, 6);
@@ -174,20 +172,6 @@ class RevenueByGeography extends Component
             $this->products = $products;
             $this->segments = $segments;
         }
-    }
-
-
-    public function getTickerPresentation()
-    {
-        $data = json_decode(DB::connection('pgsql-xbrl')
-            ->table('info_tikr_presentations')
-            ->where('ticker', $this->ticker)->orderByDesc('id')->first()->info, true)['annual'];
-        $this->ebitda = $data['Income Statement']['EBITDA'];
-        $this->adjNetIncome = $data['Income Statement']['Net Income'];
-        $this->dilutedEPS = $data['Income Statement']['Diluted EPS Excl Extra Items'];
-        $this->revenues = $data['Income Statement']['Revenues'];
-        $this->dilutedSharesOut = $data['Income Statement']['Weighted Average Diluted Shares Outstanding'];
-        // dd($this->ebitda, $this->adjNetIncome, $this->dilutedEPS);
     }
 
     public function render()

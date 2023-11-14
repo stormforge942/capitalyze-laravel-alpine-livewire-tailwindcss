@@ -2,7 +2,7 @@
     <div class="filters-row mb-3">
         <div class="select-wrapper flex items-center custom-text-xs" x-data="{unitType: 0}">
             <div class="flex items-center text-sm">Unit Type
-                <button id="dropdownUnitTypeButton" data-dropdown-toggle="dropdown-UnitType"
+                <button id="dropdownUnitTypeButton" data-dropdown-toggle="{{$chartId}}dropdown-UnitType"
                     class="flex items-center flowbite-select bg-gray-50 border border-gray-700 text-gray-900 text-sm ml-2 p-2"
                     name="view" id="">
                     <span
@@ -14,7 +14,7 @@
                     </svg>
                 </button>
                 <!-- Dropdown menu -->
-                <div id="dropdown-UnitType" wire:ignore
+                <div id="{{$chartId}}dropdown-UnitType" wire:ignore
                     class="z-10 hidden bg-white divide-y divide-gray-100 rounded-lg shadow w-60 dark:bg-gray-700 dark:divide-gray-600">
                     <div class="p-3 text-sm flex items-center justify-between">
                         <div>Unit Type</div>
@@ -90,12 +90,12 @@
                     </ul>
                     <div class="mx-3 my-4">
                         <button class="w-full p-1 text-sm bg-[#52D3A2] rounded text-center" id="unitTypeCloseButton"
-                            @click="setUnitType(unitType)">Show Result</button>
+                            @click="{{$chartId}}setUnitType(unitType)">Show Result</button>
                     </div>
                 </div>
             </div>
             <div class="ml-3 flex items-center text-sm" x-data="{reverseOrder:false}">Order
-                <button id="dropdownOrderButton" data-dropdown-toggle="dropdown-Order"
+                <button id="dropdownOrderButton" data-dropdown-toggle="{{$chartId}}dropdown-Order"
                     class="flex items-center flowbite-select bg-gray-50 border border-gray-700 text-gray-900 text-sm ml-2 p-2"
                     name="view" id="">
                     <span x-text="reverseOrder == false ? 'Latest on Right' : 'Latest on Left'"></span>
@@ -106,7 +106,7 @@
                     </svg>
                 </button>
                 <!-- Dropdown menu -->
-                <div id="dropdown-Order" wire:ignore
+                <div id="{{$chartId}}dropdown-Order" wire:ignore
                     class="z-10 hidden bg-white divide-y divide-gray-100 rounded-lg shadow w-60 dark:bg-gray-700 dark:divide-gray-600">
                     <div class="p-3 text-sm flex items-center justify-between">
                         <div>Order</div>
@@ -151,14 +151,14 @@
                         </li>
                     </ul>
                     <div class="mx-3 my-4">
-                        <button @click="setReverseOrder(reverseOrder)"
+                        <button @click="{{$chartId}}setReverseOrder(reverseOrder)"
                             class="w-full p-1 text-sm bg-[#52D3A2] rounded text-center" id="orderCloseButton">Show
                             Result</button>
                     </div>
                 </div>
             </div>
             <div class="ml-3 flex items-center text-sm">Freeze Panes
-                <button type="submit" id="dropdownFreezePanesButton" data-dropdown-toggle="dropdown-FreezePanes"
+                <button type="submit" id="dropdownFreezePanesButton" data-dropdown-toggle="{{$chartId}}dropdown-FreezePanes"
                     class="flex items-center flowbite-select bg-gray-50 border border-gray-700 text-gray-900 text-sm ml-2 p-2"
                     name="view" id="">
                     Top Row
@@ -169,7 +169,7 @@
                     </svg>
                 </button>
                 <!-- Dropdown menu -->
-                <div id="dropdown-FreezePanes"
+                <div id="{{$chartId}}dropdown-FreezePanes"
                     class="z-10 hidden bg-white divide-y divide-gray-100 rounded-lg shadow w-60 dark:bg-gray-700 dark:divide-gray-600">
                     <div class="p-3 text-sm flex items-center justify-between">
                         <div>Freeze Panes</div>
@@ -236,7 +236,7 @@
                 </div>
             </div>
             <div wire:ignore class="ml-3 flex items-center text-sm" x-data="{round: 0}">Decimal
-                <button id="dropdownDecimalButton" data-dropdown-toggle="dropdown-Decimal"
+                <button id="dropdownDecimalButton" data-dropdown-toggle="{{$chartId}}dropdown-Decimal"
                     class="flex items-center flowbite-select bg-gray-50 border border-gray-700 text-gray-900 text-sm ml-2 p-2"
                     name="view" id="">
                     <span x-text='round == 0 ? "auto" : (round == 2 ? ".00" : (round == 3 ? ".00" : ""))'></span>
@@ -247,7 +247,7 @@
                     </svg>
                 </button>
                 <!-- Dropdown menu -->
-                <div id="dropdown-Decimal"
+                <div id="{{$chartId}}dropdown-Decimal"
                     class="z-10 hidden bg-white divide-y divide-gray-100 rounded-lg shadow w-60 dark:bg-gray-700 dark:divide-gray-600">
                     <div class="p-3 text-sm flex items-center justify-between">
                         <div>Decimal</div>
@@ -308,7 +308,7 @@
                     </ul>
                     <div class="mx-3 my-4">
                         <button class="w-full p-1 text-sm bg-[#52D3A2] rounded text-center" id="decimalCloseButton"
-                            @click="setRound(round)">Show Result</button>
+                            @click="{{$chartId}}setRound(round)">Show Result</button>
                     </div>
                 </div>
             </div>
@@ -319,56 +319,56 @@
         <ul class="flex soft-radio-wrapper big-checked items-center">
             <li class="mr-2">
                 <label class="flex items-center pl-3 cursor-pointer">
-                    <input wire:model="period" value="fiscal-annual" id="date-fiscal-annual" type="radio"
+                    <input  value="fiscal-annual" id="{{$chartId}}date-fiscal-annual" type="radio"
                         name="date-range" class="w-5 h-5 ">
                     <span class="w-full py-2 ml-2 text-sm">Fiscal Annual</span>
                 </label>
             </li>
             <li class="mr-2">
                 <label class="flex items-center pl-3 cursor-pointer">
-                    <input wire:model="period" value="fiscal-quarterly" id="date-fiscal-quaterly" type="radio"
+                    <input  value="fiscal-quarterly" id="{{$chartId}}date-fiscal-quaterly" type="radio"
                         name="date-range" class="w-5 h-5 ">
                     <span class="w-full py-2 ml-2 text-sm">Fiscal Quaterly</span>
                 </label>
             </li>
             <li class="mr-2">
                 <label class="flex items-center pl-3 cursor-pointer">
-                    <input wire:model="period" value="fiscal-semi-annual" id="date-fiscal-semi-annual" type="radio"
+                    <input  value="fiscal-semi-annual" id="{{$chartId}}date-fiscal-semi-annual" type="radio"
                         name="date-range" class="w-5 h-5 ">
                     <span class="w-full py-2 ml-2 text-sm">Fiscal Semi-Annual</span>
                 </label>
             </li>
             <li class="mr-2">
                 <label class="flex items-center pl-3 cursor-pointer">
-                    <input wire:model="period" value="YTD" id="date-YTD" type="radio" name="date-range"
+                    <input  value="YTD" id="{{$chartId}}date-YTD" type="radio" name="date-range"
                         class="w-5 h-5 ">
                     <span class="w-full py-2 ml-2 text-sm">YTD</span>
                 </label>
             </li>
             <li class="mr-2">
                 <label class="flex items-center pl-3 cursor-pointer">
-                    <input wire:model="period" value="LTM" id="date-LTM" type="radio" name="date-range"
+                    <input  value="LTM" id="{{$chartId}}date-LTM" type="radio" name="date-range"
                         class="w-5 h-5 ">
                     <span class="w-full py-2 ml-2 text-sm">LTM</span>
                 </label>
             </li>
             <li class="mr-2">
                 <label class="flex items-center pl-3 cursor-pointer">
-                    <input wire:model="period" value="annual" id="date-annual" id="date-annual" type="radio"
+                    <input  value="annual" id="{{$chartId}}date-annual"type="radio"
                         name="date-range" class="w-5 h-5 ">
                     <span class="w-full py-2 ml-2 text-sm">Calendar Annual</span>
                 </label>
             </li>
             <li class="mr-2">
                 <label class="flex items-center pl-3 cursor-pointer">
-                    <input wire:model="period" value="quarterly" id="date-quarterly" type="radio" name="date-range"
+                    <input  value="quarterly" id="{{$chartId}}date-quarterly" type="radio" name="date-range"
                         class="w-5 h-5 ">
                     <span class="w-full py-2 ml-2 text-sm">Calendar Quaterly</span>
                 </label>
             </li>
             <li class="mr-2">
                 <label class="flex items-center pl-3 cursor-pointer">
-                    <input wire:model="period" value="SA" id="date-SA" type="radio" name="date-sa" class="w-5 h-5 ">
+                    <input  value="SA" id="{{$chartId}}date-SA" type="radio" name="date-sa" class="w-5 h-5 ">
                     <span class="w-full py-2 ml-2 text-sm">Calendar SA</span>
                 </label>
             </li>
@@ -378,66 +378,87 @@
     <div class="years-range-wrapper mt-4 mb-8" wire:ignore>
         <div class="dots-wrapper">
             @foreach($rangeDates as $key => $date)
-            <span id="{{date('Y', strtotime($date))}}" class="inactive-dots"></span>
+            <span id="{{$chartId}}{{date('Y', strtotime($date))}}" class="inactive-dots"></span>
             @endforeach
         </div>
-        <div id="range-slider-company-analysis-geography" class="range-slider" x-init='() => {
-            const el = document.querySelector("#range-slider-company-analysis-geography");
-            if(!el) {
+        <div id="{{$chartId}}range-slider-company-analysis" class="range-slider" x-init='() => {
+            const {{$chartId}}el = document.querySelector("#{{$chartId}}range-slider-company-analysis");
+            if(!{{$chartId}}el) {
                 return;
             }
-            const rangeDates = {!!json_encode($rangeDates)!!}
-            let selectedValue = [];
+            const {{$chartId}}rangeDates = {!!json_encode($rangeDates)!!}
+            let {{$chartId}}selectedValue = [];
 
-            if (rangeDates.length > 0) {
-                if(rangeDates[0] > rangeDates[rangeDates.length - 1]){
-                    rangeDates.reverse();
+            if ({{$chartId}}rangeDates.length > 0) {
+                if({{$chartId}}rangeDates[0] > {{$chartId}}rangeDates[{{$chartId}}rangeDates.length - 1]){
+                    {{$chartId}}rangeDates.reverse();
                 }
-                selectedValue = [rangeDates[0], rangeDates[rangeDates.length - 1]]
+                {{$chartId}}selectedValue = [{{$chartId}}rangeDates[0], {{$chartId}}rangeDates[{{$chartId}}rangeDates.length - 1]]
             }
-            let rangeMin = new Date(selectedValue[0]).getFullYear();
-            let rangeMax = selectedValue[1] ? new Date(selectedValue[1]).getFullYear() : new Date().getFullYear();
-            selectedValue[0] = rangeMin
-            selectedValue[1] = rangeMax;
-            recognizeDotsStatus(selectedValue, [rangeMin, rangeMax]);
-            rangeSlider(el, {
+            let {{$chartId}}rangeMin = new Date({{$chartId}}selectedValue[0]).getFullYear();
+            let {{$chartId}}rangeMax = {{$chartId}}selectedValue[1] ? new Date({{$chartId}}selectedValue[1]).getFullYear() : new Date().getFullYear();
+            {{$chartId}}selectedValue[0] = {{$chartId}}rangeMin
+            {{$chartId}}selectedValue[1] = {{$chartId}}rangeMax;
+            {{$chartId}}recognizeDotsStatus({{$chartId}}selectedValue, [{{$chartId}}rangeMin, {{$chartId}}rangeMax]);
+            rangeSlider({{$chartId}}el, {
                 step: 1,
-                min: rangeMin,
-                max: rangeMax,
-                value: selectedValue,
+                min: {{$chartId}}rangeMin,
+                max: {{$chartId}}rangeMax,
+                value: {{$chartId}}selectedValue,
                 rangeSlideDisabled: true,
                 onInput: (value, e) => {
-                    if (value.length === 2 && value !== selectedValue) {
-                        recognizeDotsStatus(selectedValue, [rangeMin, rangeMax]);
-                        Livewire.emit("analysisDatesChanged", value)
+                    if (value.length === 2 && value !== {{$chartId}}selectedValue) {
+                        {{$chartId}}recognizeDotsStatus({{$chartId}}selectedValue, [{{$chartId}}rangeMin, {{$chartId}}rangeMax]);
+                        Livewire.emit("{{$chartId}}analysisDatesChanged", value)
                     }
                 },
             });
-            function recognizeDotsStatus(value, baseArray) {
-                    let base = generateRangeArray(baseArray)
-                    let activeYears = generateRangeArray(value)
-                    let intersection = base.filter(x => !activeYears.includes(x));
+            function {{$chartId}}generateRangeArray(inputArray) {
+                if (inputArray.length !== 2) {
+                    return [];
+                }
 
-                    activeYears.forEach(id => {
-                        let element = document.getElementById(id);
-                        if (element) {
-                            element.classList.add("active-dots");
-                            element.classList.remove("inactive-dots");
+                let start = inputArray[0];
+                let end = inputArray[1];
+                let rangeArray = [];
+
+                if (start <= end) {
+                    for (let i = start; i <= end; i++) {
+                        rangeArray.push(i);
+                    }
+                } else {
+                    for (let i = start; i >= end; i--) {
+                        rangeArray.push(i);
+                    }
+                }
+
+                return rangeArray;
+            }
+            function {{$chartId}}recognizeDotsStatus(value, baseArray) {
+                    let {{$chartId}}base = {{$chartId}}generateRangeArray(baseArray)
+                    let {{$chartId}}activeYears = {{$chartId}}generateRangeArray(value)
+                    let {{$chartId}}intersection = {{$chartId}}base.filter(x => !{{$chartId}}activeYears.includes(x));
+
+                    {{$chartId}}activeYears.forEach(id => {
+                        let {{$chartId}}element = document.getElementById("{{$chartId}}" +id);
+                        if ({{$chartId}}element) {
+                            {{$chartId}}element.classList.add("active-dots");
+                            {{$chartId}}element.classList.remove("inactive-dots");
                         }
                     })
 
-                    intersection.forEach(id => {
-                        let element = document.getElementById(id);
-                        if (element) {
-                            element.classList.remove("active-dots");
-                            element.classList.add("inactive-dots");
+                    {{$chartId}}intersection.forEach(id => {
+                        let {{$chartId}}element = document.getElementById("{{$chartId}}" + id);
+                        if ({{$chartId}}element) {
+                            {{$chartId}}element.classList.remove("active-dots");
+                            {{$chartId}}element.classList.add("inactive-dots");
                         }
                     })
                 }
         }'></div>
     </div>
-    <div x-data="{ showgraph: false }">
-        <div class="flex justify-end" x-show="!showgraph" @click="showgraph = true">
+    <div x-data="{ rbgshowgraph: false }" wire:ignore>
+        <div class="flex justify-end" x-show="!rbgshowgraph" @click="rbgshowgraph = true">
             <button class="show-hide-chart-btn">
                 Show Chart
                 <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 16 16" fill="none">
@@ -456,8 +477,9 @@
         'products' => $products,
         'segments' => $segments,
         'period' => $period,
+        'chartData' => $chartData,
         'chartId' => 'rbg'
-        ])
+        ], key(uniqid()))
     </div>
     <div class="w-full">
         <div class="table-wrapper">
@@ -564,3 +586,51 @@
         </div>
     </div>
 </div>
+@push('scripts')
+<script>
+    let {{$chartId}}decimalPoints = 0;
+    let {{$chartId}}unitType = 0
+    let {{$chartId}}reversOrder = false
+    function {{$chartId}}setRound(v){
+        {{$chartId}}decimalPoints = v
+        Livewire.emit('{{$chartId}}decimalChanged', v)
+        @this.set('decimalPoint', v)
+    }
+    function {{$chartId}}setReverseOrder(v){
+        {{$chartId}}reversOrder = v
+        Livewire.emit('{{$chartId}}orderChanged', v)
+        @this.set('reverseOrder', v)
+    }
+    function {{$chartId}}setUnitType(v){
+        {{$chartId}}unitType = v
+        Livewire.emit('{{$chartId}}unitChanged', {{$chartId}}unitType)
+        @this.set('unit', {{$chartId}}unitType)
+    }
+
+    const {{$chartId}}annualCheckbox = document.getElementById("{{$chartId}}date-annual");
+    const {{$chartId}}fiscalAnnualCheckbox = document.getElementById("{{$chartId}}date-fiscal-annual");
+
+    {{$chartId}}annualCheckbox.addEventListener("click", function() {
+        Livewire.emit('{{$chartId}}periodChanged', 'args')
+    });
+    {{$chartId}}fiscalAnnualCheckbox.addEventListener("click", function() {
+        Livewire.emit('{{$chartId}}periodChanged', 'args')
+    });
+    // date-fiscal-quarterly
+    const {{$chartId}}quarterlyCheckbox = document.getElementById("{{$chartId}}date-quarterly");
+    const {{$chartId}}fiscalQuarterlyCheckbox = document.getElementById("{{$chartId}}date-fiscal-quaterly");
+
+    {{$chartId}}quarterlyCheckbox.addEventListener("click", function() {
+        Livewire.emit('{{$chartId}}periodChanged', 'qrgs')
+    });
+    {{$chartId}}fiscalQuarterlyCheckbox.addEventListener("click", function() {
+        Livewire.emit('{{$chartId}}periodChanged', 'qrgs')
+    });
+
+    // const {{$chartId}}unitTypeDropdownCloseIcon = document.getElementById("{{$chartId}}unitTypeClose");
+
+    // {{$chartId}}unitTypeDropdownCloseIcon.addEventListener("click", function() {
+    //     document.getElementById('{{$chartId}}{{$chartId}}dropdown-UnitType').classList.toggle("hidden");
+    // });
+</script>
+@endpush

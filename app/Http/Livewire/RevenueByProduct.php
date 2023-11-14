@@ -36,15 +36,14 @@ class RevenueByProduct extends Component
     public $quarterRange = [];
     public $decimalPoint = 0;
     public $reverseOrder = false;
-    public $chartId = "rbp";
+    public $chartId = 'rbp';
+    protected $listeners = ['tabClicked', 'tabSubClicked', 'rbpanalysisDatesChanged', 'rbpdecimalChange', 'rbpperiodChanged', 'rbpunitChanged'];
 
-    protected $listeners = ['tabClicked', 'tabSubClicked', 'analysisDatesChanged', 'decimalChange', 'periodChanged'];
-
-    public function decimalChange($decimal){
+    public function rbpdecimalChange($decimal){
         $this->decimalPoint = $decimal;
     }
 
-    public function unitChanged($unit){
+    public function rbpunitChanged($unit){
         $this->unit = $unit;
     }
 
@@ -52,7 +51,7 @@ class RevenueByProduct extends Component
         return $this->unit;
     }
 
-    public function analysisDatesChanged($value)
+    public function rbpanalysisDatesChanged($value)
     {
         $this->years = array_reverse(array_keys($this->products));
         if($this->reverseOrder){
@@ -77,10 +76,9 @@ class RevenueByProduct extends Component
         return $this->years;
     }
 
-    public function periodChanged($period){
+    public function rbpperiodChanged($period){
         $this->period = $period == 'arps' ? 'annual' : 'quarterly';
         $this->getProducts();
-        $this->getTickerPresentation();
         $this->rangeDates = array_keys($this->products);
 
         $this->years = array_reverse(array_keys($this->products));
@@ -118,7 +116,6 @@ class RevenueByProduct extends Component
         $this->period = $period;
         $this->companyName = $this->ticker;
         $this->getProducts();
-        $this->getTickerPresentation();
         $this->rangeDates = array_keys($this->products);
 
         $this->years = array_reverse(array_keys($this->products));
@@ -143,7 +140,7 @@ class RevenueByProduct extends Component
             ->where('ticker', '=', $this->ticker)
             ->where('endpoint', '=', $source)
             ->value('api_return_open_ai');
-
+        $json =
         $data = json_decode($json, true);
         $products = [];
         $dates = [];
@@ -167,7 +164,7 @@ class RevenueByProduct extends Component
             }
         }
 
-        $this->json = base64_encode($json);
+        // $this->json = base64_encode($json);
         if($source == 'arps'){
             $this->products = array_slice($products, 0, 6);
             $this->segments = array_slice($segments, 0, 6);
@@ -178,19 +175,6 @@ class RevenueByProduct extends Component
         }
     }
 
-
-    public function getTickerPresentation()
-    {
-        $data = json_decode(DB::connection('pgsql-xbrl')
-            ->table('info_tikr_presentations')
-            ->where('ticker', $this->ticker)->orderByDesc('id')->first()->info, true)['annual'];
-        $this->ebitda = $data['Income Statement']['EBITDA'];
-        $this->adjNetIncome = $data['Income Statement']['Net Income'];
-        $this->dilutedEPS = $data['Income Statement']['Diluted EPS Excl Extra Items'];
-        $this->revenues = $data['Income Statement']['Revenues'];
-        $this->dilutedSharesOut = $data['Income Statement']['Weighted Average Diluted Shares Outstanding'];
-        // dd($this->ebitda, $this->adjNetIncome, $this->dilutedEPS);
-    }
     public function render()
     {
         return view('livewire.revenue-by-product');
