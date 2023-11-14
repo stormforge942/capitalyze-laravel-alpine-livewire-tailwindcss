@@ -12,18 +12,6 @@
     ]" />
 
     <div class="mt-6" id="track-ownership-tabs">
-        <x-primary-tabs :tabs="['discover' => 'Discover', 'favorite' => 'My Favorites']">
-            <x-slot name="head">
-                @include('livewire.track-investor.search')
-            </x-slot>
-
-            <div x-show="active === 'discover'" x-cloak>
-                <livewire:track-investor.discover />
-            </div>
-    
-            <div x-show="active === 'favorite'" x-cloak>
-                <livewire:track-investor.favorites />
-            </div>
-        </x-primary-tabs>
+        <livewire:tabs :tabs="$tabs" :ssr="false">
     </div>
 </div>

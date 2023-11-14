@@ -14,7 +14,6 @@ class Discover extends Component
 
     protected $listeners = [
         'update' => '$refresh',
-        'update:search' => 'updatedSearch'
     ];
 
     public $perPage = 20;

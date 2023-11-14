@@ -1,11 +1,15 @@
-<div>
+<div x-data="{ search: @entangle('search') }">
     <div class="hidden md:flex items-baseline justify-between">
         <h2 class="text-xl font-semibold">My Favorites</h2>
 
-        <div class="hidden md:block">
+        @include('livewire.track-investor.search')
+    </div>
+
+    <template x-teleport="#track-ownership-tabs .tab-slot" @input.debounce="$wire.search = $event.target.value">
+        <div x-show="active === 'my-favorites'" x-cloak>
             @include('livewire.track-investor.search')
         </div>
-    </div>
+    </template>
 
     <div class="mt-6">
         <div wire:loading.block wire:target="search, $refresh">
