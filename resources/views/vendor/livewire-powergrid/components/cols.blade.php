@@ -25,7 +25,7 @@
         <span>{{ $column->title }}</span>
         @if ($column->sortable)
             <span>
-                @if ($multiSort && array_key_exists($field, $sortArray))
+                {{-- @if ($multiSort && array_key_exists($field, $sortArray))
                     @if ($sortArray[$field] == 'desc')
                         &#8595;
                     @else
@@ -34,18 +34,18 @@
                 @elseif($multiSort)
                     &#8597;
                 @else
-                    @if ($sortField !== $field)
+                    @if ($sortField !== $field) --}}
                         <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16"
                             viewBox="0 0 16
                     16" fill="none">
                             <path d="M12 6L8 2L4 6H12ZM12 10L8 14L4 10H12Z" fill="#464E49" />
                         </svg>
-                    @elseif ($sortDirection == 'desc')
+                    {{-- @elseif ($sortDirection == 'desc')
                         &#8593;
                     @else
                         &#8595;
                     @endif
-                @endif
+                @endif --}}
             </span>
         @endif
     </div>
