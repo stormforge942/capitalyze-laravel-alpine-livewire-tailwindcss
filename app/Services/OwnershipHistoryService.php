@@ -13,11 +13,8 @@ class OwnershipHistoryService
 
     public static function push(array $data)
     {
-        if (
-            $data['type'] === 'company' &&
-            !count(session('ownership-history.items', []))
-        ) {
-            session()->put('ownership-history.companyUrl', $data['url']);
+        if (!count(session('ownership-history.items', []))) {
+            session()->put('ownership-history.initial', $data['url']);
             return;
         }
 
@@ -54,8 +51,8 @@ class OwnershipHistoryService
         return Arr::last($history);
     }
 
-    public static function getCompanyUrl(): ?string
+    public static function getInitialUrl(): ?string
     {
-        return session('ownership-history.companyUrl');
+        return session('ownership-history.initialUrl');
     }
 }

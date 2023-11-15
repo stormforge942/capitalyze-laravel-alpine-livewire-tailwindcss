@@ -18,6 +18,7 @@ class Breadcrumb extends Component
     {
         return view('livewire.ownership.breadcrumb', [
             'historyItems' => OwnershipHistoryService::get(),
+            'initialUrl' => OwnershipHistoryService::getInitialUrl(),
         ]);
     }
 
@@ -36,8 +37,8 @@ class Breadcrumb extends Component
     {
         OwnershipHistoryService::clear();
 
-        if (OwnershipHistoryService::getCompanyUrl()) {
-            return redirect(OwnershipHistoryService::getCompanyUrl());
+        if (OwnershipHistoryService::getInitialUrl()) {
+            return redirect(OwnershipHistoryService::getInitialUrl());
         }
 
         return redirect()->route('company.ownership', $this->company);
