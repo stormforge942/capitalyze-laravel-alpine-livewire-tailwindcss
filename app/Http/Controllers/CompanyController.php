@@ -236,4 +236,17 @@ class CompanyController extends BaseController
             'tab' => 'company-fund',
         ]);
     }
+
+    public function analysis(Request $request, string $ticker){
+        $company = Company::query()
+            ->where('ticker', $ticker)
+            ->firstOrFail();
+
+        return view('layouts.company', [
+            'company' => $company,
+            'ticker' => $ticker,
+            'period' => $request->query('period', 'annual'),
+            'tab' => 'analysis',
+        ]);
+    }
 }

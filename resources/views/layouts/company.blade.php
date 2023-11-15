@@ -20,7 +20,7 @@
             display: none;
         }
     </style>
-    
+
     <!-- Scripts -->
     @vite(['resources/css/app.css', 'resources/js/app.js'])
 
@@ -82,6 +82,8 @@
             <livewire:etf.filings />
         @elseif($tab === 'filings-summary')
             <livewire:comapany-filings-summary :company="$company" :tinker="$ticker" :period="$period"/>
+        @elseif($tab == 'analysis')
+            <livewire:company-analysis :company="$company" :ticker="$ticker" :period="$period" />
         @endif
     </main>
 
