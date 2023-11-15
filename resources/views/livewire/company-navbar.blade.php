@@ -4,30 +4,30 @@
         collapsed: false,
         toggle() {
             this.collapsed = !this.collapsed
-    
+
             if (this.collapsed) {
                 document.body.classList.add('nav-collapsed')
-                
-                document.getElementById('default-sidebar').classList.remove('w-52')
-    
-                document.getElementById('main-container').classList.remove('lg:ml-52')
+
+                document.getElementById('default-sidebar').classList.remove('w-56')
+
+                document.getElementById('main-container').classList.remove('lg:ml-56')
                 document.getElementById('main-container').classList.add('lg:ml-20');
-    
-                document.getElementById('navigation').classList.remove('lg:ml-52');
+
+                document.getElementById('navigation').classList.remove('lg:ml-56');
                 document.getElementById('navigation').classList.add('lg:ml-20');
             } else {
                 document.body.classList.remove('nav-collapsed')
-    
+
                 document.getElementById('main-container').classList.remove('lg:ml-20');
-                document.getElementById('main-container').classList.add('lg:ml-52')
-    
+                document.getElementById('main-container').classList.add('lg:ml-56')
+
                 document.getElementById('navigation').classList.remove('lg:ml-20');
-                document.getElementById('navigation').classList.add('lg:ml-52');
+                document.getElementById('navigation').classList.add('lg:ml-56');
             }
         }
     }"
-        class="fixed top-0 left-0 z-40 hidden h-screen pt-10 bg-white border-r border-gray-200 lg:block dark:bg-gray-800 dark:border-gray-700 w-52"
-        :class="collapsed ? 'w-20' : 'w-52'" aria-label="Sidebar">
+        class="fixed top-0 left-0 z-40 hidden h-screen pt-10 bg-white border-r border-gray-200 lg:block dark:bg-gray-800 dark:border-gray-700 w-56"
+        :class="collapsed ? 'w-20' : 'w-56'" aria-label="Sidebar">
         <div class="flex flex-col h-full px-6 pb-4 bg-white dark:bg-gray-800">
             <button class="absolute -right-3 top-40" :class="collapsed ? 'rotate-180' : ''" @click="toggle">
                 <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
@@ -246,7 +246,7 @@
                                         href="{{ route('company.track-investor', ['ticker' => $this->company->ticker]) }}">
                                         Track Investors
                                     </a>
-                                </li>  
+                                </li>
                                 @foreach ($child as $childItem)
                                     <li class="space-y-2">
                                         <a href="{{ $childItem['url'] ?? '#' }}"

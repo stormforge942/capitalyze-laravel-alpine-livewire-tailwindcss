@@ -7,7 +7,7 @@
             <img src="{{url('/svg/pdf.svg')}}" alt="pdf"/>
         </div>
     </div>
-    <div class="flex flex-col mx-6 md:lg-0 ">
+    <div class="flex flex-col mx-6 md:lg-0 ml-0">
         <div> <h4 class="text-lg text-[#121A0F] font-[700]"> {{$company->name}} ({{$company->ticker}})</h4></div>
         <div class="flex justify-between items-center content-center">
             <div class="flex justify-start content-center items-center mt-3">
@@ -91,7 +91,7 @@
                 <livewire:is :component="'filings-summary.'.$tabName" :company="$company" :ticker="$ticker"/>
             @elseif($tabName === 'all-filings')
                 <livewire:is :component="'filings-summary.'.$tabName" :company="$company" :ticker="$ticker"/>
-            @elseif($tabName === 'key-exhibits')        
+            @elseif($tabName === 'key-exhibits')
                 <livewire:is :component="'filings-summary.'.$tabName" :company="$company" :ticker="$ticker"/>
             @endif
         </div>

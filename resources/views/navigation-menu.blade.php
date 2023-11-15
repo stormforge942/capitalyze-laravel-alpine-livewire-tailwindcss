@@ -1,4 +1,4 @@
-<div class="lg:ml-52" id="navigation">
+<div class="lg:ml-56" id="navigation">
     <div class="flex items-center justify-between px-4 py-8 bg-white lg:hidden header__main">
         <div class="flex items-center justify-between gap-1">
             @auth
