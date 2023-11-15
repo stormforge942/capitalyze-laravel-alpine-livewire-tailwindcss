@@ -41,32 +41,34 @@
                                     <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="m19 19-4-4m0-7A7 7 0 1 1 1 8a7 7 0 0 1 14 0Z"/>
                                 </svg>
                             </div>
-                            <input type="search" id="default-search" class="flex focus:outline-none focus:ring-0  h-0 leading-3 w-full p-4 pl-10 text-sm text-gray-900 border-b-0 border-t-0 border-l-0 border-r-0 bg-gray-100 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white" placeholder="Search">
+                            <input type="search" id="default-search" class="flex rounded-sm border-[#E8EBF2] ring-[#E8EBF2] focus:ring-[#E8EBF2] focus:outline-none focus:ring-0  h-0 leading-3 w-full p-4 pl-10 text-sm text-gray-900 bg-white dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white" placeholder="Search">
                         </div>
                     </div>
                     <div class="flex justify-start items-center bg-[#E8EBF2] my-4 rounded">
-                        <div class="mr-3 bg-[#52D3A2] px-[1rem] py-[0.25rem] rounded text-sm text-[#01090F] font-[500]"><a hre="#">D-9</a></div>
-                        <div class="mr-3  px-[1rem] py-[0.25rem] rounded text-sm text-[#7C8286] font-[500]"><a hre="#">A-G</a></div>
-                        <div class="mr-3  px-[1rem] py-[0.25rem] rounded text-sm text-[#7C8286] font-[500]"><a hre="#">H-N</a></div>
-                        <div class="mr-3  px-[1rem] py-[0.25rem] rounded text-sm text-[#7C8286] font-[500]"><a hre="#">O-Q</a></div>
-                        <div class="mr-3  px-[1rem] py-[0.25rem] rounded text-sm text-[#7C8286] font-[500]"><a hre="#">Q-W</a></div>
-                        <div class="mr-3  px-[1rem] py-[0.25rem] rounded text-sm text-[#7C8286] font-[500]"><a hre="#">X-Z</a></div>
+                        <div class="mr-3 bg-green-100 border-[#52D3A2] border-2 px-[2.15rem] py-[0.15rem] rounded text-sm text-[#01090F] font-[500]"><a hre="#">D-9</a></div>
+                        <div class="mr-3  px-[1rem] py-[0.15rem] rounded text-sm text-[#7C8286] font-[500]"><a hre="#">A-G</a></div>
+                        <div class="mr-3  px-[1rem] py-[0.15rem] rounded text-sm text-[#7C8286] font-[500]"><a hre="#">H-N</a></div>
+                        <div class="mr-3  px-[1rem] py-[0.15rem] rounded text-sm text-[#7C8286] font-[500]"><a hre="#">O-Q</a></div>
+                        <div class="mr-3  px-[1rem] py-[0.15rem] rounded text-sm text-[#7C8286] font-[500]"><a hre="#">Q-W</a></div>
+                        <div class="mr-3  px-[1rem] py-[0.15rem] rounded text-sm text-[#7C8286] font-[500]"><a hre="#">X-Z</a></div>
                     </div>
-                    <div class="grid xs:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 gap-y-3">
-                        @for($i=0; $i<100; $i++)
-                            <div class="flex justify-start items-center">
-                                <input type="checkbox" class="focus:ring-0 text-[#121A0F] focus:border-transparent" id="{{$i}}"/> 
-                                <label class="ml-3 text-[#121A0F] text-base font-[400]" for="{{$i}}">486APOS</label>
-                            </div>
-                        @endfor
-                    <div>
+                    <form>
+                        <div class="grid xs:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 gap-y-3 mx-1">
+                            @for($i=0; $i<100; $i++)
+                                <div class="flex justify-start items-center">
+                                    <input type="checkbox" value="{{$i}}" wire:model="selectedIds" class="focus:ring-0 text-[#121A0F] focus:border-transparent" id="{{$i}}"/> 
+                                    <label class="ml-3 text-[#121A0F] text-base font-[400]" for="{{$i}}">486APOS</label>
+                                </div>
+                            @endfor
+                        <div>
+                    </form>
                 </div>
             </div>
         </div>
     </div>
     <div class="mt-5 sm:mt-6">
         <span class="flex w-full rounded-md shadow-sm">
-            <button class="inline-flex text-base bg-[#D1D3D5] text-[#fff] font-[500] justify-center w-full px-4 py-2  rounded ">
+            <button wire:click.prevent="handleCheckBox" @click="open=false" class="inline-flex text-base {{count($selectedIds) > 0 ? 'bg-[#52D3A2] text-[#121A0F]' : 'bg-[#D1D3D5] text-[#fff]' }} font-[500] justify-center w-full px-4 py-2  rounded ">
                 Show Result
             </button>
         </span>

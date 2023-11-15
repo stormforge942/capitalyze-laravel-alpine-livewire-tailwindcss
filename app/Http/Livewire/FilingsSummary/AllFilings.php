@@ -10,10 +10,15 @@ class AllFilings extends Component
     public $ticker;
     public $model = false;
     public $selectedTab = "all-documents";
-    protected $listeners = ['handleAllFilingsTabs' => 'handleTabs'];
+    public $checkedCount;
+    protected $listeners = ['handleAllFilingsTabs' => 'handleTabs', 'emitCountInAllfilings'];
 
     public function handleTabs($tab){
         $this->selectedTab = $tab;
+    }
+
+    public function emitCountInAllfilings($count){
+        $this->checkedCount = $count;
     }
 
     public function handleFilingBrowserType($val){

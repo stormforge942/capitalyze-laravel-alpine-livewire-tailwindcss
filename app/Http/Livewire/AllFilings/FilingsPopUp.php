@@ -7,11 +7,16 @@ use Livewire\Component;
 class FilingsPopUp extends Component
 {
     public $model = false;
+    public $selectedIds = [];
+
     protected $listeners = ['handleFilingBrowserType'];
 
     public function handleFilingBrowserType($val){
-        dd($val);
         $this->model = $val;
+    }
+
+    public function handleCheckBox(){
+      $this->emit('emitCountInAllfilings', count($this->selectedIds));  
     }
 
     public function render()
