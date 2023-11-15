@@ -58,7 +58,7 @@
                             clip-rule="evenodd" />
                     </svg>
                 </button>
-                <div x-show="dropdownMenu" class="absolute left-0 py-2 mt-2 bg-white  rounded-md shadow-xl w-44">
+                <div x-show="dropdownMenu" class="absolute z-50 left-0 py-2 mt-10 bg-white  rounded-md shadow-xl w-44">
                     <div class="flex justify-start items-center content-start">
                         <a href="javascript;" wire:click.prevent="setTabName('summary')" class="block px-4 py-2 text-sm font-[600]">
                             Filings Summary

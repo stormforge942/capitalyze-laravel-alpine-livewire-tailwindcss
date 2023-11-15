@@ -7,6 +7,12 @@ use Livewire\Component;
 class Financials extends Component
 {
     public $data = [];
+    public $checkedCount;
+    protected $listeners = ['emitCountInAllfilings'];
+
+    public function emitCountInAllfilings($selected){
+        $this->checkedCount = $selected;
+    }
 
     public function render()
     {
