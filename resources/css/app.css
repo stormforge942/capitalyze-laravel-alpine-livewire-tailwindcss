@@ -19,6 +19,46 @@
 @tailwind components;
 @tailwind utilities;
 
+/* active inner tab */
+
+.innertab-active ::after {
+    content: ' ';
+    width: 120%;
+    border: 2px solid #13B05B;
+    display: flex;
+    margin-top: 4px;
+    margin-left: -11px;
+}
+
+.change-select-chevron {
+    background-image: url("../img/svg/chevron-down-with-circle.svg") !important;
+    background-size: 1.125rem 1.125rem !important;
+    background: none;
+    border-radius: 0;
+    border: none;
+    font-size: 0.8125rem;
+    outline: none;
+  }
+
+/* make more fancy scollbar */
+
+::-webkit-scrollbar {
+    height: 5px; 
+    width: 5px; 
+}
+
+/* Track */
+::-webkit-scrollbar-track {
+    background: #888;
+    border-radius: 5px;
+}
+
+/* Handle */
+::-webkit-scrollbar-thumb {
+    background: #000;
+    border-radius: 5px;
+}
+
 /* ownership breadcrumb border */
 .ownership-active-bread-link {
     position: relative;

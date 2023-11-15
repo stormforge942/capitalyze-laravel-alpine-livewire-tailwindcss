@@ -80,6 +80,8 @@
             <livewire:ownership.company-fund :company="$company" :ticker="$ticker" :period="$period" />
         @elseif($tab == 'etf-filings')
             <livewire:etf.filings />
+        @elseif($tab === 'filings-summary')
+            <livewire:comapany-filings-summary :company="$company" :tinker="$ticker" :period="$period"/>
         @elseif($tab == 'analysis')
             <livewire:company-analysis :company="$company" :ticker="$ticker" :period="$period" />
         @endif
