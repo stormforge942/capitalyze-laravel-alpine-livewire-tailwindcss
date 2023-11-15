@@ -52,6 +52,7 @@ class CompanyReport extends Component
     public $activeTitle = 'Income Statement';
 
     protected $listeners = ['periodChange', 'tabClicked', 'tabSubClicked', 'selectRow', 'unselectRow'];
+
     protected $queryString = [
         'unitType',
         'reverse',
@@ -220,6 +221,8 @@ class CompanyReport extends Component
 
     public function changeDates($dates)
     {
+
+
         $this->tableLoading = true;
         $this->rows = [];
 
@@ -284,7 +287,9 @@ class CompanyReport extends Component
         foreach ($array as $key => $value) {
             if (is_array($value)) {
                 if (strtotime($key) !== false) {
+
                     $this->tableDates[] = date('Y-m-d', strtotime($key));
+
                 }
                 $this->traverseArray($value);
             } else {
@@ -295,19 +300,28 @@ class CompanyReport extends Component
 
     public function generateTableDates()
     {
+
+        $this->tableDates = []; // Clears the array
+
+        // get all dates possibles and fill tableDates
         $this->traverseArray($this->data);
 
         $dates = [];
+
+        // min and max dates
         $minYear = strtotime(min(array_unique($this->tableDates)));
         $maxYear = strtotime(max(array_unique($this->tableDates)));
         $year = 365 * 24 * 60 * 60;
 
+        // generate all dates between min and max
         for ($currentDate = $minYear; $currentDate <= $maxYear; $currentDate += $year) {
             $dates[] = date('Y-m-d', $currentDate);
         }
 
+        // for the slider date - rangeDates is slider dates
         $this->rangeDates = $dates;
 
+        // define selected date for the slider
         if (count($this->rangeDates) > 0) {
             if ($this->rangeDates[0] > $this->rangeDates[count($this->rangeDates) - 1]) {
                 $this->rangeDates = array_reverse($this->rangeDates);
@@ -316,9 +330,18 @@ class CompanyReport extends Component
             $this->selectedValue = [$this->rangeDates[0], $this->rangeDates[count($this->rangeDates) - 1]];
         }
 
+        // define the maximum date of the slider
         $rangeMax = strtotime($this->selectedValue[1]) ?: strtotime(now());
-        $this->selectedValue[0] = $this->startDate ?? date('Y-m-d', $rangeMax - 6 * 365 * 24 * 60 * 60);
+
+        // if the start date is greater than the minimum date of the slider
+        if(strtotime($this->startDate) > $minYear) {
+            $this->selectedValue[0] = $this->startDate ?? date('Y-m-d', $rangeMax - 6 * 365 * 24 * 60 * 60);
+        }
+
+        // if the end date is null than define the maximum date of the slider
         $this->selectedValue[1] = $this->endDate ?? $this->rangeDates[count($this->rangeDates) - 1];
+
+
         $this->changeDates($this->selectedValue);
 
     }
