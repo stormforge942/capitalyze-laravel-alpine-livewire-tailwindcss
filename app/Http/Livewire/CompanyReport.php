@@ -52,6 +52,7 @@ class CompanyReport extends Component
     public $activeTitle = 'Income Statement';
 
     protected $listeners = ['periodChange', 'tabClicked', 'tabSubClicked', 'selectRow', 'unselectRow'];
+
     protected $queryString = [
         'unitType',
         'reverse',
@@ -207,6 +208,13 @@ class CompanyReport extends Component
         DB::setDefaultConnection($defaultConnectionName);
 
         $data = json_decode($query, true);
+
+        // handle period is not set by default we put it to annual
+        $this->period ?? $this->period = 'annual';
+
+        // adjust data in case of standardised template and annual period or quarterly period since both are combined in one array
+        $data = ($this->view === 'Standardised Template') ? ($this->period === 'annual' ? $data['annual'] : $data['quarter']) : $data;
+
         $this->data = $data;
         $this->generateUI();
     }
@@ -231,22 +239,24 @@ class CompanyReport extends Component
                 $this->tableDates = [];
 
                 if (gettype($dates[0]) === 'integer') {
-                    $date = new DateTime($dates[0] . '-09-09');
+                    $date = new DateTime($dates[0] . '-01-01');
                     $dates[0] = $date->format('Y-m-d');
                 }
 
                 if (gettype($dates[1]) === 'integer') {
-                    $date = new DateTime($dates[1] . '-09-09');
+                    $date = new DateTime($dates[1] . '-12-31');
                     $dates[1] = $date->format('Y-m-d');
                 }
 
-                $minYear = strtotime($dates[0]);
-                $maxYear = strtotime($dates[1]);
-                $year = 365 * 24 * 60 * 60;
+                // filter tableDates to only keep the selected date from the slider
+                $this->tableDates = array_values(array_unique(array_filter($this->rangeDates, function ($date) {
+                    $timestamp = strtotime($date);
+                    $startTimestamp = strtotime($dates[0]);
+                    $endTimestamp = strtotime($dates[1]);
 
-                for ($currentDate = $minYear; $currentDate <= $maxYear; $currentDate += $year) {
-                    $this->tableDates[] = date('Y-m-d', $currentDate);
-                }
+                    return $timestamp !== false && $timestamp >= $startTimestamp && $timestamp <= $endTimestamp;
+                })));
+
             }
         }
 
@@ -284,7 +294,9 @@ class CompanyReport extends Component
         foreach ($array as $key => $value) {
             if (is_array($value)) {
                 if (strtotime($key) !== false) {
-                    $this->tableDates[] = date('Y-m-d', strtotime($key));
+                    if(!in_array(date('Y-m-d', strtotime($key)), $this->tableDates)) {
+                        $this->tableDates[] = date('Y-m-d', strtotime($key));
+                    }
                 }
                 $this->traverseArray($value);
             } else {
@@ -295,31 +307,51 @@ class CompanyReport extends Component
 
     public function generateTableDates()
     {
+
+        $this->tableDates = []; // Clears the array
+
+        // get all dates possibles and fill tableDates
         $this->traverseArray($this->data);
 
-        $dates = [];
-        $minYear = strtotime(min(array_unique($this->tableDates)));
-        $maxYear = strtotime(max(array_unique($this->tableDates)));
-        $year = 365 * 24 * 60 * 60;
+        // for the slider date - rangeDates is slider dates
+        $this->rangeDates = $this->tableDates;
 
-        for ($currentDate = $minYear; $currentDate <= $maxYear; $currentDate += $year) {
-            $dates[] = date('Y-m-d', $currentDate);
-        }
 
-        $this->rangeDates = $dates;
-
+        // define selected date for the slider
         if (count($this->rangeDates) > 0) {
+
             if ($this->rangeDates[0] > $this->rangeDates[count($this->rangeDates) - 1]) {
                 $this->rangeDates = array_reverse($this->rangeDates);
             }
-
-            $this->selectedValue = [$this->rangeDates[0], $this->rangeDates[count($this->rangeDates) - 1]];
+            $this->selectedValue = [$this->rangeDates[count($this->rangeDates) - 7], $this->rangeDates[count($this->rangeDates) - 1]];
         }
 
+
+        // define the maximum date of the slider
         $rangeMax = strtotime($this->selectedValue[1]) ?: strtotime(now());
-        $this->selectedValue[0] = $this->startDate ?? date('Y-m-d', $rangeMax - 6 * 365 * 24 * 60 * 60);
+
+        // if the end date is null than define the maximum date of the slider
         $this->selectedValue[1] = $this->endDate ?? $this->rangeDates[count($this->rangeDates) - 1];
-        $this->changeDates($this->selectedValue);
+
+
+        // if the start date is greater than the minimum date of the slider
+        if(strtotime($this->startDate) > strtotime(min($this->tableDates))) {
+            $this->selectedValue[0] = $this->startDate ?? date('Y-m-d', $rangeMax - 6 * 365 * 24 * 60 * 60);
+        }
+
+        // adjust the data table for the selected dates
+
+        $this->endDate = $this->endDate ?? $this->selectedValue[1];
+        $this->startDate = $this->startDate ?? date('Y-m-d', $rangeMax - 6 * 365 * 24 * 60 * 60);
+
+        // filter tableDates to only keep the selected date from the slider
+        $this->tableDates = array_reverse(array_values(array_unique(array_filter($this->tableDates, function ($date) {
+            $timestamp = strtotime($date);
+            $startTimestamp = strtotime($this->selectedValue[0]);
+            $endTimestamp = strtotime($this->selectedValue[1]);
+
+            return $timestamp !== false && $timestamp >= $startTimestamp && $timestamp <= $endTimestamp;
+        }))));
 
     }
 
@@ -355,13 +387,6 @@ class CompanyReport extends Component
         }
 
         if ($this->view === 'Standardised Template') {
-            if ($this->period === 'annual') {
-                $data = $data['annual'];
-            }
-
-            if ($this->period === 'quarterly') {
-                $data = $data['quarter'];
-            }
             foreach ($this->navbar[$this->activeIndex] as $tab) {
                 if ($tab['id'] === $this->activeSubIndex) {
                     $data = match ($tab['title']) {

@@ -490,14 +490,14 @@
                                     </ul>
                                 </div>
 
-                                <div class="years-range-wrapper my-2" wire:ignore>
-                                    <div class="dots-wrapper">
-                                        @foreach($rangeDates as $key => $date)
-                                            <span id="{{date('Y', strtotime($date))}}" class="inactive-dots"></span>
-                                        @endforeach
+                                    <div class="years-range-wrapper my-2">
+                                        <div class="dots-wrapper">
+                                            @foreach($rangeDates as $key => $date)
+                                                <span id="{{date('Y', strtotime($date))}}" class="inactive-dots"></span>
+                                            @endforeach
+                                        </div>
+                                        <div id="range-slider-company-report" class="range-slider"></div>
                                     </div>
-                                    <div id="range-slider-company-report" class="range-slider"></div>
-                                </div>
 
                                 @if(count($chartData))
                                     <div class="my-4 pb-5 w-full px-5 bg-white flex flex-col">
@@ -625,7 +625,6 @@
 <script>
 
     let slideOpen = false;
-    const el = document.querySelector('#range-slider-company-report');
 
     function generateRangeArray(inputArray) {
         if (inputArray.length !== 2) {
@@ -684,16 +683,17 @@
 
         updateRangeSlider();
 
-     
+
         Livewire.hook('message.processed', (message, component) => {
-            console.log(message.updateQueue[0].payload.value)
             if (message.updateQueue.some(update => update.payload.value === 'Standardised Template' || 'As reported (Harmonized)')) {
-                console.log('updateRangeSlider');
-                // Call your updateRangeSlider function here
+
+                console.log(@this.rangeDates);
+                console.log(@this.tableDates);
                 updateRangeSlider();
+
             }
         });
-       
+
 
         Livewire.hook('element.updated', () => {
             initChart()
@@ -701,11 +701,14 @@
 
         function updateRangeSlider() {
 
+            let el = document.querySelector('#range-slider-company-report');
+
             if(!el) {
                 return;
             }
 
             let rangeDates = @this.rangeDates
+
             let selectedValue = [];
 
             if (rangeDates.length > 0) {
@@ -731,12 +734,18 @@
                 endDate = new Date(@this.endDate).getFullYear()
             }
 
+
             let rangeMin = new Date(selectedValue[0]).getFullYear();
             let rangeMax = selectedValue[1] ? new Date(selectedValue[1]).getFullYear() : new Date().getFullYear();
+
+
             selectedValue[0] = startDate ?? rangeMax - 6;
             selectedValue[1] = endDate ?? rangeMax;
 
-            recognizeDotsStatus(selectedValue, [rangeMin, rangeMax]);
+
+            let valueAfter = null;
+
+
 
             rangeSlider(el, {
                 step: 1,
@@ -744,20 +753,33 @@
                 max: rangeMax,
                 value: selectedValue,
                 rangeSlideDisabled: true,
-                onInput: (value) => {
-                    if (value.length === 2 && value !== selectedValue) {
-                        recognizeDotsStatus(value, [rangeMin, rangeMax]);
-                        @this.changeDates(value)
+                onThumbDragEnd: (data) => {
 
-                        if (chart) {
-                            chart.destroy();
-                        }
+                    recognizeDotsStatus(valueAfter, [rangeMin, rangeMax]);
+
+                    console.log(valueAfter)
+                    @this.changeDates(valueAfter)
+
+                    if (chart) {
+                        chart.destroy();
+                    }
+                },
+                onInput: (value, userInteraction) => {
+                    if (value.length === 2 && value !== selectedValue) {
+                        valueAfter = value;
+                        recognizeDotsStatus(valueAfter, [rangeMin, rangeMax]);
                     }
                 }
             });
+
+            recognizeDotsStatus(selectedValue, [rangeMin, rangeMax]);
+
+
+
+
         }
     });
-    
+
 
     Livewire.on('slide-over.close', () => {
         slideOpen = false;
