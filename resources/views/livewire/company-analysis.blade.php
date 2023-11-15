@@ -53,9 +53,9 @@
                                 <div class="flex w-full overflow-x-hidden">
                                     <div class="tabs-container w-full" style="overflow-x: auto; white-space: nowrap;">
                                         <ul class="tabs-wrapper flex">
-                                            <li data-tab-index="0" class="whitespace-nowrap min-w-min p-4 border-b-2 max-h-[50px] overflow-hidden rounded-t-lg cursor-pointer border-transparent text-[#828C85] hover:text-[#828C85] px-6 tab active" wire:click="$emit('tabSubClicked', 'revenue')">Revenue</li>
-                                            <li data-tab-index="0" class="whitespace-nowrap min-w-min p-4 border-b-2 max-h-[50px] overflow-hidden rounded-t-lg cursor-pointer border-transparent text-[#828C85] hover:text-[#828C85] px-6 tab" wire:click="$emit('tabSubClicked', 'efficiency')">Efficiency</li>
-                                            <li data-tab-index="0" class="whitespace-nowrap min-w-min p-4 border-b-2 max-h-[50px] overflow-hidden rounded-t-lg cursor-pointer border-transparent text-[#828C85] hover:text-[#828C85] px-6 tab" wire:click="$emit('tabSubClicked', 'capital-allocation')">Capital Allocation</li>
+                                            <li data-tab-index="0" class="whitespace-nowrap min-w-min p-4 border-b-2 max-h-[50px] overflow-hidden rounded-t-lg cursor-pointer border-transparent text-[#828C85] hover:text-[#828C85] px-6 tab active">Revenue</li>
+                                            <li data-tab-index="0" class="whitespace-nowrap min-w-min p-4 border-b-2 max-h-[50px] overflow-hidden rounded-t-lg cursor-pointer border-transparent text-[#828C85] hover:text-[#828C85] px-6 tab">Efficiency</li>
+                                            <li data-tab-index="0" class="whitespace-nowrap min-w-min p-4 border-b-2 max-h-[50px] overflow-hidden rounded-t-lg cursor-pointer border-transparent text-[#828C85] hover:text-[#828C85] px-6 tab">Capital Allocation</li>
                                         </ul>
                                     </div>
                                 </div>
@@ -86,7 +86,13 @@
                                     ])
                                 </div>
                                 <div x-show="currentTab == 'revenue-by-employee'">
-
+                                    @livewire('revenue-by-employee', [
+                                        'company' => $company,
+                                        'companyName' => $companyName,
+                                        'ticker' => $ticker,
+                                        'cost' => $cost,
+                                        'period' => $period,
+                                    ])
                                 </div>
                             </div>
                         </div>

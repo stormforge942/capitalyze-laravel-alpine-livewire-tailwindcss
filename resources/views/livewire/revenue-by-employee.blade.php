@@ -2,7 +2,7 @@
     <div class="filters-row mb-3">
         <div class="select-wrapper flex items-center custom-text-xs" x-data="{unitType: 0}">
             <div class="flex items-center text-sm">Unit Type
-                <button id="dropdownUnitTypeButton" data-dropdown-toggle="dropdown-UnitType"
+                <button id="dropdownUnitTypeButton" data-dropdown-toggle="{{$chartId}}dropdown-UnitType"
                     class="flex items-center flowbite-select bg-gray-50 border border-gray-700 text-gray-900 text-sm ml-2 p-2"
                     name="view" id="">
                     <span
@@ -14,7 +14,7 @@
                     </svg>
                 </button>
                 <!-- Dropdown menu -->
-                <div id="dropdown-UnitType" wire:ignore
+                <div id="{{$chartId}}dropdown-UnitType" wire:ignore
                     class="z-10 hidden bg-white divide-y divide-gray-100 rounded-lg shadow w-60 dark:bg-gray-700 dark:divide-gray-600">
                     <div class="p-3 text-sm flex items-center justify-between">
                         <div>Unit Type</div>
@@ -95,7 +95,7 @@
                 </div>
             </div>
             <div class="ml-3 flex items-center text-sm" x-data="{reverseOrder:false}">Order
-                <button id="dropdownOrderButton" data-dropdown-toggle="dropdown-Order"
+                <button id="dropdownOrderButton" data-dropdown-toggle="{{$chartId}}dropdown-Order"
                     class="flex items-center flowbite-select bg-gray-50 border border-gray-700 text-gray-900 text-sm ml-2 p-2"
                     name="view" id="">
                     <span x-text="reverseOrder == false ? 'Latest on Right' : 'Latest on Left'"></span>
@@ -106,7 +106,7 @@
                     </svg>
                 </button>
                 <!-- Dropdown menu -->
-                <div id="dropdown-Order" wire:ignore
+                <div id="{{$chartId}}dropdown-Order" wire:ignore
                     class="z-10 hidden bg-white divide-y divide-gray-100 rounded-lg shadow w-60 dark:bg-gray-700 dark:divide-gray-600">
                     <div class="p-3 text-sm flex items-center justify-between">
                         <div>Order</div>
@@ -158,7 +158,7 @@
                 </div>
             </div>
             <div class="ml-3 flex items-center text-sm">Freeze Panes
-                <button type="submit" id="dropdownFreezePanesButton" data-dropdown-toggle="dropdown-FreezePanes"
+                <button type="submit" id="dropdownFreezePanesButton" data-dropdown-toggle="{{$chartId}}dropdown-FreezePanes"
                     class="flex items-center flowbite-select bg-gray-50 border border-gray-700 text-gray-900 text-sm ml-2 p-2"
                     name="view" id="">
                     Top Row
@@ -169,7 +169,7 @@
                     </svg>
                 </button>
                 <!-- Dropdown menu -->
-                <div id="dropdown-FreezePanes"
+                <div id="{{$chartId}}dropdown-FreezePanes"
                     class="z-10 hidden bg-white divide-y divide-gray-100 rounded-lg shadow w-60 dark:bg-gray-700 dark:divide-gray-600">
                     <div class="p-3 text-sm flex items-center justify-between">
                         <div>Freeze Panes</div>
@@ -236,7 +236,7 @@
                 </div>
             </div>
             <div wire:ignore class="ml-3 flex items-center text-sm" x-data="{round: 0}">Decimal
-                <button id="dropdownDecimalButton" data-dropdown-toggle="dropdown-Decimal"
+                <button id="dropdownDecimalButton" data-dropdown-toggle="{{$chartId}}dropdown-Decimal"
                     class="flex items-center flowbite-select bg-gray-50 border border-gray-700 text-gray-900 text-sm ml-2 p-2"
                     name="view" id="">
                     <span x-text='round == 0 ? "auto" : (round == 2 ? ".00" : (round == 3 ? ".00" : ""))'></span>
@@ -247,7 +247,7 @@
                     </svg>
                 </button>
                 <!-- Dropdown menu -->
-                <div id="dropdown-Decimal"
+                <div id="{{$chartId}}dropdown-Decimal"
                     class="z-10 hidden bg-white divide-y divide-gray-100 rounded-lg shadow w-60 dark:bg-gray-700 dark:divide-gray-600">
                     <div class="p-3 text-sm flex items-center justify-between">
                         <div>Decimal</div>
@@ -457,8 +457,8 @@
                 }
         }'></div>
     </div>
-    <div x-data="{ rbpshowgraph: false }" wire:ignore>
-        <div class="flex justify-end" x-show="!rbpshowgraph" @click="rbpshowgraph = true">
+    <div x-data="{ rbeshowgraph: false }" wire:ignore>
+        <div class="flex justify-end" x-show="!rbeshowgraph" @click="rbeshowgraph = true">
             <button class="show-hide-chart-btn">
                 Show Chart
                 <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 16 16" fill="none">
@@ -478,7 +478,7 @@
         'segments' => $segments,
         'chartData' => $chartData,
         'period' => $period,
-        'chartId' => 'rbp'
+        'chartId' => 'rbe'
         ], key(uniqid()))
     </div>
     <div class="w-full">
@@ -486,36 +486,32 @@
             <div class="table">
                 <div class="row-group row-head-fonts-sm row-border-custom table-border-bottom">
                     <div class="row row-head">
-                        <div class="cell font-bold">{{$companyName}} ({{$ticker}})</div>
+                        <div class="cell font-bold">Revenue / Employee</div>
                         @foreach ($this->selectedRange as $date)
                         <div class="cell font-bold">{{ $date }}</div>
                         @endforeach
                     </div>
-                    @foreach ($segments as $index => $segment)
                     <div class="row ">
-                        <div class="font-bold cell">
-                            {{ str_replace('[Member]', '', $segment) }}
-                        </div>
-                        @foreach ($this->selectedRange as $key => $date)
-                        @if (array_key_exists($segment, $products[$date]))
-                        <div class="font-bold cell">
-                            @if($this->selectedUnit == 0)
-                            {{ number_format($products[$date][$segment], $decimalPoint) }}
-                            @elseif($this->selectedUnit == 'thousands')
-                            {{ number_format($products[$date][$segment]/1000, $decimalPoint) }}
-                            @elseif($this->selectedUnit == 'millions')
-                            {{ number_format($products[$date][$segment]/1000000, $decimalPoint) }}
-                            @elseif($this->selectedUnit == 'billions')
-                            {{ number_format($products[$date][$segment]/1000000000, $decimalPoint) }}
+                        <div class="cell">Revenues</div>
+                        @foreach ($this->selectedRange as $date)
+                            @if(isset($revenues[$date]))
+                            <div class="cell">
+                                @if($this->selectedUnit == 0)
+                                {{ number_format(explode('|', $revenues[$date][0])[0], $decimalPoint) }}
+                                @elseif($this->selectedUnit == 'thousands')
+                                {{ number_format(explode('|', $revenues[$date][0])[0]/1000, $decimalPoint) }}
+                                @elseif($this->selectedUnit == 'millions')
+                                {{ number_format(explode('|', $revenues[$date][0])[0]/1000000, $decimalPoint) }}
+                                @elseif($this->selectedUnit == 'billions')
+                                {{ number_format(explode('|', $revenues[$date][0])[0]/1000000000, $decimalPoint) }}
+                                @endif
+                            </div>
                             @endif
-                        </div>
-                        @endif
                         @endforeach
                     </div>
-                    <div class="row row-sub">
+                    <div class="row">
                         <div class="cell">% Change YoY</div>
                         @foreach ($this->selectedRange as $key => $date)
-                        @if (array_key_exists($segment, $products[$date]))
                         <div class="cell">
                             @php
                             if($reverseOrder){
@@ -525,45 +521,24 @@
                             @if ($key == 0)
                             0.0%
                             @else
-                            {{ round((($products[$date][$segment] - $products[$years[$key - 1]][$segment]) /
-                            $products[$date][$segment]) * 100, 2) . '%' }}
+                            {{ number_format(((explode('|', $revenues[$date][0])[0] - explode('|', $revenues[$years[$key - 1]][0])[0]) /
+                            explode('|', $revenues[$date][0])[0]) * 100, $decimalPoint) . '%' }}
                             @endif
                         </div>
-                        @endif
                         @endforeach
                     </div>
-                    <div class="row row-sub">
-                        <div class="cell">% of Total</div>
-                        @foreach ($this->selectedRange as $key => $date)
-                        @if (array_key_exists($segment, $products[$date]))
-                        <div class="cell">
-                            {{ round((($products[$date][$segment] / array_sum($products[$date])) * 100), 2) }}%
-                        </div>
-                        @endif
+                    <div class="row ">
+                        <div class="cell">Employees</div>
+                        @foreach ($this->selectedRange as $date)
+                            @if(isset($employeeCount[$date]))
+                            <div class="cell">
+                                {{ number_format($employeeCount[$date]) }}
+                            </div>
+                            @endif
                         @endforeach
                     </div>
 
-                    <div class="row row-spacer "></div>
-                    @endforeach
-                    <div class="row ">
-                        <div class="font-bold cell">Total Revenues</div>
-                        @foreach ($this->selectedRange as $date)
-                        @if (array_key_exists($segment, $products[$date]))
-                        <div class="font-bold cell">
-                            @if($this->selectedUnit == 0)
-                            {{ number_format(array_sum($products[$date]), $decimalPoint) }}
-                            @elseif($this->selectedUnit == 'thousands')
-                            {{ number_format(array_sum($products[$date])/1000, $decimalPoint) }}
-                            @elseif($this->selectedUnit == 'millions')
-                            {{ number_format(array_sum($products[$date])/1000000, $decimalPoint) }}
-                            @elseif($this->selectedUnit == 'billions')
-                            {{ number_format(array_sum($products[$date])/1000000000, $decimalPoint) }}
-                            @endif
-                        </div>
-                        @endif
-                        @endforeach
-                    </div>
-                    <div class="row row-sub">
+                    <div class="row">
                         <div class="cell">% Change YoY</div>
                         @foreach ($this->selectedRange as $key => $date)
                         <div class="cell">
@@ -575,8 +550,47 @@
                             @if ($key == 0)
                             0.0%
                             @else
-                            {{ round(((array_sum($products[$date]) - array_sum($products[array_keys($products)[$key -
-                            1]])) / array_sum($products[$date])) * 100, 2) . '%' }}
+                            {{ number_format(($employeeCount[$date] - $employeeCount[$years[$key - 1]])/
+                                $employeeCount[$date] *100, $decimalPoint) }}%
+                            @endif
+                        </div>
+                        @endforeach
+                    </div>
+                    <div class="row ">
+                        <div class="cell font-bold">Revenue / Employee (‘000s)</div>
+                        @foreach ($this->selectedRange as $date)
+                            @if(isset($revenues[$date]))
+                            <div class="cell font-bold">
+                                @if($this->selectedUnit == 0)
+                                {{ number_format(explode('|', $revenues[$date][0])[0] / $employeeCount[$date], $decimalPoint) }}
+                                @elseif($this->selectedUnit == 'thousands')
+                                {{ number_format(explode('|', $revenues[$date][0])[0] / $employeeCount[$date]/1000, $decimalPoint) }}
+                                @elseif($this->selectedUnit == 'millions')
+                                {{ number_format(explode('|', $revenues[$date][0])[0] / $employeeCount[$date]/1000000, $decimalPoint) }}
+                                @elseif($this->selectedUnit == 'billions')
+                                {{ number_format(explode('|', $revenues[$date][0])[0] / $employeeCount[$date]/1000000000, $decimalPoint) }}
+                                @endif
+                            </div>
+                            @endif
+                        @endforeach
+                    </div>
+                    <div class="row">
+                        <div class="cell font-bold">% Change YoY</div>
+                        @foreach ($this->selectedRange as $key => $date)
+                        <div class="cell font-bold">
+                            @php
+                            if($reverseOrder){
+                                $key = (count($this->selectedRange) -1) - $key;
+                            }
+                            @endphp
+                            @if ($key == 0)
+                            0.0%
+                            @else
+                            @php
+                            $current = explode('|', $revenues[$date][0])[0] / $employeeCount[$date];
+                            $previous = explode('|', $revenues[$years[$key - 1]][0])[0] / $employeeCount[$years[$key - 1]];
+                            @endphp
+                            {{ number_format((($current - $previous) / $current) * 100, $decimalPoint) }}%
                             @endif
                         </div>
                         @endforeach
@@ -630,7 +644,7 @@
     // const {{$chartId}}unitTypeDropdownCloseIcon = document.getElementById("{{$chartId}}unitTypeClose");
 
     // {{$chartId}}unitTypeDropdownCloseIcon.addEventListener("click", function() {
-    //     document.getElementById('{{$chartId}}dropdown-UnitType').classList.toggle("hidden");
+    //     document.getElementById('{{$chartId}}{{$chartId}}dropdown-UnitType').classList.toggle("hidden");
     // });
 </script>
 @endpush
