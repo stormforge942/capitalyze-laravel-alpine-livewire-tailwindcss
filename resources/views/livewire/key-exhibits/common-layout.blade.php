@@ -4,10 +4,46 @@
             <table class="min-w-full divide-y divide-gray-200 dark:divide-gray-700">
                 <thead class="bg-[#E6E6E6] dark:bg-gray-800 sticky top-0">
                     <tr>
-                        <th class="py-2.5 px-4 text-left text-base normal-case text-[#121A0F] font-[600] whitespace-nowrap">File name</th>
-                        <th class="py-2.5 px-4 text-left text-base normal-case text-[#121A0F] font-[600] whitespace-nowrap">Description</th>
-                        <th class="py-2.5 px-4 text-left text-base normal-case text-[#121A0F] font-[600] whitespace-nowrap">Filing Date</th>
-                        <th class="py-2.5 px-4 text-left text-base normal-case text-[#121A0F] font-[600] whitespace-nowrap">Period of Report</th>
+                        <th class="py-2.5 px-4 text-left text-base normal-case text-[#121A0F] font-[600] whitespace-nowrap">
+                            <div class="flex items-center">
+                                File name
+                                <a href="#">
+                                    <svg width="16" height="16" viewBox="0 0 16 16" fill="none" xmlns="http://www.w3.org/2000/svg">
+                                        <path d="M12 6L8 2L4 6H12ZM12 10L8 14L4 10H12Z" fill="#464E49"/>
+                                    </svg>
+                                </a>
+                            </div>
+                        </th>
+                        <th class="py-2.5 px-4 text-left text-base normal-case text-[#121A0F] font-[600] whitespace-nowrap">
+                            <div class="flex items-center">
+                                Description
+                                <a href="#">
+                                    <svg width="16" height="16" viewBox="0 0 16 16" fill="none" xmlns="http://www.w3.org/2000/svg">
+                                        <path d="M12 6L8 2L4 6H12ZM12 10L8 14L4 10H12Z" fill="#464E49"/>
+                                    </svg>
+                                </a>
+                            </div>
+                        </th>
+                        <th class="py-2.5 px-4 text-left text-base normal-case text-[#121A0F] font-[600] whitespace-nowrap">
+                            <div class="flex items-center">
+                                Filing Date
+                                <a href="#">
+                                    <svg width="16" height="16" viewBox="0 0 16 16" fill="none" xmlns="http://www.w3.org/2000/svg">
+                                        <path d="M12 6L8 2L4 6H12ZM12 10L8 14L4 10H12Z" fill="#464E49"/>
+                                    </svg>
+                                </a>
+                            </div>
+                        </th>
+                        <th class="py-2.5 px-4 text-left text-base normal-case text-[#121A0F] font-[600] whitespace-nowrap">
+                            <div class="flex items-center">
+                                Period of Report
+                                <a href="#">
+                                    <svg width="16" height="16" viewBox="0 0 16 16" fill="none" xmlns="http://www.w3.org/2000/svg">
+                                        <path d="M12 6L8 2L4 6H12ZM12 10L8 14L4 10H12Z" fill="#464E49"/>
+                                    </svg>
+                                </a>
+                            </div>
+                        </th>
                     </tr>
                 </thead>
                 <tbody class="bg-white divide-y divide-gray-200 dark:divide-gray-700 dark:bg-gray-900">

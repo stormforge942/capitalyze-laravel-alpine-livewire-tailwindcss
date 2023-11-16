@@ -1,9 +1,14 @@
 <div class="flex flex-col">
     <!-- just for responsive view  -->
-    <div class="mr-2 md:hidden absolute top-[52%] right-[2%] bg-white p-2 rounded-full">
+    <div class="mr-2 md:hidden absolute top-[52%] right-[2%] bg-white p-2 rounded-full {{$checkedCount ? 'border-2 border-[#2C71F0] bg-[#EAF1FE]' : ''}}">
         <div @click="open=true" class="flex justify-between items-center">
-            <div><img src="{{url('/svg/filter-list.svg')}}"/></div>
-            <h4 class="text-sm ml-2 text-[#121A0F] font-[400]">Table Optios</h4>
+            <div><img src="{{asset('/svg/filter-list.svg')}}"/></div>
+            <div class="flex justify-between items-center">
+                <h4 class="text-sm ml-2 text-[#121A0F] font-[400]">Table Optios</h4>
+                @if($checkedCount)
+                    <span class="bg-[#2C71F0] px-3 ml-2 py-0 rounded-full text-[0.625rem] font-[600] text-white">{{$checkedCount}}</span>
+                @endif
+            </div>
         </div>
     </div>
     <div class="hidden md:flex justify-between items-center mt-4 flex-wrap">
@@ -32,7 +37,7 @@
                 </div>
             </div>
             <div class="flex ml-2 relative justify-between mt-0 mx-0 mb-3" x-data="{dropdownMenu: false}" @keydown.window.escape="dropdownMenu = false" @click.away="dropdownMenu = false">
-                <button @click="dropdownMenu = ! dropdownMenu" class="flex justify-between items-center py-2 px-4 rounded-full border-[#939598] bg-[#fff] z-20">
+                <button @click="open = ! open" class="flex {{$checkedCount ? 'bg-[#E2E2E2] border-2 border-[#9DA3A8]' : ''}} justify-between items-center py-2 px-4 rounded-full border-[#939598] bg-[#fff] z-20">
                     <span class="mr-4 text-sm p-x-4 font-[400] text-[#01090F]"> Select Filing Type</span>
                     @if($checkedCount)
                         <span class="bg-[#2C71F0] px-3 py-0 rounded-full text-[0.625rem] font-[600] text-white">{{$checkedCount}}</span>
@@ -44,7 +49,7 @@
                             clip-rule="evenodd" />
                     </svg>
                 </button>
-                <div x-show="dropdownMenu" class="absolute left-0 py-2 mt-10 bg-white  rounded-md shadow-xl w-44 z-50">
+                <!-- <div x-show="dropdownMenu" class="absolute left-0 py-2 mt-10 bg-white  rounded-md shadow-xl w-44 z-50">
                     <div class="flex justify-start items-center content-start">
                         <a href="javascript;" @click.prevent="open=true" class="block px-4 py-2 text-sm text-[#01090F] font-[400]">
                             Select Filing Type
@@ -55,7 +60,7 @@
                             Sort by title
                         </a>
                     </div>
-                </div>
+                </div> -->
             </div>
         </div>
         <div class="search mr-2">

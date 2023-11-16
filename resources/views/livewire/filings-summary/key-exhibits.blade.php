@@ -20,7 +20,7 @@
     <!-- just for responsive view  -->
     <div class="mr-2 md:hidden absolute top-[52%] right-[2%] bg-white p-2 rounded-full">
         <div class="flex justify-between items-center">
-            <div><img src="{{url('/svg/filter-list.svg')}}"/></div>
+            <div><img src="{{asset('/svg/filter-list.svg')}}"/></div>
             <h4 class="text-sm ml-2 text-[#121A0F] font-[400]">Table Optios</h4>
         </div>
     </div>

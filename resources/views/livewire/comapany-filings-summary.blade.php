@@ -4,7 +4,7 @@
             <h4 class="text-[#3561E7] text-[2rem] font-[600]">Filings</h4>
         </div>
         <div>
-            <img src="{{url('/svg/pdf.svg')}}" alt="pdf"/>
+            <img src="{{asset('/svg/pdf.svg')}}" alt="pdf"/>
         </div>
     </div>
     <div class="flex flex-col mx-6 md:lg-0 ">
@@ -18,25 +18,25 @@
                     <span class="text-[#13B05B] text-base font-medium mr-2">(+0.40%)<span>
                 </div>
                 <div>
-                    <img src="{{url('/svg/increase-icon.svg')}}" alt="increase-icon"/>
+                    <img src="{{asset('/svg/increase-icon.svg')}}" alt="increase-icon"/>
                 </div>
             </div>
             <div class="hidden lg:flex justify-around items-center">
                  <div class="flex justify-start items-center mr-3">
                     <div class="mr-1">
-                        <img src="{{url('/svg/download.svg')}}"/>
+                        <img src="{{asset('/svg/download.svg')}}"/>
                     </div>
                     <p><a href="#" class="text-sm text-[#121A0F] font-[500]">Download PDF </a></p>
                  </div>
                  <div class="flex justify-start items-center mr-3">
                     <div class="mr-1">
-                        <img src="{{url('/svg/download.svg')}}"/>
+                        <img src="{{asset('/svg/download.svg')}}"/>
                     </div>
                     <p><a href="#" class="text-sm text-[#121A0F] font-[500]">Download Excel</a></p>
                  </div>
                  <div class="flex justify-start items-center">
                     <div class="mr-1">
-                        <img src="{{url('/svg/download.svg')}}"/>
+                        <img src="{{asset('/svg/download.svg')}}"/>
                     </div>
                     <p><a href="#" class="text-sm text-[#121A0F] font-[500]">Download CSV</a></p>
                  </div>
@@ -44,9 +44,9 @@
         </div>
         <div class="px-0 py-2 mt-2">
             <div class="hidden lg:flex tabs-wrapper w-full">
-                <div @class(['tab text-base font-[500]', 'active font-[600]' => $tabName == 'summary']) wire:click="setTabName('summary')">Filings Summary</div>
-                <div @class(['tab text-base font-[500]', 'active font-[600]' => $tabName == 'all-filings']) wire:click="setTabName('all-filings')">All Filings</div>
-                <div @class(['tab text-base font-[500]', 'active font-[600]' => $tabName == 'key-exhibits']) wire:click="setTabName('key-exhibits')">Key Exhibits</div>
+                <div  @class(['tab text-base font-[500]', 'active font-[600]' => $tabName == 'summary']) wire:click="setTabName('summary')">Filings Summary</div>
+                <div  @class(['tab text-base font-[500]', 'active font-[600]' => $tabName == 'all-filings']) wire:click="setTabName('all-filings')">All Filings</div>
+                <div  @class(['tab text-base font-[500]', 'active font-[600]' => $tabName == 'key-exhibits']) wire:click="setTabName('key-exhibits')">Key Exhibits</div>
             </div>
             <div class="flex lg:hidden justify-between relative w-full mt-0 mx-0 mb-3" x-data="{dropdownMenu: false}" @keydown.window.escape="dropdownMenu = false" @click.away="dropdownMenu = false">
                 <button @click="dropdownMenu = ! dropdownMenu" class="flex items-center py-2 px-4 bg-[#52D3A2]  rounded">
@@ -64,7 +64,7 @@
                             Filings Summary
                         </a>
                         @if($tabName == 'summary')
-                            <div><img src="{{url('/svg/tick.svg')}}" alt="tick"/></div>
+                            <div><img src="{{asset('/svg/tick.svg')}}" alt="tick"/></div>
                         @endif
                     </div>
                     <div class="flex justify-start items-center content-start">
@@ -72,7 +72,7 @@
                             All Filings
                         </a>
                         @if($tabName == 'all-filings')
-                            <div><img src="{{url('/svg/tick.svg')}}" alt="tick"/></div>
+                            <div><img src="{{asset('/svg/tick.svg')}}" alt="tick"/></div>
                         @endif
                     </div>
                     <div class="flex justify-start items-center content-start">
@@ -80,7 +80,7 @@
                             Key Exhibits
                         </a>
                         @if($tabName == 'key-exhibits')
-                            <div><img src="{{url('/svg/tick.svg')}}" alt="tick"/></div>
+                            <div><img src="{{asset('/svg/tick.svg')}}" alt="tick"/></div>
                         @endif
                     </div>
                 </div>
