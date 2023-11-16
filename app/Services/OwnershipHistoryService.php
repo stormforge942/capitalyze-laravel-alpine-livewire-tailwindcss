@@ -26,11 +26,8 @@ class OwnershipHistoryService
     {
         $data['url'] = rtrim(parse_url($data['url'], PHP_URL_PATH), '/');
 
-        // if we are on the ownership page and there is no history yet
-        if (
-            !count(session('ownership-history.items', [])) &&
-            route('company.ownership', static::getCompany(), false) === $data['url']
-        ) {
+        // Dont open new tab if the url is the one that lead to the rabbit hole
+        if (route('company.ownership', static::getCompany(), false) === $data['url']) {
             return;
         }
 

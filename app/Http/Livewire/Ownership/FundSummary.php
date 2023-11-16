@@ -128,7 +128,7 @@ class FundSummary extends Component
             ->where('cik', '=', $this->cik)
             ->where('report_calendar_or_quarter', '=', $this->quarter)
             ->orderByDesc('weight')
-            ->limit(5)
+            ->limit(7)
             ->get()
             ->map(function ($item) {
                 return [

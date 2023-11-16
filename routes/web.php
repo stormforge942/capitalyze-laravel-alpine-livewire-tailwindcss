@@ -89,10 +89,8 @@ Route::middleware([])->group(function () {
         Route::get('/company/{ticker}/employee', [CompanyController::class, 'employee'])->name('company.employee');
         Route::get('/company/{ticker}/fail-to-deliver', [CompanyController::class, 'failToDeliver'])->name('company.fail.to.deliver');
 
-        Route::middleware(RememberOwnershipHistory::class)->group(function () {
-            Route::get('/company/{ticker}/ownership', [CompanyController::class, 'ownership'])->name('company.ownership');
-            Route::get('/fund/{fund}', [CompanyController::class, 'fund'])->name('company.fund');
-        });
+        Route::get('/company/{ticker}/ownership/{of?}', [CompanyController::class, 'ownership'])->name('company.ownership');
+        Route::get('/fund/{fund}', [CompanyController::class, 'fund'])->name('company.fund');
 
         Route::get('/fund/{cik}/', [FundController::class, 'summary'])->name('fund.summary');
         Route::get('/fund/{cik}/holdings', [FundController::class, 'holdings'])->name('fund.holdings');

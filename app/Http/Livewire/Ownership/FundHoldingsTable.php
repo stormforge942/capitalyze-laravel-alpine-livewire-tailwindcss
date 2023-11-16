@@ -4,6 +4,7 @@ namespace App\Http\Livewire\Ownership;
 
 use App\Powergrid\BaseTable;
 use App\Models\CompanyFilings;
+use App\Services\OwnershipHistoryService;
 use Illuminate\Database\Eloquent\Builder;
 use PowerComponents\LivewirePowerGrid\Column;
 use PowerComponents\LivewirePowerGrid\PowerGrid;
@@ -44,7 +45,7 @@ class FundHoldingsTable extends BaseTable
         return PowerGrid::eloquent()
             ->addColumn('name_of_issuer')
             ->addColumn('investor_name_formated', function (CompanyFilings $companyFilings) {
-                return '<a href=" ' . route('company.ownership', $companyFilings->symbol) . ' " class="text-blue">' . $companyFilings->symbol . (!empty($companyFilings->name_of_issuer) ? ' <span class="text-xs font-light">(' . $companyFilings->name_of_issuer . ')<span>' : '') . '</button>';
+                return '<a href=" ' . route('company.ownership', [OwnershipHistoryService::getCompany(), $companyFilings->symbol]) . ' " class="text-blue">' . $companyFilings->symbol . (!empty($companyFilings->name_of_issuer) ? ' <span class="text-xs font-light">(' . $companyFilings->name_of_issuer . ')<span>' : '') . '</button>';
             })
             ->addColumn('ssh_prnamt', function (CompanyFilings $companyFilings) {
                 return number_format($companyFilings->ssh_prnamt);

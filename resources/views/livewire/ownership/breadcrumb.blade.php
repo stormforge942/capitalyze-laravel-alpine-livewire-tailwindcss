@@ -4,7 +4,7 @@
     ],
     [
         'text' => 'Shareholders',
-        'href' => route('company.ownership', ['ticker' => $ticker, 'history' => false]),
+        'href' => route('company.ownership', ['ticker' => $ticker]),
     ],
 ]">
     <div class="ml-2 items-center hidden gap-6 xl:flex text-[#7C8286]">

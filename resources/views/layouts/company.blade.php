@@ -73,7 +73,7 @@
         @elseif($tab == 'failToDeliver')
             <livewire:company-fail-to-deliver :company="$company" :ticker="$ticker" :period="$period" />
         @elseif($tab == 'ownership')
-            <livewire:ownership.page :company="$company" :ticker="$ticker" :period="$period" />
+            <livewire:ownership.page :company="$currentCompany" :ticker="$currentCompany->ticker" :period="$period" />
         @elseif($tab == 'fund')
             <livewire:ownership.fund :company="$company" :ticker="$ticker" :period="$period" />
         @elseif($tab == 'track-investor')
