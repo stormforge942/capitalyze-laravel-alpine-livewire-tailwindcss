@@ -8,7 +8,7 @@ use App\Http\Livewire\AsTab;
 use Illuminate\Support\Carbon;
 use Illuminate\Support\Facades\DB;
 
-class CompanyFundSummary extends Component
+class FundSummary extends Component
 {
     use AsTab;
 
@@ -31,7 +31,7 @@ class CompanyFundSummary extends Component
 
     public function render()
     {
-        return view('livewire.ownership.company-fund-summary');
+        return view('livewire.ownership.fund-summary');
     }
 
     public function getSummary()

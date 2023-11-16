@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Models\Company;
+use App\Services\OwnershipHistoryService;
 use Illuminate\Http\Request;
 use Illuminate\Routing\Controller as BaseController;
 
@@ -116,7 +117,8 @@ class CompanyController extends BaseController
         ]);
     }
 
-    public function trackInvestor(Request $request, $ticker){
+    public function trackInvestor(Request $request, $ticker)
+    {
         $company = Company::where('ticker', $ticker)->get()->first();
 
         return view('layouts.company', [
@@ -201,6 +203,8 @@ class CompanyController extends BaseController
 
     public function ownership(Request $request, string $ticker)
     {
+        OwnershipHistoryService::setCompany($ticker);
+        
         $company = Company::query()
             ->where('ticker', $ticker)
             ->firstOrFail();
@@ -216,14 +220,14 @@ class CompanyController extends BaseController
     public function fund(Request $request, string $ticker)
     {
         $company = Company::query()
-            ->where('ticker', $ticker)
+            ->where('ticker', OwnershipHistoryService::getCompany())
             ->firstOrFail();
 
         return view('layouts.company', [
             'company' => $company,
             'ticker' => $ticker,
             'period' => $request->query('period', 'annual'),
-            'tab' => 'company-fund',
+            'tab' => 'fund',
         ]);
     }
 }

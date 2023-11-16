@@ -2,6 +2,7 @@
 
 namespace App\Services;
 
+use App\Models\Company;
 use Illuminate\Support\Arr;
 
 class OwnershipHistoryService
@@ -9,6 +10,10 @@ class OwnershipHistoryService
     public static function clear(): void
     {
         session()->forget('ownership-history');
+    }
+
+    public static function setCompany(string $ticker) {
+        session()->put('ownership-history.company', $ticker);
     }
 
     public static function push(array $data)
@@ -54,5 +59,10 @@ class OwnershipHistoryService
     public static function getInitialUrl(): ?string
     {
         return session('ownership-history.initialUrl');
+    }
+
+    public static function getCompany(): string
+    {
+        return session('ownership-history.company', Company::DEFAULT_TICKER);
     }
 }

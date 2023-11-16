@@ -2,9 +2,10 @@
 
 namespace App\Http\Middleware;
 
-use App\Services\OwnershipHistoryService;
 use Closure;
+use Illuminate\Support\Str;
 use Illuminate\Http\Request;
+use App\Services\OwnershipHistoryService;
 
 class RememberOwnershipHistory
 {
@@ -21,8 +22,8 @@ class RememberOwnershipHistory
 
         // If the user has visited outside of the ownership pages, or visited from sidenav clear the history
         if (
-            !($referer && strpos(parse_url($referer, PHP_URL_PATH), '/ownership'))
-            || $request->query('history', true) == false
+            !($referer && Str::startsWith(parse_url($referer, PHP_URL_PATH), ['/ownership//', '/fund//'])) ||
+            $request->query('history', true) == false
         ) {
             OwnershipHistoryService::clear();
         }

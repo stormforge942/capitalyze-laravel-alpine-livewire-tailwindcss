@@ -9,7 +9,7 @@ use PowerComponents\LivewirePowerGrid\Column;
 use PowerComponents\LivewirePowerGrid\PowerGrid;
 use PowerComponents\LivewirePowerGrid\PowerGridEloquent;
 
-class CompanyFundHoldingsTable extends BaseTable
+class FundHoldingsTable extends BaseTable
 {
     public $quarter = null;
     public string $cik = '';

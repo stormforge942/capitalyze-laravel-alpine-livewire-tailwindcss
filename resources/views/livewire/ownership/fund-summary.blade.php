@@ -1,4 +1,4 @@
-{{-- Check resources/views/livewire/ownership/company-fund.blade.php for js code --}}
+{{-- Check resources/views/livewire/ownership/fund.blade.php for js code --}}
 <div>
     <div class="grid grid-cols-12 gap-6">
         <div class="order-1 col-span-12 xl:col-span-8 2xl:col-span-9">
@@ -30,7 +30,7 @@
 
                     <template x-if="result?.length == 5">
                         <div class="flex justify-center mt-6">
-                            <a href="{{ route('company.fund', [$ticker, $cik, 'tab' => 'holdings']) }}" class="text-sm font-semibold hover:underline">
+                            <a href="#" class="text-sm font-semibold hover:underline" @click.prevent="changeTab('holdings')">
                                 View All Holdings
                             </a>
                         </div>

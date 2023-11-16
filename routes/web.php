@@ -91,7 +91,7 @@ Route::middleware([])->group(function () {
 
         Route::middleware(RememberOwnershipHistory::class)->group(function () {
             Route::get('/company/{ticker}/ownership', [CompanyController::class, 'ownership'])->name('company.ownership');
-            Route::get('/company/{ticker}/ownership/funds/{fund}', [CompanyController::class, 'fund'])->name('company.fund');
+            Route::get('/fund/{fund}', [CompanyController::class, 'fund'])->name('company.fund');
         });
 
         Route::get('/fund/{cik}/', [FundController::class, 'summary'])->name('fund.summary');

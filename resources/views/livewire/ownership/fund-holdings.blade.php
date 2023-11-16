@@ -10,5 +10,5 @@
         </label>
     @endif
 
-    <livewire:ownership.company-fund-holdings-table :cik="$cik" :quarter="$quarter" />
+    <livewire:ownership.fund-holdings-table :cik="$cik" :quarter="$quarter" />
 </div>
