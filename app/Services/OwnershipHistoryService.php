@@ -7,23 +7,32 @@ use Illuminate\Support\Arr;
 
 class OwnershipHistoryService
 {
-    public static function clear(): void
+    public static function setCompany(string $ticker): void
     {
-        session()->forget('ownership-history');
-    }
-
-    public static function setCompany(string $ticker) {
         session()->put('ownership-history.company', $ticker);
     }
 
-    public static function push(array $data)
+    public static function hasCompany(): bool
     {
-        if (!count(session('ownership-history.items', []))) {
-            session()->put('ownership-history.initial', $data['url']);
+        return session()->has('ownership-history.company');
+    }
+
+    public static function getCompany(): string
+    {
+        return session('ownership-history.company', Company::DEFAULT_TICKER);
+    }
+
+    public static function push(array $data): void
+    {
+        $data['url'] = rtrim(parse_url($data['url'], PHP_URL_PATH), '/');
+
+        // if we are on the ownership page and there is no history yet
+        if (
+            !count(session('ownership-history.items', [])) &&
+            route('company.ownership', static::getCompany(), false) === $data['url']
+        ) {
             return;
         }
-
-        $data['url'] = rtrim(parse_url($data['url'], PHP_URL_PATH), '/');
 
         if (Arr::where(static::get(), fn ($item) => $item['url'] === $data['url'])) {
             return;
@@ -32,13 +41,12 @@ class OwnershipHistoryService
         session()->push('ownership-history.items', $data);
     }
 
-    public static function get()
+    public static function get(): array
     {
         $history = session('ownership-history.items', []);
 
         return Arr::map($history, fn ($item) => [
             'name' => $item['name'],
-            'type' => $item['type'],
             'url' => $item['url'],
             'active' => rtrim(parse_url(request()->url(), PHP_URL_PATH), '/') === $item['url'],
         ]);
@@ -56,13 +64,8 @@ class OwnershipHistoryService
         return Arr::last($history);
     }
 
-    public static function getInitialUrl(): ?string
+    public static function clear(): void
     {
-        return session('ownership-history.initialUrl');
-    }
-
-    public static function getCompany(): string
-    {
-        return session('ownership-history.company', Company::DEFAULT_TICKER);
+        session()->forget('ownership-history.items');
     }
 }

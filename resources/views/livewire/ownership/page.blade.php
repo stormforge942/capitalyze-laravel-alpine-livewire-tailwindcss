@@ -1,7 +1,7 @@
 <div x-data="{ tab: null }" @tab-changed="tab = $event.detail;">
     <h2 class="block mb-4 text-xl font-semibold lg:hidden text-blue">Ownership</h2>
 
-    @livewire('ownership.breadcrumb', ['company' => $company->ticker])
+    @livewire('ownership.breadcrumb')
 
     <div class="mt-6">
         <h1 class="text-lg font-bold md:text-xl">{{ $company->name }} ({{ $company->ticker }})</h1>

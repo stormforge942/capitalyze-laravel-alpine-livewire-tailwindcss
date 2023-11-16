@@ -1,7 +1,7 @@
 <div>
     <h2 class="block mb-4 text-xl font-semibold lg:hidden text-blue">Ownership</h2>
 
-    @livewire('ownership.breadcrumb', ['company' => $company->ticker])
+    @livewire('ownership.breadcrumb')
 
     <div class="mt-6">
         <h1 class="text-xl font-bold">{{ $fund->name }}</h1>
@@ -21,7 +21,7 @@
     </div>
 
     <div class="mt-6" id="company-fund-tab">
-        <livewire:tabs :tabs="$tabs" :data="['fund' => $fund, 'ticker' => $company->ticker]">
+        <livewire:tabs :tabs="$tabs" :data="['fund' => $fund]">
     </div>
 </div>
 

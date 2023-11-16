@@ -9,16 +9,11 @@ class Breadcrumb extends Component
 {
     public $company;
 
-    public function mount($company)
-    {
-        $this->company = $company;
-    }
-
     public function render()
     {
         return view('livewire.ownership.breadcrumb', [
+            'ticker' => OwnershipHistoryService::getCompany(),
             'historyItems' => OwnershipHistoryService::get(),
-            'initialUrl' => OwnershipHistoryService::getInitialUrl(),
         ]);
     }
 
@@ -30,17 +25,19 @@ class Breadcrumb extends Component
             return redirect($lastItem['url']);
         }
 
-        return redirect()->route('company.ownership', $this->company);
+        return redirect(route('company.ownership', [
+            'ticker' => OwnershipHistoryService::getCompany(),
+            'history' => false
+        ]));
     }
 
     public function clearHistory()
     {
         OwnershipHistoryService::clear();
 
-        if (OwnershipHistoryService::getInitialUrl()) {
-            return redirect(OwnershipHistoryService::getInitialUrl());
-        }
-
-        return redirect()->route('company.ownership', $this->company);
+        return redirect(route('company.ownership', [
+            'ticker' => OwnershipHistoryService::getCompany(),
+            'history' => false
+        ]));
     }
 }

@@ -4,7 +4,7 @@
     ],
     [
         'text' => 'Shareholders',
-        'href' => $initialUrl ?? '#',
+        'href' => route('company.ownership', ['ticker' => $ticker, 'history' => false]),
     ],
 ]">
     <div class="ml-2 items-center hidden gap-6 xl:flex text-[#7C8286]">
@@ -134,7 +134,7 @@
                     class="hover:text-dark-light2 whitespace-nowrap @if ($item['active']) text-blue ownership-active-bread-link @endif">{{ $item['name'] }}
                 </a>
 
-                <button wire:click="removeHistory('{{ $item['url'] }}', '{{ $item['type'] }}')">
+                <button wire:click="removeHistory('{{ $item['url'] }}')">
                     <svg xmlns="http://www.w3.org/2000/svg" width="10" height="10" viewBox="0 0 10 10"
                         fill="none">
                         <path

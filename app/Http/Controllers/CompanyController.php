@@ -203,7 +203,9 @@ class CompanyController extends BaseController
 
     public function ownership(Request $request, string $ticker)
     {
-        OwnershipHistoryService::setCompany($ticker);
+        if(!OwnershipHistoryService::hasCompany()) {
+            OwnershipHistoryService::setCompany($ticker);
+        }
         
         $company = Company::query()
             ->where('ticker', $ticker)
@@ -217,7 +219,7 @@ class CompanyController extends BaseController
         ]);
     }
 
-    public function fund(Request $request, string $ticker)
+    public function fund(Request $request)
     {
         $company = Company::query()
             ->where('ticker', OwnershipHistoryService::getCompany())
@@ -225,7 +227,7 @@ class CompanyController extends BaseController
 
         return view('layouts.company', [
             'company' => $company,
-            'ticker' => $ticker,
+            'ticker' => $company->ticker,
             'period' => $request->query('period', 'annual'),
             'tab' => 'fund',
         ]);

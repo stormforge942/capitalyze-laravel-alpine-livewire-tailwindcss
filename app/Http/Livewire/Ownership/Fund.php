@@ -27,7 +27,6 @@ class Fund extends Component
 
         OwnershipHistoryService::push([
             'name' => $this->fund->name,
-            'type' => 'fund',
             'url' => request()->url(),
         ]);
 
