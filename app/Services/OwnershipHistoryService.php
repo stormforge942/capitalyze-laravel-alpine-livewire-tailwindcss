@@ -31,11 +31,15 @@ class OwnershipHistoryService
             return;
         }
 
-        if (Arr::where(static::get(), fn ($item) => $item['url'] === $data['url'])) {
+        $items = static::get();
+
+        if (Arr::where($items, fn ($item) => $item['url'] === $data['url'])) {
             return;
         }
 
-        session()->push('ownership-history.items', $data);
+        $items = array_merge([$data], $items);
+
+        session()->put('ownership-history.items', $items);
     }
 
     public static function get(): array
@@ -56,7 +60,7 @@ class OwnershipHistoryService
             return $historyItem['url'] !== $url;
         });
 
-        session()->put('ownership-history.items', $history);
+        session()->put('ownership-history.items', array_values($history));
 
         return Arr::last($history);
     }

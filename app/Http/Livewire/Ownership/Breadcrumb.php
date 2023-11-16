@@ -25,19 +25,13 @@ class Breadcrumb extends Component
             return redirect($lastItem['url']);
         }
 
-        return redirect(route('company.ownership', [
-            'ticker' => OwnershipHistoryService::getCompany(),
-            'history' => false
-        ]));
+        $this->clearHistory();
     }
 
     public function clearHistory()
     {
         OwnershipHistoryService::clear();
 
-        return redirect(route('company.ownership', [
-            'ticker' => OwnershipHistoryService::getCompany(),
-            'history' => false
-        ]));
+        return redirect(route('company.ownership', ['ticker' => OwnershipHistoryService::getCompany()]));
     }
 }
