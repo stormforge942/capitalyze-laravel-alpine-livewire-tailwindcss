@@ -1,4 +1,4 @@
-<div class="flex flex-col lg:flex-row justify-start items-center flex-wrap" x-data="{open: false, id:null}">
+<div x-cloak  class="flex flex-col lg:flex-row justify-start items-center flex-wrap" x-data="{open: false, id:null}">
     <?php $i = 0;?>
     @foreach($titles as $item)
         <div class="bg-white p-3 rounded w-full lg:w-[calc(50%-1rem)] mr-0 lg-0 {{$i%2 === 0 ? 'lg:mr-3': 'lg:ml-4'}} mb-5">
@@ -19,7 +19,7 @@
                     </div>
                     <div class="flex justify-center items-center content-center">
                         <div class="m-0 p-0"> 
-                            <img class="mt-1 mr-0" src="{{url('/svg/search.svg')}}"/>
+                            <img class="mt-1 mr-0" src="{{asset('/svg/search.svg')}}"/>
                         </div>
                         <input type="search" class="focus:ring-0 focus:border-blue-500 placeholder:text-sm text-sm  border-none w-[9rem] leading-[1.45rem] h-[1.45rem]" placeholder="search document"/>
                     </div>
@@ -31,7 +31,7 @@
                         <option value="sort_by_title">Sort by title</option>
                     </select>
                     <div class="ml-3 p-0"> 
-                        <img class="mt-1 mr-0" src="{{url('/svg/search.svg')}}"/>
+                        <img class="mt-1 mr-0" src="{{asset('/svg/search.svg')}}"/>
                     </div>
                     <div class="xs:flex md:hidden xl:hidden 2xl:flex">
                         <input type="search" class="focus:ring-0 focus:border-blue-500 placeholder:text-sm text-sm  border-none w-[9rem] leading-[1.45rem] h-[1.45rem]" placeholder="search document"/>
