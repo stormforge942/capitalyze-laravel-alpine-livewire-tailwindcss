@@ -16,7 +16,7 @@
                     <div class="flex flex-col p-4">
                         <div class="flex justify-between">
                             <h4 class="text-[#121A0F] text-[0.875rem] font-[500]">View</h4>
-                            <img @click="dropdownMenu = false" class="cursor-pointer" src="{{url('/svg/close.svg')}}"/>
+                            <img @click="dropdownMenu = false" class="cursor-pointer" src="{{asset('/svg/close.svg')}}"/>
                         </div>
                         <div class="flex justify-start items-center my-2">
                             <input name="view" class="focus:ring-0 text-[#121A0F] focus:border-transparent" type="radio" id="all"/>

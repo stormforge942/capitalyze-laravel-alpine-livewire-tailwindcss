@@ -8,7 +8,7 @@
                 <div> <h4 class="text-sm font-[500] pr-1 mt-2">TrackInvestors</h4></div>
                 <div class="pr-1 mt-0 mb-1"> <span class="text-sm font-[500">/</span> </div>
                 <div> <h5 class="text-sm font-[500] pr-1 mt-2">Discover</h5></div>
-                <div class="pr-0 mt-3"><img class="pr-1" src="{{url('/svg/chevron.svg')}}" alt=""/> </div>
+                <div class="pr-0 mt-3"><img class="pr-1" src="{{asset('/svg/chevron.svg')}}" alt=""/> </div>
             </div>   
             <div class="hidden md:flex tabs-wrapper w-full">
                 <div @class(['tab text-base font-[500]', 'active font-[600]' => $infoTabActive == 'track-investor']) wire:click="setInfoActiveTab('track-investor')">TrackInvestor</div>

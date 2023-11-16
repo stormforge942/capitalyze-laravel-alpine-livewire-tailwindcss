@@ -2,14 +2,14 @@
     <div class="flex justify-between items-center m-0">
         <h4 class="text-base font-[500] text-[#121A0F]">Browse Filing Types</h4>
         <div class="cursor-pointer" @click="open = false">   
-            <img src="{{url('/svg/close.svg')}}" alt="close icon"/>
+            <img src="{{asset('/svg/close.svg')}}" alt="close icon"/>
         </div>
     </div> 
     <div>
         <div class="flex flex-col rounded md:hidden mt-2">
             <div class="flex justify-between items-center p-2">
                 <h4 class="text-[#7C8286] font-[400] text-base">Sort</h4>
-                <img src="{{url('/svg/right-values.svg')}}" alt="Right Values Icon"/>
+                <img src="{{asset('/svg/right-values.svg')}}" alt="Right Values Icon"/>
             </div>
         </div>
         <div class="flex flex-col md:hidden my-2">
@@ -27,7 +27,7 @@
         <div class="flex flex-col md:hidden bg-[#FAFAFA] my-2">
             <div class="flex justify-between items-center p-2">
                 <h4 class="text-[#7C8286] text-sm font-[400]">Select File Type</h4>
-                <img src="{{url('/svg/right-values.svg')}}" alt="Right Values Icon"/>
+                <img src="{{asset('/svg/right-values.svg')}}" alt="Right Values Icon"/>
             </div>
         </div>   
         <div class="mt-3">
