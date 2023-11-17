@@ -50,7 +50,7 @@ class History extends BaseTable
             Column::make('Name', 'name_of_issuer')->sortable(),
             Column::make('Date', 'report_calendar_or_quarter')->sortable()
                 ->headerAttribute('[&>div]:justify-end')->bodyAttribute('text-right'),
-            Column::make('Shares Held or Principal Amt', 'ssh_prnamt')->sortable()
+            Column::make('Shares Held', 'ssh_prnamt')->sortable()
                 ->headerAttribute('[&>div]:justify-end')->bodyAttribute('text-right'),
             Column::make('Change in Shares', 'change_in_shares')
                 ->headerAttribute('[&>div]:justify-end')->bodyAttribute('text-right'),
