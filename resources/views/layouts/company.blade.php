@@ -26,7 +26,7 @@
 
     @livewireStyles
     @once
-        @push('scripts')
+        @push('scripts' )
             <script src="https://cdn.jsdelivr.net/npm/@uvarov.frontend/vanilla-calendar/build/vanilla-calendar.min.js"></script>
             <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
             <script src="https://cdn.jsdelivr.net/npm/luxon"></script>

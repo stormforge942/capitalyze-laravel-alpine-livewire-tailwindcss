@@ -622,6 +622,15 @@
 
                             align: 'center',
                         },
+                        y1: {
+                            stacked: true,
+                            display: '{{$chartId}}' == 'rbe' ? true : false,
+                            position: 'right',
+                            type: 'linear',
+                            grid: {
+                                drawOnChartArea: false, // only want the grid lines for one axis to show up
+                            },
+                        }
                     }
                 }
             });
