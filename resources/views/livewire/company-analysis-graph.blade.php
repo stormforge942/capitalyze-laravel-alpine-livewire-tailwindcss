@@ -74,7 +74,7 @@
             <div class="graph-header graph-header-flex relative mb-5">
                 <div class="pr-3">
                     <p class="title revenue-title" wire:click="load()">{{ $name }}. ({{ $ticker }}) </p>
-                    <p class="revenue-subtitle">Revenue by Product </p>
+                    <p class="revenue-subtitle">{{$title}} </p>
                 </div>
 
                 <div>
@@ -147,6 +147,7 @@
                 </div>
                 <div class="select-graph-date-wrapper desktop-show ml-12 flex">
                     <ul class="items-center w-full flex custom_radio_wrapper">
+                        @if($chartId != 'rbe')
                         <li class="">
                             <input value="Values" id="Values" type="radio" name="{{$chartId}}radio-group" checked>
                             <label for="Values" onclick="{{$chartId}}typeChanged('values')">Values</label>
@@ -156,6 +157,7 @@
                                 name="{{$chartId}}radio-group">
                             <label for="Percentage" onclick="{{$chartId}}typeChanged('percentage')">Percentage Mix</label>
                         </li>
+                        @endif
                         <li class="custom_checkbox" x-data="{toggle: false, toggle2: false}">
                             <button
                                 class="flex items-center transition ease-in-out duration-300 w-7 h-3 bg-gray-custom rounded-full focus:outline-none"
@@ -246,7 +248,7 @@
     let {{$chartId}}chartType = 'values'
     function {{$chartId}}typeChanged(type){
         {{$chartId}}chartType = type
-        {{$chartId}}filteredData[({{$chartId}}period == 'arps' || {{$chartId}}period == 'args') ? 'annual' : 'quarterly'].forEach((value, pindex) => {
+        {{$chartId}}filteredData['quarterly'].forEach((value, pindex) => {
             let {{$chartId}}finalData = []
             value.data.forEach((data, cindex) => {
                 if(type == 'percentage'){
@@ -257,7 +259,21 @@
                 }
                 {{$chartId}}finalData.push(data)
             })
-            {{$chartId}}filteredData[({{$chartId}}period == 'arps' || {{$chartId}}period == 'args') ? 'annual' : 'quarterly'][pindex].data = {{$chartId}}finalData
+            {{$chartId}}filteredData['quarterly'][pindex].data = {{$chartId}}finalData
+        })
+
+        {{$chartId}}filteredData['annual'].forEach((value, pindex) => {
+            let {{$chartId}}finalData = []
+            value.data.forEach((data, cindex) => {
+                if(type == 'percentage'){
+                    data.y = data.percentage
+                }
+                else {
+                    data.y = data.revenue
+                }
+                {{$chartId}}finalData.push(data)
+            })
+            {{$chartId}}filteredData['annual'][pindex].data = {{$chartId}}finalData
         })
         {{$chartId}}initChart({{$chartId}}filteredData)
     }
@@ -628,7 +644,9 @@
                             position: 'right',
                             type: 'linear',
                             beginAtZero: false,
-                            z:1,
+                            @if($startPoint)
+                            min: {{$startPoint}},
+                            @endif
                             grid: {
                                 drawOnChartArea: false, // only want the grid lines for one axis to show up
                             },

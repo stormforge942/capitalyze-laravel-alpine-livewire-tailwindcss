@@ -457,7 +457,7 @@
                 }
         }'></div>
     </div>
-    <div x-data="{ rbeshowgraph: false }" wire:ignore>
+    <div x-data="{ rbeshowgraph: true }" wire:ignore>
         <div class="flex justify-end" x-show="!rbeshowgraph" @click="rbeshowgraph = true">
             <button class="show-hide-chart-btn">
                 Show Chart
@@ -478,7 +478,8 @@
         'segments' => $segments,
         'chartData' => $chartData,
         'period' => $period,
-        'chartId' => 'rbe'
+        'chartId' => 'rbe',
+        'title' => 'Revenue per Employee'
         ], key(uniqid()))
     </div>
     <div class="w-full">

@@ -21,6 +21,8 @@ class CompanyAnalysisGraph extends Component
     public $chartId;
     public $revenues;
     public $employeeCount;
+    public $startPoint = null;
+    public $title;
 
     protected $listeners = ['initChart'];
 
@@ -94,6 +96,7 @@ class CompanyAnalysisGraph extends Component
         if($this->chartId == 'rbe'){
             $annualRevenueData = $this->getPresentationData();
             $annualEmployeeData = $this->getEmployeeCount();
+            $this->startPoint = min($annualEmployeeData) - ((min($annualEmployeeData) / 100) * 20);
             $quarterlyData = $this->getPresentationData("quarter");
             $annualDataSet["revenue"] = [
                 "label" => "Revenue",
@@ -222,9 +225,6 @@ class CompanyAnalysisGraph extends Component
         }
         elseif($this->chartId == 'rbp') {
             $source = ($this->period == 'annual' || $this->period == 'fiscal-annual') ? 'arps' : 'qrps';
-        }
-        elseif($this->chartId == 'rbe'){
-
         }
 
         if($period){
