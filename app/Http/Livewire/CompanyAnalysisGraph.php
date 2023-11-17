@@ -182,8 +182,8 @@ class CompanyAnalysisGraph extends Component
             $quarterDataSet["employee"]["datalabels"] = ['color' => $fontColors[1]];
 
             return [
-                "annual" => array_values($annualDataSet),
-                "quarterly" => array_values($quarterDataSet)
+                "annual" => array_values(array_reverse($annualDataSet)),
+                "quarterly" => array_values(array_reverse($quarterDataSet))
             ];
         }
 
