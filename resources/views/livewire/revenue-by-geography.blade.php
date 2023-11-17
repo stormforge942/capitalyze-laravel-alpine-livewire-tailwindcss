@@ -377,7 +377,7 @@
 
     <div class="years-range-wrapper mt-4 mb-8" wire:ignore>
         <div class="dots-wrapper">
-            @foreach($rangeDates as $key => $date)
+            @foreach(array_reverse($rangeDates) as $key => $date)
             <span id="{{$chartId}}{{date('Y', strtotime($date))}}" class="inactive-dots"></span>
             @endforeach
         </div>
@@ -408,7 +408,7 @@
                 rangeSlideDisabled: true,
                 onInput: (value, e) => {
                     if (value.length === 2 && value !== {{$chartId}}selectedValue) {
-                        {{$chartId}}recognizeDotsStatus({{$chartId}}selectedValue, [{{$chartId}}rangeMin, {{$chartId}}rangeMax]);
+                        {{$chartId}}recognizeDotsStatus(value, [{{$chartId}}rangeMin, {{$chartId}}rangeMax]);
                         Livewire.emit("{{$chartId}}analysisDatesChanged", value)
                     }
                 },
@@ -457,7 +457,7 @@
                 }
         }'></div>
     </div>
-    <div x-data="{ rbgshowgraph: false }" wire:ignore>
+    <div x-data="{ rbgshowgraph: true }" wire:ignore>
         <div class="flex justify-end" x-show="!rbgshowgraph" @click="rbgshowgraph = true">
             <button class="show-hide-chart-btn">
                 Show Chart
@@ -478,7 +478,8 @@
         'segments' => $segments,
         'period' => $period,
         'chartData' => $chartData,
-        'chartId' => 'rbg'
+        'chartId' => 'rbg',
+        'title' => 'Revenue by Geographys'
         ], key(uniqid()))
     </div>
     <div class="w-full">
@@ -486,14 +487,14 @@
             <div class="table">
                 <div class="row-group row-head-fonts-sm row-border-custom table-border-bottom">
                     <div class="row row-head">
-                        <div class="cell font-bold">{{$companyName}} ({{$ticker}})</div>
+                        <div class="cell font-bold min-64">{{$companyName}} ({{$ticker}})</div>
                         @foreach ($this->selectedRange as $date)
                         <div class="cell font-bold">{{ $date }}</div>
                         @endforeach
                     </div>
                     @foreach ($segments as $index => $segment)
                     <div class="row ">
-                        <div class="font-bold cell">
+                        <div class="font-bold cell min-64">
                             {{ str_replace('[Member]', '', $segment) }}
                         </div>
                         @foreach ($this->selectedRange as $key => $date)
@@ -546,7 +547,7 @@
                     <div class="row row-spacer "></div>
                     @endforeach
                     <div class="row ">
-                        <div class="font-bold cell">Total Revenues</div>
+                        <div class="font-bold cell min-64">Total Revenues</div>
                         @foreach ($this->selectedRange as $date)
                         @if (array_key_exists($segment, $products[$date]))
                         <div class="font-bold cell">

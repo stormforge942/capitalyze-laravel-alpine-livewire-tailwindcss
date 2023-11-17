@@ -377,7 +377,7 @@
 
     <div class="years-range-wrapper mt-4 mb-8" wire:ignore>
         <div class="dots-wrapper">
-            @foreach($rangeDates as $key => $date)
+            @foreach(array_reverse($rangeDates) as $key => $date)
             <span id="{{$chartId}}{{date('Y', strtotime($date))}}" class="inactive-dots"></span>
             @endforeach
         </div>
@@ -408,7 +408,7 @@
                 rangeSlideDisabled: true,
                 onInput: (value, e) => {
                     if (value.length === 2 && value !== {{$chartId}}selectedValue) {
-                        {{$chartId}}recognizeDotsStatus({{$chartId}}selectedValue, [{{$chartId}}rangeMin, {{$chartId}}rangeMax]);
+                        {{$chartId}}recognizeDotsStatus(value, [{{$chartId}}rangeMin, {{$chartId}}rangeMax]);
                         Livewire.emit("{{$chartId}}analysisDatesChanged", value)
                     }
                 },
@@ -457,7 +457,7 @@
                 }
         }'></div>
     </div>
-    <div x-data="{ rbeshowgraph: false }" wire:ignore>
+    <div x-data="{ rbeshowgraph: true }" wire:ignore>
         <div class="flex justify-end" x-show="!rbeshowgraph" @click="rbeshowgraph = true">
             <button class="show-hide-chart-btn">
                 Show Chart
@@ -478,7 +478,8 @@
         'segments' => $segments,
         'chartData' => $chartData,
         'period' => $period,
-        'chartId' => 'rbe'
+        'chartId' => 'rbe',
+        'title' => 'Revenue per Employee'
         ], key(uniqid()))
     </div>
     <div class="w-full">
@@ -486,13 +487,13 @@
             <div class="table">
                 <div class="row-group row-head-fonts-sm row-border-custom table-border-bottom">
                     <div class="row row-head">
-                        <div class="cell font-bold">Revenue / Employee</div>
+                        <div class="cell font-bold min-64">Revenue / Employee</div>
                         @foreach ($this->selectedRange as $date)
                         <div class="cell font-bold">{{ $date }}</div>
                         @endforeach
                     </div>
                     <div class="row ">
-                        <div class="cell">Revenues</div>
+                        <div class="cell min-64">Revenues</div>
                         @foreach ($this->selectedRange as $date)
                             @if(isset($revenues[$date]))
                             <div class="cell">
@@ -510,7 +511,7 @@
                         @endforeach
                     </div>
                     <div class="row">
-                        <div class="cell">% Change YoY</div>
+                        <div class="cell min-64">% Change YoY</div>
                         @foreach ($this->selectedRange as $key => $date)
                         <div class="cell">
                             @php
@@ -528,7 +529,7 @@
                         @endforeach
                     </div>
                     <div class="row ">
-                        <div class="cell">Employees</div>
+                        <div class="cell min-64">Employees</div>
                         @foreach ($this->selectedRange as $date)
                             @if(isset($employeeCount[$date]))
                             <div class="cell">
@@ -539,7 +540,7 @@
                     </div>
 
                     <div class="row">
-                        <div class="cell">% Change YoY</div>
+                        <div class="cell min-64">% Change YoY</div>
                         @foreach ($this->selectedRange as $key => $date)
                         <div class="cell">
                             @php
@@ -557,7 +558,7 @@
                         @endforeach
                     </div>
                     <div class="row ">
-                        <div class="cell font-bold">Revenue / Employee (‘000s)</div>
+                        <div class="cell min-64 font-bold">Revenue / Employee (‘000s)</div>
                         @foreach ($this->selectedRange as $date)
                             @if(isset($revenues[$date]))
                             <div class="cell font-bold">
@@ -575,7 +576,7 @@
                         @endforeach
                     </div>
                     <div class="row">
-                        <div class="cell font-bold">% Change YoY</div>
+                        <div class="cell min-64 font-bold">% Change YoY</div>
                         @foreach ($this->selectedRange as $key => $date)
                         <div class="cell font-bold">
                             @php

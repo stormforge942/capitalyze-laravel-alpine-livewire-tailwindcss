@@ -21,6 +21,8 @@ class CompanyAnalysisGraph extends Component
     public $chartId;
     public $revenues;
     public $employeeCount;
+    public $startPoint = null;
+    public $title;
 
     protected $listeners = ['initChart'];
 
@@ -94,6 +96,7 @@ class CompanyAnalysisGraph extends Component
         if($this->chartId == 'rbe'){
             $annualRevenueData = $this->getPresentationData();
             $annualEmployeeData = $this->getEmployeeCount();
+            $this->startPoint = min($annualEmployeeData) - ((min($annualEmployeeData) / 100) * 20);
             $quarterlyData = $this->getPresentationData("quarter");
             $annualDataSet["revenue"] = [
                 "label" => "Revenue",
@@ -101,7 +104,7 @@ class CompanyAnalysisGraph extends Component
                 "fill" => true,
             ];
             $annualDataSet["employee"] = [
-                "label" => "Revenue / Employee",
+                "label" => "Employees",
                 "borderRadius" => 2,
                 "fill" => true,
                 "type" => 'line',
@@ -112,7 +115,7 @@ class CompanyAnalysisGraph extends Component
                 "fill" => true,
             ];
             $quarterDataSet["employee"] = [
-                "label" => "Revenue / Employee",
+                "label" => "Employees",
                 "borderRadius" => 2,
                 "fill" => true,
                 "type" => 'line',
@@ -126,7 +129,8 @@ class CompanyAnalysisGraph extends Component
                 $annualDataSet["revenue"]["data"][] = $set;
                 $annualDataSet["employee"]["data"][] = [
                     "x" => $date,
-                    "y" => (double)round((explode("|", $item[0])[0]/$this->employeeCount[$date]), 2)
+                    "y" => $this->employeeCount[$date],
+                    // (double)round((explode("|", $item[0])[0]/$this->employeeCount[$date]), 2)
                 ];
             }
             foreach($quarterlyData as $date => $item){
@@ -138,45 +142,51 @@ class CompanyAnalysisGraph extends Component
                 $quarterDataSet["revenue"]["data"][] = $set;
 
                 foreach($this->employeeCount as $eDate => $eCount){
-                    if(date('Y', strtotime($date) == date('Y', strtotime($eDate)))){
+                    if(date('Y', strtotime($date)) == date('Y', strtotime($eDate))){
+                        $date;
+                        $eDate;
                         $quarterDataSet["employee"]["data"][] = [
                             "x" => $date,
-                            "y" => $eCount
+                            "y" => $eCount,
                         ];
+                        break;
                     }
                 }
             }
+            // $quarterDataSet["employee"]["data"] = array_values($quarterDataSet["employee"]["data"]);
 
             $annualDataSet["revenue"]["label"] = "Revenue";
             $annualDataSet["revenue"]["borderRadius"] = "2";
+            $annualDataSet["revenue"]["yAxisID"] = "y";
             $annualDataSet["revenue"]["fill"] = true;
             $annualDataSet["revenue"]["backgroundColor"] = $colors[2];
             $annualDataSet["revenue"]["datalabels"] = ['color' => $fontColors[2]];
 
-            $annualDataSet["employee"]["label"] = "Revenue / Employee";
+            $annualDataSet["employee"]["label"] = "Employees";
+            $annualDataSet["employee"]["yAxisID"] = "y1";
             $annualDataSet["employee"]["borderRadius"] = "2";
-            $annualDataSet["employee"]["fill"] = true;
-            $annualDataSet["employee"]["backgroundColor"] = "#C22929";
+            $annualDataSet["employee"]["fill"] = false;
             $annualDataSet["employee"]["borderColor"] = "#C22929";
             $annualDataSet["employee"]["datalabels"] = ['color' => $fontColors[1]];
 
 
             $quarterDataSet["revenue"]["label"] = "Revenue";
+            $quarterDataSet["revenue"]["yAxisID"] = "y";
             $quarterDataSet["revenue"]["borderRadius"] = "2";
             $quarterDataSet["revenue"]["fill"] = true;
             $quarterDataSet["revenue"]["backgroundColor"] = $colors[2];
             $quarterDataSet["revenue"]["datalabels"] = ['color' => $fontColors[2]];
 
-            $quarterDataSet["employee"]["label"] = "Revenue / Employee";
+            $quarterDataSet["employee"]["label"] = "Employees";
+            $quarterDataSet["employee"]["yAxisID"] = "y1";
             $quarterDataSet["employee"]["borderRadius"] = "2";
-            $quarterDataSet["employee"]["fill"] = true;
-            $quarterDataSet["employee"]["backgroundColor"] = "#C22929";
+            $quarterDataSet["employee"]["fill"] = false;
             $quarterDataSet["employee"]["borderColor"] = "#C22929";
             $quarterDataSet["employee"]["datalabels"] = ['color' => $fontColors[1]];
 
             return [
-                "annual" => array_values($annualDataSet),
-                "quarterly" => array_values($quarterDataSet)
+                "annual" => array_values(array_reverse($annualDataSet)),
+                "quarterly" => array_values(array_reverse($quarterDataSet))
             ];
         }
 
@@ -215,9 +225,6 @@ class CompanyAnalysisGraph extends Component
         }
         elseif($this->chartId == 'rbp') {
             $source = ($this->period == 'annual' || $this->period == 'fiscal-annual') ? 'arps' : 'qrps';
-        }
-        elseif($this->chartId == 'rbe'){
-
         }
 
         if($period){
