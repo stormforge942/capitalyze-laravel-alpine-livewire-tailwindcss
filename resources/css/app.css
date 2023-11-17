@@ -673,6 +673,10 @@ line-height: normal;
 .bg-gray-custom {
     background-color: #929292;
 }
+.min-64 {
+    min-width: 16rem;
+    width: 16rem;
+}
 @media(min-width:576px){
     .mobile-show {
         display: none;

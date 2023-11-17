@@ -488,7 +488,7 @@
             <div class="table">
                 <div class="row-group row-head-fonts-sm row-border-custom table-border-bottom">
                     <div class="row row-head">
-                        <div class="cell font-bold">{{$companyName}} ({{$ticker}})</div>
+                        <div class="cell font-bold min-64">{{$companyName}} ({{$ticker}})</div>
                         @foreach ($this->selectedRange as $date)
                         <div class="cell font-bold">{{ $date }}</div>
                         @endforeach
@@ -548,7 +548,7 @@
                     <div class="row row-spacer "></div>
                     @endforeach
                     <div class="row ">
-                        <div class="font-bold cell">Total Revenues</div>
+                        <div class="font-bold cell min-64">Total Revenues</div>
                         @foreach ($this->selectedRange as $date)
                         @if (array_key_exists($segment, $products[$date]))
                         <div class="font-bold cell">
