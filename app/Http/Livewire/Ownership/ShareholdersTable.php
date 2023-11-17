@@ -78,7 +78,7 @@ class ShareholdersTable extends BaseTable
 
             Column::add()
                 ->title('Estimated Avg Price Paid')
-                ->field('price_paid')
+                ->field('estimated_average_price')
                 ->sortable()
                 ->headerAttribute('[&>div]:justify-end')->bodyAttribute('text-right'),
         ];
@@ -114,8 +114,8 @@ class ShareholdersTable extends BaseTable
                 return number_format($companyFilings->ownership, 4) . '%';
             })
             ->addColumn('signature_date')
-            ->addColumn('price_paid', function (CompanyFilings $companyFilings) {
-                return number_format($companyFilings->price_paid, 4);
+            ->addColumn('estimated_average_price', function (CompanyFilings $companyFilings) {
+                return number_format($companyFilings->estimated_average_price, 4);
             });
     }
 }
