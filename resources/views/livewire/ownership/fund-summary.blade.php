@@ -119,7 +119,7 @@
         <div class="order-5 col-span-12 xl:col-span-6 p-6 bg-white rounded">
             <h3 class="mb-4 text-sm font-semibold text-blue">13F Activity</h3>
 
-            <x-defer-data-loading use-alpine="true" on-init="getSummary" class="h-48">
+            <x-defer-data-loading use-alpine="true" on-init="getSummary" class="h-60">
                 <div class="grid grid-cols-2 gap-4 md:grid-cols-5 xl:grid-cols-2 2xl:grid-cols-4">
                     <template x-for="item in result">
                         <div>

@@ -14,7 +14,7 @@
     @endforeach
 
     @if ($chevron)
-        <svg class="-ml-1" xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 16 16"
+        <svg class="-ml-1 shrink-0" xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 16 16"
             fill="none">
             <path d="M10.2536 8L6.25365 12L5.32031 11.0667L8.38698 8L5.32031 4.93333L6.25365 4L10.2536 8Z"
                 fill="#464E49" />

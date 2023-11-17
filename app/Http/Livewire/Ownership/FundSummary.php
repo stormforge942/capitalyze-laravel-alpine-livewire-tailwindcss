@@ -174,7 +174,7 @@ class FundSummary extends Component
             ->where('report_calendar_or_quarter', '=', $this->quarter)
             ->orderByDesc('change_in_shares')
             ->where('change_in_shares', '>', 0)
-            ->limit(8)
+            ->limit(10)
             ->get()
             ->map(function ($item) {
                 $item->name_of_issuer = Str::title($item->name_of_issuer);
@@ -195,7 +195,7 @@ class FundSummary extends Component
             ->where('cik', '=', $this->cik)
             ->where('report_calendar_or_quarter', '=', $this->quarter)
             ->orderBy('change_in_shares')
-            ->limit(8)
+            ->limit(10)
             ->get()
             ->map(function ($item) {
                 $item->name_of_issuer = Str::title($item->name_of_issuer);

@@ -7,7 +7,7 @@
         'href' => route('company.ownership', ['ticker' => $ticker]),
     ],
 ]">
-    <div class="ml-2 font-normal flex items-center gap-4 md:gap-6 text-[#7C8286]" x-data="{
+    <div class="ml-2 font-normal flex items-center gap-4 md:gap-6 text-[#7C8286] text-sm+" x-data="{
         tabs: @js($historyItems),
         tabsCount: 3,
         init() {
@@ -16,7 +16,7 @@
         updateTabsCount() {
             const width = window.innerWidth;
     
-            if (width >= 1280) {
+            if (width >= 1536) {
                 this.tabsCount = 3;
             } else if (width >= 768) {
                 this.tabsCount = 2;
@@ -25,14 +25,12 @@
             } else {
                 this.tabsCount = 0;
             }
-    
-            console.log(this.tabsCount)
         },
     }"
         @resize.window.throttle="updateTabsCount()">
         <template x-for="tab in tabs.slice(0, tabsCount)" :key="tab.url">
             <div class="flex items-center gap-2">
-                <a :href="tab.url" class="hover:text-dark-light2 whitespace-nowrap"
+                <a :href="tab.active ? '#' : tab.url" class="hover:text-dark-light2 whitespace-nowrap"
                     :class="tab.active ? `text-blue ownership-active-bread-link` : ''" x-text="tab.name"></a>
 
                 <button class="h-4 w-4" @click="$wire.removeHistory(tab.url)">
@@ -47,7 +45,7 @@
         </template>
 
         <template x-if="tabs.length > tabsCount">
-            <div x-data="{ dropdown: null }" x-init="dropdown = new Dropdown($refs.dropdown, $refs.button)">
+            <div x-data="{ dropdown: null }" x-init="dropdown = new Dropdown($refs.dropdown, $refs.button, { placement: 'bottom-end' })">
                 <button class="flex items-center gap-2" x-ref="button">
                     <span class="hover:text-dark-light2" :class="tabsCount === 0 ? 'text-blue' : ''"
                         x-text="tabsCount ? 'More' : tabs[0].name"></span>
@@ -66,8 +64,8 @@
                     style="box-shadow: 4px 0px 8px 0px rgba(0, 0, 8, 0.08);" x-ref="dropdown">
                     <template x-for="tab in tabs.slice((tabsCount || 1), tabs.length)" :key="tab.url" hidden>
                         <div class="flex items-center justify-between gap-2">
-                            <a :href="tab.url" :class="tab.active ? `text-blue` : `hover:text-dark-light2`"
-                                x-text="tab.name">
+                            <a :href="tab.active ? '#' : tab.url"
+                                :class="tab.active ? `text-blue` : `hover:text-dark-light2`" x-text="tab.name">
                             </a>
 
                             <button @click="$wire.removeHistory(tab.url)">

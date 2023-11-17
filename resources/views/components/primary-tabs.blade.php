@@ -21,7 +21,7 @@
         return this.tabs[this.active];
     }
 }" x-init="$dispatch('tab-changed', activeTab);
-dropdown = new Dropdown($refs.dropdown, $refs.dropdownBtn)" {{ $attributes }}>
+dropdown = new Dropdown($refs.dropdown, $refs.dropdownBtn, { placement: 'bottom-start' })" {{ $attributes }}>
     <div class="flex flex-wrap items-center justify-between gap-2 lg:hidden text-base">
         <div>
             <button x-ref="dropdownBtn"
