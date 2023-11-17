@@ -1,5 +1,5 @@
-<div class="main-graph-wrapper w-full" x-data="{ showgraph: true }">
-    <div
+<div class="main-graph-wrapper w-full">
+    <div  x-show="showgraph"
         :class="{ 'custom-dropdown-absolute-wrapper': !showgraph, 'custom-dropdown-absolute-wrapper abs-custom': showgraph }">
         <div class="relative custom-dropdown-absolute-wrapper-inner flex justify-end" x-data="{
             chartMenuOpen: false
@@ -30,7 +30,7 @@
                 <div class="py-1" role="none">
                     <!-- Active: "bg-gray-100 text-gray-900", Not Active: "text-gray-700" -->
                     <div class="links-wrapper mb-3">
-                        <a href="#" x-show="showgraph" @click="showgraph = !showgraph" class="menu_link"
+                        <a href="#" x-show="showgraph" @click="showgraph = !showgraph; chartMenuOpen =! chartMenuOpen;" class="menu_link"
                             role="menuitem" tabindex="-1" id="menu-item-0">Hide Chart</a>
                         <a href="#" x-show="!showgraph" @click="showgraph = !showgraph" class="menu_link"
                             role="menuitem" tabindex="-1" id="menu-item-0">Show Chart</a>
@@ -68,7 +68,7 @@
         </div>
     </div>
 
-    <div class="relative graph-wrapper-box w-full">
+    <div class="relative graph-wrapper-box w-full" x-show="showgraph">
         <div class="graph-wrapper">
             <div class="graph-header relative">
                 <div class="pr-3 pl-5" x-data="{ percentage: '{{ $persentage }}' }">
