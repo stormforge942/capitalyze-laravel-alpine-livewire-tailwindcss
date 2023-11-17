@@ -17,6 +17,7 @@ class Fund extends Component
     public $tabs = [
         FundSummary::class,
         FundHoldings::class,
+        History::class,
     ];
 
     public function mount(Company $company)
