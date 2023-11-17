@@ -377,7 +377,7 @@
 
     <div class="years-range-wrapper mt-4 mb-8" wire:ignore>
         <div class="dots-wrapper">
-            @foreach($rangeDates as $key => $date)
+            @foreach(array_reverse($rangeDates) as $key => $date)
             <span id="{{$chartId}}{{date('Y', strtotime($date))}}" class="inactive-dots"></span>
             @endforeach
         </div>
@@ -408,7 +408,7 @@
                 rangeSlideDisabled: true,
                 onInput: (value, e) => {
                     if (value.length === 2 && value !== {{$chartId}}selectedValue) {
-                        {{$chartId}}recognizeDotsStatus({{$chartId}}selectedValue, [{{$chartId}}rangeMin, {{$chartId}}rangeMax]);
+                        {{$chartId}}recognizeDotsStatus(value, [{{$chartId}}rangeMin, {{$chartId}}rangeMax]);
                         Livewire.emit("{{$chartId}}analysisDatesChanged", value)
                     }
                 },
@@ -438,6 +438,7 @@
                     let {{$chartId}}base = {{$chartId}}generateRangeArray(baseArray)
                     let {{$chartId}}activeYears = {{$chartId}}generateRangeArray(value)
                     let {{$chartId}}intersection = {{$chartId}}base.filter(x => !{{$chartId}}activeYears.includes(x));
+                    console.log({{$chartId}}activeYears)
 
                     {{$chartId}}activeYears.forEach(id => {
                         let {{$chartId}}element = document.getElementById("{{$chartId}}"+id);
