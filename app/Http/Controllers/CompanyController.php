@@ -2,9 +2,10 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\Fund;
 use App\Models\Company;
-use App\Services\OwnershipHistoryService;
 use Illuminate\Http\Request;
+use App\Services\OwnershipHistoryService;
 use Illuminate\Routing\Controller as BaseController;
 
 class CompanyController extends BaseController
@@ -231,17 +232,25 @@ class CompanyController extends BaseController
         ]);
     }
 
-    public function fund(Request $request)
+    public function fund(string $fund, ?string $company = null)
     {
-        $company = Company::query()
+        $fund = Fund::where('cik', $fund)->firstOrFail();
+
+        $currentCompany = $company
+            ? Company::query()
+            ->where('ticker', $company)
+            ->first()
+            : null;
+
+        $intialCompany = Company::query()
             ->where('ticker', OwnershipHistoryService::getCompany())
             ->firstOrFail();
 
         return view('layouts.company', [
-            'company' => $company,
-            'ticker' => $company->ticker,
-            'period' => $request->query('period', 'annual'),
+            'company' => $intialCompany,
+            'currentCompany' => $currentCompany,
             'tab' => 'fund',
+            'fund' => $fund,
         ]);
     }
 }

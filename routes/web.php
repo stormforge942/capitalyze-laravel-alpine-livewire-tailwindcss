@@ -39,7 +39,6 @@ use App\Http\Controllers\FrankfurtController;
 use App\Http\Controllers\MutualFundController;
 use App\Http\Controllers\VerifyEmailController;
 use App\Http\Controllers\ResetLinkSentController;
-use App\Http\Middleware\RememberOwnershipHistory;
 use App\Http\Controllers\ResetPasswordSuccessfulController;
 use App\Http\Controllers\ShenzhenController;
 use Laravel\Fortify\Http\Controllers\AuthenticatedSessionController;
@@ -90,7 +89,9 @@ Route::middleware([])->group(function () {
         Route::get('/company/{ticker}/fail-to-deliver', [CompanyController::class, 'failToDeliver'])->name('company.fail.to.deliver');
 
         Route::get('/company/{ticker}/ownership/{of?}', [CompanyController::class, 'ownership'])->name('company.ownership');
-        Route::get('/fund/{fund}', [CompanyController::class, 'fund'])->name('company.fund');
+        
+        // if company is supplied in url, it will show history of fund for that company otherwise it will show history of fund for all companies
+        Route::get('/fund/{fund}/{company?}', [CompanyController::class, 'fund'])->name('company.fund');
 
         Route::get('/fund/{cik}/', [FundController::class, 'summary'])->name('fund.summary');
         Route::get('/fund/{cik}/holdings', [FundController::class, 'holdings'])->name('fund.holdings');

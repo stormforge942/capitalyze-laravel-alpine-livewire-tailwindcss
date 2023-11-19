@@ -2,10 +2,9 @@
 
 namespace App\Http\Livewire\Ownership;
 
-use App\Models\Fund as FundModel;
-use App\Models\Company;
 use Livewire\Component;
 use App\Models\CompanyInsider;
+use App\Http\Livewire\Ownership\History;
 use App\Services\OwnershipHistoryService;
 
 class Fund extends Component
@@ -20,11 +19,10 @@ class Fund extends Component
         History::class,
     ];
 
-    public function mount(Company $company)
+    public function mount($fund, $company = null)
     {
+        $this->fund = $fund;
         $this->company = $company;
-
-        $this->fund = FundModel::where('cik', request()->route('fund'))->firstOrFail();
 
         OwnershipHistoryService::push([
             'name' => $this->fund->name,

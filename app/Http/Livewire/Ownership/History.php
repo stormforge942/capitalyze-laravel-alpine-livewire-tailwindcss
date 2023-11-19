@@ -5,17 +5,17 @@ namespace App\Http\Livewire\Ownership;
 use App\Models\Filing;
 use App\Http\Livewire\AsTab;
 use App\Powergrid\BaseTable;
-use App\Services\OwnershipHistoryService;
 use PowerComponents\LivewirePowerGrid\Column;
 use PowerComponents\LivewirePowerGrid\PowerGrid;
 use Illuminate\Contracts\Database\Eloquent\Builder;
+use Illuminate\Support\Arr;
 use PowerComponents\LivewirePowerGrid\PowerGridEloquent;
 
 class History extends BaseTable
 {
     use AsTab;
 
-    public string $ticker;
+    public ?string $ticker;
     public string $cik;
     public string $sortField = 'report_calendar_or_quarter';
     public string $sortDirection = 'desc';
@@ -23,8 +23,8 @@ class History extends BaseTable
     public function mount(array $data = []): void
     {
         parent::mount();
-        $this->ticker = OwnershipHistoryService::getCompany();
-        $this->cik = $data['fund']['cik'];
+        $this->ticker = Arr::get($data, 'company.ticker');
+        $this->cik = Arr::get($data, 'fund.cik');
     }
 
     public function datasource(): ?Builder
@@ -38,10 +38,8 @@ class History extends BaseTable
                 'weight',
                 'price_paid',
             ])
-            ->where([
-                'symbol' => $this->ticker,
-                'cik' => $this->cik,
-            ]);
+            ->when($this->ticker, fn ($q) => $q->where('symbol', $this->ticker))
+            ->where('cik', $this->cik);
     }
 
     public function columns(): array
