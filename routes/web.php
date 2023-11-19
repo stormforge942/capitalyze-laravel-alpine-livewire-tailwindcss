@@ -74,6 +74,7 @@ Route::middleware([])->group(function () {
         Route::get('/company/{ticker}/', [CompanyController::class, 'profile'])->name('company.product');
         Route::get('/company/{ticker}/profile', [CompanyController::class, 'profile'])->name('company.profile');
         Route::get('/company/{ticker}/track-investor', [CompanyController::class, 'trackInvestor'])->name('company.track-investor');
+        Route::get('/company/{ticker}/filings-summary', [CompanyController::class, 'filingsSummary'])->name('company.filings-summary');
         Route::get('/company/{ticker}/executive-compensation', [CompanyController::class, 'executiveCompensation'])->name('company.executive.compensation');
         Route::get('/company/{ticker}/chart', [CompanyController::class, 'chart'])->name('company.chart');
         Route::get('/company/{ticker}/splits', [CompanyController::class, 'splits'])->name('company.splits');
@@ -87,18 +88,19 @@ Route::middleware([])->group(function () {
         Route::get('/company/{ticker}/restatement', [CompanyController::class, 'restatement'])->name('company.restatement');
         Route::get('/company/{ticker}/employee', [CompanyController::class, 'employee'])->name('company.employee');
         Route::get('/company/{ticker}/fail-to-deliver', [CompanyController::class, 'failToDeliver'])->name('company.fail.to.deliver');
+        Route::get('/company/{ticker}/analysis', [CompanyController::class, 'analysis'])->name('company.analysis');
 
         Route::get('/company/{ticker}/ownership/{of?}', [CompanyController::class, 'ownership'])->name('company.ownership');
-        
-        // if company is supplied in url, it will show history of fund for that company otherwise it will show history of fund for all companies
-        Route::get('/fund/{fund}/{company?}', [CompanyController::class, 'fund'])->name('company.fund');
 
-        Route::get('/fund/{cik}/', [FundController::class, 'summary'])->name('fund.summary');
+        Route::get('/legacy/fund/{cik}/', [FundController::class, 'summary'])->name('fund.summary');
         Route::get('/fund/{cik}/holdings', [FundController::class, 'holdings'])->name('fund.holdings');
         Route::get('/fund/{cik}/metrics', [FundController::class, 'metrics'])->name('fund.metrics');
         Route::get('/fund/{ticker}/filings', [FundController::class, 'filings'])->name('fund.filings');
         Route::get('/fund/{ticker}/insider', [FundController::class, 'insider'])->name('fund.insider');
         Route::get('/fund/{ticker}/restatement', [FundController::class, 'restatement'])->name('fund.restatement');
+
+        // if company is supplied in url, it will show history of fund for that company otherwise it will show history of fund for all companies
+        Route::get('/fund/{fund}/{company?}', [CompanyController::class, 'fund'])->name('company.fund');
 
         Route::get('/mutual-fund/{cik}/{fund_symbol}/{series_id}/{class_id}/', [MutualFundController::class, 'holdings'])->name('mutual-fund.holdings');
         Route::get('/mutual-fund/{cik}/{fund_symbol}/{series_id}/{class_id}/returns', [MutualFundController::class, 'returns'])->name('mutual-fund.returns');

@@ -202,7 +202,17 @@ class CompanyController extends BaseController
         ]);
     }
 
-    public function ownership(Request $request, string $ticker, ?string $of = null)
+    public function filingsSummary(Request $request, $ticker){
+        $company = Company::where('ticker', $ticker)->get()->first();
+        return view('layouts.company', [
+            'company' => $company,
+            'ticker' => $ticker,
+            'period' => $request->query('period', 'annual'),
+            'tab' => 'filings-summary'
+        ]);
+    }
+
+    public function ownership(Request $request, string $ticker)
     {
         $historyCompany = OwnershipHistoryService::getCompany();
 
@@ -258,6 +268,19 @@ class CompanyController extends BaseController
             'currentCompany' => $currentCompany,
             'tab' => 'fund',
             'fund' => $fund,
+        ]);
+    }
+
+    public function analysis(Request $request, string $ticker){
+        $company = Company::query()
+            ->where('ticker', $ticker)
+            ->firstOrFail();
+
+        return view('layouts.company', [
+            'company' => $company,
+            'ticker' => $ticker,
+            'period' => $request->query('period', 'annual'),
+            'tab' => 'analysis',
         ]);
     }
 }

@@ -87,7 +87,7 @@ class FundSummary extends Component
                 ];
             });
 
-        $lastQuarterSectorAllocation = null;
+        $lastQuarterSectorAllocation = collect([]);
         if ($investments->count()) {
             $lastestQuarter = $investments->last()['date'];
 
@@ -111,7 +111,7 @@ class FundSummary extends Component
         return [
             'overTimeSectorAllocation' => $investments->toArray(),
             'lastQuarterSectorAllocation' => $lastQuarterSectorAllocation?->toArray(),
-            'conversionRate' => $lastQuarterSectorAllocation
+            'conversionRate' => $lastQuarterSectorAllocation->count()
                 ? number_format($lastQuarterSectorAllocation->sum('conversionRate') / $lastQuarterSectorAllocation->count(), 2)
                 : 0,
             'sectorAllocationChangePercentage' => $investments->count() < 2

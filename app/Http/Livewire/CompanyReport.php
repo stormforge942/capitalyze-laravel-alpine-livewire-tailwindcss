@@ -228,6 +228,7 @@ class CompanyReport extends Component
 
     public function changeDates($dates)
     {
+
         $this->tableLoading = true;
         $this->rows = [];
 
@@ -249,7 +250,7 @@ class CompanyReport extends Component
                 }
 
                 // filter tableDates to only keep the selected date from the slider
-                $this->tableDates = array_values(array_unique(array_filter($this->rangeDates, function ($date) {
+                $this->tableDates = array_values(array_unique(array_filter($this->rangeDates, function ($date) use ($dates){
                     $timestamp = strtotime($date);
                     $startTimestamp = strtotime($dates[0]);
                     $endTimestamp = strtotime($dates[1]);
@@ -262,16 +263,34 @@ class CompanyReport extends Component
 
         if ($this->period === 'quarterly') {
 
-            $this->tableDates = array_unique($this->tableDates);
+            $this->tableDates = []; // Clears the array
 
-            $filteredDates = array_filter($this->tableDates, function ($date) use ($dates) {
-                $year = intval(date('Y', strtotime($date)));
-                return $year >= $dates[0] && $year <= $dates[1];
-            });
+            // get all dates possibles and fill tableDates
+            $this->traverseArray($this->data);
 
-            rsort($filteredDates);
+            $this->tableDates = array_reverse($this->tableDates);
 
-            $this->tableDates = array_reverse($filteredDates);
+            if (count($dates) == 2) {
+
+                if (gettype($dates[0]) === 'integer') {
+                    $date = new DateTime($dates[0] . '-01-01');
+                    $dates[0] = $date->format('Y-m-d');
+                }
+
+                if (gettype($dates[1]) === 'integer') {
+                    $date = new DateTime($dates[1] . '-12-31');
+                    $dates[1] = $date->format('Y-m-d');
+                }
+
+                // filter tableDates to only keep the selected date from the slider
+                $this->tableDates = array_values(array_unique(array_filter($this->tableDates, function ($date) use ($dates){
+                    $timestamp = strtotime($date);
+                    $startTimestamp = strtotime($dates[0]);
+                    $endTimestamp = strtotime($dates[1]);
+
+                    return $timestamp !== false && $timestamp >= $startTimestamp && $timestamp <= $endTimestamp;
+                })));
+            }
         }
 
         $this->generateRows($this->data);
@@ -313,46 +332,113 @@ class CompanyReport extends Component
         // get all dates possibles and fill tableDates
         $this->traverseArray($this->data);
 
-        // for the slider date - rangeDates is slider dates
+        $this->tableDates = array_reverse($this->tableDates);
+
+            // for the slider date - rangeDates is slider dates
         $this->rangeDates = $this->tableDates;
+
+
+        // Check and update $this->endDate if applicable
+        if (isset($this->endDate) && is_integer($this->endDate)) {
+            // Extract the year from $this->endDate
+            $year = date('Y', strtotime("{$this->endDate}-01-01"));
+
+            // Search for a date within $this->rangeDates that matches the year
+            foreach ($this->rangeDates as $date) {
+                if (substr($date, 0, 4) == $year) {
+                    $this->endDate = $date;
+                }
+            }
+        }
+
+        // Check and update $this->startDate if applicable
+        if (isset($this->startDate) && is_integer($this->startDate)) {
+            // Extract the year from $this->startDate
+            $year = $this->startDate;
+
+            // Flag to check if a match is found in $this->rangeDates
+            $matchFound = false;
+
+            // Search for a date within $this->rangeDates that matches the year
+            foreach ($this->rangeDates as $date) {
+                if (substr($date, 0, 4) == $year) {
+                    $this->startDate = $date;
+                    $matchFound = true;
+                    break;
+                }
+            }
+
+            // If no match is found, use $this->rangeDates[count($this->rangeDates) - 7] because year is before the first year in $this->rangeDates
+            if (!$matchFound) {
+
+                $year = substr($this->rangeDates[count($this->rangeDates) - 1], 0, 4) - 5;
+
+                // Search for a date within $this->rangeDates that matches the year
+                foreach ($this->rangeDates as $date) {
+                    if (substr($date, 0, 4) == $year) {
+                        $this->startDate = $date;
+                        break;
+                    }
+                }
+            }
+        }
 
 
         // define selected date for the slider
         if (count($this->rangeDates) > 0) {
 
-            if ($this->rangeDates[0] > $this->rangeDates[count($this->rangeDates) - 1]) {
-                $this->rangeDates = array_reverse($this->rangeDates);
+            $firstDate = $this->startDate;
+            if($this->startDate === null) {
+
+                $year = substr($this->rangeDates[count($this->rangeDates) - 1], 0, 4) - 5;
+
+                $firstDate = $this->rangeDates[count($this->rangeDates) - 1];
+                // Search for a date within $this->rangeDates that matches the year
+                foreach ($this->rangeDates as $date) {
+                    if (substr($date, 0, 4) == $year) {
+                        $firstDate = $date;
+                        break;
+                    }
+                }
+
             }
-            $this->selectedValue = [$this->rangeDates[count($this->rangeDates) - 7], $this->rangeDates[count($this->rangeDates) - 1]];
+
+
+
+            $this->selectedValue = [$firstDate, $this->rangeDates[count($this->rangeDates) - 1]];
         }
-
-
-        // define the maximum date of the slider
-        $rangeMax = strtotime($this->selectedValue[1]) ?: strtotime(now());
 
         // if the end date is null than define the maximum date of the slider
         $this->selectedValue[1] = $this->endDate ?? $this->rangeDates[count($this->rangeDates) - 1];
 
-
-        // if the start date is greater than the minimum date of the slider
-        if(strtotime($this->startDate) > strtotime(min($this->tableDates))) {
-            $this->selectedValue[0] = $this->startDate ?? date('Y-m-d', $rangeMax - 6 * 365 * 24 * 60 * 60);
-        }
-
-        // adjust the data table for the selected dates
-
         $this->endDate = $this->endDate ?? $this->selectedValue[1];
-        $this->startDate = $this->startDate ?? date('Y-m-d', $rangeMax - 6 * 365 * 24 * 60 * 60);
+        $this->startDate = $this->startDate ?? $this->selectedValue[0];
 
-        // filter tableDates to only keep the selected date from the slider
-        $this->tableDates = array_reverse(array_values(array_unique(array_filter($this->tableDates, function ($date) {
+
+                // filter tableDates to only keep the selected date from the slider
+        $this->tableDates = array_values(array_unique(array_filter($this->tableDates, function ($date) {
             $timestamp = strtotime($date);
             $startTimestamp = strtotime($this->selectedValue[0]);
             $endTimestamp = strtotime($this->selectedValue[1]);
 
             return $timestamp !== false && $timestamp >= $startTimestamp && $timestamp <= $endTimestamp;
-        }))));
+        })));
 
+        if($this->period === 'quarterly') {
+            $filteredData = [];
+
+            foreach ($this->rangeDates as $date) {
+                $year = date('Y', strtotime($date));
+
+                // Only keep the latest date for each year
+                if (!isset($filteredData[$year]) || $date > $filteredData[$year]) {
+                    $filteredData[$year] = $date;
+                }
+            }
+
+            // $filteredData now contains one date per year (the latest if possible)
+            $this->rangeDates = array_values($filteredData);
+        }
     }
 
     public function generateRows($data)
