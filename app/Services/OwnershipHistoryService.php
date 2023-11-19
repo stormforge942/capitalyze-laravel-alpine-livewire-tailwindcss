@@ -53,7 +53,7 @@ class OwnershipHistoryService
         ]);
     }
 
-    public static function remove($url): ?array
+    public static function remove($url): void
     {
         $history = static::get();
         $history = Arr::where($history, function ($historyItem) use ($url) {
@@ -61,8 +61,6 @@ class OwnershipHistoryService
         });
 
         session()->put('ownership-history.items', array_values($history));
-
-        return Arr::last($history);
     }
 
     public static function clear(): void

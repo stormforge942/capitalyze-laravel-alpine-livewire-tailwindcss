@@ -26,6 +26,11 @@
                 this.tabsCount = 0;
             }
         },
+        removeTab(tab) {
+            this.tabs = this.tabs.filter(t => t.url !== tab.url);
+    
+            $wire.removeTab(tab);
+        }
     }"
         @resize.window.throttle="updateTabsCount()">
         <template x-for="tab in tabs.slice(0, tabsCount)" :key="tab.url">
@@ -33,7 +38,7 @@
                 <a :href="tab.active ? '#' : tab.url" class="hover:text-dark-light2 whitespace-nowrap"
                     :class="tab.active ? `text-blue ownership-active-bread-link` : ''" x-text="tab.name"></a>
 
-                <button class="h-4 w-4" @click="$wire.removeHistory(tab.url)">
+                <button class="h-4 w-4" @click="removeTab(tab)">
                     <svg xmlns="http://www.w3.org/2000/svg" width="10" height="10" viewBox="0 0 10 10"
                         fill="none">
                         <path
@@ -68,7 +73,7 @@
                                 :class="tab.active ? `text-blue` : `hover:text-dark-light2`" x-text="tab.name">
                             </a>
 
-                            <button @click="$wire.removeHistory(tab.url)">
+                            <button @click="removeTab(tab)">
                                 <svg xmlns="http://www.w3.org/2000/svg" width="10" height="10"
                                     viewBox="0 0 10 10" fill="none">
                                     <path

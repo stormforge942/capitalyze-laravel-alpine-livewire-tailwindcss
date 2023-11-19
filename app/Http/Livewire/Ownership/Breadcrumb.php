@@ -17,15 +17,15 @@ class Breadcrumb extends Component
         ]);
     }
 
-    public function removeHistory($url)
+    public function removeTab(array $tab)
     {
-        $lastItem = OwnershipHistoryService::remove($url);
+        OwnershipHistoryService::remove($tab['url']);
 
-        if ($lastItem) {
-            return redirect($lastItem['url']);
+        if ($tab['active'] ?? false) {
+            return redirect(route('company.ownership', ['ticker' => OwnershipHistoryService::getCompany()]));
         }
 
-        $this->clearHistory();
+        return back();
     }
 
     public function clearHistory()
