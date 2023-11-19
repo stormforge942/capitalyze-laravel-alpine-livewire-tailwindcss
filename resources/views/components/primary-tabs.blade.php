@@ -35,7 +35,7 @@ dropdown = new Dropdown($refs.dropdown, $refs.dropdownBtn, { placement: 'bottom-
                 </svg>
             </button>
 
-            <div class="z-10 hidden bg-white divide-y divide-gray-100 rounded shadow min-w-[190px]" x-ref="dropdown">
+            <div class="z-10 hidden bg-white divide-y divide-gray-100 rounded shadow min-w-[12rem]" x-ref="dropdown">
                 <div class="py-2 text-sm text-gray-700">
                     @foreach ($tabs as $key => $tab)
                         <button class="block w-full px-4 py-2 text-left"
