@@ -26,9 +26,9 @@
             }
         }
     }"
-        class="fixed top-0 left-0 z-40 hidden h-screen pt-10 bg-white border-r border-gray-200 lg:block dark:bg-gray-800 dark:border-gray-700 w-56"
+        class="fixed top-0 left-0 z-40 hidden h-screen pt-10 bg-white border-r border-gray-200 lg:block dark:bg-gray-800 dark:border-gray-700 w-52"
         :class="collapsed ? 'w-20' : 'w-56'" aria-label="Sidebar">
-        <div class="flex flex-col h-full px-6 pb-4 bg-white dark:bg-gray-800">
+        <div class="flex flex-col h-full pb-4 bg-white dark:bg-gray-800">
             <button class="absolute -right-3 top-40" :class="collapsed ? 'rotate-180' : ''" @click="toggle">
                 <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
                     <path
@@ -36,7 +36,7 @@
                         fill="#121A0F" />
                 </svg>
             </button>
-            <div class="mb-10">
+            <div class="mb-10 px-6">
                 <a href="{{ route('home') }}">
                     <svg class="inline" x-show="!collapsed" width="145" height="32" viewBox="0 0 145 32"
                         fill="none" xmlns="http://www.w3.org/2000/svg">
@@ -89,14 +89,14 @@
                     </svg>
                 </a>
             </div>
-            <ul class="text-[14px] flex-1 overflow-x-hidden space-y-2">
-                <li class="flex items-center w-full p-2 font-semibold rounded group text-blue">
+            <ul class="text-[14px] flex-1 overflow-x-hidden overflow-y-auto space-y-2 px-6">
+                <li class="flex items-center gap-3 p-2 pr-0 font-semibold rounded group text-blue">
                     <svg width="16" height="28" class="fill-current" viewBox="0 0 16 17" fill="none"
                         xmlns="http://www.w3.org/2000/svg">
                         <path
                             d="M7.77966 5.31441C7.19566 5.31441 6.29165 4.65041 5.33965 4.67441C4.08365 4.69041 2.93165 5.40241 2.28365 6.53041C0.979648 8.79441 1.94765 12.1384 3.21965 13.9784C3.84365 14.8744 4.57965 15.8824 5.55565 15.8504C6.49165 15.8104 6.84366 15.2424 7.97966 15.2424C9.10766 15.2424 9.42766 15.8504 10.4197 15.8264C11.4277 15.8104 12.0677 14.9144 12.6837 14.0104C13.3957 12.9704 13.6917 11.9624 13.7077 11.9064C13.6837 11.8984 11.7477 11.1544 11.7237 8.91441C11.7077 7.04241 13.2517 6.14641 13.3237 6.10641C12.4437 4.81841 11.0917 4.67441 10.6197 4.64241C9.38766 4.54641 8.35566 5.31441 7.77966 5.31441ZM9.85966 3.42641C10.3797 2.80241 10.7237 1.93041 10.6277 1.06641C9.88366 1.09841 8.98766 1.56241 8.45166 2.18641C7.97166 2.73841 7.55566 3.62641 7.66766 4.47441C8.49166 4.53841 9.33966 4.05041 9.85966 3.42641Z" />
                     </svg>
-                    <span class="ml-3 tag-collapsed">{{ $company->name }}  ({{ $company->ticker }})</span>
+                    <span class="tag-collapsed !whitespace-pre-wrap break-words">{{ $company->name }} ({{ $company->ticker }})</span>
                 </li>
                 @foreach ($navbarItems as $item)
                     <?php
@@ -174,15 +174,16 @@
                     </li>
                 @endforeach
             </ul>
+
             <button id="profileButton" data-dropdown-toggle="dropdownProfile" data-dropdown-placement="left-end"
                 type="button"
-                class="mt-5 inline-flex items-center font-semibold text-[14px] leading-4 focus:outline-none transition self-start">
+                class="mt-5 px-6 gap-x-2 inline-flex items-center font-semibold text-[14px] leading-4 focus:outline-none transition self-start">
                 <div class="bg-[#52D3A2] w-9 h-9 leading-9 rounded-full mr-2">{{ Auth::user()->initials }}
                 </div>
 
                 <span class="tag-collapsed">{{ Auth::user()->name }}</span>
 
-                <svg class="tag-collapsed" class="ml-[10px]" width="16" height="16" viewBox="0 0 16 16"
+                <svg class="tag-collapsed" width="16" height="16" viewBox="0 0 16 16"
                     fill="none" xmlns="http://www.w3.org/2000/svg">
                     <path
                         d="M8.00033 2C7.26699 2 6.66699 2.6 6.66699 3.33333C6.66699 4.06667 7.26699 4.66667 8.00033 4.66667C8.73366 4.66667 9.33366 4.06667 9.33366 3.33333C9.33366 2.6 8.73366 2 8.00033 2ZM8.00033 11.3333C7.26699 11.3333 6.66699 11.9333 6.66699 12.6667C6.66699 13.4 7.26699 14 8.00033 14C8.73366 14 9.33366 13.4 9.33366 12.6667C9.33366 11.9333 8.73366 11.3333 8.00033 11.3333ZM8.00033 6.66667C7.26699 6.66667 6.66699 7.26667 6.66699 8C6.66699 8.73333 7.26699 9.33333 8.00033 9.33333C8.73366 9.33333 9.33366 8.73333 9.33366 8C9.33366 7.26667 8.73366 6.66667 8.00033 6.66667Z"
@@ -212,7 +213,7 @@
                 </button>
             </div>
 
-            <ul class="my-6 overflow-y-scroll md:mt-10 space-y-7">
+            <ul class="my-6 overflow-y-auto md:mt-10 space-y-7">
                 @foreach ($navbarItems as $item)
                     <?php
                     $child = $item['child'] ?? [];

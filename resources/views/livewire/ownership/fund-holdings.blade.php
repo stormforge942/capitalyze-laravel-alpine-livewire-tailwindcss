@@ -5,11 +5,11 @@
             <span>Quarter to view</span>
             <x-select name="quarter" :options="$quarters" placeholder="Select a quarter" x-model="quarter"></x-select>
 
-            <x-tab-slot id="ownership-tab">
+            <x-tab-slot id="company-fund-tab">
                 <x-select name="quarter" :options="$quarters" placeholder="Select a quarter" x-model="quarter"></x-select>
             </x-tab-slot>
         </div>
     @endif
 
-    <livewire:ownership.shareholders-table :ticker="$ticker" :quarter="$quarter" />
+    <livewire:ownership.fund-holdings-table :cik="$cik" :quarter="$quarter" />
 </div>

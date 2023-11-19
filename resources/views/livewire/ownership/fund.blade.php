@@ -1,7 +1,7 @@
 <div>
     <h2 class="block mb-4 text-xl font-semibold lg:hidden text-blue">Ownership</h2>
 
-    @livewire('ownership.breadcrumb', ['company' => $company->ticker])
+    @livewire('ownership.breadcrumb')
 
     <div class="mt-6">
         <h1 class="text-xl font-bold">{{ $fund->name }}</h1>
@@ -21,7 +21,7 @@
     </div>
 
     <div class="mt-6" id="company-fund-tab">
-        <livewire:tabs :tabs="$tabs" :data="['fund' => $fund, 'ticker' => $company->ticker]">
+        <livewire:tabs :tabs="$tabs" :data="['fund' => $fund, 'company' => $company]">
     </div>
 </div>
 
@@ -70,11 +70,21 @@
                             display: false,
                         },
                         tooltip: {
-                            displayColors: false,
-                            backgroundColor: '#fff',
-                            titleColor: '#121A0F',
-                            bodyColor: '#121A0F',
-                            yAlign: 'bottom',
+                            bodyFont: {
+                                size: 15
+                            },
+                            external: chartJsPlugins.largeTooltip,
+                            enabled: false,
+                            position: 'nearest',
+                            callbacks: {
+                                title: function(context) {
+                                    return context[0].label;
+                                },
+                                label: function(context) {
+                                    const val = Intl.NumberFormat().format(context.raw)
+                                    return `Value|${val}`;
+                                }
+                            },
                         },
                         pointLine: {
                             color: '#0E5FD9',

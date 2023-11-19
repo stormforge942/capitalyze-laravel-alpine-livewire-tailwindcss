@@ -15,6 +15,11 @@ module.exports = {
         "./vendor/wire-elements/pro/**/*.blade.php",
     ],
 
+    safelist: [
+        '[&>div]:justify-end',
+        'text-right',
+    ],
+
     theme: {
         extend: {
             fontFamily: {

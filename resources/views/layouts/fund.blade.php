@@ -24,7 +24,9 @@
     <x-jet-banner />
 
     <div class="min-h-screen bg-gray-100">
-        @livewire('navigation-menu')
+        <div class="ml-8">
+            @livewire('navigation-menu')
+        </div>
         <livewire:fund-navbar :fund="$fund" />
         <!-- Page Content -->
         <main>

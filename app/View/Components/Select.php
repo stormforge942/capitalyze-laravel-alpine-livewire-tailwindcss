@@ -2,25 +2,26 @@
 
 namespace App\View\Components;
 
+use Illuminate\Support\Str;
 use Illuminate\View\Component;
 
 class Select extends Component
 {
-    /**
-     * Create a new component instance.
-     *
-     * @return void
-     */
-    public function __construct(public $options, public $placeholder)
-    {
-        //
+    public $name;
+    public $placeholder;
+    public $value;
+
+    public function __construct(
+        public array $options,
+        ?string $placeholder = null,
+        ?string $value = null,
+        ?string $name = null,
+    ) {
+        $this->name = $name ?? Str::random(10);
+        $this->placeholder = $placeholder ?? '';
+        $this->value = $value ?? '';
     }
 
-    /**
-     * Get the view / contents that represent the component.
-     *
-     * @return \Illuminate\Contracts\View\View|\Closure|string
-     */
     public function render()
     {
         return view('components.select');
