@@ -18,7 +18,7 @@
 
             <x-defer-data-loading use-alpine="true" on-init="getHoldingSummary" class="h-32">
                 <div class="space-y-4">
-                    <template x-for="item in result">
+                    <template x-for="item in result" :key="item.name">
                         <div class="flex items-center justify-between gap-5">
                             <span class="text-sm" x-text="item.name"></span>
                             <span class="font-semibold" x-text="`${item.weight}%`"></span>
@@ -41,8 +41,8 @@
             <x-tabs :tabs="['Top Buys', 'Top Sells']">
                 <x-defer-data-loading use-alpine="true" on-init="getTopBuySells" class="h-80">
                     <div class="space-y-4" :class="active == 0 ? 'block' : 'hidden'" :data-active="active">
-                        <template x-for="item in result.topBuys">
-                            <div class="grid items-center grid-cols-12 gap-4 ">
+                        <template x-for="item in result.topBuys" :key="`${item.name_of_issuer}-${item.width}`">
+                            <div class="grid items-center grid-cols-12 gap-4">
                                 <div class="cursor-pointer col-span-8 xl:col-span-9 px-2 py-1.5 bg-[#F0F6FF] rounded-[40px]"
                                     :title="item.change_in_shares">
                                     <div class="h-2 rounded-[40px] bg-blue" :style="`width: ${item.width}%`">
@@ -57,7 +57,7 @@
                     </div>
 
                     <div class="space-y-4" :class="active == 1 ? 'block' : 'hidden'">
-                        <template x-for="item in result.topSells">
+                        <template x-for="item in result.topSells" :key="`${item.name_of_issuer}-${item.width}`">
                             <div class="grid items-center grid-cols-12 gap-4 ">
                                 <div class="cursor-pointer col-span-8 xl:col-span-9 px-2 py-1.5 bg-[#F0F6FF] rounded-[40px]"
                                     :title="item.change_in_shares">
@@ -121,7 +121,7 @@
 
             <x-defer-data-loading use-alpine="true" on-init="getSummary" class="h-60">
                 <div class="grid grid-cols-2 gap-4 md:grid-cols-5 xl:grid-cols-2 2xl:grid-cols-4">
-                    <template x-for="item in result">
+                    <template x-for="item in result" :key="item.title">
                         <div>
                             <p class="text-sm text-dark-light2" x-text="item.title"></p>
 
