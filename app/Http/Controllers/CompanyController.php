@@ -206,7 +206,7 @@ class CompanyController extends BaseController
     {
         $historyCompany = OwnershipHistoryService::getCompany();
 
-        if (!$historyCompany || $historyCompany !== $ticker) {
+        if ($historyCompany !== $ticker) {
             OwnershipHistoryService::clear();
         }
 
@@ -244,7 +244,14 @@ class CompanyController extends BaseController
 
         $intialCompany = Company::query()
             ->where('ticker', OwnershipHistoryService::getCompany())
-            ->firstOrFail();
+            ->first();
+
+        abort_if(!$intialCompany && !$currentCompany, 404);
+
+        if (!$intialCompany && $currentCompany) {
+            OwnershipHistoryService::setCompany($currentCompany->ticker);
+            $intialCompany = $currentCompany->clone();
+        }
 
         return view('layouts.company', [
             'company' => $intialCompany,
