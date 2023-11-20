@@ -8,8 +8,6 @@
         const tab = this.tabs[key];
         this.active = tab.key;
 
-        $refs.slot.innerHTML = '';
-
         // update query string
         const url = new URL(window.location.href);
         url.searchParams.set('tab', tab.key);
