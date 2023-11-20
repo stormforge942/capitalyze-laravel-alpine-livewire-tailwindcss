@@ -96,8 +96,8 @@ class CompanyNavbar extends Component
                     <path d="M8.66667 14.0007V15.6673L6.66667 14.334L4.66667 15.6673V14.0007H4.33333C3.04467 14.0007 2 12.956 2 11.6673V3.33398C2 2.22942 2.89543 1.33398 4 1.33398H13.3333C13.7015 1.33398 14 1.63246 14 2.00065V13.334C14 13.7022 13.7015 14.0007 13.3333 14.0007H8.66667ZM8.66667 12.6673H12.6667V10.6673H4.33333C3.78105 10.6673 3.33333 11.1151 3.33333 11.6673C3.33333 12.2196 3.78105 12.6673 4.33333 12.6673H4.66667V11.334H8.66667V12.6673ZM12.6667 9.33398V2.66732H4V9.35758C4.10887 9.34205 4.22016 9.33398 4.33333 9.33398H12.6667ZM4.66667 3.33398H6V4.66732H4.66667V3.33398ZM4.66667 5.33398H6V6.66732H4.66667V5.33398ZM4.66667 7.33398H6V8.66732H4.66667V7.33398Z" fill="#464E49"/>
                 </svg>
                 ICON,
-                'url' => route('company.profile', ['ticker' => $this->company->ticker]),
-                'active' => request()->routeIs('company.filings')
+                'url' => route('company.filings-summary', ['ticker' => $this->company->ticker]),
+                'active' => request()->routeIs('company.filings-summary')
             ],
             [
                 'title' => 'Ownership',
