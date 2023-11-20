@@ -13,16 +13,27 @@ class CompanyReportTableRow extends Component
     public $selected;
     public $attr = "";
     public $selectedRows = [];
+    public $itemKey = 0;
 
     protected $listeners = ['resetSelection'];
 
-    public function mount($data, $index = 0, $selectedRows = [], $reverse = false)
+    public function mount($data, $index = 0, $selectedRows = [], $reverse = false, $itemKey = 0)
     {
         $this->data = $data;
+        $this->itemKey = $itemKey;
         $this->index = $index;
         $this->selected = in_array($data['title'], $selectedRows);
         $this->selectedRows = $selectedRows;
         $this->reverse = $reverse;
+    }
+
+    public function getIsCheckedProperty(){
+        if(array_key_exists($this->itemKey, $this->selectedRows)){
+            return true;
+        }
+        else {
+            return false;
+        }
     }
 
     public function generateAttribute($value)
