@@ -558,6 +558,9 @@ class CompanyReport extends Component
         if (str_contains($value, '%') || str_contains($value, '-') || !is_numeric($value)) {
             return $value;
         }
+        if ($value <= 100) {
+            return round($value, 2);
+        }
 
         if (str_contains($value, '.') || str_contains($value, ',')) {
             $float = floatval(str_replace(',', '', $value));

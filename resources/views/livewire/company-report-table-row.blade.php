@@ -33,7 +33,7 @@
             @foreach($reverse ? array_reverse($data['values'], true) : $data['values'] as $date => $value)
                 <div wire:key="{{$date}}" class="{{$value['value'] < 0 ? 'text-red' : 'text-black'}} w-[150px] flex items-center justify-center open-slide py-2   cursor-pointer hover:underline" data-value='{{$this->generateAttribute($value)}}'>
                     @if(!$value['empty'])
-                        {{$value['value'] <= 0 ? '(' . str_replace('-', '', $value['present']) . ')' : str_replace('-', '', $value['present'])}}
+                        {{($value['value'] < 0 && is_numeric($value['value'])) ? '(' . str_replace('-', '', $value['present']) . ')' : (!is_numeric($value['value']) ? $value['present'] : number_format($value['value'], 2))}}
                     @endif
                 </div>
             @endforeach
