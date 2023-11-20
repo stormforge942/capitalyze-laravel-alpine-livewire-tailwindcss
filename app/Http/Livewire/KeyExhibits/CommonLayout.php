@@ -3,24 +3,20 @@
 namespace App\Http\Livewire\KeyExhibits;
 
 use Livewire\Component;
+use App\Models\CompanyLinks;
 
 class CommonLayout extends Component
 {
-    public $data = [];
+    public $data;
+    public $order;
+
+    public function handleSorting($column){
+        $this->emit('sortingOrder', [$column, $this->order]);
+        $this->col = $column;
+    }
     
-    // public function mount(){
-    //     $this->data = CompanyLinks::where('symbol', 'AAPL')
-    //     ->orderByDesc('acceptance_time')
-    //     ->get();
-    // }
     public function render()
     {
-        $data = CompanyLinks::where('symbol', 'AAPL')
-        ->orderByDesc('acceptance_time')
-        ->get();
-        dd($data);
-        return view('livewire.key-exhibits.common-layout', [
-            'data' => $data
-        ]);
+        return view('livewire.key-exhibits.common-layout');
     }
 }
