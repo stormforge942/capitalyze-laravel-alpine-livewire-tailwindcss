@@ -1,147 +1,130 @@
-<div x-data="{ showgraph: true }">
-    <div class="cards-wrapper">
-        <div class="white-card market-card-holder">
-            <div class="title">Market Data</div>
-            <div class="key-values-wrapper">
-
-                <div class="key-value">
-                    <div class="key">52 Week High</div>
-                    <div class="value">{{ getLowPriceFromDashRange(@$profile['fiftytwo_week_range']) ?: '-' }}</div>
+<div>
+    <?php
+    $cards = [
+        [
+            'title' => 'Market Data',
+            'items' => [
+                [
+                    'key' => '52 Week High',
+                    'value' => getLowPriceFromDashRange(@$profile['fiftytwo_week_range']) ?: '-',
+                ],
+                [
+                    'key' => '52 Week Low',
+                    'value' => getHighPriceFromDashRange($profile['fiftytwo_week_range']) ?: '-',
+                ],
+                [
+                    'key' => 'Avg. 3mths Vol.',
+                    'value' => '31.54MM',
+                ],
+                [
+                    'key' => 'Beta',
+                    'value' => '1.06',
+                ],
+                [
+                    'key' => 'Short Interest',
+                    'value' => '0.4%',
+                ],
+            ],
+        ],
+        [
+            'title' => 'Capital Structure',
+            'items' => [
+                [
+                    'key' => 'Market Capital',
+                    'value' => '$133.74',
+                ],
+                [
+                    'key' => 'Total Enterprise Value',
+                    'value' => '$83.3434',
+                ],
+                [
+                    'key' => 'Shares Outstanding',
+                    'value' => '31.54MM',
+                ],
+                [
+                    'key' => 'LTM Net Debt',
+                    'value' => '1.06',
+                ],
+                [
+                    'key' => 'LTM Net Debt/EBITDA',
+                    'value' => '0.4%',
+                ],
+            ],
+        ],
+        [
+            'title' => 'Profitability',
+            'items' => [
+                [
+                    'key' => 'Gross Margin',
+                    'value' => '$133.74',
+                ],
+                [
+                    'key' => 'EBIT Margin',
+                    'value' => '$83.3434',
+                ],
+                [
+                    'key' => 'ROA',
+                    'value' => '31.54MM',
+                ],
+                [
+                    'key' => 'ROE',
+                    'value' => '1.06',
+                ],
+                [
+                    'key' => 'ROIC',
+                    'value' => '0.4%',
+                ],
+            ],
+        ],
+        [
+            'title' => 'LTM Valuation',
+            'items' => [
+                [
+                    'key' => 'EV/Revenues',
+                    'value' => '$133.74',
+                ],
+                [
+                    'key' => 'LTM EV/Gross Profit',
+                    'value' => '$83.3434',
+                ],
+                [
+                    'key' => 'LTM EV/Adj. EBIT',
+                    'value' => '31.54MM',
+                ],
+                [
+                    'key' => 'LTM EV/Adj. P/E',
+                    'value' => '1.06',
+                ],
+                [
+                    'key' => 'LTM P/BV',
+                    'value' => '0.4%',
+                ],
+            ],
+        ],
+    ];
+    ?>
+    <div class="grid grid-cols-1 md:grid-cols-2 2xl:grid-cols-4 gap-6 text-base">
+        @foreach ($cards as $card)
+            <x-card :title="$card['title']">
+                <div class="grid grid-cols-3 2xl:grid-cols-2 gap-5">
+                    @foreach ($card['items'] as $item)
+                        <div>
+                            <div class="text-dark-light2 text-[11px]">{{ $item['key'] }}</div>
+                            <div class="font-semibold">{{ $item['value'] }}</div>
+                        </div>
+                    @endforeach
                 </div>
-                <div class="key-value">
-                    <div class="key">52 Week Low</div>
-                    <div class="value">{{ getHighPriceFromDashRange($profile['fiftytwo_week_range']) ?: '-' }}</div>
-                </div>
-
-                <div class="key-value">
-                    <div class="key">Avg. 3mths Vol.</div>
-                    <div class="value">31.54MM</div>
-                </div>
-
-                <div class="key-value">
-                    <div class="key">Beta</div>
-                    <div class="value">1.06</div>
-                </div>
-
-                <div class="key-value">
-                    <div class="key">Short Interest</div>
-                    <div class="value">0.4%</div>
-                </div>
-            </div>
-        </div>
-
-        <div class="white-card market-card-holder ">
-            <div class="title">Capital Structure</div>
-            <div class="key-values-wrapper">
-
-                <div class="key-value">
-                    <div class="key">Market Capital</div>
-                    <div class="value">$133.74</div>
-                </div>
-                <div class="key-value">
-                    <div class="key">Total Enterprise Value</div>
-                    <div class="value">$83.343408245224</div>
-                </div>
-
-                <div class="key-value">
-                    <div class="key">Shares Outstanding</div>
-                    <div class="value">31.54MM</div>
-                </div>
-
-                <div class="key-value">
-                    <div class="key">LTM Net Debt</div>
-                    <div class="value">1.06</div>
-                </div>
-
-                <div class="key-value">
-                    <div class="key">LTM Net Debt/EBITDA</div>
-                    <div class="value">0.4%</div>
-                </div>
-            </div>
-        </div>
-
-        <div class="white-card market-card-holder ">
-            <div class="title">Profitability</div>
-            <div class="key-values-wrapper">
-                <div class="key-value">
-                    <div class="key">Gross Margin</div>
-                    <div class="value">$133.74</div>
-                </div>
-                <div class="key-value">
-                    <div class="key">EBIT Margin</div>
-                    <div class="value">$83.343408245224</div>
-                </div>
-
-                <div class="key-value">
-                    <div class="key">ROA</div>
-                    <div class="value">31.54MM</div>
-                </div>
-
-                <div class="key-value">
-                    <div class="key">ROE</div>
-                    <div class="value">1.06</div>
-                </div>
-
-                <div class="key-value">
-                    <div class="key">ROIC</div>
-                    <div class="value">0.4%</div>
-                </div>
-            </div>
-        </div>
-
-        <div class="white-card market-card-holder ">
-            <div class="title">LTM Valuation</div>
-            <div class="key-values-wrapper">
-                <div class="key-value">
-                    <div class="key">EV/Revenues</div>
-                    <div class="value">$133.74</div>
-                </div>
-                <div class="key-value">
-                    <div class="key">LTM EV/Gross Profit</div>
-                    <div class="value">$83.343408245224</div>
-                </div>
-
-                <div class="key-value">
-                    <div class="key">LTM EV/Adj. EBIT</div>
-                    <div class="value">31.54MM</div>
-                </div>
-
-                <div class="key-value">
-                    <div class="key">LTM EV/Adj. P/E</div>
-                    <div class="value">1.06</div>
-                </div>
-
-                <div class="key-value">
-                    <div class="key">LTM P/BV</div>
-                    <div class="value">0.4%</div>
-                </div>
-            </div>
-        </div>
+            </x-card>
+        @endforeach
     </div>
 
-    {{-- if ssr is disabled, please move this component javascript code to resources/views/livewire/company-profile/page.blade.php  --}}
-    <div class="flex justify-end mt-5" x-show="!showgraph" @click="showgraph = true">
-        <button class="show-hide-chart-btn">
-            Show Chart
-            <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 16 16" fill="none">
-                <path
-                    d="M10.3083 6.19514L7.72167 8.78378L5.135 6.19514C5.01045 6.07021 4.84135 6 4.665 6C4.48865 6 4.31955 6.07021 4.195 6.19514C3.935 6.45534 3.935 6.87566 4.195 7.13585L7.255 10.1982C7.515 10.4584 7.935 10.4584 8.195 10.1982L11.255 7.13585C11.515 6.87566 11.515 6.45534 11.255 6.19514C10.995 5.94161 10.5683 5.93494 10.3083 6.19514Z"
-                    fill="#121A0F" />
-            </svg>
-        </button>
-    </div>
     <livewire:company-profile.company-overview-graph :ticker="$profile['symbol']" />
 
-    <div class="w-full mt-4 white-card b-info-card">
-        <div class="title">
-            <div class="title_small">Business Information</div>
+    <x-card title="Business Information" class="mt-4">
+        <div class="leading-6 text-base">
+            {{ @$profile['description'] ?: 'Description not found' }}
         </div>
-        <div class="flex flex-wrap mt-4 key-values-wrapper__item_parent">
-            <div class="text-info">
-                {{ @$profile['description'] ?: 'Description not found' }}
-            </div>
-        </div>
-    </div>
+    </x-card>
 
     <div class="w-full mt-4 white-card c-profile-card" x-data="{
         expand: false

@@ -1,5 +1,5 @@
 <div class="main-graph-wrapper w-full">
-    <div  x-show="showgraph"
+    <div x-show="showgraph"
         :class="{ 'custom-dropdown-absolute-wrapper': !showgraph, 'custom-dropdown-absolute-wrapper abs-custom': showgraph }">
         <div class="relative custom-dropdown-absolute-wrapper-inner flex justify-end" x-data="{
             chartMenuOpen: false
