@@ -1,4 +1,7 @@
 <div class="flex flex-col">
+    <div class="place-items-center fixed top-0 left-0 right-0 bottom-0 w-full h-screen z-50 overflow-hidden bg-transparent" wire:loading.grid>
+        <span class="mx-auto simple-loader !text-blue"></span>
+    </div>
     <div class="hidden md:flex justify-between items-center mt-4 flex-wrap">
         <div class="flex justify-start items-center">
             <div><span class="text-[#464E49] text-[0.75rem] font-[400]">View</span></div>
@@ -51,9 +54,9 @@
                         <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="m19 19-4-4m0-7A7 7 0 1 1 1 8a7 7 0 0 1 14 0Z"/>
                     </svg>
                 </div>
-                <input type="search" id="default-search" class="flex focus:outline-none focus:ring-0 focus:border-blue-500 h-0 leading-3 w-full p-4 pl-10 text-sm text-gray-900 border-b-2 border-t-0 border-l-0 border-r-0 bg-gray-100 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white" placeholder="Search">
+                <input type="search" wire:keydown="handleSearchAllDocuments($event?.target?.value)"  id="default-search" class="flex focus:outline-none focus:ring-0 focus:border-blue-500 h-0 leading-3 w-full p-4 pl-10 text-sm text-gray-900 border-b-2 border-t-0 border-l-0 border-r-0 bg-gray-100 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white" placeholder="Search">
             </div>
         </div>
     </div>
-    <livewire:all-filings.common-layout :data="$data"/>
+    <livewire:all-filings.common-layout key="{{ now() }}" :order="$order" :data="$data"/>
 </div>
