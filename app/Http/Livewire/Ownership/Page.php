@@ -23,7 +23,6 @@ class Page extends Component
 
         OwnershipHistoryService::push([
             'name' => $this->company->name,
-            'type' => 'company',
             'url' => request()->url(),
         ]);
 

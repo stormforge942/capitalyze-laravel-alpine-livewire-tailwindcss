@@ -8,13 +8,12 @@ use App\Http\Livewire\AsTab;
 use Illuminate\Support\Carbon;
 use Illuminate\Support\Facades\DB;
 
-class CompanyFundSummary extends Component
+class FundSummary extends Component
 {
     use AsTab;
 
     public string $quarter = '';
     public $cik;
-    public $ticker;
 
     public static function title(): string
     {
@@ -24,14 +23,13 @@ class CompanyFundSummary extends Component
     public function mount(array $data)
     {
         $this->cik = $data['fund']['cik'];
-        $this->ticker = $data['ticker'];
 
         $this->quarter = $this->getLatestQuarter();
     }
 
     public function render()
     {
-        return view('livewire.ownership.company-fund-summary');
+        return view('livewire.ownership.fund-summary');
     }
 
     public function getSummary()
@@ -89,7 +87,7 @@ class CompanyFundSummary extends Component
                 ];
             });
 
-        $lastQuarterSectorAllocation = null;
+        $lastQuarterSectorAllocation = collect([]);
         if ($investments->count()) {
             $lastestQuarter = $investments->last()['date'];
 
@@ -97,7 +95,7 @@ class CompanyFundSummary extends Component
                 ->table('industry_summary')
                 ->where('cik', '=', $this->cik)
                 ->where('date', '=', $lastestQuarter)
-                ->select('industry_title', 'weight', 'performance_percentage')
+                ->select('industry_title', 'weight')
                 ->orderBy('weight', 'desc')
                 ->limit(15)
                 ->get()
@@ -105,7 +103,7 @@ class CompanyFundSummary extends Component
                     return [
                         'name' => Str::title($item->industry_title),
                         'weight' => number_format($item->weight, 2),
-                        'conversionRate' => $item->performance_percentage,
+                        'conversionRate' => number_format($item->weight, 2),
                     ];
                 });
         }
@@ -113,7 +111,7 @@ class CompanyFundSummary extends Component
         return [
             'overTimeSectorAllocation' => $investments->toArray(),
             'lastQuarterSectorAllocation' => $lastQuarterSectorAllocation?->toArray(),
-            'conversionRate' => $lastQuarterSectorAllocation
+            'conversionRate' => $lastQuarterSectorAllocation->count()
                 ? number_format($lastQuarterSectorAllocation->sum('conversionRate') / $lastQuarterSectorAllocation->count(), 2)
                 : 0,
             'sectorAllocationChangePercentage' => $investments->count() < 2
@@ -130,7 +128,7 @@ class CompanyFundSummary extends Component
             ->where('cik', '=', $this->cik)
             ->where('report_calendar_or_quarter', '=', $this->quarter)
             ->orderByDesc('weight')
-            ->limit(5)
+            ->limit(7)
             ->get()
             ->map(function ($item) {
                 return [
@@ -176,7 +174,7 @@ class CompanyFundSummary extends Component
             ->where('report_calendar_or_quarter', '=', $this->quarter)
             ->orderByDesc('change_in_shares')
             ->where('change_in_shares', '>', 0)
-            ->limit(8)
+            ->limit(10)
             ->get()
             ->map(function ($item) {
                 $item->name_of_issuer = Str::title($item->name_of_issuer);
@@ -197,7 +195,7 @@ class CompanyFundSummary extends Component
             ->where('cik', '=', $this->cik)
             ->where('report_calendar_or_quarter', '=', $this->quarter)
             ->orderBy('change_in_shares')
-            ->limit(8)
+            ->limit(10)
             ->get()
             ->map(function ($item) {
                 $item->name_of_issuer = Str::title($item->name_of_issuer);

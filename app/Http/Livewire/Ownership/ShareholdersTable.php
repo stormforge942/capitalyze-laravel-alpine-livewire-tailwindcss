@@ -49,30 +49,38 @@ class ShareholdersTable extends BaseTable
                 ->searchable(),
 
             Column::make('Shares Held', 'ssh_prnamt')
-                ->sortable(),
+                ->sortable()
+                ->headerAttribute('[&>div]:justify-end')->bodyAttribute('text-right'),
 
             Column::make('Market Value', 'value')
-                ->sortable(),
+                ->sortable()
+                ->headerAttribute('[&>div]:justify-end')->bodyAttribute('text-right'),
 
             Column::make('% of Portfolio', 'weight')
-                ->sortable(),
+                ->sortable()
+                ->headerAttribute('[&>div]:justify-end')->bodyAttribute('text-right'),
 
             Column::make('Prior % of Portfolio', 'last_weight')
-                ->sortable(),
+                ->sortable()
+                ->headerAttribute('[&>div]:justify-end')->bodyAttribute('text-right'),
 
             Column::make('Change in Shares', 'change_in_shares')
-                ->sortable(),
+                ->sortable()
+                ->headerAttribute('[&>div]:justify-end')->bodyAttribute('text-right'),
 
             Column::make('% Ownership', 'ownership')
-                ->sortable(),
+                ->sortable()
+                ->headerAttribute('[&>div]:justify-end')->bodyAttribute('text-right'),
 
             Column::make('Date reported', 'signature_date')
-                ->sortable(),
+                ->sortable()
+                ->headerAttribute('[&>div]:justify-end')->bodyAttribute('text-right'),
 
             Column::add()
                 ->title('Estimated Avg Price Paid')
-                ->field('price_paid')
-                ->sortable(),
+                ->field('estimated_average_price')
+                ->sortable()
+                ->headerAttribute('[&>div]:justify-end')->bodyAttribute('text-right'),
         ];
     }
 
@@ -81,7 +89,7 @@ class ShareholdersTable extends BaseTable
         return PowerGrid::eloquent()
             ->addColumn('investor_name')
             ->addColumn('investor_name_formated', function (CompanyFilings $companyFilings) {
-                return ('<a class="text-blue" href="' . route('company.fund', [$this->ticker, $companyFilings->cik]) . '">' . Str::title($companyFilings->investor_name) . (!empty($companyFilings->put_call) ? ' <span class="text-sm font-bold">(' . $companyFilings->put_call . ')</span></a>' : '</a>'));
+                return ('<a class="text-blue" href="' . route('company.fund', [$companyFilings->cik, $this->ticker]) . '">' . Str::title($companyFilings->investor_name) . (!empty($companyFilings->put_call) ? ' <span class="text-sm font-bold">(' . $companyFilings->put_call . ')</span></a>' : '</a>'));
             })
             ->addColumn('ssh_prnamt', function (CompanyFilings $companyFilings) {
                 return number_format($companyFilings->ssh_prnamt);
@@ -106,8 +114,8 @@ class ShareholdersTable extends BaseTable
                 return number_format($companyFilings->ownership, 4) . '%';
             })
             ->addColumn('signature_date')
-            ->addColumn('price_paid', function (CompanyFilings $companyFilings) {
-                return number_format($companyFilings->price_paid, 4);
+            ->addColumn('estimated_average_price', function (CompanyFilings $companyFilings) {
+                return number_format($companyFilings->estimated_average_price, 4);
             });
     }
 }

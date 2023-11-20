@@ -20,13 +20,13 @@
             display: none;
         }
     </style>
-    
+
     <!-- Scripts -->
     @vite(['resources/css/app.css', 'resources/js/app.js'])
 
     @livewireStyles
     @once
-        @push('scripts')
+        @push('scripts' )
             <script src="https://cdn.jsdelivr.net/npm/@uvarov.frontend/vanilla-calendar/build/vanilla-calendar.min.js"></script>
             <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
             <script src="https://cdn.jsdelivr.net/npm/luxon"></script>
@@ -41,7 +41,7 @@
 
     <livewire:company-navbar :company="$company" />
 
-    <main class="px-0 pb-10 transition-all md:px-0 lg:px-8 lg:ml-52" id="main-container">
+    <main class="px-4 pb-10 transition-all md:px-6 lg:px-8 lg:ml-56" id="main-container">
         @if ($tab == 'geographical')
             <livewire:company-geographical :company="$company" :ticker="$ticker" :period="$period" />
         @elseif($tab == 'products')
@@ -73,15 +73,17 @@
         @elseif($tab == 'failToDeliver')
             <livewire:company-fail-to-deliver :company="$company" :ticker="$ticker" :period="$period" />
         @elseif($tab == 'ownership')
-            <livewire:ownership.page :company="$company" :ticker="$ticker" :period="$period" />
+            <livewire:ownership.page :company="$currentCompany" :ticker="$currentCompany->ticker" />
+        @elseif($tab == 'fund')
+            <livewire:ownership.fund :company="$currentCompany" :fund="$fund" />
         @elseif($tab == 'track-investor')
-            <livewire:comapny-track-investor :comapany="$company" :tinker="$ticker" :period="$period"/>
-        @elseif($tab == 'company-fund')
-            <livewire:ownership.company-fund :company="$company" :ticker="$ticker" :period="$period" />
+            <livewire:track-investor.page :comapany="$company" :tinker="$ticker" :period="$period" />
         @elseif($tab == 'etf-filings')
             <livewire:etf.filings />
         @elseif($tab === 'filings-summary')
             <livewire:comapany-filings-summary :company="$company" :tinker="$ticker" :period="$period"/>
+        @elseif($tab == 'analysis')
+            <livewire:company-analysis :company="$company" :ticker="$ticker" :period="$period" />
         @endif
     </main>
 

@@ -6,6 +6,7 @@ import "./../../vendor/power-components/livewire-powergrid/dist/powergrid.css"
 import Alpine from "alpinejs"
 import focus from "@alpinejs/focus"
 import Swal from "sweetalert2"
+import { debounce } from "lodash"
 
 import rangeSlider from "range-slider-input"
 import "range-slider-input/dist/style.css"
@@ -13,12 +14,13 @@ import "range-slider-input/dist/style.css"
 window.Swal = Swal
 window.Alpine = Alpine
 window.rangeSlider = rangeSlider
+window._ = { debounce }
 
 import "./datepicker.js"
 import "./range-slider"
 import "./css-tables"
 import "./report-text-highlighter"
-import './chartjs-plugins'
+import "./chartjs-plugins"
 
 Alpine.plugin(focus)
 

@@ -1,15 +1,15 @@
 <div>
     @if (count($quarters))
-        <label class="items-center hidden gap-1 text-sm lg:flex" x-data>
+        {{-- @todo: doing wire:ignore to remove alpinejs console errors due to x-tab-slot (but works), need to investigate it later --}}
+        <div class="items-center hidden gap-2 text-sm lg:inline-flex" x-data="{ quarter: @entangle('quarter') }" wire:ignore> 
             <span>Quarter to view</span>
-            <x-select :options="$quarters" placeholder="Select a quarter" wire:model="quarter"></x-select>
+            <x-select name="quarter" :options="$quarters" placeholder="Select a quarter" x-model="quarter"></x-select>
 
-            <template x-teleport="#ownership-tab .tab-slot">
-                <x-select :options="$quarters" placeholder="Select a quarter" @change="Livewire.emit('update:quarter', $event.target.value)"></x-select>
-            </template>
-        </label>
+            <x-tab-slot id="ownership-tab">
+                <x-select name="quarter" :options="$quarters" placeholder="Select a quarter" x-model="quarter"></x-select>
+            </x-tab-slot>
+        </div>
     @endif
-
 
     <livewire:ownership.shareholders-table :ticker="$ticker" :quarter="$quarter" />
 </div>

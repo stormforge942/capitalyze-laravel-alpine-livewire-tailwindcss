@@ -7,11 +7,9 @@ use App\Http\Livewire\AsTab;
 use App\Models\CompanyFilings;
 use Illuminate\Support\Carbon;
 
-class CompanyFundHoldings extends Component
+class FundHoldings extends Component
 {
     use AsTab;
-
-    protected $listeners = ['update:quarter' => 'updateQuarter'];
 
     public $cik;
     public $quarters;
@@ -34,12 +32,7 @@ class CompanyFundHoldings extends Component
 
     public function render()
     {
-        return view('livewire.ownership.company-fund-holdings');
-    }
-
-    public function updateQuarter($quarter) {
-        $this->quarter = $quarter;
-        $this->updatedQuarter();
+        return view('livewire.ownership.fund-holdings');
     }
 
     public function updatedQuarter()

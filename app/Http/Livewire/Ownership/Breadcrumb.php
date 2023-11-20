@@ -9,37 +9,29 @@ class Breadcrumb extends Component
 {
     public $company;
 
-    public function mount($company)
-    {
-        $this->company = $company;
-    }
-
     public function render()
     {
         return view('livewire.ownership.breadcrumb', [
+            'ticker' => OwnershipHistoryService::getCompany(),
             'historyItems' => OwnershipHistoryService::get(),
         ]);
     }
 
-    public function removeHistory($url)
+    public function removeTab(array $tab)
     {
-        $lastItem = OwnershipHistoryService::remove($url);
+        OwnershipHistoryService::remove($tab['url']);
 
-        if ($lastItem) {
-            return redirect($lastItem['url']);
+        if ($tab['active'] ?? false) {
+            return redirect(route('company.ownership', ['ticker' => OwnershipHistoryService::getCompany()]));
         }
 
-        return redirect()->route('company.ownership', $this->company);
+        return back();
     }
 
     public function clearHistory()
     {
         OwnershipHistoryService::clear();
 
-        if (OwnershipHistoryService::getCompanyUrl()) {
-            return redirect(OwnershipHistoryService::getCompanyUrl());
-        }
-
-        return redirect()->route('company.ownership', $this->company);
+        return redirect(route('company.ownership', ['ticker' => OwnershipHistoryService::getCompany()]));
     }
 }
