@@ -17,8 +17,8 @@ class AllFilings extends Component
         $this->selectedTab = $tab;
     }
 
-    public function emitCountInAllfilings($count){
-        $this->checkedCount = $count;
+    public function emitCountInAllfilings($selectChecked){
+        $this->checkedCount = count($selectChecked);
     }
 
     public function handleFilingBrowserType($val){

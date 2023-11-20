@@ -25,17 +25,24 @@
                     </div>
                 </div> -->
                 <div class="flex justify-between items-center">
-                    <select id="countries" class="h-7 py-0.75 px-3 rounded-full border border-solid border-[#939598] text-sm">
-                        <option selected>Choose a value</option>
-                        <option value="sort_by_date">Sort by date</option>
-                        <option value="sort_by_title">Sort by title</option>
-                    </select>
+                    @if($item['value'] === 'financials')  
+                        <select wire:change="handleSorting([$event?.target?.value, '{{$order}}'])" id="countries" class="h-7 py-0.75 px-3 rounded-full border border-solid border-[#939598] text-sm">
+                            <option selected>Choose a value</option>
+                            <option value="form_type">Sort by form type</option>
+                            <option value="filing_date">Sort by filing Date</option>
+                        </select>
+                    @else 
+                        <select id="countries" class="h-7 py-0.75 px-3 rounded-full border border-solid border-[#939598] text-sm">
+                            <option selected>Choose a value</option>
+                            <option value="form_type">Sort by form type</option>
+                            <option value="filing_date">Sort by filing Date</option>
+                        </select>
+                    @endif
                     <div class="ml-3 p-0"> 
                         <img class="mt-1 mr-0" src="{{asset('/svg/search.svg')}}"/>
                     </div>
                     <div class="xs:flex md:hidden xl:hidden 2xl:flex">
                         <input type="search" class="focus:ring-0 focus:border-blue-500 placeholder:text-sm text-sm  border-none w-[9rem] leading-[1.45rem] h-[1.45rem]" placeholder="search document"/>
-                
                     </div>
                 </div>
                 <div class="mx-3">
@@ -45,14 +52,25 @@
             <div class="overflow-hidden -mt-1 overflow-x-auto border h-[20rem] overflow-y-auto border-gray-200 dark:border-gray-700">    
                 <table class="min-w-full divide-y divide-gray-200 dark:divide-gray-700">
                     <tbody class="bg-white divide-y divide-gray-200 dark:divide-gray-700 dark:bg-gray-900">
-                        @foreach($data as $item)
-                            <tr class="hover:bg-gray-50" @click="open=true">
-                                <td class="px-4 py-3 text-base  font-[400] text-[#121A0F] whitespace-nowrap">{{$item['name']}}</td>
-                                <td class="px-4 py-3 text-base  font-[400] text-[#121A0F] whitespace-nowrap">{{$item['desc']}}</td>
-                                <td class="px-4 py-3 text-base  font-[400] text-[#121A0F] whitespace-nowrap">{{$item['date_1']}}</td>
-                                <td class="px-4 py-3 text-base  font-[400] text-[#121A0F] whitespace-nowrap">{{$item['date_2']}}</td>
-                            </tr>
-                        @endforeach
+                        @if($item['value'] === 'financials')
+                            @foreach($financials as $row)
+                                <tr class="hover:bg-gray-50" @click="open=true">
+                                    <td class="px-4 py-3 text-base  font-[400] text-[#121A0F] whitespace-nowrap">{{$row->form_type ?? ''}}</td>
+                                    <td class="px-4 py-3 text-base  font-[400] text-[#121A0F] whitespace-nowrap">{{$row->form_type ?? ''}}</td>
+                                    <td class="px-4 py-3 text-base  font-[400] text-[#121A0F] whitespace-nowrap">{{$row->filing_date ?? ''}}</td>
+                                    <td class="px-4 py-3 text-base  font-[400] text-[#121A0F] whitespace-nowrap">{{$row->filing_date ?? ''}}</td>
+                                </tr>
+                            @endforeach
+                        @else 
+                            @foreach($data as $item)
+                                <tr class="hover:bg-gray-50" @click="open=true">
+                                    <td class="px-4 py-3 text-base  font-[400] text-[#121A0F] whitespace-nowrap">{{$item['name'] ?? ''}}</td>
+                                    <td class="px-4 py-3 text-base  font-[400] text-[#121A0F] whitespace-nowrap">{{$item['desc'] ?? ''}}</td>
+                                    <td class="px-4 py-3 text-base  font-[400] text-[#121A0F] whitespace-nowrap">{{$item['date_1'] ?? ''}}</td>
+                                    <td class="px-4 py-3 text-base  font-[400] text-[#121A0F] whitespace-nowrap">{{$item['date_2'] ?? ''}}</td>
+                                </tr>
+                            @endforeach
+                        @endif
                     </tbody>
                 </table>
             </div>

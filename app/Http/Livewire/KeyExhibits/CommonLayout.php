@@ -6,10 +6,21 @@ use Livewire\Component;
 
 class CommonLayout extends Component
 {
-    public $data;
+    public $data = [];
     
+    // public function mount(){
+    //     $this->data = CompanyLinks::where('symbol', 'AAPL')
+    //     ->orderByDesc('acceptance_time')
+    //     ->get();
+    // }
     public function render()
     {
-        return view('livewire.key-exhibits.common-layout');
+        $data = CompanyLinks::where('symbol', 'AAPL')
+        ->orderByDesc('acceptance_time')
+        ->get();
+        dd($data);
+        return view('livewire.key-exhibits.common-layout', [
+            'data' => $data
+        ]);
     }
 }

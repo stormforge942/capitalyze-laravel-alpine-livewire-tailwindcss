@@ -19,6 +19,9 @@
 @tailwind components;
 @tailwind utilities;
 
+.no-dash-break {
+    word-break: keep-all;
+  }
 /* active inner tab */
 
 .innertab-active ::after {
