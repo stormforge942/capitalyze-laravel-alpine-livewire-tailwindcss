@@ -1,4 +1,4 @@
-<div class="main-graph-wrapper w-full">
+<div class="main-graph-wrapper w-full" x-data="{ showgraph: true }">
     <div x-show="showgraph"
         :class="{ 'custom-dropdown-absolute-wrapper': !showgraph, 'custom-dropdown-absolute-wrapper abs-custom': showgraph }">
         <div class="relative custom-dropdown-absolute-wrapper-inner flex justify-end" x-data="{
@@ -22,15 +22,15 @@
 
                 </button>
             </div>
-
-
+            
             <div @click.away="chartMenuOpen = false" x-show="chartMenuOpen"
                 class="absolute custom-drop-down right-0 z-10    bg-white  focus:outline-none" role="menu"
                 aria-orientation="vertical" aria-labelledby="menu-button" tabindex="-1">
                 <div class="py-1" role="none">
                     <!-- Active: "bg-gray-100 text-gray-900", Not Active: "text-gray-700" -->
                     <div class="links-wrapper mb-3">
-                        <a href="#" x-show="showgraph" @click="showgraph = !showgraph; chartMenuOpen =! chartMenuOpen;" class="menu_link"
+                        <a href="#" x-show="showgraph"
+                            @click="showgraph = !showgraph; chartMenuOpen =! chartMenuOpen;" class="menu_link"
                             role="menuitem" tabindex="-1" id="menu-item-0">Hide Chart</a>
                         <a href="#" x-show="!showgraph" @click="showgraph = !showgraph" class="menu_link"
                             role="menuitem" tabindex="-1" id="menu-item-0">Show Chart</a>
@@ -149,7 +149,8 @@
                         </div>
                     </div>
                 </div>
-                <div class="select-graph-date-wrapper desktop-show ml-12 flex">
+
+                <div class="hidden select-graph-date-wrapper desktop-show ml-12 lg:flex overflow-x-auto">
                     <ul class="items-center w-full flex">
                         <li class="w-full mr-6">
                             <input wire:model="currentChartPeriod" value="3m" id="date-3m" type="radio"

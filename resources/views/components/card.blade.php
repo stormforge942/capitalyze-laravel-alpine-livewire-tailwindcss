@@ -1,4 +1,4 @@
-<div {{ $attributes->merge(['class' => 'bg-white p-6 rounded-lg']) }}>
+<div {{ $attributes->merge(['class' => 'bg-white p-4 md:p-6 rounded-lg']) }}>
     @if (isset($head))
         <div class="mb-4">
             {{ $head }}
