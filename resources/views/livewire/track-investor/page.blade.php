@@ -7,7 +7,7 @@
         ],
         [
             'text' => 'Discover',
-            'href' => route('company.track-investor', 'AAPL'),
+            'href' => '#',
         ],
     ]" />
 

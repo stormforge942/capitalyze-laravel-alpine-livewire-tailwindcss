@@ -14,19 +14,20 @@ class Discover extends Component
 
     protected $listeners = [
         'update' => '$refresh',
+        'search:discover' => 'updatedSearch',
     ];
 
     public $perPage = 20;
-    public $query = "";
+    public $search = "";
 
     public function loadMore()
     {
         $this->perPage += 20;
     }
 
-    public function search($query)
+    public function updatedSearch($search)
     {
-        $this->query = $query;
+        $this->search = $search;
         $this->reset('perPage');
     }
 
@@ -42,9 +43,9 @@ class Discover extends Component
                 $join->on('fs.investor_name', '=', 'latest_dates.investor_name');
                 $join->on('fs.date', '=', 'latest_dates.max_date');
             })
-            ->when($this->query, function ($q) {
-                return $q->where(DB::raw('fs.investor_name'), 'ilike', "%$this->query%")
-                    ->orWhere(DB::raw('fs.cik'), 'like', "%$this->query%");
+            ->when($this->search, function ($q) {
+                return $q->where(DB::raw('fs.investor_name'), 'ilike', "%$this->search%")
+                    ->orWhere(DB::raw('fs.cik'), 'like', "%$this->search%");
             })
             ->orderBy('total_value', 'desc')
             ->paginate($this->perPage)

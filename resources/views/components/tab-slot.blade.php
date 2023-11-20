@@ -1,5 +1,3 @@
-<template x-teleport="#{{ $id }} .tab-slot">
-    <div {{ $attributes }} @if($tab) x-show="active === '{{ $tab }}'" x-cloak @endif>
-        {{ $slot }}
-    </div>
+<template x-teleport="#{{ $id }} .tab-slot {{ $tab ? ".slot-$tab" : '' }}" {{ $attributes }}>
+    {{ $slot }}
 </template>

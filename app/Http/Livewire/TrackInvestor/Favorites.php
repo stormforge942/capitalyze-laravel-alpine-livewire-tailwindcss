@@ -13,6 +13,7 @@ class Favorites extends Component
 
     protected $listeners = [
         'update' => '$refresh',
+        'search:favorites' => 'updatedSearch',
     ];
 
     public static function title(): string
