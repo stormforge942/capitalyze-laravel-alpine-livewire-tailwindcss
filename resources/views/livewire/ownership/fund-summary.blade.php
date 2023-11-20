@@ -17,8 +17,8 @@
             <h3 class="mb-4 text-sm font-semibold text-blue">13F Holding Summary</h3>
 
             <x-defer-data-loading use-alpine="true" on-init="getHoldingSummary" class="h-32">
-                <div class="space-y-4">
-                    <template x-for="item in result" :key="item.name">
+                <div class="space-y-4" :data-result="JSON.stringify(result)">
+                    <template x-for="(item, idx) in result" :key="idx">
                         <div class="flex items-center justify-between gap-5">
                             <span class="text-sm" x-text="item.name"></span>
                             <span class="font-semibold" x-text="`${item.weight}%`"></span>
