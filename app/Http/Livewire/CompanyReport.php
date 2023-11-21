@@ -50,6 +50,7 @@ class CompanyReport extends Component
     public $chartType = 'line';
     public $isOpen = false;
     public $activeTitle = 'Income Statement';
+    public $colors = [];
 
     protected $listeners = ['periodChange', 'tabClicked', 'tabSubClicked', 'selectRow', 'unselectRow'];
 
@@ -82,6 +83,7 @@ class CompanyReport extends Component
         if (count($this->selectedRows) < 5) {
             $this->selectedRows[$title]['dates'] = $data;
             $this->selectedRows[$title]['type'] = 'line';
+            $this->selectedRows[$title]['color'] = $this->colors[count($this->selectedRows) - 1];
         }
 
         $this->generateChartData();
@@ -142,12 +144,11 @@ class CompanyReport extends Component
                     ];
                 }
             }
-
             $chartData[] = [
                 'data' => $data,
                 'type' => $row['type'],
                 'label' => $title,
-                'borderColor' => ['#5a5a5a', '#737373', '#8d8d8d', '#a6a6a6', '#949494'],
+                'borderColor' => $row['color'],
                 'pointRadius' => 1,
                 'pointHoverRadius' => 8,
                 'tension' => 0.5,
@@ -557,6 +558,9 @@ class CompanyReport extends Component
         if (str_contains($value, '%') || str_contains($value, '-') || !is_numeric($value)) {
             return $value;
         }
+        if ($value <= 100) {
+            return round($value, 2);
+        }
 
         if (str_contains($value, '.') || str_contains($value, ',')) {
             $float = floatval(str_replace(',', '', $value));
@@ -697,6 +701,10 @@ class CompanyReport extends Component
         ->latest('date')->first()?->adj_close;
 
         $this->cost =  $first;
+
+        $this->colors = [
+            "#000000","#454545","#5e5e5e","#636363","#7a7a7a","#878787","#7a7e94","#5d6074","#4d5060","#3d404c","#4f5263"
+        ];
 
 
         $previous = DB::connection('pgsql-xbrl')

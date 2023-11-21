@@ -46,8 +46,8 @@
 /* make more fancy scollbar */
 
 ::-webkit-scrollbar {
-    height: 5px; 
-    width: 5px; 
+    height: 5px;
+    width: 5px;
 }
 
 /* Track */
@@ -540,6 +540,14 @@ position: relative;
 .company-profile-overview-chart {
     max-height: 350px !important;
 }
+
+.chart-company-report {
+    max-height: 350px !important;
+    display: block !important;
+    height: 350px !important;
+    width: 100% !important;
+}
+
 .custom-text-xs .text-xs {
     font-size: 12px;
 }
@@ -680,6 +688,9 @@ line-height: normal;
     border-top-left-radius: 4px;
 
 }
+.ml_4 {
+    margin-left: 21px !important;
+}
 .row-border-custom div:nth-child(14) .cell:last-child{
     border-top-right-radius: 4px;
 
@@ -691,6 +702,9 @@ line-height: normal;
 .row-border-custom div:nth-child(15) .cell:last-child{
     border-bottom-right-radius: 4px;
 
+}
+.bg-gray-custom-light {
+    background-color: #e5e5e5;
 }
 .row-border-custom div:nth-child(17) .cell:first-child{
     border-top-left-radius: 4px;

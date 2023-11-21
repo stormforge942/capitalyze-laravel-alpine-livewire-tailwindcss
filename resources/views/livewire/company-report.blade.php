@@ -62,22 +62,22 @@
 
                                 <div class="flex w-full overflow-x-hidden">
                                     <div class="tabs-container w-full" style="overflow-x: auto; white-space: nowrap;">
-                                        <ul class="tabs-wrapper flex">
+                                        <ul class="tabs-wrapper flex gap-2">
                                             @foreach($navbar[$activeIndex] as $key => $value)
                                                 @if($value['title'] === 'Income Statement')
-                                                    <li data-tab-index="0" class="whitespace-nowrap min-w-min p-4 border-b-2 max-h-[50px] overflow-hidden rounded-t-lg cursor-pointer border-transparent text-[#828C85] hover:text-[#828C85] px-6 tab @if($value['title'] == $activeTitle) active @endif" wire:click="$emit('tabSubClicked', '{{$value['title']}}')">{{ preg_replace('/\[[^\]]*?\]/', '', $value['title']) }}</li>
+                                                    <li data-tab-index="0" class="whitespace-nowrap min-w-min p-4 border-b-2 max-h-[50px] overflow-hidden rounded-t-lg cursor-pointer border-transparent text-[#828C85] hover:bg-gray-light px-6 tab @if($value['title'] == $activeTitle) active hover:bg-green-dark @endif" wire:click="$emit('tabSubClicked', '{{$value['title']}}')">{{ preg_replace('/\[[^\]]*?\]/', '', $value['title']) }}</li>
                                                 @endif
                                                 @if($value['title'] === 'Balance Sheet Statement')
-                                                    <li data-tab-index="1" class="whitespace-nowrap min-w-min p-4 border-b-2 max-h-[50px] overflow-hidden rounded-t-lg cursor-pointer border-transparent text-[#828C85] hover:text-[#828C85] px-6 tab @if($value['title'] == $activeTitle) active @endif" wire:click="$emit('tabSubClicked', '{{$value['title']}}')">{{ preg_replace('/\[[^\]]*?\]/', '', $value['title']) }}</li>
+                                                    <li data-tab-index="1" class="whitespace-nowrap min-w-min p-4 border-b-2 max-h-[50px] overflow-hidden rounded-t-lg cursor-pointer border-transparent text-[#828C85] hover:bg-gray-light px-6 tab @if($value['title'] == $activeTitle) active hover:bg-green-dark @endif" wire:click="$emit('tabSubClicked', '{{$value['title']}}')">{{ preg_replace('/\[[^\]]*?\]/', '', $value['title']) }}</li>
                                                 @endif
                                                 @if($value['title'] === 'Cash Flow Statement')
-                                                    <li data-tab-index="2" class="whitespace-nowrap min-w-min p-4 border-b-2 max-h-[50px] overflow-hidden rounded-t-lg cursor-pointer border-transparent text-[#828C85] hover:text-[#828C85] px-6 tab @if($value['title'] == $activeTitle) active @endif" wire:click="$emit('tabSubClicked', '{{$value['title']}}')">{{ preg_replace('/\[[^\]]*?\]/', '', $value['title']) }}</li>
+                                                    <li data-tab-index="2" class="whitespace-nowrap min-w-min p-4 border-b-2 max-h-[50px] overflow-hidden rounded-t-lg cursor-pointer border-transparent text-[#828C85] hover:bg-gray-light px-6 tab @if($value['title'] == $activeTitle) active hover:bg-green-dark @endif" wire:click="$emit('tabSubClicked', '{{$value['title']}}')">{{ preg_replace('/\[[^\]]*?\]/', '', $value['title']) }}</li>
                                                 @endif
                                                 @if($value['title'] === 'Ratios')
-                                                    <li data-tab-index="2" class="whitespace-nowrap min-w-min p-4 border-b-2 max-h-[50px] overflow-hidden rounded-t-lg cursor-pointer border-transparent text-[#828C85] hover:text-[#828C85] px-6 tab @if($value['title'] == $activeTitle) active @endif" wire:click="$emit('tabSubClicked', '{{$value['title']}}')">{{ preg_replace('/\[[^\]]*?\]/', '', $value['title']) }}</li>
+                                                    <li data-tab-index="2" class="whitespace-nowrap min-w-min p-4 border-b-2 max-h-[50px] overflow-hidden rounded-t-lg cursor-pointer border-transparent text-[#828C85] hover:bg-gray-light px-6 tab @if($value['title'] == $activeTitle) active hover:bg-green-dark @endif" wire:click="$emit('tabSubClicked', '{{$value['title']}}')">{{ preg_replace('/\[[^\]]*?\]/', '', $value['title']) }}</li>
                                                 @endif
                                             @endforeach
-                                            <li data-tab-index="4" class="whitespace-nowrap min-w-min p-4 border-b-2 max-h-[50px] overflow-hidden rounded-t-lg cursor-pointer border-transparent text-[#828C85] hover:text-[#828C85] px-6 tab" wire:click="$emit('tabSubClicked', '{{$value['title']}}')">Disclosure</li>
+                                            <li data-tab-index="4" class="whitespace-nowrap min-w-min p-4 border-b-2 max-h-[50px] overflow-hidden rounded-t-lg cursor-pointer border-transparent text-[#828C85] hover:bg-gray-light px-6 tab" wire:click="$emit('tabSubClicked', '{{$value['title']}}')">Disclosure</li>
                                         </ul>
                                     </div>
                                 </div>
@@ -85,9 +85,9 @@
 
 
                                 <div class="filters-row">
-                                    <div class="select-wrapper flex items-center">
-                                        <div class="ml-3 flex items-center text-xs">View
-                                            <button type="submit" id="dropdownViewButton" data-dropdown-toggle="dropdown-View" class="flex items-center flowbite-select bg-gray-50 border border-gray-700 text-gray-900 text-xs ml-2 p-2" name="view" id="">
+                                    <div class="select-wrapper flex items-center custom-text-xs">
+                                        <div class="flex items-center text-sm">View
+                                            <button type="submit" id="dropdownViewButton" data-dropdown-toggle="dropdown-View" class="flex items-center flowbite-select bg-gray-50 border border-gray-700 text-gray-900 text-sm ml-2 p-2" name="view" id="">
                                                 {{$view}}
                                                 <svg width="16" height="16" viewBox="0 0 16 16" fill="none" xmlns="http://www.w3.org/2000/svg">
                                                     <path d="M10.3083 6.19514L7.72167 8.78378L5.135 6.19514C5.01045 6.07021 4.84135 6 4.665 6C4.48865 6 4.31955 6.07021 4.195 6.19514C3.935 6.45534 3.935 6.87566 4.195 7.13585L7.255 10.1982C7.515 10.4584 7.935 10.4584 8.195 10.1982L11.255 7.13585C11.515 6.87566 11.515 6.45534 11.255 6.19514C10.995 5.94161 10.5683 5.93494 10.3083 6.19514Z" fill="#121A0F"/>
@@ -168,8 +168,8 @@
                                                 </div>
                                             </div>
                                         </div>
-                                        <div class="ml-3 flex items-center text-xs">Unit Type
-                                            <button type="submit" id="dropdownUnitTypeButton" data-dropdown-toggle="dropdown-UnitType" class="flex items-center flowbite-select bg-gray-50 border border-gray-700 text-gray-900 text-xs ml-2 p-2" name="view" id="">
+                                        <div class="ml-3 flex items-center text-sm">Unit Type
+                                            <button type="submit" id="dropdownUnitTypeButton" data-dropdown-toggle="dropdown-UnitType" class="flex items-center flowbite-select bg-gray-50 border border-gray-700 text-gray-900 text-sm ml-2 p-2" name="view" id="">
                                                 {{$unitType}}
                                                 <svg width="16" height="16" viewBox="0 0 16 16" fill="none" xmlns="http://www.w3.org/2000/svg">
                                                     <path d="M10.3083 6.19514L7.72167 8.78378L5.135 6.19514C5.01045 6.07021 4.84135 6 4.665 6C4.48865 6 4.31955 6.07021 4.195 6.19514C3.935 6.45534 3.935 6.87566 4.195 7.13585L7.255 10.1982C7.515 10.4584 7.935 10.4584 8.195 10.1982L11.255 7.13585C11.515 6.87566 11.515 6.45534 11.255 6.19514C10.995 5.94161 10.5683 5.93494 10.3083 6.19514Z" fill="#121A0F"/>
@@ -238,8 +238,8 @@
                                                 </div>
                                             </div>
                                         </div>
-                                        <div class="ml-3 flex items-center text-xs">Template
-                                            <button type="submit" id="dropdownTemplateButton" data-dropdown-toggle="dropdown-Template" class="flex items-center flowbite-select bg-gray-50 border border-gray-700 text-gray-900 text-xs ml-2 p-2" name="view" id="">
+                                        <div class="ml-3 flex items-center text-sm">Template
+                                            <button type="submit" id="dropdownTemplateButton" data-dropdown-toggle="dropdown-Template" class="flex items-center flowbite-select bg-gray-50 border border-gray-700 text-gray-900 text-sm ml-2 p-2" name="view" id="">
                                                 {{$template}}
                                                 <svg width="16" height="16" viewBox="0 0 16 16" fill="none" xmlns="http://www.w3.org/2000/svg">
                                                     <path d="M10.3083 6.19514L7.72167 8.78378L5.135 6.19514C5.01045 6.07021 4.84135 6 4.665 6C4.48865 6 4.31955 6.07021 4.195 6.19514C3.935 6.45534 3.935 6.87566 4.195 7.13585L7.255 10.1982C7.515 10.4584 7.935 10.4584 8.195 10.1982L11.255 7.13585C11.515 6.87566 11.515 6.45534 11.255 6.19514C10.995 5.94161 10.5683 5.93494 10.3083 6.19514Z" fill="#121A0F"/>
@@ -272,8 +272,8 @@
                                                 </div>
                                             </div>
                                         </div>
-                                        <div class="ml-3 flex items-center text-xs">Order
-                                            <button type="submit" id="dropdownOrderButton" data-dropdown-toggle="dropdown-Order" class="flex items-center flowbite-select bg-gray-50 border border-gray-700 text-gray-900 text-xs ml-2 p-2" name="view" id="">
+                                        <div class="ml-3 flex items-center text-sm">Order
+                                            <button type="submit" id="dropdownOrderButton" data-dropdown-toggle="dropdown-Order" class="flex items-center flowbite-select bg-gray-50 border border-gray-700 text-gray-900 text-sm ml-2 p-2" name="view" id="">
                                                 {{$reverse ? 'Latest on the Left' : 'Latest on the Right'}}
                                                 <svg width="16" height="16" viewBox="0 0 16 16" fill="none" xmlns="http://www.w3.org/2000/svg">
                                                     <path d="M10.3083 6.19514L7.72167 8.78378L5.135 6.19514C5.01045 6.07021 4.84135 6 4.665 6C4.48865 6 4.31955 6.07021 4.195 6.19514C3.935 6.45534 3.935 6.87566 4.195 7.13585L7.255 10.1982C7.515 10.4584 7.935 10.4584 8.195 10.1982L11.255 7.13585C11.515 6.87566 11.515 6.45534 11.255 6.19514C10.995 5.94161 10.5683 5.93494 10.3083 6.19514Z" fill="#121A0F"/>
@@ -318,8 +318,8 @@
                                                 </div>
                                             </div>
                                         </div>
-                                        <div class="ml-3 flex items-center text-xs">Freeze Panes
-                                            <button type="submit" id="dropdownFreezePanesButton" data-dropdown-toggle="dropdown-FreezePanes" class="flex items-center flowbite-select bg-gray-50 border border-gray-700 text-gray-900 text-xs ml-2 p-2" name="view" id="">
+                                        <div class="ml-3 flex items-center text-sm">Freeze Panes
+                                            <button type="submit" id="dropdownFreezePanesButton" data-dropdown-toggle="dropdown-FreezePanes" class="flex items-center flowbite-select bg-gray-50 border border-gray-700 text-gray-900 text-sm ml-2 p-2" name="view" id="">
                                                 {{$freezePanes}}
                                                 <svg width="16" height="16" viewBox="0 0 16 16" fill="none" xmlns="http://www.w3.org/2000/svg">
                                                     <path d="M10.3083 6.19514L7.72167 8.78378L5.135 6.19514C5.01045 6.07021 4.84135 6 4.665 6C4.48865 6 4.31955 6.07021 4.195 6.19514C3.935 6.45534 3.935 6.87566 4.195 7.13585L7.255 10.1982C7.515 10.4584 7.935 10.4584 8.195 10.1982L11.255 7.13585C11.515 6.87566 11.515 6.45534 11.255 6.19514C10.995 5.94161 10.5683 5.93494 10.3083 6.19514Z" fill="#121A0F"/>
@@ -376,8 +376,8 @@
                                                 </div>
                                             </div>
                                         </div>
-                                        <div class="ml-3 flex items-center text-xs">Decimal
-                                            <button type="submit" id="dropdownDecimalButton" data-dropdown-toggle="dropdown-Decimal" class="flex items-center flowbite-select bg-gray-50 border border-gray-700 text-gray-900 text-xs ml-2 p-2" name="view" id="">
+                                        <div class="ml-3 flex items-center text-sm">Decimal
+                                            <button type="submit" id="dropdownDecimalButton" data-dropdown-toggle="dropdown-Decimal" class="flex items-center flowbite-select bg-gray-50 border border-gray-700 text-gray-900 text-sm ml-2 p-2" name="view" id="">
                                                 {{$decimalDisplay == 2 ? '.00' : ($decimalDisplay == 3 ? '.000' : 'auto')}}
                                                 <svg width="16" height="16" viewBox="0 0 16 16" fill="none" xmlns="http://www.w3.org/2000/svg">
                                                     <path d="M10.3083 6.19514L7.72167 8.78378L5.135 6.19514C5.01045 6.07021 4.84135 6 4.665 6C4.48865 6 4.31955 6.07021 4.195 6.19514C3.935 6.45534 3.935 6.87566 4.195 7.13585L7.255 10.1982C7.515 10.4584 7.935 10.4584 8.195 10.1982L11.255 7.13585C11.515 6.87566 11.515 6.45534 11.255 6.19514C10.995 5.94161 10.5683 5.93494 10.3083 6.19514Z" fill="#121A0F"/>
@@ -442,49 +442,49 @@
                                         <li class="mr-2">
                                             <label class="flex items-center pl-3 cursor-pointer">
                                                 <input wire:model="period" value="arf5drs" id="date-fiscal-annual" type="radio" name="date-range" class="w-5 h-5 ">
-                                                <span class="w-full py-3 ml-2 text-xs">Fiscal Annual</span>
+                                                <span class="w-full py-3 ml-2 text-sm">Fiscal Annual</span>
                                             </label>
                                         </li>
                                         <li class="mr-2">
                                             <label class="flex items-center pl-3 cursor-pointer">
                                                 <input wire:model="period" value="qrf5drs" id="date-fiscal-quaterly" type="radio"  name="date-range" class="w-5 h-5 ">
-                                                <span class="w-full py-3 ml-2 text-xs">Fiscal Quaterly</span>
+                                                <span class="w-full py-3 ml-2 text-sm">Fiscal Quaterly</span>
                                             </label>
                                         </li>
                                         <li class="mr-2">
                                             <label class="flex items-center pl-3 cursor-pointer">
                                                 <input wire:model="period" value="fiscal-semi-annual" id="date-fiscal-semi-annual" type="radio"  name="date-range" class="w-5 h-5 ">
-                                                <span class="w-full py-3 ml-2 text-xs">Fiscal Semi-Annual</span>
+                                                <span class="w-full py-3 ml-2 text-sm">Fiscal Semi-Annual</span>
                                             </label>
                                         </li>
                                         <li class="mr-2">
                                             <label class="flex items-center pl-3 cursor-pointer">
                                                 <input wire:model="period" value="YTD" id="date-YTD" type="radio"  name="date-range" class="w-5 h-5 ">
-                                                <span class="w-full py-3 ml-2 text-xs">YTD</span>
+                                                <span class="w-full py-3 ml-2 text-sm">YTD</span>
                                             </label>
                                         </li>
                                         <li class="mr-2">
                                             <label class="flex items-center pl-3 cursor-pointer">
                                                 <input wire:model="period" value="LTM" id="date-LTM" type="radio"  name="date-range" class="w-5 h-5 ">
-                                                <span class="w-full py-3 ml-2 text-xs">LTM</span>
+                                                <span class="w-full py-3 ml-2 text-sm">LTM</span>
                                             </label>
                                         </li>
                                         <li class="mr-2">
                                             <label class="flex items-center pl-3 cursor-pointer">
                                                 <input wire:model="period" value="annual" id="date-annual" id="date-annual" type="radio" name="date-range" class="w-5 h-5 ">
-                                                <span class="w-full py-3 ml-2 text-xs">Calendar Annual</span>
+                                                <span class="w-full py-3 ml-2 text-sm">Calendar Annual</span>
                                             </label>
                                         </li>
                                         <li class="mr-2">
                                             <label class="flex items-center pl-3 cursor-pointer">
                                                 <input wire:model="period" value="quarterly" id="date-quarterly" type="radio" name="date-range" class="w-5 h-5 ">
-                                                <span class="w-full py-3 ml-2 text-xs">Calendar Quaterly</span>
+                                                <span class="w-full py-3 ml-2 text-sm">Calendar Quaterly</span>
                                             </label>
                                         </li>
                                         <li class="mr-2">
                                             <label class="flex items-center pl-3 cursor-pointer">
                                                 <input wire:model="period" value="SA" id="date-SA" type="radio"  name="date-sa" class="w-5 h-5 ">
-                                                <span class="w-full py-3 ml-2 text-xs">Calendar SA</span>
+                                                <span class="w-full py-3 ml-2 text-sm">Calendar SA</span>
                                             </label>
                                         </li>
                                     </ul>
@@ -500,13 +500,13 @@
                                     </div>
 
                                 @if(count($chartData))
-                                    <div class="my-4 pb-5 w-full px-5 bg-white flex flex-col">
+                                    <div class="mb-4 mt-9 pb-5 w-full px-5 bg-white flex flex-col">
                                         <div class="flex justify-between w-full my-12 pl-6 pr-3">
                                             <div class="text-lg text-indigo-600 font-bold">
                                                 Apple Inc. (AAPL)
                                             </div>
                                             <div class="flex items-start">
-                                                <span wire:click="closeChart" class="rounded-full bg-red-500 text-white w-5 h-5 flex items-center justify-center">
+                                                <span wire:click="closeChart" class="rounded-full bg-red-500 text-white w-5 h-5 flex items-center justify-center cursor-pointer">
                                                     <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="4" stroke="currentColor" class="w-3 h-3">
                                                       <path stroke-linecap="round" stroke-linejoin="round" d="M6 18L18 6M6 6l12 12" />
                                                     </svg>
@@ -514,17 +514,32 @@
                                             </div>
                                         </div>
                                         <div class="px-6 w-full">
-                                            <canvas id="chart-company-report"></canvas>
+                                            <canvas id="chart-company-report" class="chart-company-report"></canvas>
                                         </div>
                                         <div class="w-full flex flex-wrap justify-start items-end space-x-3 px-2 mt-8 space-y-3">
                                             @foreach($selectedRows as $title => $row)
-                                                <div class="rounded-full relative whitespace-nowrap border flex space-x-2 justify-between items-center h-[40px] px-2">
-                                                    <span wire:click="toggleChartType('{{$title}}')" class="flex items-center justify-center hover:cursor-pointer">
+                                                <div class="rounded-full relative whitespace-nowrap border flex space-x-2.5 justify-between items-center h-[40px] px-2">
+
+                                                    <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 16 16" fill="none">
+                                                        <circle cx="8" cy="8" r="6" fill="{{$row['color'] ?? '#7C8286'}}"/>
+                                                      </svg>
+                                                    <span class="flex items-center justify-center hover:cursor-pointer">
                                                         {{$title}}
-                                                        <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 16 16" fill="none">
-                                                           <path d="M10.3083 6.19514L7.72167 8.78378L5.135 6.19514C5.01045 6.07021 4.84135 6 4.665 6C4.48865 6 4.31955 6.07021 4.195 6.19514C3.935 6.45534 3.935 6.87566 4.195 7.13585L7.255 10.1982C7.515 10.4584 7.935 10.4584 8.195 10.1982L11.255 7.13585C11.515 6.87566 11.515 6.45534 11.255 6.19514C10.995 5.94161 10.5683 5.93494 10.3083 6.19514Z" fill="#464E49"/>
-                                                        </svg>
+
+
                                                     </span>
+                                                    <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 16 16" fill="none">
+                                                        <path d="M3.33333 2V12.6667H14V14H2V2H3.33333ZM13.2929 3.95956L14.7071 5.37377L10.6667 9.4142L8.66667 7.414L6.04044 10.0405L4.62623 8.6262L8.66667 4.58579L10.6667 6.586L13.2929 3.95956Z" fill="#3561E7"/>
+                                                      </svg>
+                                                    @if($row['type'] == 'line')
+                                                        <svg xmlns="http://www.w3.org/2000/svg" wire:click="toggleChartType('{{$title}}')" width="16" height="16" viewBox="0 0 16 16" fill="none">
+                                                        <path d="M10.3083 6.19514L7.72167 8.78378L5.135 6.19514C5.01045 6.07021 4.84135 6 4.665 6C4.48865 6 4.31955 6.07021 4.195 6.19514C3.935 6.45534 3.935 6.87566 4.195 7.13585L7.255 10.1982C7.515 10.4584 7.935 10.4584 8.195 10.1982L11.255 7.13585C11.515 6.87566 11.515 6.45534 11.255 6.19514C10.995 5.94161 10.5683 5.93494 10.3083 6.19514Z" fill="#464E49"/>
+                                                        </svg>
+                                                    @else
+                                                        <svg xmlns="http://www.w3.org/2000/svg" width="14" height="12" viewBox="0 0 14 12" fill="none">
+                                                            <path d="M0.333008 6.66667H4.33301V12H0.333008V6.66667ZM4.99967 0H8.99967V12H4.99967V0ZM9.66634 3.33333H13.6663V12H9.66634V3.33333Z" fill="#3561E7"/>
+                                                        </svg>
+                                                    @endif
                                                     @if($isOpen === $title)
                                                         <div class="absolute z-20 bg-white top-[45px] right-[-30px] border-[#D4DDD7] shadow-md rounded-lg">
                                                             <ul class="px-4 py-2">
@@ -554,7 +569,7 @@
                                                         </div>
                                                     @endif
 
-                                                    <span wire:click="unselectRow('{{ $title }}')" class="rounded-full bg-white border-2 border-red-500 text-red-500 w-5 h-5 flex items-center justify-center">
+                                                    <span wire:click="unselectRow('{{ $title }}')" class="rounded-full bg-white border-2 border-red-500 text-red-500 w-5 h-5 flex items-center ml_4 justify-center cursor-pointer">
                                                         <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="4" stroke="currentColor" class="w-3 h-3">
                                                           <path stroke-linecap="round" stroke-linejoin="round" d="M6 18L18 6M6 6l12 12" />
                                                         </svg>
@@ -564,47 +579,50 @@
                                         </div>
                                     </div>
                                 @endif
-
-                                <div class="warning-wrapper mt-5">
-                                    <div class="warning-text">
-                                        <svg viewBox="0 0 16 16" fill="none" xmlns="http://www.w3.org/2000/svg">
-                                            <path d="M7.99967 14.6663C4.31777 14.6663 1.33301 11.6815 1.33301 7.99967C1.33301 4.31777 4.31777 1.33301 7.99967 1.33301C11.6815 1.33301 14.6663 4.31777 14.6663 7.99967C14.6663 11.6815 11.6815 14.6663 7.99967 14.6663ZM7.99967 13.333C10.9452 13.333 13.333 10.9452 13.333 7.99967C13.333 5.05415 10.9452 2.66634 7.99967 2.66634C5.05415 2.66634 2.66634 5.05415 2.66634 7.99967C2.66634 10.9452 5.05415 13.333 7.99967 13.333ZM7.33301 9.99967H8.66634V11.333H7.33301V9.99967ZM7.33301 4.66634H8.66634V8.66634H7.33301V4.66634Z" fill="#DA680B"/>
-                                        </svg>
-                                        Click on any of the row(s) to chart the data
+                                 <div class="flex justify-between mt-7">
+                                    <div class="warning-wrapper ">
+                                        <div class="warning-text">
+                                            <svg viewBox="0 0 16 16" fill="none" xmlns="http://www.w3.org/2000/svg">
+                                                <path d="M7.99967 14.6663C4.31777 14.6663 1.33301 11.6815 1.33301 7.99967C1.33301 4.31777 4.31777 1.33301 7.99967 1.33301C11.6815 1.33301 14.6663 4.31777 14.6663 7.99967C14.6663 11.6815 11.6815 14.6663 7.99967 14.6663ZM7.99967 13.333C10.9452 13.333 13.333 10.9452 13.333 7.99967C13.333 5.05415 10.9452 2.66634 7.99967 2.66634C5.05415 2.66634 2.66634 5.05415 2.66634 7.99967C2.66634 10.9452 5.05415 13.333 7.99967 13.333ZM7.33301 9.99967H8.66634V11.333H7.33301V9.99967ZM7.33301 4.66634H8.66634V8.66634H7.33301V4.66634Z" fill="#DA680B"/>
+                                            </svg>
+                                            Click on any of the row(s) to chart the data
+                                        </div>
                                     </div>
-                                </div>
-                                <div class="flex justify-end items-baseline">
-                                    <span class="currency-font">Currency: &nbsp;</span>
-                                    <select wire:model="currency" id="currency-select" class="inline-flex font-bold !pr-8 bg-transparent">
-                                        <option value="USD">USD</option>
-                                        <option value="CAD">CAD</option>
-                                        <option value="EUR">EUR</option>
-                                    </select>
-                                </div>
-                                    <div class="flex w-full overflow-x-scroll">
+                                    <div class="flex justify-end items-baseline">
+                                        <span class="currency-font">Currency: &nbsp;</span>
+                                        <select wire:model="currency" id="currency-select" class="inline-flex font-bold !pr-8 bg-transparent">
+                                            <option value="USD">USD</option>
+                                            <option value="CAD">CAD</option>
+                                            <option value="EUR">EUR</option>
+                                        </select>
+                                    </div>
+                                 </div>
+
+
+                                    <div class="w-full">
                                         <div class="table-wrapper w-full" style="font-size: 12px;">
                                             <div class="table" wire:key="{{now()}}">
                                                 <div class="row-group">
-                                                    <div class="flex flex-row bg-gray-200">
-                                                        <div class="w-[300px] font-bold flex py-4 items-center justify-start text-sm">
+                                                    <div class="flex flex-row bg-gray-custom-light">
+                                                        <div class="w-[250px] font-bold flex py-2 items-center justify-start text-base">
                                                             <span class="ml-6">
                                                                 {{$companyName}} ({{$ticker}})
                                                             </span>
                                                         </div>
-                                                        <div class="w-full flex flex-row bg-gray-200 justify-end">
+                                                        <div class="w-full flex flex-row bg-gray-custom-light justify-between">
                                                             @foreach ($reverse ? array_reverse($tableDates) : $tableDates as $date)
-                                                                <div class="w-[150px] flex items-center justify-center text-sm font-bold">
-                                                                    <span class="py-4">
+                                                                <div class="w-[150px] flex items-center justify-center text-base font-bold">
+                                                                    <span class="py-2">
                                                                         {{ date('M Y', strtotime($date)) }}
                                                                     </span>
                                                                 </div>
                                                             @endforeach
                                                         </div>
                                                     </div>
-                                                    <div class="divide-y">
+                                                    <div class="divide-y text-base">
                                                         @if(!$tableLoading)
-                                                            @foreach($rows as $row)
-                                                                <livewire:company-report-table-row :data="$row" wire:key="{{Str::random()}}" :selectedRows="$selectedRows" :reverse="$reverse"/>
+                                                            @foreach($rows as $key=> $row)
+                                                                <livewire:company-report-table-row :data="$row" wire:key="{{Str::random()}}" :selectedRows="$selectedRows" :reverse="$reverse" :itemKey="$row['title']"/>
                                                             @endforeach
                                                         @endif
                                                     </div>
@@ -1024,7 +1042,7 @@
                     }
                 }
             }],
-            maintainAspectRatio: true,
+            maintainAspectRatio: false,
             aspectRatio: 3,
             type: 'line',
             data: {
