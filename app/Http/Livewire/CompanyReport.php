@@ -131,12 +131,18 @@ class CompanyReport extends Component
         $chartData = [];
         foreach ($this->selectedRows as $title => $row) {
             $data = [];
-            foreach ($row['dates'] as $cell) {
+            foreach ($row['dates'] as $key => $cell) {
+
                 if (!$cell['empty']) {
-                    $data[] = [
-                        'y' => $cell['value'],
-                        'x' => $cell['date'],
-                    ];
+                    $selectedYear = date('Y', strtotime($cell['date']));
+                    $startYear = !is_numeric($this->startDate) ? date('Y', strtotime($this->startDate)) : $this->startDate;
+                    $endYear = !is_numeric($this->endDate) ? date('Y', strtotime($this->endDate)) : $this->endDate;
+                    if(!($selectedYear < $startYear) && !($selectedYear > $endYear)) {
+                        $data[] = [
+                            'y' => $cell['value'],
+                            'x' => $cell['date'],
+                        ];
+                    }
                 } else {
                     $data[] = [
                         'y' => null,
@@ -161,8 +167,8 @@ class CompanyReport extends Component
 
         $this->chartData = $chartData;
 
+        $this->emit('initCompanyReportChart');
         if ($initChart) {
-            $this->emit('initCompanyReportChart');
         }
     }
 
@@ -229,7 +235,6 @@ class CompanyReport extends Component
 
     public function changeDates($dates)
     {
-
         $this->tableLoading = true;
         $this->rows = [];
 
@@ -391,7 +396,7 @@ class CompanyReport extends Component
             $firstDate = $this->startDate;
             if($this->startDate === null) {
 
-                $year = substr($this->rangeDates[count($this->rangeDates) - 1], 0, 4) - 5;
+                $year = substr($this->rangeDates[count($this->rangeDates) - 1], 0, 4) - (count($this->rangeDates)-1);
 
                 $firstDate = $this->rangeDates[count($this->rangeDates) - 1];
                 // Search for a date within $this->rangeDates that matches the year

@@ -559,7 +559,7 @@
                                                     </div>
                                                 </div>
                                             </div>
-                                            <div class="px-6 w-full">
+                                            <div class="px-6 w-full" wire:ignore>
                                                 <canvas id="chart-company-report" class="chart-company-report"></canvas>
                                             </div>
                                             <div class="w-full flex flex-wrap justify-start items-end space-x-3 px-2 mt-8 space-y-3">
@@ -750,11 +750,7 @@
 
         Livewire.hook('message.processed', (message, component) => {
             if (message.updateQueue.some(update => update.payload.value === 'Standardised Template' || 'As reported (Harmonized)')) {
-
-                console.log(@this.rangeDates);
-                console.log(@this.tableDates);
                 updateRangeSlider();
-
             }
         });
 
@@ -831,6 +827,7 @@
                 onInput: (value, userInteraction) => {
                     if (value.length === 2 && value !== selectedValue) {
                         valueAfter = value;
+                        @this.changeDates(value)
                         recognizeDotsStatus(valueAfter, [rangeMin, rangeMax]);
                     }
                 }
