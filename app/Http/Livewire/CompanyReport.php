@@ -560,10 +560,10 @@ class CompanyReport extends Component
 
         $decimalDisplay = intval($this->decimalDisplay);
 
-        if (str_contains($value, '%') || str_contains($value, '-') || !is_numeric($value)) {
+        if (str_contains($value, '%') || $value == '-' || !is_numeric($value)) {
             return $value;
         }
-        if ($value <= 100) {
+        if ($value <= 100 && $value > -1000) {
             return round($value, 2);
         }
 
@@ -574,20 +574,20 @@ class CompanyReport extends Component
         }
 
         if (!isset($units[$unitType])) {
-            return number_format($value, $decimalDisplay);
+            return $value;
         }
 
         $unitAbbreviation = $units[$unitType];
 
         // Determine the appropriate unit based on the number
         if ($unitAbbreviation == 'B') {
-            return number_format($value / 1000000000);
+            return $value / 1000000000;
         } elseif ($unitAbbreviation == 'M') {
-            return number_format($value / 1000000);
+            return $value / 1000000;
         } elseif ($unitAbbreviation == 'T') {
-            return number_format($value / 1000);
+            return $value / 1000;
         } else {
-            return number_format($value);
+            return $value;
         }
     }
 
@@ -602,7 +602,7 @@ class CompanyReport extends Component
             if (in_array('|', str_split($value))) {
                 $array = explode('|', $value);
 
-                $response['value'] = $array[0];
+                $response['value'] = $this->generatePresent($array[0]);
                 $response['present'] = $this->generatePresent($array[0]);
                 $response['hash'] = $array[1];
 
