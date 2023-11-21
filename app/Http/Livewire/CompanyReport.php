@@ -51,6 +51,7 @@ class CompanyReport extends Component
     public $isOpen = false;
     public $activeTitle = 'Income Statement';
     public $colors = [];
+    public $allRows = [];
 
     protected $listeners = ['periodChange', 'tabClicked', 'tabSubClicked', 'selectRow', 'unselectRow'];
 
@@ -59,8 +60,6 @@ class CompanyReport extends Component
         'reverse',
         'decimalDisplay',
         'view',
-        'startDate',
-        'endDate',
     ];
 
     public function toggleChartType($title)
@@ -497,12 +496,19 @@ class CompanyReport extends Component
         }
 
         $this->rows = $rows;
+        // $a = $this->allRows;
         $this->tableLoading = false;
     }
 
     public function generateRow($data, $title, $isSegmentation = false): array
     {
         $row = [
+            'title' => $title,
+            'segmentation' => false,
+            'values' => $this->generateEmptyCellsRow(),
+            'children' => [],
+        ];
+        $allrow = [
             'title' => $title,
             'segmentation' => false,
             'values' => $this->generateEmptyCellsRow(),
@@ -524,6 +530,12 @@ class CompanyReport extends Component
                     $datePart = substr($date, 0, 7);
                     if ($datePart == $year) {
                         $row['values'][$date] = $this->parseCell($value, $key);
+                    }
+                }
+                foreach ($this->rangeDates as $date) {
+                    $datePart = substr($date, 0, 7);
+                    if ($datePart == $year) {
+                        $allrow['values'][$date] = $this->parseCell($value, $key);
                         break;
                     }
                 }
@@ -545,7 +557,7 @@ class CompanyReport extends Component
 
         $row['segmentation'] = $isSegmentation && count($row['children']) === 0;
         $row['id'] = serialize($row);
-
+        $this->allRows[] = $allrow;
         return $row;
     }
 

@@ -6,7 +6,7 @@
                 @if($this->isChecked)
                 checked
                 @endif
-                name="selected-chart-{{$data['id']}}">
+                name="selected-chart-{{$data['id'] ?? ''}}">
             </div>
         @endif
         <div

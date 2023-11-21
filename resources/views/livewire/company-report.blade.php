@@ -667,7 +667,7 @@
                                                 </div>
                                                 <div class="divide-y text-base">
                                                     @if(!$tableLoading)
-                                                        @foreach($rows as $key=> $row)
+                                                        @foreach($allRows as $key=> $row)
                                                             <livewire:company-report-table-row :data="$row" wire:key="{{Str::random()}}" :selectedRows="$selectedRows" :reverse="$reverse" :itemKey="$row['title']"/>
                                                         @endforeach
                                                     @endif
