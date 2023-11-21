@@ -709,7 +709,7 @@
                                                 <div class="divide-y text-base">
                                                     @if(!$tableLoading)
                                                         @foreach($allRows as $key=> $row)
-                                                            <livewire:company-report-table-row :data="$row" wire:key="{{Str::random()}}" :selectedRows="$selectedRows" :reverse="$reverse" :itemKey="$row['title']"/>
+                                                            <livewire:company-report-table-row :data="$row" wire:key="{{Str::random()}}" :selectedRows="$selectedRows" :reverse="$reverse" :itemKey="$row['title']" :startDate="$startDate" :endDate="$endDate"/>
                                                         @endforeach
                                                     @endif
                                                 </div>
@@ -868,7 +868,6 @@
                 onInput: (value, userInteraction) => {
                     if (value.length === 2 && value !== selectedValue) {
                         valueAfter = value;
-                        @this.changeDates(value)
                         recognizeDotsStatus(valueAfter, [rangeMin, rangeMax]);
                     }
                 }

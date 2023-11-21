@@ -14,10 +14,12 @@ class CompanyReportTableRow extends Component
     public $attr = "";
     public $selectedRows = [];
     public $itemKey = 0;
+    public $startDate = null;
+    public $endDate = null;
 
     protected $listeners = ['resetSelection'];
 
-    public function mount($data, $index = 0, $selectedRows = [], $reverse = false, $itemKey = 0)
+    public function mount($data, $index = 0, $selectedRows = [], $reverse = false, $itemKey = 0, $startDate = null, $endDate = null)
     {
         $this->data = $data;
         $this->itemKey = $itemKey;
@@ -25,6 +27,8 @@ class CompanyReportTableRow extends Component
         $this->selected = in_array($data['title'], $selectedRows);
         $this->selectedRows = $selectedRows;
         $this->reverse = $reverse;
+        $this->startDate = $startDate;
+        $this->endDate = $endDate;
     }
 
     public function getIsCheckedProperty(){

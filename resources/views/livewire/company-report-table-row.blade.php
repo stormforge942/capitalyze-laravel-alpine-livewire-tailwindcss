@@ -35,11 +35,13 @@
         </div>
         <div class="w-full flex flex-row justify-between ">
             @foreach($reverse ? array_reverse($data['values'], true) : $data['values'] as $date => $value)
+                @if(date('Y', strtotime($date)) >= (is_numeric($startDate) ? $startDate : date('Y', strtotime($startDate))) && date('Y', strtotime($date)) <= (is_numeric($endDate)? $endDate : date('Y', strtotime($endDate))))
                 <div wire:key="{{$date}}" class="{{$value['value'] < 0 ? 'text-red' : 'text-black'}} w-[150px] flex items-center justify-center open-slide py-2   cursor-pointer hover:underline" data-value='{{$this->generateAttribute($value)}}'>
                     @if(!$value['empty'])
                         {{($value['value'] < 0 && is_numeric($value['value'])) ? '(' . number_format(str_replace('-', '', $value['value']), 2) . ')' : (!is_numeric($value['value']) ? $value['value'] : number_format($value['value'], 2))}}
                     @endif
                 </div>
+                @endif
             @endforeach
         </div>
     </div>

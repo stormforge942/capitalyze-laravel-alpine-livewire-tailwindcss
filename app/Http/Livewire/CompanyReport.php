@@ -395,7 +395,7 @@ class CompanyReport extends Component
             $firstDate = $this->startDate;
             if($this->startDate === null) {
 
-                $year = substr($this->rangeDates[count($this->rangeDates) - 1], 0, 4) - (count($this->rangeDates)-1);
+                $year = substr($this->rangeDates[count($this->rangeDates) - 1], 0, 4) - 5;
 
                 $firstDate = $this->rangeDates[count($this->rangeDates) - 1];
                 // Search for a date within $this->rangeDates that matches the year
