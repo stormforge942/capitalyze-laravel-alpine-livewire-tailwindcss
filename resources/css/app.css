@@ -328,6 +328,9 @@ span.business-footer-text a {
     border-radius: 100%;
     background: #fff;
 }
+.flex-col-border-less {
+    border: none !important;
+}
 .graph-wrapper [type="radio"]:checked + label:after,
 .graph-wrapper [type="radio"]:not(:checked) + label:after {
     content: '';

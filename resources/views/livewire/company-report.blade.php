@@ -490,146 +490,192 @@
                                     </ul>
                                 </div>
 
-                                    <div class="years-range-wrapper my-2">
-                                        <div class="dots-wrapper">
-                                            @foreach($rangeDates as $key => $date)
-                                                <span id="{{date('Y', strtotime($date))}}" class="inactive-dots"></span>
-                                            @endforeach
-                                        </div>
-                                        <div id="range-slider-company-report" class="range-slider"></div>
+                                <div class="years-range-wrapper my-2">
+                                    <div class="dots-wrapper">
+                                        @foreach($rangeDates as $key => $date)
+                                            <span id="{{date('Y', strtotime($date))}}" class="inactive-dots"></span>
+                                        @endforeach
                                     </div>
+                                    <div id="range-slider-company-report" class="range-slider"></div>
+                                </div>
 
                                 @if(count($chartData))
-                                    <div class="mb-4 mt-9 pb-5 w-full px-5 bg-white flex flex-col">
-                                        <div class="flex justify-between w-full my-12 pl-6 pr-3">
-                                            <div class="text-lg text-indigo-600 font-bold">
-                                                Apple Inc. (AAPL)
-                                            </div>
-                                            <div class="flex items-start">
-                                                <span wire:click="closeChart" class="rounded-full bg-red-500 text-white w-5 h-5 flex items-center justify-center cursor-pointer">
-                                                    <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="4" stroke="currentColor" class="w-3 h-3">
-                                                      <path stroke-linecap="round" stroke-linejoin="round" d="M6 18L18 6M6 6l12 12" />
-                                                    </svg>
-                                                </span>
-                                            </div>
-                                        </div>
-                                        <div class="px-6 w-full">
-                                            <canvas id="chart-company-report" class="chart-company-report"></canvas>
-                                        </div>
-                                        <div class="w-full flex flex-wrap justify-start items-end space-x-3 px-2 mt-8 space-y-3">
-                                            @foreach($selectedRows as $title => $row)
-                                                <div class="rounded-full relative whitespace-nowrap border flex space-x-2.5 justify-between items-center h-[40px] px-2">
-
-                                                    <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 16 16" fill="none">
-                                                        <circle cx="8" cy="8" r="6" fill="{{$row['color'] ?? '#7C8286'}}"/>
-                                                      </svg>
-                                                    <span class="flex items-center justify-center hover:cursor-pointer">
-                                                        {{$title}}
-
-
-                                                    </span>
-                                                    <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 16 16" fill="none">
-                                                        <path d="M3.33333 2V12.6667H14V14H2V2H3.33333ZM13.2929 3.95956L14.7071 5.37377L10.6667 9.4142L8.66667 7.414L6.04044 10.0405L4.62623 8.6262L8.66667 4.58579L10.6667 6.586L13.2929 3.95956Z" fill="#3561E7"/>
-                                                      </svg>
-                                                    @if($row['type'] == 'line')
-                                                        <svg xmlns="http://www.w3.org/2000/svg" wire:click="toggleChartType('{{$title}}')" width="16" height="16" viewBox="0 0 16 16" fill="none">
-                                                        <path d="M10.3083 6.19514L7.72167 8.78378L5.135 6.19514C5.01045 6.07021 4.84135 6 4.665 6C4.48865 6 4.31955 6.07021 4.195 6.19514C3.935 6.45534 3.935 6.87566 4.195 7.13585L7.255 10.1982C7.515 10.4584 7.935 10.4584 8.195 10.1982L11.255 7.13585C11.515 6.87566 11.515 6.45534 11.255 6.19514C10.995 5.94161 10.5683 5.93494 10.3083 6.19514Z" fill="#464E49"/>
-                                                        </svg>
-                                                    @else
-                                                        <svg xmlns="http://www.w3.org/2000/svg" width="14" height="12" viewBox="0 0 14 12" fill="none">
-                                                            <path d="M0.333008 6.66667H4.33301V12H0.333008V6.66667ZM4.99967 0H8.99967V12H4.99967V0ZM9.66634 3.33333H13.6663V12H9.66634V3.33333Z" fill="#3561E7"/>
-                                                        </svg>
-                                                    @endif
-                                                    @if($isOpen === $title)
-                                                        <div class="absolute z-20 bg-white top-[45px] right-[-30px] border-[#D4DDD7] shadow-md rounded-lg">
-                                                            <ul class="px-4 py-2">
-                                                                <li onclick="changeChartType('{{$title}}', 'line')" class="flex p-2 items-center hover:cursor-pointer">
-                                                                    <svg xmlns="http://www.w3.org/2000/svg" width="13" height="12" viewBox="0 0 13 12" fill="none">
-                                                                        <path d="M1.33333 0V10.6667H12V12H0V0H1.33333ZM11.2929 1.95956L12.7071 3.37377L8.66667 7.4142L6.66667 5.414L4.04044 8.04047L2.62623 6.6262L6.66667 2.58579L8.66667 4.586L11.2929 1.95956Z" fill="#3561E7"/>
-                                                                    </svg>
-                                                                    <p class="ml-2 mr-3">Line Chart</p>
-                                                                    @if($chartType === 'line')
-                                                                        <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 16 16" fill="none">
-                                                                            <path d="M7.99967 14.6668C4.31777 14.6668 1.33301 11.682 1.33301 8.00016C1.33301 4.31826 4.31777 1.3335 7.99967 1.3335C11.6815 1.3335 14.6663 4.31826 14.6663 8.00016C14.6663 11.682 11.6815 14.6668 7.99967 14.6668ZM7.99967 13.3335C10.9452 13.3335 13.333 10.9457 13.333 8.00016C13.333 5.05464 10.9452 2.66683 7.99967 2.66683C5.05415 2.66683 2.66634 5.05464 2.66634 8.00016C2.66634 10.9457 5.05415 13.3335 7.99967 13.3335ZM7.33474 10.6668L4.50633 7.83843L5.44915 6.89556L7.33474 8.78123L11.106 5.00998L12.0488 5.95278L7.33474 10.6668Z" fill="#13B05B"/>
-                                                                        </svg>
-                                                                    @endif
-                                                                </li>
-                                                                <li onclick="changeChartType('{{$title}}', 'bar')" class="flex p-2 items-center hover:cursor-pointer">
-                                                                    <svg xmlns="http://www.w3.org/2000/svg" width="14" height="12" viewBox="0 0 14 12" fill="none">
-                                                                        <path d="M0.333008 6.66667H4.33301V12H0.333008V6.66667ZM4.99967 0H8.99967V12H4.99967V0ZM9.66634 3.33333H13.6663V12H9.66634V3.33333Z" fill="#3561E7"/>
-                                                                    </svg>
-                                                                    <p class="ml-2 mr-3">Bar Chart</p>
-                                                                    @if($chartType === 'bar')
-                                                                        <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 16 16" fill="none">
-                                                                            <path d="M7.99967 14.6668C4.31777 14.6668 1.33301 11.682 1.33301 8.00016C1.33301 4.31826 4.31777 1.3335 7.99967 1.3335C11.6815 1.3335 14.6663 4.31826 14.6663 8.00016C14.6663 11.682 11.6815 14.6668 7.99967 14.6668ZM7.99967 13.3335C10.9452 13.3335 13.333 10.9457 13.333 8.00016C13.333 5.05464 10.9452 2.66683 7.99967 2.66683C5.05415 2.66683 2.66634 5.05464 2.66634 8.00016C2.66634 10.9457 5.05415 13.3335 7.99967 13.3335ZM7.33474 10.6668L4.50633 7.83843L5.44915 6.89556L7.33474 8.78123L11.106 5.00998L12.0488 5.95278L7.33474 10.6668Z" fill="#13B05B"/>
-                                                                        </svg>
-                                                                    @endif
-                                                                </li>
-                                                            </ul>
-                                                        </div>
-                                                    @endif
-
-                                                    <span wire:click="unselectRow('{{ $title }}')" class="rounded-full bg-white border-2 border-red-500 text-red-500 w-5 h-5 flex items-center ml_4 justify-center cursor-pointer">
-                                                        <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="4" stroke="currentColor" class="w-3 h-3">
-                                                          <path stroke-linecap="round" stroke-linejoin="round" d="M6 18L18 6M6 6l12 12" />
-                                                        </svg>
-                                                    </span>
-                                                </div>
-                                            @endforeach
-                                        </div>
-                                    </div>
-                                @endif
-                                 <div class="flex justify-between mt-7">
-                                    <div class="warning-wrapper ">
-                                        <div class="warning-text">
-                                            <svg viewBox="0 0 16 16" fill="none" xmlns="http://www.w3.org/2000/svg">
-                                                <path d="M7.99967 14.6663C4.31777 14.6663 1.33301 11.6815 1.33301 7.99967C1.33301 4.31777 4.31777 1.33301 7.99967 1.33301C11.6815 1.33301 14.6663 4.31777 14.6663 7.99967C14.6663 11.6815 11.6815 14.6663 7.99967 14.6663ZM7.99967 13.333C10.9452 13.333 13.333 10.9452 13.333 7.99967C13.333 5.05415 10.9452 2.66634 7.99967 2.66634C5.05415 2.66634 2.66634 5.05415 2.66634 7.99967C2.66634 10.9452 5.05415 13.333 7.99967 13.333ZM7.33301 9.99967H8.66634V11.333H7.33301V9.99967ZM7.33301 4.66634H8.66634V8.66634H7.33301V4.66634Z" fill="#DA680B"/>
+                                <div x-data="{showGraph: true, menuOpen: false}">
+                                    <div class="flex justify-end mt-4">
+                                        <button class="show-hide-chart-btn" @click="showGraph = true" x-show="!showGraph">
+                                            Show Chart
+                                            <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 16 16" fill="none">
+                                                <path d="M10.3083 6.19514L7.72167 8.78378L5.135 6.19514C5.01045 6.07021 4.84135 6 4.665 6C4.48865 6 4.31955 6.07021 4.195 6.19514C3.935 6.45534 3.935 6.87566 4.195 7.13585L7.255 10.1982C7.515 10.4584 7.935 10.4584 8.195 10.1982L11.255 7.13585C11.515 6.87566 11.515 6.45534 11.255 6.19514C10.995 5.94161 10.5683 5.93494 10.3083 6.19514Z" fill="#121A0F"></path>
                                             </svg>
-                                            Click on any of the row(s) to chart the data
+                                        </button>
+                                    </div>
+                                    <div>
+                                        <div class="mb-4 mt-7 pb-5 w-full px-5 bg-white flex flex-col" x-show="showGraph">
+                                            <div class="flex justify-between w-full my-12 pl-6 pr-3">
+                                                <div class="text-lg text-indigo-600 font-bold">
+                                                    Apple Inc. (AAPL)
+                                                </div>
+                                                <div class="flex items-start relative">
+
+                                                    <button type="button" class="custom-drop-down-button hide-mobile"  aria-expanded="true" aria-haspopup="true">
+
+                                                        <svg  xmlns="http://www.w3.org/2000/svg" @click="menuOpen = true" x-show="!menuOpen" fill="#121A0F" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" class="w-6 h-6">
+                                                            <path stroke-linecap="round" stroke-linejoin="round" d="M12 6.75a.75.75 0 110-1.5.75.75 0 010 1.5zM12 12.75a.75.75 0 110-1.5.75.75 0 010 1.5zM12 18.75a.75.75 0 110-1.5.75.75 0 010 1.5z"></path>
+                                                        </svg>
+
+                                                        <svg  xmlns="http://www.w3.org/2000/svg" @click="menuOpen = false" x-show="menuOpen" fill="#121A0F" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" class="w-6 h-6" style="display: none;">
+                                                            <path stroke-linecap="round" stroke-linejoin="round" d="M6.75 12a.75.75 0 11-1.5 0 .75.75 0 011.5 0zM12.75 12a.75.75 0 11-1.5 0 .75.75 0 011.5 0zM18.75 12a.75.75 0 11-1.5 0 .75.75 0 011.5 0z"></path>
+                                                        </svg>
+
+                                                    </button>
+
+                                                    <div  class="absolute custom-drop-down right-0 z-10 bg-white focus:outline-none" x-show="menuOpen" role="menu" x-show="showGraph=true" aria-orientation="vertical" aria-labelledby="menu-button" tabindex="-1" style="">
+                                                        <div class="py-1" role="none">
+                                                            <!-- Active: "bg-gray-100 text-gray-900", Not Active: "text-gray-700" -->
+                                                            <div class="links-wrapper mb-3">
+                                                                <a href="#" @click="menuOpen = false; showGraph = false;" class="menu_link" role="menuitem" tabindex="-1" id="menu-item-0">Hide Chart</a>
+                                                                <a href="#"  chartMenuOpen = false" class="menu_link" role="menuitem" tabindex="-1" id="menu-item-0" style="display: none;">Show Chart</a>
+                                                                <a href="#" class="menu_link" role="menuitem" tabindex="-1" id="menu-item-1">View In Full
+                                                                    Screen</a>
+                                                                <a href="#" class="menu_link" role="menuitem" tabindex="-1" id="menu-item-2">Print
+                                                                    Chart</a>
+                                                            </div>
+                                                            <hr class="mb-3">
+                                                            <div class="links-wrapper">
+                                                                <a href="#" class="menu_link" role="menuitem" tabindex="-1" id="menu-item-3"> <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="w-6 h-6">
+                                                                        <path stroke-linecap="round" stroke-linejoin="round" d="M3 16.5v2.25A2.25 2.25 0 005.25 21h13.5A2.25 2.25 0 0021 18.75V16.5M16.5 12L12 16.5m0 0L7.5 12m4.5 4.5V3"></path>
+                                                                    </svg>
+                                                                    Download As PNG</a>
+                                                                <a href="#" class="menu_link" role="menuitem" tabindex="-1" id="menu-item-4"> <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="w-6 h-6">
+                                                                        <path stroke-linecap="round" stroke-linejoin="round" d="M3 16.5v2.25A2.25 2.25 0 005.25 21h13.5A2.25 2.25 0 0021 18.75V16.5M16.5 12L12 16.5m0 0L7.5 12m4.5 4.5V3"></path>
+                                                                    </svg>
+                                                                    Download As PNG</a>
+                                                                <a href="#" class="menu_link" role="menuitem" tabindex="-1" id="menu-item-5"> <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="w-6 h-6">
+                                                                        <path stroke-linecap="round" stroke-linejoin="round" d="M3 16.5v2.25A2.25 2.25 0 005.25 21h13.5A2.25 2.25 0 0021 18.75V16.5M16.5 12L12 16.5m0 0L7.5 12m4.5 4.5V3"></path>
+                                                                    </svg>
+                                                                    Download As PNG</a>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                            <div class="px-6 w-full">
+                                                <canvas id="chart-company-report" class="chart-company-report"></canvas>
+                                            </div>
+                                            <div class="w-full flex flex-wrap justify-start items-end space-x-3 px-2 mt-8 space-y-3">
+                                                @foreach($selectedRows as $title => $row)
+                                                    <div class="rounded-full relative whitespace-nowrap border flex space-x-2.5 justify-between items-center h-[40px] px-2">
+
+                                                        <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 16 16" fill="none">
+                                                            <circle cx="8" cy="8" r="6" fill="{{$row['color'] ?? '#7C8286'}}"/>
+                                                            </svg>
+                                                        <span class="flex items-center justify-center hover:cursor-pointer">
+                                                            {{$title}}
+
+
+                                                        </span>
+                                                        <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 16 16" fill="none">
+                                                            <path d="M3.33333 2V12.6667H14V14H2V2H3.33333ZM13.2929 3.95956L14.7071 5.37377L10.6667 9.4142L8.66667 7.414L6.04044 10.0405L4.62623 8.6262L8.66667 4.58579L10.6667 6.586L13.2929 3.95956Z" fill="#3561E7"/>
+                                                            </svg>
+                                                        @if($row['type'] == 'line')
+                                                            <svg xmlns="http://www.w3.org/2000/svg" wire:click="toggleChartType('{{$title}}')" width="16" height="16" viewBox="0 0 16 16" fill="none">
+                                                            <path d="M10.3083 6.19514L7.72167 8.78378L5.135 6.19514C5.01045 6.07021 4.84135 6 4.665 6C4.48865 6 4.31955 6.07021 4.195 6.19514C3.935 6.45534 3.935 6.87566 4.195 7.13585L7.255 10.1982C7.515 10.4584 7.935 10.4584 8.195 10.1982L11.255 7.13585C11.515 6.87566 11.515 6.45534 11.255 6.19514C10.995 5.94161 10.5683 5.93494 10.3083 6.19514Z" fill="#464E49"/>
+                                                            </svg>
+                                                        @else
+                                                            <svg xmlns="http://www.w3.org/2000/svg" width="14" height="12" viewBox="0 0 14 12" fill="none">
+                                                                <path d="M0.333008 6.66667H4.33301V12H0.333008V6.66667ZM4.99967 0H8.99967V12H4.99967V0ZM9.66634 3.33333H13.6663V12H9.66634V3.33333Z" fill="#3561E7"/>
+                                                            </svg>
+                                                        @endif
+                                                        @if($isOpen === $title)
+                                                            <div class="absolute z-20 bg-white top-[45px] right-[-30px] border-[#D4DDD7] shadow-md rounded-lg">
+                                                                <ul class="px-4 py-2">
+                                                                    <li onclick="changeChartType('{{$title}}', 'line')" class="flex p-2 items-center hover:cursor-pointer">
+                                                                        <svg xmlns="http://www.w3.org/2000/svg" width="13" height="12" viewBox="0 0 13 12" fill="none">
+                                                                            <path d="M1.33333 0V10.6667H12V12H0V0H1.33333ZM11.2929 1.95956L12.7071 3.37377L8.66667 7.4142L6.66667 5.414L4.04044 8.04047L2.62623 6.6262L6.66667 2.58579L8.66667 4.586L11.2929 1.95956Z" fill="#3561E7"/>
+                                                                        </svg>
+                                                                        <p class="ml-2 mr-3">Line Chart</p>
+                                                                        @if($chartType === 'line')
+                                                                            <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 16 16" fill="none">
+                                                                                <path d="M7.99967 14.6668C4.31777 14.6668 1.33301 11.682 1.33301 8.00016C1.33301 4.31826 4.31777 1.3335 7.99967 1.3335C11.6815 1.3335 14.6663 4.31826 14.6663 8.00016C14.6663 11.682 11.6815 14.6668 7.99967 14.6668ZM7.99967 13.3335C10.9452 13.3335 13.333 10.9457 13.333 8.00016C13.333 5.05464 10.9452 2.66683 7.99967 2.66683C5.05415 2.66683 2.66634 5.05464 2.66634 8.00016C2.66634 10.9457 5.05415 13.3335 7.99967 13.3335ZM7.33474 10.6668L4.50633 7.83843L5.44915 6.89556L7.33474 8.78123L11.106 5.00998L12.0488 5.95278L7.33474 10.6668Z" fill="#13B05B"/>
+                                                                            </svg>
+                                                                        @endif
+                                                                    </li>
+                                                                    <li onclick="changeChartType('{{$title}}', 'bar')" class="flex p-2 items-center hover:cursor-pointer">
+                                                                        <svg xmlns="http://www.w3.org/2000/svg" width="14" height="12" viewBox="0 0 14 12" fill="none">
+                                                                            <path d="M0.333008 6.66667H4.33301V12H0.333008V6.66667ZM4.99967 0H8.99967V12H4.99967V0ZM9.66634 3.33333H13.6663V12H9.66634V3.33333Z" fill="#3561E7"/>
+                                                                        </svg>
+                                                                        <p class="ml-2 mr-3">Bar Chart</p>
+                                                                        @if($chartType === 'bar')
+                                                                            <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 16 16" fill="none">
+                                                                                <path d="M7.99967 14.6668C4.31777 14.6668 1.33301 11.682 1.33301 8.00016C1.33301 4.31826 4.31777 1.3335 7.99967 1.3335C11.6815 1.3335 14.6663 4.31826 14.6663 8.00016C14.6663 11.682 11.6815 14.6668 7.99967 14.6668ZM7.99967 13.3335C10.9452 13.3335 13.333 10.9457 13.333 8.00016C13.333 5.05464 10.9452 2.66683 7.99967 2.66683C5.05415 2.66683 2.66634 5.05464 2.66634 8.00016C2.66634 10.9457 5.05415 13.3335 7.99967 13.3335ZM7.33474 10.6668L4.50633 7.83843L5.44915 6.89556L7.33474 8.78123L11.106 5.00998L12.0488 5.95278L7.33474 10.6668Z" fill="#13B05B"/>
+                                                                            </svg>
+                                                                        @endif
+                                                                    </li>
+                                                                </ul>
+                                                            </div>
+                                                        @endif
+
+                                                        <span wire:click="unselectRow('{{ $title }}')" class="rounded-full bg-white border-2 border-red-500 text-red-500 w-5 h-5 flex items-center ml_4 justify-center cursor-pointer">
+                                                            <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="4" stroke="currentColor" class="w-3 h-3">
+                                                                <path stroke-linecap="round" stroke-linejoin="round" d="M6 18L18 6M6 6l12 12" />
+                                                            </svg>
+                                                        </span>
+                                                    </div>
+                                                @endforeach
+                                            </div>
                                         </div>
                                     </div>
-                                    <div class="flex justify-end items-baseline">
-                                        <span class="currency-font">Currency: &nbsp;</span>
-                                        <select wire:model="currency" id="currency-select" class="inline-flex font-bold !pr-8 bg-transparent">
-                                            <option value="USD">USD</option>
-                                            <option value="CAD">CAD</option>
-                                            <option value="EUR">EUR</option>
-                                        </select>
+                               </div>
+                                @endif
+                                <div class="flex justify-between mt-7">
+                                <div class="warning-wrapper ">
+                                    <div class="warning-text">
+                                        <svg viewBox="0 0 16 16" fill="none" xmlns="http://www.w3.org/2000/svg">
+                                            <path d="M7.99967 14.6663C4.31777 14.6663 1.33301 11.6815 1.33301 7.99967C1.33301 4.31777 4.31777 1.33301 7.99967 1.33301C11.6815 1.33301 14.6663 4.31777 14.6663 7.99967C14.6663 11.6815 11.6815 14.6663 7.99967 14.6663ZM7.99967 13.333C10.9452 13.333 13.333 10.9452 13.333 7.99967C13.333 5.05415 10.9452 2.66634 7.99967 2.66634C5.05415 2.66634 2.66634 5.05415 2.66634 7.99967C2.66634 10.9452 5.05415 13.333 7.99967 13.333ZM7.33301 9.99967H8.66634V11.333H7.33301V9.99967ZM7.33301 4.66634H8.66634V8.66634H7.33301V4.66634Z" fill="#DA680B"/>
+                                        </svg>
+                                        Click on any of the row(s) to chart the data
                                     </div>
-                                 </div>
-
-
-                                    <div class="w-full">
-                                        <div class="table-wrapper w-full" style="font-size: 12px;">
-                                            <div class="table" wire:key="{{now()}}">
-                                                <div class="row-group">
-                                                    <div class="flex flex-row bg-gray-custom-light">
-                                                        <div class="w-[250px] font-bold flex py-2 items-center justify-start text-base">
-                                                            <span class="ml-6">
-                                                                {{$companyName}} ({{$ticker}})
-                                                            </span>
-                                                        </div>
-                                                        <div class="w-full flex flex-row bg-gray-custom-light justify-between">
-                                                            @foreach ($reverse ? array_reverse($tableDates) : $tableDates as $date)
-                                                                <div class="w-[150px] flex items-center justify-center text-base font-bold">
-                                                                    <span class="py-2">
-                                                                        {{ date('M Y', strtotime($date)) }}
-                                                                    </span>
-                                                                </div>
-                                                            @endforeach
-                                                        </div>
+                                </div>
+                                <div class="flex justify-end items-baseline" wire:ignore.self>
+                                    <span class="currency-font">Currency: &nbsp;</span>
+                                    <select wire:model="currency" id="currency-select" class="inline-flex font-bold !pr-8 bg-transparent">
+                                        <option value="USD">USD</option>
+                                        <option value="CAD">CAD</option>
+                                        <option value="EUR">EUR</option>
+                                    </select>
+                                </div>
+                                </div>
+                                <div class="w-full">
+                                    <div class="table-wrapper w-full" style="font-size: 12px;">
+                                        <div class="table" wire:key="{{now()}}">
+                                            <div class="row-group">
+                                                <div class="flex flex-row bg-gray-custom-light">
+                                                    <div class="w-[250px] font-bold flex py-2 items-center justify-start text-base">
+                                                        <span class="ml-6">
+                                                            {{$companyName}} ({{$ticker}})
+                                                        </span>
                                                     </div>
-                                                    <div class="divide-y text-base">
-                                                        @if(!$tableLoading)
-                                                            @foreach($rows as $key=> $row)
-                                                                <livewire:company-report-table-row :data="$row" wire:key="{{Str::random()}}" :selectedRows="$selectedRows" :reverse="$reverse" :itemKey="$row['title']"/>
-                                                            @endforeach
-                                                        @endif
+                                                    <div class="w-full flex flex-row bg-gray-custom-light justify-between">
+                                                        @foreach ($reverse ? array_reverse($tableDates) : $tableDates as $date)
+                                                            <div class="w-[150px] flex items-center justify-center text-base font-bold">
+                                                                <span class="py-2">
+                                                                    {{ date('M Y', strtotime($date)) }}
+                                                                </span>
+                                                            </div>
+                                                        @endforeach
                                                     </div>
+                                                </div>
+                                                <div class="divide-y text-base">
+                                                    @if(!$tableLoading)
+                                                        @foreach($rows as $key=> $row)
+                                                            <livewire:company-report-table-row :data="$row" wire:key="{{Str::random()}}" :selectedRows="$selectedRows" :reverse="$reverse" :itemKey="$row['title']"/>
+                                                        @endforeach
+                                                    @endif
                                                 </div>
                                             </div>
                                         </div>
                                     </div>
+                                </div>
                             </div>
                         </div>
                     </div>

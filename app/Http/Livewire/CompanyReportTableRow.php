@@ -64,7 +64,7 @@ class CompanyReportTableRow extends Component
 
     public function select()
     {
-        if ($this->selected) {
+        if ($this->getIsCheckedProperty()) {
             $this->emit('unselectRow', $this->data['title']);
             $this->selected = false;
             return;

@@ -1,8 +1,12 @@
-<div class="flex flex-col">
+<div class="flex flex-col flex-col-border-less">
     <div class="flex w-full flex-row hover:bg-gray-light {{$this->isChecked ? 'bg-[#52D3A2]/20' : ($data['segmentation'] ? 'bg-[#52C6FF]/10' : 'bg-white')}}">
         @if($this->isChecked)
             <div class="flex justify-center items-center ml-2" wire:ignore>
-                <input type="checkbox" wire:click.stop="select" checked name="selected-chart-{{$data['id']}}">
+                <input type="checkbox" wire:click.stop="select"
+                @if($this->isChecked)
+                checked
+                @endif
+                name="selected-chart-{{$data['id']}}">
             </div>
         @endif
         <div
