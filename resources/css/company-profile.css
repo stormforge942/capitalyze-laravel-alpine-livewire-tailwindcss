@@ -2,16 +2,6 @@
     min-height: 100vh;
     min-height: calc(100vh - 20vw);
 }
-.no-company-profile-found {
-    width: 100%;
-    height: 25vw;
-    min-height: 50vh;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    font-weight: bold;
-    font-size: 24px;
-}
 
 .page-titles .text-color-green {
     color: #13B05B;
@@ -71,11 +61,6 @@
     padding: 1rem;
     background: white;
     border-radius: 0.666em;
-}
-
-.radio-filter {
-    color: #121A0F;
-    @apply focus:ring-[#121A0F];
 }
 
 .white-card .title {

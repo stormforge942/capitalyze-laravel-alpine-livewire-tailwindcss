@@ -1,4 +1,4 @@
-<div class="date-range-select-wrapper flex ml-6 relative"  wire:click="toggle">
+<div class="date-range-select-wrapper flex relative"  wire:click="toggle">
     <div class="from-wrapper py-2 px-3 flex flex-col">
         <label class="calendar-label" for="fromCalendar">From</label>
         <div class="value">{{\Carbon\Carbon::parse($start_at)->format('M d, Y')}}</div>
@@ -22,7 +22,6 @@
 
 @pushonce('scripts')
     <script>
-
         const today = new Date()
         const tomorrow = new Date(today);
         tomorrow.setDate(today.getDate() + 1);

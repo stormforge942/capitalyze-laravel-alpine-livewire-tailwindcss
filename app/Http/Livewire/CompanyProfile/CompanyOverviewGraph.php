@@ -28,7 +28,7 @@ class CompanyOverviewGraph extends Component
     ];
 
     public $name = '';
-    public $persentage = null;
+    public $percentage = null;
 
     public function dateRangeSelected($start_at, $end_at)
     {
@@ -100,7 +100,7 @@ class CompanyOverviewGraph extends Component
         if (count($result) > 1) {
             $first = $result->first()->adj_close;
             $last = $result->last()->adj_close;
-            $this->persentage
+            $this->percentage
                 = round((($last - $first) / $last) * 100, 2);
         }
 

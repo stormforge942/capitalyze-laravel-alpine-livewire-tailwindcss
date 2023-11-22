@@ -11,7 +11,7 @@ class CompanyAnalysisGraph extends Component
     public $years;
     public $minDate;
     public $maxDate;
-    public $persentage;
+    public $percentage;
     public $ticker;
     public $chartData;
     public $name;

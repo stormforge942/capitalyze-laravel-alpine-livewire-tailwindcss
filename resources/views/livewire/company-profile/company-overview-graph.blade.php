@@ -1,200 +1,81 @@
-<div class="main-graph-wrapper w-full" x-data="{ showgraph: true }">
-    <div x-show="showgraph"
-        :class="{ 'custom-dropdown-absolute-wrapper': !showgraph, 'custom-dropdown-absolute-wrapper abs-custom': showgraph }">
-        <div class="relative custom-dropdown-absolute-wrapper-inner flex justify-end" x-data="{
-            chartMenuOpen: false
-        }">
-            <div>
-                <button type="button" @click="chartMenuOpen = !chartMenuOpen" class="custom-drop-down-button hide-mobile"
-                    id="menu-button" aria-expanded="true" aria-haspopup="true">
+<div class="bg-white px-8 py-10 rounded-lg relative" x-data="{ hide: false }">
+    <div class="absolute top-5 right-5">
+        <x-dropdown placement="bottom-start" :shadow="true">
+            <x-slot name="trigger">
+                <svg :class="open ? `rotate-90` : ''" width="24" height="24" viewBox="0 0 24 24" fill="none"
+                    xmlns="http://www.w3.org/2000/svg">
+                    <path
+                        d="M9 21.998L15 21.998C20 21.998 22 19.998 22 14.998L22 8.99805C22 3.99805 20 1.99805 15 1.99805L9 1.99805C4 1.99805 2 3.99805 2 8.99805L2 14.998C2 19.998 4 21.998 9 21.998Z"
+                        stroke="#121A0F" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" />
+                    <circle cx="12" cy="8" r="1" fill="#121A0F" />
+                    <circle cx="12" cy="12" r="1" fill="#121A0F" />
+                    <circle cx="12" cy="16" r="1" fill="#121A0F" />
+                </svg>
+            </x-slot>
 
-                    <svg x-show="!chartMenuOpen" xmlns="http://www.w3.org/2000/svg" fill="#121A0F" viewBox="0 0 24 24"
-                        stroke-width="2" stroke="currentColor" class="w-6 h-6">
-                        <path stroke-linecap="round" stroke-linejoin="round"
-                            d="M12 6.75a.75.75 0 110-1.5.75.75 0 010 1.5zM12 12.75a.75.75 0 110-1.5.75.75 0 010 1.5zM12 18.75a.75.75 0 110-1.5.75.75 0 010 1.5z" />
-                    </svg>
+            <div class="py-4 text-sm+ w-52">
+                <div class="[&>*]:px-4 [&>*]:w-full [&>*]:p-2 [&>*]:text-left">
+                    <button class="hover:bg-gray-100" @click="hide = !hide; dropdown.hide();"
+                        x-text="hide ? 'Show Chart' : 'Hide Chart'"></button>
+                    <button class="hover:bg-gray-100">View in Full Screen</button>
+                    <button class="hover:bg-gray-100">Print Chart</button>
+                </div>
+                <hr class="my-4">
+                <div class="[&>*]:px-4 [&>*]:w-full [&>*]:p-2">
+                    <button class="hover:bg-gray-100 flex items-center gap-x-2">
+                        <svg width="16" height="16" viewBox="0 0 16 16" fill="none"
+                            xmlns="http://www.w3.org/2000/svg">
+                            <path
+                                d="M8.66927 6.66667H12.0026L8.0026 10.6667L4.0026 6.66667H7.33594V2H8.66927V6.66667ZM2.66927 12.6667H13.3359V8H14.6693V13.3333C14.6693 13.7015 14.3708 14 14.0026 14H2.0026C1.63442 14 1.33594 13.7015 1.33594 13.3333V8H2.66927V12.6667Z"
+                                fill="#121A0F" />
+                        </svg>
 
-                    <svg x-show="chartMenuOpen" xmlns="http://www.w3.org/2000/svg" fill="#121A0F" viewBox="0 0 24 24"
-                        stroke-width="2" stroke="currentColor" class="w-6 h-6">
-                        <path stroke-linecap="round" stroke-linejoin="round"
-                            d="M6.75 12a.75.75 0 11-1.5 0 .75.75 0 011.5 0zM12.75 12a.75.75 0 11-1.5 0 .75.75 0 011.5 0zM18.75 12a.75.75 0 11-1.5 0 .75.75 0 011.5 0z" />
-                    </svg>
+                        <span>Download as PDF</span>
+                    </button>
+                    <button class="hover:bg-gray-100 flex items-center gap-x-2">
+                        <svg width="16" height="16" viewBox="0 0 16 16" fill="none"
+                            xmlns="http://www.w3.org/2000/svg">
+                            <path
+                                d="M8.66927 6.66667H12.0026L8.0026 10.6667L4.0026 6.66667H7.33594V2H8.66927V6.66667ZM2.66927 12.6667H13.3359V8H14.6693V13.3333C14.6693 13.7015 14.3708 14 14.0026 14H2.0026C1.63442 14 1.33594 13.7015 1.33594 13.3333V8H2.66927V12.6667Z"
+                                fill="#121A0F" />
+                        </svg>
 
-                </button>
-            </div>
-            
-            <div @click.away="chartMenuOpen = false" x-show="chartMenuOpen"
-                class="absolute custom-drop-down right-0 z-10    bg-white  focus:outline-none" role="menu"
-                aria-orientation="vertical" aria-labelledby="menu-button" tabindex="-1">
-                <div class="py-1" role="none">
-                    <!-- Active: "bg-gray-100 text-gray-900", Not Active: "text-gray-700" -->
-                    <div class="links-wrapper mb-3">
-                        <a href="#" x-show="showgraph"
-                            @click="showgraph = !showgraph; chartMenuOpen =! chartMenuOpen;" class="menu_link"
-                            role="menuitem" tabindex="-1" id="menu-item-0">Hide Chart</a>
-                        <a href="#" x-show="!showgraph" @click="showgraph = !showgraph" class="menu_link"
-                            role="menuitem" tabindex="-1" id="menu-item-0">Show Chart</a>
-                        <a href="#" class="menu_link" role="menuitem" tabindex="-1" id="menu-item-1">View In Full
-                            Screen</a>
-                        <a href="#" class="menu_link" role="menuitem" tabindex="-1" id="menu-item-2">Print
-                            Chart</a>
-                    </div>
-                    <hr class="mb-3">
-                    <div class="links-wrapper">
-                        <a href="#" class="menu_link" role="menuitem" tabindex="-1" id="menu-item-3"> <svg
-                                xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5"
-                                stroke="currentColor" class="w-6 h-6">
-                                <path stroke-linecap="round" stroke-linejoin="round"
-                                    d="M3 16.5v2.25A2.25 2.25 0 005.25 21h13.5A2.25 2.25 0 0021 18.75V16.5M16.5 12L12 16.5m0 0L7.5 12m4.5 4.5V3" />
-                            </svg>
-                            Download As PNG</a>
-                        <a href="#" class="menu_link" role="menuitem" tabindex="-1" id="menu-item-4"> <svg
-                                xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5"
-                                stroke="currentColor" class="w-6 h-6">
-                                <path stroke-linecap="round" stroke-linejoin="round"
-                                    d="M3 16.5v2.25A2.25 2.25 0 005.25 21h13.5A2.25 2.25 0 0021 18.75V16.5M16.5 12L12 16.5m0 0L7.5 12m4.5 4.5V3" />
-                            </svg>
-                            Download As PNG</a>
-                        <a href="#" class="menu_link" role="menuitem" tabindex="-1" id="menu-item-5"> <svg
-                                xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5"
-                                stroke="currentColor" class="w-6 h-6">
-                                <path stroke-linecap="round" stroke-linejoin="round"
-                                    d="M3 16.5v2.25A2.25 2.25 0 005.25 21h13.5A2.25 2.25 0 0021 18.75V16.5M16.5 12L12 16.5m0 0L7.5 12m4.5 4.5V3" />
-                            </svg>
-                            Download As PNG</a>
-                    </div>
+                        <span>Download as JPEG</span>
+                    </button>
+                    <button class="hover:bg-gray-100 flex items-center gap-x-2">
+                        <svg width="16" height="16" viewBox="0 0 16 16" fill="none"
+                            xmlns="http://www.w3.org/2000/svg">
+                            <path
+                                d="M8.66927 6.66667H12.0026L8.0026 10.6667L4.0026 6.66667H7.33594V2H8.66927V6.66667ZM2.66927 12.6667H13.3359V8H14.6693V13.3333C14.6693 13.7015 14.3708 14 14.0026 14H2.0026C1.63442 14 1.33594 13.7015 1.33594 13.3333V8H2.66927V12.6667Z"
+                                fill="#121A0F" />
+                        </svg>
+
+                        <span>Download as PNG</span>
+                    </button>
                 </div>
             </div>
+        </x-dropdown>
+    </div>
+
+    <div class="flex items-center gap-x-5">
+        <div>
+            <b class="font-extrabold">{{ $name }} ({{ $ticker }})</b><br>
+            <small class="text-sm {{ $percentage >= 0 ? 'text-blue-600' : 'text-red-600' }}">
+                {{ $percentage }}% price return over {{ $chartPeriods[$currentChartPeriod] }}
+            </small>
+        </div>
+
+        <div class="flex-1 flex justify-center">
+            @include('livewire.company-profile.overview-graph-filters')
         </div>
     </div>
 
-    <div class="relative w-full" x-show="showgraph">
-        <div class="graph-wrapper">
-            <div class="graph-header relative">
-                <div class="pr-3 pl-5 text-base" x-data="{ percentage: '{{ $persentage }}' }">
-                    <b class="font-extrabold" wire:click="load()">{{ $name }} ({{ $ticker }})</b><br>
-                    <small class="text-sm" :class="percentage >= 0 ? 'text-blue-600' : 'text-red-600'">{{ $persentage }}% price return
-                        over
-                        {{ $chartPeriods[$currentChartPeriod] }}</small>
-                </div>
-                <div>
-                    <div class="relative custom-dropdown-absolute-wrapper-inner mobile-show flex justify-end"
-                        x-data="{
-                            openMobileGraph: false
-                        }">
-                        <div>
-                            <button type="button" @click="openMobileGraph = !openMobileGraph"
-                                class="custom-drop-down-button-lg" id="menu-button" aria-expanded="true"
-                                aria-haspopup="true">
-                                Select
-                                <svg x-show="!openMobileGraph" xmlns="http://www.w3.org/2000/svg" fill="#121A0F"
-                                    viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="w-3 h-6">
-                                    <path stroke-linecap="round" stroke-linejoin="round"
-                                        d="M19.5 8.25l-7.5 7.5-7.5-7.5" />
-                                </svg>
+    <div class="place-items-center h-96" wire:loading.grid>
+        <span class="mx-auto simple-loader !text-green-dark"></span>
+    </div>
 
-
-
-                                <svg x-show="openMobileGraph" xmlns="http://www.w3.org/2000/svg" fill="#121A0F"
-                                    viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="w-3 h-6">
-                                    <path stroke-linecap="round" stroke-linejoin="round"
-                                        d="M4.5 15.75l7.5-7.5 7.5 7.5" />
-                                </svg>
-
-
-                            </button>
-                        </div>
-
-
-                        <div @click.away="openMobileGraph = false" x-show="openMobileGraph"
-                            class="absolute custom-drop-down right-0 z-10    bg-white  focus:outline-none"
-                            role="menu" aria-orientation="vertical" aria-labelledby="menu-button" tabindex="-1">
-                            <div class="py-1" role="none">
-                                <!-- Active: "bg-gray-100 text-gray-900", Not Active: "text-gray-700" -->
-                                <div class="links-wrapper mb-3">
-
-                                    <a href="#" class="menu_link" role="menuitem" tabindex="-1"
-                                        id="menu-item-1">View In Full Screen</a>
-                                    <a href="#" class="menu_link" role="menuitem" tabindex="-1"
-                                        id="menu-item-2">Print Chart</a>
-                                </div>
-                                <hr class="mb-3">
-                                <div class="links-wrapper">
-                                    <a href="#" class="menu_link" role="menuitem" tabindex="-1"
-                                        id="menu-item-3"> <svg xmlns="http://www.w3.org/2000/svg" fill="none"
-                                            viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor"
-                                            class="w-6 h-6">
-                                            <path stroke-linecap="round" stroke-linejoin="round"
-                                                d="M3 16.5v2.25A2.25 2.25 0 005.25 21h13.5A2.25 2.25 0 0021 18.75V16.5M16.5 12L12 16.5m0 0L7.5 12m4.5 4.5V3" />
-                                        </svg>
-                                        Download As PNG</a>
-                                    <a href="#" class="menu_link" role="menuitem" tabindex="-1"
-                                        id="menu-item-4"> <svg xmlns="http://www.w3.org/2000/svg" fill="none"
-                                            viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor"
-                                            class="w-6 h-6">
-                                            <path stroke-linecap="round" stroke-linejoin="round"
-                                                d="M3 16.5v2.25A2.25 2.25 0 005.25 21h13.5A2.25 2.25 0 0021 18.75V16.5M16.5 12L12 16.5m0 0L7.5 12m4.5 4.5V3" />
-                                        </svg>
-                                        Download As PNG</a>
-                                    <a href="#" class="menu_link" role="menuitem" tabindex="-1"
-                                        id="menu-item-5"> <svg xmlns="http://www.w3.org/2000/svg" fill="none"
-                                            viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor"
-                                            class="w-6 h-6">
-                                            <path stroke-linecap="round" stroke-linejoin="round"
-                                                d="M3 16.5v2.25A2.25 2.25 0 005.25 21h13.5A2.25 2.25 0 0021 18.75V16.5M16.5 12L12 16.5m0 0L7.5 12m4.5 4.5V3" />
-                                        </svg>
-                                        Download As PNG</a>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-
-                <div class="hidden select-graph-date-wrapper desktop-show ml-12 lg:flex overflow-hidden">
-                    <ul class="items-center w-full flex">
-                        <li class="w-full mr-6">
-                            <input wire:model="currentChartPeriod" value="3m" id="date-3m" type="radio"
-                                name="date-range" name="radio-group" checked>
-                            <label for="date-3m">3m</label>
-                        </li>
-                        <li class="w-full mr-6">
-                            <input wire:model="currentChartPeriod" value="6m" id="date-6m" type="radio"
-                                name="date-range" name="radio-group" checked>
-                            <label for="date-6m">6m</label>
-                        </li>
-                        <li class="w-full mr-6">
-                            <input wire:model="currentChartPeriod" value="YTD" id="date-1yr" type="radio"
-                                name="date-range">
-                            <label for="date-1yr">YTD</label>
-                        </li>
-                        <li class="w-full mr-6">
-                            <input wire:model="currentChartPeriod" value="1yr" id="date-1yr2" type="radio"
-                                name="date-range">
-                            <label for="date-1yr2">1yr</label>
-                        </li>
-                        <li class="w-full mr-6">
-                            <input wire:model="currentChartPeriod" value="5yr" id="date-5yr" type="radio"
-                                name="date-range">
-                            <label for="date-5yr">5yr</label>
-                        </li>
-                        <li class="w-full mr-6">
-                            <input wire:model="currentChartPeriod" value="max" id="date-5yr2" type="radio"
-                                name="date-range">
-                            <label for="date-5yr2">MAX</label>
-                        </li>
-                    </ul>
-                    <livewire:range-calendar />
-                </div>
-            </div>
-
-            <div class="place-items-center h-96" wire:loading.grid>
-                <span class="mx-auto simple-loader !text-green-dark"></span>
-            </div>
-
-            <div class="mt-3 mr-5" wire:loading.remove x-show="showgraph" x-transition>
-                <canvas id="product-profile-chart" class="w-full company-profile-overview-chart"></canvas>
-            </div>
-        </div>
+    <div class="mt-3 mr-5" wire:loading.remove x-show="!hide" x-transition>
+        <canvas id="product-profile-chart" class="w-full company-profile-overview-chart"></canvas>
     </div>
 </div>
 @pushonce('scripts')

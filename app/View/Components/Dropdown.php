@@ -11,7 +11,7 @@ class Dropdown extends Component
      *
      * @return void
      */
-    public function __construct(public string $placement = 'bottom')
+    public function __construct(public string $placement = 'bottom', public bool $shadow = false)
     {
     }
 
