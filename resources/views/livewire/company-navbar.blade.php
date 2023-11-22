@@ -140,6 +140,12 @@
                                             Track Investors
                                         </a>
                                     </li>
+                                    <li>
+                                        <a class="flex items-center w-full p-2 text-gray-900 transition duration-75 rounded-lg group hover:bg-gray-100 dark:text-white dark:hover:bg-gray-700 @if($currentRoute === 'track-investor') font-bold @endif"
+                                            href="{{ route('company.filings-summary', ['ticker' => $this->company->ticker]) }}">
+                                            Filings Summary
+                                        </a>
+                                    </li>
                                     @foreach ($child as $childItem)
                                         <li>
                                             <a class="flex items-center w-full p-2 text-gray-900 transition duration-75 rounded-lg group hover:bg-gray-100 dark:text-white dark:hover:bg-gray-700 @if ($childItem['active']) font-bold @endif"
