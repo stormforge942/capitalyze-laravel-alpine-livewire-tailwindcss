@@ -1,4 +1,4 @@
-<div>
+<div x-data="{ showgraph: true }">
     <div class="cards-wrapper">
         <div class="white-card market-card-holder">
             <div class="title">Market Data</div>
@@ -120,6 +120,16 @@
     </div>
 
     {{-- if ssr is disabled, please move this component javascript code to resources/views/livewire/company-profile/page.blade.php  --}}
+    <div class="flex justify-end mt-5" x-show="!showgraph" @click="showgraph = true">
+        <button class="show-hide-chart-btn">
+            Show Chart
+            <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 16 16" fill="none">
+                <path
+                    d="M10.3083 6.19514L7.72167 8.78378L5.135 6.19514C5.01045 6.07021 4.84135 6 4.665 6C4.48865 6 4.31955 6.07021 4.195 6.19514C3.935 6.45534 3.935 6.87566 4.195 7.13585L7.255 10.1982C7.515 10.4584 7.935 10.4584 8.195 10.1982L11.255 7.13585C11.515 6.87566 11.515 6.45534 11.255 6.19514C10.995 5.94161 10.5683 5.93494 10.3083 6.19514Z"
+                    fill="#121A0F" />
+            </svg>
+        </button>
+    </div>
     <livewire:company-profile.company-overview-graph :ticker="$profile['symbol']" />
 
     <div class="w-full mt-4 white-card b-info-card">
@@ -687,10 +697,11 @@
                                 0.0%
                             @else
                                 @php
-                                    $currentDilutedSharesOut = str_replace(',', '', explode('|', $dilutedSharesOut[$date][0])[0]);
-                                    $previousDilutedSharesOut = str_replace(',', '', explode('|', $dilutedSharesOut[array_keys($products)[$key - 1]][0])[0]);
+                                    $currentDilutedSharesOut = floatval(str_replace(',', '', explode('|', $dilutedSharesOut[$date][0])[0]));
+                                    $previousDilutedSharesOut = floatval(str_replace(',', '', explode('|', $dilutedSharesOut[array_keys($products)[$key - 1]][0])[0]));
+                                    $percentageChange = ($previousDilutedSharesOut != 0) ? round((($currentDilutedSharesOut - $previousDilutedSharesOut) / $previousDilutedSharesOut) * 100, 2) : 0;
                                 @endphp
-                                {{ round((($currentDilutedSharesOut - $previousDilutedSharesOut) / $previousDilutedSharesOut) * 100, 2) }}%
+                                {{ $percentageChange }}%
                             @endif
                         </div>
                     @endforeach
@@ -699,7 +710,7 @@
             <div class="row row-spacer"></div>
         </div>
     </div>
-    
+
     <div class="table-bottom-sec">
         <div class="table-wrapper ">
             <div class="table">

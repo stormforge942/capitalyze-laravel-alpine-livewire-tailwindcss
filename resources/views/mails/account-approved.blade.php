@@ -1,5 +1,4 @@
 @php
-
 $title = "Welcome to the Capitalyze Beta";
 @endphp
 

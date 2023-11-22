@@ -4,12 +4,13 @@ namespace App\Http\Livewire\Ownership;
 
 use App\Powergrid\BaseTable;
 use App\Models\CompanyFilings;
+use App\Services\OwnershipHistoryService;
 use Illuminate\Database\Eloquent\Builder;
 use PowerComponents\LivewirePowerGrid\Column;
 use PowerComponents\LivewirePowerGrid\PowerGrid;
 use PowerComponents\LivewirePowerGrid\PowerGridEloquent;
 
-class CompanyFundHoldingsTable extends BaseTable
+class FundHoldingsTable extends BaseTable
 {
     public $quarter = null;
     public string $cik = '';
@@ -44,7 +45,7 @@ class CompanyFundHoldingsTable extends BaseTable
         return PowerGrid::eloquent()
             ->addColumn('name_of_issuer')
             ->addColumn('investor_name_formated', function (CompanyFilings $companyFilings) {
-                return '<a href=" ' . route('company.ownership', $companyFilings->symbol) . ' " class="text-blue">' . $companyFilings->symbol . (!empty($companyFilings->name_of_issuer) ? ' <span class="text-xs font-light">(' . $companyFilings->name_of_issuer . ')<span>' : '') . '</button>';
+                return '<a href=" ' . route('company.ownership', [OwnershipHistoryService::getCompany(), $companyFilings->symbol]) . ' " class="text-blue">' . $companyFilings->symbol . (!empty($companyFilings->name_of_issuer) ? ' <span class="text-xs font-light">(' . $companyFilings->name_of_issuer . ')<span>' : '') . '</button>';
             })
             ->addColumn('ssh_prnamt', function (CompanyFilings $companyFilings) {
                 return number_format($companyFilings->ssh_prnamt);
@@ -82,28 +83,36 @@ class CompanyFundHoldingsTable extends BaseTable
                 ->sortable(),
 
             Column::make('Shares Held or Principal Amt', 'ssh_prnamt')
-                ->sortable(),
+                ->sortable()
+                ->headerAttribute('[&>div]:justify-end')->bodyAttribute('text-right'),
 
             Column::make('Market Value', 'value')
-                ->sortable(),
+                ->sortable()
+                ->headerAttribute('[&>div]:justify-end')->bodyAttribute('text-right'),
 
             Column::make('% of Portfolio', 'weight')
-                ->sortable(),
+                ->sortable()
+                ->headerAttribute('[&>div]:justify-end')->bodyAttribute('text-right'),
 
             Column::make('Prior % of Portfolio', 'last_weight')
-                ->sortable(),
+                ->sortable()
+                ->headerAttribute('[&>div]:justify-end')->bodyAttribute('text-right'),
 
             Column::make('Change in Shares', 'change_in_shares')
-                ->sortable(),
+                ->sortable()
+                ->headerAttribute('[&>div]:justify-end')->bodyAttribute('text-right'),
 
             Column::make('% Ownership', 'ownership')
-                ->sortable(),
+                ->sortable()
+                ->headerAttribute('[&>div]:justify-end')->bodyAttribute('text-right'),
 
             Column::make('Date reported', 'signature_date')
-                ->sortable(),
+                ->sortable()
+                ->headerAttribute('[&>div]:justify-end')->bodyAttribute('text-right'),
 
             Column::make('Source Date', 'report_calendar_or_quarter')
-                ->sortable(),
+                ->sortable()
+                ->headerAttribute('[&>div]:justify-end')->bodyAttribute('text-right'),
         ];
     }
 }

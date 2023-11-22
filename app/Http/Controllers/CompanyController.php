@@ -2,8 +2,10 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\Fund;
 use App\Models\Company;
 use Illuminate\Http\Request;
+use App\Services\OwnershipHistoryService;
 use Illuminate\Routing\Controller as BaseController;
 
 class CompanyController extends BaseController
@@ -116,7 +118,8 @@ class CompanyController extends BaseController
         ]);
     }
 
-    public function trackInvestor(Request $request, $ticker){
+    public function trackInvestor(Request $request, $ticker)
+    {
         $company = Company::where('ticker', $ticker)->get()->first();
 
         return view('layouts.company', [
@@ -211,29 +214,60 @@ class CompanyController extends BaseController
 
     public function ownership(Request $request, string $ticker)
     {
+        $historyCompany = OwnershipHistoryService::getCompany();
+
+        if ($historyCompany !== $ticker) {
+            OwnershipHistoryService::clear();
+        }
+
+        OwnershipHistoryService::setCompany($ticker);
+
+        $of = $of ?? $ticker;
+
         $company = Company::query()
             ->where('ticker', $ticker)
             ->firstOrFail();
 
+        $currentCompany = $ticker === $of ? $company :
+            Company::query()
+            ->where('ticker', $of)
+            ->firstOrFail();
+
         return view('layouts.company', [
             'company' => $company,
+            'currentCompany' => $currentCompany,
             'ticker' => $ticker,
             'period' => $request->query('period', 'annual'),
             'tab' => 'ownership'
         ]);
     }
 
-    public function fund(Request $request, string $ticker)
+    public function fund(string $fund, ?string $company = null)
     {
-        $company = Company::query()
-            ->where('ticker', $ticker)
-            ->firstOrFail();
+        $fund = Fund::where('cik', $fund)->firstOrFail();
+
+        $currentCompany = $company
+            ? Company::query()
+            ->where('ticker', $company)
+            ->first()
+            : null;
+
+        $intialCompany = Company::query()
+            ->where('ticker', OwnershipHistoryService::getCompany())
+            ->first();
+
+        abort_if(!$intialCompany && !$currentCompany, 404);
+
+        if (!$intialCompany && $currentCompany) {
+            OwnershipHistoryService::setCompany($currentCompany->ticker);
+            $intialCompany = $currentCompany->clone();
+        }
 
         return view('layouts.company', [
-            'company' => $company,
-            'ticker' => $ticker,
-            'period' => $request->query('period', 'annual'),
-            'tab' => 'company-fund',
+            'company' => $intialCompany,
+            'currentCompany' => $currentCompany,
+            'tab' => 'fund',
+            'fund' => $fund,
         ]);
     }
 

@@ -19,6 +19,9 @@
 @tailwind components;
 @tailwind utilities;
 
+.no-dash-break {
+    word-break: keep-all;
+  }
 /* active inner tab */
 
 .innertab-active ::after {
@@ -62,14 +65,13 @@
 /* ownership breadcrumb border */
 .ownership-active-bread-link {
     position: relative;
-    padding-bottom: 8px;
     text-align: center;
 }
 
 .ownership-active-bread-link::after {
     content: "";
     position: absolute;
-    bottom: 0;
+    bottom: -8px;
     left: 50%;
     transform: translateX(-50%);
     width: 24px;

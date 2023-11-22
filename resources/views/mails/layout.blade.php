@@ -8,6 +8,8 @@
     <meta name="x-apple-disable-message-reformatting" />
     <meta http-equiv="X-UA-Compatible" content="IE=edge" />
     <meta content="telephone=no" name="format-detection" />
+    <meta name="supported-color-schemes" content="light">
+    <meta name="color-schemes" content="light">
     <title>Capitalyze</title>
     <!--[if (mso 16)]>
         <style type="text/css">
@@ -42,7 +44,7 @@
                 padding-right: 48px !important;
             }
         }
-    </style>
+  </style>
 
     <link href="https://fonts.googleapis.com/css?family=Inter:400,500,600,700" rel="stylesheet" />
     <!--<![endif]-->
