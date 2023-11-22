@@ -450,6 +450,7 @@ class CompanyReport extends Component
     {
         $this->tableLoading = true;
         $rows = [];
+        $allRows = [];
 
         if ($this->view !== 'Standardised Template') {
             if (
@@ -491,12 +492,14 @@ class CompanyReport extends Component
         }
 
         foreach ($data as $key => $value) {
-            $rows[] = $this->generateRow($value, $key);
+            $rowArray = $this->generateRow($value, $key);
+            $rows[] = $rowArray[0];
+            $allRows[] =$rowArray[1];
 
         }
 
         $this->rows = $rows;
-        // $a = $this->allRows;
+        $this->allRows = $allRows;
         $this->tableLoading = false;
     }
 
@@ -558,7 +561,8 @@ class CompanyReport extends Component
         $row['segmentation'] = $isSegmentation && count($row['children']) === 0;
         $row['id'] = serialize($row);
         $this->allRows[] = $allrow;
-        return $row;
+
+        return [$row, $allrow];
     }
 
     public function generatePresent($value)
