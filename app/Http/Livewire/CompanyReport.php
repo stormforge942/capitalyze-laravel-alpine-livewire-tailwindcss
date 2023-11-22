@@ -317,7 +317,7 @@ class CompanyReport extends Component
     {
         foreach ($array as $key => $value) {
             if (is_array($value)) {
-                if (strtotime($key) !== false) {
+                if (strtotime($key) !== false && strlen($key) > 5) {
                     if(!in_array(date('Y-m-d', strtotime($key)), $this->tableDates)) {
                         $this->tableDates[] = date('Y-m-d', strtotime($key));
                     }
