@@ -804,9 +804,13 @@
         });
 
 
-        Livewire.hook('element.updated', () => {
-            initChart()
-        })
+        // Livewire.hook('element.updated', () => {
+        //     if(!chart) {
+        //         initChart()
+        //     } else {
+        //         updateChart()
+        //     }
+        // })
 
         function updateRangeSlider() {
 
@@ -865,13 +869,12 @@
                 onThumbDragEnd: (data) => {
 
                     recognizeDotsStatus(valueAfter, [rangeMin, rangeMax]);
-
-                    console.log(valueAfter)
+                    console.log(valueAfter);
                     @this.changeDates(valueAfter)
 
-                    if (chart) {
-                        chart.destroy();
-                    }
+                    // if (chart) {
+                    //     chart.destroy();
+                    // }
                 },
                 onInput: (value, userInteraction) => {
                     if (value.length === 2 && value !== selectedValue) {
@@ -882,10 +885,6 @@
             });
 
             recognizeDotsStatus(selectedValue, [rangeMin, rangeMax]);
-
-
-
-
         }
     });
 
@@ -897,6 +896,10 @@
 
     Livewire.on('initCompanyReportChart', () => {
         initChart();
+    });
+
+    Livewire.on('updateCompanyReportChart', () => {
+        updateChart();
     });
 
     Livewire.on('hideCompanyReportChart', () => {
@@ -1103,9 +1106,19 @@
    async function changeChartType(title, type) {
         await @this.changeChartType(title, type)
 
-        initChart()
+        updateChart()
     }
 
+    function updateChart() {
+       if (chart) {
+           chart.data.datasets = @this.chartData;
+           chart.update();
+       } else {
+           initChart();
+       }
+    }
+
+    // chart init
     function initChart() {
         if (chart) chart.destroy();
         let data = @this.chartData;

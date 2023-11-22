@@ -86,7 +86,25 @@ class CompanyReport extends Component
         }
 
         $this->generateChartData();
-        $this->emit('initCompanyReportChart');
+//        $this->emit('initCompanyReportChart');
+    }
+
+    public function updateSelectRows()
+    {
+
+        $index = 0;
+        foreach ($this->selectedRows as $title => $row) {
+            foreach ($this->rows as $key => $value) {
+                if (isset($value['title']) && $value['title'] === $title) {
+                    $index = $key;
+                    break; // Stop the loop once the target title is found
+                }
+            }
+
+            $rowFind = $this->rows[$index];
+            $this->selectedRows[$title]['dates'] =  $rowFind['values'];
+        }
+
     }
 
     public function regenerateTableChart(): void
@@ -166,8 +184,10 @@ class CompanyReport extends Component
 
         $this->chartData = $chartData;
 
-        $this->emit('initCompanyReportChart');
         if ($initChart) {
+            $this->emit('initCompanyReportChart');
+        } else {
+            $this->emit('updateCompanyReportChart');
         }
     }
 
@@ -301,8 +321,9 @@ class CompanyReport extends Component
         $this->generateRows($this->data);
 
         if (count($this->selectedRows)) {
+            $this->updateSelectRows();
             $this->generateChartData();
-            $this->emit('initCompanyReportChart');
+            $this->emit('updateCompanyReportChart');
         }
         $this->tableLoading = false;
     }
@@ -311,6 +332,7 @@ class CompanyReport extends Component
     {
         $this->generateTableDates();
         $this->generateRows($this->data);
+        $this->emit('initCompanyReportChart');
     }
 
     function traverseArray($array)
