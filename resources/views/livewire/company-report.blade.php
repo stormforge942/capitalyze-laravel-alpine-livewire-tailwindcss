@@ -492,8 +492,16 @@
 
                                 <div class="years-range-wrapper my-2">
                                     <div class="dots-wrapper">
+                                        @php
+                                            $existingYears = [];
+                                        @endphp
                                         @foreach($rangeDates as $key => $date)
+                                            @if(!in_array(date('Y', strtotime($date)), $existingYears))
                                             <span id="{{date('Y', strtotime($date))}}" class="inactive-dots"></span>
+                                            @endif
+                                            @php
+                                                $existingYears[] = date('Y', strtotime($date))
+                                            @endphp
                                         @endforeach
                                     </div>
                                     <div id="range-slider-company-report" class="range-slider"></div>
@@ -708,7 +716,7 @@
                                                 </div>
                                                 <div class="divide-y text-base">
                                                     @if(!$tableLoading)
-                                                        @foreach($allRows as $key=> $row)
+                                                        @foreach($rows as $key=> $row)
                                                             <livewire:company-report-table-row :data="$row" wire:key="{{Str::random()}}" :selectedRows="$selectedRows" :reverse="$reverse" :itemKey="$row['title']" :startDate="$startDate" :endDate="$endDate"/>
                                                         @endforeach
                                                     @endif
