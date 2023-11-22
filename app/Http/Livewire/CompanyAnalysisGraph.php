@@ -120,19 +120,42 @@ class CompanyAnalysisGraph extends Component
                 "fill" => true,
                 "type" => 'line',
             ];
-            foreach($annualRevenueData as $date => $item){
+
+            foreach ($annualRevenueData as $date => $item) {
                 $set = [];
                 $set["x"] = $date;
                 $set["y"] = (double)explode("|", $item[0])[0];
                 $set['backgroundColor'] = $colors[2];
                 $set['datalabels'] = ['color' => $fontColors[2]];
                 $annualDataSet["revenue"]["data"][] = $set;
-                $annualDataSet["employee"]["data"][] = [
-                    "x" => $date,
-                    "y" => $this->employeeCount[$date],
-                    // (double)round((explode("|", $item[0])[0]/$this->employeeCount[$date]), 2)
-                ];
+
+                if (isset($this->employeeCount[$date])) {
+                    $annualDataSet["employee"]["data"][] = [
+                        "x" => $date,
+                        "y" => $this->employeeCount[$date],
+                        // Additional code here...
+                    ];
+                } else {
+                    // If the current year is not available, try to find the previous year dynamically
+                    $currentIndex = array_search($date, $this->years);
+
+                    if ($currentIndex > 0 && isset($this->employeeCount[$this->years[$currentIndex - 1]])) {
+                        $prevYear = $this->years[$currentIndex - 1];
+
+                        $annualDataSet["employee"]["data"][] = [
+                            "x" => $date,
+                            "y" => $this->employeeCount[$prevYear],
+                            // Additional code here...
+                        ];
+                    } else {
+                        $annualDataSet["employee"]["data"][] = [
+                            "x" => $date,
+                            "y" => 0,
+                        ];
+                    }
+                }
             }
+
             foreach($quarterlyData as $date => $item){
                 $set = [];
                 $set["x"] = $date;
