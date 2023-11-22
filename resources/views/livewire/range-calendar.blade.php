@@ -1,4 +1,4 @@
-<div class="date-range-select-wrapper flex relative"  wire:click="toggle">
+<div class="date-range-select-wrapper border-2 border-[#F3F3F3] rounded-lg flex relative divide-x"  wire:click="toggle">
     <div class="from-wrapper py-2 px-3 flex flex-col">
         <label class="calendar-label" for="fromCalendar">From</label>
         <div class="value">{{\Carbon\Carbon::parse($start_at)->format('M d, Y')}}</div>
@@ -13,7 +13,7 @@
         </svg>
     </div>
     @if($visible)
-        <div wire:click.stop class="absolute-top-70  md:max-w-[556px] border rounded-md flex flex-row justify-between bg-white"  style="width: 556px; border-color: #3561E7;">
+        <div wire:click.stop class="absolute-top-70  md:max-w-[556px] border rounded-md flex flex-row justify-between bg-white text-dark"  style="width: 556px; border-color: #3561E7;">
             <div id="fromCalendar"></div>
             <div id="toCalendar"></div>
         </div>
@@ -56,7 +56,7 @@
                         today: false,
                     },
                     range: {
-                        disabled: [todayDisabledDate],
+                        // disabled: [todayDisabledDate],
                     },
                     selected: {
                         month: from_calendar_month,
@@ -76,7 +76,7 @@
                         weekend: false,
                     },
                     range: {
-                        disabled: [tomorrowDisabledDate],
+                        // disabled: [tomorrowDisabledDate],
                     },
                     selected: {
                         month: to_calendar_month,

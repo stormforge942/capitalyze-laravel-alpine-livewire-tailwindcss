@@ -1,12 +1,12 @@
-<div class="flex items-center overflow-hidden gap-x-8 text-gray-medium2">
+<div class="px-1 flex items-center gap-x-8 text-gray-medium2">
     <div class="flex items-center gap-5 text-sm">
         <?php
         $ranges = ['3m' => '3m', '6m' => '6m', 'YTD' => 'YTD', '1yr' => '1yr', '5yr' => '5yr', 'max' => 'MAX'];
         ?>
         @foreach ($ranges as $value => $label)
             <label class="flex items-center gap-x-1 {{ $currentChartPeriod === $value ? 'text-dark' : '' }}">
-                <input wire:model="currentChartPeriod" value="{{ $value }}" type="radio" name="date-range" class="h-4 w-4 text-inherit">
-                <span>{{ $label }}</span>
+                <input wire:model="currentChartPeriod" value="{{ $value }}" type="radio" name="date-range" class="h-4 w-4 checked:text-dark peer outline-dark">
+                <span class="peer-checked:text-dark">{{ $label }}</span>
             </label>
         @endforeach
     </div>

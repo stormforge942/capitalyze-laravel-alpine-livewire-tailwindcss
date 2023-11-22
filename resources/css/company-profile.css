@@ -211,11 +211,6 @@
     opacity: 1;
 }
 
-.company-profile-page .date-range-select-wrapper {
-    border: 2px solid #F3F3F3;
-    border-radius: 0.66em;
-}
-
 .company-profile-page .date-range-select-wrapper > div:not(:last-child) {
     border-right: 2px solid #F3F3F3;
 }
