@@ -7,33 +7,37 @@
                         <th class="py-2.5 px-4 text-left text-base normal-case text-[#121A0F] font-[600] whitespace-nowrap">
                             <div class="flex items-center cursor-pointer" wire:click.prevent="handleSorting('form_type')">
                                 File name
-                                <svg width="16" height="16" viewBox="0 0 16 16" fill="none" xmlns="http://www.w3.org/2000/svg">
-                                    <path d="M12 6L8 2L4 6H12ZM12 10L8 14L4 10H12Z" fill="#464E49"/>
-                                </svg>
+                                <div class="ml-2">
+                                    <svg  fill="none" stroke-linecap="round" stroke-linejoin="round" stroke-width="4" viewBox="0 0 24 24" stroke="currentColor" class="h-3 w-3 cursor-pointer fill-current {{$col === 'form_type' && $order === 'asc' ? 'text-blue-500' :'text-gray-500' }}"><path d="M5 15l7-7 7 7"></path></svg>
+                                    <svg  fill="none" stroke-linecap="round" stroke-linejoin="round" stroke-width="4" viewBox="0 0 24 24" stroke="currentColor" class="h-3 w-3 cursor-pointer fill-current {{$col === 'form_type' && $order === 'desc' ? 'text-blue-500' :'text-gray-500' }}"><path d="M19 9l-7 7-7-7"></path></svg>
+                                </div>
                             </div>
                         </th>
                         <th class="py-2.5 px-4 text-left text-base normal-case text-[#121A0F] font-[600] whitespace-nowrap">
                             <div class="flex items-center cursor-pointer" wire:click.prevent="handleSorting('form_type')">
                                 Description
-                                <svg width="16" height="16" viewBox="0 0 16 16" fill="none" xmlns="http://www.w3.org/2000/svg">
-                                    <path d="M12 6L8 2L4 6H12ZM12 10L8 14L4 10H12Z" fill="#464E49"/>
-                                </svg>
+                                <div class="ml-2">
+                                    <svg  fill="none" stroke-linecap="round" stroke-linejoin="round" stroke-width="4" viewBox="0 0 24 24" stroke="currentColor" class="h-3 w-3 cursor-pointer fill-current {{$col === 'form_type' && $order === 'asc' ? 'text-blue-500' :'text-gray-500' }}"><path d="M5 15l7-7 7 7"></path></svg>
+                                    <svg  fill="none" stroke-linecap="round" stroke-linejoin="round" stroke-width="4" viewBox="0 0 24 24" stroke="currentColor" class="h-3 w-3 cursor-pointer fill-current {{$col === 'form_type' && $order === 'desc' ? 'text-blue-500' :'text-gray-500' }}"><path d="M19 9l-7 7-7-7"></path></svg>
+                                </div>
                             </div>
                         </th>
                         <th class="py-2.5 px-4 text-left text-base normal-case text-[#121A0F] font-[600] whitespace-nowrap">
                             <div class="flex items-center cursor-pointer" wire:click.prevent="handleSorting('filing_date')">
                                 Filing Date
-                                <svg width="16" height="16" viewBox="0 0 16 16" fill="none" xmlns="http://www.w3.org/2000/svg">
-                                    <path d="M12 6L8 2L4 6H12ZM12 10L8 14L4 10H12Z" fill="#464E49"/>
-                                </svg>
+                                <div class="ml-2">
+                                    <svg  fill="none" stroke-linecap="round" stroke-linejoin="round" stroke-width="4" viewBox="0 0 24 24" stroke="currentColor" class="h-3 w-3 cursor-pointer fill-current {{$col === 'filing_date' && $order === 'asc' ? 'text-blue-500' :'text-gray-500' }}"><path d="M5 15l7-7 7 7"></path></svg>
+                                    <svg  fill="none" stroke-linecap="round" stroke-linejoin="round" stroke-width="4" viewBox="0 0 24 24" stroke="currentColor" class="h-3 w-3 cursor-pointer fill-current {{$col === 'filing_date' && $order === 'desc' ? 'text-blue-500' :'text-gray-500' }}"><path d="M19 9l-7 7-7-7"></path></svg>
+                                </div>
                             </div>
                         </th>
                         <th class="py-2.5 px-4 text-left text-base normal-case text-[#121A0F] font-[600] whitespace-nowrap">
                             <div class="flex items-center cursor-pointer" wire:click.prevent="handleSorting('filing_date')">
                                 Period of Report
-                                <svg width="16" height="16" viewBox="0 0 16 16" fill="none" xmlns="http://www.w3.org/2000/svg">
-                                    <path d="M12 6L8 2L4 6H12ZM12 10L8 14L4 10H12Z" fill="#464E49"/>
-                                </svg>
+                                <div class="ml-2">
+                                    <svg  fill="none" stroke-linecap="round" stroke-linejoin="round" stroke-width="4" viewBox="0 0 24 24" stroke="currentColor" class="h-3 w-3 cursor-pointer fill-current {{$col === 'filing_date' && $order === 'asc' ? 'text-blue-500' :'text-gray-500' }}"><path d="M5 15l7-7 7 7"></path></svg>
+                                    <svg  fill="none" stroke-linecap="round" stroke-linejoin="round" stroke-width="4" viewBox="0 0 24 24" stroke="currentColor" class="h-3 w-3 cursor-pointer fill-current {{$col === 'filing_date' && $order === 'desc' ? 'text-blue-500' :'text-gray-500' }}"><path d="M19 9l-7 7-7-7"></path></svg>
+                                </div>
                             </div>
                         </th>
                     </tr>

@@ -78,5 +78,5 @@
             </div>
         </div>
     </div>
-    <livewire:all-filings.common-layout key="{{ now() }}" :order="$order" :data="$data"/>
+    <livewire:all-filings.common-layout key="{{ now() }}" :order="$order" :col="$col" :data="$data"/>
 </div>
