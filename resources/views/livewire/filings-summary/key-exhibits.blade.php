@@ -16,7 +16,7 @@
             <option value="credit-agreement">Credit Agreement</option>
             <option value="indentures">Indentures</option>
             <option value="material-contracts">Material Contracts</option>
-            <option value="plan-reorganization">Plans of Reorganization</option>
+            <option value="plans-reorganization">Plans of Reorganization</option>
             <option value="underwriting-agreements">Underwriting Agreements</option>
         </select>
     </div>
@@ -32,5 +32,14 @@
         <livewire:is :component="'key-exhibits.'. $selectedTab"/>
     @elseif($selectedTab === 'credit-agreement')
         <livewire:is :component="'key-exhibits.'. $selectedTab"/>
+    @elseif($selectedTab === 'indentures')
+        <livewire:is :component="'key-exhibits.'. $selectedTab"/>
+    @elseif($selectedTab === 'material-contracts')
+        <livewire:is :component="'key-exhibits.'. $selectedTab"/>
+    @elseif($selectedTab === 'plans-reorganization')
+        <livewire:is :component="'key-exhibits.'. $selectedTab"/>
+    @elseif($selectedTab === 'underwriting-agreements')
+        <livewire:is :component="'key-exhibits.'. $selectedTab"/>
     @endif
+
 </div>
