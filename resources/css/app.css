@@ -830,12 +830,7 @@ line-height: normal;
         flex-basis: auto;
         width: 32px !important;
     }
-    .graph-wrapper .graph-header .title {
-        font-size: 16px;
-    }
-    .graph-wrapper .graph-header div:first-child small {
-        font-size: 11px;
-    }
+    
     .page-titles .brr {
         margin-top: 10px;
     }

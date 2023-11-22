@@ -44,7 +44,6 @@ class CompanyOverview extends Component
         return [
             'profile' => [
                 [
-                    'is_main' => true,
                     'key' => 'SIC',
                     'value' => data_get($profile, 'sic_description'),
                     'icon' => <<<'ICON'
@@ -97,7 +96,6 @@ class CompanyOverview extends Component
                         ICON
                 ],
                 [
-                    'is_main' => true,
                     'key' => 'Current C.E.O',
                     'value' => data_get($profile, 'ceo'),
                     'icon' => <<<'ICON'
@@ -107,7 +105,6 @@ class CompanyOverview extends Component
                         ICON
                 ],
                 [
-                    'is_main' => true,
                     'key' => 'Location - HQ',
                     'value' => data_get($profile, 'city') . (isset($profile['country'], $profile['city']) ? ' , ' : '') . data_get($profile, 'country'),
                     'icon' => <<<'ICON'
@@ -119,7 +116,6 @@ class CompanyOverview extends Component
                         ICON
                 ],
                 [
-                    'is_main' => true,
                     'key' => 'IPO date',
                     'value' => data_get($profile, 'ipo_data'),
                     'icon' => <<<'ICON'
@@ -131,7 +127,6 @@ class CompanyOverview extends Component
                         ICON
                 ],
                 [
-                    'is_main' => true,
                     'key' => 'Number of Employees',
                     'value' => data_get($profile, 'employees'),
                     'icon' => <<<'ICON'
@@ -143,7 +138,6 @@ class CompanyOverview extends Component
                         ICON
                 ],
                 [
-                    'is_main' => true,
                     'key' => 'Official Website',
                     'value' => data_get($profile, 'website'),
                     'type' => 'link',

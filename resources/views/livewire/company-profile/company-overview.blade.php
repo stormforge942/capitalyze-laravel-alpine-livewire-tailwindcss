@@ -1,4 +1,4 @@
-<div>
+<div class="grid grid-cols-1 gap-y-4">
     <?php
     $cards = [
         [
@@ -103,7 +103,8 @@
         ],
     ];
     ?>
-    <div class="grid grid-cols-1 md:grid-cols-2 2xl:grid-cols-4 gap-6 text-base leading-normal">
+    <div
+        class="grid grid-cols-1 md:grid-cols-2 2xl:grid-cols-4 gap-x-6 gap-y-4 text-base leading-normal order-2 2xl:order-1">
         @foreach ($cards as $card)
             <x-card :title="$card['title']">
                 <div class="grid grid-cols-3 2xl:grid-cols-2 gap-5">
@@ -118,15 +119,33 @@
         @endforeach
     </div>
 
-    <livewire:company-profile.company-overview-graph :ticker="$profile['symbol']" />
+    <div class="order-1 2xl:order-2">
+        <livewire:company-profile.company-overview-graph :ticker="$profile['symbol']" />
+    </div>
 
-    <x-card title="Business Information" class="mt-4">
+    <x-card title="Business Information" class="order-3">
         <div class="leading-6 text-base">
             {{ $profile['description'] ?? 'Description not found' }}
         </div>
     </x-card>
 
-    <x-card title="Company Profile" x-data="{ expanded: false }" class="mt-4 text-base">
+    <x-card title="Company Profile" x-data="{
+        expanded: false,
+        showCount: 0,
+        updateCount() {
+            const width = window.innerWidth;
+    
+            if (width >= 1536) {
+                this.showCount = 6;
+            } else if (width >= 1280) {
+                this.showCount = 10;
+            } else if (width >= 1024) {
+                this.showCount = 8;
+            } else {
+                this.showCount = 6;
+            }
+        }
+    }" @resize.window.throttle="updateCount()" x-init="updateCount()" class="text-base order-4">
         <x-slot name="topRight">
             <button class="text-sm font-extrabold hover:text-black"
                 x-text="expanded ? 'Hide full profile': 'View full profile'" @click="expanded = !expanded">
@@ -134,10 +153,11 @@
             </button>
         </x-slot>
 
-        <div class="grid gap-x-4 gap-y-6 grid-cols-2 md:grid-cols-3 2xl:grid-cols-6">
-            @foreach ($profile['profile'] as $item)
-                <div class="flex gap-2" @if (!($item['is_main'] ?? false)) x-show="expanded" x-cloak @endif>
-                    <div class="{{ !isset($item['icon']) ? 'hidden invisible' : 'grid' }} bg-[#52D3A233] bg-opacity-20 md:grid place-items-center h-8 w-8 rounded">
+        <div class="grid gap-x-4 gap-y-6 grid-cols-2 lg:grid-cols-4 xl:grid-cols-5 2xl:grid-cols-6">
+            @foreach ($profile['profile'] as $idx => $item)
+                <div class="flex gap-2" x-show="expanded || {{ $idx }} < showCount" x-cloak>
+                    <div
+                        class="{{ !isset($item['icon']) ? 'hidden invisible' : 'grid' }} bg-[#52D3A233] bg-opacity-20 md:grid place-items-center h-8 w-8 rounded">
                         {!! $item['icon'] ?? '' !!}
                     </div>
 
@@ -163,7 +183,7 @@
         </div>
     </x-card>
 
-    <div class="table-wrapper">
+    <div class="table-wrapper order-5">
         <div class="table">
             <div class="row-group row-head-fonts-sm table-border-bottom">
                 <div class="row row-head ">
@@ -348,7 +368,7 @@
         </div>
     </div>
 
-    <div class="table-bottom-sec">
+    <div class="table-bottom-sec order-6">
         <div class="table-wrapper ">
             <div class="table">
                 <div class="row-group row-group-blue row-head-fonts-sm">

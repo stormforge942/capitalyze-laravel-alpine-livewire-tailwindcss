@@ -13,10 +13,6 @@
     font-size: 24px;
 }
 
-.company-profile-page {
-    font-size: 24px;  /* base size */
-}
-
 .page-titles .text-color-green {
     color: #13B05B;
     font-weight: 500;
@@ -164,13 +160,6 @@
     border-radius: 0.666em;
     padding: 24px;
     width: 100%;
-}
-
-.graph-wrapper .graph-header div:first-child small {
-    font-size: 1.17em;
-}
-.graph-wrapper .graph-header .title {
-    font-size: 1.33em;
 }
 
 .graph-header {
