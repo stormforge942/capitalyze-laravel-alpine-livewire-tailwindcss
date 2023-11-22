@@ -16,11 +16,13 @@ class CompanyReportTableRow extends Component
     public $itemKey = 0;
     public $startDate = null;
     public $endDate = null;
+    public $isChild = false;
 
     protected $listeners = ['resetSelection'];
 
-    public function mount($data, $index = 0, $selectedRows = [], $reverse = false, $itemKey = 0, $startDate = null, $endDate = null)
+    public function mount($data, $index = 0, $selectedRows = [], $reverse = false, $itemKey = 0, $startDate = null, $endDate = null, $isChild = false)
     {
+        $this->isChild = $isChild;
         $this->data = $data;
         $this->itemKey = $itemKey;
         $this->index = $index;

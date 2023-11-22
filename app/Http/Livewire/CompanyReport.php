@@ -533,6 +533,7 @@ class CompanyReport extends Component
                     $datePart = substr($date, 0, 7);
                     if ($datePart == $year) {
                         $row['values'][$date] = $this->parseCell($value, $key);
+                        break;
                     }
                 }
                 foreach ($this->rangeDates as $date) {
@@ -549,10 +550,12 @@ class CompanyReport extends Component
                         $valuen = $sValue[$keyn];
                         $keynn = array_keys($valuen)[0];
                         $valuenn = $valuen[$keynn];
-                        $row['children'][] = $this->generateRow($valuenn, $keynn, true);
+                        $row['children'][] = $this->generateRow($valuenn, $keynn, true)[0];
+                        $allrow['children'][] = $this->generateRow($valuenn, $keynn, true)[1];
                     }
                 } else {
-                    $row['children'][] = $this->generateRow($value, $key, $isSegmentation);
+                    $row['children'][] = $this->generateRow($value, $key, $isSegmentation)[0];
+                    $allrow['children'][] = $this->generateRow($value, $key, $isSegmentation)[1];
                 }
             }
 
@@ -560,7 +563,8 @@ class CompanyReport extends Component
 
         $row['segmentation'] = $isSegmentation && count($row['children']) === 0;
         $row['id'] = serialize($row);
-        $this->allRows[] = $allrow;
+        $allrow['segmentation'] = $isSegmentation && count($allrow['children']) === 0;
+        $allrow['id'] = serialize($allrow);
 
         return [$row, $allrow];
     }
@@ -663,6 +667,7 @@ class CompanyReport extends Component
 
         if ($propertyName === 'view') {
             $this->getData();
+            $this->traverseArray($this->allRows);
         }
 
     }
