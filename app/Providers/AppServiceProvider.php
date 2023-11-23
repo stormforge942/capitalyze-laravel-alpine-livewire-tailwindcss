@@ -228,11 +228,31 @@ class AppServiceProvider extends ServiceProvider
             });
         }
         // log DB request local to termninal for debugging purposes
-        if (App::environment('local') && env('DB_LOG') != false) {
+
+
+        if (App::environment('local') && env('DB_LOG', true)) {
             DB::listen(function ($query) {
-                Log::debug(
-                    "Query: {$query->sql}, Bindings: " . json_encode($query->bindings) . ", Time: {$query->time}"
-                );
+                // Get the full stack trace
+                $backtrace = debug_backtrace(DEBUG_BACKTRACE_IGNORE_ARGS);
+
+                // Filter out the vendor calls and get the first user-land caller
+                $caller = collect($backtrace)
+                    ->filter(function ($trace) {
+                        return isset($trace['file']) && !str_contains($trace['file'], 'vendor/');
+                    })
+                    ->first();
+
+                $class = $caller['class'] ?? 'N/A';
+                $function = $caller['function'] ?? 'N/A';
+                $file = $caller['file'] ?? 'N/A';
+                $line = $caller['line'] ?? 'N/A';
+
+                // Construct the log message
+                $message = "Query: {$query->sql}, Bindings: " . json_encode($query->bindings) . ", Time: {$query->time}";
+                $message .= ", Called by: {$class}@{$function}, File: {$file}, Line: {$line}";
+
+                // Log the message
+                Log::debug($message);
             });
         }
 
