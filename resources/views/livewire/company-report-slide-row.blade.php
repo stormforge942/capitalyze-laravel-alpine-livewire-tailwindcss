@@ -13,7 +13,16 @@
             <div class="w-3/4 flex flex-row justify-around">
                 @foreach($row['values'] as $value)
                     <div class="p-2">
-                        <span data-value="{{$this->generateAttribute($value)}}" wire:click="" class="open-slide cursor-pointer hover:underline {{$value['value'] < 0 ? 'text-red' : 'text-black'}}">{{$value['value']}}</span>
+                        @php
+                            $res = str_replace(',', '', $value['value']);
+                            if(is_numeric($res)){
+                                if($res < 0){
+                                    $res = number_format(abs($res));
+                                    $res = "($res)";
+                                }
+                            }
+                        @endphp
+                        <span data-value="{{$this->generateAttribute($value)}}" wire:click="" class="open-slide cursor-pointer hover:underline {{$res < 0 ? 'text-red' : 'text-black'}}">{{$res}}</span>
                     </div>
                 @endforeach
             </div>

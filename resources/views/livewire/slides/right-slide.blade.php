@@ -78,8 +78,6 @@ class="fixed overflow-x-hidden h-full shadow w-full modal_parent bg-white z-40 p
     <script>
         window.reportTextHighlighter.highlight(@json($value), 'table tbody tr td')
     </script>
-    @endif
-
     <script>
         document.body.addEventListener('click', function (event) {
             let element = event.target;
@@ -97,4 +95,6 @@ class="fixed overflow-x-hidden h-full shadow w-full modal_parent bg-white z-40 p
             }
         });
     </script>
+    @endif
+
 </div>
