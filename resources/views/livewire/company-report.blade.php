@@ -12,7 +12,8 @@
             </div>
         </div>
     @else
-
+    <livewire:slides.right-slide>
+    <livewire:slides.left-slide>
     <div class="py-0 bg-gray-100">
         <div class="mx-auto">
             <div class="px-4 sm:pr-6 lg:pr-8 py-0 pl-0">

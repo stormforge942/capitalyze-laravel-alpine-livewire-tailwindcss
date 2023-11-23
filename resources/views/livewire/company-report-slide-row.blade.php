@@ -13,7 +13,7 @@
             <div class="w-3/4 flex flex-row justify-around">
                 @foreach($row['values'] as $value)
                     <div class="p-2">
-                        <span data-value="{{$this->generateAttribute($value)}}" class="open-slide cursor-pointer hover:underline {{$value['value'] < 0 ? 'text-red' : 'text-black'}}">{{$value['value']}}</span>
+                        <span data-value="{{$this->generateAttribute($value)}}" wire:click="" class="open-slide cursor-pointer hover:underline {{$value['value'] < 0 ? 'text-red' : 'text-black'}}">{{$value['value']}}</span>
                     </div>
                 @endforeach
             </div>

@@ -10,13 +10,19 @@ class CompanyReportSlideRow extends Component
     public $rows;
     public $tableDates;
     public $ticker;
+    public $isRight = false;
 
     protected $listeners = ['getTicker'];
 
-    public function mount($data)
+    public function mount($data, $isRight = false)
     {
         $this->data = $data;
+        $this->isRight = $isRight;
         $this->generateRows();
+    }
+
+    public function viewDetails($value){
+        $this->emit('leftSlide', $value);
     }
 
     public function getTicker($ticker) {
