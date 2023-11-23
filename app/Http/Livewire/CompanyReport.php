@@ -195,45 +195,22 @@ class CompanyReport extends Component
     {
         $acronym = ($this->period == 'annual') ? 'arf5drs' : 'qrf5drs';
 
-        $defaultConnectionName = DB::getDefaultConnection();
-        $defaultConnectionResolver = new ConnectionResolver();
-        $defaultConnectionResolver->addConnection(
-            $defaultConnectionName,
-            DB::connection($defaultConnectionName),
-        );
-        $defaultConnectionResolver->setDefaultConnection($defaultConnectionName);
-
-        $remoteConnectionName = 'pgsql-xbrl';
-        $remoteConnectionResolver = new ConnectionResolver();
-        $remoteConnectionResolver->addConnection(
-            $remoteConnectionName,
-            DB::connection($remoteConnectionName),
-        );
-        $remoteConnectionResolver->setDefaultConnection($remoteConnectionName);
-
-        DB::setDefaultConnection($remoteConnectionName);
-        Model::setConnectionResolver($remoteConnectionResolver);
-
         if ($this->view === 'Standardised Template') {
-            $query = InfoTikrPresentation::query()
-                ->where('ticker', '=', $this->ticker)
-                ->select('info')->value('info');
+            $data = InfoTikrPresentation::where('ticker', $this->ticker)->orderByDesc('id')->first()->info;
         } else {
             $query = InfoPresentation::query()
                 ->where('ticker', '=', $this->ticker)
                 ->where('acronym', '=', $acronym)
                 ->where('id', '=', $this->activeSubIndex)
                 ->select('info')->value('info');
+
+            $data = json_decode($query, true);
+
         }
 
         if ($this->activeTitle === 'Ratios') {
             $query = $this->fakeDataForRatiosPage();
         }
-
-        Model::setConnectionResolver($defaultConnectionResolver);
-        DB::setDefaultConnection($defaultConnectionName);
-
-        $data = json_decode($query, true);
 
         // handle period is not set by default we put it to annual
         $this->period ?? $this->period = 'annual';

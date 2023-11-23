@@ -67,8 +67,8 @@ class CompanyAnalysisGraph extends Component
 
     public function getPresentationData($period = "annual")
     {
-        $data = json_decode(InfoTikrPresentation::where('ticker', $this->ticker)
-            ->orderByDesc('id')->first()->info, true)[$period];
+        $data = InfoTikrPresentation::where('ticker', $this->ticker)
+            ->orderByDesc('id')->first()->info[$period];
         $this->revenues = $data['Income Statement']['Revenues'];
         return $data['Income Statement']['Revenues'];
     }
