@@ -220,13 +220,13 @@ class AppServiceProvider extends ServiceProvider
      */
     public function boot()
     {
-        if (App::environment('production')) {
-            DB::listen(function ($query) {
-                Log::stack(['papertrail'])->debug(
-                    "Query: {$query->sql}, Bindings: " . json_encode($query->bindings) . ", Time: {$query->time}"
-                );
-            });
-        }
+//        if (App::environment('production')) {
+//            DB::listen(function ($query) {
+//                Log::stack(['papertrail'])->debug(
+//                    "Query: {$query->sql}, Bindings: " . json_encode($query->bindings) . ", Time: {$query->time}"
+//                );
+//            });
+//        }
         // log DB request local to termninal for debugging purposes
 
 
