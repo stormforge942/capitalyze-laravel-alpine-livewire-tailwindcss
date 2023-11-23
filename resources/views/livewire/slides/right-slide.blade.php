@@ -53,7 +53,30 @@ class="fixed overflow-x-hidden h-full shadow w-full modal_parent bg-white z-40 p
         <span
             class="{{str_contains($this->result['formula']['resolved'], '229234000000')
                 || str_contains($this->result['formula']['resolved'], '21563900000') ? 'text-yellow-500' : 'text-black'}}">
-            {{$result['formula']['resolved']}}
+            @php
+
+            $splitedFormula = explode(' ', $result['formula']['resolved']);
+            $finalFormula = "";
+            $formulaValues = [];
+            foreach($splitedFormula as $str){
+                if(is_numeric($str)){
+                    $formulaValues[] = $str;
+                    if($str < 0){
+                        $str = "<span class='text-red'>(".number_format(abs($str)).")</span>";
+                    }
+                    else {
+                        $str = number_format($str);
+                    }
+                    $formulaValues[] = $str;
+                    $finalFormula .= " " . $str;
+                }
+                else {
+                    $finalFormula .= " " . $str;
+                }
+            }
+
+            @endphp
+            {!!$finalFormula!!}
         </span>
     </div>
     <div class="block px-4 py-2">
@@ -63,7 +86,7 @@ class="fixed overflow-x-hidden h-full shadow w-full modal_parent bg-white z-40 p
     @endif
 
     @if($result && array_key_exists('body', $result))
-    <livewire:company-report-slide-row :isRight="true" wire:key="{{now()}}" :data="$result['body']" />
+    <livewire:company-report-slide-row :isRight="true" wire:key="{{now()}}" :data="$result['body']" :formulaValues="$formulaValues" />
     @endif
 
     @if(is_array($data))

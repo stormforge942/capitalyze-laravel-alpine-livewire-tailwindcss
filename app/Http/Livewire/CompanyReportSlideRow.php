@@ -11,13 +11,15 @@ class CompanyReportSlideRow extends Component
     public $tableDates;
     public $ticker;
     public $isRight = false;
+    public $formulaValues;
 
     protected $listeners = ['getTicker'];
 
-    public function mount($data, $isRight = false)
+    public function mount($data, $isRight = false, $formulaValues = [])
     {
         $this->data = $data;
         $this->isRight = $isRight;
+        $this->formulaValues = $formulaValues;
         $this->generateRows();
     }
 

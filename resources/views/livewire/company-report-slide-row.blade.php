@@ -20,9 +20,16 @@
                                     $res = number_format(abs($res));
                                     $res = "($res)";
                                 }
+                                else {
+                                    $res = number_format($res);
+                                }
                             }
                         @endphp
-                        <span data-value="{{$this->generateAttribute($value)}}" wire:click="" class="open-slide cursor-pointer hover:underline {{$res < 0 ? 'text-red' : 'text-black'}}">{{$res}}</span>
+                        <span
+                        @if(in_array($value['value'], $formulaValues))
+                            style="background-color: yellow;"
+                        @endif
+                        data-value="{{$this->generateAttribute($value)}}" wire:click="" class="open-slide cursor-pointer hover:underline {{$res < 0 ? 'text-red' : 'text-black'}}">{{$res}}</span>
                     </div>
                 @endforeach
             </div>
