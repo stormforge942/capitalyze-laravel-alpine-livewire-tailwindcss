@@ -1,8 +1,8 @@
 <div
 @if(!$open)
 style="display: none;"
-@endif
-class="fixed h-full shadow w-full modal_parent bg-white z-40 p-8 max-w-xl left-0 top-0 transition ease-in-out">
+@endif @click.away="@this.set('open', false)" x-data
+class="fixed overflow-x-hidden h-full shadow w-full modal_parent bg-white z-40 p-8 max-w-xl left-0 top-0 transition ease-in-out">
     <div class="flex items-center justify-between">
         <div class="text-lg shrink-0 font-semibold">{!! $title !!}</div>
         <div class="ml-3 flex h-7 items-center">
@@ -33,6 +33,7 @@ class="fixed h-full shadow w-full modal_parent bg-white z-40 p-8 max-w-xl left-0
         </div>
     </div>
 @if($loaded)
+<div class="mt-5">
     @if($result && array_key_exists('Mapping result', $result))
         <h3 class="text-[21px] font-bold mb-2">{{$result['message']}}</h3>
         <p>{{$result['Mapping result']}}</p>
@@ -75,5 +76,6 @@ class="fixed h-full shadow w-full modal_parent bg-white z-40 p-8 max-w-xl left-0
     <script>
         window.reportTextHighlighter.highlight(@json($value), 'table tbody tr td')
     </script>
+</div>
 @endif
 </div>
