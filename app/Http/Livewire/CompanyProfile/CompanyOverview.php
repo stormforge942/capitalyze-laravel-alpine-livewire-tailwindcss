@@ -71,12 +71,18 @@ class CompanyOverview extends Component
 
     public function getPresentationData()
     {
-        $data = json_decode(InfoTikrPresentation::where('ticker', $this->profile['symbol'])
-            ->orderByDesc('id')->first()->info, true)['annual'];
-        $this->ebitda = $data['Income Statement']['EBITDA'];
-        $this->adjNetIncome = $data['Income Statement']['Net Income'];
-        $this->dilutedEPS = $data['Income Statement']['Diluted EPS Excl Extra Items'];
-        $this->revenues = $data['Income Statement']['Revenues'];
-        $this->dilutedSharesOut = $data['Income Statement']['Weighted Average Diluted Shares Outstanding'];
+        $tickerSymbol = $this->profile['symbol'];
+
+        $infoAnnualData = InfoTikrPresentation::where('ticker', $tickerSymbol)
+            ->orderByDesc('id')
+            ->first(['info']) // Select only the 'info' column.
+            ->info['annual'];
+
+
+        $this->ebitda = $infoAnnualData['Income Statement']['EBITDA'];
+        $this->adjNetIncome = $infoAnnualData['Income Statement']['Net Income'];
+        $this->dilutedEPS = $infoAnnualData['Income Statement']['Diluted EPS Excl Extra Items'];
+        $this->revenues = $infoAnnualData['Income Statement']['Revenues'];
+        $this->dilutedSharesOut = $infoAnnualData['Income Statement']['Weighted Average Diluted Shares Outstanding'];
     }
 }
