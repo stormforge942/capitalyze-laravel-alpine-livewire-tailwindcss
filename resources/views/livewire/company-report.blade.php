@@ -738,7 +738,6 @@
 @push('scripts')
 <script>
 
-    let slideOpen = false;
 
     function generateRangeArray(inputArray) {
         if (inputArray.length !== 2) {
@@ -785,16 +784,6 @@
     }
 
     document.addEventListener('DOMContentLoaded', function() {
-        document.body.addEventListener('click', function(event) {
-            var element = event.target;
-            if (element.classList.contains('open-slide') && !slideOpen) {
-                var value = element.dataset.value;
-                value = JSON.parse(value);
-                window.livewire.emit('slide-over.open', 'company-report-slide', value, {force: true});
-                slideOpen = true;
-            }
-        });
-
         updateRangeSlider();
 
 

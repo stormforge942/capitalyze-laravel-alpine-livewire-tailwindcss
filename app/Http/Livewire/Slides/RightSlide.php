@@ -17,10 +17,16 @@ class RightSlide extends Component
     public $title = "Report Info";
     public $period = "";
     public $loaded = false;
+    public $open = false;
 
-    protected $listeners = ['rightSlide'];
+    protected $listeners = ['rightSlide', 'loadData'];
 
     public function rightSlide($data){
+        $this->open = true;
+        $this->loaded = false;
+        $this->emitSelf('loadData', $data);
+    }
+    public function loadData($data){
         $this->ticker = $data['ticker'];
         $this->value = $data['value'];
         $this->hash = $data['hash'];

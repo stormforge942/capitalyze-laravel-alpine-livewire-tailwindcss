@@ -17,10 +17,17 @@ class LeftSlide extends Component
     public $title = "Report Info";
     public $period = "";
     public $loaded = false;
+    public $open = false;
 
-    protected $listeners = ['leftSlide'];
+    protected $listeners = ['leftSlide', 'loadData'];
 
     public function leftSlide($data){
+        $this->open = true;
+        $this->loaded = false;
+        $this->emitSelf('loadData', $data);
+    }
+
+    public function loadData($data){
         $this->ticker = $data['ticker'] ?? '';
         $this->value = $data['value'];
         $this->hash = $data['hash'];
