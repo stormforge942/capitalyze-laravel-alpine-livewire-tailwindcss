@@ -19,7 +19,11 @@ class LeftSlide extends Component
     public $loaded = false;
     public $open = false;
 
-    protected $listeners = ['leftSlide', 'loadData'];
+    protected $listeners = ['leftSlide', 'loadData', 'closeSlide'];
+
+    public function closeSlide(){
+        $this->open = false;
+    }
 
     public function leftSlide($data){
         $this->open = true;

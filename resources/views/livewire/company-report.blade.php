@@ -14,7 +14,7 @@
     @else
     <livewire:slides.right-slide>
     <livewire:slides.left-slide>
-    <div class="py-0 bg-gray-100">
+    <div id="main-report-div" class="py-0 bg-gray-100">
         <div class="mx-auto">
             <div class="px-4 sm:pr-6 lg:pr-8 py-0 pl-0">
                 <div class="mt-0 flow-root company-profile-loading overflow-x-hidden">
@@ -738,6 +738,10 @@
 @push('scripts')
 <script>
 
+    let mainDiv = document.getElementById('main-report-div')
+    mainDiv.addEventListener('click', function(){
+        Livewire.emit('closeSlide')
+    })
 
     function generateRangeArray(inputArray) {
         if (inputArray.length !== 2) {

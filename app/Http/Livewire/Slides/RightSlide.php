@@ -19,7 +19,10 @@ class RightSlide extends Component
     public $loaded = false;
     public $open = false;
 
-    protected $listeners = ['rightSlide', 'loadData'];
+    protected $listeners = ['rightSlide', 'loadData', 'closeSlide'];
+    public function closeSlide(){
+        $this->open = false;
+    }
 
     public function rightSlide($data){
         $this->open = true;
