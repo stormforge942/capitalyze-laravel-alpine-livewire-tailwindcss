@@ -358,7 +358,7 @@
                                     $currentDilutedSharesOut = str_replace(',', '', explode('|', $dilutedSharesOut[$date][0])[0]);
                                     $previousDilutedSharesOut = str_replace(',', '', explode('|', $dilutedSharesOut[array_keys($products)[$key - 1]][0])[0]);
                                 @endphp
-                                {{ round((($currentDilutedSharesOut - $previousDilutedSharesOut) / $previousDilutedSharesOut) * 100, 2) }}%
+                                {{-- {{ round((($currentDilutedSharesOut - $previousDilutedSharesOut) / $previousDilutedSharesOut) * 100, 2) }}% --}}
                             @endif
                         </div>
                     @endforeach

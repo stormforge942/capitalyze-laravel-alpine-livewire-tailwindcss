@@ -6,6 +6,7 @@ import "./../../vendor/power-components/livewire-powergrid/dist/powergrid.css"
 import Alpine from "alpinejs"
 import focus from "@alpinejs/focus"
 import Swal from "sweetalert2"
+import VanillaCalendar from '@uvarov.frontend/vanilla-calendar';
 
 import rangeSlider from "range-slider-input"
 import "range-slider-input/dist/style.css"
@@ -13,6 +14,7 @@ import "range-slider-input/dist/style.css"
 window.Swal = Swal
 window.Alpine = Alpine
 window.rangeSlider = rangeSlider
+window.VanillaCalendar = VanillaCalendar
 
 import "./datepicker.js"
 import "./range-slider"

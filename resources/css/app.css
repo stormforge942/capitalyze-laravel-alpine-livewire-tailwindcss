@@ -11,9 +11,10 @@
 @import "common-styles.css";
 @import "navigation_subtabs.css";
 @import "loader.css";
-@import "calendar.css";
-@import "calendar-base.css";
 @import "loaders.css";
+@import '../../node_modules/@uvarov.frontend/vanilla-calendar/build/vanilla-calendar.min.css';
+@import '../../node_modules/@uvarov.frontend/vanilla-calendar/build/themes/light.min.css';
+@import 'calendar.css';
 
 @tailwind base;
 @tailwind components;

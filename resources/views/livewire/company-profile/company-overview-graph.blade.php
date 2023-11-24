@@ -1,5 +1,5 @@
 <div class="bg-white px-8 py-10 rounded-lg relative" x-data="{ hide: false }">
-    <div class="absolute top-5 right-5">
+    <div class="absolute top-3 right-5">
         <x-dropdown placement="bottom-start" :shadow="true">
             <x-slot name="trigger">
                 <svg :class="open ? `rotate-90` : ''" width="24" height="24" viewBox="0 0 24 24" fill="none"
@@ -65,8 +65,26 @@
             </small>
         </div>
 
-        <div class="flex-1 flex justify-center">
-            @include('livewire.company-profile.overview-graph-filters')
+        <div class="flex-1 flex justify-end xl:justify-center">
+            <div class="hidden xl:block">
+                @include('livewire.company-profile.overview-graph-filters')
+            </div>
+
+            <x-dropdown placement="bottom-end" class="block xl:hidden">
+                <x-slot name="trigger">
+                    <div class="p-2 flex items-center gap-x-2 border border-[#ECE9F1] text-[#686868] text-sm rounded">
+                        <span class="capitalize">{{ $chartPeriods[$currentChartPeriod] ?? 'N/A' }}</span>
+                        <svg width="16" height="16" viewBox="0 0 16 16" fill="none"
+                            xmlns="http://www.w3.org/2000/svg">
+                            <path d="M7.99479 9.33366L5.32812 6.66699H10.6615L7.99479 9.33366Z" fill="black" />
+                        </svg>
+                    </div>
+                </x-slot>
+
+                <div class="p-4">
+                    @include('livewire.company-profile.overview-graph-filters')
+                </div>
+            </x-dropdown>
         </div>
     </div>
 
@@ -74,7 +92,7 @@
         <span class="mx-auto simple-loader !text-green-dark"></span>
     </div>
 
-    <div class="mt-3 mr-5" wire:loading.remove x-show="!hide" x-transition>
+    <div class="mt-3" wire:loading.remove x-show="!hide" x-transition>
         <canvas id="product-profile-chart" class="w-full company-profile-overview-chart"></canvas>
     </div>
 </div>
@@ -224,7 +242,7 @@
             let data = @this.chartData;
             let canvas = document.getElementById("product-profile-chart");
             if (!canvas) return;
-            let ctx = document.getElementById('product-profile-chart').getContext("2d");
+            let ctx = canvas.getContext("2d");
             let gradientBg = ctx.createLinearGradient(0, 0, 0, canvas.height * 2.5)
             gradientBg.addColorStop(0.8, 'rgba(19,176,91,0.18)')
             gradientBg.addColorStop(1, 'rgba(19,176,91,0.05)')
