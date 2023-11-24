@@ -119,5 +119,10 @@ class="fixed overflow-x-hidden h-full shadow w-full modal_parent bg-white z-40 p
         });
     </script>
     @endif
+    <style>
+        body {
+            overflow: {{$open ? 'hidden' : 'auto'}};
+        }
+    </style>
 
 </div>
