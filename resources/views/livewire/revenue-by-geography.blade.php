@@ -2,8 +2,8 @@
     <div class="filters-row mb-3">
         <div class="select-wrapper flex items-center custom-text-xs" x-data="{unitType: 0}">
             <div class="flex items-center text-sm">Unit Type
-                <button id="dropdownUnitTypeButton" data-dropdown-toggle="{{$chartId}}dropdown-UnitType"
-                    class="flex items-center flowbite-select bg-gray-50 border border-gray-700 text-gray-900 text-sm ml-2 p-2"
+            <div class="relative">    <button id="dropdownUnitTypeButton" data-dropdown-toggle="{{$chartId}}dropdown-UnitType" :class="unitType != 0 ? 'active' : ''"
+                    class="flex items-center flowbite-select bg-gray-50 border border-gray-700 text-gray-900 text-sm ml-2 p-2 flowbite_btn active"
                     name="view" id="">
                     <span
                         x-text="unitType == 0 ? 'None' : (unitType == 'thousands' ? 'Thousands' : (unitType == 'millions' ? 'Millions' : (unitType == 'billions' ? 'Billions' : '')))"></span>
@@ -15,7 +15,7 @@
                 </button>
                 <!-- Dropdown menu -->
                 <div id="{{$chartId}}dropdown-UnitType" wire:ignore
-                    class="z-10 hidden bg-white divide-y divide-gray-100 rounded-lg shadow w-60 dark:bg-gray-700 dark:divide-gray-600">
+                    class="z-10 hidden bg-white divide-y divide-gray-100 rounded-lg shadow w-60 dark:bg-gray-700 dark:divide-gray-600 dropdown-scroll-wrapper">
                     <div class="p-3 text-sm flex items-center justify-between">
                         <div>Unit Type</div>
                         <svg id="unitTypeClose" width="24" height="24" viewBox="0 0 24 24" fill="none"
@@ -25,7 +25,7 @@
                                 fill="#686868" />
                         </svg>
                     </div>
-                    <ul class="p-4 space-y-1 text-sm text-gray-700 dark:text-gray-200 max-h-40 overflow-y-scroll"
+                    <ul class="p-4 space-y-1 text-sm text-gray-700 dark:text-gray-200 h_23 overflow-y-scroll dropdown-scroll"
                         aria-labelledby="dropdownViewButton">
                         <li>
                             <div class="flex p-2 rounded hover:bg-[#52D3A233] cursor-pointer">
@@ -94,9 +94,10 @@
                     </div>
                 </div>
             </div>
+            </div>
             <div class="ml-3 flex items-center text-sm" x-data="{reverseOrder:false}">Order
-                <button id="dropdownOrderButton" data-dropdown-toggle="{{$chartId}}dropdown-Order"
-                    class="flex items-center flowbite-select bg-gray-50 border border-gray-700 text-gray-900 text-sm ml-2 p-2"
+                <div class="relative">   <button id="dropdownOrderButton" data-dropdown-toggle="{{$chartId}}dropdown-Order" :class="reverseOrder != false ? 'active' : ''"
+                    class="flex items-center flowbite-select bg-gray-50 border border-gray-700 text-gray-900 text-sm ml-2 p-2 flowbite_btn"
                     name="view" id="">
                     <span x-text="reverseOrder == false ? 'Latest on Right' : 'Latest on Left'"></span>
                     <svg width="16" height="16" viewBox="0 0 16 16" fill="none" xmlns="http://www.w3.org/2000/svg">
@@ -107,7 +108,7 @@
                 </button>
                 <!-- Dropdown menu -->
                 <div id="{{$chartId}}dropdown-Order" wire:ignore
-                    class="z-10 hidden bg-white divide-y divide-gray-100 rounded-lg shadow w-60 dark:bg-gray-700 dark:divide-gray-600">
+                    class="z-10 hidden bg-white divide-y divide-gray-100 rounded-lg shadow w-60 dark:bg-gray-700 dark:divide-gray-600 dropdown-scroll-wrapper">
                     <div class="p-3 text-sm flex items-center justify-between">
                         <div>Order</div>
                         <svg id="orderClose" width="24" height="24" viewBox="0 0 24 24" fill="none"
@@ -117,7 +118,7 @@
                                 fill="#686868" />
                         </svg>
                     </div>
-                    <ul class="p-4 space-y-1 text-sm text-gray-700 dark:text-gray-200 max-h-40 overflow-y-scroll"
+                    <ul class="p-4 space-y-1 text-sm text-gray-700 dark:text-gray-200 h_23 overflow-y-scroll dropdown-scroll"
                         aria-labelledby="dropdownViewButton">
                         <li>
                             <div class="flex p-2 rounded hover:bg-[#52D3A233] cursor-pointer">
@@ -156,10 +157,11 @@
                             Result</button>
                     </div>
                 </div>
+                </div>
             </div>
-            <div class="ml-3 flex items-center text-sm">Freeze Panes
-                <button type="submit" id="dropdownFreezePanesButton" data-dropdown-toggle="{{$chartId}}dropdown-FreezePanes"
-                    class="flex items-center flowbite-select bg-gray-50 border border-gray-700 text-gray-900 text-sm ml-2 p-2"
+            <div class="ml-3 flex items-center text-sm" x-data="{freezepans: 0}">Freeze Panes
+                <div class="relative">     <button type="submit" id="dropdownFreezePanesButton" data-dropdown-toggle="{{$chartId}}dropdown-FreezePanes" :class="freezepans != 0 ? 'active' : ''"
+                    class="flex items-center flowbite-select bg-gray-50 border border-gray-700 text-gray-900 text-sm ml-2 p-2 flowbite_btn"
                     name="view" id="">
                     Top Row
                     <svg width="16" height="16" viewBox="0 0 16 16" fill="none" xmlns="http://www.w3.org/2000/svg">
@@ -170,7 +172,7 @@
                 </button>
                 <!-- Dropdown menu -->
                 <div id="{{$chartId}}dropdown-FreezePanes"
-                    class="z-10 hidden bg-white divide-y divide-gray-100 rounded-lg shadow w-60 dark:bg-gray-700 dark:divide-gray-600">
+                    class="z-10 hidden bg-white divide-y divide-gray-100 rounded-lg shadow w-60 dark:bg-gray-700 dark:divide-gray-600 dropdown-scroll-wrapper">
                     <div class="p-3 text-sm flex items-center justify-between">
                         <div>Freeze Panes</div>
                         <svg id="freezePanesClose" width="24" height="24" viewBox="0 0 24 24" fill="none"
@@ -180,12 +182,12 @@
                                 fill="#686868" />
                         </svg>
                     </div>
-                    <ul class="p-4 space-y-1 text-sm text-gray-700 dark:text-gray-200 max-h-40 overflow-y-scroll"
+                    <ul class="p-4 space-y-1 text-sm text-gray-700 dark:text-gray-200 h_23 overflow-y-scroll dropdown-scroll"
                         aria-labelledby="dropdownViewButton">
                         <li>
                             <div class="flex p-2 rounded hover:bg-[#52D3A233] cursor-pointer">
                                 <div class="flex items-center h-5 cursor-pointer">
-                                    <input wire:model="freezePanes"
+                                    <input wire:model="freezePanes" @click='freezepans = "Top Row"'
                                         id="freezePanes-radio-1" name="freezePanes-radio" type="radio" value="Top Row"
                                         class="cursor-pointer w-4 h-4 text-[#686868] bg-transpearent border-[#686868] border-2">
                                 </div>
@@ -200,7 +202,7 @@
                         <li>
                             <div class="flex p-2 rounded hover:bg-[#52D3A233] cursor-pointer">
                                 <div class="flex items-center h-5 cursor-pointer">
-                                    <input wire:model="freezePanes"
+                                    <input wire:model="freezePanes" @click='freezepans = "First Column"'
                                         id="freezePanes-radio-2" name="freezePanes-radio" type="radio"
                                         value="First Column"
                                         class="cursor-pointer w-4 h-4 text-[#686868] bg-transpearent border-[#686868] border-2">
@@ -216,7 +218,7 @@
                         <li>
                             <div class="flex p-2 rounded hover:bg-[#52D3A233] cursor-pointer">
                                 <div class="flex items-center h-5 cursor-pointer">
-                                    <input wire:model="freezePanes" id="freezePanes-radio-3" name="freezePanes-radio" type="radio"
+                                    <input wire:model="freezePanes" id="freezePanes-radio-3" name="freezePanes-radio" type="radio" @click='freezepans = "Top Row & First Column"'
                                         value="Top Row & First Column"
                                         class="cursor-pointer w-4 h-4 text-[#686868] bg-transpearent border-[#686868] border-2">
                                 </div>
@@ -234,10 +236,11 @@
                             id="freezePanesCloseButton">Show Result</button>
                     </div>
                 </div>
+                </div>
             </div>
             <div wire:ignore class="ml-3 flex items-center text-sm" x-data="{round: 0}">Decimal
-                <button id="dropdownDecimalButton" data-dropdown-toggle="{{$chartId}}dropdown-Decimal"
-                    class="flex items-center flowbite-select bg-gray-50 border border-gray-700 text-gray-900 text-sm ml-2 p-2"
+                <div class="relative">   <button id="dropdownDecimalButton" data-dropdown-toggle="{{$chartId}}dropdown-Decimal" :class="round != 0 ? 'active' : ''"
+                    class="flex items-center flowbite-select bg-gray-50 border border-gray-700 text-gray-900 text-sm ml-2 p-2 flowbite_btn"
                     name="view" id="">
                     <span x-text='round == 0 ? "auto" : (round == 2 ? ".00" : (round == 3 ? ".00" : ""))'></span>
                     <svg width="16" height="16" viewBox="0 0 16 16" fill="none" xmlns="http://www.w3.org/2000/svg">
@@ -248,7 +251,7 @@
                 </button>
                 <!-- Dropdown menu -->
                 <div id="{{$chartId}}dropdown-Decimal"
-                    class="z-10 hidden bg-white divide-y divide-gray-100 rounded-lg shadow w-60 dark:bg-gray-700 dark:divide-gray-600">
+                    class="z-10 hidden bg-white divide-y divide-gray-100 rounded-lg shadow w-60 dark:bg-gray-700 dark:divide-gray-600 dropdown-scroll-wrapper">
                     <div class="p-3 text-sm flex items-center justify-between">
                         <div>Decimal</div>
                         <svg id="decimalClose" width="24" height="24" viewBox="0 0 24 24" fill="none"
@@ -258,7 +261,7 @@
                                 fill="#686868" />
                         </svg>
                     </div>
-                    <ul class="p-4 space-y-1 text-sm text-gray-700 dark:text-gray-200 max-h-40 overflow-y-scroll"
+                    <ul class="p-4 space-y-1 text-sm text-gray-700 dark:text-gray-200 h_23 overflow-y-scroll dropdown-scroll"
                         aria-labelledby="dropdownViewButton">
                         <li>
                             <div class="flex p-2 rounded hover:bg-[#52D3A233] cursor-pointer">
@@ -310,6 +313,7 @@
                         <button class="w-full p-1 text-sm bg-[#52D3A2] rounded text-center" id="decimalCloseButton"
                             @click="{{$chartId}}setRound(round)">Show Result</button>
                     </div>
+                </div>
                 </div>
             </div>
         </div>

@@ -271,6 +271,58 @@ span.business-footer-text a {
     border-radius: 4px;
 
 }
+.dropdown-scroll-wrapper {
+    height: 488px;
+    width: 416px;
+    position: absolute !important;
+    left: 0px !important;
+    top: 40px !important;
+    transform: translate(10px, 10px) !important;
+}
+.dropdown-scroll-wrapper input[type=radio]:checked {
+    background-image: url(/public/img/radio-image.png
+    ) !important;
+    background-color: transparent !important;
+    background-size: 30px 30px !important;
+
+}
+.dropdown-scroll-wrapper input[type=radio]:checked:focus,.dropdown-scroll-wrapper input[type=radio]:focus  {
+    outline: none !important;
+
+    box-shadow: none !important;
+
+}
+.dropdown-scroll-wrapper input[type=radio] {
+    height: 23px !important;
+    width: 23px !important;
+}
+.flowbite_btn.active {
+    background-color: #E2E2E2 !important;
+}
+.flowbite_btn svg {
+    transition: all 0.2s ease-in-out;
+}
+.flowbite_btn.active svg {
+    transform: rotate(-180deg);
+}
+.dropdown-scroll-wrapper .h_23 {
+    max-height: 23rem;
+    height: 100%;
+}
+.dropdown-scroll label{
+    font-size: 14px;
+    font-weight: 400 !important;
+}
+.dropdown-scroll::-webkit-scrollbar-track {
+    border-radius: 2px !important;
+opacity: 0.25 !important;
+background: #D4DDD7 !important;
+  }
+  .dropdown-scroll::-webkit-scrollbar-thumb {
+    border-radius: 1px !important;
+    opacity: 0.7 !important;
+    background: #464E49 !important;
+  }
 
 .sticky-sidebar {
     position: sticky;
