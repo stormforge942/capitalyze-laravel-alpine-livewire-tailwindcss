@@ -436,12 +436,13 @@ position: relative;
 .table-bottom-sec {
     display: block;
     width: 100%;
-    padding: 10px;
+    padding: 8px;
     background: #fff;
     border-radius: 4px;
 }
 .table-bottom-sec .table-wrapper{
     margin-top: 0 !important;
+    border-radius: 4px;
 }
 .custom-drop-down-button {
     width: 24px;

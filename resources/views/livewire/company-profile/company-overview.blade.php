@@ -364,13 +364,12 @@
                     @endforeach
                 </div>
             </div>
-            <div class="row row-spacer"></div>
         </div>
     </div>
 
     <div class="table-bottom-sec order-6">
         <div class="table-wrapper ">
-            <div class="table">
+            <div class="table mb-1">
                 <div class="row-group row-group-blue row-head-fonts-sm">
                     <div class="row row-head">
                         <div class="font-bold cell">Adj. Diluted EPS</div>

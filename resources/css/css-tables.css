@@ -1,6 +1,5 @@
 .table-wrapper {
     width: 100%;
-    max-width: calc(100vw - 8rem);
     overflow-x: auto;
     font-size: 0.5em;
     margin-top: 24px;
