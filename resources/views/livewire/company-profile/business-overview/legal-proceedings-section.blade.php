@@ -86,9 +86,7 @@ if(preg_match('/>Other Legal Proceedings</i', $businessContent)){ $sidebarLinks[
 </div>
 <div class="mobile-show">
     <div class="bussiness-information" x-data="{ collapse: false }">
-        <div class="white-card relative" x-data="{
-            activeTab: '{{$sidebarLinks[0]['link']}}'
-        }">
+        <div class="white-card relative" x-data="{ activeTab: '{{ count($sidebarLinks) > 0 ? $sidebarLinks[0]['link'] : '' }}' }">
             <span class="text_absolute">
                 <a href="{{$menuLinks['s3_url']}}">Source: FY {{date('Y', strtotime($menuLinks['acceptance_time']))}} 10-k</a>
             </span>
