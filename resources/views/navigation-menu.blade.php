@@ -1,5 +1,5 @@
 <div class="lg:ml-56" id="navigation">
-    <div class="flex items-center justify-between px-4 py-8 bg-white lg:hidden header__main">
+    <div class="flex items-center justify-between px-4 md:px-6 py-8 bg-white lg:hidden header__main">
         <div class="flex items-center justify-between gap-1">
             @auth
                 <button class="p-1" x-data @click="$dispatch('toggle-mobile-nav')">
