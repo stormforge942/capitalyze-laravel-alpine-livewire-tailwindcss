@@ -42,6 +42,10 @@ class CompanyReportTableRow extends Component
         }
     }
 
+    public function showRightSlide($value) {
+        $this->emit('rightSlide', $value);
+    }
+
     public function generateAttribute($value)
     {
         $string = '';

@@ -12,8 +12,9 @@
             </div>
         </div>
     @else
-
-    <div class="py-0 bg-gray-100">
+    <livewire:slides.right-slide>
+    <livewire:slides.left-slide>
+    <div id="main-report-div" class="py-0 bg-gray-100">
         <div class="mx-auto">
             <div class="px-4 sm:pr-6 lg:pr-8 py-0 pl-0">
                 <div class="mt-0 flow-root company-profile-loading overflow-x-hidden">
@@ -737,7 +738,10 @@
 @push('scripts')
 <script>
 
-    let slideOpen = false;
+    let mainDiv = document.getElementById('main-report-div')
+    mainDiv.addEventListener('click', function(){
+        Livewire.emit('closeSlide')
+    })
 
     function generateRangeArray(inputArray) {
         if (inputArray.length !== 2) {
@@ -784,16 +788,6 @@
     }
 
     document.addEventListener('DOMContentLoaded', function() {
-        document.body.addEventListener('click', function(event) {
-            var element = event.target;
-            if (element.classList.contains('open-slide') && !slideOpen) {
-                var value = element.dataset.value;
-                value = JSON.parse(value);
-                window.livewire.emit('slide-over.open', 'company-report-slide', value, {force: true});
-                slideOpen = true;
-            }
-        });
-
         updateRangeSlider();
 
 
