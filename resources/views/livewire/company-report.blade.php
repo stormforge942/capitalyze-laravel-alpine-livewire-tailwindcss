@@ -357,18 +357,18 @@
                                                 </div>
                                             </div>
                                         </div>
-                                        <div class=" flex items-center text-sm">Template
-                                            <button type="submit" id="dropdownTemplateButton" data-dropdown-toggle="dropdown-Template" class="flex items-center flowbite-select bg-gray-50 border border-gray-700 text-gray-900 text-sm ml-2 p-2" name="view" id="">
-                                                {{$template}}
+                                        <div class=" flex items-center text-sm">Decimal
+                                            <button type="submit" id="dropdownDecimalButton" data-dropdown-toggle="dropdown-Decimal" class="flex items-center flowbite-select bg-gray-50 border border-gray-700 text-gray-900 text-sm ml-2 p-2" name="view" id="">
+                                                {{$decimalDisplay == 2 ? '.00' : ($decimalDisplay == 3 ? '.000' : 'auto')}}
                                                 <svg width="16" height="16" viewBox="0 0 16 16" fill="none" xmlns="http://www.w3.org/2000/svg">
                                                     <path d="M10.3083 6.19514L7.72167 8.78378L5.135 6.19514C5.01045 6.07021 4.84135 6 4.665 6C4.48865 6 4.31955 6.07021 4.195 6.19514C3.935 6.45534 3.935 6.87566 4.195 7.13585L7.255 10.1982C7.515 10.4584 7.935 10.4584 8.195 10.1982L11.255 7.13585C11.515 6.87566 11.515 6.45534 11.255 6.19514C10.995 5.94161 10.5683 5.93494 10.3083 6.19514Z" fill="#121A0F"/>
                                                 </svg>
                                             </button>
                                             <!-- Dropdown menu -->
-                                            <div id="dropdown-Template" class="z-10 hidden bg-white divide-y divide-gray-100 rounded-lg shadow w-60 dark:bg-gray-700 dark:divide-gray-600">
+                                            <div id="dropdown-Decimal" class="z-10 hidden bg-white divide-y divide-gray-100 rounded-lg shadow w-60 dark:bg-gray-700 dark:divide-gray-600">
                                                 <div class="p-3 text-sm flex items-center justify-between">
-                                                    <div>Template</div>
-                                                    <svg id="templateClose" width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                                                    <div>Decimal</div>
+                                                    <svg id="decimalClose" width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
                                                         <path d="M6.4 19L5 17.6L10.6 12L5 6.4L6.4 5L12 10.6L17.6 5L19 6.4L13.4 12L19 17.6L17.6 19L12 13.4L6.4 19Z" fill="#686868"/>
                                                     </svg>
                                                 </div>
@@ -376,18 +376,42 @@
                                                     <li>
                                                         <div class="flex p-2 rounded hover:bg-[#52D3A233] cursor-pointer">
                                                             <div class="flex items-center h-5 cursor-pointer">
-                                                                <input wire:model="template" @if($view === 'Standart') checked @endif id="template-radio-1" name="template-radio" type="radio" value="Standart" class="cursor-pointer w-4 h-4 text-[#686868] bg-transpearent border-[#686868] border-2">
+                                                                <input wire:model="decimalDisplay" @if($decimalDisplay === '0') checked @endif id="decimal-radio-1" name="decimal-radio" type="radio" value="0" class="cursor-pointer w-4 h-4 text-[#686868] bg-transpearent border-[#686868] border-2">
                                                             </div>
                                                             <div class="ml-4 text-sm cursor-pointer">
-                                                                <label for="template-radio-1" class="cursor-pointer font-medium text-gray-900 dark:text-gray-300">
-                                                                    <div>Standart</div>
+                                                                <label for="decimal-radio-1" class="cursor-pointer font-medium text-gray-900 dark:text-gray-300">
+                                                                    <div>auto</div>
+                                                                </label>
+                                                            </div>
+                                                        </div>
+                                                    </li>
+                                                    <li>
+                                                        <div class="flex p-2 rounded hover:bg-[#52D3A233] cursor-pointer">
+                                                            <div class="flex items-center h-5 cursor-pointer">
+                                                                <input wire:model="decimalDisplay" @if($decimalDisplay === '2') checked @endif id="decimal-radio-2" name="decimal-radio" type="radio" value="2" class="cursor-pointer w-4 h-4 text-[#686868] bg-transpearent border-[#686868] border-2">
+                                                            </div>
+                                                            <div class="ml-4 text-sm cursor-pointer">
+                                                                <label for="decimal-radio-2" class="cursor-pointer font-medium text-gray-900 dark:text-gray-300">
+                                                                    <div>.00</div>
+                                                                </label>
+                                                            </div>
+                                                        </div>
+                                                    </li>
+                                                    <li>
+                                                        <div class="flex p-2 rounded hover:bg-[#52D3A233] cursor-pointer">
+                                                            <div class="flex items-center h-5 cursor-pointer">
+                                                                <input wire:model="decimalDisplay" @if($decimalDisplay === '3') checked @endif id="decimal-radio-3" name="decimal-radio" type="radio" value="3" class="cursor-pointer w-4 h-4 text-[#686868] bg-transpearent border-[#686868] border-2">
+                                                            </div>
+                                                            <div class="ml-4 text-sm cursor-pointer">
+                                                                <label for="decimal-radio-3" class="cursor-pointer font-medium text-gray-900 dark:text-gray-300">
+                                                                    <div>.000</div>
                                                                 </label>
                                                             </div>
                                                         </div>
                                                     </li>
                                                 </ul>
                                                 <div class="mx-3 my-4">
-                                                    <button class="w-full p-1 text-sm bg-[#52D3A2] rounded text-center" id="templateCloseButton">Show Result</button>
+                                                    <button class="w-full p-1 text-sm bg-[#52D3A2] rounded text-center" id="decimalCloseButton">Show Result</button>
                                                 </div>
                                             </div>
                                         </div>
@@ -495,64 +519,7 @@
                                                 </div>
                                             </div>
                                         </div>
-                                        <div class=" flex items-center text-sm">Decimal
-                                            <button type="submit" id="dropdownDecimalButton" data-dropdown-toggle="dropdown-Decimal" class="flex items-center flowbite-select bg-gray-50 border border-gray-700 text-gray-900 text-sm ml-2 p-2" name="view" id="">
-                                                {{$decimalDisplay == 2 ? '.00' : ($decimalDisplay == 3 ? '.000' : 'auto')}}
-                                                <svg width="16" height="16" viewBox="0 0 16 16" fill="none" xmlns="http://www.w3.org/2000/svg">
-                                                    <path d="M10.3083 6.19514L7.72167 8.78378L5.135 6.19514C5.01045 6.07021 4.84135 6 4.665 6C4.48865 6 4.31955 6.07021 4.195 6.19514C3.935 6.45534 3.935 6.87566 4.195 7.13585L7.255 10.1982C7.515 10.4584 7.935 10.4584 8.195 10.1982L11.255 7.13585C11.515 6.87566 11.515 6.45534 11.255 6.19514C10.995 5.94161 10.5683 5.93494 10.3083 6.19514Z" fill="#121A0F"/>
-                                                </svg>
-                                            </button>
-                                            <!-- Dropdown menu -->
-                                            <div id="dropdown-Decimal" class="z-10 hidden bg-white divide-y divide-gray-100 rounded-lg shadow w-60 dark:bg-gray-700 dark:divide-gray-600">
-                                                <div class="p-3 text-sm flex items-center justify-between">
-                                                    <div>Decimal</div>
-                                                    <svg id="decimalClose" width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
-                                                        <path d="M6.4 19L5 17.6L10.6 12L5 6.4L6.4 5L12 10.6L17.6 5L19 6.4L13.4 12L19 17.6L17.6 19L12 13.4L6.4 19Z" fill="#686868"/>
-                                                    </svg>
-                                                </div>
-                                                <ul class="p-4 space-y-1 text-sm text-gray-700 dark:text-gray-200 max-h-40 overflow-y-scroll" aria-labelledby="dropdownViewButton">
-                                                    <li>
-                                                        <div class="flex p-2 rounded hover:bg-[#52D3A233] cursor-pointer">
-                                                            <div class="flex items-center h-5 cursor-pointer">
-                                                                <input wire:model="decimalDisplay" @if($decimalDisplay === '0') checked @endif id="decimal-radio-1" name="decimal-radio" type="radio" value="0" class="cursor-pointer w-4 h-4 text-[#686868] bg-transpearent border-[#686868] border-2">
-                                                            </div>
-                                                            <div class="ml-4 text-sm cursor-pointer">
-                                                                <label for="decimal-radio-1" class="cursor-pointer font-medium text-gray-900 dark:text-gray-300">
-                                                                    <div>auto</div>
-                                                                </label>
-                                                            </div>
-                                                        </div>
-                                                    </li>
-                                                    <li>
-                                                        <div class="flex p-2 rounded hover:bg-[#52D3A233] cursor-pointer">
-                                                            <div class="flex items-center h-5 cursor-pointer">
-                                                                <input wire:model="decimalDisplay" @if($decimalDisplay === '2') checked @endif id="decimal-radio-2" name="decimal-radio" type="radio" value="2" class="cursor-pointer w-4 h-4 text-[#686868] bg-transpearent border-[#686868] border-2">
-                                                            </div>
-                                                            <div class="ml-4 text-sm cursor-pointer">
-                                                                <label for="decimal-radio-2" class="cursor-pointer font-medium text-gray-900 dark:text-gray-300">
-                                                                    <div>.00</div>
-                                                                </label>
-                                                            </div>
-                                                        </div>
-                                                    </li>
-                                                    <li>
-                                                        <div class="flex p-2 rounded hover:bg-[#52D3A233] cursor-pointer">
-                                                            <div class="flex items-center h-5 cursor-pointer">
-                                                                <input wire:model="decimalDisplay" @if($decimalDisplay === '3') checked @endif id="decimal-radio-3" name="decimal-radio" type="radio" value="3" class="cursor-pointer w-4 h-4 text-[#686868] bg-transpearent border-[#686868] border-2">
-                                                            </div>
-                                                            <div class="ml-4 text-sm cursor-pointer">
-                                                                <label for="decimal-radio-3" class="cursor-pointer font-medium text-gray-900 dark:text-gray-300">
-                                                                    <div>.000</div>
-                                                                </label>
-                                                            </div>
-                                                        </div>
-                                                    </li>
-                                                </ul>
-                                                <div class="mx-3 my-4">
-                                                    <button class="w-full p-1 text-sm bg-[#52D3A2] rounded text-center" id="decimalCloseButton">Show Result</button>
-                                                </div>
-                                            </div>
-                                        </div>
+
                                     </div>
                                 </div>
                                 <div class="filters-row flex hidden items-center mt-2 text-sm">
