@@ -3,6 +3,7 @@
 style="display: none;"
 @endif
 class="fixed overflow-x-hidden h-full shadow w-full modal_parent bg-white z-40 p-8 max-w-xl left-0 top-0 transition ease-in-out">
+<input type="hidden" id="leftSlideOpen" value="{{$open}}">
     <div class="flex items-center justify-between">
         <div class="text-lg shrink-0 font-semibold">{!! $title !!}</div>
         <div class="ml-3 flex h-7 items-center">

@@ -60,6 +60,8 @@ class CompanyReport extends Component
         'reverse',
         'decimalDisplay',
         'view',
+        'startDate',
+        'endDate'
     ];
 
     public function toggleChartType($title)
