@@ -26,7 +26,7 @@
 
     @livewireStyles
     @once
-        @push('scripts' )
+        @push('scripts')
             <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
             <script src="https://cdn.jsdelivr.net/npm/luxon"></script>
             <script src="https://cdnjs.cloudflare.com/ajax/libs/chartjs-adapter-luxon/0.2.1/chartjs-adapter-luxon.min.js"></script>
@@ -80,15 +80,18 @@
         @elseif($tab == 'etf-filings')
             <livewire:etf.filings />
         @elseif($tab === 'filings-summary')
-            <livewire:comapany-filings-summary :company="$company" :tinker="$ticker" :period="$period"/>
+            <livewire:comapany-filings-summary :company="$company" :tinker="$ticker" :period="$period" />
         @elseif($tab == 'analysis')
             <livewire:company-analysis :company="$company" :ticker="$ticker" :period="$period" />
         @endif
     </main>
 
-    @stack('modals')
-    @livewire('spotlight-pro')
-    @livewire('slide-over-pro')
+    <div id="modals-area">
+        @stack('modals')
+        @livewire('spotlight-pro')
+        @livewire('slide-over-pro')
+    </div>
+
     @livewireScripts
     @stack('scripts')
 </body>

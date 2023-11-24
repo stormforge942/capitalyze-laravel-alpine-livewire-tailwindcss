@@ -111,15 +111,11 @@
 input {
     @apply text-base;
 }
+
 .bussiness-information  {
     gap: 20px;
 }
-/* .bussiness-information .bussiness-information-left {
-flex: 0 0 70%;
-}
-.bussiness-information .bussiness-information-right {
-    flex: 0 0 28%;
-} */
+
 .bussiness-information .bussiness-information-left p {
     font-size: 14px !important;
     font-weight: 400 !important;
@@ -220,21 +216,6 @@ span.business-footer-text a {
     padding: 1.4em 2em;
     background: white;
     border-radius: 0.666em;
-}
-.key-values-wrapper__item{
-    margin-bottom: 15px;
-    display: flex;
-    gap: 15px;
-}
-.key-values-wrapper__item .key-values-none {
-    background: none !important;
-    flex-basis: 13%
-}
-.key-values-wrapper__item .key-value {
-    flex-basis: 85%;
-}
-.key-values-wrapper__item .value {
-    word-break: break-word;
 }
 .tabs-wrapper {
     margin: 24px 0;
@@ -820,19 +801,11 @@ line-height: normal;
         font-size: 11px;
         letter-spacing: -0.11px;
     }
-    .white-card .key-values-wrapper {
-        grid-template-columns: repeat(3, 1fr);
-    }
     .page-titles {
         font-size: 20px;
         line-height: 22px;
         letter-spacing: 0.1px;
-    }
-    .key-values-wrapper__item .key-values-none {
-        flex-basis: auto;
-        width: 32px !important;
-    }
-    
+    }    
     .page-titles .brr {
         margin-top: 10px;
     }
@@ -860,9 +833,6 @@ line-height: normal;
     }
     .table-wrapper .table  .cell {
         font-size: 13px;
-    }
-    .company-profile-page{
-        font-size: small;
     }
     .graph-header {
         justify-content: space-between;
