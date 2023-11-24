@@ -8,7 +8,7 @@ class="fixed overflow-x-hidden h-full shadow w-full modal_parent bg-white z-40 p
         <div class="text-lg shrink-0 font-semibold">{!! $title !!}</div>
         <div class="ml-3 flex h-7 items-center">
             <button type="button" wire:click="$set('open', false)"
-                class="rounded-md bg-white text-gray-400 hover:text-gray-500 ring-2 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2">
+                class="rounded-md bg-white text-gray-400 hover:text-gray-500">
                 <span class="sr-only">Close panel</span>
                 <svg class="h-6 w-6" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24"
                     stroke="currentColor" aria-hidden="true">

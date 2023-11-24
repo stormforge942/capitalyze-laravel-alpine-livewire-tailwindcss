@@ -46,8 +46,7 @@
 /* make more fancy scollbar */
 
 ::-webkit-scrollbar {
-    height: 5px;
-    width: 5px;
+    display: none;
 }
 
 /* Track */
@@ -947,5 +946,9 @@ line-height: normal;
     }
     .hide-mobile{
         display: none;
+    }
+    .modal_parent{
+        border-left: 1px solid #e5e7eb;
+        box-shadow: none;
     }
 }
