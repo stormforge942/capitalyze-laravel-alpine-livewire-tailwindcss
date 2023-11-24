@@ -30,25 +30,31 @@ class Page extends Component
 
     private function getCostAndDynamic()
     {
+        // Retrieve the latest two adjusted closing prices for the given company's ticker symbol
         $eodPrices = DB::connection('pgsql-xbrl')
             ->table('eod_prices')
-            ->where('symbol', strtolower($this->company->ticker))
-            ->latest('date')
-            ->pluck('adj_close')
-            ->toArray();
+            ->where('symbol', strtolower($this->company->ticker)) // Ensure the ticker symbol is in lowercase
+            ->latest('date') // Order by date, descending
+            ->take(2) // Limit the results to the latest two records
+            ->pluck('adj_close') // Retrieve only the 'adj_close' column
+            ->toArray(); // Convert the collection to an array
 
-        $first = $eodPrices[0] ?? 0;
-        $previous = $eodPrices[1] ?? 0;
+        // Initialize variables to store the most recent and previous prices
+        $latestPrice = $eodPrices[0] ?? 0; // Use null coalescing operator to avoid undefined index errors
+        $previousPrice = $eodPrices[1] ?? 0;
 
-        $dynamic = 0;
+        // Initialize the percentage change variable
+        $percentageChange = 0;
 
-        if ($first && $previous) {
-            $dynamic = round((($first - $previous) / $previous) * 100, 2);
+        // Calculate the percentage change if both latest and previous prices are available and not zero
+        if ($latestPrice > 0 && $previousPrice > 0) {
+            $percentageChange = round((($latestPrice - $previousPrice) / $previousPrice) * 100, 2);
         }
 
+            // Return an associative array with the latest price and the percentage change
         return [
-            'cost' => $first,
-            'dynamic' => $dynamic,
+            'cost' => $latestPrice,
+            'dynamic' => $percentageChange,
         ];
     }
 }

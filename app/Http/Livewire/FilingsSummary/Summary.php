@@ -3,11 +3,39 @@
 namespace App\Http\Livewire\FilingsSummary;
 
 use Livewire\Component;
+use DB;
 
 class Summary extends Component
 {
     public $data = [];
     public $titles = [];
+    public $financials = [];
+    public $col = "acceptance_time";
+    public $order = "desc";
+
+    public function mount(){
+        $this->financials = $this->getDataFromDB();
+    }
+
+    public function handleSorting($data){
+        if ($this->col === $data[0]) {
+            $this->order = $data[1] === 'asc' ? 'desc' : 'asc';
+        } else {
+            $this->order = 'asc';
+        }
+        $this->col = $data[0];
+        $this->financials = $this->getDataFromDB();
+    }
+
+    public function getDataFromDB(){
+        $query = DB::connection('pgsql-xbrl')
+        ->table('company_links')
+        ->where('symbol', 'AAPL')
+        ->whereIn('form_type', ['10-Q', '8-K'])
+        ->orderBy($this->col, $this->order)
+        ->get();
+        return $query;
+    }
 
     public function render()
     {

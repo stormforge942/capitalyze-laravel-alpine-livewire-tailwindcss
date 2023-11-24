@@ -1,4 +1,7 @@
 <div class="flex flex-col">
+    <div class="place-items-center fixed top-0 left-0 right-0 bottom-0 w-full h-screen z-50 overflow-hidden bg-transparent" wire:loading.grid>
+        <span class="mx-auto simple-loader !text-blue"></span>
+    </div>
     <div class="flex lg:hidden justify-between items-center content-center mt-2 mb-4 mx-6">
         <div>
             <h4 class="text-[#3561E7] text-[2rem] font-[600]">Filings</h4>

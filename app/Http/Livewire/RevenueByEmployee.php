@@ -156,8 +156,8 @@ class RevenueByEmployee extends Component
         if($this->period == 'quarterly'){
             $period = 'quarter';
         }
-        $data = json_decode(InfoTikrPresentation::where('ticker', $this->ticker)
-            ->orderByDesc('id')->first()->info, true)[$period];
+        $data = InfoTikrPresentation::where('ticker', $this->ticker)
+            ->orderByDesc('id')->first()->info[$period];
         $this->revenues = $data['Income Statement']['Revenues'];
     }
     public function render()

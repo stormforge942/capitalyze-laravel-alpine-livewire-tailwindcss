@@ -1,19 +1,23 @@
-<div class="flex flex-col">
-    <div class="flex w-full flex-row {{$selected ? 'bg-[#52D3A2]/20' : ($data['segmentation'] ? 'bg-[#52C6FF]/10' : 'bg-white')}}">
-        @if($selected)
-            <div class="flex justify-center items-center ml-2">
-                <input type="checkbox" wire:click.stop="select" checked name="selected-chart-{{$data['id']}}">
+<div class="flex flex-col flex-col-border-less">
+    <div class="flex w-full flex-row hover:bg-gray-light {{$this->isChecked ? 'bg-[#52D3A2]/20' : ($data['segmentation'] ? 'bg-[#52C6FF]/10' : 'bg-white')}}">
+        @if($this->isChecked)
+            <div class="flex justify-center items-center ml-2" wire:ignore>
+                <input type="checkbox" wire:click.stop="select"
+                @if($this->isChecked)
+                checked
+                @endif
+                name="selected-chart-{{$data['id'] ?? ''}}">
             </div>
         @endif
         <div
             wire:click.stop="select"
-            class="cursor-default py-2 text-base w-[300px] truncate flex flex-row items-center"
+            class="cursor-default py-2  w-[250px] truncate flex flex-row items-center"
             style="{{count($data['children']) == 0 ? 'padding-left: 20px;' : 'padding-left: 10px;'}}"
             title="{{$data['title']}}">
-            <span class="whitespace-nowrap truncate">
+            <span class="whitespace-nowrap truncate text-base cursor-pointer">
                 {{$data['title']}}
             </span>
-            <div class="ml-2 flex items-center justify-center">
+            <div class="ml-2 flex items-center justify-center ">
                 @if(count($data['children']) == 0)
                     <div class="w-4 h-4 mr-2"></div>
                 @elseif(!$open)
@@ -29,20 +33,23 @@
                 @endif
             </div>
         </div>
-        <div class="w-full flex flex-row justify-end">
+        <div class="w-full flex flex-row justify-between ">
             @foreach($reverse ? array_reverse($data['values'], true) : $data['values'] as $date => $value)
-                <div wire:key="{{$date}}" class="{{$value['value'] < 0 ? 'text-red' : 'text-black'}} w-[150px] flex items-center justify-center open-slide py-4 text-base  cursor-pointer hover:underline" data-value='{{$this->generateAttribute($value)}}'>
+                @if((date('Y', strtotime($date)) >= (is_numeric($startDate) ? $startDate : date('Y', strtotime($startDate))) &&
+                date('Y', strtotime($date)) <= (is_numeric($endDate)? $endDate : date('Y', strtotime($endDate)))))
+                <div wire:key="{{$date}}" wire:click="showRightSlide({{json_encode($value)}})" class="{{$value['value'] < 0 ? 'text-red' : 'text-black'}} w-[150px] flex items-center justify-center open-slide py-2   cursor-pointer hover:underline">
                     @if(!$value['empty'])
-                        {{$value['present']}}
+                        {{($value['value'] < 0 && is_numeric($value['value'])) ? '(' . number_format(str_replace('-', '', $value['value']), 2) . ')' : (!is_numeric($value['value']) ? $value['value'] : number_format($value['value'], 2))}}
                     @endif
                 </div>
-            @endforeach
+                @endif
+                {{-- {{date('Y', strtotime($date)) . '>=' . (is_numeric($startDate) ? $startDate : date('Y', strtotime($startDate))) . ' | ' . date('Y', strtotime($date)) . '<=' . (is_numeric($endDate)? $endDate : date('Y', strtotime($endDate)))}} --}}
+                @endforeach
+            </div>
         </div>
-    </div>
-
     @if($open)
         @foreach($data['children'] as $key => $value)
-            <livewire:company-report-table-row wire:key="{{$value['id']}}" :data="$value" :index="$index + 1" :selectedRows="$selectedRows" :reverse="$reverse"/>
+        <livewire:company-report-table-row wire:key="{{$value['id']}}" :data="$value" :index="$index + 1" :selectedRows="$selectedRows" :reverse="$reverse" :isChild="true" :startDate="$startDate" :endDate="$endDate"/>
         @endforeach
     @endif
 </div>

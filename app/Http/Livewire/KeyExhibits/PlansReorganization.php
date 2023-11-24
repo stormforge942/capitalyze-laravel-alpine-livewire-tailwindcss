@@ -5,7 +5,7 @@ namespace App\Http\Livewire\KeyExhibits;
 use Livewire\Component;
 use DB;
 
-class CreditAgreement extends Component
+class PlansReorganization extends Component
 {
     public $checkedCount;
     public $data = [];
@@ -57,6 +57,6 @@ class CreditAgreement extends Component
 
     public function render()
     {
-        return view('livewire.key-exhibits.credit-agreement');
+        return view('livewire.key-exhibits.plans-reorganization');
     }
 }

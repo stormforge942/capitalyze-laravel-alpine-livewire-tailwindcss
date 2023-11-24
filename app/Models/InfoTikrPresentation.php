@@ -11,4 +11,8 @@ class InfoTikrPresentation extends Model
     protected $connection = 'pgsql-xbrl';
     protected $table = 'info_tikr_presentations';
     public $timestamps = false;
+
+    protected $casts = [
+        'info' => 'array',
+    ];
 }

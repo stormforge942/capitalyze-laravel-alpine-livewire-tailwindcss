@@ -13,16 +13,37 @@ class CompanyReportTableRow extends Component
     public $selected;
     public $attr = "";
     public $selectedRows = [];
+    public $itemKey = 0;
+    public $startDate = null;
+    public $endDate = null;
+    public $isChild = false;
 
     protected $listeners = ['resetSelection'];
 
-    public function mount($data, $index = 0, $selectedRows = [], $reverse = false)
+    public function mount($data, $index = 0, $selectedRows = [], $reverse = false, $itemKey = 0, $startDate = null, $endDate = null, $isChild = false)
     {
+        $this->isChild = $isChild;
         $this->data = $data;
+        $this->itemKey = $itemKey;
         $this->index = $index;
         $this->selected = in_array($data['title'], $selectedRows);
         $this->selectedRows = $selectedRows;
         $this->reverse = $reverse;
+        $this->startDate = $startDate;
+        $this->endDate = $endDate;
+    }
+
+    public function getIsCheckedProperty(){
+        if(array_key_exists($this->itemKey, $this->selectedRows)){
+            return true;
+        }
+        else {
+            return false;
+        }
+    }
+
+    public function showRightSlide($value) {
+        $this->emit('rightSlide', $value);
     }
 
     public function generateAttribute($value)
@@ -53,7 +74,7 @@ class CompanyReportTableRow extends Component
 
     public function select()
     {
-        if ($this->selected) {
+        if ($this->getIsCheckedProperty()) {
             $this->emit('unselectRow', $this->data['title']);
             $this->selected = false;
             return;

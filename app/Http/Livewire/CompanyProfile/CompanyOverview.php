@@ -26,8 +26,8 @@ class CompanyOverview extends Component
         $this->profile = $this->formatProfile($data['profile']);
         $this->period = $data['period'];
 
-        $this->getProducts($data['profile']['symbol']);
-        $this->getPresentationData($data['profile']['symbol']);
+        $this->getProducts();
+        $this->getPresentationData();
     }
 
     public function render()
@@ -255,12 +255,12 @@ class CompanyOverview extends Component
         ];
     }
 
-    private function getProducts($symbol)
+    private function getProducts()
     {
         $source = ($this->period == 'annual') ? 'arps' : 'qrps';
         $json = DB::connection('pgsql-xbrl')
             ->table('as_reported_sec_segmentation_api')
-            ->where('ticker', '=', $symbol)
+            ->where('ticker', '=', $this->profile['symbol'])
             ->where('endpoint', '=', $source)
             ->value('api_return_open_ai');
 
@@ -289,14 +289,19 @@ class CompanyOverview extends Component
         $this->segments = array_slice($this->segments, 0, 6);
     }
 
-    private function getPresentationData($symbol)
+    private function getPresentationData()
     {
-        $data = json_decode(InfoTikrPresentation::where('ticker', $symbol)
-            ->orderByDesc('id')->first()->info, true)['annual'];
-        $this->ebitda = $data['Income Statement']['EBITDA'];
-        $this->adjNetIncome = $data['Income Statement']['Net Income'];
-        $this->dilutedEPS = $data['Income Statement']['Diluted EPS Excl Extra Items'];
-        $this->revenues = $data['Income Statement']['Revenues'];
-        $this->dilutedSharesOut = $data['Income Statement']['Weighted Average Diluted Shares Outstanding'];
+        $tickerSymbol = $this->profile['symbol'];
+
+        $infoAnnualData = InfoTikrPresentation::where('ticker', $tickerSymbol)
+            ->orderByDesc('id')
+            ->first(['info']) // Select only the 'info' column.
+            ->info['annual'];
+
+        $this->ebitda = $infoAnnualData['Income Statement']['EBITDA'];
+        $this->adjNetIncome = $infoAnnualData['Income Statement']['Net Income'];
+        $this->dilutedEPS = $infoAnnualData['Income Statement']['Diluted EPS Excl Extra Items'];
+        $this->revenues = $infoAnnualData['Income Statement']['Revenues'];
+        $this->dilutedSharesOut = $infoAnnualData['Income Statement']['Weighted Average Diluted Shares Outstanding'];
     }
 }

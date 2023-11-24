@@ -50,6 +50,8 @@ class CompanyReport extends Component
     public $chartType = 'line';
     public $isOpen = false;
     public $activeTitle = 'Income Statement';
+    public $colors = [];
+    public $allRows = [];
 
     protected $listeners = ['periodChange', 'tabClicked', 'tabSubClicked', 'selectRow', 'unselectRow'];
 
@@ -58,8 +60,6 @@ class CompanyReport extends Component
         'reverse',
         'decimalDisplay',
         'view',
-        'startDate',
-        'endDate',
     ];
 
     public function toggleChartType($title)
@@ -82,10 +82,29 @@ class CompanyReport extends Component
         if (count($this->selectedRows) < 5) {
             $this->selectedRows[$title]['dates'] = $data;
             $this->selectedRows[$title]['type'] = 'line';
+            $this->selectedRows[$title]['color'] = $this->colors[count($this->selectedRows) - 1];
         }
 
         $this->generateChartData();
-        $this->emit('initCompanyReportChart');
+//        $this->emit('initCompanyReportChart');
+    }
+
+    public function updateSelectRows()
+    {
+
+        $index = 0;
+        foreach ($this->selectedRows as $title => $row) {
+            foreach ($this->rows as $key => $value) {
+                if (isset($value['title']) && $value['title'] === $title) {
+                    $index = $key;
+                    break; // Stop the loop once the target title is found
+                }
+            }
+
+            $rowFind = $this->rows[$index];
+            $this->selectedRows[$title]['dates'] =  $rowFind['values'];
+        }
+
     }
 
     public function regenerateTableChart(): void
@@ -129,12 +148,18 @@ class CompanyReport extends Component
         $chartData = [];
         foreach ($this->selectedRows as $title => $row) {
             $data = [];
-            foreach ($row['dates'] as $cell) {
+            foreach ($row['dates'] as $key => $cell) {
+
                 if (!$cell['empty']) {
-                    $data[] = [
-                        'y' => $cell['value'],
-                        'x' => $cell['date'],
-                    ];
+                    $selectedYear = date('Y', strtotime($cell['date']));
+                    $startYear = !is_numeric($this->startDate) ? date('Y', strtotime($this->startDate)) : $this->startDate;
+                    $endYear = !is_numeric($this->endDate) ? date('Y', strtotime($this->endDate)) : $this->endDate;
+                    if(!($selectedYear < $startYear) && !($selectedYear > $endYear)) {
+                        $data[] = [
+                            'y' => $cell['value'],
+                            'x' => $cell['date'],
+                        ];
+                    }
                 } else {
                     $data[] = [
                         'y' => null,
@@ -142,12 +167,11 @@ class CompanyReport extends Component
                     ];
                 }
             }
-
             $chartData[] = [
                 'data' => $data,
                 'type' => $row['type'],
                 'label' => $title,
-                'borderColor' => ['#5a5a5a', '#737373', '#8d8d8d', '#a6a6a6', '#949494'],
+                'borderColor' => $row['color'],
                 'pointRadius' => 1,
                 'pointHoverRadius' => 8,
                 'tension' => 0.5,
@@ -162,6 +186,8 @@ class CompanyReport extends Component
 
         if ($initChart) {
             $this->emit('initCompanyReportChart');
+        } else {
+            $this->emit('updateCompanyReportChart');
         }
     }
 
@@ -169,45 +195,22 @@ class CompanyReport extends Component
     {
         $acronym = ($this->period == 'annual') ? 'arf5drs' : 'qrf5drs';
 
-        $defaultConnectionName = DB::getDefaultConnection();
-        $defaultConnectionResolver = new ConnectionResolver();
-        $defaultConnectionResolver->addConnection(
-            $defaultConnectionName,
-            DB::connection($defaultConnectionName),
-        );
-        $defaultConnectionResolver->setDefaultConnection($defaultConnectionName);
-
-        $remoteConnectionName = 'pgsql-xbrl';
-        $remoteConnectionResolver = new ConnectionResolver();
-        $remoteConnectionResolver->addConnection(
-            $remoteConnectionName,
-            DB::connection($remoteConnectionName),
-        );
-        $remoteConnectionResolver->setDefaultConnection($remoteConnectionName);
-
-        DB::setDefaultConnection($remoteConnectionName);
-        Model::setConnectionResolver($remoteConnectionResolver);
-
         if ($this->view === 'Standardised Template') {
-            $query = InfoTikrPresentation::query()
-                ->where('ticker', '=', $this->ticker)
-                ->select('info')->value('info');
+            $data = InfoTikrPresentation::where('ticker', $this->ticker)->orderByDesc('id')->first()->info;
         } else {
             $query = InfoPresentation::query()
                 ->where('ticker', '=', $this->ticker)
                 ->where('acronym', '=', $acronym)
                 ->where('id', '=', $this->activeSubIndex)
                 ->select('info')->value('info');
+
+            $data = json_decode($query, true);
+
         }
 
         if ($this->activeTitle === 'Ratios') {
             $query = $this->fakeDataForRatiosPage();
         }
-
-        Model::setConnectionResolver($defaultConnectionResolver);
-        DB::setDefaultConnection($defaultConnectionName);
-
-        $data = json_decode($query, true);
 
         // handle period is not set by default we put it to annual
         $this->period ?? $this->period = 'annual';
@@ -228,7 +231,6 @@ class CompanyReport extends Component
 
     public function changeDates($dates)
     {
-
         $this->tableLoading = true;
         $this->rows = [];
 
@@ -296,8 +298,9 @@ class CompanyReport extends Component
         $this->generateRows($this->data);
 
         if (count($this->selectedRows)) {
+            $this->updateSelectRows();
             $this->generateChartData();
-            $this->emit('initCompanyReportChart');
+            $this->emit('updateCompanyReportChart');
         }
         $this->tableLoading = false;
     }
@@ -306,13 +309,14 @@ class CompanyReport extends Component
     {
         $this->generateTableDates();
         $this->generateRows($this->data);
+        $this->emit('initCompanyReportChart');
     }
 
     function traverseArray($array)
     {
         foreach ($array as $key => $value) {
             if (is_array($value)) {
-                if (strtotime($key) !== false) {
+                if (strtotime($key) !== false && strlen($key) > 5) {
                     if(!in_array(date('Y-m-d', strtotime($key)), $this->tableDates)) {
                         $this->tableDates[] = date('Y-m-d', strtotime($key));
                     }
@@ -445,6 +449,7 @@ class CompanyReport extends Component
     {
         $this->tableLoading = true;
         $rows = [];
+        $allRows = [];
 
         if ($this->view !== 'Standardised Template') {
             if (
@@ -486,17 +491,26 @@ class CompanyReport extends Component
         }
 
         foreach ($data as $key => $value) {
-            $rows[] = $this->generateRow($value, $key);
+            $rowArray = $this->generateRow($value, $key);
+            $rows[] = $rowArray[0];
+            $allRows[] =$rowArray[1];
 
         }
 
         $this->rows = $rows;
+        $this->allRows = $allRows;
         $this->tableLoading = false;
     }
 
     public function generateRow($data, $title, $isSegmentation = false): array
     {
         $row = [
+            'title' => $title,
+            'segmentation' => false,
+            'values' => $this->generateEmptyCellsRow(),
+            'children' => [],
+        ];
+        $allrow = [
             'title' => $title,
             'segmentation' => false,
             'values' => $this->generateEmptyCellsRow(),
@@ -521,6 +535,13 @@ class CompanyReport extends Component
                         break;
                     }
                 }
+                foreach ($this->rangeDates as $date) {
+                    $datePart = substr($date, 0, 7);
+                    if ($datePart == $year) {
+                        $allrow['values'][$date] = $this->parseCell($value, $key);
+                        break;
+                    }
+                }
             } else {
                 if (in_array($key, ['#segmentation'])) {
                     foreach ($value as $sKey => $sValue) {
@@ -528,10 +549,12 @@ class CompanyReport extends Component
                         $valuen = $sValue[$keyn];
                         $keynn = array_keys($valuen)[0];
                         $valuenn = $valuen[$keynn];
-                        $row['children'][] = $this->generateRow($valuenn, $keynn, true);
+                        $row['children'][] = $this->generateRow($valuenn, $keynn, true)[0];
+                        $allrow['children'][] = $this->generateRow($valuenn, $keynn, true)[1];
                     }
                 } else {
-                    $row['children'][] = $this->generateRow($value, $key, $isSegmentation);
+                    $row['children'][] = $this->generateRow($value, $key, $isSegmentation)[0];
+                    $allrow['children'][] = $this->generateRow($value, $key, $isSegmentation)[1];
                 }
             }
 
@@ -539,8 +562,10 @@ class CompanyReport extends Component
 
         $row['segmentation'] = $isSegmentation && count($row['children']) === 0;
         $row['id'] = serialize($row);
+        $allrow['segmentation'] = $isSegmentation && count($allrow['children']) === 0;
+        $allrow['id'] = serialize($allrow);
 
-        return $row;
+        return [$row, $allrow];
     }
 
     public function generatePresent($value)
@@ -554,8 +579,11 @@ class CompanyReport extends Component
 
         $decimalDisplay = intval($this->decimalDisplay);
 
-        if (str_contains($value, '%') || str_contains($value, '-') || !is_numeric($value)) {
+        if (str_contains($value, '%') || $value == '-' || !is_numeric($value)) {
             return $value;
+        }
+        if ($value <= 100 && $value > -1000) {
+            return round($value, 2);
         }
 
         if (str_contains($value, '.') || str_contains($value, ',')) {
@@ -565,20 +593,20 @@ class CompanyReport extends Component
         }
 
         if (!isset($units[$unitType])) {
-            return number_format($value, $decimalDisplay);
+            return $value;
         }
 
         $unitAbbreviation = $units[$unitType];
 
         // Determine the appropriate unit based on the number
         if ($unitAbbreviation == 'B') {
-            return number_format($value / 1000000000);
+            return $value / 1000000000;
         } elseif ($unitAbbreviation == 'M') {
-            return number_format($value / 1000000);
+            return $value / 1000000;
         } elseif ($unitAbbreviation == 'T') {
-            return number_format($value / 1000);
+            return $value / 1000;
         } else {
-            return number_format($value);
+            return $value;
         }
     }
 
@@ -593,7 +621,7 @@ class CompanyReport extends Component
             if (in_array('|', str_split($value))) {
                 $array = explode('|', $value);
 
-                $response['value'] = $array[0];
+                $response['value'] = $this->generatePresent($array[0]);
                 $response['present'] = $this->generatePresent($array[0]);
                 $response['hash'] = $array[1];
 
@@ -638,6 +666,7 @@ class CompanyReport extends Component
 
         if ($propertyName === 'view') {
             $this->getData();
+            $this->traverseArray($this->allRows);
         }
 
     }
@@ -697,6 +726,10 @@ class CompanyReport extends Component
         ->latest('date')->first()?->adj_close;
 
         $this->cost =  $first;
+
+        $this->colors = [
+            "#000000","#454545","#5e5e5e","#636363","#7a7a7a","#878787","#7a7e94","#5d6074","#4d5060","#3d404c","#4f5263"
+        ];
 
 
         $previous = DB::connection('pgsql-xbrl')

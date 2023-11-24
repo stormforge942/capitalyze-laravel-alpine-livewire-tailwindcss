@@ -66,35 +66,24 @@ class CompanyOverviewGraph extends Component
 
         $result = DB::connection('pgsql-xbrl')
             ->table('eod_prices')
+            ->select('date', 'adj_close', 'volume')
+            ->selectRaw('AVG(adj_close) OVER () as adj_close_avg')
+            ->selectRaw('MAX(adj_close) OVER () as max_adj_close')
+            ->selectRaw('MIN(adj_close) OVER () as min_adj_close')
+            ->selectRaw('AVG(volume) OVER () as volume_avg')
             ->where('symbol', strtolower($this->ticker))
             ->whereBetween('date', $period)
             ->orderBy('date')
             ->get();
 
-        $adj_close_avg = round(DB::connection('pgsql-xbrl')
-            ->table('eod_prices')
-            ->where('symbol', strtolower($this->ticker))
-            ->whereBetween('date', $period)
-            ->avg('adj_close'));
+        $adj_close_avg = round($result->first()->adj_close_avg);
+        $max = round($result->first()->max_adj_close);
+        $min = round($result->first()->min_adj_close);
+        $volume_avg = round($result->first()->volume_avg);
 
-        $max = round(DB::connection('pgsql-xbrl')
-            ->table('eod_prices')
-            ->where('symbol', strtolower($this->ticker))
-            ->whereBetween('date', $period)
-            ->max('adj_close'));
-
-        $min = round(DB::connection('pgsql-xbrl')
-            ->table('eod_prices')
-            ->where('symbol', strtolower($this->ticker))
-            ->whereBetween('date', $period)
-            ->min('adj_close'));
-
-
-        $volume_avg = round(DB::connection('pgsql-xbrl')
-            ->table('eod_prices')
-            ->where('symbol', strtolower($this->ticker))
-            ->whereBetween('date', $period)
-            ->avg('volume'));
+        foreach ($result as $row) {
+            unset($row->adj_close_avg, $row->max_adj_close, $row->min_adj_close, $row->volume_avg);
+        }
 
         $divider = 1;
 
