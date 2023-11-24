@@ -740,7 +740,12 @@
 
     let mainDiv = document.getElementById('main-report-div')
     mainDiv.addEventListener('click', function(){
-        Livewire.emit('closeSlide')
+        let leftSlideOpen = document.getElementById('leftSlideOpen').value
+        let rightSlideOpen = document.getElementById('rightSlideOpen').value
+
+        if(leftSlideOpen || rightSlideOpen){
+            Livewire.emit('closeSlide')
+        }
     })
 
     function generateRangeArray(inputArray) {
