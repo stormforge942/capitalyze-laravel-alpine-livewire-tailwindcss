@@ -251,9 +251,9 @@
             <div class="row-group row-head-fonts-sm table-header-border">
                 <div class="row">
                     <div class="font-bold cell">EBITDA</div>
-                    @foreach (array_keys($products) as $key => $date)
+                    @foreach (array_keys($products) as $date)
                         <div class="font-bold cell">
-                            {{ number_format(explode('|', str_replace(',', '', $ebitda[$date][0]))[0]) }}
+                            {{ isset($ebitda[$date]) ? number_format((float)explode('|', str_replace(',', '', $ebitda[$date][0]))[0], 2) : 'N/A' }}
                         </div>
                     @endforeach
                 </div>
@@ -266,11 +266,19 @@
                                 0.0%
                             @else
                                 @php
-                                    $currentEbitDA = str_replace(',', '', explode('|', $ebitda[$date][0])[0]);
-                                    $previousEbitDA = str_replace(',', '', explode('|', $ebitda[array_keys($products)[$key - 1]][0])[0]);
+                                    $previousKey = array_keys($products)[$key - 1];
+                                    $currentEbitDAValue = isset($ebitda[$date][0]) ? str_replace(',', '', explode('|', $ebitda[$date][0])[0]) : 0;
+                                    $previousEbitDAValue = isset($ebitda[$previousKey][0]) ? str_replace(',', '', explode('|', $ebitda[$previousKey][0])[0]) : 0;
+                                    $currentEbitDA = floatval($currentEbitDAValue);
+                                    $previousEbitDA = floatval($previousEbitDAValue);
                                 @endphp
-                                {{ round((($currentEbitDA - $previousEbitDA) / $previousEbitDA) * 100, 2) }}%
+                                @if ($previousEbitDA != 0)
+                                    {{ round((($currentEbitDA - $previousEbitDA) / $previousEbitDA) * 100, 2) }}%
+                                @else
+                                    N/A
+                                @endif
                             @endif
+
                         </div>
                     @endforeach
                 </div>
@@ -283,10 +291,25 @@
                                 0.0%
                             @else
                                 @php
-                                    $currentEbitda = str_replace(',', '', explode('|', $ebitda[$date][0])[0]);
-                                    $currentRevenue = str_replace(',', '', explode('|', $revenues[$date][0])[0]);
+                                    $currentEbitdaValue = 0;
+                                    $currentRevenueValue = 0;
+
+                                    // Check if the key exists in the $ebitda array and if so, remove commas and convert to float
+                                    if (isset($ebitda[$date][0])) {
+                                        $currentEbitdaValue = floatval(str_replace(',', '', explode('|', $ebitda[$date][0])[0]));
+                                    }
+
+                                    // Check if the key exists in the $revenues array and if so, remove commas and convert to float
+                                    if (isset($revenues[$date][0])) {
+                                        $currentRevenueValue = floatval(str_replace(',', '', explode('|', $revenues[$date][0])[0]));
+                                    }
                                 @endphp
-                                {{ round($currentRevenue / $currentEbitda, 2) }}
+                                // Ensure that $currentEbitdaValue is not zero to avoid division by zero
+                                @if ($currentEbitdaValue != 0)
+                                    {{ round($currentRevenueValue / $currentEbitdaValue, 2) }}
+                                @else
+                                    N/A
+                                @endif
                             @endif
                         </div>
                     @endforeach
@@ -300,7 +323,7 @@
                     <div class="font-bold cell">Adj. Net Income</div>
                     @foreach (array_keys($products) as $key => $date)
                         <div class="font-bold cell">
-                            {{ number_format(explode('|', str_replace(',', '', $adjNetIncome[$date][0]))[0]) }}
+                            {{ isset($adjNetIncome[$date][0]) ? number_format(floatval(explode('|', str_replace(',', '', $adjNetIncome[$date][0]))[0]), 2) : 'N/A' }}
                         </div>
                     @endforeach
                 </div>
@@ -313,11 +336,20 @@
                                 0.0%
                             @else
                                 @php
-                                    $currentAdjNetIncome = str_replace(',', '', explode('|', $adjNetIncome[$date][0])[0]);
-                                    $previousAdjNetIncome = str_replace(',', '', explode('|', $adjNetIncome[array_keys($products)[$key - 1]][0])[0]);
+                                    $currentKey = array_keys($products)[$key];
+                                    $previousKey = array_keys($products)[$key - 1];
+
+                                    $currentAdjNetIncome = isset($adjNetIncome[$currentKey][0]) ? floatval(str_replace(',', '', explode('|', $adjNetIncome[$currentKey][0])[0])) : 0;
+                                    $previousAdjNetIncome = isset($adjNetIncome[$previousKey][0]) ? floatval(str_replace(',', '', explode('|', $adjNetIncome[$previousKey][0])[0])) : 0;
                                 @endphp
-                                {{ round((($currentAdjNetIncome - $previousAdjNetIncome) / $previousAdjNetIncome) * 100, 2) }}%
+
+                                @if ($previousAdjNetIncome != 0)
+                                    {{ round((($currentAdjNetIncome - $previousAdjNetIncome) / $previousAdjNetIncome) * 100, 2) }}%
+                                @else
+                                    N/A
+                                @endif
                             @endif
+
                         </div>
                     @endforeach
                 </div>
@@ -330,10 +362,15 @@
                                 0.0%
                             @else
                                 @php
-                                    $currentNetIncome = str_replace(',', '', explode('|', $adjNetIncome[$date][0])[0]);
-                                    $currentRevenue = str_replace(',', '', explode('|', $revenues[$date][0])[0]);
+                                    $currentNetIncome = isset($adjNetIncome[$date][0]) ? floatval(str_replace(',', '', explode('|', $adjNetIncome[$date][0])[0])) : 0;
+                                    $currentRevenue = isset($revenues[$date][0]) ? floatval(str_replace(',', '', explode('|', $revenues[$date][0])[0])) : 0;
                                 @endphp
-                                {{ round($currentRevenue / $currentNetIncome, 2) }}%
+
+                                @if ($currentNetIncome != 0)
+                                    {{ round(($currentRevenue / $currentNetIncome) * 100, 2) }}%
+                                @else
+                                    N/A
+                                @endif
                             @endif
                         </div>
                     @endforeach
@@ -343,7 +380,7 @@
                     <div class="cell">Diluted Shares Out</div>
                     @foreach (array_keys($products) as $key => $date)
                         <div class="cell">
-                            {{ str_replace(',', '', explode('|', $dilutedSharesOut[$date][0])[0]) }}
+                            {{ isset($dilutedSharesOut[$date][0]) ? str_replace(',', '', explode('|', $dilutedSharesOut[$date][0])[0]) : 'N/A' }}
                         </div>
                     @endforeach
                 </div>
@@ -355,9 +392,11 @@
                                 0.0%
                             @else
                                 @php
-                                    $currentDilutedSharesOut = floatval(str_replace(',', '', explode('|', $dilutedSharesOut[$date][0])[0]));
-                                    $previousDilutedSharesOut = floatval(str_replace(',', '', explode('|', $dilutedSharesOut[array_keys($products)[$key - 1]][0])[0]));
-                                    $percentageChange = ($previousDilutedSharesOut != 0) ? round((($currentDilutedSharesOut - $previousDilutedSharesOut) / $previousDilutedSharesOut) * 100, 2) : 0;
+                                    $previousDate = array_keys($products)[$key - 1];
+                                    $currentDilutedSharesOut = isset($dilutedSharesOut[$date][0]) ? floatval(str_replace(',', '', explode('|', $dilutedSharesOut[$date][0])[0])) : 0;
+                                    $previousDilutedSharesOut = isset($dilutedSharesOut[$previousDate][0]) ? floatval(str_replace(',', '', explode('|', $dilutedSharesOut[$previousDate][0])[0])) : 0;
+
+                                    $percentageChange = ($previousDilutedSharesOut != 0) ? round((($currentDilutedSharesOut - $previousDilutedSharesOut) / $previousDilutedSharesOut) * 100, 2) : 'N/A';
                                 @endphp
                                 {{ $percentageChange }}%
                             @endif
@@ -376,7 +415,7 @@
                         <div class="font-bold cell">Adj. Diluted EPS</div>
                         @foreach (array_keys($products) as $key => $date)
                             <div class="font-bold cell">
-                                {{ str_replace(',', '', explode('|', $dilutedEPS[$date][0])[0]) }}
+                                {{ isset($dilutedEPS[$date][0]) ? str_replace(',', '', explode('|', $dilutedEPS[$date][0])[0]) : 'N/A' }}
                             </div>
                         @endforeach
                     </div>
@@ -389,10 +428,15 @@
                                     0.0%
                                 @else
                                     @php
-                                        $currentDilutedEPS = str_replace(',', '', explode('|', $dilutedEPS[$date][0])[0]);
-                                        $previousDilutedEPS = str_replace(',', '', explode('|', $dilutedEPS[array_keys($products)[$key - 1]][0])[0]);
+                                        $previousDate = array_keys($products)[$key - 1];
+                                        $currentDilutedEPS = isset($dilutedEPS[$date][0]) ? floatval(str_replace(',', '', explode('|', $dilutedEPS[$date][0])[0])) : 0;
+                                        $previousDilutedEPS = isset($dilutedEPS[$previousDate][0]) ? floatval(str_replace(',', '', explode('|', $dilutedEPS[$previousDate][0])[0])) : 0;
                                     @endphp
-                                    {{ round((($currentDilutedEPS - $previousDilutedEPS) / $previousDilutedEPS) * 100, 2) }}%
+                                    @if ($previousDilutedEPS != 0)
+                                        {{ round((($currentDilutedEPS - $previousDilutedEPS) / $previousDilutedEPS) * 100, 2) }}%
+                                    @else
+                                        N/A
+                                    @endif
                                 @endif
                             </div>
                         @endforeach

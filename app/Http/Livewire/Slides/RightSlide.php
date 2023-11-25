@@ -33,7 +33,7 @@ class RightSlide extends Component
         $this->ticker = $data['ticker'];
         $this->value = $data['value'];
         $this->hash = $data['hash'];
-        $this->secondHash = $data['secondHash'];
+        $this->secondHash = $data['secondHash'] ?? null;
 
         if ($this->secondHash) {
             $result = DB::connection('pgsql-xbrl')
