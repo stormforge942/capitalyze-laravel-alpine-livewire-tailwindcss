@@ -1,5 +1,10 @@
 <div x-data="{
-    activeTab: @if(count($sidebarLinks)) '{{ $sidebarLinks[0]['link'] }}' @else null @endif,
+    activeTab: @if (count($sidebarLinks)) '{{ $sidebarLinks[0]['link'] }}' @else null @endif,
+    openSource() {
+        window.livewire.emit('slide-over.open', 'business-information-source-slide', { sourceLink: `{{ $menuLinks['s3_url'] }}` }, {
+            force: true
+        });
+    },
     toggle(tab, clear = true) {
         if (this.activeTab === tab && clear) {
             this.activeTab = null
@@ -16,7 +21,7 @@
     <x-card class="block lg:hidden max-w-[612px] w-full">
         <div class="flex items-center justify-between gap-4">
             <h3 class="font-semibold text-lg">Business</h3>
-            <a href="{{ $menuLinks['s3_url'] }}" class="underline text-xs">
+            <a href="{{ $menuLinks['s3_url'] }}" @click.prevent="openSource" class="underline text-xs">
                 Source: FY {{ date('Y', strtotime($menuLinks['acceptance_time'])) }} 10-K
             </a>
         </div>
@@ -60,26 +65,26 @@
             </x-card>
         </div>
 
-        @if(count($sidebarLinks))
-        <div class="max-w-[304px] w-full">
-            <x-card class="sticky top-2">
-                <div class="space-y-2 text-blue">
-                    @foreach ($sidebarLinks as $item)
-                        <button class="w-full py-2 px-4 text-left rounded"
-                            :class="activeTab === '{{ $item['link'] }}' ? 'bg-green bg-opacity-20 text-dark' :
-                                'hover:bg-gray-100'"
-                            @click="setActive('{{ $item['link'] }}')">
-                            {{ $item['anchorText'] }}
-                        </button>
-                    @endforeach
-                </div>
-                <div class="mt-3.5 px-4 flex justify-end">
-                    <a href="{{ $menuLinks['s3_url'] }}" class="underline text-xs">
-                        Source: FY {{ date('Y', strtotime($menuLinks['acceptance_time'])) }} 10-K
-                    </a>
-                </div>
-            </x-card>
-        </div>
+        @if (count($sidebarLinks))
+            <div class="max-w-[304px] w-full">
+                <x-card class="sticky top-2">
+                    <div class="space-y-2 text-blue">
+                        @foreach ($sidebarLinks as $item)
+                            <button class="w-full py-2 px-4 text-left rounded"
+                                :class="activeTab === '{{ $item['link'] }}' ? 'bg-green bg-opacity-20 text-dark' :
+                                    'hover:bg-gray-100'"
+                                @click="setActive('{{ $item['link'] }}')">
+                                {{ $item['anchorText'] }}
+                            </button>
+                        @endforeach
+                    </div>
+                    <div class="mt-3.5 px-4 flex justify-end">
+                        <a href="{{ $menuLinks['s3_url'] }}" @click.prevent="openSource" class="underline text-xs">
+                            Source: FY {{ date('Y', strtotime($menuLinks['acceptance_time'])) }} 10-K
+                        </a>
+                    </div>
+                </x-card>
+            </div>
         @endif
     </div>
 </div>
