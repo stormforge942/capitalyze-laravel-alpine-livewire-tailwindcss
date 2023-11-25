@@ -427,10 +427,6 @@ position: relative;
     height: 16px;
 }
 
-.company-profile-overview-chart {
-    max-height: 350px !important;
-}
-
 .chart-company-report {
     max-height: 350px !important;
     display: block !important;

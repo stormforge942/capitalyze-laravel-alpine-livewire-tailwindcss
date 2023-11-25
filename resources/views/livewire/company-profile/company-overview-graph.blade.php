@@ -1,5 +1,5 @@
-<div class="bg-white px-8 py-10 rounded-lg relative" x-data="{ hide: false }">
-    <div class="absolute top-3 right-5">
+<div class="bg-white px-4 py-6 md:px-6 rounded-lg relative" x-data="{ hide: false }">
+    <div class="absolute top-2 right-2 sm:top-3 sm:right-5">
         <x-dropdown placement="bottom-start" :shadow="true">
             <x-slot name="trigger">
                 <svg :class="open ? `rotate-90` : ''" width="24" height="24" viewBox="0 0 24 24" fill="none"
@@ -65,15 +65,28 @@
             </small>
         </div>
 
-        <div class="flex-1 flex justify-end xl:justify-center">
+        <div class="flex-1 flex justify-end xl:justify-center" x-data="{
+            dateRange: $wire.entangle('dateRange'),
+            currentChartPeriod: $wire.entangle('currentChartPeriod'),
+            showDropdown: false,
+            init() {
+                this.$watch('dateRange', value => {
+                    this.showDropdown = false
+                })
+        
+                this.$watch('currentChartPeriod', value => {
+                    this.showDropdown = false
+                })
+            },
+        }">
             <div class="hidden xl:block">
                 @include('livewire.company-profile.overview-graph-filters')
             </div>
 
-            <x-dropdown placement="bottom-end" class="block xl:hidden">
+            <x-dropdown placement="bottom-end" class="block xl:hidden" x-model="showDropdown">
                 <x-slot name="trigger">
-                    <div class="p-2 flex items-center gap-x-2 border border-[#ECE9F1] text-[#686868] text-sm rounded">
-                        <span class="capitalize">{{ $chartPeriods[$currentChartPeriod] ?? 'N/A' }}</span>
+                    <div class="p-2 mr-5 flex items-center gap-x-2 border border-[#ECE9F1] text-[#686868] text-sm rounded">
+                        <span class="capitalize whitespace-nowrap">{{ $chartPeriods[$currentChartPeriod] ?? 'N/A' }}</span>
                         <svg width="16" height="16" viewBox="0 0 16 16" fill="none"
                             xmlns="http://www.w3.org/2000/svg">
                             <path d="M7.99479 9.33366L5.32812 6.66699H10.6615L7.99479 9.33366Z" fill="black" />
@@ -93,7 +106,7 @@
     </div>
 
     <div class="mt-3" wire:loading.remove x-show="!hide" x-transition>
-        <canvas id="product-profile-chart" class="w-full company-profile-overview-chart"></canvas>
+        <canvas id="product-profile-chart"></canvas>
     </div>
 </div>
 @pushonce('scripts')
@@ -126,115 +139,6 @@
             }
 
             return tooltipEl;
-        };
-
-        const externalTooltipHandler = (context) => {
-            // Tooltip Element
-            const {
-                chart,
-                tooltip
-            } = context;
-            const tooltipEl = getOrCreateTooltip(chart);
-
-            // Hide if no tooltip
-            if (tooltip.opacity === 0) {
-                tooltipEl.style.opacity = 0;
-                return;
-            }
-
-            // Set Text
-            if (tooltip.body) {
-                const titleLines = tooltip.title || [];
-                const bodyLines = tooltip.body.map(b => b.lines);
-
-                const tableHead = document.createElement('thead');
-
-                tableHead.style.color = '#3561E7';
-                tableHead.style.textAlign = 'left';
-                tableHead.style.marginBottom = '8px';
-
-                titleLines.forEach(title => {
-                    const tr = document.createElement('tr');
-                    tr.style.borderWidth = 0;
-
-                    const th = document.createElement('th');
-                    th.style.borderWidth = 0;
-                    const text = document.createTextNode(title);
-
-                    th.appendChild(text);
-                    tr.appendChild(th);
-                    tableHead.appendChild(tr);
-                });
-
-                const tableBody = document.createElement('tbody');
-                bodyLines.reverse().forEach((body, i) => {
-                    const [label, value] = body[0].split('|');
-
-                    //label
-
-                    const trLabel = document.createElement('tr');
-                    trLabel.style.backgroundColor = 'inherit';
-                    trLabel.style.borderWidth = '0';
-                    trLabel.style.fontSize = '12px';
-                    trLabel.style.fontWeight = '400';
-                    trLabel.style.color = '#464E49';
-                    trLabel.style.paddingBottom = '0px';
-                    trLabel.style.marginBottom = '0px';
-
-
-                    const tdLabel = document.createElement('td');
-                    tdLabel.style.borderWidth = 0;
-
-                    const textLabel = document.createTextNode(label);
-
-                    tdLabel.appendChild(textLabel);
-                    trLabel.appendChild(tdLabel);
-
-                    tableBody.appendChild(trLabel);
-
-
-                    //value
-                    const tr = document.createElement('tr');
-                    tr.style.backgroundColor = 'inherit';
-                    tr.style.borderWidth = '0';
-                    tr.style.fontSize = '16px';
-                    tr.style.fontWeight = '700';
-                    tr.style.color = '#464E49';
-
-                    const td = document.createElement('td');
-                    td.style.borderWidth = 0;
-
-                    const text = document.createTextNode(value);
-
-                    td.appendChild(text);
-                    tr.appendChild(td);
-
-                    tableBody.appendChild(tr);
-                });
-
-                const tableRoot = tooltipEl.querySelector('table');
-
-                // Remove old children
-                while (tableRoot.firstChild) {
-                    tableRoot.firstChild.remove();
-                }
-
-                // Add new children
-                tableRoot.appendChild(tableHead);
-                tableRoot.appendChild(tableBody);
-            }
-
-            const {
-                offsetLeft: positionX,
-                offsetTop: positionY
-            } = chart.canvas;
-
-            // Display, position, and set styles for font
-            tooltipEl.style.opacity = 1;
-            tooltipEl.style.left = positionX + tooltip.caretX + 'px';
-            tooltipEl.style.top = positionY + tooltip.caretY - 155 + 'px';
-            tooltipEl.style.font = tooltip.options.bodyFont.string;
-            tooltipEl.style.padding = 8 + 'px ' + 19 + 'px';
         };
 
         function initChart() {
@@ -317,7 +221,7 @@
                             bodyFont: {
                                 size: 15
                             },
-                            external: externalTooltipHandler,
+                            external: window.chartJsPlugins.largeTooltip,
                             enabled: false,
                             position: 'nearest',
                             callbacks: {
