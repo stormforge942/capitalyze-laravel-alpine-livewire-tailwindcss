@@ -60,8 +60,9 @@
             </x-card>
         </div>
 
+        @if(count($sidebarLinks))
         <div class="max-w-[304px] w-full">
-            <x-card>
+            <x-card class="sticky top-2">
                 <div class="space-y-2 text-blue">
                     @foreach ($sidebarLinks as $item)
                         <button class="w-full py-2 px-4 text-left rounded"
@@ -79,5 +80,6 @@
                 </div>
             </x-card>
         </div>
+        @endif
     </div>
 </div>
