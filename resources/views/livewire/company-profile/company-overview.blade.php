@@ -222,7 +222,15 @@
                                     @if ($key == 0)
                                         0.0%
                                     @else
-                                        {{ round((($products[$date][$segment] - $products[array_keys($products)[$key - 1]][$segment]) / $products[$date][$segment]) * 100, 2) . '%' }}
+                                        {!! redIfNegative(
+                                            round(
+                                                (($products[$date][$segment] - $products[array_keys($products)[$key - 1]][$segment]) /
+                                                    $products[$date][$segment]) *
+                                                    100,
+                                                2,
+                                            ),
+                                            fn($v) => $v . '%',
+                                        ) !!}
                                     @endif
                                 </td>
                             @endif
@@ -248,7 +256,15 @@
                             @if ($key == 0)
                                 0.0%
                             @else
-                                {{ round(((array_sum($products[$date]) - array_sum($products[array_keys($products)[$key - 1]])) / array_sum($products[$date])) * 100, 2) . '%' }}
+                                {!! redIfNegative(
+                                    round(
+                                        ((array_sum($products[$date]) - array_sum($products[array_keys($products)[$key - 1]])) /
+                                            array_sum($products[$date])) *
+                                            100,
+                                        2,
+                                    ),
+                                    fn($val) => $val . '%',
+                                ) !!}
                             @endif
                         </td>
                     @endforeach
@@ -290,7 +306,7 @@
                                     $previousEbitDA = floatval($previousEbitDAValue);
                                 @endphp
                                 @if ($previousEbitDA != 0)
-                                    {{ round((($currentEbitDA - $previousEbitDA) / $previousEbitDA) * 100, 2) }}%
+                                    {!! redIfNegative(round((($currentEbitDA - $previousEbitDA) / $previousEbitDA) * 100, 2), fn($v) => $v . '%') !!}
                                 @else
                                     N/A
                                 @endif
@@ -324,7 +340,7 @@
                                 @endphp
                                 {{-- Ensure that $currentEbitdaValue is not zero to avoid division by zero --}}
                                 @if ($currentEbitdaValue != 0)
-                                    {{ round($currentRevenueValue / $currentEbitdaValue, 2) }}
+                                    {!! redIfNegative(round($currentRevenueValue / $currentEbitdaValue, 2)) !!}
                                 @else
                                     N/A
                                 @endif
@@ -369,7 +385,10 @@
                                 @endphp
 
                                 @if ($previousAdjNetIncome != 0)
-                                    {{ round((($currentAdjNetIncome - $previousAdjNetIncome) / $previousAdjNetIncome) * 100, 2) }}%
+                                    {!! redIfNegative(
+                                        round((($currentAdjNetIncome - $previousAdjNetIncome) / $previousAdjNetIncome) * 100, 2),
+                                        fn($v) => $v . '%',
+                                    ) !!}
                                 @else
                                     N/A
                                 @endif
@@ -392,7 +411,7 @@
                                 @endphp
 
                                 @if ($currentNetIncome != 0)
-                                    {{ round(($currentRevenue / $currentNetIncome) * 100, 2) }}%
+                                    {!! redIfNegative(round(($currentRevenue / $currentNetIncome) * 100, 2), fn($v) => $v . '%') !!}
                                 @else
                                     N/A
                                 @endif
@@ -426,7 +445,7 @@
 
                                     $percentageChange = $previousDilutedSharesOut != 0 ? round((($currentDilutedSharesOut - $previousDilutedSharesOut) / $previousDilutedSharesOut) * 100, 2) : 'N/A';
                                 @endphp
-                                {{ $percentageChange }}%
+                                {!! redIfNegative($percentageChange, fn($v) => $v . '%') !!}
                             @endif
                         </td>
                     @endforeach
@@ -464,7 +483,10 @@
                                     $previousDilutedEPS = isset($dilutedEPS[$previousDate][0]) ? floatval(str_replace(',', '', explode('|', $dilutedEPS[$previousDate][0])[0])) : 0;
                                 @endphp
                                 @if ($previousDilutedEPS != 0)
-                                    {{ round((($currentDilutedEPS - $previousDilutedEPS) / $previousDilutedEPS) * 100, 2) }}%
+                                    {!! redIfNegative(
+                                        round((($currentDilutedEPS - $previousDilutedEPS) / $previousDilutedEPS) * 100, 2),
+                                        fn($v) => $v . '%',
+                                    ) !!}
                                 @else
                                     N/A
                                 @endif
