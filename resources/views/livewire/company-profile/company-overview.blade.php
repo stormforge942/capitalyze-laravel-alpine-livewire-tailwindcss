@@ -145,7 +145,8 @@
                 this.showCount = 6;
             }
         }
-    }" @resize.window.throttle="updateCount()" x-init="updateCount()" class="text-base order-4">
+    }" @resize.window.throttle="updateCount()"
+        x-init="updateCount()" class="text-base order-4">
         <x-slot name="topRight">
             <button class="text-sm font-extrabold hover:text-black"
                 x-text="expanded ? 'Hide full profile': 'View full profile'" @click="expanded = !expanded">
@@ -183,85 +184,101 @@
         </div>
     </x-card>
 
-    <div class="table-wrapper order-5">
-        <div class="table">
-            <div class="row-group row-head-fonts-sm table-border-bottom">
-                <div class="row row-head ">
-                    <div class="cell font-bold">{{ $profile['registrant_name'] }} ({{ $profile['symbol'] }})</div>
+    <div class="overflow-auto rounded-lg order-5">
+        <table class="w-full rounded-lg text-left">
+            <thead class="font-sm font-semibold capitalize bg-[#EDEDED] text-dark">
+                <tr class="border-b-2 border-b-[#E6E6E6]">
+                    <th class="pl-6 py-2 whitespace-nowrap font-extrabold">{{ $profile['registrant_name'] }}
+                        ({{ $profile['symbol'] }})</th>
                     @foreach (array_keys($products) as $date)
-                        <div class="cell font-bold">{{ $date }}</div>
+                        <th class="pl-6 py-2 whitespace-nowrap font-extrabold last:pr-6 text-right">
+                            {{ $date }}
+                        </th>
                     @endforeach
-                </div>
+                </tr>
+            </thead>
+
+            <tbody>
                 @foreach ($segments as $index => $segment)
-                    <div class="row ">
-                        <div class="font-bold cell">
+                    <tr class="border-b-2 border-b-[#E6E6E6]">
+                        <th class="bg-white pl-6 py-3 whitespace-nowrap font-extrabold">
                             {{ $segment }}
-                        </div>
+                        </th>
                         @foreach (array_keys($products) as $date)
                             @if (array_key_exists($segment, $products[$date]))
-                                <div class="font-bold cell">
+                                <th class="bg-white pl-6 py-3 last:pr-6 text-right font-extrabold">
                                     {{ number_format($products[$date][$segment]) }}
-                                </div>
+                                </th>
                             @endif
                         @endforeach
-                        {{-- <div class="font-bold cell">100.0</div>
-                        <div class="font-bold cell">100.0</div>
-                        <div class="font-bold cell">100.0</div>
-                        <div class="font-bold cell">100.0</div>
-                        <div class="font-bold cell">100.0</div>
-                        <div class="font-bold cell">100.0</div> --}}
-                    </div>
-                    <div class="row row-sub">
-                        <div class="cell">% Change YoY</div>
+                    </tr>
+                    <tr class="border-b-2 border-b-[#E6E6E6]">
+                        <td class="bg-white pl-6 py-4 whitespace-nowrap">
+                            <span class="pl-4">% Change YoY</span>
+                        </td>
                         @foreach (array_keys($products) as $key => $date)
                             @if (array_key_exists($segment, $products[$date]))
-                                <div class="cell">
+                                <td class="bg-white pl-6 py-4 last:pr-6 text-right">
                                     @if ($key == 0)
                                         0.0%
                                     @else
                                         {{ round((($products[$date][$segment] - $products[array_keys($products)[$key - 1]][$segment]) / $products[$date][$segment]) * 100, 2) . '%' }}
                                     @endif
-                                </div>
+                                </td>
                             @endif
                         @endforeach
-                    </div>
+                    </tr>
                 @endforeach
-                <div class="row ">
-                    <div class="font-bold cell">Total Revenues</div>
+                <tr>
+                    <th class="bg-white pl-6 pt-4 whitespace-nowrap font-extrabold">
+                        Total Revenues
+                    </th>
                     @foreach (array_keys($products) as $date)
-                        <div class="font-bold cell">
+                        <th class="bg-white pl-6 pt-4 whitespace-nowrap font-extrabold last:pr-6 text-right">
                             {{ number_format(array_sum($products[$date])) }}
-                        </div>
+                        </th>
                     @endforeach
-                </div>
-                <div class="row row-sub">
-                    <div class="cell">% Change YoY</div>
+                </tr>
+                <tr>
+                    <td class="bg-white rounded-bl-lg pl-6 py-4 whitespace-nowrap">
+                        <span class="pl-4">% Change YoY</span>
+                    </td>
                     @foreach (array_keys($products) as $key => $date)
-                        <div class="cell">
+                        <td class="bg-white last:rounded-br-lg pl-6 py-4 last:pr-6 text-right">
                             @if ($key == 0)
                                 0.0%
                             @else
                                 {{ round(((array_sum($products[$date]) - array_sum($products[array_keys($products)[$key - 1]])) / array_sum($products[$date])) * 100, 2) . '%' }}
                             @endif
-                        </div>
+                        </td>
                     @endforeach
-                </div>
-            </div>
-            <div class="row row-spacer "></div>
-            <div class="row-group row-head-fonts-sm table-header-border">
-                <div class="row">
-                    <div class="font-bold cell">EBITDA</div>
-                    @foreach (array_keys($products) as $date)
-                        <div class="font-bold cell">
-                            {{ isset($ebitda[$date]) ? number_format((float)explode('|', str_replace(',', '', $ebitda[$date][0]))[0], 2) : 'N/A' }}
-                        </div>
-                    @endforeach
-                </div>
+                </tr>
 
-                <div class="row row-sub">
-                    <div class="cell">% Change YoY</div>
+            </tbody>
+
+            <tbody>
+                <tr>
+                    <td class="py-2 bg-transparent"></td>
+                </tr>
+            </tbody>
+
+            <tbody>
+                <tr class="border-b-2 border-b-[#E6E6E6]">
+                    <th class="bg-white rounded-tl pl-6 py-3 whitespace-nowrap font-extrabold">
+                        EBITDA
+                    </th>
+                    @foreach (array_keys($products) as $date)
+                        <th class="bg-white last:rounded-tr pl-6 py-3 last:pr-6 text-right font-extrabold">
+                            {{ isset($ebitda[$date]) ? number_format((float) explode('|', str_replace(',', '', $ebitda[$date][0]))[0], 2) : 'N/A' }}
+                        </th>
+                    @endforeach
+                </tr>
+                <tr>
+                    <td class="bg-white pl-6 pt-4 pb-2 whitespace-nowrap">
+                        <span class="pl-4">% Change YoY</span>
+                    </td>
                     @foreach (array_keys($products) as $key => $date)
-                        <div class="cell">
+                        <td class="bg-white pl-6 pt-4 pb-2 last:pr-6 text-right">
                             @if ($key == 0)
                                 0.0%
                             @else
@@ -278,15 +295,16 @@
                                     N/A
                                 @endif
                             @endif
-
-                        </div>
+                        </td>
                     @endforeach
-                </div>
+                </tr>
 
-                <div class="row row-sub">
-                    <div class="cell">% Margins</div>
+                <tr>
+                    <td class="rounded-bl-lg bg-white pl-6 pt-2 pb-4 whitespace-nowrap">
+                        <span class="pl-4">% Margins</span>
+                    </td>
                     @foreach (array_keys($products) as $key => $date)
-                        <div class="cell">
+                        <td class="rounded-br-lg bg-white pl-6 pt-2 pb-4 last:pr-6 text-right">
                             @if ($key == 0)
                                 0.0%
                             @else
@@ -304,34 +322,41 @@
                                         $currentRevenueValue = floatval(str_replace(',', '', explode('|', $revenues[$date][0])[0]));
                                     }
                                 @endphp
-                                // Ensure that $currentEbitdaValue is not zero to avoid division by zero
+                                {{-- Ensure that $currentEbitdaValue is not zero to avoid division by zero --}}
                                 @if ($currentEbitdaValue != 0)
                                     {{ round($currentRevenueValue / $currentEbitdaValue, 2) }}
                                 @else
                                     N/A
                                 @endif
                             @endif
-                        </div>
+                        </td>
                     @endforeach
-                </div>
-            </div>
+                </tr>
+            </tbody>
 
-            <div class="row row-spacer"></div>
+            <tbody>
+                <tr>
+                    <td class="py-2 bg-transparent"></td>
+                </tr>
+            </tbody>
 
-            <div class="row-group row-head-fonts-sm table-header-border">
-                <div class="row">
-                    <div class="font-bold cell">Adj. Net Income</div>
-                    @foreach (array_keys($products) as $key => $date)
-                        <div class="font-bold cell">
+            <tbody>
+                <tr class="border-b-2 border-b-[#E6E6E6]">
+                    <th class="bg-white rounded-tl pl-6 py-3 whitespace-nowrap font-extrabold">
+                        Adj. Net Income
+                    </th>
+                    @foreach (array_keys($products) as $date)
+                        <th class="bg-white last:rounded-tr pl-6 py-3 last:pr-6 text-right font-extrabold">
                             {{ isset($adjNetIncome[$date][0]) ? number_format(floatval(explode('|', str_replace(',', '', $adjNetIncome[$date][0]))[0]), 2) : 'N/A' }}
-                        </div>
+                        </th>
                     @endforeach
-                </div>
-
-                <div class="row row-sub">
-                    <div class="cell">% Change YoY</div>
+                </tr>
+                <tr>
+                    <td class="bg-white pl-6 pt-4 pb-2 whitespace-nowrap">
+                        <span class="pl-4">% Change YoY</span>
+                    </td>
                     @foreach (array_keys($products) as $key => $date)
-                        <div class="cell">
+                        <td class="bg-white pl-6 pt-4 pb-2 last:pr-6 text-right">
                             @if ($key == 0)
                                 0.0%
                             @else
@@ -349,15 +374,15 @@
                                     N/A
                                 @endif
                             @endif
-
-                        </div>
+                        </td>
                     @endforeach
-                </div>
-
-                <div class="row row-sub">
-                    <div class="cell">% Margins</div>
+                </tr>
+                <tr>
+                    <td class="bg-white pl-6 py-2 whitespace-nowrap">
+                        <span class="pl-4">% Margins</span>
+                    </td>
                     @foreach (array_keys($products) as $key => $date)
-                        <div class="cell">
+                        <td class="bg-white pl-6 py-2 last:pr-6 text-right">
                             @if ($key == 0)
                                 0.0%
                             @else
@@ -372,22 +397,25 @@
                                     N/A
                                 @endif
                             @endif
-                        </div>
+                        </td>
                     @endforeach
-                </div>
-
-                <div class="row row-sub">
-                    <div class="cell">Diluted Shares Out</div>
+                </tr>
+                <tr>
+                    <td class="bg-white pl-6 py-2 whitespace-nowrap">
+                        <span class="pl-4">Diluted Shares Out</span>
+                    </td>
                     @foreach (array_keys($products) as $key => $date)
-                        <div class="cell">
+                        <td class="bg-white pl-6 pt-2 pb-4 last:pr-6 text-right">
                             {{ isset($dilutedSharesOut[$date][0]) ? str_replace(',', '', explode('|', $dilutedSharesOut[$date][0])[0]) : 'N/A' }}
-                        </div>
+                        </td>
                     @endforeach
-                </div>
-                <div class="row row-sub">
-                    <div class="cell">% Change YoY</div>
+                </tr>
+                <tr>
+                    <td class="rounded-bl-lg bg-white pl-6 pt-2 pb-4 whitespace-nowrap">
+                        <span class="pl-4">% Change YoY</span>
+                    </td>
                     @foreach (array_keys($products) as $key => $date)
-                        <div class="cell">
+                        <td class="rounded-br-lg bg-white pl-6 pt-2 pb-4 last:pr-6 text-right">
                             @if ($key == 0)
                                 0.0%
                             @else
@@ -396,53 +424,55 @@
                                     $currentDilutedSharesOut = isset($dilutedSharesOut[$date][0]) ? floatval(str_replace(',', '', explode('|', $dilutedSharesOut[$date][0])[0])) : 0;
                                     $previousDilutedSharesOut = isset($dilutedSharesOut[$previousDate][0]) ? floatval(str_replace(',', '', explode('|', $dilutedSharesOut[$previousDate][0])[0])) : 0;
 
-                                    $percentageChange = ($previousDilutedSharesOut != 0) ? round((($currentDilutedSharesOut - $previousDilutedSharesOut) / $previousDilutedSharesOut) * 100, 2) : 'N/A';
+                                    $percentageChange = $previousDilutedSharesOut != 0 ? round((($currentDilutedSharesOut - $previousDilutedSharesOut) / $previousDilutedSharesOut) * 100, 2) : 'N/A';
                                 @endphp
                                 {{ $percentageChange }}%
                             @endif
-                        </div>
+                        </td>
                     @endforeach
-                </div>
-            </div>
-        </div>
+                </tr>
+            </tbody>
+        </table>
     </div>
 
-    <div class="table-bottom-sec order-6">
-        <div class="table-wrapper ">
-            <div class="table mb-1">
-                <div class="row-group row-group-blue row-head-fonts-sm">
-                    <div class="row row-head">
-                        <div class="font-bold cell">Adj. Diluted EPS</div>
-                        @foreach (array_keys($products) as $key => $date)
-                            <div class="font-bold cell">
-                                {{ isset($dilutedEPS[$date][0]) ? str_replace(',', '', explode('|', $dilutedEPS[$date][0])[0]) : 'N/A' }}
-                            </div>
-                        @endforeach
-                    </div>
+    <div class="bg-white rounded p-2 overflow-auto order-6">
+        <table class="rounded text-left" style="background: rgba(82, 198, 255, 0.10)">
+            <thead>
+                <tr>
+                    <th class="pl-6 pt-4 font-extrabold whitespace-nowrap text-dark">Adj. Diluted EPS</th>
+                    @foreach (array_keys($products) as $key => $date)
+                        <th class="pl-6 last:pr-6 pt-4 font-extrabold whitespace-nowrap text-dark text-right">
+                            {{ isset($dilutedEPS[$date][0]) ? str_replace(',', '', explode('|', $dilutedEPS[$date][0])[0]) : 'N/A' }}
+                        </th>
+                    @endforeach
+                </tr>
+            </thead>
 
-                    <div class="row row-sub">
-                        <div class="font-bold cell">% Change YoY</div>
-                        @foreach (array_keys($products) as $key => $date)
-                            <div class="cell">
-                                @if ($key == 0)
-                                    0.0%
+            <tbody>
+                <tr>
+                    <td class="pl-6 py-4">
+                        <span class="pl-4 whitespace-nowrap">% Change YoY</span>
+                    </td>
+                    @foreach (array_keys($products) as $key => $date)
+                        <td class="pl-6 py-4 last:pr-6 text-right">
+                            @if ($key == 0)
+                                0.0%
+                            @else
+                                @php
+                                    $previousDate = array_keys($products)[$key - 1];
+                                    $currentDilutedEPS = isset($dilutedEPS[$date][0]) ? floatval(str_replace(',', '', explode('|', $dilutedEPS[$date][0])[0])) : 0;
+                                    $previousDilutedEPS = isset($dilutedEPS[$previousDate][0]) ? floatval(str_replace(',', '', explode('|', $dilutedEPS[$previousDate][0])[0])) : 0;
+                                @endphp
+                                @if ($previousDilutedEPS != 0)
+                                    {{ round((($currentDilutedEPS - $previousDilutedEPS) / $previousDilutedEPS) * 100, 2) }}%
                                 @else
-                                    @php
-                                        $previousDate = array_keys($products)[$key - 1];
-                                        $currentDilutedEPS = isset($dilutedEPS[$date][0]) ? floatval(str_replace(',', '', explode('|', $dilutedEPS[$date][0])[0])) : 0;
-                                        $previousDilutedEPS = isset($dilutedEPS[$previousDate][0]) ? floatval(str_replace(',', '', explode('|', $dilutedEPS[$previousDate][0])[0])) : 0;
-                                    @endphp
-                                    @if ($previousDilutedEPS != 0)
-                                        {{ round((($currentDilutedEPS - $previousDilutedEPS) / $previousDilutedEPS) * 100, 2) }}%
-                                    @else
-                                        N/A
-                                    @endif
+                                    N/A
                                 @endif
-                            </div>
-                        @endforeach
-                    </div>
-                </div>
-            </div>
-        </div>
+                            @endif
+                        </td>
+                    @endforeach
+                </tr>
+            </tbody>
+        </table>
     </div>
 </div>

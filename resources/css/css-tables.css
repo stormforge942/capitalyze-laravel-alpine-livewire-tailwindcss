@@ -26,7 +26,7 @@
     padding: 0.5rem 0.8rem
 }
 .table-wrapper .table .row-group .row:first-child .cell { border-top: none; }
-.table-wrapper .row-head .cell {background: #e5e5e5;}
+.table-wrapper .row-head .cell {background: #EDEDED;}
 .table-wrapper .cell {
     text-align: right;
 }
