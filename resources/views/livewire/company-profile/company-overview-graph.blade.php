@@ -11,7 +11,7 @@
     </div>
 
     <div class="bg-white px-4 py-6 md:px-6 rounded-lg relative" x-show="!hide" x-transition>
-        <div class="absolute top-2 right-2 sm:top-3 sm:right-5">
+        <div class="absolute top-2 right-2 xl:top-3 xl:right-5">
             <x-dropdown placement="bottom-start" :shadow="true">
                 <x-slot name="trigger">
                     <svg :class="open ? `rotate-90` : ''" width="24" height="24" viewBox="0 0 24 24"
