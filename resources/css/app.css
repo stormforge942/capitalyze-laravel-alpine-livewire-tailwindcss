@@ -47,6 +47,8 @@
 
 ::-webkit-scrollbar {
     display: none;
+    /*height: 5px;*/
+    /*width: 5px;*/
 }
 
 /* Track */
@@ -241,12 +243,11 @@ span.business-footer-text a {
     margin: 24px 0;
 }
 .page-titles {
-    font-size: 24px;
-    line-height: 31px;
+    font-size: 1.25rem;
+    /*line-height: 31px;*/
 }
 .page-titles .brr {
     display: block;
-    margin-top: 0.3rem;
 }
 .table-wrapper .cell:first-child {
     padding-left: 22px;
@@ -786,6 +787,10 @@ line-height: normal;
 .min-64 {
     min-width: 16rem;
     width: 16rem;
+}
+.company-price {
+    font-size: 1.25rem;
+    font-weight: 700;
 }
 @media(min-width:576px){
     .mobile-show {

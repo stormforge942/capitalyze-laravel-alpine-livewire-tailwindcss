@@ -2,6 +2,7 @@
 
 namespace App\Http\Livewire;
 
+use App\Models\EodPrices;
 use App\Models\InfoPresentation;
 use App\Models\InfoTikrPresentation;
 use Carbon\Carbon;
@@ -61,8 +62,57 @@ class CompanyReport extends Component
         'decimalDisplay',
         'view',
         'startDate',
-        'endDate'
+        'endDate',
+        'activeTitle',
     ];
+
+    public function mount(Request $request, $company, $ticker, $period)
+    {
+
+
+        $eodPrices = EodPrices::where('symbol', strtolower($this->company->ticker))
+            ->latest('date')
+            ->take(2)
+            ->pluck('adj_close')
+            ->toArray();
+
+        $latestPrice = $eodPrices[0] ?? 0;
+        $previousPrice = $eodPrices[1] ?? 0;
+
+        $this->dynamic  = 0;
+
+        // Calculate the percentage change if both latest and previous prices are available and not zero
+        if ($latestPrice > 0 && $previousPrice > 0) {
+            $this->dynamic = round((($latestPrice - $previousPrice) / $previousPrice) * 100, 2);
+        }
+        $this->cost = $latestPrice;
+
+        $this->colors = [
+            "#000000","#454545","#5e5e5e","#636363","#7a7a7a","#878787","#7a7e94","#5d6074","#4d5060","#3d404c","#4f5263"
+        ];
+
+
+        $this->emit('periodChange', 'annual');
+        $this->company = $company;
+        $this->ticker = $ticker;
+        $this->period = $period;
+        $this->companyName = $this->ticker;
+        $companyData = @json_decode($this->company, true);
+        if ($companyData && count($companyData) && is_array($companyData) && array_key_exists('name', $companyData))
+            $this->companyName = $companyData['name'];
+        $this->getNavbar();
+        if ($this->noData === true) {
+            return;
+        }
+        $this->getData();
+        if (!$this->currentRoute) {
+            $this->currentRoute = $request->route()->getName();
+        }
+
+        $this->emit('getTicker', $ticker);
+
+    }
+
 
     public function toggleChartType($title)
     {
@@ -480,16 +530,7 @@ class CompanyReport extends Component
         }
 
         if ($this->view === 'Standardised Template') {
-            foreach ($this->navbar[$this->activeIndex] as $tab) {
-                if ($tab['id'] === $this->activeSubIndex) {
-                    $data = match ($tab['title']) {
-                        'Income Statement' => $data['Income Statement'],
-                        'Balance Sheet Statement' => $data['Balance Sheet'],
-                        'Cash Flow Statement' => $data['Cash Flow Statement'],
-                        default => $data
-                    };
-                }
-            }
+            $data = $this->activeTitle == 'Balance Sheet Statement' ? $data['Balance Sheet'] : $data[$this->activeTitle];
         }
 
         foreach ($data as $key => $value) {
@@ -690,80 +731,32 @@ class CompanyReport extends Component
             ->select('statement', 'statement_group', 'id', 'title')->get();
 
         $collection = $query->collect();
+        $navbar = $collection->toArray();
+        $navbar = array_map(function($object) {
+            return (array)$object;
+        }, $navbar);
 
-        foreach ($collection as $value) {
-            if ($value->title === 'Income Statement') {
-                $navbar[$value->statement_group][0] = ['statement' => $value->statement, 'id' => $value->id, 'title' => $value->title];
-            }
-
-            if ($value->title === 'Balance Sheet Statement') {
-                $navbar[$value->statement_group][1] = ['statement' => $value->statement, 'id' => $value->id, 'title' => $value->title];
-            }
-
-            if ($value->title === 'Cash Flow Statement') {
-                $navbar[$value->statement_group][2] = ['statement' => $value->statement, 'id' => $value->id, 'title' => $value->title];
-            }
-
-            $navbar[$value->statement_group][3] = ['statement' => '', 'id' => 101, 'title' => 'Ratios'];
-
-        }
-        if ($navbar === []) {
+        if ($navbar == []) {
             $this->noData = true;
             return;
         }
 
-        $this->activeIndex = 'Financial Statements [Financial Statements]';
-        $this->activeSubIndex = $navbar[$this->activeIndex][0]['id'];
+        if($this->activeTitle == 'Income Statement' || $this->activeTitle == 'Balance Sheet Statement' || $this->activeTitle == 'Cash Flow Statement') {
+            $this->activeIndex = 'Financial Statements [Financial Statements]';
+        }
+
+        foreach($navbar as $value) {
+            if($this->activeTitle == $value['title']) {
+                $this->activeSubIndex = $value['id'];
+                break;
+            }
+        }
+
         $this->navbar = $navbar;
 
         $this->emit('navbarUpdated', $this->navbar, $this->activeIndex, $this->activeSubIndex);
     }
 
-    public function mount(Request $request, $company, $ticker, $period)
-    {
-
-        $first = DB::connection('pgsql-xbrl')
-        ->table('eod_prices')
-        ->where('symbol', strtolower($this->ticker))
-        ->latest('date')->first()?->adj_close;
-
-        $this->cost =  $first;
-
-        $this->colors = [
-            "#000000","#454545","#5e5e5e","#636363","#7a7a7a","#878787","#7a7e94","#5d6074","#4d5060","#3d404c","#4f5263"
-        ];
-
-
-        $previous = DB::connection('pgsql-xbrl')
-        ->table('eod_prices')
-        ->where('symbol', strtolower($this->ticker))
-        ->latest('date')
-        ->skip(1)->first()?->adj_close;
-
-        if ($previous && $first) {
-            $this->dynamic = round((($first - $previous) / $previous) * 100, 2);
-        }
-
-        $this->emit('periodChange', 'annual');
-        $this->company = $company;
-        $this->ticker = $ticker;
-        $this->period = $period;
-        $this->companyName = $this->ticker;
-        $companyData = @json_decode($this->company, true);
-        if ($companyData && count($companyData) && is_array($companyData) && array_key_exists('name', $companyData))
-            $this->companyName = $companyData['name'];
-        $this->getNavbar();
-        if ($this->noData === true) {
-            return;
-        }
-        $this->getData();
-        if (!$this->currentRoute) {
-            $this->currentRoute = $request->route()->getName();
-        }
-
-        $this->emit('getTicker', $ticker);
-
-    }
 
     public function periodChange($period)
     {
@@ -780,14 +773,24 @@ class CompanyReport extends Component
 
     public function tabSubClicked($title)
     {
+
         $this->activeTitle = $title;
 
-        foreach ($this->navbar[$this->activeIndex] as $nav) {
-            if ($nav['title'] === $title) {
-                $this->activeSubIndex = $nav['id'];
-            }
+        if($this->navbar == null){
+            $this->getNavbar();
+
         }
 
+        if($this->activeTitle === 'Income Statement' || $this->activeTitle === 'Balance Sheet Statement' || $this->activeTitle === 'Cash Flow Statement') {
+            if($this->view === 'As reported (Harmonized)') {
+                foreach($this->navbar as $value) {
+                    if($this->activeTitle === $value['title']) {
+                        $this->activeSubIndex = $value['id'];
+                        break;
+                    }
+                }
+            }
+        }
         $this->getData();
     }
 

@@ -379,7 +379,7 @@
                     <div class="value">
                         @if (@$profile['sec_filings_url'])
                             <a target="_blank"
-                                href="{{ @$profile['sec_filings_url'] }}">{{ getSiteNameFromUrl(@$profile['sec_filings_url']) }}</a>
+                                    href="{{ @$profile['sec_filings_url'] }}">{{ getSiteNameFromUrl(@$profile['sec_filings_url']) }}</a>
                         @else
                             -
                         @endif
