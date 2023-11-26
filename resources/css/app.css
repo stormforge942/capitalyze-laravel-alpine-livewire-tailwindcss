@@ -215,15 +215,18 @@ input {
     font-size: 14px;
     font-weight: 400 !important;
 }
+.dropdown-scroll::-webkit-scrollbar {
+    width: 4px !important;
+    display: block;
+}
 .dropdown-scroll::-webkit-scrollbar-track {
     border-radius: 2px !important;
-opacity: 0.25 !important;
-background: #D4DDD7 !important;
+    background: rgba(212, 221, 215, 0.25) !important;
+    outline: 2px solid rgba(212, 221, 215, 0.25) !important;
   }
   .dropdown-scroll::-webkit-scrollbar-thumb {
     border-radius: 1px !important;
-    opacity: 0.7 !important;
-    background: #464E49 !important;
+    background: rgba(70, 78, 73, 0.75) !important;
   }
 
 .sticky-sidebar {
@@ -771,7 +774,7 @@ line-height: normal;
     }
 }
 
-
+/* custom radio */
 .custom-radio {
     height: 20px;
     width: 20px;
@@ -802,3 +805,4 @@ line-height: normal;
 .custom-radio:checked::before {
     opacity: 1;
 }
+/* end custom radio */
