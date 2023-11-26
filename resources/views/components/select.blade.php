@@ -1,22 +1,13 @@
 <div x-data="{
-    dropdown: null,
-    isVisible: false,
+    showDropdown: false,
     name: '{{ $name }}',
     value: '{{ $value }}',
     tmpValue: '{{ $value }}',
     options: @js($options),
     placeholder: '{{ $placeholder }}',
-    init() {        
-        this.dropdown = new Dropdown($refs.body, $refs.trigger, {
-            placement: 'bottom-start',
-            onShow: () => {
-                this.isVisible = true
-                this.tmpValue = this.value
-            },
-            onHide: () => {
-                this.isVisible = false
-                this.tmpValue = this.value
-            },
+    init() {
+        $watch('showDropdown', value => {
+            this.tmpValue = this.value
         })
 
         $watch('value', (newVal, oldVal) => {
@@ -25,24 +16,26 @@
             }
         })
     }
-}" class="inline-block">
-    <div x-modelable="value" {{ $attributes }}>
-        <button class="border-[0.5px] border-[#93959880] p-2 rounded-full flex items-center gap-x-1"
-        :class="isVisible ? 'bg-[#E2E2E2]' : 'bg-white hover:bg-[#E2E2E2]'"
-            x-ref="trigger">
-            <span class="font-medium" x-text="value ? options[value] : placeholder">
-            </span>
+}" x-modelable="value" {{ $attributes->merge(['class' => 'inline-block']) }}>
+    <x-dropdown x-model="showDropdown" placement="bottom-start">
+        <x-slot name="trigger">
+            <div class="border-[0.5px] border-[#93959880] p-2 rounded-full flex items-center gap-x-1"
+                :class="showDropdown ? 'bg-[#E2E2E2]' : 'bg-white hover:bg-[#E2E2E2]'">
+                <span class="font-medium text-sm" x-text="value ? options[value] : placeholder">
+                </span>
 
-            <span :class="isVisible ? 'rotate-180' : ''" class="transition-transform shrink-0">
-                <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 16 16" fill="none">
-                    <path
-                        d="M10.3083 6.19514L7.72167 8.78378L5.135 6.19514C5.01045 6.07021 4.84135 6 4.665 6C4.48865 6 4.31955 6.07021 4.195 6.19514C3.935 6.45534 3.935 6.87566 4.195 7.13585L7.255 10.1982C7.515 10.4584 7.935 10.4584 8.195 10.1982L11.255 7.13585C11.515 6.87566 11.515 6.45534 11.255 6.19514C10.995 5.94161 10.5683 5.93494 10.3083 6.19514Z"
-                        fill="#121A0F" />
-                </svg>
-            </span>
-        </button>
+                <span :class="showDropdown ? 'rotate-180' : ''" class="transition-transform shrink-0">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 16 16"
+                        fill="none">
+                        <path
+                            d="M10.3083 6.19514L7.72167 8.78378L5.135 6.19514C5.01045 6.07021 4.84135 6 4.665 6C4.48865 6 4.31955 6.07021 4.195 6.19514C3.935 6.45534 3.935 6.87566 4.195 7.13585L7.255 10.1982C7.515 10.4584 7.935 10.4584 8.195 10.1982L11.255 7.13585C11.515 6.87566 11.515 6.45534 11.255 6.19514C10.995 5.94161 10.5683 5.93494 10.3083 6.19514Z"
+                            fill="#121A0F" />
+                    </svg>
+                </span>
+            </div>
+        </x-slot>
 
-        <div class="z-10 hidden w-[20rem] sm:w-[26rem] p-6 bg-white rounded-lg border border-[#D4DDD7]" x-ref="body">
+        <div class="w-[20rem] sm:w-[26rem] p-6">
             <div class="flex justify-between gap-2">
                 <span x-text="placeholder"></span>
 
@@ -68,11 +61,12 @@
             </div>
 
             <div class="pt-6">
-                <button type="button" class="w-full px-4 py-3 text-white font-medium bg-green-dark hover:bg-opacity-80 rounded disabled:pointer-events-none disabled:bg-[#D1D3D5]"
-                    @click="value = tmpValue; dropdown.hide()" :disabled="value === tmpValue">
+                <button type="button"
+                    class="w-full px-4 py-3 font-medium bg-green-dark hover:bg-opacity-80 rounded disabled:pointer-events-none disabled:bg-[#D1D3D5] disabled:text-white"
+                    @click="value = tmpValue; showDropdown = false;" :disabled="value === tmpValue">
                     Show Result
                 </button>
             </div>
         </div>
-    </div>
+    </x-dropdown>
 </div>
