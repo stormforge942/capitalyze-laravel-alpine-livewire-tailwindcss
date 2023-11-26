@@ -157,7 +157,7 @@ function getOrCreateTooltip(chart) {
         tooltipEl.style.transition = "all .1s ease"
         tooltipEl.style.minWidth = "230px"
         tooltipEl.style.filter =
-            "drop-shadow(0px 10.732307434082031px 21.464614868164062px rgba(50, 50, 71, 0.06)) drop-shadow(0px 10.732307434082031px 10.732307434082031px rgba(50, 50, 71, 0.08))"
+            "drop-shadow(0px 10.7px 21.5px rgba(50, 50, 71, 0.06)) drop-shadow(0px 10.7px 10.7px rgba(50, 50, 71, 0.08))"
         tooltipEl.classList.add("tooltip-caret")
 
         const table = document.createElement("table")
