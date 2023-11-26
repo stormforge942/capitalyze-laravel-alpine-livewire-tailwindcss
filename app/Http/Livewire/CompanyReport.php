@@ -29,9 +29,9 @@ class CompanyReport extends Component
     public $currency = 'USD';
     public $currentRoute;
     public $order = "Latest on the Right";
-    public $period;
+    public $period = 'annual';
     public $table;
-    public $navbar;
+    public $asReportedStatementsList;
     public $reverse = false;
     public $activeIndex = '';
     public $activeSubIndex = '';
@@ -40,8 +40,8 @@ class CompanyReport extends Component
     public $rangeDates = [];
     public $noData = false;
     public $tableLoading = true;
-    public $cost = null;
-    public $dynamic = null;
+    public $latestPrice = 0;
+    public $percentageChange = 0;
     public $startDate = null;
     public $endDate = null;
     protected $request;
@@ -51,7 +51,7 @@ class CompanyReport extends Component
     public $chartType = 'line';
     public $isOpen = false;
     public $activeTitle = 'Income Statement';
-    public $colors = [];
+    public $chartColors = [];
     public $allRows = [];
 
     protected $listeners = ['periodChange', 'tabClicked', 'tabSubClicked', 'selectRow', 'unselectRow'];
@@ -68,8 +68,6 @@ class CompanyReport extends Component
 
     public function mount(Request $request, $company, $ticker, $period)
     {
-
-
         $eodPrices = EodPrices::where('symbol', strtolower($this->company->ticker))
             ->latest('date')
             ->take(2)
@@ -79,38 +77,37 @@ class CompanyReport extends Component
         $latestPrice = $eodPrices[0] ?? 0;
         $previousPrice = $eodPrices[1] ?? 0;
 
-        $this->dynamic  = 0;
-
-        // Calculate the percentage change if both latest and previous prices are available and not zero
         if ($latestPrice > 0 && $previousPrice > 0) {
-            $this->dynamic = round((($latestPrice - $previousPrice) / $previousPrice) * 100, 2);
+            $this->percentageChange = round((($latestPrice - $previousPrice) / $previousPrice) * 100, 2);
         }
-        $this->cost = $latestPrice;
+        $this->latestPrice = $latestPrice;
 
-        $this->colors = [
+        $this->chartColors = [
             "#000000","#454545","#5e5e5e","#636363","#7a7a7a","#878787","#7a7e94","#5d6074","#4d5060","#3d404c","#4f5263"
         ];
 
-
-        $this->emit('periodChange', 'annual');
         $this->company = $company;
         $this->ticker = $ticker;
         $this->period = $period;
         $this->companyName = $this->ticker;
+
+
         $companyData = @json_decode($this->company, true);
+
         if ($companyData && count($companyData) && is_array($companyData) && array_key_exists('name', $companyData))
             $this->companyName = $companyData['name'];
-        $this->getNavbar();
+
+        $this->setAsReportedStatementsList();
+
         if ($this->noData === true) {
             return;
         }
+
         $this->getData();
+
         if (!$this->currentRoute) {
             $this->currentRoute = $request->route()->getName();
         }
-
-        $this->emit('getTicker', $ticker);
-
     }
 
 
@@ -134,7 +131,7 @@ class CompanyReport extends Component
         if (count($this->selectedRows) < 5) {
             $this->selectedRows[$title]['dates'] = $data;
             $this->selectedRows[$title]['type'] = 'line';
-            $this->selectedRows[$title]['color'] = $this->colors[count($this->selectedRows) - 1];
+            $this->selectedRows[$title]['color'] = $this->chartColors[count($this->selectedRows) - 1];
         }
 
         $this->generateChartData();
@@ -719,24 +716,21 @@ class CompanyReport extends Component
         $this->getData();
     }
 
-    public function getNavbar()
+    public function setAsReportedStatementsList()
     {
-        $navbar = [];
         $acronym = ($this->period == 'annual') ? 'arf5drs' : 'qrf5drs';
-        $source = 'info_presentations';
-        $query = DB::connection('pgsql-xbrl')
-            ->table($source)
-            ->where('ticker', '=', $this->ticker)
+
+        $statements = InfoPresentation::where('ticker', '=', $this->ticker)
             ->where('acronym', '=', $acronym)
-            ->select('statement', 'statement_group', 'id', 'title')->get();
+            ->select('statement', 'statement_group', 'id', 'title')
+            ->get()
+            ->toArray();
 
-        $collection = $query->collect();
-        $navbar = $collection->toArray();
-        $navbar = array_map(function($object) {
+        $statements = array_map(function($object) {
             return (array)$object;
-        }, $navbar);
+        }, $statements);
 
-        if ($navbar == []) {
+        if ($statements == []) {
             $this->noData = true;
             return;
         }
@@ -745,23 +739,21 @@ class CompanyReport extends Component
             $this->activeIndex = 'Financial Statements [Financial Statements]';
         }
 
-        foreach($navbar as $value) {
+        foreach($statements as $value) {
             if($this->activeTitle == $value['title']) {
                 $this->activeSubIndex = $value['id'];
                 break;
             }
         }
 
-        $this->navbar = $navbar;
-
-        $this->emit('navbarUpdated', $this->navbar, $this->activeIndex, $this->activeSubIndex);
+        $this->asReportedStatementsList = $statements;
     }
 
 
     public function periodChange($period)
     {
         $this->period = $period;
-        $this->getNavbar();
+        $this->setAsReportedStatementsList();
         $this->getData();
     }
 
@@ -776,14 +768,14 @@ class CompanyReport extends Component
 
         $this->activeTitle = $title;
 
-        if($this->navbar == null){
-            $this->getNavbar();
+        if($this->asReportedStatements == null){
+            $this->setAsReportedStatementsList();
 
         }
 
         if($this->activeTitle === 'Income Statement' || $this->activeTitle === 'Balance Sheet Statement' || $this->activeTitle === 'Cash Flow Statement') {
             if($this->view === 'As reported (Harmonized)') {
-                foreach($this->navbar as $value) {
+                foreach($this->asReportedStatementsList as $value) {
                     if($this->activeTitle === $value['title']) {
                         $this->activeSubIndex = $value['id'];
                         break;

@@ -19,17 +19,17 @@
         <div class="flex justify-between items-center content-center pr-8">
             <div class="flex justify-start content-center items-center mt-3">
                 <div>
-                    <h4 class="text-lg font-[700] mr-2">${{ number_format($cost, 2) }}</h4>
+                    <h4 class="text-lg font-[700] mr-2">${{ number_format($latestPrice, 2) }}</h4>
                 </div>
                 <div>
                     <span class="text-base font-medium mr-2">
-                        <small id="dynamicValue" class="{{ $dynamic > 0 ? 'text-color-green' : 'text-color-red' }}">
-                                            ({{ $dynamic > 0 ? '+' : '-' }}{{ abs($dynamic) }}%)
+                        <small id="dynamicValue" class="{{ $percentageChange > 0 ? 'text-color-green' : 'text-color-red' }}">
+                                            ({{ $percentageChange > 0 ? '+' : '-' }}{{ abs($percentageChange) }}%)
                         </small>
                     </span>
                 </div>
                 <div>
-                    <img src="{{ $dynamic > 0 ? asset('/svg/increase-icon.svg') : asset('/svg/decrease-icon.svg') }}" alt="icon"/>
+                    <img src="{{ $percentageChange > 0 ? asset('/svg/increase-icon.svg') : asset('/svg/decrease-icon.svg') }}" alt="icon"/>
                 </div>
             </div>
             <div class="hidden lg:flex justify-around items-center">
