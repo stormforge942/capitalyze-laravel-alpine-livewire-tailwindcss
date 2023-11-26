@@ -2,7 +2,6 @@
 
 namespace App\Services;
 
-use App\Http\Livewire\AllFilings\Ownership;
 use App\Models\Company;
 use Illuminate\Support\Arr;
 
