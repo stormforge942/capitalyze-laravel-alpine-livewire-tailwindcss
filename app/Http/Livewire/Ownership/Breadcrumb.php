@@ -8,12 +8,17 @@ use Livewire\Component;
 class Breadcrumb extends Component
 {
     public $company;
+    public $url;
 
+    public function mount() {
+        $this->url = request()->url();
+    }
+    
     public function render()
     {
         return view('livewire.ownership.breadcrumb', [
             'ticker' => OwnershipHistoryService::getCompany(),
-            'historyItems' => OwnershipHistoryService::get(),
+            'historyItems' => OwnershipHistoryService::get($this->url),
         ]);
     }
 

@@ -54,3 +54,22 @@ function asTabs(array $tabs)
         ];
     }, $tabs);
 }
+
+function redIfNegative($value, ?callable $formatter = null)
+{
+    if (!is_numeric($value)) return $value;
+
+    if ($value < 0) {
+        if ($formatter) {
+            $formattedValue = $formatter(-1 * $value);
+        }
+
+        return '<span class="text-red">(' . $formattedValue . ')</span>';
+    }
+
+    if ($formatter) {
+        return $formatter($value);
+    }
+
+    return $value;
+}

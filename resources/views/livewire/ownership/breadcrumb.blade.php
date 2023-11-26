@@ -32,7 +32,7 @@
             $wire.removeTab(tab);
         }
     }"
-        @resize.window.throttle="updateTabsCount()">
+        @resize.window.throttle="updateTabsCount()" wire:key="{{ md5(json_encode($historyItems)) }}">
         <template x-for="tab in tabs.slice(0, tabsCount)" :key="tab.url">
             <div class="flex items-center gap-2">
                 <a :href="tab.active ? '#' : tab.url" class="hover:text-dark-light2 whitespace-nowrap"

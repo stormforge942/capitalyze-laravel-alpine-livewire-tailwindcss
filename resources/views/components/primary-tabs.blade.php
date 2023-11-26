@@ -49,7 +49,7 @@ dropdown = new Dropdown($refs.dropdown, $refs.dropdownBtn, { placement: 'bottom-
             </div>
         </div>
 
-        <div class="tab-slot block md:hidden" x-ref="slot">
+        <div class="tab-slot block lg:hidden" x-ref="slot">
             {{ $head ?? '' }}
         </div>
     </div>
@@ -70,7 +70,7 @@ dropdown = new Dropdown($refs.dropdown, $refs.dropdownBtn, { placement: 'bottom-
         @endforeach
     </div>
 
-    <div class="mt-6">
+    <div class="mt-4 lg:mt-6">
         {{ $slot ?? '' }}
     </div>
 </div>

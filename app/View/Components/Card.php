@@ -4,15 +4,16 @@ namespace App\View\Components;
 
 use Illuminate\View\Component;
 
-class Dropdown extends Component
+class Card extends Component
 {
     /**
      * Create a new component instance.
      *
      * @return void
      */
-    public function __construct(public string $placement = 'bottom', public bool $shadow = false)
+    public function __construct(public ?string $title = null)
     {
+        //
     }
 
     /**
@@ -22,6 +23,6 @@ class Dropdown extends Component
      */
     public function render()
     {
-        return view('components.dropdown');
+        return view('components.card');
     }
 }

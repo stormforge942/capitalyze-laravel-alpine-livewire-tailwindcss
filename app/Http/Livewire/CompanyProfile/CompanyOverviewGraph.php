@@ -12,10 +12,7 @@ class CompanyOverviewGraph extends Component
     public $ticker = "";
     public $currentChartPeriod = "3m";
     public $chartData = [];
-    public $start_at = null;
-    public $end_at = null;
-
-    protected $listeners = ['dateRangeSelected'];
+    public $dateRange = [null, null];
 
     public $chartPeriods = [
         '3m' => '3 months',
@@ -28,13 +25,16 @@ class CompanyOverviewGraph extends Component
     ];
 
     public $name = '';
-    public $persentage = null;
+    public $percentage = null;
 
-    public function dateRangeSelected($start_at, $end_at)
+    public function updatedDateRange(array $range)
     {
+        if(!$range[0] || !$range[1]) {
+            return;
+        }
+
         $this->currentChartPeriod = 'custom';
-        $this->start_at = $start_at;
-        $this->end_at = $end_at;
+        $this->dateRange = $range;
         $this->load();
     }
 
@@ -62,6 +62,7 @@ class CompanyOverviewGraph extends Component
             'dataset2' => [],
         ];
 
+        $period = $this->getPeriod();
 
         $result = DB::connection('pgsql-xbrl')
             ->table('eod_prices')
@@ -71,7 +72,7 @@ class CompanyOverviewGraph extends Component
             ->selectRaw('MIN(adj_close) OVER () as min_adj_close')
             ->selectRaw('AVG(volume) OVER () as volume_avg')
             ->where('symbol', strtolower($this->ticker))
-            ->whereBetween('date', $this->getPeriod())
+            ->whereBetween('date', $period)
             ->orderBy('date')
             ->get();
 
@@ -89,7 +90,7 @@ class CompanyOverviewGraph extends Component
         if (count($result) > 1) {
             $first = $result->first()->adj_close;
             $last = $result->last()->adj_close;
-            $this->persentage
+            $this->percentage
                 = round((($last - $first) / $last) * 100, 2);
         }
 
@@ -195,8 +196,8 @@ class CompanyOverviewGraph extends Component
                 return [$fromDate, $toDate];
 
             case 'custom':
-                $fromDate = Carbon::parse($this->start_at);
-                $toDate = Carbon::parse($this->end_at);
+                $fromDate = Carbon::parse($this->dateRange[0]);
+                $toDate = Carbon::parse($this->dateRange[1]);
                 return [$fromDate, $toDate];
 
             case 'max':

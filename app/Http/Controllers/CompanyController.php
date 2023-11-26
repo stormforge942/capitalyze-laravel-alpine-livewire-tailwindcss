@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Http\Livewire\AllFilings\Ownership;
 use App\Models\Fund;
 use App\Models\Company;
 use Illuminate\Http\Request;
@@ -202,7 +203,8 @@ class CompanyController extends BaseController
         ]);
     }
 
-    public function filingsSummary(Request $request, $ticker){
+    public function filingsSummary(Request $request, $ticker)
+    {
         $company = Company::where('ticker', $ticker)->get()->first();
         return view('layouts.company', [
             'company' => $company,
@@ -214,30 +216,21 @@ class CompanyController extends BaseController
 
     public function ownership(Request $request, string $ticker)
     {
-        $historyCompany = OwnershipHistoryService::getCompany();
-
-        if ($historyCompany !== $ticker) {
-            OwnershipHistoryService::clear();
-        }
-
-        OwnershipHistoryService::setCompany($ticker);
-
-        $of = $of ?? $ticker;
+        OwnershipHistoryService::setCompany($request->route('start', $ticker));
 
         $company = Company::query()
-            ->where('ticker', $ticker)
+            ->where('ticker', OwnershipHistoryService::getCompany())
             ->firstOrFail();
 
-        $currentCompany = $ticker === $of ? $company :
+        $currentCompany = $ticker === $company->ticker ? $company :
             Company::query()
-            ->where('ticker', $of)
+            ->where('ticker', $ticker)
             ->firstOrFail();
 
         return view('layouts.company', [
             'company' => $company,
+            'ticker' => $company->ticker,
             'currentCompany' => $currentCompany,
-            'ticker' => $ticker,
-            'period' => $request->query('period', 'annual'),
             'tab' => 'ownership'
         ]);
     }
@@ -254,14 +247,7 @@ class CompanyController extends BaseController
 
         $intialCompany = Company::query()
             ->where('ticker', OwnershipHistoryService::getCompany())
-            ->first();
-
-        abort_if(!$intialCompany && !$currentCompany, 404);
-
-        if (!$intialCompany && $currentCompany) {
-            OwnershipHistoryService::setCompany($currentCompany->ticker);
-            $intialCompany = $currentCompany->clone();
-        }
+            ->firstOrFail();
 
         return view('layouts.company', [
             'company' => $intialCompany,
@@ -271,7 +257,8 @@ class CompanyController extends BaseController
         ]);
     }
 
-    public function analysis(Request $request, string $ticker){
+    public function analysis(Request $request, string $ticker)
+    {
         $company = Company::query()
             ->where('ticker', $ticker)
             ->firstOrFail();

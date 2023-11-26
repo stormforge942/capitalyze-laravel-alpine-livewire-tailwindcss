@@ -22,6 +22,7 @@ use Illuminate\Support\ServiceProvider;
 use Illuminate\Auth\Notifications\VerifyEmail;
 use Illuminate\Auth\Notifications\ResetPassword;
 use Illuminate\Notifications\Messages\MailMessage;
+use Illuminate\Support\Facades\Blade;
 use WireElements\Pro\Components\Spotlight\Spotlight;
 use WireElements\Pro\Components\Spotlight\SpotlightQuery;
 use WireElements\Pro\Components\Spotlight\SpotlightResult;
@@ -34,6 +35,28 @@ class AppServiceProvider extends ServiceProvider
      * @return void
      */
     public function register()
+    {
+        $this->registerSpotlight();
+    }
+
+    /**
+     * Bootstrap any application services.
+     *
+     * @return void
+     */
+    public function boot()
+    {
+        $this->logDbQueries();
+
+        $this->customizeEmails();
+
+        Blade::directive('redIfNegative', function (...$args) {
+            $value = redIfNegative(...$args);
+            return "<?php echo $value ?>";
+        });
+    }
+
+    private function registerSpotlight()
     {
         Spotlight::registerGroup('companies', 'Companies');
         Spotlight::registerGroup('funds', 'Funds');
@@ -213,22 +236,16 @@ class AppServiceProvider extends ServiceProvider
         );
     }
 
-    /**
-     * Bootstrap any application services.
-     *
-     * @return void
-     */
-    public function boot()
+    private function logDbQueries()
     {
-//        if (App::environment('production')) {
-//            DB::listen(function ($query) {
-//                Log::stack(['papertrail'])->debug(
-//                    "Query: {$query->sql}, Bindings: " . json_encode($query->bindings) . ", Time: {$query->time}"
-//                );
-//            });
-//        }
+        // if (App::environment('production')) {
+        //     DB::listen(function ($query) {
+        //         Log::stack(['papertrail'])->debug(
+        //             "Query: {$query->sql}, Bindings: " . json_encode($query->bindings) . ", Time: {$query->time}"
+        //         );
+        //     });
+        // }
         // log DB request local to termninal for debugging purposes
-
 
         if (App::environment('local') && env('DB_LOG', true)) {
             DB::listen(function ($query) {
@@ -255,7 +272,10 @@ class AppServiceProvider extends ServiceProvider
                 Log::debug($message);
             });
         }
+    }
 
+    private function customizeEmails()
+    {
         // Customize verify email notification
         VerifyEmail::toMailUsing(function ($user, $url) {
             return (new MailMessage)

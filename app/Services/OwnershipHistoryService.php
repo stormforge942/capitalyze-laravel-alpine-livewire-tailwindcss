@@ -7,8 +7,12 @@ use Illuminate\Support\Arr;
 
 class OwnershipHistoryService
 {
-    public static function setCompany(string $ticker): void
-    {
+    public static function setCompany(string $ticker, bool $clearIfChanged = true): void
+    {        
+        if($clearIfChanged && static::hasCompany() && static::getCompany() !== $ticker) {
+            static::clear();
+        }
+        
         session()->put('ownership-history.company', $ticker);
     }
 
@@ -42,21 +46,21 @@ class OwnershipHistoryService
         session()->put('ownership-history.items', $items);
     }
 
-    public static function get(): array
+    public static function get(?string $requestUrl = null): array
     {
         $history = session('ownership-history.items', []);
+        $requestUrl = $requestUrl ? rtrim(parse_url($requestUrl, PHP_URL_PATH), '/') : null;
 
         return Arr::map($history, fn ($item) => [
             'name' => $item['name'],
             'url' => $item['url'],
-            'active' => rtrim(parse_url(request()->url(), PHP_URL_PATH), '/') === $item['url'],
+            'active' => $requestUrl && $requestUrl === $item['url'],
         ]);
     }
 
     public static function remove($url): void
     {
-        $history = static::get();
-        $history = Arr::where($history, function ($historyItem) use ($url) {
+        $history = array_filter(static::get(), function ($historyItem) use ($url) {
             return $historyItem['url'] !== $url;
         });
 

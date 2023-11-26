@@ -1,5 +1,5 @@
 <div class="lg:ml-56" id="navigation">
-    <div class="flex items-center justify-between px-4 py-8 bg-white lg:hidden header__main">
+    <div class="flex items-center justify-between px-4 md:px-6 py-8 bg-white lg:hidden header__main">
         <div class="flex items-center justify-between gap-1">
             @auth
                 <button class="p-1" x-data @click="$dispatch('toggle-mobile-nav')">
@@ -24,7 +24,7 @@
         <div>
             @auth
                 <button id="profileButtonMobile" data-dropdown-toggle="dropdownProfileMobile" type="button"
-                    class="bg-[#52D3A2] w-9 h-9 leading-9 rounded-full font-semibold text-[14px] focus:outline-none transition self-start">
+                    class="bg-[#52D3A2] w-9 h-9 leading-9 rounded-full font-semibold focus:outline-none transition self-start">
                     {{ Auth::user()->initials }}
                 </button>
 
@@ -44,7 +44,7 @@
                     fill="#9DA3A8" />
             </svg>
 
-            <button wire:click="$emit('spotlight.toggle')" class="w-full text-left text-[#7C8286] text-sm ml-3">
+            <button wire:click="$emit('spotlight.toggle')" class="w-full text-left text-[#7C8286] ml-3">
                 Search
             </button>
         </div>

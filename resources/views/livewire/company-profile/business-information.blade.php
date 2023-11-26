@@ -19,24 +19,15 @@ $tabs = [
 ];
 ?>
 
-<div id="business-information" class="cards-wrapper wide-cards-wrapper" x-data="{ active: 0 }">
-    <div class="flex flex-wrap lg:flex-nowrap nav-top">
-        <div class=" basis-full order-2 lg:order-1  lg:basis-7/12">
-            <div class="white-card-nav">
-                <ul class="nav-top-list">
-                    @foreach ($tabs as $idx => $tab)
-                        <li>
-                            <a href="#" @click.prevent="active = {{ $idx }}"
-                                :class="active === {{ $idx }} ? 'active' : ''">
-                                {{ $tab['title'] }}
-                            </a>
-                        </li>
-                    @endforeach
-                </ul>
-            </div>
-        </div>
-        <div class="bussiness-information-right order-1 lg:order-2 basis-full lg:basis-1/5">
-        </div>
+<div x-data="{ active: 0 }">
+    <div class="max-w-[612px] lg:max-w-[723px] xl:max-w-[800px] w-full mb-6 flex flex-wrap items-center gap-x-2 gap-y-4 text-sm [&>*]:tracking-[-0.12px]">
+        @foreach ($tabs as $idx => $tab)
+            <button @click.prevent="active = {{ $idx }}" class="p-2 border rounded-full transition"
+                :class="active === {{ $idx }} ? 'border-green-dark bg-green bg-opacity-20' :
+                    'border-[#D1D3D5] hover:bg-gray-200'">
+                {{ $tab['title'] }}
+            </button>
+        @endforeach
     </div>
 
     @foreach ($tabs as $idx => $tab)
