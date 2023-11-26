@@ -60,7 +60,7 @@
                 <template x-for="(label, key) in options" :key="key">
                     <label class="cursor-pointer rounded flex items-center p-4 hover:bg-green-light gap-x-4">
                         <input type="radio" :name="name" :value="key"
-                            class="text-dark focus:ring-dark" x-model="tmpValue">
+                            class="custom-radio border-dark focus:ring-0" x-model="tmpValue">
 
                         <span x-text="label">label</span>
                     </label>
