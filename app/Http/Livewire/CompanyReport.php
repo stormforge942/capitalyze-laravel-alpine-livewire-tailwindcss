@@ -7,11 +7,7 @@ use App\Models\InfoPresentation;
 use App\Models\InfoTikrPresentation;
 use Carbon\Carbon;
 use DateTime;
-use Illuminate\Database\ConnectionResolver;
-use Illuminate\Database\Eloquent\Model;
-use Illuminate\Support\Str;
 use Livewire\Component;
-use Illuminate\Support\Facades\DB;
 use Illuminate\Http\Request;
 
 class CompanyReport extends Component
@@ -50,7 +46,7 @@ class CompanyReport extends Component
     public $selectedValue = [];
     public $chartType = 'line';
     public $isOpen = false;
-    public $activeTitle = 'Income Statement';
+    public $activeTabName = 'Income Statement';
     public $chartColors = [];
     public $allRows = [];
 
@@ -63,10 +59,10 @@ class CompanyReport extends Component
         'view',
         'startDate',
         'endDate',
-        'activeTitle',
+        'activeTabName',
     ];
 
-    public function mount(Request $request, $company, $ticker, $period)
+    public function mount(Request $request, $company, $ticker, $period): void
     {
         $eodPrices = EodPrices::where('symbol', strtolower($this->company->ticker))
             ->latest('date')
@@ -240,7 +236,7 @@ class CompanyReport extends Component
         }
     }
 
-    public function getData()
+    public function getData() : void
     {
         $acronym = ($this->period == 'annual') ? 'arf5drs' : 'qrf5drs';
 
@@ -257,7 +253,7 @@ class CompanyReport extends Component
 
         }
 
-        if ($this->activeTitle === 'Ratios') {
+        if ($this->activeTabName === 'Ratios') {
             $data = $this->fakeDataForRatiosPage();
         }
 
@@ -527,7 +523,7 @@ class CompanyReport extends Component
         }
 
         if ($this->view === 'Standardised Template') {
-            $data = $this->activeTitle == 'Balance Sheet Statement' ? $data['Balance Sheet'] : $data[$this->activeTitle];
+            $data = $this->activeTabName == 'Balance Sheet Statement' ? $data['Balance Sheet'] : $data[$this->activeTabName];
         }
 
         foreach ($data as $key => $value) {
@@ -735,12 +731,12 @@ class CompanyReport extends Component
             return;
         }
 
-        if($this->activeTitle == 'Income Statement' || $this->activeTitle == 'Balance Sheet Statement' || $this->activeTitle == 'Cash Flow Statement') {
+        if($this->activeTabName == 'Income Statement' || $this->activeTabName == 'Balance Sheet Statement' || $this->activeTabName == 'Cash Flow Statement') {
             $this->activeIndex = 'Financial Statements [Financial Statements]';
         }
 
         foreach($statements as $value) {
-            if($this->activeTitle == $value['title']) {
+            if($this->activeTabName == $value['title']) {
                 $this->activeSubIndex = $value['id'];
                 break;
             }
@@ -750,14 +746,14 @@ class CompanyReport extends Component
     }
 
 
-    public function periodChange($period)
+    public function periodChange($period) : void
     {
         $this->period = $period;
         $this->setAsReportedStatementsList();
         $this->getData();
     }
 
-    public function tabClicked($key)
+    public function tabClicked($key): void
     {
         $this->activeIndex = $key;
         $this->getData();
@@ -766,17 +762,17 @@ class CompanyReport extends Component
     public function tabSubClicked($title)
     {
 
-        $this->activeTitle = $title;
+        $this->activeTabName = $title;
 
-        if($this->asReportedStatements == null){
+        if($this->asReportedStatementsList == null){
             $this->setAsReportedStatementsList();
 
         }
 
-        if($this->activeTitle === 'Income Statement' || $this->activeTitle === 'Balance Sheet Statement' || $this->activeTitle === 'Cash Flow Statement') {
+        if($this->activeTabName === 'Income Statement' || $this->activeTabName === 'Balance Sheet Statement' || $this->activeTabName === 'Cash Flow Statement') {
             if($this->view === 'As reported (Harmonized)') {
                 foreach($this->asReportedStatementsList as $value) {
-                    if($this->activeTitle === $value['title']) {
+                    if($this->activeTabName === $value['title']) {
                         $this->activeSubIndex = $value['id'];
                         break;
                     }
