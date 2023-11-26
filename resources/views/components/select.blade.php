@@ -27,9 +27,10 @@
     }
 }" class="inline-block">
     <div x-modelable="value" {{ $attributes }}>
-        <button class="bg-white border-[0.5px] border-[#93959880] p-2 rounded-full flex items-center gap-x-1"
+        <button class="border-[0.5px] border-[#93959880] p-2 rounded-full flex items-center gap-x-1"
+        :class="isVisible ? 'bg-[#E2E2E2]' : 'bg-white hover:bg-[#E2E2E2]'"
             x-ref="trigger">
-            <span x-text="value ? options[value] : placeholder">
+            <span class="font-medium" x-text="value ? options[value] : placeholder">
             </span>
 
             <span :class="isVisible ? 'rotate-180' : ''" class="transition-transform shrink-0">
@@ -57,7 +58,7 @@
 
             <div class="max-h-[19rem] space-y-2 overflow-y-auto">
                 <template x-for="(label, key) in options" :key="key">
-                    <label class="flex items-center p-4 gap-x-4">
+                    <label class="cursor-pointer rounded flex items-center p-4 hover:bg-green-light gap-x-4">
                         <input type="radio" :name="name" :value="key"
                             class="text-dark focus:ring-dark" x-model="tmpValue">
 
@@ -66,8 +67,8 @@
                 </template>
             </div>
 
-            <div class="mt-2 pb-2">
-                <button type="button" class="w-full px-4 py-3 text-white font-medium bg-dark rounded-lg disabled:pointer-events-none disabled:bg-[#D1D3D5]"
+            <div class="pt-6">
+                <button type="button" class="w-full px-4 py-3 text-white font-medium bg-green-dark hover:bg-opacity-80 rounded disabled:pointer-events-none disabled:bg-[#D1D3D5]"
                     @click="value = tmpValue; dropdown.hide()" :disabled="value === tmpValue">
                     Show Result
                 </button>
