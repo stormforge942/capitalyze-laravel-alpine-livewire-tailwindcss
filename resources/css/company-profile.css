@@ -6,7 +6,19 @@
 .page-titles .text-color-green {
     color: #13B05B;
     font-weight: 500;
-    font-size: 16px;
+    font-size: 0.875rem;
+}
+
+.text-color-red {
+    color: #e25252;
+    font-weight: 500;
+    font-size: 0.875rem;
+}
+
+.page-titles .text-color-red {
+    color: #e25252;
+    font-weight: 500;
+    font-size: 0.875rem;
 }
 
 .page-titles {
@@ -186,7 +198,7 @@
 
 .company-name {
     color: #121A0F;
-    font-size: 24px;
+    font-size: 1.25rem;
     font-style: normal;
     font-weight: 700;
     line-height: normal;
