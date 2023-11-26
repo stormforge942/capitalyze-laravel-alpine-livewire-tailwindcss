@@ -46,6 +46,7 @@ class ShareholdersTable extends BaseTable
             Column::add()
                 ->title('Fund')
                 ->field('investor_name_formated', 'investor_name')
+                ->sortable()
                 ->searchable(),
 
             Column::make('Shares Held', 'ssh_prnamt')
