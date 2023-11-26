@@ -1,4 +1,5 @@
 <div x-data="{
+    scrolling: false,
     activeTab: @if (count($sidebarLinks)) '{{ $sidebarLinks[0]['link'] }}' @else null @endif,
     openSource() {
         window.livewire.emit('slide-over.open', 'business-information-source-slide', { sourceLink: `{{ $menuLinks['s3_url'] }}` }, {
@@ -14,9 +15,41 @@
         this.activeTab = tab
     },
     setActive(tab) {
-        this.activeTab = tab
+        this.scrolling = true
         window.smoothScroll(tab.replace('#', ''))
-    }
+        this.activeTab = tab
+        setTimeout(() => {
+            this.scrolling = false
+        }, 1000)
+    },
+    init() {
+        const links = [...$refs.contentArea.querySelectorAll('.anchor')].map((el) => '#' + el.getAttribute('id'))
+
+        let callback = (entries, observer) => {
+            if (window.innerWidth <= 1024 || this.scrolling) {
+                return;
+            }
+
+            entries.forEach(entry => {
+                if (entry.isIntersecting) {
+                    this.activeTab = '#' + entry.target.getAttribute('id')
+                    return;
+                };
+            })
+        }
+
+        let observer = new IntersectionObserver(callback, {
+            threshold: [0.5]
+        });
+
+        links.forEach((link) => {
+            const element = $refs.contentArea.querySelector(link)
+
+            if (element) {
+                observer.observe(element)
+            }
+        })
+    },
 }">
     <x-card class="block lg:hidden max-w-[612px] w-full">
         <div class="flex items-center justify-between gap-4">
@@ -59,7 +92,7 @@
     <div class="hidden lg:flex gap-6">
         <div class="lg:max-w-[723px] xl:max-w-[800px] flex-1">
             <x-card>
-                <div class="bussiness-information-content">
+                <div class="bussiness-information-content" x-ref="contentArea">
                     {!! $businessContent !!}
                 </div>
             </x-card>
