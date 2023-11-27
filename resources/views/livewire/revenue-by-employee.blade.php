@@ -178,7 +178,7 @@
                     class="z-10 bg-white divide-y divide-gray-100 rounded-lg shadow w-60 dark:bg-gray-700 dark:divide-gray-600 dropdown-scroll-wrapper">
                     <div class="p-3 text-base flex items-center justify-between font-medium">
                         <div>Freeze Panes</div>
-                        <svg id="freezePanesClose" class="cursor-pointer" width="24" height="24" viewBox="0 0 24 24" fill="none"
+                        <svg id="freezePanesClose" class="cursor-pointer" width="24" height="24" viewBox="0 0 24 24" fill="none" @click="freezepanOpen = false"
                             xmlns="http://www.w3.org/2000/svg">
                             <path
                                 d="M6.4 19L5 17.6L10.6 12L5 6.4L6.4 5L12 10.6L17.6 5L19 6.4L13.4 12L19 17.6L17.6 19L12 13.4L6.4 19Z"
@@ -190,7 +190,7 @@
                         <li>
                             <div class="flex p-2 rounded hover:bg-[#52D3A233] cursor-pointer">
                                 <div class="flex items-center h-5 cursor-pointer">
-                                    <input wire:model="freezePanes" @click='freezepans = "Top Row"'
+                                    <input @click='freezepans = "Top Row"'
                                         id="{{$chartId}}freezePanes-radio-1" name="freezePanes-radio" type="radio" value="Top Row"
                                         class="cursor-pointer w-4 h-4 text-[#686868] bg-transpearent border-[#686868] border-2">
                                 </div>
@@ -205,7 +205,7 @@
                         <li>
                             <div class="flex p-2 rounded hover:bg-[#52D3A233] cursor-pointer">
                                 <div class="flex items-center h-5 cursor-pointer">
-                                    <input wire:model="freezePanes" @click='freezepans = "First Column"'
+                                    <input @click='freezepans = "First Column"'
                                         id="{{$chartId}}freezePanes-radio-2" name="freezePanes-radio" type="radio"
                                         value="First Column"
                                         class="cursor-pointer w-4 h-4 text-[#686868] bg-transpearent border-[#686868] border-2">
@@ -221,7 +221,7 @@
                         <li>
                             <div class="flex p-2 rounded hover:bg-[#52D3A233] cursor-pointer">
                                 <div class="flex items-center h-5 cursor-pointer">
-                                    <input wire:model="freezePanes" id="{{$chartId}}freezePanes-radio-3" name="freezePanes-radio" type="radio" @click='freezepans = "Top Row & First Column"'
+                                    <input id="{{$chartId}}freezePanes-radio-3" name="freezePanes-radio" type="radio" @click='freezepans = "Top Row & First Column"'
                                         value="Top Row & First Column"
                                         class="cursor-pointer w-4 h-4 text-[#686868] bg-transpearent border-[#686868] border-2">
                                 </div>
@@ -236,14 +236,14 @@
                     </ul>
                     <div class="mx-3 my-4">
                         <button class="w-full p-1 text-base font-medium bg-[#52D3A2] rounded text-center"
-                            id="freezePanesCloseButton">Show Result</button>
+                            id="freezePanesCloseButton" @click="{{$chartId}}setFreezePans(freezepans)">Show Result</button>
                     </div>
                 </div>
                 </div>
             </div>
-            <div wire:ignore class="ml-3 flex items-center text-sm" x-data="{round: null, open: false}" @click.away="open = false">Decimal
+            <div wire:ignore class="ml-3 flex items-center text-sm" x-data="{round: null, roundOpen: false}" @click.away="roundOpen = false">Decimal
                 <div class="relative">
-                    <button :class="[round != null ? 'active' : '', open ? 'down' : '']" @click="open = !open"
+                    <button :class="[round != null ? 'active' : '', roundOpen ? 'down' : '']" @click="roundOpen = !roundOpen"
                         class="flex items-center flowbite-select bg-gray-50 border border-gray-700 text-gray-900 text-sm ml-2 p-2 flowbite_btn"
                         name="view" id="">
                         <span x-text='(round == null || round == 0) ? "auto" : (round == 2 ? ".00" : (round == 3 ? ".00" : ""))' ></span>
@@ -254,7 +254,7 @@
                         </svg>
                     </button>
                     <!-- Dropdown menu -->
-                    <div x-show="open"
+                    <div x-show="roundOpen"
                         class="z-10 bg-white divide-y divide-gray-100 rounded-lg shadow w-60 dark:bg-gray-700 dark:divide-gray-600 dropdown-scroll-wrapper">
                         <div class="p-3 text-base flex items-center justify-between font-medium">
                             <div>Decimal</div>
@@ -634,6 +634,11 @@
     let {{$chartId}}decimalPoints = 0;
     let {{$chartId}}unitType = 0
     let {{$chartId}}reversOrder = false
+    let {{$chartId}}FreezePans = null
+    function {{$chartId}}setFreezePans(v){
+        {{$chartId}}FreezePans = v
+        @this.set('freezePanes', v)
+    }
     function {{$chartId}}setRound(v){
         {{$chartId}}decimalPoints = v
         Livewire.emit('{{$chartId}}decimalChanged', v)

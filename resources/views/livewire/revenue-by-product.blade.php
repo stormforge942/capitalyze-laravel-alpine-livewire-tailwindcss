@@ -112,7 +112,7 @@
                     class="z-10 bg-white divide-y divide-gray-100 rounded-lg shadow  dark:bg-gray-700 dark:divide-gray-600 dropdown-scroll-wrapper">
                     <div class="p-3 text-base flex items-center justify-between font-medium">
                         <div>Order</div>
-                        <svg id="orderClose" width="24" height="24" class="cursor-pointer" viewBox="0 0 24 24" fill="none"
+                        <svg id="orderClose" width="24" height="24" class="cursor-pointer" viewBox="0 0 24 24" fill="none" @click="reverseOrderOpen = false"
                             xmlns="http://www.w3.org/2000/svg">
                             <path
                                 d="M6.4 19L5 17.6L10.6 12L5 6.4L6.4 5L12 10.6L17.6 5L19 6.4L13.4 12L19 17.6L17.6 19L12 13.4L6.4 19Z"
@@ -177,7 +177,7 @@
                     class="z-10 bg-white divide-y divide-gray-100 rounded-lg shadow  dark:bg-gray-700 dark:divide-gray-600 dropdown-scroll-wrapper">
                     <div class="p-3 text-base flex items-center justify-between font-medium">
                         <div>Freeze Panes</div>
-                        <svg id="freezePanesClose" width="24" height="24" class="cursor-pointer" viewBox="0 0 24 24" fill="none"
+                        <svg id="freezePanesClose" width="24" height="24" class="cursor-pointer" viewBox="0 0 24 24" fill="none" @click="freezepanOpen = false"
                             xmlns="http://www.w3.org/2000/svg">
                             <path
                                 d="M6.4 19L5 17.6L10.6 12L5 6.4L6.4 5L12 10.6L17.6 5L19 6.4L13.4 12L19 17.6L17.6 19L12 13.4L6.4 19Z"
@@ -189,7 +189,7 @@
                         <li>
                             <div class="flex p-2 rounded hover:bg-[#52D3A233] cursor-pointer">
                                 <div class="flex items-center h-5 cursor-pointer">
-                                    <input wire:model="freezePanes" @click='freezepans = "Top Row"'
+                                    <input @click='freezepans = "Top Row"'
                                         id="freezePanes-radio-1" name="freezePanes-radio" type="radio" value="Top Row"
                                         class="cursor-pointer w-4 h-4 text-[#686868] bg-transpearent border-[#686868] border-2">
                                 </div>
@@ -204,7 +204,7 @@
                         <li>
                             <div class="flex p-2 rounded hover:bg-[#52D3A233] cursor-pointer">
                                 <div class="flex items-center h-5 cursor-pointer">
-                                    <input wire:model="freezePanes" @click='freezepans = "First Column"'
+                                    <input @click='freezepans = "First Column"'
                                         id="freezePanes-radio-2" name="freezePanes-radio" type="radio"
                                         value="First Column"
                                         class="cursor-pointer w-4 h-4 text-[#686868] bg-transpearent border-[#686868] border-2">
@@ -220,7 +220,7 @@
                         <li>
                             <div class="flex p-2 rounded hover:bg-[#52D3A233] cursor-pointer">
                                 <div class="flex items-center h-5 cursor-pointer">
-                                    <input wire:model="freezePanes"id="freezePanes-radio-3" name="freezePanes-radio" type="radio" @click='freezepans = "Top Row & First Column"'
+                                    <input id="freezePanes-radio-3" name="freezePanes-radio" type="radio" @click='freezepans = "Top Row & First Column"'
                                         value="Top Row & First Column"
                                         class="cursor-pointer w-4 h-4 text-[#686868] bg-transpearent border-[#686868] border-2">
                                 </div>
@@ -234,7 +234,7 @@
                         </li>
                     </ul>
                     <div class="mx-3 my-4">
-                        <button class="w-full p-1 font-medium text-base bg-[#52D3A2] rounded text-center"
+                        <button class="w-full p-1 font-medium text-base bg-[#52D3A2] rounded text-center" @click="{{$chartId}}setFreezePans(freezepans)"
                             id="freezePanesCloseButton">Show Result</button>
                     </div>
                 </div>
@@ -246,7 +246,7 @@
                     class="flex items-center flowbite-select bg-gray-50 border border-gray-700 text-gray-900 text-sm ml-2 p-2 flowbite_btn"
                     name="view" id="">
                     <span x-text='(round == 0 || round == null) ? "auto" : (round == 2 ? ".00" : (round == 3 ? ".00" : ""))'></span>
-                    <svg width="16" height="16" viewBox="0 0 16 16" fill="none" xmlns="http://www.w3.org/2000/svg" @click="roundOpen = !roundOpen">
+                    <svg width="16" height="16" viewBox="0 0 16 16" fill="none" xmlns="http://www.w3.org/2000/svg" >
                         <path
                             d="M10.3083 6.19514L7.72167 8.78378L5.135 6.19514C5.01045 6.07021 4.84135 6 4.665 6C4.48865 6 4.31955 6.07021 4.195 6.19514C3.935 6.45534 3.935 6.87566 4.195 7.13585L7.255 10.1982C7.515 10.4584 7.935 10.4584 8.195 10.1982L11.255 7.13585C11.515 6.87566 11.515 6.45534 11.255 6.19514C10.995 5.94161 10.5683 5.93494 10.3083 6.19514Z"
                             fill="#121A0F" />
@@ -257,7 +257,7 @@
                     class="z-10 bg-white divide-y divide-gray-100 rounded-lg shadow  dark:bg-gray-700 dark:divide-gray-600 dropdown-scroll-wrapper">
                     <div class="p-3 text-base flex items-center justify-between font-medium">
                         <div>Decimal</div>
-                        <svg id="decimalClose" width="24" height="24" class="cursor-pointer" viewBox="0 0 24 24" fill="none"
+                        <svg id="decimalClose" width="24" height="24" class="cursor-pointer" viewBox="0 0 24 24" fill="none" @click="roundOpen = false"
                             xmlns="http://www.w3.org/2000/svg">
                             <path
                                 d="M6.4 19L5 17.6L10.6 12L5 6.4L6.4 5L12 10.6L17.6 5L19 6.4L13.4 12L19 17.6L17.6 19L12 13.4L6.4 19Z"
@@ -600,6 +600,7 @@
     let {{$chartId}}decimalPoints = 0;
     let {{$chartId}}unitType = 0
     let {{$chartId}}reversOrder = false
+    {{$chartId}}FreezePans = 0
     function {{$chartId}}setRound(v){
         {{$chartId}}decimalPoints = v
         Livewire.emit('{{$chartId}}decimalChanged', v)
@@ -610,6 +611,12 @@
         Livewire.emit('{{$chartId}}orderChanged', v)
         @this.set('reverseOrder', v)
     }
+
+    function {{$chartId}}setFreezePans(v){
+        {{$chartId}}FreezePans = v
+        @this.set('freezePanes', v)
+    }
+
     function {{$chartId}}setUnitType(v){
         {{$chartId}}unitType = v
         Livewire.emit('{{$chartId}}unitChanged', {{$chartId}}unitType)

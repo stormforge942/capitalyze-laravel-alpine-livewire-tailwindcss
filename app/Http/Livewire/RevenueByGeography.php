@@ -8,6 +8,7 @@ use Illuminate\Http\Request;
 
 class RevenueByGeography extends Component
 {
+    use TableFiltersTrait;
     public $company;
     public $ticker;
     public $companyName;
