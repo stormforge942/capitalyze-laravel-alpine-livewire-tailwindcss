@@ -104,7 +104,7 @@
     ];
     ?>
     <div
-        class="grid grid-cols-1 md:grid-cols-2 2xl:grid-cols-4 gap-x-6 gap-y-4 text-base leading-normal order-2 2xl:order-1">
+        class="grid grid-cols-1 md:grid-cols-2 2xl:grid-cols-4 gap-x-6 gap-y-4 text-base leading-normal order-2 lg:order-1">
         @foreach ($cards as $card)
             <x-card :title="$card['title']">
                 <div class="grid grid-cols-3 2xl:grid-cols-2 gap-5">
@@ -119,7 +119,7 @@
         @endforeach
     </div>
 
-    <div class="order-1 2xl:order-2">
+    <div class="order-1 lg:order-2">
         <livewire:company-profile.company-overview-graph :ticker="$profile['symbol']" />
     </div>
 
