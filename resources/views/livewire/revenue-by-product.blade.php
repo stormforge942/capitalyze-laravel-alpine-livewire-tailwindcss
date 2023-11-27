@@ -1,24 +1,24 @@
 <div>
-    <div class="filters-row mb-3">
-        <div class="select-wrapper flex items-center custom-text-xs" x-data="{unitType: 0}">
+    <div class="filters-row bg-white py-3 px-4  rounded-lg mb-7 custom__border_gray">
+        <div class="select-wrapper flex gap-x-4 items-center custom-text-xs" x-data="{unitType: null, unitTypeOpen: false}" @click.away="unitTypeOpen = false">
             <div class="flex items-center text-sm">Unit Type
-                <div class="relative">    <button id="dropdownUnitTypeButton" data-dropdown-toggle="dropdown-UnitType"
-                    class="flex items-center flowbite-select bg-gray-50 border border-gray-700 text-gray-900 text-sm ml-2 p-2 flowbite_btn" :class="unitType != 0 ? 'active' : ''"
+                <div class="relative">    <button id="dropdownUnitTypeButton"
+                    class="flex items-center flowbite-select bg-gray-50 border border-gray-700 text-gray-900 text-sm ml-2 p-2 flowbite_btn" :class="[unitType != null ? 'active' : '',unitTypeOpen ? 'down' : '']"
                     name="view" id="">
-                    <span
-                        x-text="unitType == 0 ? 'None' : (unitType == 'thousands' ? 'Thousands' : (unitType == 'millions' ? 'Millions' : (unitType == 'billions' ? 'Billions' : '')))"></span>
-                    <svg width="16" height="16" viewBox="0 0 16 16" fill="none" xmlns="http://www.w3.org/2000/svg">
+                    <span @click="unitTypeOpen = !unitTypeOpen"
+                        x-text="(unitType == null || unitType == 0) ? 'None' : (unitType == 'thousands' ? 'Thousands' : (unitType == 'millions' ? 'Millions' : (unitType == 'billions' ? 'Billions' : '')))"></span>
+                    <svg @click="unitTypeOpen = !unitTypeOpen" width="16" height="16" viewBox="0 0 16 16" fill="none" xmlns="http://www.w3.org/2000/svg">
                         <path
                             d="M10.3083 6.19514L7.72167 8.78378L5.135 6.19514C5.01045 6.07021 4.84135 6 4.665 6C4.48865 6 4.31955 6.07021 4.195 6.19514C3.935 6.45534 3.935 6.87566 4.195 7.13585L7.255 10.1982C7.515 10.4584 7.935 10.4584 8.195 10.1982L11.255 7.13585C11.515 6.87566 11.515 6.45534 11.255 6.19514C10.995 5.94161 10.5683 5.93494 10.3083 6.19514Z"
                             fill="#121A0F" />
                     </svg>
                 </button>
                 <!-- Dropdown menu -->
-                <div id="dropdown-UnitType" wire:ignore
-                    class="z-10 hidden bg-white divide-y divide-gray-100 rounded-lg shadow  dark:bg-gray-700 dark:divide-gray-600 dropdown-scroll-wrapper">
+                <div x-show="unitTypeOpen" wire:ignore
+                    class="z-10 bg-white divide-y divide-gray-100 rounded-lg shadow  dark:bg-gray-700 dark:divide-gray-600 dropdown-scroll-wrapper">
                     <div class="p-3 text-base flex items-center justify-between font-medium">
                         <div>Unit Type</div>
-                        <svg id="unitTypeClose" width="24" height="24" viewBox="0 0 24 24" fill="none"
+                        <svg id="unitTypeClose" width="24" height="24" class="cursor-pointer" viewBox="0 0 24 24" fill="none"  @click="unitTypeOpen = false"
                             xmlns="http://www.w3.org/2000/svg">
                             <path
                                 d="M6.4 19L5 17.6L10.6 12L5 6.4L6.4 5L12 10.6L17.6 5L19 6.4L13.4 12L19 17.6L17.6 19L12 13.4L6.4 19Z"
@@ -95,23 +95,23 @@
                 </div>
             </div>
             </div>
-            <div class="ml-3 flex items-center text-sm" x-data="{reverseOrder:false}">Order
-                <div class="relative">    <button id="dropdownOrderButton" data-dropdown-toggle="dropdown-Order" :class="reverseOrder != false ? 'active' : ''"
+            <div class="flex items-center text-sm" x-data="{reverseOrder:null, reverseOrderOpen: false}" @click.away="reverseOrderOpen = false">Order
+                <div class="relative">    <button :class="[reverseOrder != null ? 'active' : '', reverseOrderOpen ? 'down' : '']" @click="reverseOrderOpen = !reverseOrderOpen"
                     class="flex items-center flowbite-select bg-gray-50 border border-gray-700 text-gray-900 text-sm ml-2 p-2 flowbite_btn"
                     name="view" id="">
-                    <span x-text="reverseOrder == false ? 'Latest on Right' : 'Latest on Left'"></span>
-                    <svg width="16" height="16" viewBox="0 0 16 16" fill="none" xmlns="http://www.w3.org/2000/svg">
+                    <span x-text="(reverseOrder == false || reverseOrder == null) ? 'Latest on Right' : 'Latest on Left'"></span>
+                    <svg width="16" height="16" viewBox="0 0 16 16" fill="none" xmlns="http://www.w3.org/2000/svg" @click="reverseOrderOpen = !reverseOrderOpen">
                         <path
                             d="M10.3083 6.19514L7.72167 8.78378L5.135 6.19514C5.01045 6.07021 4.84135 6 4.665 6C4.48865 6 4.31955 6.07021 4.195 6.19514C3.935 6.45534 3.935 6.87566 4.195 7.13585L7.255 10.1982C7.515 10.4584 7.935 10.4584 8.195 10.1982L11.255 7.13585C11.515 6.87566 11.515 6.45534 11.255 6.19514C10.995 5.94161 10.5683 5.93494 10.3083 6.19514Z"
                             fill="#121A0F" />
                     </svg>
                 </button>
                 <!-- Dropdown menu -->
-                <div id="dropdown-Order" wire:ignore
-                    class="z-10 hidden bg-white divide-y divide-gray-100 rounded-lg shadow  dark:bg-gray-700 dark:divide-gray-600 dropdown-scroll-wrapper">
+                <div id="dropdown-Order" x-show="reverseOrderOpen" wire:ignore
+                    class="z-10 bg-white divide-y divide-gray-100 rounded-lg shadow  dark:bg-gray-700 dark:divide-gray-600 dropdown-scroll-wrapper">
                     <div class="p-3 text-base flex items-center justify-between font-medium">
                         <div>Order</div>
-                        <svg id="orderClose" width="24" height="24" viewBox="0 0 24 24" fill="none"
+                        <svg id="orderClose" width="24" height="24" class="cursor-pointer" viewBox="0 0 24 24" fill="none"
                             xmlns="http://www.w3.org/2000/svg">
                             <path
                                 d="M6.4 19L5 17.6L10.6 12L5 6.4L6.4 5L12 10.6L17.6 5L19 6.4L13.4 12L19 17.6L17.6 19L12 13.4L6.4 19Z"
@@ -159,24 +159,24 @@
                 </div>
             </div>
             </div>
-            <div class="ml-3 flex items-center text-sm" x-data="{freezepans: 0}">Freeze Panes
+            <div class="flex items-center text-sm" x-data="{freezepans: null, freezepanOpen: false}" @click.away="freezepanOpen = false">Freeze Panes
                 <div class="relative">
-                <button type="submit" id="dropdownFreezePanesButton" data-dropdown-toggle="dropdown-FreezePanes" :class="freezepans != 0 ? 'active' : ''"
+                <button type="submit" @click="freezepanOpen = !freezepanOpen" :class="[freezepans != null ? 'active' : '', freezepanOpen ? 'down' : '']"
                     class="flex items-center flowbite-select bg-gray-50 border border-gray-700 text-gray-900 text-sm ml-2 p-2 flowbite_btn"
                     name="view" id="">
                     Top Row
-                    <svg width="16" height="16" viewBox="0 0 16 16" fill="none" xmlns="http://www.w3.org/2000/svg">
+                    <svg width="16" height="16" viewBox="0 0 16 16" fill="none" xmlns="http://www.w3.org/2000/svg" @click="freezepanOpen = !freezepanOpen">
                         <path
                             d="M10.3083 6.19514L7.72167 8.78378L5.135 6.19514C5.01045 6.07021 4.84135 6 4.665 6C4.48865 6 4.31955 6.07021 4.195 6.19514C3.935 6.45534 3.935 6.87566 4.195 7.13585L7.255 10.1982C7.515 10.4584 7.935 10.4584 8.195 10.1982L11.255 7.13585C11.515 6.87566 11.515 6.45534 11.255 6.19514C10.995 5.94161 10.5683 5.93494 10.3083 6.19514Z"
                             fill="#121A0F" />
                     </svg>
                 </button>
                 <!-- Dropdown menu -->
-                <div id="dropdown-FreezePanes"
-                    class="z-10 hidden bg-white divide-y divide-gray-100 rounded-lg shadow  dark:bg-gray-700 dark:divide-gray-600 dropdown-scroll-wrapper">
+                <div x-show="freezepanOpen"
+                    class="z-10 bg-white divide-y divide-gray-100 rounded-lg shadow  dark:bg-gray-700 dark:divide-gray-600 dropdown-scroll-wrapper">
                     <div class="p-3 text-base flex items-center justify-between font-medium">
                         <div>Freeze Panes</div>
-                        <svg id="freezePanesClose" width="24" height="24" viewBox="0 0 24 24" fill="none"
+                        <svg id="freezePanesClose" width="24" height="24" class="cursor-pointer" viewBox="0 0 24 24" fill="none"
                             xmlns="http://www.w3.org/2000/svg">
                             <path
                                 d="M6.4 19L5 17.6L10.6 12L5 6.4L6.4 5L12 10.6L17.6 5L19 6.4L13.4 12L19 17.6L17.6 19L12 13.4L6.4 19Z"
@@ -239,24 +239,24 @@
                 </div>
             </div>
             </div>
-            <div wire:ignore class="ml-3 flex items-center text-sm" x-data="{round: 0}">Decimal
+            <div wire:ignore class="flex items-center text-sm" x-data="{round: null, roundOpen: false}" @click.away="roundOpen = false">Decimal
                 <div class="relative">
-                <button id="dropdownDecimalButton" data-dropdown-toggle="dropdown-Decimal" :class="round != 0 ? 'active' : ''"
+                <button :class="[round != null ? 'active' : '', roundOpen? 'down' : '']"
                     class="flex items-center flowbite-select bg-gray-50 border border-gray-700 text-gray-900 text-sm ml-2 p-2 flowbite_btn"
                     name="view" id="">
-                    <span x-text='round == 0 ? "auto" : (round == 2 ? ".00" : (round == 3 ? ".00" : ""))'></span>
-                    <svg width="16" height="16" viewBox="0 0 16 16" fill="none" xmlns="http://www.w3.org/2000/svg">
+                    <span x-text='(round == 0 || round == null) ? "auto" : (round == 2 ? ".00" : (round == 3 ? ".00" : ""))' @click="roundOpen = !roundOpen"></span>
+                    <svg width="16" height="16" viewBox="0 0 16 16" fill="none" xmlns="http://www.w3.org/2000/svg" @click="roundOpen = !roundOpen">
                         <path
                             d="M10.3083 6.19514L7.72167 8.78378L5.135 6.19514C5.01045 6.07021 4.84135 6 4.665 6C4.48865 6 4.31955 6.07021 4.195 6.19514C3.935 6.45534 3.935 6.87566 4.195 7.13585L7.255 10.1982C7.515 10.4584 7.935 10.4584 8.195 10.1982L11.255 7.13585C11.515 6.87566 11.515 6.45534 11.255 6.19514C10.995 5.94161 10.5683 5.93494 10.3083 6.19514Z"
                             fill="#121A0F" />
                     </svg>
                 </button>
                 <!-- Dropdown menu -->
-                <div id="dropdown-Decimal"
-                    class="z-10 hidden bg-white divide-y divide-gray-100 rounded-lg shadow  dark:bg-gray-700 dark:divide-gray-600 dropdown-scroll-wrapper">
+                <div x-show="roundOpen"
+                    class="z-10 bg-white divide-y divide-gray-100 rounded-lg shadow  dark:bg-gray-700 dark:divide-gray-600 dropdown-scroll-wrapper">
                     <div class="p-3 text-base flex items-center justify-between font-medium">
                         <div>Decimal</div>
-                        <svg id="decimalClose" width="24" height="24" viewBox="0 0 24 24" fill="none"
+                        <svg id="decimalClose" width="24" height="24" class="cursor-pointer" viewBox="0 0 24 24" fill="none"
                             xmlns="http://www.w3.org/2000/svg">
                             <path
                                 d="M6.4 19L5 17.6L10.6 12L5 6.4L6.4 5L12 10.6L17.6 5L19 6.4L13.4 12L19 17.6L17.6 19L12 13.4L6.4 19Z"
@@ -635,10 +635,6 @@
         Livewire.emit('{{$chartId}}periodChanged', 'qrps')
     });
 
-    // const {{$chartId}}unitTypeDropdownCloseIcon = document.getElementById("{{$chartId}}unitTypeClose");
 
-    // {{$chartId}}unitTypeDropdownCloseIcon.addEventListener("click", function() {
-    //     document.getElementById('{{$chartId}}dropdown-UnitType').classList.toggle("hidden");
-    // });
 </script>
 @endpush

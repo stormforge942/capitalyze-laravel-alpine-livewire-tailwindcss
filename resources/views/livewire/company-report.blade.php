@@ -115,24 +115,24 @@
 
 
 
-                                <div class="filters-row bg-white py-3 px-4  rounded-lg mb-7">
+                                <div class="filters-row bg-white py-3 px-4  rounded-lg mb-7 custom__border_gray">
                                     <div class="select-wrapper flex gap-x-4 items-center custom-text-xs">
                                         <div class=" flex items-center text-sm">View
-                                            <button type="submit" id="dropdownViewButton" data-dropdown-toggle="dropdown-View" class="flex items-center flowbite-select bg-gray-50 border border-gray-700 text-gray-900 text-sm ml-2 p-2" name="view" id="">
-                                                {{$view}}
+                                     <div class="relative">       <button type="submit" id="dropdownViewButton" data-dropdown-toggle="dropdown-View" class="flex items-center flowbite-select bg-gray-50 border border-gray-700 text-gray-900 text-sm ml-2 p-2" name="view" id="">
+                                                {{(str_replace('(Harmonized)', '', $view))}}
                                                 <svg width="16" height="16" viewBox="0 0 16 16" fill="none" xmlns="http://www.w3.org/2000/svg">
                                                     <path d="M10.3083 6.19514L7.72167 8.78378L5.135 6.19514C5.01045 6.07021 4.84135 6 4.665 6C4.48865 6 4.31955 6.07021 4.195 6.19514C3.935 6.45534 3.935 6.87566 4.195 7.13585L7.255 10.1982C7.515 10.4584 7.935 10.4584 8.195 10.1982L11.255 7.13585C11.515 6.87566 11.515 6.45534 11.255 6.19514C10.995 5.94161 10.5683 5.93494 10.3083 6.19514Z" fill="#121A0F"/>
                                                 </svg>
                                             </button>
                                             <!-- Dropdown menu -->
-                                            <div id="dropdown-View" class="z-10 hidden bg-white divide-y divide-gray-100 rounded-lg shadow w-60 dark:bg-gray-700 dark:divide-gray-600">
-                                                <div class="p-3 text-sm flex items-center justify-between">
+                                            <div id="dropdown-View" class="z-10 hidden bg-white divide-y divide-gray-100 rounded-lg shadow  dark:bg-gray-700 dark:divide-gray-600 dropdown-scroll-wrapper">
+                                                <div class="p-3 text-base flex items-center justify-between font-medium">
                                                     <div>View</div>
-                                                    <svg id="viewClose" width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                                                    <svg id="viewClose" width="24" height="24" viewBox="0 0 24 24" class="cursor-pointer" fill="none" xmlns="http://www.w3.org/2000/svg">
                                                         <path d="M6.4 19L5 17.6L10.6 12L5 6.4L6.4 5L12 10.6L17.6 5L19 6.4L13.4 12L19 17.6L17.6 19L12 13.4L6.4 19Z" fill="#686868"/>
                                                     </svg>
                                                 </div>
-                                                <ul class="p-4 space-y-1 text-sm text-gray-700 dark:text-gray-200 max-h-40 overflow-y-scroll" aria-labelledby="dropdownViewButton">
+                                                <ul class="p-4 space-y-1 text-sm text-gray-700 dark:text-gray-200 h_23 overflow-y-scroll dropdown-scroll " aria-labelledby="dropdownViewButton">
                                                     <li>
                                                         <div class="flex p-2 rounded hover:bg-[#52D3A233] cursor-pointer">
                                                             <div class="flex items-center h-5 cursor-pointer">
@@ -140,7 +140,7 @@
                                                             </div>
                                                             <div class="ml-4 text-sm cursor-pointer">
                                                                 <label for="view-radio-1" class="cursor-pointer font-medium text-gray-900 dark:text-gray-300">
-                                                                    <div>As reported (Harmonized)</div>
+                                                                    <div>As reported</div>
                                                                 </label>
                                                             </div>
                                                         </div>
@@ -195,26 +195,27 @@
                                                     </li>
                                                 </ul>
                                                 <div class="mx-3 my-4">
-                                                    <button class="w-full p-1 text-sm bg-[#52D3A2] rounded text-center" id="viewCloseButton">Show Result</button>
+                                                    <button class="w-full p-1 text-base font-medium bg-[#52D3A2] rounded text-center" id="viewCloseButton">Show Result</button>
                                                 </div>
                                             </div>
+                                     </div>
                                         </div>
                                         <div class=" flex items-center text-sm">Period Type
-                                            <button type="submit" id="dropdownViewButton" data-dropdown-toggle="dropdown-Period" class="flex items-center flowbite-select bg-gray-50 border border-gray-700 text-gray-900 text-sm ml-2 p-2" name="period" id="">
+                                            <div class="relative">      <button type="submit" id="dropdownViewButton" data-dropdown-toggle="dropdown-Period" class="flex items-center flowbite-select bg-gray-50 border border-gray-700 text-gray-900 text-sm ml-2 p-2" name="period" id="">
                                                 {{$period}}
                                                 <svg width="16" height="16" viewBox="0 0 16 16" fill="none" xmlns="http://www.w3.org/2000/svg">
                                                     <path d="M10.3083 6.19514L7.72167 8.78378L5.135 6.19514C5.01045 6.07021 4.84135 6 4.665 6C4.48865 6 4.31955 6.07021 4.195 6.19514C3.935 6.45534 3.935 6.87566 4.195 7.13585L7.255 10.1982C7.515 10.4584 7.935 10.4584 8.195 10.1982L11.255 7.13585C11.515 6.87566 11.515 6.45534 11.255 6.19514C10.995 5.94161 10.5683 5.93494 10.3083 6.19514Z" fill="#121A0F"/>
                                                 </svg>
                                             </button>
                                             <!-- Dropdown menu -->
-                                            <div id="dropdown-Period" class="z-10 hidden bg-white divide-y divide-gray-100 rounded-lg shadow w-60 dark:bg-gray-700 dark:divide-gray-600">
-                                                <div class="p-3 text-sm flex items-center justify-between">
+                                            <div id="dropdown-Period" class="z-10 hidden bg-white divide-y divide-gray-100 rounded-lg shadow  dark:bg-gray-700 dark:divide-gray-600 dropdown-scroll-wrapper">
+                                                <div class="p-3 text-base flex items-center justify-between font-medium">
                                                     <div>Period Type</div>
-                                                    <svg id="periodClose" width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                                                    <svg id="periodClose" width="24" height="24" viewBox="0 0 24 24" class="cursor-pointer" fill="none" xmlns="http://www.w3.org/2000/svg">
                                                         <path d="M6.4 19L5 17.6L10.6 12L5 6.4L6.4 5L12 10.6L17.6 5L19 6.4L13.4 12L19 17.6L17.6 19L12 13.4L6.4 19Z" fill="#686868"/>
                                                     </svg>
                                                 </div>
-                                                <ul class="p-4 space-y-1 text-sm text-gray-700 dark:text-gray-200 max-h-40 overflow-y-scroll" aria-labelledby="dropdownViewButton">
+                                                <ul class="p-4 space-y-1 text-sm text-gray-700 dark:text-gray-200 h_23 overflow-y-scroll dropdown-scroll " aria-labelledby="dropdownViewButton">
                                                     <li>
                                                         <div class="flex p-2 rounded hover:bg-[#52D3A233] cursor-pointer">
                                                             <div class="flex items-center h-5 cursor-pointer">
@@ -313,26 +314,26 @@
                                                     </li>
                                                 </ul>
                                                 <div class="mx-3 my-4">
-                                                    <button class="w-full p-1 text-sm bg-[#52D3A2] rounded text-center" id="periodCloseButton">Show Result</button>
+                                                    <button class="w-full p-1 text-base font-medium bg-[#52D3A2] rounded text-center" id="periodCloseButton">Show Result</button>
                                                 </div>
-                                            </div>
+                                            </div></div>
                                         </div>
                                         <div class=" flex items-center text-sm">Unit Type
-                                            <button type="submit" id="dropdownUnitTypeButton" data-dropdown-toggle="dropdown-UnitType" class="flex items-center flowbite-select bg-gray-50 border border-gray-700 text-gray-900 text-sm ml-2 p-2" name="view" id="">
+                                            <div class="relative">      <button type="submit" id="dropdownUnitTypeButton" data-dropdown-toggle="dropdown-UnitType" class="flex items-center flowbite-select bg-gray-50 border border-gray-700 text-gray-900 text-sm ml-2 p-2" name="view" id="">
                                                 {{$unitType}}
                                                 <svg width="16" height="16" viewBox="0 0 16 16" fill="none" xmlns="http://www.w3.org/2000/svg">
                                                     <path d="M10.3083 6.19514L7.72167 8.78378L5.135 6.19514C5.01045 6.07021 4.84135 6 4.665 6C4.48865 6 4.31955 6.07021 4.195 6.19514C3.935 6.45534 3.935 6.87566 4.195 7.13585L7.255 10.1982C7.515 10.4584 7.935 10.4584 8.195 10.1982L11.255 7.13585C11.515 6.87566 11.515 6.45534 11.255 6.19514C10.995 5.94161 10.5683 5.93494 10.3083 6.19514Z" fill="#121A0F"/>
                                                 </svg>
                                             </button>
                                             <!-- Dropdown menu -->
-                                            <div id="dropdown-UnitType" class="z-10 hidden bg-white divide-y divide-gray-100 rounded-lg shadow w-60 dark:bg-gray-700 dark:divide-gray-600">
-                                                <div class="p-3 text-sm flex items-center justify-between">
+                                            <div id="dropdown-UnitType" class="z-10 hidden bg-white divide-y divide-gray-100 rounded-lg shadow  dark:bg-gray-700 dark:divide-gray-600 dropdown-scroll-wrapper">
+                                                <div class="p-3 text-base flex items-center justify-between font-medium">
                                                     <div>Unit Type</div>
-                                                    <svg id="unitTypeClose" width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                                                    <svg id="unitTypeClose" width="24" height="24" viewBox="0 0 24 24" class="cursor-pointer" fill="none" xmlns="http://www.w3.org/2000/svg">
                                                         <path d="M6.4 19L5 17.6L10.6 12L5 6.4L6.4 5L12 10.6L17.6 5L19 6.4L13.4 12L19 17.6L17.6 19L12 13.4L6.4 19Z" fill="#686868"/>
                                                     </svg>
                                                 </div>
-                                                <ul class="p-4 space-y-1 text-sm text-gray-700 dark:text-gray-200 max-h-40 overflow-y-scroll" aria-labelledby="dropdownViewButton">
+                                                <ul class="p-4 space-y-1 text-sm text-gray-700 dark:text-gray-200 h_23 overflow-y-scroll dropdown-scroll " aria-labelledby="dropdownViewButton">
                                                     <li>
                                                         <div class="flex p-2 rounded hover:bg-[#52D3A233] cursor-pointer">
                                                             <div class="flex items-center h-5 cursor-pointer">
@@ -383,26 +384,27 @@
                                                     </li>
                                                 </ul>
                                                 <div class="mx-3 my-4">
-                                                    <button class="w-full p-1 text-sm bg-[#52D3A2] rounded text-center" id="unitTypeCloseButton">Show Result</button>
+                                                    <button class="w-full p-1 text-base font-medium bg-[#52D3A2] rounded text-center" id="unitTypeCloseButton">Show Result</button>
                                                 </div>
+                                            </div>
                                             </div>
                                         </div>
                                         <div class=" flex items-center text-sm">Decimal
-                                            <button type="submit" id="dropdownDecimalButton" data-dropdown-toggle="dropdown-Decimal" class="flex items-center flowbite-select bg-gray-50 border border-gray-700 text-gray-900 text-sm ml-2 p-2" name="view" id="">
+                                            <div class="relative">         <button type="submit" id="dropdownDecimalButton" data-dropdown-toggle="dropdown-Decimal" class="flex items-center flowbite-select bg-gray-50 border border-gray-700 text-gray-900 text-sm ml-2 p-2" name="view" id="">
                                                 {{$decimalDisplay == 2 ? '.00' : ($decimalDisplay == 3 ? '.000' : 'auto')}}
                                                 <svg width="16" height="16" viewBox="0 0 16 16" fill="none" xmlns="http://www.w3.org/2000/svg">
                                                     <path d="M10.3083 6.19514L7.72167 8.78378L5.135 6.19514C5.01045 6.07021 4.84135 6 4.665 6C4.48865 6 4.31955 6.07021 4.195 6.19514C3.935 6.45534 3.935 6.87566 4.195 7.13585L7.255 10.1982C7.515 10.4584 7.935 10.4584 8.195 10.1982L11.255 7.13585C11.515 6.87566 11.515 6.45534 11.255 6.19514C10.995 5.94161 10.5683 5.93494 10.3083 6.19514Z" fill="#121A0F"/>
                                                 </svg>
                                             </button>
                                             <!-- Dropdown menu -->
-                                            <div id="dropdown-Decimal" class="z-10 hidden bg-white divide-y divide-gray-100 rounded-lg shadow w-60 dark:bg-gray-700 dark:divide-gray-600">
-                                                <div class="p-3 text-sm flex items-center justify-between">
+                                            <div id="dropdown-Decimal" class="z-10 hidden bg-white divide-y divide-gray-100 rounded-lg shadow  dark:bg-gray-700 dark:divide-gray-600 dropdown-scroll-wrapper">
+                                                <div class="p-3 text-base flex items-center justify-between font-medium">
                                                     <div>Decimal</div>
-                                                    <svg id="decimalClose" width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                                                    <svg id="decimalClose" width="24" height="24" viewBox="0 0 24 24" class="cursor-pointer" fill="none" xmlns="http://www.w3.org/2000/svg">
                                                         <path d="M6.4 19L5 17.6L10.6 12L5 6.4L6.4 5L12 10.6L17.6 5L19 6.4L13.4 12L19 17.6L17.6 19L12 13.4L6.4 19Z" fill="#686868"/>
                                                     </svg>
                                                 </div>
-                                                <ul class="p-4 space-y-1 text-sm text-gray-700 dark:text-gray-200 max-h-40 overflow-y-scroll" aria-labelledby="dropdownViewButton">
+                                                <ul class="p-4 space-y-1 text-sm text-gray-700 dark:text-gray-200 h_23 overflow-y-scroll dropdown-scroll " aria-labelledby="dropdownViewButton">
                                                     <li>
                                                         <div class="flex p-2 rounded hover:bg-[#52D3A233] cursor-pointer">
                                                             <div class="flex items-center h-5 cursor-pointer">
@@ -441,26 +443,27 @@
                                                     </li>
                                                 </ul>
                                                 <div class="mx-3 my-4">
-                                                    <button class="w-full p-1 text-sm bg-[#52D3A2] rounded text-center" id="decimalCloseButton">Show Result</button>
+                                                    <button class="w-full p-1 text-base font-medium bg-[#52D3A2] rounded text-center" id="decimalCloseButton">Show Result</button>
                                                 </div>
+                                            </div>
                                             </div>
                                         </div>
                                         <div class=" flex items-center text-sm">Order
-                                            <button type="submit" id="dropdownOrderButton" data-dropdown-toggle="dropdown-Order" class="flex items-center flowbite-select bg-gray-50 border border-gray-700 text-gray-900 text-sm ml-2 p-2" name="view" id="">
+                                            <div class="relative">          <button type="submit" id="dropdownOrderButton" data-dropdown-toggle="dropdown-Order" class="flex items-center flowbite-select bg-gray-50 border border-gray-700 text-gray-900 text-sm ml-2 p-2" name="view" id="">
                                                 {{$reverse ? 'Latest on the Left' : 'Latest on the Right'}}
                                                 <svg width="16" height="16" viewBox="0 0 16 16" fill="none" xmlns="http://www.w3.org/2000/svg">
                                                     <path d="M10.3083 6.19514L7.72167 8.78378L5.135 6.19514C5.01045 6.07021 4.84135 6 4.665 6C4.48865 6 4.31955 6.07021 4.195 6.19514C3.935 6.45534 3.935 6.87566 4.195 7.13585L7.255 10.1982C7.515 10.4584 7.935 10.4584 8.195 10.1982L11.255 7.13585C11.515 6.87566 11.515 6.45534 11.255 6.19514C10.995 5.94161 10.5683 5.93494 10.3083 6.19514Z" fill="#121A0F"/>
                                                 </svg>
                                             </button>
                                             <!-- Dropdown menu -->
-                                            <div id="dropdown-Order" class="z-10 hidden bg-white divide-y divide-gray-100 rounded-lg shadow w-60 dark:bg-gray-700 dark:divide-gray-600">
-                                                <div class="p-3 text-sm flex items-center justify-between">
+                                            <div id="dropdown-Order" class="z-10 hidden bg-white divide-y divide-gray-100 rounded-lg shadow  dark:bg-gray-700 dark:divide-gray-600 dropdown-scroll-wrapper">
+                                                <div class="p-3 text-base flex items-center justify-between font-medium">
                                                     <div>Order</div>
-                                                    <svg id="orderClose" width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                                                    <svg id="orderClose" width="24" height="24" class="cursor-pointer" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
                                                         <path d="M6.4 19L5 17.6L10.6 12L5 6.4L6.4 5L12 10.6L17.6 5L19 6.4L13.4 12L19 17.6L17.6 19L12 13.4L6.4 19Z" fill="#686868"/>
                                                     </svg>
                                                 </div>
-                                                <ul class="p-4 space-y-1 text-sm text-gray-700 dark:text-gray-200 max-h-40 overflow-y-scroll" aria-labelledby="dropdownViewButton">
+                                                <ul class="p-4 space-y-1 text-sm text-gray-700 dark:text-gray-200 h_23 overflow-y-scroll dropdown-scroll " aria-labelledby="dropdownViewButton">
                                                     <li>
                                                         <div class="flex p-2 rounded hover:bg-[#52D3A233] cursor-pointer">
                                                             <div class="flex items-center h-5 cursor-pointer">
@@ -487,26 +490,27 @@
                                                     </li>
                                                 </ul>
                                                 <div class="mx-3 my-4">
-                                                    <button class="w-full p-1 text-sm bg-[#52D3A2] rounded text-center" id="orderCloseButton">Show Result</button>
+                                                    <button class="w-full p-1 text-base font-medium bg-[#52D3A2] rounded text-center" id="orderCloseButton">Show Result</button>
                                                 </div>
+                                            </div>
                                             </div>
                                         </div>
                                         <div class=" flex items-center text-sm">Freeze Panes
-                                            <button type="submit" id="dropdownFreezePanesButton" data-dropdown-toggle="dropdown-FreezePanes" class="flex items-center flowbite-select bg-gray-50 border border-gray-700 text-gray-900 text-sm ml-2 p-2" name="view" id="">
+                                            <div class="relative">      <button type="submit" id="dropdownFreezePanesButton" data-dropdown-toggle="dropdown-FreezePanes" class="flex items-center flowbite-select bg-gray-50 border border-gray-700 text-gray-900 text-sm ml-2 p-2" name="view" id="">
                                                 {{$freezePanes}}
                                                 <svg width="16" height="16" viewBox="0 0 16 16" fill="none" xmlns="http://www.w3.org/2000/svg">
                                                     <path d="M10.3083 6.19514L7.72167 8.78378L5.135 6.19514C5.01045 6.07021 4.84135 6 4.665 6C4.48865 6 4.31955 6.07021 4.195 6.19514C3.935 6.45534 3.935 6.87566 4.195 7.13585L7.255 10.1982C7.515 10.4584 7.935 10.4584 8.195 10.1982L11.255 7.13585C11.515 6.87566 11.515 6.45534 11.255 6.19514C10.995 5.94161 10.5683 5.93494 10.3083 6.19514Z" fill="#121A0F"/>
                                                 </svg>
                                             </button>
                                             <!-- Dropdown menu -->
-                                            <div id="dropdown-FreezePanes" class="z-10 hidden bg-white divide-y divide-gray-100 rounded-lg shadow w-60 dark:bg-gray-700 dark:divide-gray-600">
-                                                <div class="p-3 text-sm flex items-center justify-between">
+                                            <div id="dropdown-FreezePanes" class="z-10 hidden bg-white divide-y divide-gray-100 rounded-lg shadow  dark:bg-gray-700 dark:divide-gray-600 dropdown-scroll-wrapper">
+                                                <div class="p-3 text-base flex items-center justify-between font-medium">
                                                     <div>Freeze Panes</div>
-                                                    <svg id="freezePanesClose" width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                                                    <svg id="freezePanesClose" width="24" height="24" class="cursor-pointer" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
                                                         <path d="M6.4 19L5 17.6L10.6 12L5 6.4L6.4 5L12 10.6L17.6 5L19 6.4L13.4 12L19 17.6L17.6 19L12 13.4L6.4 19Z" fill="#686868"/>
                                                     </svg>
                                                 </div>
-                                                <ul class="p-4 space-y-1 text-sm text-gray-700 dark:text-gray-200 max-h-40 overflow-y-scroll" aria-labelledby="dropdownViewButton">
+                                                <ul class="p-4 space-y-1 text-sm text-gray-700 dark:text-gray-200 h_23 overflow-y-scroll dropdown-scroll " aria-labelledby="dropdownViewButton">
                                                     <li>
                                                         <div class="flex p-2 rounded hover:bg-[#52D3A233] cursor-pointer">
                                                             <div class="flex items-center h-5 cursor-pointer">
@@ -545,8 +549,9 @@
                                                     </li>
                                                 </ul>
                                                 <div class="mx-3 my-4">
-                                                    <button class="w-full p-1 text-sm bg-[#52D3A2] rounded text-center" id="freezePanesCloseButton">Show Result</button>
+                                                    <button class="w-full p-1 text-base font-medium bg-[#52D3A2] rounded text-center" id="freezePanesCloseButton">Show Result</button>
                                                 </div>
+                                            </div>
                                             </div>
                                         </div>
 
