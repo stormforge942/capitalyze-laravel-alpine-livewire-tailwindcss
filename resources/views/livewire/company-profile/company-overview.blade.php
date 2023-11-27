@@ -134,7 +134,7 @@
         showCount: 0,
         updateCount() {
             const width = window.innerWidth;
-    
+
             if (width >= 1536) {
                 this.showCount = 6;
             } else if (width >= 1280) {
@@ -202,7 +202,7 @@
                 @foreach ($segments as $index => $segment)
                     <tr class="border-b-2 border-b-[#E6E6E6]">
                         <th class="bg-white pl-6 py-3 whitespace-nowrap font-extrabold">
-                            {{ $segment }}
+                            {{ str_replace('[Member]', '', $segment) }}
                         </th>
                         @foreach (array_keys($products) as $date)
                             @if (array_key_exists($segment, $products[$date]))
