@@ -85,7 +85,7 @@
                     this.$watch('dateRange', value => {
                         this.showDropdown = false
                     })
-            
+
                     this.$watch('currentChartPeriod', value => {
                         this.showDropdown = false
                     })
@@ -116,7 +116,7 @@
         </div>
 
         <div class="place-items-center h-96" wire:loading.grid>
-            <span class="mx-auto simple-loader !text-green-dark"></span>
+            <span class="mx-auto simple-loader text-blue"></span>
         </div>
 
         <div class="mt-3" wire:loading.remove>
