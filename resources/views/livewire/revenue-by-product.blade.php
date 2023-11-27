@@ -1,13 +1,14 @@
 <div>
     <div class="filters-row bg-white py-3 px-4  rounded-lg mb-7 custom__border_gray">
-        <div class="select-wrapper flex gap-x-4 items-center custom-text-xs" x-data="{unitType: null, unitTypeOpen: false}" @click.away="unitTypeOpen = false">
-            <div class="flex items-center text-sm">Unit Type
-                <div class="relative">    <button id="dropdownUnitTypeButton"
+        <div class="select-wrapper flex gap-x-4 items-center custom-text-xs">
+            <div class="flex items-center text-sm" x-data="{unitType: null, unitTypeOpen: false}" @click.away="unitTypeOpen = false">Unit Type
+                <div class="relative">
+                    <button id="dropdownUnitTypeButton" @click="unitTypeOpen = !unitTypeOpen"
                     class="flex items-center flowbite-select bg-gray-50 border border-gray-700 text-gray-900 text-sm ml-2 p-2 flowbite_btn" :class="[unitType != null ? 'active' : '',unitTypeOpen ? 'down' : '']"
                     name="view" id="">
-                    <span @click="unitTypeOpen = !unitTypeOpen"
+                    <span
                         x-text="(unitType == null || unitType == 0) ? 'None' : (unitType == 'thousands' ? 'Thousands' : (unitType == 'millions' ? 'Millions' : (unitType == 'billions' ? 'Billions' : '')))"></span>
-                    <svg @click="unitTypeOpen = !unitTypeOpen" width="16" height="16" viewBox="0 0 16 16" fill="none" xmlns="http://www.w3.org/2000/svg">
+                    <svg width="16" height="16" viewBox="0 0 16 16" fill="none" xmlns="http://www.w3.org/2000/svg">
                         <path
                             d="M10.3083 6.19514L7.72167 8.78378L5.135 6.19514C5.01045 6.07021 4.84135 6 4.665 6C4.48865 6 4.31955 6.07021 4.195 6.19514C3.935 6.45534 3.935 6.87566 4.195 7.13585L7.255 10.1982C7.515 10.4584 7.935 10.4584 8.195 10.1982L11.255 7.13585C11.515 6.87566 11.515 6.45534 11.255 6.19514C10.995 5.94161 10.5683 5.93494 10.3083 6.19514Z"
                             fill="#121A0F" />
@@ -45,12 +46,12 @@
                         <li>
                             <div class="flex p-2 rounded hover:bg-[#52D3A233] cursor-pointer">
                                 <div class="flex items-center h-5 cursor-pointer">
-                                    <input @click="unitType = 'thousands'" id="unitType-radio-1" name="unitType-radio"
+                                    <input @click="unitType = 'thousands'" id="unitType-radio-2" name="unitType-radio"
                                         type="radio" value="Thousands"
                                         class="cursor-pointer w-4 h-4 text-[#686868] bg-transpearent border-[#686868] border-2">
                                 </div>
                                 <div class="ml-4 text-sm cursor-pointer">
-                                    <label for="unitType-radio-1"
+                                    <label for="unitType-radio-2"
                                         class="cursor-pointer  text-gray-900 dark:text-gray-300">
                                         <div>Thousands</div>
                                     </label>
@@ -60,12 +61,12 @@
                         <li>
                             <div class="flex p-2 rounded hover:bg-[#52D3A233] cursor-pointer">
                                 <div class="flex items-center h-5 cursor-pointer">
-                                    <input @click="unitType = 'millions'" id="unitType-radio-2" name="unitType-radio"
+                                    <input @click="unitType = 'millions'" id="unitType-radio-3" name="unitType-radio"
                                         type="radio" value="Millions"
                                         class="cursor-pointer w-4 h-4 text-[#686868] bg-transpearent border-[#686868] border-2">
                                 </div>
                                 <div class="ml-4 text-sm cursor-pointer">
-                                    <label for="unitType-radio-2"
+                                    <label for="unitType-radio-3"
                                         class="cursor-pointer  text-gray-900 dark:text-gray-300">
                                         <div>Millions</div>
                                     </label>
@@ -75,12 +76,12 @@
                         <li>
                             <div class="flex p-2 rounded hover:bg-[#52D3A233] cursor-pointer">
                                 <div class="flex items-center h-5 cursor-pointer">
-                                    <input @click="unitType = 'billions'" id="unitType-radio-3" name="unitType-radio"
+                                    <input @click="unitType = 'billions'" id="unitType-radio-4" name="unitType-radio"
                                         type="radio" value="Billions"
                                         class="cursor-pointer w-4 h-4 text-[#686868] bg-transpearent border-[#686868] border-2">
                                 </div>
                                 <div class="ml-4 text-sm cursor-pointer">
-                                    <label for="unitType-radio-3"
+                                    <label for="unitType-radio-4"
                                         class="cursor-pointer  text-gray-900 dark:text-gray-300">
                                         <div>Billions</div>
                                     </label>
@@ -138,12 +139,12 @@
                         <li>
                             <div class="flex p-2 rounded hover:bg-[#52D3A233] cursor-pointer">
                                 <div class="flex items-center h-5 cursor-pointer">
-                                    <input @click="reverseOrder = true" id="order-radio-1" name="order-radio"
+                                    <input @click="reverseOrder = true" id="order-radio-2" name="order-radio"
                                         type="radio"
                                         class="cursor-pointer w-4 h-4 text-[#686868] bg-transpearent border-[#686868] border-2">
                                 </div>
                                 <div class="ml-4 text-sm cursor-pointer">
-                                    <label for="order-radio-1"
+                                    <label for="order-radio-2"
                                         class="cursor-pointer text-gray-900 dark:text-gray-300">
                                         <div>Latest on the Left</div>
                                     </label>
@@ -241,10 +242,10 @@
             </div>
             <div wire:ignore class="flex items-center text-sm" x-data="{round: null, roundOpen: false}" @click.away="roundOpen = false">Decimal
                 <div class="relative">
-                <button :class="[round != null ? 'active' : '', roundOpen? 'down' : '']"
+                <button :class="[round != null ? 'active' : '', roundOpen? 'down' : '']" @click="roundOpen = !roundOpen"
                     class="flex items-center flowbite-select bg-gray-50 border border-gray-700 text-gray-900 text-sm ml-2 p-2 flowbite_btn"
                     name="view" id="">
-                    <span x-text='(round == 0 || round == null) ? "auto" : (round == 2 ? ".00" : (round == 3 ? ".00" : ""))' @click="roundOpen = !roundOpen"></span>
+                    <span x-text='(round == 0 || round == null) ? "auto" : (round == 2 ? ".00" : (round == 3 ? ".00" : ""))'></span>
                     <svg width="16" height="16" viewBox="0 0 16 16" fill="none" xmlns="http://www.w3.org/2000/svg" @click="roundOpen = !roundOpen">
                         <path
                             d="M10.3083 6.19514L7.72167 8.78378L5.135 6.19514C5.01045 6.07021 4.84135 6 4.665 6C4.48865 6 4.31955 6.07021 4.195 6.19514C3.935 6.45534 3.935 6.87566 4.195 7.13585L7.255 10.1982C7.515 10.4584 7.935 10.4584 8.195 10.1982L11.255 7.13585C11.515 6.87566 11.515 6.45534 11.255 6.19514C10.995 5.94161 10.5683 5.93494 10.3083 6.19514Z"
