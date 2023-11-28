@@ -55,7 +55,7 @@
                         <label class="cursor-pointer rounded flex items-center p-4 hover:bg-green-light gap-x-4">
                             <input type="radio" :name="name" :value="key"
                                 class="custom-radio border-dark focus:ring-0" x-model="tmpValue">
-    
+
                             <span x-text="label">label</span>
                         </label>
                     </template>
@@ -64,7 +64,7 @@
 
             <div class="p-6">
                 <button type="button"
-                    class="w-full px-4 py-3 font-medium bg-green-dark hover:bg-opacity-80 rounded disabled:pointer-events-none disabled:bg-[#D1D3D5] disabled:text-white"
+                    class="w-full px-4 py-3 font-medium bg-green-dark hover:bg-opacity-80 rounded disabled:pointer-events-none disabled:bg-[#D1D3D5] disabled:text-white text-base"
                     @click="value = tmpValue; showDropdown = false;" :disabled="value === tmpValue">
                     Show Result
                 </button>
