@@ -34,7 +34,7 @@ class RevenueByProduct extends Component
     public $chartData;
     public $name;
     public $quarterRange = [];
-    public $decimalPoint = 0;
+    public $decimalPoint;
     public $reverseOrder = false;
     public $chartId = 'rbp';
     protected $listeners = ['tabClicked', 'tabSubClicked', 'rbpanalysisDatesChanged', 'rbpdecimalChange', 'rbpperiodChanged', 'rbpunitChanged'];

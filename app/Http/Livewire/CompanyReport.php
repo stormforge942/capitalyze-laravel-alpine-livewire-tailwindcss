@@ -709,6 +709,7 @@ class CompanyReport extends Component
 
     public function updatedPeriod()
     {
+        $this->setAsReportedStatementsList();
         $this->getData();
     }
 
