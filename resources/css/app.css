@@ -218,6 +218,7 @@ input {
 .dropdown-scroll label{
     font-size: 0.875rem;
     font-weight: 400 !important;
+    width: 100%;
 }
 .dropdown-scroll::-webkit-scrollbar {
     width: 4px !important;

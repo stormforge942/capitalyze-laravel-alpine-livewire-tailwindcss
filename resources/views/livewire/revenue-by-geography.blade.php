@@ -35,7 +35,7 @@
                                             type="radio" value="None"
                                             class="cursor-pointer w-4 h-4 text-[#686868] bg-transpearent border-[#686868] border-2">
                                     </div>
-                                    <div class="ml-4 text-sm cursor-pointer">
+                                    <div class="ml-4 w-full text-sm cursor-pointer">
                                         <label for="{{$chartId}}unitType-radio-1"
                                             class="cursor-pointer font-medium text-gray-900 dark:text-gray-300">
                                             <div>None</div>
@@ -50,7 +50,7 @@
                                             type="radio" value="Thousands"
                                             class="cursor-pointer w-4 h-4 text-[#686868] bg-transpearent border-[#686868] border-2">
                                     </div>
-                                    <div class="ml-4 text-sm cursor-pointer">
+                                    <div class="ml-4 w-full text-sm cursor-pointer">
                                         <label for="{{$chartId}}unitType-radio-2"
                                             class="cursor-pointer font-medium text-gray-900 dark:text-gray-300">
                                             <div>Thousands</div>
@@ -65,7 +65,7 @@
                                             type="radio" value="Millions"
                                             class="cursor-pointer w-4 h-4 text-[#686868] bg-transpearent border-[#686868] border-2">
                                     </div>
-                                    <div class="ml-4 text-sm cursor-pointer">
+                                    <div class="ml-4 w-full text-sm cursor-pointer">
                                         <label for="{{$chartId}}unitType-radio-3"
                                             class="cursor-pointer font-medium text-gray-900 dark:text-gray-300">
                                             <div>Millions</div>
@@ -80,7 +80,7 @@
                                             type="radio" value="Billions"
                                             class="cursor-pointer w-4 h-4 text-[#686868] bg-transpearent border-[#686868] border-2">
                                     </div>
-                                    <div class="ml-4 text-sm cursor-pointer">
+                                    <div class="ml-4 w-full text-sm cursor-pointer">
                                         <label for="{{$chartId}}unitType-radio-4"
                                             class="cursor-pointer font-medium text-gray-900 dark:text-gray-300">
                                             <div>Billions</div>
@@ -129,7 +129,7 @@
                                         type="radio"
                                         class="cursor-pointer w-4 h-4 text-[#686868] bg-transpearent border-[#686868] border-2">
                                 </div>
-                                <div class="ml-4 text-sm cursor-pointer">
+                                <div class="ml-4 w-full text-sm cursor-pointer">
                                     <label for="{{$chartId}}order-radio-1"
                                         class="cursor-pointer font-medium text-gray-900 dark:text-gray-300">
                                         <div>Latest on the Right</div>
@@ -144,7 +144,7 @@
                                         type="radio"
                                         class="cursor-pointer w-4 h-4 text-[#686868] bg-transpearent border-[#686868] border-2">
                                 </div>
-                                <div class="ml-4 text-sm cursor-pointer">
+                                <div class="ml-4 w-full text-sm cursor-pointer">
                                     <label for="{{$chartId}}order-radio-2"
                                         class="cursor-pointer font-medium text-gray-900 dark:text-gray-300">
                                         <div>Latest on the Left</div>
@@ -194,7 +194,7 @@
                                         id="{{$chartId}}freezePanes-radio-1" name="freezePanes-radio" type="radio" value="Top Row"
                                         class="cursor-pointer w-4 h-4 text-[#686868] bg-transpearent border-[#686868] border-2">
                                 </div>
-                                <div class="ml-4 text-sm cursor-pointer">
+                                <div class="ml-4 w-full text-sm cursor-pointer">
                                     <label for="{{$chartId}}freezePanes-radio-1"
                                         class="cursor-pointer font-medium text-gray-900 dark:text-gray-300">
                                         <div>Top Row</div>
@@ -210,7 +210,7 @@
                                         value="First Column"
                                         class="cursor-pointer w-4 h-4 text-[#686868] bg-transpearent border-[#686868] border-2">
                                 </div>
-                                <div class="ml-4 text-sm cursor-pointer">
+                                <div class="ml-4 w-full text-sm cursor-pointer">
                                     <label for="{{$chartId}}freezePanes-radio-2"
                                         class="cursor-pointer font-medium text-gray-900 dark:text-gray-300">
                                         <div>First Column</div>
@@ -225,7 +225,7 @@
                                         value="Top Row & First Column"
                                         class="cursor-pointer w-4 h-4 text-[#686868] bg-transpearent border-[#686868] border-2">
                                 </div>
-                                <div class="ml-4 text-sm cursor-pointer">
+                                <div class="ml-4 w-full text-sm cursor-pointer">
                                     <label for="{{$chartId}}freezePanes-radio-3"
                                         class="cursor-pointer font-medium text-gray-900 dark:text-gray-300">
                                         <div>Top Row & First Column</div>
@@ -274,7 +274,7 @@
                                             name="decimal-radio" type="radio" value="0"
                                             class="cursor-pointer w-4 h-4 text-[#686868] bg-transpearent border-[#686868] border-2">
                                     </div>
-                                    <div class="ml-4 text-sm cursor-pointer">
+                                    <div class="ml-4 w-full text-sm cursor-pointer">
                                         <label @click="round=0" for="{{$chartId}}decimal-radio-1"
                                             class="cursor-pointer font-medium text-gray-900 dark:text-gray-300">
                                             <div>auto</div>
@@ -289,7 +289,7 @@
                                             name="decimal-radio" type="radio" value="2"
                                             class="cursor-pointer w-4 h-4 text-[#686868] bg-transpearent border-[#686868] border-2">
                                     </div>
-                                    <div class="ml-4 text-sm cursor-pointer">
+                                    <div class="ml-4 w-full text-sm cursor-pointer">
                                         <label @click="round=2" for="{{$chartId}}decimal-radio-2"
                                             class="cursor-pointer font-medium text-gray-900 dark:text-gray-300">
                                             <div>.00</div>
@@ -304,7 +304,7 @@
                                             name="decimal-radio" type="radio" value="3"
                                             class="cursor-pointer w-4 h-4 text-[#686868] bg-transpearent border-[#686868] border-2">
                                     </div>
-                                    <div class="ml-4 text-sm cursor-pointer">
+                                    <div class="ml-4 w-full text-sm cursor-pointer">
                                         <label @click="round=3" for="{{$chartId}}decimal-radio-3"
                                             class="cursor-pointer font-medium text-gray-900 dark:text-gray-300">
                                             <div>.000</div>

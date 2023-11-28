@@ -139,7 +139,7 @@
                                                                 <div class="flex items-center h-5 cursor-pointer">
                                                                     <input @click='view = "As reported (Harmonized)"' :checked="view == 'As reported (Harmonized)'" id="view-radio-1" name="view-radio" type="radio" value="As reported (Harmonized)" class="cursor-pointer w-4 h-4 text-[#686868] bg-transpearent border-[#686868] border-2">
                                                                 </div>
-                                                                <div class="ml-4 text-sm cursor-pointer">
+                                                                <div class="ml-4 w-full text-sm cursor-pointer">
                                                                     <label for="view-radio-1" class="cursor-pointer font-medium text-gray-900 dark:text-gray-300">
                                                                         <div>As reported</div>
                                                                     </label>
@@ -151,7 +151,7 @@
                                                                 <div class="flex items-center h-5 cursor-pointer">
                                                                     <input @click='view = "Adjusted"' :checked="view == 'Adjusted'" id="view-radio-2" name="view-radio" type="radio" value="Adjusted" class="cursor-pointer w-4 h-4 text-[#686868] bg-transpearent border-[#686868] border-2">
                                                                 </div>
-                                                                <div class="ml-4 text-sm cursor-pointer">
+                                                                <div class="ml-4 w-full text-sm cursor-pointer">
                                                                     <label for="view-radio-2" class="cursor-pointer font-medium text-gray-900 dark:text-gray-300">
                                                                         <div>Adjusted</div>
                                                                     </label>
@@ -163,7 +163,7 @@
                                                                 <div class="flex items-center h-5 cursor-pointer">
                                                                     <input @click='view ="Standardised Template"' :checked="view == 'Standardised Template'" id="view-radio-3" name="view-radio" type="radio" value="Standardised Template" class="cursor-pointer w-4 h-4 text-[#686868] bg-transpearent border-[#686868] border-2">
                                                                 </div>
-                                                                <div class="ml-4 text-sm cursor-pointer">
+                                                                <div class="ml-4 w-full text-sm cursor-pointer">
                                                                     <label for="view-radio-3" class="cursor-pointer font-medium text-gray-900 dark:text-gray-300">
                                                                         <div>Standardised Template</div>
                                                                     </label>
@@ -175,7 +175,7 @@
                                                                 <div class="flex items-center h-5 cursor-pointer">
                                                                     <input @click='view ="Per Share"' :checked="view == 'Per Share'" id="view-radio-4" name="view-radio" type="radio" value="Per Share" class="cursor-pointer w-4 h-4 text-[#686868] bg-transpearent border-[#686868] border-2">
                                                                 </div>
-                                                                <div class="ml-4 text-sm cursor-pointer">
+                                                                <div class="ml-4 w-full text-sm cursor-pointer">
                                                                     <label for="view-radio-4" class="cursor-pointer font-medium text-gray-900 dark:text-gray-300">
                                                                         <div>Per Share</div>
                                                                     </label>
@@ -187,7 +187,7 @@
                                                                 <div class="flex items-center h-5 cursor-pointer">
                                                                     <input @click='view ="Common size"' :checked="view == 'Common size'" id="view-radio-5" name="view-radio" type="radio" value="Common size" class="cursor-pointer w-4 h-4 text-[#686868] bg-transpearent border-[#686868] border-2">
                                                                 </div>
-                                                                <div class="ml-4 text-sm cursor-pointer">
+                                                                <div class="ml-4 w-full text-sm cursor-pointer">
                                                                     <label for="view-radio-5" class="cursor-pointer font-medium text-gray-900 dark:text-gray-300">
                                                                         <div>Common size</div>
                                                                     </label>
@@ -223,7 +223,7 @@
                                                                 <div class="flex items-center h-5 cursor-pointer">
                                                                     <input @click='period = "Fiscal Annual"' :checked="period == 'Fiscal Annual'" id="period-radio-1" name="view-radio" type="radio" value="Fiscal Annual" class="cursor-pointer w-4 h-4 text-[#686868] bg-transpearent border-[#686868] border-2">
                                                                 </div>
-                                                                <div class="ml-4 text-sm cursor-pointer">
+                                                                <div class="ml-4 w-full text-sm cursor-pointer">
                                                                     <label for="period-radio-1" class="cursor-pointer font-medium text-gray-900 dark:text-gray-300">
                                                                         <div>Fiscal Annual</div>
                                                                     </label>
@@ -235,7 +235,7 @@
                                                                 <div class="flex items-center h-5 cursor-pointer">
                                                                     <input @click='period = "Fiscal Quaterly"' :checked="period == 'Fiscal Quaterly'" id="period-radio-2" name="view-radio" type="radio" value="Fiscal Quaterly" class="cursor-pointer w-4 h-4 text-[#686868] bg-transpearent border-[#686868] border-2">
                                                                 </div>
-                                                                <div class="ml-4 text-sm cursor-pointer">
+                                                                <div class="ml-4 w-full text-sm cursor-pointer">
                                                                     <label for="period-radio-2" class="cursor-pointer font-medium text-gray-900 dark:text-gray-300">
                                                                         <div>Fiscal Quaterly</div>
                                                                     </label>
@@ -247,7 +247,7 @@
                                                                 <div class="flex items-center h-5 cursor-pointer">
                                                                     <input @click='period = "Fiscal Semi-Annual"' :checked="period == 'Fiscal Semi-Annual'" id="period-radio-3" name="view-radio" type="radio" value="Fiscal Semi-Annual" class="cursor-pointer w-4 h-4 text-[#686868] bg-transpearent border-[#686868] border-2">
                                                                 </div>
-                                                                <div class="ml-4 text-sm cursor-pointer">
+                                                                <div class="ml-4 w-full text-sm cursor-pointer">
                                                                     <label for="period-radio-3" class="cursor-pointer font-medium text-gray-900 dark:text-gray-300">
                                                                         <div>Fiscal Semi-Annual</div>
                                                                     </label>
@@ -259,7 +259,7 @@
                                                                 <div class="flex items-center h-5 cursor-pointer">
                                                                     <input @click='period = "YTD"' :checked="period == 'YTD'" id="period-radio-4" name="view-radio" type="radio" value="YTD" class="cursor-pointer w-4 h-4 text-[#686868] bg-transpearent border-[#686868] border-2">
                                                                 </div>
-                                                                <div class="ml-4 text-sm cursor-pointer">
+                                                                <div class="ml-4 w-full text-sm cursor-pointer">
                                                                     <label for="period-radio-4" class="cursor-pointer font-medium text-gray-900 dark:text-gray-300">
                                                                         <div>YTD</div>
                                                                     </label>
@@ -271,7 +271,7 @@
                                                                 <div class="flex items-center h-5 cursor-pointer">
                                                                     <input @click='period = "LTM"' :checked="period == 'LTM'" id="period-radio-5" name="view-radio" type="radio" value="LTM" class="cursor-pointer w-4 h-4 text-[#686868] bg-transpearent border-[#686868] border-2">
                                                                 </div>
-                                                                <div class="ml-4 text-sm cursor-pointer">
+                                                                <div class="ml-4 w-full text-sm cursor-pointer">
                                                                     <label for="period-radio-5" class="cursor-pointer font-medium text-gray-900 dark:text-gray-300">
                                                                         <div>LTM</div>
                                                                     </label>
@@ -283,7 +283,7 @@
                                                                 <div class="flex items-center h-5 cursor-pointer">
                                                                     <input @click='period = "Calendar Annual"' :checked="period == 'Calendar Annual'" id="period-radio-6" name="view-radio" type="radio" value="Calendar Annual" class="cursor-pointer w-4 h-4 text-[#686868] bg-transpearent border-[#686868] border-2">
                                                                 </div>
-                                                                <div class="ml-4 text-sm cursor-pointer">
+                                                                <div class="ml-4 w-full text-sm cursor-pointer">
                                                                     <label for="period-radio-6" class="cursor-pointer font-medium text-gray-900 dark:text-gray-300">
                                                                         <div>Calendar Annual</div>
                                                                     </label>
@@ -295,7 +295,7 @@
                                                                 <div class="flex items-center h-5 cursor-pointer">
                                                                     <input @click='period = "Calendar Quaterly"' :checked="period == 'Calendar Quaterly'" id="period-radio-7" name="view-radio" type="radio" value="Calendar Quaterly" class="cursor-pointer w-4 h-4 text-[#686868] bg-transpearent border-[#686868] border-2">
                                                                 </div>
-                                                                <div class="ml-4 text-sm cursor-pointer">
+                                                                <div class="ml-4 w-full text-sm cursor-pointer">
                                                                     <label for="period-radio-7" class="cursor-pointer font-medium text-gray-900 dark:text-gray-300">
                                                                         <div>Calendar Quaterly</div>
                                                                     </label>
@@ -307,7 +307,7 @@
                                                                 <div class="flex items-center h-5 cursor-pointer">
                                                                     <input @click='period = "Calendar SA"' :checked="period == 'Calendar SA'" id="period-radio-8" name="view-radio" type="radio" value="Calendar SA" class="cursor-pointer w-4 h-4 text-[#686868] bg-transpearent border-[#686868] border-2">
                                                                 </div>
-                                                                <div class="ml-4 text-sm cursor-pointer">
+                                                                <div class="ml-4 w-full text-sm cursor-pointer">
                                                                     <label for="period-radio-8" class="cursor-pointer font-medium text-gray-900 dark:text-gray-300">
                                                                         <div>Calendar SA</div>
                                                                     </label>
@@ -343,7 +343,7 @@
                                                                 <div class="flex items-center h-5 cursor-pointer">
                                                                     <input @click='unitType = "None"' :checked="unitType == 'None'" id="unitType-radio" name="unitType-radio" type="radio" value="None" class="cursor-pointer w-4 h-4 text-[#686868] bg-transpearent border-[#686868] border-2">
                                                                 </div>
-                                                                <div class="ml-4 text-sm cursor-pointer">
+                                                                <div class="ml-4 w-full text-sm cursor-pointer">
                                                                     <label for="unitType-radio" class="cursor-pointer font-medium text-gray-900 dark:text-gray-300">
                                                                         <div>None</div>
                                                                     </label>
@@ -355,7 +355,7 @@
                                                                 <div class="flex items-center h-5 cursor-pointer">
                                                                     <input @click='unitType = "Thousands"' :checked="unitType == 'Thousands'" id="unitType-radio-1" name="unitType-radio" type="radio" value="Thousands" class="cursor-pointer w-4 h-4 text-[#686868] bg-transpearent border-[#686868] border-2">
                                                                 </div>
-                                                                <div class="ml-4 text-sm cursor-pointer">
+                                                                <div class="ml-4 w-full text-sm cursor-pointer">
                                                                     <label for="unitType-radio-1" class="cursor-pointer font-medium text-gray-900 dark:text-gray-300">
                                                                         <div>Thousands</div>
                                                                     </label>
@@ -367,7 +367,7 @@
                                                                 <div class="flex items-center h-5 cursor-pointer">
                                                                     <input @click='unitType = "Millions"' :checked="unitType == 'Millions'" id="unitType-radio-2" name="unitType-radio" type="radio" value="Millions" class="cursor-pointer w-4 h-4 text-[#686868] bg-transpearent border-[#686868] border-2">
                                                                 </div>
-                                                                <div class="ml-4 text-sm cursor-pointer">
+                                                                <div class="ml-4 w-full text-sm cursor-pointer">
                                                                     <label for="unitType-radio-2" class="cursor-pointer font-medium text-gray-900 dark:text-gray-300">
                                                                         <div>Millions</div>
                                                                     </label>
@@ -379,7 +379,7 @@
                                                                 <div class="flex items-center h-5 cursor-pointer">
                                                                     <input @click='unitType = "Billions"' :checked="unitType == 'Billions'" id="unitType-radio-3" name="unitType-radio" type="radio" value="Billions" class="cursor-pointer w-4 h-4 text-[#686868] bg-transpearent border-[#686868] border-2">
                                                                 </div>
-                                                                <div class="ml-4 text-sm cursor-pointer">
+                                                                <div class="ml-4 w-full text-sm cursor-pointer">
                                                                     <label for="unitType-radio-3" class="cursor-pointer font-medium text-gray-900 dark:text-gray-300">
                                                                         <div>Billions</div>
                                                                     </label>
@@ -415,7 +415,7 @@
                                                                 <div class="flex items-center h-5 cursor-pointer">
                                                                     <input @click='decimalDisplay = "0"' :checked="'decimalDisplay' == '0'" id="decimal-radio-1" name="decimal-radio" type="radio" value="0" class="cursor-pointer w-4 h-4 text-[#686868] bg-transpearent border-[#686868] border-2">
                                                                 </div>
-                                                                <div class="ml-4 text-sm cursor-pointer">
+                                                                <div class="ml-4 w-full text-sm cursor-pointer">
                                                                     <label for="decimal-radio-1" class="cursor-pointer font-medium text-gray-900 dark:text-gray-300">
                                                                         <div>auto</div>
                                                                     </label>
@@ -427,7 +427,7 @@
                                                                 <div class="flex items-center h-5 cursor-pointer">
                                                                     <input @click='decimalDisplay = "2"' :checked="'decimalDisplay' == '2'" id="decimal-radio-2" name="decimal-radio" type="radio" value="2" class="cursor-pointer w-4 h-4 text-[#686868] bg-transpearent border-[#686868] border-2">
                                                                 </div>
-                                                                <div class="ml-4 text-sm cursor-pointer">
+                                                                <div class="ml-4 w-full text-sm cursor-pointer">
                                                                     <label for="decimal-radio-2" class="cursor-pointer font-medium text-gray-900 dark:text-gray-300">
                                                                         <div>.00</div>
                                                                     </label>
@@ -439,7 +439,7 @@
                                                                 <div class="flex items-center h-5 cursor-pointer">
                                                                     <input @click='decimalDisplay = "3"' :checked="'decimalDisplay' == '3'" id="decimal-radio-3" name="decimal-radio" type="radio" value="3" class="cursor-pointer w-4 h-4 text-[#686868] bg-transpearent border-[#686868] border-2">
                                                                 </div>
-                                                                <div class="ml-4 text-sm cursor-pointer">
+                                                                <div class="ml-4 w-full text-sm cursor-pointer">
                                                                     <label for="decimal-radio-3" class="cursor-pointer font-medium text-gray-900 dark:text-gray-300">
                                                                         <div>.000</div>
                                                                     </label>
@@ -475,7 +475,7 @@
                                                                 <div class="flex items-center h-5 cursor-pointer">
                                                                     <input @click="reverse = false" :checked="!reverse" id="order-radio-0" name="order-radio" type="radio" value="false" class="cursor-pointer w-4 h-4 text-[#686868] bg-transpearent border-[#686868] border-2">
                                                                 </div>
-                                                                <div class="ml-4 text-sm cursor-pointer">
+                                                                <div class="ml-4 w-full text-sm cursor-pointer">
                                                                     <label for="order-radio-0" class="cursor-pointer font-medium text-gray-900 dark:text-gray-300">
                                                                         <div>Latest on the Right</div>
                                                                     </label>
@@ -487,7 +487,7 @@
                                                                 <div class="flex items-center h-5 cursor-pointer">
                                                                     <input  @click="reverse = true" :checked="reverse" id="order-radio-1" name="order-radio" type="radio" value="true" class="cursor-pointer w-4 h-4 text-[#686868] bg-transpearent border-[#686868] border-2">
                                                                 </div>
-                                                                <div class="ml-4 text-sm cursor-pointer">
+                                                                <div class="ml-4 w-full text-sm cursor-pointer">
                                                                     <label for="order-radio-1" class="cursor-pointer font-medium text-gray-900 dark:text-gray-300">
                                                                         <div>Latest on the Left</div>
                                                                     </label>
@@ -523,7 +523,7 @@
                                                                 <div class="flex items-center h-5 cursor-pointer">
                                                                     <input @click='freezePanes = "Top Row"' :checked="freezePanes == 'Top Row'" id="freezePanes-radio-1" name="freezePanes-radio" type="radio" value="Top Row" class="cursor-pointer w-4 h-4 text-[#686868] bg-transpearent border-[#686868] border-2">
                                                                 </div>
-                                                                <div class="ml-4 text-sm cursor-pointer">
+                                                                <div class="ml-4 w-full text-sm cursor-pointer">
                                                                     <label for="freezePanes-radio-1" class="cursor-pointer font-medium text-gray-900 dark:text-gray-300">
                                                                         <div>Top Row</div>
                                                                     </label>
@@ -535,7 +535,7 @@
                                                                 <div class="flex items-center h-5 cursor-pointer">
                                                                     <input @click='freezePanes = "First Column"' :checked="freezePanes == 'First Column'" id="freezePanes-radio-2" name="freezePanes-radio" type="radio" value="First Column" class="cursor-pointer w-4 h-4 text-[#686868] bg-transpearent border-[#686868] border-2">
                                                                 </div>
-                                                                <div class="ml-4 text-sm cursor-pointer">
+                                                                <div class="ml-4 w-full text-sm cursor-pointer">
                                                                     <label for="freezePanes-radio-2" class="cursor-pointer font-medium text-gray-900 dark:text-gray-300">
                                                                         <div>First Column</div>
                                                                     </label>
@@ -547,7 +547,7 @@
                                                                 <div class="flex items-center h-5 cursor-pointer">
                                                                     <input @click='freezePanes = "Top Row & First Column"' :checked="freezePanes == 'Top Row & First Column'" id="freezePanes-radio-3" name="freezePanes-radio" type="radio" value="Top Row & First Column" class="cursor-pointer w-4 h-4 text-[#686868] bg-transpearent border-[#686868] border-2">
                                                                 </div>
-                                                                <div class="ml-4 text-sm cursor-pointer">
+                                                                <div class="ml-4 w-full text-sm cursor-pointer">
                                                                     <label for="freezePanes-radio-3" class="cursor-pointer font-medium text-gray-900 dark:text-gray-300">
                                                                         <div>Top Row & First Column</div>
                                                                     </label>
@@ -578,7 +578,7 @@
                                             @endphp
                                         @endforeach
                                     </div>
-                                    <div id="range-slider-company-report" class="range-slider"></div>
+                                    <div wire:ignore id="range-slider-company-report" class="range-slider"></div>
                                 </div>
 
                                 @if(count($chartData))

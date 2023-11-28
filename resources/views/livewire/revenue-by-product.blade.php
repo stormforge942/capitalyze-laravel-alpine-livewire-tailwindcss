@@ -35,7 +35,7 @@
                                         type="radio" value="None"
                                         class="cursor-pointer w-4 h-4 text-[#686868] bg-transpearent border-[#686868] border-2">
                                 </div>
-                                <div class="ml-4 text-sm cursor-pointer">
+                                <div class="ml-4 w-full text-sm cursor-pointer">
                                     <label for="unitType-radio-1"
                                         class="cursor-pointer  text-gray-900 dark:text-gray-300">
                                         <div>None</div>
@@ -50,7 +50,7 @@
                                         type="radio" value="Thousands"
                                         class="cursor-pointer w-4 h-4 text-[#686868] bg-transpearent border-[#686868] border-2">
                                 </div>
-                                <div class="ml-4 text-sm cursor-pointer">
+                                <div class="ml-4 w-full text-sm cursor-pointer">
                                     <label for="unitType-radio-2"
                                         class="cursor-pointer  text-gray-900 dark:text-gray-300">
                                         <div>Thousands</div>
@@ -65,7 +65,7 @@
                                         type="radio" value="Millions"
                                         class="cursor-pointer w-4 h-4 text-[#686868] bg-transpearent border-[#686868] border-2">
                                 </div>
-                                <div class="ml-4 text-sm cursor-pointer">
+                                <div class="ml-4 w-full text-sm cursor-pointer">
                                     <label for="unitType-radio-3"
                                         class="cursor-pointer  text-gray-900 dark:text-gray-300">
                                         <div>Millions</div>
@@ -80,7 +80,7 @@
                                         type="radio" value="Billions"
                                         class="cursor-pointer w-4 h-4 text-[#686868] bg-transpearent border-[#686868] border-2">
                                 </div>
-                                <div class="ml-4 text-sm cursor-pointer">
+                                <div class="ml-4 w-full text-sm cursor-pointer">
                                     <label for="unitType-radio-4"
                                         class="cursor-pointer  text-gray-900 dark:text-gray-300">
                                         <div>Billions</div>
@@ -128,7 +128,7 @@
                                         type="radio"
                                         class="cursor-pointer w-4 h-4 text-[#686868] bg-transpearent border-[#686868] border-2">
                                 </div>
-                                <div class="ml-4 text-sm cursor-pointer">
+                                <div class="ml-4 w-full text-sm cursor-pointer">
                                     <label for="order-radio-1"
                                         class="cursor-pointer  text-gray-900 dark:text-gray-300">
                                         <div>Latest on the Right</div>
@@ -143,7 +143,7 @@
                                         type="radio"
                                         class="cursor-pointer w-4 h-4 text-[#686868] bg-transpearent border-[#686868] border-2">
                                 </div>
-                                <div class="ml-4 text-sm cursor-pointer">
+                                <div class="ml-4 w-full text-sm cursor-pointer">
                                     <label for="order-radio-2"
                                         class="cursor-pointer text-gray-900 dark:text-gray-300">
                                         <div>Latest on the Left</div>
@@ -193,7 +193,7 @@
                                         id="freezePanes-radio-1" name="freezePanes-radio" type="radio" value="Top Row"
                                         class="cursor-pointer w-4 h-4 text-[#686868] bg-transpearent border-[#686868] border-2">
                                 </div>
-                                <div class="ml-4 text-sm cursor-pointer">
+                                <div class="ml-4 w-full text-sm cursor-pointer">
                                     <label for="freezePanes-radio-1"
                                         class="cursor-pointer  text-gray-900 dark:text-gray-300">
                                         <div>Top Row</div>
@@ -209,7 +209,7 @@
                                         value="First Column"
                                         class="cursor-pointer w-4 h-4 text-[#686868] bg-transpearent border-[#686868] border-2">
                                 </div>
-                                <div class="ml-4 text-sm cursor-pointer">
+                                <div class="ml-4 w-full text-sm cursor-pointer">
                                     <label for="freezePanes-radio-2"
                                         class="cursor-pointer  text-gray-900 dark:text-gray-300">
                                         <div>First Column</div>
@@ -224,7 +224,7 @@
                                         value="Top Row & First Column"
                                         class="cursor-pointer w-4 h-4 text-[#686868] bg-transpearent border-[#686868] border-2">
                                 </div>
-                                <div class="ml-4 text-sm cursor-pointer">
+                                <div class="ml-4 w-full text-sm cursor-pointer">
                                     <label for="freezePanes-radio-3"
                                         class="cursor-pointer  text-gray-900 dark:text-gray-300">
                                         <div>Top Row & First Column</div>
