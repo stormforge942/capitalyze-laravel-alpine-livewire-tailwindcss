@@ -37,13 +37,13 @@ class RevenueByProduct extends Component
     public $decimalPoint;
     public $reverseOrder = false;
     public $chartId = 'rbp';
-    protected $listeners = ['tabClicked', 'tabSubClicked', 'rbpanalysisDatesChanged', 'rbpdecimalChange', 'rbpperiodChanged', 'rbpunitChanged'];
+    protected $listeners = ['tabClicked', 'tabSubClicked', 'rbpAnalysisDatesChanged', 'rbpDecimalChange', 'rbpPeriodChanged', 'rbpUnitChanged'];
 
-    public function rbpdecimalChange($decimal){
+    public function rbpDecimalChange($decimal){
         $this->decimalPoint = $decimal;
     }
 
-    public function rbpunitChanged($unit){
+    public function rbpUnitChanged($unit){
         $this->unit = $unit;
     }
 
@@ -51,7 +51,7 @@ class RevenueByProduct extends Component
         return $this->unit;
     }
 
-    public function rbpanalysisDatesChanged($value)
+    public function rbpAnalysisDatesChanged($value)
     {
         $this->years = array_reverse(array_keys($this->products));
         if($this->reverseOrder){
@@ -76,7 +76,7 @@ class RevenueByProduct extends Component
         return $this->years;
     }
 
-    public function rbpperiodChanged($period){
+    public function rbpPeriodChanged($period){
         $this->period = $period == 'arps' ? 'annual' : 'quarterly';
         $this->getProducts();
         $this->rangeDates = array_keys($this->products);

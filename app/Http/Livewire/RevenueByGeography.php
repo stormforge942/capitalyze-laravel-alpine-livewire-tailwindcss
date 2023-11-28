@@ -37,13 +37,13 @@ class RevenueByGeography extends Component
     public $reverseOrder = false;
     public $chartId = 'rbg';
 
-    protected $listeners = ['tabClicked', 'tabSubClicked', 'rbganalysisDatesChanged', 'rbgdecimalChange', 'rbgperiodChanged', 'rbgunitChanged'];
+    protected $listeners = ['tabClicked', 'tabSubClicked', 'rbgAnalysisDatesChanged', 'rbgDecimalChange', 'rbgPeriodChanged', 'rbgUnitChanged'];
 
-    public function rbgdecimalChange($decimal){
+    public function rbgDecimalChange($decimal){
         $this->decimalPoint = $decimal;
     }
 
-    public function rbgunitChanged($unit){
+    public function rbgUnitChanged($unit){
         $this->unit = $unit;
     }
 
@@ -51,7 +51,7 @@ class RevenueByGeography extends Component
         return $this->unit;
     }
 
-    public function rbganalysisDatesChanged($value)
+    public function rbgAnalysisDatesChanged($value)
     {
         $this->years = array_reverse(array_keys($this->products));
         if($this->reverseOrder){
@@ -76,7 +76,7 @@ class RevenueByGeography extends Component
         return $this->years;
     }
 
-    public function rbgperiodChanged($period){
+    public function rbgPeriodChanged($period){
         $this->period = $period == 'arps' ? 'annual' : 'quarterly';
         $this->getProducts();
         $this->rangeDates = array_keys($this->products);

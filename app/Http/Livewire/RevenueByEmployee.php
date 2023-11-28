@@ -39,13 +39,13 @@ class RevenueByEmployee extends Component
     public $reverseOrder = false;
     public $chartId = 'rbe';
     public $employeeCount;
-    protected $listeners = ['tabClicked', 'tabSubClicked', 'rbeanalysisDatesChanged', 'rbedecimalChange', 'rbeperiodChanged', 'rbeunitChanged'];
+    protected $listeners = ['tabClicked', 'tabSubClicked', 'rbeAnalysisDatesChanged', 'rbeDecimalChange', 'rbePeriodChanged', 'rbeUnitChanged'];
 
-    public function rbedecimalChange($decimal){
+    public function rbeDecimalChange($decimal){
         $this->decimalPoint = $decimal;
     }
 
-    public function rbeunitChanged($unit){
+    public function rbeUnitChanged($unit){
         $this->unit = $unit;
     }
 
@@ -53,7 +53,7 @@ class RevenueByEmployee extends Component
         return $this->unit;
     }
 
-    public function rbeanalysisDatesChanged($value)
+    public function rbeAnalysisDatesChanged($value)
     {
         $this->years = array_reverse(array_keys($this->revenues));
         if($this->reverseOrder){
@@ -78,7 +78,7 @@ class RevenueByEmployee extends Component
         return $this->years;
     }
 
-    public function rbeperiodChanged($period){
+    public function rbePeriodChanged($period){
         $this->period = $period == 'arps' ? 'annual' : 'quarterly';
         $this->getPresentationData();
         $this->getEmployeeCount();
