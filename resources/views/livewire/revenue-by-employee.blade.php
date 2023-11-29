@@ -91,7 +91,7 @@
                         </ul>
                         <div class="mx-3 my-4">
                             <button class="w-full p-1 text-base font-medium bg-[#52D3A2] rounded text-center" id="unitTypeCloseButton"
-                                @click="{{$chartId}}setUnitType(unitType)">Show Result</button>
+                                @click="{{$chartId}}setUnitType(unitType);unitTypeSelectorOpen=false">Show Result</button>
                         </div>
                     </div>
                 </div>
@@ -154,7 +154,7 @@
                         </li>
                     </ul>
                     <div class="mx-3 my-4">
-                        <button @click="{{$chartId}}setReverseOrder(reverseOrder)"
+                        <button @click="{{$chartId}}setReverseOrder(reverseOrder);reverseOrderSelectorOpen=false"
                             class="w-full p-1 text-base font-medium bg-[#52D3A2] rounded text-center" id="orderCloseButton">Show
                             Result</button>
                     </div>
@@ -236,7 +236,7 @@
                     </ul>
                     <div class="mx-3 my-4">
                         <button class="w-full p-1 text-base font-medium bg-[#52D3A2] rounded text-center"
-                            id="freezePanesCloseButton" @click="{{$chartId}}setFreezePans(freezePans)">Show Result</button>
+                            id="freezePanesCloseButton" @click="{{$chartId}}setFreezePans(freezePans);freezePansOpen=false">Show Result</button>
                     </div>
                 </div>
                 </div>
@@ -315,7 +315,7 @@
                         </ul>
                         <div class="mx-3 my-4">
                             <button class="w-full p-1 text-base font-medium bg-[#52D3A2] rounded text-center" id="decimalCloseButton"
-                                @click="{{$chartId}}setRound(round)">Show Result</button>
+                                @click="{{$chartId}}setRound(round);roundSelectorOpen=false">Show Result</button>
                         </div>
                     </div>
                 </div>
