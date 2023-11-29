@@ -892,7 +892,6 @@
             if(!el) {
                 return;
             }
-
             let rangeDates = @this.rangeDates
 
             let selectedValue = [];

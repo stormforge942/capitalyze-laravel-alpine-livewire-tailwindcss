@@ -49,6 +49,7 @@ class CompanyReport extends Component
     public $activeTabName = 'Income Statement';
     public $chartColors = [];
     public $allRows = [];
+    public $datesEmptyStatus = [];
 
     protected $listeners = ['periodChange', 'tabClicked', 'tabSubClicked', 'selectRow', 'unselectRow'];
 
@@ -239,7 +240,7 @@ class CompanyReport extends Component
 
     public function getData() : void
     {
-        $acronym = ($this->period == 'annual') ? 'arf5drs' : 'qrf5drs';
+        $acronym = ($this->period == 'annual') || ($this->period == 'Calendar Annual') || ($this->period == 'Fiscal Annual') ? 'arf5drs' : 'qrf5drs';
 
         if ($this->view === 'Standardised Template') {
             $data = InfoTikrPresentation::where('ticker', $this->ticker)->orderByDesc('id')->first()->info;
@@ -527,12 +528,46 @@ class CompanyReport extends Component
             $data = $this->activeTabName == 'Balance Sheet Statement' ? $data['Balance Sheet'] : $data[$this->activeTabName];
         }
 
+
         foreach ($data as $key => $value) {
             $rowArray = $this->generateRow($value, $key);
             $rows[] = $rowArray[0];
+            foreach(array_keys($rowArray[1]['values']) as $date){
+                if(!isset($this->datesEmptyStatus[$date])){
+                    $this->datesEmptyStatus[$date] = false;
+                }
+                if($rowArray[1]['values'][$date]['value'] != '-'){
+                    $this->datesEmptyStatus[$date] = true;
+                }
+            }
             $allRows[] =$rowArray[1];
-
         }
+
+        foreach($rows as $rowKey => $row){
+            $rowValues = [];
+            foreach($row['values'] as $valueKey => $value){
+                if($this->datesEmptyStatus[$valueKey]){
+                    $rowValues[$valueKey] = $value;
+                }
+            }
+            $rows[$rowKey]['values'] = $rowValues;
+        }
+
+        foreach($this->tableDates as $dateKey => $tableDate){
+            if(!$this->datesEmptyStatus[$tableDate]){
+                unset($this->tableDates[$dateKey]);
+            }
+        }
+
+        foreach($this->rangeDates as $dateKey => $tableDate){
+            foreach($this->datesEmptyStatus as $statusKey => $dateStatus){
+                if(date('Y', strtotime($statusKey)) == date('Y', strtotime($tableDate)) && !$dateStatus){
+                    unset($this->rangeDates[$dateKey]);
+                }
+            }
+        }
+        $this->rangeDates = array_values($this->rangeDates);
+        $this->tableDates = array_values($this->tableDates);
 
         $this->rows = $rows;
         $this->allRows = $allRows;
@@ -716,7 +751,7 @@ class CompanyReport extends Component
 
     public function setAsReportedStatementsList()
     {
-        $acronym = ($this->period == 'annual') ? 'arf5drs' : 'qrf5drs';
+        $acronym = ($this->period == 'annual') || ($this->period == 'Calendar Annual') || ($this->period == 'Fiscal Annual') ? 'arf5drs' : 'qrf5drs';
 
         $statements = InfoPresentation::where('ticker', '=', $this->ticker)
             ->where('acronym', '=', $acronym)
