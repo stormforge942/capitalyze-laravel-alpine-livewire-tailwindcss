@@ -1,6 +1,126 @@
 <div>
     <div class="filters-row bg-white py-3 px-4  rounded-lg mb-7 custom__border_gray">
         <div class="select-wrapper flex gap-x-4 items-center custom-text-xs">
+            <div class=" flex items-center text-sm" x-data="{period: null, periodTypeSelectorOpen: false}">Period Type
+                <div class="relative">
+                        <button type="submit" :class="[period != null ? 'active' : '', periodTypeSelectorOpen ? 'down' : '']" @click="periodTypeSelectorOpen = !periodTypeSelectorOpen" class="flex items-center flowbite_btn flowbite-select bg-gray-50 border border-gray-700 text-gray-900 text-sm ml-2 p-2" name="period" id="">
+                            {{$period}}
+                            <svg width="16" height="16" viewBox="0 0 16 16" fill="none" xmlns="http://www.w3.org/2000/svg">
+                                <path d="M10.3083 6.19514L7.72167 8.78378L5.135 6.19514C5.01045 6.07021 4.84135 6 4.665 6C4.48865 6 4.31955 6.07021 4.195 6.19514C3.935 6.45534 3.935 6.87566 4.195 7.13585L7.255 10.1982C7.515 10.4584 7.935 10.4584 8.195 10.1982L11.255 7.13585C11.515 6.87566 11.515 6.45534 11.255 6.19514C10.995 5.94161 10.5683 5.93494 10.3083 6.19514Z" fill="#121A0F"/>
+                            </svg>
+                        </button>
+                    <!-- Dropdown menu -->
+                    <div x-cloak x-show="periodTypeSelectorOpen" id="dropdown-Period" class="z-10 bg-white divide-y divide-gray-100 rounded-lg shadow  dark:bg-gray-700 dark:divide-gray-600 dropdown-scroll-wrapper">
+                        <div class="p-3 text-base flex items-center justify-between font-medium">
+                            <div>Period Type</div>
+                            <svg @click="periodTypeSelectorOpen = false" id="periodClose" width="24" height="24" viewBox="0 0 24 24" class="cursor-pointer" fill="none" xmlns="http://www.w3.org/2000/svg">
+                                <path d="M6.4 19L5 17.6L10.6 12L5 6.4L6.4 5L12 10.6L17.6 5L19 6.4L13.4 12L19 17.6L17.6 19L12 13.4L6.4 19Z" fill="#686868"/>
+                            </svg>
+                        </div>
+                        <ul class="p-4 space-y-1 text-sm text-gray-700 dark:text-gray-200 h_23 overflow-y-scroll dropdown-scroll " aria-labelledby="dropdownViewButton">
+                            <li>
+                                <div class="flex p-2 rounded hover:bg-[#52D3A233] cursor-pointer">
+                                    <div class="flex items-center h-5 cursor-pointer">
+                                        <input @click='period = "Fiscal Annual"' :checked="period == 'Fiscal Annual'" id="{{$chartId}}period-radio-1" name="view-radio" type="radio" value="Fiscal Annual" class="cursor-pointer w-4 h-4 text-[#686868] bg-transpearent border-[#686868] border-2">
+                                    </div>
+                                    <div class="ml-4 w-full text-sm cursor-pointer">
+                                        <label for="{{$chartId}}period-radio-1" class="cursor-pointer font-medium text-gray-900 dark:text-gray-300">
+                                            <div>Fiscal Annual</div>
+                                        </label>
+                                    </div>
+                                </div>
+                            </li>
+                            <li>
+                                <div class="flex p-2 rounded hover:bg-[#52D3A233] cursor-pointer">
+                                    <div class="flex items-center h-5 cursor-pointer">
+                                        <input @click='period = "Fiscal Quaterly"' :checked="period == 'Fiscal Quaterly'" id="{{$chartId}}period-radio-2" name="view-radio" type="radio" value="Fiscal Quaterly" class="cursor-pointer w-4 h-4 text-[#686868] bg-transpearent border-[#686868] border-2">
+                                    </div>
+                                    <div class="ml-4 w-full text-sm cursor-pointer">
+                                        <label for="{{$chartId}}period-radio-2" class="cursor-pointer font-medium text-gray-900 dark:text-gray-300">
+                                            <div>Fiscal Quaterly</div>
+                                        </label>
+                                    </div>
+                                </div>
+                            </li>
+                            <li>
+                                <div class="flex p-2 rounded hover:bg-[#52D3A233] cursor-pointer">
+                                    <div class="flex items-center h-5 cursor-pointer">
+                                        <input @click='period = "Fiscal Semi-Annual"' :checked="period == 'Fiscal Semi-Annual'" id="{{$chartId}}period-radio-3" name="view-radio" type="radio" value="Fiscal Semi-Annual" class="cursor-pointer w-4 h-4 text-[#686868] bg-transpearent border-[#686868] border-2">
+                                    </div>
+                                    <div class="ml-4 w-full text-sm cursor-pointer">
+                                        <label for="{{$chartId}}period-radio-3" class="cursor-pointer font-medium text-gray-900 dark:text-gray-300">
+                                            <div>Fiscal Semi-Annual</div>
+                                        </label>
+                                    </div>
+                                </div>
+                            </li>
+                            <li>
+                                <div class="flex p-2 rounded hover:bg-[#52D3A233] cursor-pointer">
+                                    <div class="flex items-center h-5 cursor-pointer">
+                                        <input @click='period = "YTD"' :checked="period == 'YTD'" id="{{$chartId}}period-radio-4" name="view-radio" type="radio" value="YTD" class="cursor-pointer w-4 h-4 text-[#686868] bg-transpearent border-[#686868] border-2">
+                                    </div>
+                                    <div class="ml-4 w-full text-sm cursor-pointer">
+                                        <label for="{{$chartId}}period-radio-4" class="cursor-pointer font-medium text-gray-900 dark:text-gray-300">
+                                            <div>YTD</div>
+                                        </label>
+                                    </div>
+                                </div>
+                            </li>
+                            <li>
+                                <div class="flex p-2 rounded hover:bg-[#52D3A233] cursor-pointer">
+                                    <div class="flex items-center h-5 cursor-pointer">
+                                        <input @click='period = "LTM"' :checked="period == 'LTM'" id="{{$chartId}}period-radio-5" name="view-radio" type="radio" value="LTM" class="cursor-pointer w-4 h-4 text-[#686868] bg-transpearent border-[#686868] border-2">
+                                    </div>
+                                    <div class="ml-4 w-full text-sm cursor-pointer">
+                                        <label for="{{$chartId}}period-radio-5" class="cursor-pointer font-medium text-gray-900 dark:text-gray-300">
+                                            <div>LTM</div>
+                                        </label>
+                                    </div>
+                                </div>
+                            </li>
+                            <li>
+                                <div class="flex p-2 rounded hover:bg-[#52D3A233] cursor-pointer">
+                                    <div class="flex items-center h-5 cursor-pointer">
+                                        <input @click='period = "Calendar Annual"' :checked="period == 'Calendar Annual'" id="{{$chartId}}period-radio-6" name="view-radio" type="radio" value="Calendar Annual" class="cursor-pointer w-4 h-4 text-[#686868] bg-transpearent border-[#686868] border-2">
+                                    </div>
+                                    <div class="ml-4 w-full text-sm cursor-pointer">
+                                        <label for="{{$chartId}}period-radio-6" class="cursor-pointer font-medium text-gray-900 dark:text-gray-300">
+                                            <div>Calendar Annual</div>
+                                        </label>
+                                    </div>
+                                </div>
+                            </li>
+                            <li>
+                                <div class="flex p-2 rounded hover:bg-[#52D3A233] cursor-pointer">
+                                    <div class="flex items-center h-5 cursor-pointer">
+                                        <input @click='period = "Calendar Quaterly"' :checked="period == 'Calendar Quaterly'" id="{{$chartId}}period-radio-7" name="view-radio" type="radio" value="Calendar Quaterly" class="cursor-pointer w-4 h-4 text-[#686868] bg-transpearent border-[#686868] border-2">
+                                    </div>
+                                    <div class="ml-4 w-full text-sm cursor-pointer">
+                                        <label for="{{$chartId}}period-radio-7" class="cursor-pointer font-medium text-gray-900 dark:text-gray-300">
+                                            <div>Calendar Quaterly</div>
+                                        </label>
+                                    </div>
+                                </div>
+                            </li>
+                            <li>
+                                <div class="flex p-2 rounded hover:bg-[#52D3A233] cursor-pointer">
+                                    <div class="flex items-center h-5 cursor-pointer">
+                                        <input @click='period = "Calendar SA"' :checked="period == 'Calendar SA'" id="{{$chartId}}period-radio-8" name="view-radio" type="radio" value="Calendar SA" class="cursor-pointer w-4 h-4 text-[#686868] bg-transpearent border-[#686868] border-2">
+                                    </div>
+                                    <div class="ml-4 w-full text-sm cursor-pointer">
+                                        <label for="{{$chartId}}period-radio-8" class="cursor-pointer font-medium text-gray-900 dark:text-gray-300">
+                                            <div>Calendar SA</div>
+                                        </label>
+                                    </div>
+                                </div>
+                            </li>
+                        </ul>
+                        <div class="mx-3 my-4">
+                            <button @click="$wire.emit('{{$chartId}}PeriodChanged', period); periodTypeSelectorOpen = false" class="w-full p-1 text-base font-medium bg-[#52D3A2] rounded text-center" id="periodCloseButton">Show Result</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
             <div class="flex items-center text-sm" x-data="{unitType: null, unitTypeSelectorOpen: false}" @click.away="unitTypeSelectorOpen = false">Unit Type
                 <div class="relative">
                     <button :class="[unitType != null ? 'active' : '', unitTypeSelectorOpen ? 'down' : '']" @click="unitTypeSelectorOpen = !unitTypeSelectorOpen"
@@ -15,7 +135,7 @@
                         </svg>
                     </button>
                     <!-- Dropdown menu -->
-                    <div x-show="unitTypeSelectorOpen" wire:ignore
+                    <div x-cloak x-show="unitTypeSelectorOpen" wire:ignore
                         class="z-10 bg-white divide-y divide-gray-100 rounded-lg shadow w-60 dark:bg-gray-700 dark:divide-gray-600 dropdown-scroll-wrapper">
                         <div class="p-3 text-base flex items-center justify-between font-medium">
                             <div>Unit Type</div>
@@ -109,7 +229,7 @@
                     </svg>
                 </button>
                 <!-- Dropdown menu -->
-                <div x-show="reverseOrderSelectorOpen" wire:ignore
+                <div x-cloak x-show="reverseOrderSelectorOpen" wire:ignore
                     class="z-10 bg-white divide-y divide-gray-100 rounded-lg shadow w-60 dark:bg-gray-700 dark:divide-gray-600 dropdown-scroll-wrapper">
                     <div class="p-3 text-base flex items-center justify-between font-medium">
                         <div>Order</div>
@@ -174,7 +294,7 @@
                     </svg>
                 </button>
                 <!-- Dropdown menu -->
-                <div x-show="freezePanSelectorOpen"
+                <div x-cloak x-show="freezePanSelectorOpen"
                     class="z-10 bg-white divide-y divide-gray-100 rounded-lg shadow w-60 dark:bg-gray-700 dark:divide-gray-600 dropdown-scroll-wrapper">
                     <div class="p-3 text-base flex items-center justify-between font-medium">
                         <div>Freeze Panes</div>
@@ -254,7 +374,7 @@
                         </svg>
                     </button>
                     <!-- Dropdown menu -->
-                    <div x-show="roundSelectorOpen"
+                    <div x-cloak x-show="roundSelectorOpen"
                         class="z-10 bg-white divide-y divide-gray-100 rounded-lg shadow w-60 dark:bg-gray-700 dark:divide-gray-600 dropdown-scroll-wrapper">
                         <div class="p-3 text-base flex items-center justify-between font-medium">
                             <div>Decimal</div>
@@ -321,66 +441,6 @@
                 </div>
             </div>
         </div>
-    </div>
-    <div wire:ignore class="filters-row flex items-center mt-2 text-sm">
-        <b class="mr-3">Period Type:</b>
-        <ul class="flex soft-radio-wrapper big-checked items-center">
-            <li class="mr-2">
-                <label class="flex items-center pl-3 cursor-pointer">
-                    <input  value="fiscal-annual" id="{{$chartId}}date-fiscal-annual" type="radio"
-                        name="date-range" class="w-5 h-5 ">
-                    <span class="w-full py-2 ml-2 text-sm">Fiscal Annual</span>
-                </label>
-            </li>
-            <li class="mr-2">
-                <label class="flex items-center pl-3 cursor-pointer">
-                    <input  value="fiscal-quarterly" id="{{$chartId}}date-fiscal-quaterly" type="radio"
-                        name="date-range" class="w-5 h-5 ">
-                    <span class="w-full py-2 ml-2 text-sm">Fiscal Quaterly</span>
-                </label>
-            </li>
-            <li class="mr-2">
-                <label class="flex items-center pl-3 cursor-pointer">
-                    <input  value="fiscal-semi-annual" id="{{$chartId}}date-fiscal-semi-annual" type="radio"
-                        name="date-range" class="w-5 h-5 ">
-                    <span class="w-full py-2 ml-2 text-sm">Fiscal Semi-Annual</span>
-                </label>
-            </li>
-            <li class="mr-2">
-                <label class="flex items-center pl-3 cursor-pointer">
-                    <input  value="YTD" id="{{$chartId}}date-YTD" type="radio" name="date-range"
-                        class="w-5 h-5 ">
-                    <span class="w-full py-2 ml-2 text-sm">YTD</span>
-                </label>
-            </li>
-            <li class="mr-2">
-                <label class="flex items-center pl-3 cursor-pointer">
-                    <input  value="LTM" id="{{$chartId}}date-LTM" type="radio" name="date-range"
-                        class="w-5 h-5 ">
-                    <span class="w-full py-2 ml-2 text-sm">LTM</span>
-                </label>
-            </li>
-            <li class="mr-2">
-                <label class="flex items-center pl-3 cursor-pointer">
-                    <input  value="annual" id="{{$chartId}}date-annual"type="radio"
-                        name="date-range" class="w-5 h-5 ">
-                    <span class="w-full py-2 ml-2 text-sm">Calendar Annual</span>
-                </label>
-            </li>
-            <li class="mr-2">
-                <label class="flex items-center pl-3 cursor-pointer">
-                    <input  value="quarterly" id="{{$chartId}}date-quarterly" type="radio" name="date-range"
-                        class="w-5 h-5 ">
-                    <span class="w-full py-2 ml-2 text-sm">Calendar Quaterly</span>
-                </label>
-            </li>
-            <li class="mr-2">
-                <label class="flex items-center pl-3 cursor-pointer">
-                    <input  value="SA" id="{{$chartId}}date-SA" type="radio" name="date-sa" class="w-5 h-5 ">
-                    <span class="w-full py-2 ml-2 text-sm">Calendar SA</span>
-                </label>
-            </li>
-        </ul>
     </div>
 
     <div class="years-range-wrapper mt-4 mb-8" wire:ignore>

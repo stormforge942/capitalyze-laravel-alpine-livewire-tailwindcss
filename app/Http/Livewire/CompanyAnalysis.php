@@ -19,19 +19,6 @@ class CompanyAnalysis extends Component
 
     public function mount(Request $request, $company, $ticker, $period)
     {
-        // $first = DB::connection('pgsql-xbrl')
-        //     ->table('eod_prices')
-        //     ->where('symbol', strtolower($this->ticker))
-        //     ->latest('date')->first()?->adj_close;
-        // $previous = DB::connection('pgsql-xbrl')
-        //     ->table('eod_prices')
-        //     ->where('symbol', strtolower($this->ticker))
-        //     ->latest('date')
-        //     ->skip(1)->first()?->adj_close;
-        // if ($previous && $first) {
-        //     $this->dynamic = round((($first - $previous) / $previous) * 100, 2);
-        // }
-
         $eodPrices = EodPrices::where('symbol', strtolower($this->company->ticker))
             ->latest('date')
             ->take(2)

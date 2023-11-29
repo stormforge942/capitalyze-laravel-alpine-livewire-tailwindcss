@@ -78,7 +78,7 @@ class RevenueByProduct extends Component
     }
 
     public function rbpPeriodChanged($period){
-        $this->period = $period == 'arps' ? 'annual' : 'quarterly';
+        $this->period = ($period == 'arps') || ($period == 'Calendar Annual') || ($period == 'Fiscal Annual') ? 'annual' : 'quarterly';
         $this->getProducts();
         $this->rangeDates = array_keys($this->products);
 
