@@ -150,19 +150,19 @@
                         @if($chartId != 'rbe')
                         <li class="">
                             <input value="Values" id="Values" type="radio" name="{{$chartId}}radio-group" checked>
-                            <label for="Values" onclick="{{$chartId}}typeChanged('values')">Values</label>
+                            <label for="Values" onclick="{{$chartId}}TypeChanged('values')">Values</label>
                         </li>
                         <li class="">
                             <input value="Percentage Mix" id="Percentage" type="radio"
                                 name="{{$chartId}}radio-group">
-                            <label for="Percentage" onclick="{{$chartId}}typeChanged('percentage')">Percentage Mix</label>
+                            <label for="Percentage" onclick="{{$chartId}}TypeChanged('percentage')">Percentage Mix</label>
                         </li>
                         @endif
                         <li class="custom_checkbox" x-data="{toggle: false, toggle2: false}">
                             <button
                                 class="flex items-center transition ease-in-out duration-300 w-7 h-3 bg-gray-custom rounded-full focus:outline-none"
                                 class="bg-gray-custom"
-                                x-on:click="toggle2 = !toggle2; {{$chartId}}showLabels(toggle2)">
+                                x-on:click="toggle2 = !toggle2; {{$chartId}}ShowLabels(toggle2)">
                                 <div class="transition ease-in-out duration-300 rounded-full h-4 w-4 bg-white shadow border"
                                     :class="{ 'transform translate-x-full ': toggle2 }"></div>
                             </button> <span class="title">Show Labels</span>
@@ -178,7 +178,7 @@
             </div>
             --}}
             <div class="mt-3 mr-5" wire:loading.remove x-show="{{$chartId}}showgraph" x-transition>
-                <canvas id="{{$chartId}}canvas" wire:ignore></canvas>
+                <canvas id="{{$chartId}}Canvas" wire:ignore></canvas>
             </div>
             <div class="flex justify-end">
                 <div class="mr-5 mt-5">
@@ -228,28 +228,28 @@
 <script src="https://cdn.jsdelivr.net/npm/chartjs-plugin-datalabels@2.0.0/dist/chartjs-plugin-datalabels.min.js">
 </script>
 <script>
-    let {{$chartId}}labelsVisible = false
-    let {{$chartId}}chart = null
-    let {{$chartId}}period =  'arps'
+    let {{$chartId}}LabelsVisible = false
+    let {{$chartId}}Chart = null
+    let {{$chartId}}Period =  'arps'
     if('{{$chartId}}' == 'rbg'){
-        {{$chartId}}period =  'args'
+        {{$chartId}}Period =  'args'
     }
-    let {{$chartId}}data = {!!json_encode($chartData)!!};
-    let {{$chartId}}reverseData = false;
+    let {{$chartId}}Data = {!!json_encode($chartData)!!};
+    let {{$chartId}}ReverseData = false;
     document.addEventListener('DOMContentLoaded', function() {
-        {{$chartId}}initChart()
+        {{$chartId}}InitChart()
     })
-    let {{$chartId}}filteredData = {!!json_encode($chartData)!!}
+    let {{$chartId}}FilteredData = {!!json_encode($chartData)!!}
 
-    function {{$chartId}}showLabels(v){
-        {{$chartId}}labelsVisible = v
-        {{$chartId}}initChart({{$chartId}}filteredData)
+    function {{$chartId}}ShowLabels(v){
+        {{$chartId}}LabelsVisible = v
+        {{$chartId}}InitChart({{$chartId}}FilteredData)
     }
-    let {{$chartId}}chartType = 'values'
-    function {{$chartId}}typeChanged(type){
-        {{$chartId}}chartType = type
-        {{$chartId}}filteredData['quarterly'].forEach((value, pindex) => {
-            let {{$chartId}}finalData = []
+    let {{$chartId}}ChartType = 'values'
+    function {{$chartId}}TypeChanged(type){
+        {{$chartId}}ChartType = type
+        {{$chartId}}FilteredData['quarterly'].forEach((value, pindex) => {
+            let {{$chartId}}FinalData = []
             value.data.forEach((data, cindex) => {
                 if(type == 'percentage'){
                     data.y = data.percentage
@@ -257,13 +257,13 @@
                 else {
                     data.y = data.revenue
                 }
-                {{$chartId}}finalData.push(data)
+                {{$chartId}}FinalData.push(data)
             })
-            {{$chartId}}filteredData['quarterly'][pindex].data = {{$chartId}}finalData
+            {{$chartId}}FilteredData['quarterly'][pindex].data = {{$chartId}}FinalData
         })
 
-        {{$chartId}}filteredData['annual'].forEach((value, pindex) => {
-            let {{$chartId}}finalData = []
+        {{$chartId}}FilteredData['annual'].forEach((value, pindex) => {
+            let {{$chartId}}FinalData = []
             value.data.forEach((data, cindex) => {
                 if(type == 'percentage'){
                     data.y = data.percentage
@@ -271,214 +271,214 @@
                 else {
                     data.y = data.revenue
                 }
-                {{$chartId}}finalData.push(data)
+                {{$chartId}}FinalData.push(data)
             })
-            {{$chartId}}filteredData['annual'][pindex].data = {{$chartId}}finalData
+            {{$chartId}}FilteredData['annual'][pindex].data = {{$chartId}}FinalData
         })
-        {{$chartId}}initChart({{$chartId}}filteredData)
+        {{$chartId}}InitChart({{$chartId}}FilteredData)
     }
-    Livewire.on('{{$chartId}}decimalChanged', () => {
-        {{$chartId}}initChart({{$chartId}}filteredData)
+    Livewire.on('{{$chartId}}DecimalChanged', () => {
+        {{$chartId}}InitChart({{$chartId}}FilteredData)
     })
 
-    Livewire.on('{{$chartId}}periodChanged', (v) => {
-        {{$chartId}}period = v
-        {{$chartId}}initChart({{$chartId}}filteredData)
+    Livewire.on('{{$chartId}}PeriodChanged', (v) => {
+        {{$chartId}}Period = v
+        {{$chartId}}InitChart({{$chartId}}FilteredData)
     })
 
-    Livewire.on('{{$chartId}}unitChanged', (v) => {
-        {{$chartId}}filteredData = {!!json_encode($chartData)!!}
-        {{$chartId}}filteredData[({{$chartId}}period == 'arps' || {{$chartId}}period == 'args') ? 'annual' : 'quarterly'].forEach((value, pindex) => {
-            let {{$chartId}}finalData = []
+    Livewire.on('{{$chartId}}UnitChanged', (v) => {
+        {{$chartId}}FilteredData = {!!json_encode($chartData)!!}
+        {{$chartId}}FilteredData[({{$chartId}}Period == 'arps' || {{$chartId}}Period == 'args') ? 'annual' : 'quarterly'].forEach((value, pindex) => {
+            let {{$chartId}}FinalData = []
             value.data.forEach((data, cindex) => {
                 if(v == 'thousands'){
                     data.y = parseInt(data.y) / 1000
-                    {{$chartId}}finalData.push(data)
+                    {{$chartId}}FinalData.push(data)
                 }
 
                 if(v == 'millions'){
                     data.y = parseInt(data.y) / 1000000
-                    {{$chartId}}finalData.push(data)
+                    {{$chartId}}FinalData.push(data)
                 }
 
                 if(v == 'billions'){
                     data.y = parseInt(data.y) / 1000000000
-                    {{$chartId}}finalData.push(data)
+                    {{$chartId}}FinalData.push(data)
                 }
 
                 if(v == '0'){
-                    {{$chartId}}finalData.push(data)
+                    {{$chartId}}FinalData.push(data)
                 }
             })
-            {{$chartId}}filteredData[({{$chartId}}period == 'arps' || {{$chartId}}period == 'args' )? 'annual' : 'quarterly'][pindex].data = {{$chartId}}finalData
+            {{$chartId}}FilteredData[({{$chartId}}Period == 'arps' || {{$chartId}}Period == 'args' )? 'annual' : 'quarterly'][pindex].data = {{$chartId}}FinalData
         })
 
-        {{$chartId}}initChart({{$chartId}}filteredData)
+        {{$chartId}}InitChart({{$chartId}}FilteredData)
     })
-    Livewire.on('{{$chartId}}orderChanged',(v) => {
-        {{$chartId}}reverseData = v
-        {{$chartId}}initChart({{$chartId}}filteredData)
+    Livewire.on('{{$chartId}}OrderChanged',(v) => {
+        {{$chartId}}ReverseData = v
+        {{$chartId}}InitChart({{$chartId}}FilteredData)
     })
-    Livewire.on('{{$chartId}}analysisDatesChanged', (dates) => {
-        {{$chartId}}filteredData = {!!json_encode($chartData)!!}
-        let {{$chartId}}startDate = dates[0]
-        let {{$chartId}}endDate = dates[1]
-        {{$chartId}}filteredData['quarterly'].forEach((value, pindex) => {
-            let {{$chartId}}finalData = []
+    Livewire.on('{{$chartId}}AnalysisDatesChanged', (dates) => {
+        {{$chartId}}FilteredData = {!!json_encode($chartData)!!}
+        let {{$chartId}}StartDate = dates[0]
+        let {{$chartId}}EndDate = dates[1]
+        {{$chartId}}FilteredData['quarterly'].forEach((value, pindex) => {
+            let {{$chartId}}FinalData = []
             value.data.forEach((data, cindex) => {
-                let {{$chartId}}currentDate = parseInt(new Date(data.x).getFullYear())
-                if(!({{$chartId}}currentDate < parseInt({{$chartId}}startDate) || {{$chartId}}currentDate > parseInt({{$chartId}}endDate))){
-                    {{$chartId}}finalData.push(data)
+                let {{$chartId}}CurrentDate = parseInt(new Date(data.x).getFullYear())
+                if(!({{$chartId}}CurrentDate < parseInt({{$chartId}}StartDate) || {{$chartId}}CurrentDate > parseInt({{$chartId}}EndDate))){
+                    {{$chartId}}FinalData.push(data)
                 }
             })
-            {{$chartId}}filteredData['quarterly'][pindex].data = {{$chartId}}finalData
+            {{$chartId}}FilteredData['quarterly'][pindex].data = {{$chartId}}FinalData
         })
 
-        {{$chartId}}filteredData['annual'].forEach((value, pindex) => {
-            let {{$chartId}}finalData = []
+        {{$chartId}}FilteredData['annual'].forEach((value, pindex) => {
+            let {{$chartId}}FinalData = []
             value.data.forEach((data, cindex) => {
-                let {{$chartId}}currentDate = parseInt(new Date(data.x).getFullYear())
-                if(!({{$chartId}}currentDate < parseInt({{$chartId}}startDate) || {{$chartId}}currentDate > parseInt({{$chartId}}endDate))){
-                    {{$chartId}}finalData.push(data)
+                let {{$chartId}}CurrentDate = parseInt(new Date(data.x).getFullYear())
+                if(!({{$chartId}}CurrentDate < parseInt({{$chartId}}StartDate) || {{$chartId}}CurrentDate > parseInt({{$chartId}}EndDate))){
+                    {{$chartId}}FinalData.push(data)
                 }
             })
-            {{$chartId}}filteredData['annual'][pindex].data = {{$chartId}}finalData
+            {{$chartId}}FilteredData['annual'][pindex].data = {{$chartId}}FinalData
         })
-        {{$chartId}}initChart({{$chartId}}filteredData)
+        {{$chartId}}InitChart({{$chartId}}FilteredData)
     })
 
     document.addEventListener('{{$chartId}}refreshChart', (data) => {
-        {{$chartId}}filteredData = data.detail
-        {{$chartId}}initChart({{$chartId}}filteredData)
+        {{$chartId}}FilteredData = data.detail
+        {{$chartId}}InitChart({{$chartId}}FilteredData)
     })
     Livewire.on('{{$chartId}}refreshChart', (data) => {
         alert('here')
-        {{$chartId}}filteredData = data.detail ?? null
-        {{$chartId}}initChart({{$chartId}}filteredData)
+        {{$chartId}}FilteredData = data.detail ?? null
+        {{$chartId}}InitChart({{$chartId}}FilteredData)
     })
 
-    const {{$chartId}}getOrCreateTooltip = (chart) => {
-            let {{$chartId}}tooltipEl = chart.canvas.parentNode.querySelector('div');
+    const {{$chartId}}GetOrCreateTooltip = (chart) => {
+            let {{$chartId}}TooltipEl = chart.canvas.parentNode.querySelector('div');
 
-            if (!{{$chartId}}tooltipEl) {
-                {{$chartId}}tooltipEl = document.createElement('div');
-                {{$chartId}}tooltipEl.style.background = '#fff';
-                {{$chartId}}tooltipEl.style.borderRadius = '25px';
-                {{$chartId}}tooltipEl.style.color = 'black';
-                {{$chartId}}tooltipEl.style.opacity = 1;
-                {{$chartId}}tooltipEl.style.pointerEvents = 'none';
-                {{$chartId}}tooltipEl.style.position = 'absolute';
-                {{$chartId}}tooltipEl.style.transform = 'translate(-50%, 0)';
-                {{$chartId}}tooltipEl.style.transition = 'all .1s ease';
-                {{$chartId}}tooltipEl.style.minWidth = '230px';
-                {{$chartId}}tooltipEl.style.filter =
+            if (!{{$chartId}}TooltipEl) {
+                {{$chartId}}TooltipEl = document.createElement('div');
+                {{$chartId}}TooltipEl.style.background = '#fff';
+                {{$chartId}}TooltipEl.style.borderRadius = '25px';
+                {{$chartId}}TooltipEl.style.color = 'black';
+                {{$chartId}}TooltipEl.style.opacity = 1;
+                {{$chartId}}TooltipEl.style.pointerEvents = 'none';
+                {{$chartId}}TooltipEl.style.position = 'absolute';
+                {{$chartId}}TooltipEl.style.transform = 'translate(-50%, 0)';
+                {{$chartId}}TooltipEl.style.transition = 'all .1s ease';
+                {{$chartId}}TooltipEl.style.minWidth = '230px';
+                {{$chartId}}TooltipEl.style.filter =
                     'drop-shadow(0px 10.732307434082031px 21.464614868164062px rgba(50, 50, 71, 0.06)) drop-shadow(0px 10.732307434082031px 10.732307434082031px rgba(50, 50, 71, 0.08))';
-                {{$chartId}}tooltipEl.classList.add('tooltip-caret')
+                {{$chartId}}TooltipEl.classList.add('tooltip-caret')
 
-                const {{$chartId}}table = document.createElement('table');
-                {{$chartId}}table.style.margin = '0px';
+                const {{$chartId}}Table = document.createElement('table');
+                {{$chartId}}Table.style.margin = '0px';
 
-                {{$chartId}}tooltipEl.appendChild({{$chartId}}table);
-                {{$chartId}}chart.canvas.parentNode.appendChild({{$chartId}}tooltipEl);
+                {{$chartId}}TooltipEl.appendChild({{$chartId}}Table);
+                {{$chartId}}Chart.canvas.parentNode.appendChild({{$chartId}}TooltipEl);
             }
 
-            return {{$chartId}}tooltipEl;
+            return {{$chartId}}TooltipEl;
         };
 
-        const {{$chartId}}externalTooltipHandler = (context) => {
+        const {{$chartId}}ExternalTooltipHandler = (context) => {
             // Tooltip Element
             const {
                 chart,
                 tooltip
             } = context;
-            const {{$chartId}}tooltipEl = {{$chartId}}getOrCreateTooltip(chart);
+            const {{$chartId}}TooltipEl = {{$chartId}}GetOrCreateTooltip(chart);
 
             // Hide if no tooltip
             if (tooltip.opacity === 0) {
-                {{$chartId}}tooltipEl.style.opacity = 0;
+                {{$chartId}}TooltipEl.style.opacity = 0;
                 return;
             }
 
             // Set Text
             if (tooltip.body) {
-                const {{$chartId}}titleLines = tooltip.title || [];
+                const {{$chartId}}TitleLines = tooltip.title || [];
                 const {{$chartId}}bodyLines = tooltip.body.map(b => b.lines);
 
-                const {{$chartId}}tableHead = document.createElement('thead');
+                const {{$chartId}}TableHead = document.createElement('thead');
 
-                {{$chartId}}tableHead.style.color = '#3561E7';
-                {{$chartId}}tableHead.style.textAlign = 'left';
-                {{$chartId}}tableHead.style.marginBottom = '8px';
+                {{$chartId}}TableHead.style.color = '#3561E7';
+                {{$chartId}}TableHead.style.textAlign = 'left';
+                {{$chartId}}TableHead.style.marginBottom = '8px';
 
-                {{$chartId}}titleLines.forEach(title => {
-                    const {{$chartId}}tr = document.createElement('tr');
-                    {{$chartId}}tr.style.borderWidth = 0;
+                {{$chartId}}TitleLines.forEach(title => {
+                    const {{$chartId}}Tr = document.createElement('tr');
+                    {{$chartId}}Tr.style.borderWidth = 0;
 
-                    const {{$chartId}}th = document.createElement('th');
-                    {{$chartId}}th.style.borderWidth = 0;
-                    const {{$chartId}}text = document.createTextNode(title);
+                    const {{$chartId}}Th = document.createElement('th');
+                    {{$chartId}}Th.style.borderWidth = 0;
+                    const {{$chartId}}Text = document.createTextNode(title);
 
-                    {{$chartId}}th.appendChild({{$chartId}}text);
-                    {{$chartId}}tr.appendChild({{$chartId}}th);
-                    {{$chartId}}tableHead.appendChild({{$chartId}}tr);
+                    {{$chartId}}Th.appendChild({{$chartId}}Text);
+                    {{$chartId}}Tr.appendChild({{$chartId}}Th);
+                    {{$chartId}}TableHead.appendChild({{$chartId}}Tr);
                 });
 
-                const {{$chartId}}tableBody = document.createElement('tbody');
+                const {{$chartId}}TableBody = document.createElement('tbody');
                 {{$chartId}}bodyLines.reverse().forEach((body, i) => {
                     const [label, value] = body[0].split('|');
 
                     //label
 
-                    const {{$chartId}}trLabel = document.createElement('tr');
-                    {{$chartId}}trLabel.style.backgroundColor = 'inherit';
-                    {{$chartId}}trLabel.style.borderWidth = '0';
-                    {{$chartId}}trLabel.style.fontSize = '12px';
-                    {{$chartId}}trLabel.style.fontWeight = '400';
-                    {{$chartId}}trLabel.style.color = '#464E49';
-                    {{$chartId}}trLabel.style.paddingBottom = '0px';
-                    {{$chartId}}trLabel.style.marginBottom = '0px';
+                    const {{$chartId}}TrLabel = document.createElement('tr');
+                    {{$chartId}}TrLabel.style.backgroundColor = 'inherit';
+                    {{$chartId}}TrLabel.style.borderWidth = '0';
+                    {{$chartId}}TrLabel.style.fontSize = '12px';
+                    {{$chartId}}TrLabel.style.fontWeight = '400';
+                    {{$chartId}}TrLabel.style.color = '#464E49';
+                    {{$chartId}}TrLabel.style.paddingBottom = '0px';
+                    {{$chartId}}TrLabel.style.marginBottom = '0px';
 
 
-                    const {{$chartId}}tdLabel = document.createElement('td');
-                    {{$chartId}}tdLabel.style.borderWidth = 0;
+                    const {{$chartId}}TdLabel = document.createElement('td');
+                    {{$chartId}}TdLabel.style.borderWidth = 0;
 
-                    const {{$chartId}}textLabel = document.createTextNode(label);
+                    const {{$chartId}}TextLabel = document.createTextNode(label);
 
-                    {{$chartId}}tdLabel.appendChild({{$chartId}}textLabel);
-                    {{$chartId}}trLabel.appendChild({{$chartId}}tdLabel);
+                    {{$chartId}}TdLabel.appendChild({{$chartId}}TextLabel);
+                    {{$chartId}}TrLabel.appendChild({{$chartId}}TdLabel);
 
-                    {{$chartId}}tableBody.appendChild({{$chartId}}trLabel);
+                    {{$chartId}}TableBody.appendChild({{$chartId}}TrLabel);
 
 
                     //value
-                    const {{$chartId}}tr = document.createElement('tr');
-                    {{$chartId}}tr.style.backgroundColor = 'inherit';
-                    {{$chartId}}tr.style.borderWidth = '0';
-                    {{$chartId}}tr.style.fontSize = '16px';
-                    {{$chartId}}tr.style.fontWeight = '700';
-                    {{$chartId}}tr.style.color = '#464E49';
+                    const {{$chartId}}Tr = document.createElement('tr');
+                    {{$chartId}}Tr.style.backgroundColor = 'inherit';
+                    {{$chartId}}Tr.style.borderWidth = '0';
+                    {{$chartId}}Tr.style.fontSize = '16px';
+                    {{$chartId}}Tr.style.fontWeight = '700';
+                    {{$chartId}}Tr.style.color = '#464E49';
 
-                    const {{$chartId}}td = document.createElement('td');
-                    {{$chartId}}td.style.borderWidth = 0;
+                    const {{$chartId}}Td = document.createElement('td');
+                    {{$chartId}}Td.style.borderWidth = 0;
 
-                    const {{$chartId}}text = document.createTextNode(value);
+                    const {{$chartId}}Text = document.createTextNode(value);
 
-                    {{$chartId}}td.appendChild({{$chartId}}text);
-                    {{$chartId}}tr.appendChild({{$chartId}}td);
+                    {{$chartId}}Td.appendChild({{$chartId}}Text);
+                    {{$chartId}}Tr.appendChild({{$chartId}}Td);
 
-                    {{$chartId}}tableBody.appendChild({{$chartId}}tr);
+                    {{$chartId}}TableBody.appendChild({{$chartId}}Tr);
                 });
 
-                const {{$chartId}}tableRoot = {{$chartId}}tooltipEl.querySelector('table');
+                const {{$chartId}}TableRoot = {{$chartId}}TooltipEl.querySelector('table');
 
                 // Remove old children
-                while ({{$chartId}}tableRoot.firstChild) {
-                    {{$chartId}}tableRoot.firstChild.remove();
+                while ({{$chartId}}TableRoot.firstChild) {
+                    {{$chartId}}TableRoot.firstChild.remove();
                 }
 
                 // Add new children
-                {{$chartId}}tableRoot.appendChild({{$chartId}}tableHead);
-                {{$chartId}}tableRoot.appendChild({{$chartId}}tableBody);
+                {{$chartId}}TableRoot.appendChild({{$chartId}}TableHead);
+                {{$chartId}}TableRoot.appendChild({{$chartId}}TableBody);
             }
 
             const {
@@ -487,71 +487,71 @@
             } = chart.canvas;
 
             // Display, position, and set styles for font
-            {{$chartId}}tooltipEl.style.opacity = 1;
-            {{$chartId}}tooltipEl.style.left = positionX + tooltip.caretX + 'px';
-            {{$chartId}}tooltipEl.style.top = positionY + tooltip.caretY - 155 + 'px';
-            {{$chartId}}tooltipEl.style.font = tooltip.options.bodyFont.string;
-            {{$chartId}}tooltipEl.style.padding = 8 + 'px ' + 19 + 'px';
+            {{$chartId}}TooltipEl.style.opacity = 1;
+            {{$chartId}}TooltipEl.style.left = positionX + tooltip.caretX + 'px';
+            {{$chartId}}TooltipEl.style.top = positionY + tooltip.caretY - 155 + 'px';
+            {{$chartId}}TooltipEl.style.font = tooltip.options.bodyFont.string;
+            {{$chartId}}TooltipEl.style.padding = 8 + 'px ' + 19 + 'px';
         };
 
-        function {{$chartId}}initChart({{$chartId}}filteredData = null) {
-            if({{$chartId}}data['annual'] == null)return
-            if ({{$chartId}}chart) {{$chartId}}chart.destroy();
-            let {{$chartId}}finalData;
-            if({{$chartId}}filteredData){
+        function {{$chartId}}InitChart({{$chartId}}FilteredData = null) {
+            if({{$chartId}}Data['annual'] == null)return
+            if ({{$chartId}}Chart) {{$chartId}}Chart.destroy();
+            let {{$chartId}}FinalData;
+            if({{$chartId}}FilteredData){
 
-                {{$chartId}}finalData = {{$chartId}}filteredData
+                {{$chartId}}FinalData = {{$chartId}}FilteredData
             }
             else {
-                {{$chartId}}finalData = {{$chartId}}data
+                {{$chartId}}FinalData = {{$chartId}}Data
             }
 
-            if({{$chartId}}period == 'arps' || {{$chartId}}period == 'args'){
+            if({{$chartId}}Period == 'arps' || {{$chartId}}Period == 'args'){
 
-                {{$chartId}}finalData = {{$chartId}}finalData['annual']
+                {{$chartId}}FinalData = {{$chartId}}FinalData['annual']
             }
             else {
-                {{$chartId}}finalData = {{$chartId}}finalData['quarterly']
+                {{$chartId}}FinalData = {{$chartId}}FinalData['quarterly']
             }
 
-            let {{$chartId}}canvas = document.getElementById('{{$chartId}}canvas');
-            if(typeof {{$chartId}}finalData == 'undefined'){
+            let {{$chartId}}Canvas = document.getElementById('{{$chartId}}Canvas');
+            if(typeof {{$chartId}}FinalData == 'undefined'){
 
                 return;
             }
 
-            if (!{{$chartId}}canvas){
+            if (!{{$chartId}}Canvas){
 
                 return;
 
             }
-            let {{$chartId}}ctx = document.getElementById('{{$chartId}}canvas').getContext('2d');
+            let {{$chartId}}Ctx = document.getElementById('{{$chartId}}Canvas').getContext('2d');
 
-            let {{$chartId}}gradientBg = {{$chartId}}ctx.createLinearGradient(0, 0, 0, {{$chartId}}canvas.height * 2.5)
-            {{$chartId}}gradientBg.addColorStop(0.8, 'rgba(19,176,91,0.18)')
-            {{$chartId}}gradientBg.addColorStop(1, 'rgba(19,176,91,0.05)')
-            {{$chartId}}chart = new Chart({{$chartId}}ctx, {
+            let {{$chartId}}GradientBg = {{$chartId}}Ctx.createLinearGradient(0, 0, 0, {{$chartId}}Canvas.height * 2.5)
+            {{$chartId}}GradientBg.addColorStop(0.8, 'rgba(19,176,91,0.18)')
+            {{$chartId}}GradientBg.addColorStop(1, 'rgba(19,176,91,0.05)')
+            {{$chartId}}Chart = new Chart({{$chartId}}Ctx, {
                 plugins: [ChartDataLabels, {
                     afterDraw: chart => {
                         if (chart.tooltip?._active?.length) {
-                            let {{$chartId}}x = chart.tooltip._active[0].element.x;
-                            let {{$chartId}}y = chart.tooltip._active[0].element.y;
+                            let {{$chartId}}X = chart.tooltip._active[0].element.x;
+                            let {{$chartId}}Y = chart.tooltip._active[0].element.y;
                             let {{$chartId}}bottomBarY = false
                             if(chart.tooltip._active.length > 1){
                                 {{$chartId}}bottomBarY = chart.tooltip._active[1].element.y;
                             }
-                            let {{$chartId}}ctx = chart.ctx;
-                            {{$chartId}}ctx.save();
-                            {{$chartId}}ctx.beginPath();
-                            {{$chartId}}ctx.moveTo({{$chartId}}x, {{$chartId}}y);
+                            let {{$chartId}}Ctx = chart.ctx;
+                            {{$chartId}}Ctx.save();
+                            {{$chartId}}Ctx.beginPath();
+                            {{$chartId}}Ctx.moveTo({{$chartId}}X, {{$chartId}}Y);
                             if({{$chartId}}bottomBarY){
-                            {{$chartId}}ctx.lineTo({{$chartId}}x, {{$chartId}}bottomBarY + 9);
+                            {{$chartId}}Ctx.lineTo({{$chartId}}X, {{$chartId}}bottomBarY + 9);
                             }
-                            {{$chartId}}ctx.lineWidth = 1;
-                            {{$chartId}}ctx.strokeStyle = '#13B05BDE';
-                            {{$chartId}}ctx.setLineDash([5, 5])
-                            {{$chartId}}ctx.stroke();
-                            {{$chartId}}ctx.restore();
+                            {{$chartId}}Ctx.lineWidth = 1;
+                            {{$chartId}}Ctx.strokeStyle = '#13B05BDE';
+                            {{$chartId}}Ctx.setLineDash([5, 5])
+                            {{$chartId}}Ctx.stroke();
+                            {{$chartId}}Ctx.restore();
                         }
                     },
                 }],
@@ -560,7 +560,7 @@
                 responsive: true,
                 type: 'bar',
                 data: {
-                    datasets: {{$chartId}}finalData
+                    datasets: {{$chartId}}FinalData
                 },
                 options: {
                     interaction: {
@@ -577,16 +577,16 @@
                     },
                     plugins: {
                         datalabels: {
-                            display: {{$chartId}}chartType == 'percentage' ? true : false,
+                            display: {{$chartId}}ChartType == 'percentage' ? true : false,
                             anchor: 'center',
                             align: 'center',
                             formatter: (v) => {
-                                if({{$chartId}}chartType == 'values'){
-                                    let {{$chartId}}value = parseInt(v.y)
-                                        return {{$chartId}}value.toFixed({{$chartId}}decimalPoints ?? 0)
+                                if({{$chartId}}ChartType == 'values'){
+                                    let {{$chartId}}Value = parseInt(v.y)
+                                        return {{$chartId}}Value.toFixed({{$chartId}}DecimalPoints ?? 0)
                                 }
                                 else {
-                                    return parseInt(v.y).toFixed({{$chartId}}decimalPoints ?? 0) + '%'
+                                    return parseInt(v.y).toFixed({{$chartId}}DecimalPoints ?? 0) + '%'
                                 }
                             },
                             font: {
@@ -598,16 +598,16 @@
                             bodyFont: {
                                 size: 15
                             },
-                            external: {{$chartId}}externalTooltipHandler,
+                            external: {{$chartId}}ExternalTooltipHandler,
                             enabled: false,
                             position: 'nearest',
                             callbacks: {
                                 title: function(context) {
-                                    const {{$chartId}}inputDate = new Date(context[0].label);
-                                    const {{$chartId}}month = {{$chartId}}inputDate.getMonth() + 1;
-                                    const {{$chartId}}day = {{$chartId}}inputDate.getDate();
-                                    const {{$chartId}}year = {{$chartId}}inputDate.getFullYear();
-                                    return {{$chartId}}year + '-' +{{$chartId}}month.toString().padStart(2, '0')+ '-' + {{$chartId}}day.toString().padStart(2, '0');
+                                    const {{$chartId}}InputDate = new Date(context[0].label);
+                                    const {{$chartId}}Month = {{$chartId}}InputDate.getMonth() + 1;
+                                    const {{$chartId}}Day = {{$chartId}}InputDate.getDate();
+                                    const {{$chartId}}Year = {{$chartId}}InputDate.getFullYear();
+                                    return {{$chartId}}Year + '-' +{{$chartId}}Month.toString().padStart(2, '0')+ '-' + {{$chartId}}Day.toString().padStart(2, '0');
                                 },
                                 label: function(context) {
                                     return `${context.dataset.label}|${context.raw.y}`;
@@ -615,7 +615,7 @@
                             },
                         },
                         legend: {
-                            display: {{$chartId}}labelsVisible,
+                            display: {{$chartId}}LabelsVisible,
                             position: 'bottom',
                             labels: {
                                 boxWidth: 16,

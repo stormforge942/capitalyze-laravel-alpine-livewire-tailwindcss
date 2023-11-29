@@ -196,7 +196,7 @@
                                                         </li>
                                                     </ul>
                                                     <div class="mx-3 my-4">
-                                                        <button @click="$wire.set('view', view)" class="w-full p-1 text-base font-medium bg-[#52D3A2] rounded text-center" id="viewCloseButton">Show Result</button>
+                                                        <button @click="$wire.set('view', view); viewTypeSelectorOpen = false" class="w-full p-1 text-base font-medium bg-[#52D3A2] rounded text-center" id="viewCloseButton">Show Result</button>
                                                     </div>
                                                 </div>
                                             </div>
@@ -316,7 +316,7 @@
                                                         </li>
                                                     </ul>
                                                     <div class="mx-3 my-4">
-                                                        <button @click="$wire.set('period', period)" class="w-full p-1 text-base font-medium bg-[#52D3A2] rounded text-center" id="periodCloseButton">Show Result</button>
+                                                        <button @click="$wire.set('period', period); periodTypeSelectorOpen = false" class="w-full p-1 text-base font-medium bg-[#52D3A2] rounded text-center" id="periodCloseButton">Show Result</button>
                                                     </div>
                                                 </div>
                                             </div>
@@ -388,7 +388,7 @@
                                                         </li>
                                                     </ul>
                                                     <div class="mx-3 my-4">
-                                                        <button @click="$wire.set('unitType', unitType)" class="w-full p-1 text-base font-medium bg-[#52D3A2] rounded text-center" id="unitTypeCloseButton">Show Result</button>
+                                                        <button @click="$wire.set('unitType', unitType); unitTypeSelectorOpen = false" class="w-full p-1 text-base font-medium bg-[#52D3A2] rounded text-center" id="unitTypeCloseButton">Show Result</button>
                                                     </div>
                                                 </div>
                                             </div>
@@ -448,7 +448,7 @@
                                                         </li>
                                                     </ul>
                                                     <div class="mx-3 my-4">
-                                                        <button @click="$wire.set('decimalDisplay', decimalyDisplay)" class="w-full p-1 text-base font-medium bg-[#52D3A2] rounded text-center" id="decimalCloseButton">Show Result</button>
+                                                        <button @click="$wire.set('decimalDisplay', decimalDisplay); decimalDisplaySelectorOpen=false;" class="w-full p-1 text-base font-medium bg-[#52D3A2] rounded text-center" id="decimalCloseButton">Show Result</button>
                                                     </div>
                                                 </div>
                                             </div>
@@ -496,7 +496,7 @@
                                                         </li>
                                                     </ul>
                                                     <div class="mx-3 my-4">
-                                                        <button @click="$wire.set('reverse', reverse)" class="w-full p-1 text-base font-medium bg-[#52D3A2] rounded text-center" id="orderCloseButton">Show Result</button>
+                                                        <button @click="$wire.set('reverse', reverse); reverseSelectorOpen = false;" class="w-full p-1 text-base font-medium bg-[#52D3A2] rounded text-center" id="orderCloseButton">Show Result</button>
                                                     </div>
                                                 </div>
                                             </div>
@@ -556,7 +556,7 @@
                                                         </li>
                                                     </ul>
                                                     <div class="mx-3 my-4">
-                                                        <button class="w-full p-1 text-base font-medium bg-[#52D3A2] rounded text-center" id="freezePanesCloseButton">Show Result</button>
+                                                        <button class="w-full p-1 text-base font-medium bg-[#52D3A2] rounded text-center" @click="freezePanesSelectorOpen = false" id="freezePanesCloseButton">Show Result</button>
                                                     </div>
                                                 </div>
                                             </div>

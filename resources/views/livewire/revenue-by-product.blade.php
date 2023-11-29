@@ -1,10 +1,10 @@
 <div>
     <div class="filters-row bg-white py-3 px-4  rounded-lg mb-7 custom__border_gray">
         <div class="select-wrapper flex gap-x-4 items-center custom-text-xs">
-            <div class="flex items-center text-sm" x-data="{unitType: null, unitTypeOpen: false}" @click.away="unitTypeOpen = false">Unit Type
+            <div class="flex items-center text-sm" x-data="{unitType: null, unitTypeSelectorOpen: false}" @click.away="unitTypeSelectorOpen = false">Unit Type
                 <div class="relative">
-                    <button id="dropdownUnitTypeButton" @click="unitTypeOpen = !unitTypeOpen"
-                    class="flex items-center flowbite-select bg-gray-50 border border-gray-700 text-gray-900 text-sm ml-2 p-2 flowbite_btn" :class="[unitType != null ? 'active' : '',unitTypeOpen ? 'down' : '']"
+                    <button id="dropdownUnitTypeButton" @click="unitTypeSelectorOpen = !unitTypeSelectorOpen"
+                    class="flex items-center flowbite-select bg-gray-50 border border-gray-700 text-gray-900 text-sm ml-2 p-2 flowbite_btn" :class="[unitType != null ? 'active' : '',unitTypeSelectorOpen ? 'down' : '']"
                     name="view" id="">
                     <span
                         x-text="(unitType == null || unitType == 0) ? 'None' : (unitType == 'thousands' ? 'Thousands' : (unitType == 'millions' ? 'Millions' : (unitType == 'billions' ? 'Billions' : '')))"></span>
@@ -15,11 +15,11 @@
                     </svg>
                 </button>
                 <!-- Dropdown menu -->
-                <div x-show="unitTypeOpen" wire:ignore
+                <div x-show="unitTypeSelectorOpen" wire:ignore
                     class="z-10 bg-white divide-y divide-gray-100 rounded-lg shadow  dark:bg-gray-700 dark:divide-gray-600 dropdown-scroll-wrapper">
                     <div class="p-3 text-base flex items-center justify-between font-medium">
                         <div>Unit Type</div>
-                        <svg id="unitTypeClose" width="24" height="24" class="cursor-pointer" viewBox="0 0 24 24" fill="none"  @click="unitTypeOpen = false"
+                        <svg id="unitTypeClose" width="24" height="24" class="cursor-pointer" viewBox="0 0 24 24" fill="none"  @click="unitTypeSelectorOpen = false"
                             xmlns="http://www.w3.org/2000/svg">
                             <path
                                 d="M6.4 19L5 17.6L10.6 12L5 6.4L6.4 5L12 10.6L17.6 5L19 6.4L13.4 12L19 17.6L17.6 19L12 13.4L6.4 19Z"
@@ -91,28 +91,28 @@
                     </ul>
                     <div class="mx-3 my-4">
                         <button class="w-full p-1 text-base font-medium bg-[#52D3A2] rounded text-center" id="unitTypeCloseButton"
-                            @click="{{$chartId}}setUnitType(unitType)">Show Result</button>
+                            @click="{{$chartId}}setUnitType(unitType); unitTypeSelectorOpen=false">Show Result</button>
                     </div>
                 </div>
             </div>
             </div>
-            <div class="flex items-center text-sm" x-data="{reverseOrder:null, reverseOrderOpen: false}" @click.away="reverseOrderOpen = false">Order
-                <div class="relative">    <button :class="[reverseOrder != null ? 'active' : '', reverseOrderOpen ? 'down' : '']" @click="reverseOrderOpen = !reverseOrderOpen"
+            <div class="flex items-center text-sm" x-data="{reverseOrder:null, reverseOrderSelectorOpen: false}" @click.away="reverseOrderSelectorOpen = false">Order
+                <div class="relative">    <button :class="[reverseOrder != null ? 'active' : '', reverseOrderSelectorOpen ? 'down' : '']" @click="reverseOrderSelectorOpen = !reverseOrderSelectorOpen"
                     class="flex items-center flowbite-select bg-gray-50 border border-gray-700 text-gray-900 text-sm ml-2 p-2 flowbite_btn"
                     name="view" id="">
                     <span x-text="(reverseOrder == false || reverseOrder == null) ? 'Latest on Right' : 'Latest on Left'"></span>
-                    <svg width="16" height="16" viewBox="0 0 16 16" fill="none" xmlns="http://www.w3.org/2000/svg" @click="reverseOrderOpen = !reverseOrderOpen">
+                    <svg width="16" height="16" viewBox="0 0 16 16" fill="none" xmlns="http://www.w3.org/2000/svg" @click="reverseOrderSelectorOpen = !reverseOrderSelectorOpen">
                         <path
                             d="M10.3083 6.19514L7.72167 8.78378L5.135 6.19514C5.01045 6.07021 4.84135 6 4.665 6C4.48865 6 4.31955 6.07021 4.195 6.19514C3.935 6.45534 3.935 6.87566 4.195 7.13585L7.255 10.1982C7.515 10.4584 7.935 10.4584 8.195 10.1982L11.255 7.13585C11.515 6.87566 11.515 6.45534 11.255 6.19514C10.995 5.94161 10.5683 5.93494 10.3083 6.19514Z"
                             fill="#121A0F" />
                     </svg>
                 </button>
                 <!-- Dropdown menu -->
-                <div id="dropdown-Order" x-show="reverseOrderOpen" wire:ignore
+                <div id="dropdown-Order" x-show="reverseOrderSelectorOpen" wire:ignore
                     class="z-10 bg-white divide-y divide-gray-100 rounded-lg shadow  dark:bg-gray-700 dark:divide-gray-600 dropdown-scroll-wrapper">
                     <div class="p-3 text-base flex items-center justify-between font-medium">
                         <div>Order</div>
-                        <svg id="orderClose" width="24" height="24" class="cursor-pointer" viewBox="0 0 24 24" fill="none" @click="reverseOrderOpen = false"
+                        <svg id="orderClose" width="24" height="24" class="cursor-pointer" viewBox="0 0 24 24" fill="none" @click="reverseOrderSelectorOpen = false"
                             xmlns="http://www.w3.org/2000/svg">
                             <path
                                 d="M6.4 19L5 17.6L10.6 12L5 6.4L6.4 5L12 10.6L17.6 5L19 6.4L13.4 12L19 17.6L17.6 19L12 13.4L6.4 19Z"
@@ -153,31 +153,31 @@
                         </li>
                     </ul>
                     <div class="mx-3 my-4">
-                        <button @click="{{$chartId}}setReverseOrder(reverseOrder)"
+                        <button @click="{{$chartId}}setReverseOrder(reverseOrder); reverseOrderSelectorOpen=false"
                             class="w-full p-1 text-base font-medium bg-[#52D3A2] rounded text-center" id="orderCloseButton">Show
                             Result</button>
                     </div>
                 </div>
             </div>
             </div>
-            <div class="flex items-center text-sm" x-data="{freezepans: null, freezepanOpen: false}" @click.away="freezepanOpen = false">Freeze Panes
+            <div class="flex items-center text-sm" x-data="{freezePans: null, freezePansSelectorOpen: false}" @click.away="freezePansSelectorOpen = false">Freeze Panes
                 <div class="relative">
-                <button type="submit" @click="freezepanOpen = !freezepanOpen" :class="[freezepans != null ? 'active' : '', freezepanOpen ? 'down' : '']"
+                <button type="submit" @click="freezePansSelectorOpen = !freezePansSelectorOpen" :class="[freezePans != null ? 'active' : '', freezePansSelectorOpen ? 'down' : '']"
                     class="flex items-center flowbite-select bg-gray-50 border border-gray-700 text-gray-900 text-sm ml-2 p-2 flowbite_btn"
                     name="view" id="">
                     Top Row
-                    <svg width="16" height="16" viewBox="0 0 16 16" fill="none" xmlns="http://www.w3.org/2000/svg" @click="freezepanOpen = !freezepanOpen">
+                    <svg width="16" height="16" viewBox="0 0 16 16" fill="none" xmlns="http://www.w3.org/2000/svg" @click="freezePansSelectorOpen = !freezePansSelectorOpen">
                         <path
                             d="M10.3083 6.19514L7.72167 8.78378L5.135 6.19514C5.01045 6.07021 4.84135 6 4.665 6C4.48865 6 4.31955 6.07021 4.195 6.19514C3.935 6.45534 3.935 6.87566 4.195 7.13585L7.255 10.1982C7.515 10.4584 7.935 10.4584 8.195 10.1982L11.255 7.13585C11.515 6.87566 11.515 6.45534 11.255 6.19514C10.995 5.94161 10.5683 5.93494 10.3083 6.19514Z"
                             fill="#121A0F" />
                     </svg>
                 </button>
                 <!-- Dropdown menu -->
-                <div x-show="freezepanOpen"
+                <div x-show="freezePansSelectorOpen"
                     class="z-10 bg-white divide-y divide-gray-100 rounded-lg shadow  dark:bg-gray-700 dark:divide-gray-600 dropdown-scroll-wrapper">
                     <div class="p-3 text-base flex items-center justify-between font-medium">
                         <div>Freeze Panes</div>
-                        <svg id="freezePanesClose" width="24" height="24" class="cursor-pointer" viewBox="0 0 24 24" fill="none" @click="freezepanOpen = false"
+                        <svg id="freezePanesClose" width="24" height="24" class="cursor-pointer" viewBox="0 0 24 24" fill="none" @click="freezePansSelectorOpen = false"
                             xmlns="http://www.w3.org/2000/svg">
                             <path
                                 d="M6.4 19L5 17.6L10.6 12L5 6.4L6.4 5L12 10.6L17.6 5L19 6.4L13.4 12L19 17.6L17.6 19L12 13.4L6.4 19Z"
@@ -189,7 +189,7 @@
                         <li>
                             <div class="flex p-2 rounded hover:bg-[#52D3A233] cursor-pointer">
                                 <div class="flex items-center h-5 cursor-pointer">
-                                    <input @click='freezepans = "Top Row"'
+                                    <input @click='freezePans = "Top Row"'
                                         id="freezePanes-radio-1" name="freezePanes-radio" type="radio" value="Top Row"
                                         class="cursor-pointer w-4 h-4 text-[#686868] bg-transpearent border-[#686868] border-2">
                                 </div>
@@ -204,7 +204,7 @@
                         <li>
                             <div class="flex p-2 rounded hover:bg-[#52D3A233] cursor-pointer">
                                 <div class="flex items-center h-5 cursor-pointer">
-                                    <input @click='freezepans = "First Column"'
+                                    <input @click='freezePans = "First Column"'
                                         id="freezePanes-radio-2" name="freezePanes-radio" type="radio"
                                         value="First Column"
                                         class="cursor-pointer w-4 h-4 text-[#686868] bg-transpearent border-[#686868] border-2">
@@ -220,7 +220,7 @@
                         <li>
                             <div class="flex p-2 rounded hover:bg-[#52D3A233] cursor-pointer">
                                 <div class="flex items-center h-5 cursor-pointer">
-                                    <input id="freezePanes-radio-3" name="freezePanes-radio" type="radio" @click='freezepans = "Top Row & First Column"'
+                                    <input id="freezePanes-radio-3" name="freezePanes-radio" type="radio" @click='freezePans = "Top Row & First Column"'
                                         value="Top Row & First Column"
                                         class="cursor-pointer w-4 h-4 text-[#686868] bg-transpearent border-[#686868] border-2">
                                 </div>
@@ -234,15 +234,15 @@
                         </li>
                     </ul>
                     <div class="mx-3 my-4">
-                        <button class="w-full p-1 font-medium text-base bg-[#52D3A2] rounded text-center" @click="{{$chartId}}setFreezePans(freezepans)"
+                        <button class="w-full p-1 font-medium text-base bg-[#52D3A2] rounded text-center" @click="{{$chartId}}setFreezePans(freezePans); freezePansSelectorOpen=false"
                             id="freezePanesCloseButton">Show Result</button>
                     </div>
                 </div>
             </div>
             </div>
-            <div wire:ignore class="flex items-center text-sm" x-data="{round: null, roundOpen: false}" @click.away="roundOpen = false">Decimal
+            <div wire:ignore class="flex items-center text-sm" x-data="{round: null, roundSelectorOpen: false}" @click.away="roundSelectorOpen = false">Decimal
                 <div class="relative">
-                <button :class="[round != null ? 'active' : '', roundOpen? 'down' : '']" @click="roundOpen = !roundOpen"
+                <button :class="[round != null ? 'active' : '', roundSelectorOpen? 'down' : '']" @click="roundSelectorOpen = !roundSelectorOpen"
                     class="flex items-center flowbite-select bg-gray-50 border border-gray-700 text-gray-900 text-sm ml-2 p-2 flowbite_btn"
                     name="view" id="">
                     <span x-text='(round == 0 || round == null) ? "auto" : (round == 2 ? ".00" : (round == 3 ? ".00" : ""))'></span>
@@ -253,11 +253,11 @@
                     </svg>
                 </button>
                 <!-- Dropdown menu -->
-                <div x-show="roundOpen"
+                <div x-show="roundSelectorOpen"
                     class="z-10 bg-white divide-y divide-gray-100 rounded-lg shadow  dark:bg-gray-700 dark:divide-gray-600 dropdown-scroll-wrapper">
                     <div class="p-3 text-base flex items-center justify-between font-medium">
                         <div>Decimal</div>
-                        <svg id="decimalClose" width="24" height="24" class="cursor-pointer" viewBox="0 0 24 24" fill="none" @click="roundOpen = false"
+                        <svg id="decimalClose" width="24" height="24" class="cursor-pointer" viewBox="0 0 24 24" fill="none" @click="roundSelectorOpen = false"
                             xmlns="http://www.w3.org/2000/svg">
                             <path
                                 d="M6.4 19L5 17.6L10.6 12L5 6.4L6.4 5L12 10.6L17.6 5L19 6.4L13.4 12L19 17.6L17.6 19L12 13.4L6.4 19Z"
@@ -314,7 +314,7 @@
                     </ul>
                     <div class="mx-3 my-4">
                         <button class="w-full p-1 text-base font-medium bg-[#52D3A2] rounded text-center" id="decimalCloseButton"
-                            @click="{{$chartId}}setRound(round)">Show Result</button>
+                            @click="{{$chartId}}setRound(round); roundSelectorOpen=false">Show Result</button>
                     </div>
                 </div>
                 </div>
@@ -416,7 +416,7 @@
                 onInput: (value, e) => {
                     if (value.length === 2 && value !== {{$chartId}}selectedValue) {
                         {{$chartId}}recognizeDotsStatus(value, [{{$chartId}}rangeMin, {{$chartId}}rangeMax]);
-                        Livewire.emit("{{$chartId}}analysisDatesChanged", value)
+                        Livewire.emit("{{$chartId}}AnalysisDatesChanged", value)
                     }
                 },
             });
@@ -603,12 +603,12 @@
     {{$chartId}}FreezePans = 0
     function {{$chartId}}setRound(v){
         {{$chartId}}decimalPoints = v
-        Livewire.emit('{{$chartId}}decimalChanged', v)
+        Livewire.emit('{{$chartId}}DecimalChanged', v)
         @this.set('decimalPoint', v)
     }
     function {{$chartId}}setReverseOrder(v){
         {{$chartId}}reversOrder = v
-        Livewire.emit('{{$chartId}}orderChanged', v)
+        Livewire.emit('{{$chartId}}OrderChanged', v)
         @this.set('reverseOrder', v)
     }
 
@@ -619,7 +619,7 @@
 
     function {{$chartId}}setUnitType(v){
         {{$chartId}}unitType = v
-        Livewire.emit('{{$chartId}}unitChanged', {{$chartId}}unitType)
+        Livewire.emit('{{$chartId}}UnitChanged', {{$chartId}}unitType)
         @this.set('unit', {{$chartId}}unitType)
     }
 
@@ -627,20 +627,20 @@
     const {{$chartId}}fiscalAnnualCheckbox = document.getElementById("{{$chartId}}date-fiscal-annual");
 
     {{$chartId}}annualCheckbox.addEventListener("click", function() {
-        Livewire.emit('{{$chartId}}periodChanged', 'arps')
+        Livewire.emit('{{$chartId}}PeriodChanged', 'arps')
     });
     {{$chartId}}fiscalAnnualCheckbox.addEventListener("click", function() {
-        Livewire.emit('{{$chartId}}periodChanged', 'arps')
+        Livewire.emit('{{$chartId}}PeriodChanged', 'arps')
     });
     // date-fiscal-quarterly
     const {{$chartId}}quarterlyCheckbox = document.getElementById("{{$chartId}}date-quarterly");
     const {{$chartId}}fiscalQuarterlyCheckbox = document.getElementById("{{$chartId}}date-fiscal-quaterly");
 
     {{$chartId}}quarterlyCheckbox.addEventListener("click", function() {
-        Livewire.emit('{{$chartId}}periodChanged', 'qrps')
+        Livewire.emit('{{$chartId}}PeriodChanged', 'qrps')
     });
     {{$chartId}}fiscalQuarterlyCheckbox.addEventListener("click", function() {
-        Livewire.emit('{{$chartId}}periodChanged', 'qrps')
+        Livewire.emit('{{$chartId}}PeriodChanged', 'qrps')
     });
 
 
