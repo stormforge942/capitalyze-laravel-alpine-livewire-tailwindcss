@@ -781,13 +781,11 @@
                                                     </div>
                                                     <div class="w-full flex flex-row bg-gray-custom-light justify-between">
                                                         @foreach ($reverse ? array_reverse($tableDates) : $tableDates as $date)
-                                                            @if($datesEmptyStatus[$date])
                                                             <div class="w-[150px] flex items-center justify-center text-base font-bold">
                                                                 <span class="py-2">
                                                                     {{ date('M Y', strtotime($date)) }}
                                                                 </span>
                                                             </div>
-                                                            @endif
                                                         @endforeach
                                                     </div>
                                                 </div>
@@ -894,7 +892,6 @@
             if(!el) {
                 return;
             }
-
             let rangeDates = @this.rangeDates
 
             let selectedValue = [];

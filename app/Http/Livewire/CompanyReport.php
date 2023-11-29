@@ -532,11 +532,11 @@ class CompanyReport extends Component
         foreach ($data as $key => $value) {
             $rowArray = $this->generateRow($value, $key);
             $rows[] = $rowArray[0];
-            foreach(array_keys($rowArray[0]['values']) as $date){
+            foreach(array_keys($rowArray[1]['values']) as $date){
                 if(!isset($this->datesEmptyStatus[$date])){
                     $this->datesEmptyStatus[$date] = false;
                 }
-                if($rowArray[0]['values'][$date]['value'] != '-'){
+                if($rowArray[1]['values'][$date]['value'] != '-'){
                     $this->datesEmptyStatus[$date] = true;
                 }
             }
@@ -552,6 +552,22 @@ class CompanyReport extends Component
             }
             $rows[$rowKey]['values'] = $rowValues;
         }
+
+        foreach($this->tableDates as $dateKey => $tableDate){
+            if(!$this->datesEmptyStatus[$tableDate]){
+                unset($this->tableDates[$dateKey]);
+            }
+        }
+
+        foreach($this->rangeDates as $dateKey => $tableDate){
+            foreach($this->datesEmptyStatus as $statusKey => $dateStatus){
+                if(date('Y', strtotime($statusKey)) == date('Y', strtotime($tableDate)) && !$dateStatus){
+                    unset($this->rangeDates[$dateKey]);
+                }
+            }
+        }
+        $this->rangeDates = array_values($this->rangeDates);
+        $this->tableDates = array_values($this->tableDates);
 
         $this->rows = $rows;
         $this->allRows = $allRows;
