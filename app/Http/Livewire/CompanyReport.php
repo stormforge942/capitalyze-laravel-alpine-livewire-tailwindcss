@@ -49,6 +49,7 @@ class CompanyReport extends Component
     public $activeTabName = 'Income Statement';
     public $chartColors = [];
     public $allRows = [];
+    public $datesEmptyStatus = [];
 
     protected $listeners = ['periodChange', 'tabClicked', 'tabSubClicked', 'selectRow', 'unselectRow'];
 
@@ -239,7 +240,7 @@ class CompanyReport extends Component
 
     public function getData() : void
     {
-        $acronym = ($this->period == 'annual') ? 'arf5drs' : 'qrf5drs';
+        $acronym = ($this->period == 'annual') || ($this->period == 'Calendar Annual') || ($this->period == 'Fiscal Annual') ? 'arf5drs' : 'qrf5drs';
 
         if ($this->view === 'Standardised Template') {
             $data = InfoTikrPresentation::where('ticker', $this->ticker)->orderByDesc('id')->first()->info;
@@ -527,11 +528,29 @@ class CompanyReport extends Component
             $data = $this->activeTabName == 'Balance Sheet Statement' ? $data['Balance Sheet'] : $data[$this->activeTabName];
         }
 
+
         foreach ($data as $key => $value) {
             $rowArray = $this->generateRow($value, $key);
             $rows[] = $rowArray[0];
+            foreach(array_keys($rowArray[0]['values']) as $date){
+                if(!isset($this->datesEmptyStatus[$date])){
+                    $this->datesEmptyStatus[$date] = false;
+                }
+                if($rowArray[0]['values'][$date]['value'] != '-'){
+                    $this->datesEmptyStatus[$date] = true;
+                }
+            }
             $allRows[] =$rowArray[1];
+        }
 
+        foreach($rows as $rowKey => $row){
+            $rowValues = [];
+            foreach($row['values'] as $valueKey => $value){
+                if($this->datesEmptyStatus[$valueKey]){
+                    $rowValues[$valueKey] = $value;
+                }
+            }
+            $rows[$rowKey]['values'] = $rowValues;
         }
 
         $this->rows = $rows;
@@ -716,7 +735,7 @@ class CompanyReport extends Component
 
     public function setAsReportedStatementsList()
     {
-        $acronym = ($this->period == 'annual') ? 'arf5drs' : 'qrf5drs';
+        $acronym = ($this->period == 'annual') || ($this->period == 'Calendar Annual') || ($this->period == 'Fiscal Annual') ? 'arf5drs' : 'qrf5drs';
 
         $statements = InfoPresentation::where('ticker', '=', $this->ticker)
             ->where('acronym', '=', $acronym)
