@@ -91,7 +91,7 @@
                     </ul>
                     <div class="mx-3 my-4">
                         <button class="w-full p-1 text-base font-medium bg-[#52D3A2] rounded text-center" id="unitTypeCloseButton"
-                            @click="{{$chartId}}setUnitType(unitType)">Show Result</button>
+                            @click="{{$chartId}}setUnitType(unitType); unitTypeSelectorOpen=false">Show Result</button>
                     </div>
                 </div>
             </div>
@@ -153,7 +153,7 @@
                         </li>
                     </ul>
                     <div class="mx-3 my-4">
-                        <button @click="{{$chartId}}setReverseOrder(reverseOrder)"
+                        <button @click="{{$chartId}}setReverseOrder(reverseOrder); reverseOrderSelectorOpen=false"
                             class="w-full p-1 text-base font-medium bg-[#52D3A2] rounded text-center" id="orderCloseButton">Show
                             Result</button>
                     </div>
@@ -234,15 +234,15 @@
                         </li>
                     </ul>
                     <div class="mx-3 my-4">
-                        <button class="w-full p-1 font-medium text-base bg-[#52D3A2] rounded text-center" @click="{{$chartId}}setFreezePans(freezePans)"
+                        <button class="w-full p-1 font-medium text-base bg-[#52D3A2] rounded text-center" @click="{{$chartId}}setFreezePans(freezePans); freezePansSelectorOpen=false"
                             id="freezePanesCloseButton">Show Result</button>
                     </div>
                 </div>
             </div>
             </div>
-            <div wire:ignore class="flex items-center text-sm" x-data="{round: null, roundOpen: false}" @click.away="roundOpen = false">Decimal
+            <div wire:ignore class="flex items-center text-sm" x-data="{round: null, roundSelectorOpen: false}" @click.away="roundSelectorOpen = false">Decimal
                 <div class="relative">
-                <button :class="[round != null ? 'active' : '', roundOpen? 'down' : '']" @click="roundOpen = !roundOpen"
+                <button :class="[round != null ? 'active' : '', roundSelectorOpen? 'down' : '']" @click="roundSelectorOpen = !roundSelectorOpen"
                     class="flex items-center flowbite-select bg-gray-50 border border-gray-700 text-gray-900 text-sm ml-2 p-2 flowbite_btn"
                     name="view" id="">
                     <span x-text='(round == 0 || round == null) ? "auto" : (round == 2 ? ".00" : (round == 3 ? ".00" : ""))'></span>
@@ -253,11 +253,11 @@
                     </svg>
                 </button>
                 <!-- Dropdown menu -->
-                <div x-show="roundOpen"
+                <div x-show="roundSelectorOpen"
                     class="z-10 bg-white divide-y divide-gray-100 rounded-lg shadow  dark:bg-gray-700 dark:divide-gray-600 dropdown-scroll-wrapper">
                     <div class="p-3 text-base flex items-center justify-between font-medium">
                         <div>Decimal</div>
-                        <svg id="decimalClose" width="24" height="24" class="cursor-pointer" viewBox="0 0 24 24" fill="none" @click="roundOpen = false"
+                        <svg id="decimalClose" width="24" height="24" class="cursor-pointer" viewBox="0 0 24 24" fill="none" @click="roundSelectorOpen = false"
                             xmlns="http://www.w3.org/2000/svg">
                             <path
                                 d="M6.4 19L5 17.6L10.6 12L5 6.4L6.4 5L12 10.6L17.6 5L19 6.4L13.4 12L19 17.6L17.6 19L12 13.4L6.4 19Z"
@@ -314,7 +314,7 @@
                     </ul>
                     <div class="mx-3 my-4">
                         <button class="w-full p-1 text-base font-medium bg-[#52D3A2] rounded text-center" id="decimalCloseButton"
-                            @click="{{$chartId}}setRound(round)">Show Result</button>
+                            @click="{{$chartId}}setRound(round); roundSelectorOpen=false">Show Result</button>
                     </div>
                 </div>
                 </div>
