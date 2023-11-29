@@ -2,6 +2,7 @@
 
 namespace App\Http\Livewire;
 
+use App\Models\EodPrices;
 use Livewire\Component;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Http\Request;
@@ -37,13 +38,13 @@ class RevenueByProduct extends Component
     public $decimalPoint;
     public $reverseOrder = false;
     public $chartId = 'rbp';
-    protected $listeners = ['tabClicked', 'tabSubClicked', 'rbpanalysisDatesChanged', 'rbpdecimalChange', 'rbpperiodChanged', 'rbpunitChanged'];
+    protected $listeners = ['tabClicked', 'tabSubClicked', 'rbpAnalysisDatesChanged', 'rbpDecimalChange', 'rbpPeriodChanged', 'rbpUnitChanged'];
 
-    public function rbpdecimalChange($decimal){
+    public function rbpDecimalChange($decimal){
         $this->decimalPoint = $decimal;
     }
 
-    public function rbpunitChanged($unit){
+    public function rbpUnitChanged($unit){
         $this->unit = $unit;
     }
 
@@ -51,7 +52,7 @@ class RevenueByProduct extends Component
         return $this->unit;
     }
 
-    public function rbpanalysisDatesChanged($value)
+    public function rbpAnalysisDatesChanged($value)
     {
         $this->years = array_reverse(array_keys($this->products));
         if($this->reverseOrder){
@@ -76,7 +77,7 @@ class RevenueByProduct extends Component
         return $this->years;
     }
 
-    public function rbpperiodChanged($period){
+    public function rbpPeriodChanged($period){
         $this->period = $period == 'arps' ? 'annual' : 'quarterly';
         $this->getProducts();
         $this->rangeDates = array_keys($this->products);
@@ -97,20 +98,20 @@ class RevenueByProduct extends Component
 
     public function mount(Request $request, $company, $ticker, $period)
     {
-        $first = DB::connection('pgsql-xbrl')
-            ->table('eod_prices')
-            ->where('symbol', strtolower($this->ticker))
-            ->latest('date')->first()?->adj_close;
-        $previous = DB::connection('pgsql-xbrl')
-            ->table('eod_prices')
-            ->where('symbol', strtolower($this->ticker))
+        $eodPrices = EodPrices::where('symbol', strtolower($this->company->ticker))
             ->latest('date')
-            ->skip(1)->first()?->adj_close;
-        if ($previous && $first) {
-            $this->dynamic = round((($first - $previous) / $previous) * 100, 2);
+            ->take(2)
+            ->pluck('adj_close')
+            ->toArray();
+
+        $latestPrice = $eodPrices[0] ?? 0;
+        $previousPrice = $eodPrices[1] ?? 0;
+
+        if ($latestPrice > 0 && $previousPrice > 0) {
+            $this->dynamic = round((($latestPrice - $previousPrice) / $previousPrice) * 100, 2);
         }
 
-        $this->cost =  $first;
+        $this->cost =  $latestPrice;
         $this->company = $company;
         $this->ticker = $ticker;
         $this->period = $period;
