@@ -126,7 +126,7 @@
                                                     </svg>
                                                 </button>
                                                 <!-- Dropdown menu -->
-                                                <div id="dropdown-View" x-show="viewTypeSelectorOpen" class="z-10 bg-white divide-y divide-gray-100 rounded-lg shadow  dark:bg-gray-700 dark:divide-gray-600 dropdown-scroll-wrapper">
+                                                <div x-cloak id="dropdown-View" x-show="viewTypeSelectorOpen" class="z-10 bg-white divide-y divide-gray-100 rounded-lg shadow  dark:bg-gray-700 dark:divide-gray-600 dropdown-scroll-wrapper">
                                                     <div class="p-3 text-base flex items-center justify-between font-medium">
                                                         <div>View</div>
                                                         <svg id="viewClose" @click="viewTypeSelectorOpen = false" width="24" height="24" viewBox="0 0 24 24" class="cursor-pointer" fill="none" xmlns="http://www.w3.org/2000/svg">
@@ -210,7 +210,7 @@
                                                         </svg>
                                                     </button>
                                                 <!-- Dropdown menu -->
-                                                <div x-show="periodTypeSelectorOpen" id="dropdown-Period" class="z-10 bg-white divide-y divide-gray-100 rounded-lg shadow  dark:bg-gray-700 dark:divide-gray-600 dropdown-scroll-wrapper">
+                                                <div x-cloak x-show="periodTypeSelectorOpen" id="dropdown-Period" class="z-10 bg-white divide-y divide-gray-100 rounded-lg shadow  dark:bg-gray-700 dark:divide-gray-600 dropdown-scroll-wrapper">
                                                     <div class="p-3 text-base flex items-center justify-between font-medium">
                                                         <div>Period Type</div>
                                                         <svg @click="periodTypeSelectorOpen = false" id="periodClose" width="24" height="24" viewBox="0 0 24 24" class="cursor-pointer" fill="none" xmlns="http://www.w3.org/2000/svg">
@@ -330,7 +330,7 @@
                                                     </svg>
                                                 </button>
                                                 <!-- Dropdown menu -->
-                                                <div x-show="unitTypeSelectorOpen" class="z-10 bg-white divide-y divide-gray-100 rounded-lg shadow  dark:bg-gray-700 dark:divide-gray-600 dropdown-scroll-wrapper">
+                                                <div x-cloak x-show="unitTypeSelectorOpen" class="z-10 bg-white divide-y divide-gray-100 rounded-lg shadow  dark:bg-gray-700 dark:divide-gray-600 dropdown-scroll-wrapper">
                                                     <div class="p-3 text-base flex items-center justify-between font-medium">
                                                         <div>Unit Type</div>
                                                         <svg @click="unitTypeSelectorOpen = false" id="unitTypeClose" width="24" height="24" viewBox="0 0 24 24" class="cursor-pointer" fill="none" xmlns="http://www.w3.org/2000/svg">
@@ -402,7 +402,7 @@
                                                     </svg>
                                                 </button>
                                                 <!-- Dropdown menu -->
-                                                <div x-show="decimalDisplaySelectorOpen" class="z-10 bg-white divide-y divide-gray-100 rounded-lg shadow  dark:bg-gray-700 dark:divide-gray-600 dropdown-scroll-wrapper">
+                                                <div x-cloak x-show="decimalDisplaySelectorOpen" class="z-10 bg-white divide-y divide-gray-100 rounded-lg shadow  dark:bg-gray-700 dark:divide-gray-600 dropdown-scroll-wrapper">
                                                     <div class="p-3 text-base flex items-center justify-between font-medium">
                                                         <div>Decimal</div>
                                                         <svg id="decimalClose" @click="decimalDisplaySelectorOpen = false" width="24" height="24" viewBox="0 0 24 24" class="cursor-pointer" fill="none" xmlns="http://www.w3.org/2000/svg">
@@ -462,7 +462,7 @@
                                                     </svg>
                                                 </button>
                                                 <!-- Dropdown menu -->
-                                                <div x-show="reverseSelectorOpen" class="z-10 bg-white divide-y divide-gray-100 rounded-lg shadow  dark:bg-gray-700 dark:divide-gray-600 dropdown-scroll-wrapper">
+                                                <div x-cloak x-show="reverseSelectorOpen" class="z-10 bg-white divide-y divide-gray-100 rounded-lg shadow  dark:bg-gray-700 dark:divide-gray-600 dropdown-scroll-wrapper">
                                                     <div class="p-3 text-base flex items-center justify-between font-medium">
                                                         <div>Order</div>
                                                         <svg id="orderClose" width="24" height="24" class="cursor-pointer" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
@@ -510,7 +510,7 @@
                                                     </svg>
                                                 </button>
                                                 <!-- Dropdown menu -->
-                                                <div x-show="freezePanesSelectorOpen" class="z-10 bg-white divide-y divide-gray-100 rounded-lg shadow  dark:bg-gray-700 dark:divide-gray-600 dropdown-scroll-wrapper">
+                                                <div x-cloak x-show="freezePanesSelectorOpen" class="z-10 bg-white divide-y divide-gray-100 rounded-lg shadow  dark:bg-gray-700 dark:divide-gray-600 dropdown-scroll-wrapper">
                                                     <div class="p-3 text-base flex items-center justify-between font-medium">
                                                         <div>Freeze Panes</div>
                                                         <svg @click="freezePanesSelectorOpen = false" id="freezePanesClose" width="24" height="24" class="cursor-pointer" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">

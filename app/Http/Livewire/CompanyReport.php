@@ -60,6 +60,7 @@ class CompanyReport extends Component
         'startDate',
         'endDate',
         'activeTabName',
+        'period'
     ];
 
     public function mount(Request $request, $company, $ticker, $period): void

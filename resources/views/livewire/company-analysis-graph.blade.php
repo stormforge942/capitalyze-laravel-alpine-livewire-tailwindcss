@@ -282,7 +282,9 @@
     })
 
     Livewire.on('{{$chartId}}PeriodChanged', (v) => {
-        {{$chartId}}Period = v
+        debugger
+        let periodColumn = (v == 'Calendar Annual' || v == 'Fiscal Annual') ? 'arps' : 'qrps'
+        {{$chartId}}Period = periodColumn
         {{$chartId}}InitChart({{$chartId}}FilteredData)
     })
 
@@ -513,7 +515,7 @@
             else {
                 {{$chartId}}FinalData = {{$chartId}}FinalData['quarterly']
             }
-
+            debugger
             let {{$chartId}}Canvas = document.getElementById('{{$chartId}}Canvas');
             if(typeof {{$chartId}}FinalData == 'undefined'){
 

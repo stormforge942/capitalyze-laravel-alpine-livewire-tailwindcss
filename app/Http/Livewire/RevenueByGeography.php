@@ -78,7 +78,7 @@ class RevenueByGeography extends Component
     }
 
     public function rbgPeriodChanged($period){
-        $this->period = $period == 'arps' ? 'annual' : 'quarterly';
+        $this->period = ($period == 'arps') || ($period == 'Calendar Annual') || ($period == 'Fiscal Annual') ? 'annual' : 'quarterly';
         $this->getProducts();
         $this->rangeDates = array_keys($this->products);
 
