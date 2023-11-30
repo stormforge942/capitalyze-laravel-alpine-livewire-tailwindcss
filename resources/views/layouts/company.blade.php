@@ -88,6 +88,7 @@
 
     <div id="modals-area">
         @stack('modals')
+        @livewire('modal-pro')
         @livewire('spotlight-pro')
         @livewire('slide-over-pro')
     </div>
