@@ -242,21 +242,28 @@ class CompanyReport extends Component
     {
         $acronym = ($this->period == 'annual') || ($this->period == 'Calendar Annual') || ($this->period == 'Fiscal Annual') ? 'arf5drs' : 'qrf5drs';
 
-        if ($this->view === 'Standardised Template') {
-            $data = InfoTikrPresentation::where('ticker', $this->ticker)->orderByDesc('id')->first()->info;
-        } else {
-            $query = InfoPresentation::query()
-                ->where('ticker', '=', $this->ticker)
-                ->where('acronym', '=', $acronym)
-                ->where('id', '=', $this->activeSubIndex)
-                ->select('info')->value('info');
+        try {
+            if ($this->view === 'Standardised Template') {
+                $data = InfoTikrPresentation::where('ticker', $this->ticker)->orderByDesc('id')->first()->info;
+            } else {
+                $query = InfoPresentation::query()
+                    ->where('ticker', '=', $this->ticker)
+                    ->where('acronym', '=', $acronym)
+                    ->where('id', '=', $this->activeSubIndex)
+                    ->select('info')->value('info');
 
-            $data = json_decode($query, true);
+                $data = json_decode($query, true);
 
+            }
+
+            if ($this->activeTabName === 'Ratios') {
+                $data = $this->fakeDataForRatiosPage();
+            }
+            $this->noData = false;
         }
-
-        if ($this->activeTabName === 'Ratios') {
-            $data = $this->fakeDataForRatiosPage();
+        catch(\Exception $e) {
+            $this->noData = true;
+            return;
         }
 
         // handle period is not set by default we put it to annual
@@ -771,7 +778,7 @@ class CompanyReport extends Component
         if($this->activeTabName == 'Income Statement' || $this->activeTabName == 'Balance Sheet Statement' || $this->activeTabName == 'Cash Flow Statement') {
             $this->activeIndex = 'Financial Statements [Financial Statements]';
         }
-
+        $this->activeSubIndex = "";
         foreach($statements as $value) {
             if($this->activeTabName == $value['title']) {
                 $this->activeSubIndex = $value['id'];
@@ -808,6 +815,7 @@ class CompanyReport extends Component
 
         if($this->activeTabName === 'Income Statement' || $this->activeTabName === 'Balance Sheet Statement' || $this->activeTabName === 'Cash Flow Statement') {
             if($this->view === 'As reported (Harmonized)') {
+                $this->activeSubIndex = "";
                 foreach($this->asReportedStatementsList as $value) {
                     if($this->activeTabName === $value['title']) {
                         $this->activeSubIndex = $value['id'];

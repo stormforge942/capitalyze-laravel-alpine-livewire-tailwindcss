@@ -4,7 +4,8 @@
             <div class=" flex items-center text-sm" x-data="{period: null, periodTypeSelectorOpen: false}" @click.away="periodTypeSelectorOpen = false">Period Type
                 <div class="relative">
                         <button type="submit" :class="[period != null ? 'active' : '', periodTypeSelectorOpen ? 'down' : '']" @click="periodTypeSelectorOpen = !periodTypeSelectorOpen" class="flex items-center flowbite_btn flowbite-select bg-gray-50 border border-gray-700 text-gray-900 text-sm ml-2 p-2" name="period" id="">
-                            {{$period}}
+                            <span
+                        x-text="(period == null || period == 0) ? 'None' : period"></span>
                             <svg width="16" height="16" viewBox="0 0 16 16" fill="none" xmlns="http://www.w3.org/2000/svg">
                                 <path d="M10.3083 6.19514L7.72167 8.78378L5.135 6.19514C5.01045 6.07021 4.84135 6 4.665 6C4.48865 6 4.31955 6.07021 4.195 6.19514C3.935 6.45534 3.935 6.87566 4.195 7.13585L7.255 10.1982C7.515 10.4584 7.935 10.4584 8.195 10.1982L11.255 7.13585C11.515 6.87566 11.515 6.45534 11.255 6.19514C10.995 5.94161 10.5683 5.93494 10.3083 6.19514Z" fill="#121A0F"/>
                             </svg>
@@ -526,7 +527,7 @@
         }'></div>
     </div>
     <div x-data="{ rbpshowgraph: true }" wire:ignore>
-        <div class="flex justify-end" x-show="!rbpshowgraph" @click="rbpshowgraph = true">
+        <div class="flex justify-end" x-cloak x-show="!rbpshowgraph" @click="rbpshowgraph = true">
             <button class="show-hide-chart-btn">
                 Show Chart
                 <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 16 16" fill="none">
@@ -657,12 +658,12 @@
 </div>
 @push('scripts')
 <script>
-    let {{$chartId}}decimalPoints = 0;
+    let {{$chartId}}DecimalPoints = 0;
     let {{$chartId}}unitType = 0
     let {{$chartId}}reversOrder = false
     {{$chartId}}FreezePans = 0
     function {{$chartId}}setRound(v){
-        {{$chartId}}decimalPoints = v
+        {{$chartId}}DecimalPoints = v
         Livewire.emit('{{$chartId}}DecimalChanged', v)
         @this.set('decimalPoint', v)
     }
@@ -686,22 +687,22 @@
     const {{$chartId}}annualCheckbox = document.getElementById("{{$chartId}}date-annual");
     const {{$chartId}}fiscalAnnualCheckbox = document.getElementById("{{$chartId}}date-fiscal-annual");
 
-    {{$chartId}}annualCheckbox.addEventListener("click", function() {
-        Livewire.emit('{{$chartId}}PeriodChanged', 'arps')
-    });
-    {{$chartId}}fiscalAnnualCheckbox.addEventListener("click", function() {
-        Livewire.emit('{{$chartId}}PeriodChanged', 'arps')
-    });
+    // {{$chartId}}annualCheckbox.addEventListener("click", function() {
+    //     Livewire.emit('{{$chartId}}PeriodChanged', 'arps')
+    // });
+    // {{$chartId}}fiscalAnnualCheckbox.addEventListener("click", function() {
+    //     Livewire.emit('{{$chartId}}PeriodChanged', 'arps')
+    // });
     // date-fiscal-quarterly
-    const {{$chartId}}quarterlyCheckbox = document.getElementById("{{$chartId}}date-quarterly");
-    const {{$chartId}}fiscalQuarterlyCheckbox = document.getElementById("{{$chartId}}date-fiscal-quaterly");
+    // const {{$chartId}}quarterlyCheckbox = document.getElementById("{{$chartId}}date-quarterly");
+    // const {{$chartId}}fiscalQuarterlyCheckbox = document.getElementById("{{$chartId}}date-fiscal-quaterly");
 
-    {{$chartId}}quarterlyCheckbox.addEventListener("click", function() {
-        Livewire.emit('{{$chartId}}PeriodChanged', 'qrps')
-    });
-    {{$chartId}}fiscalQuarterlyCheckbox.addEventListener("click", function() {
-        Livewire.emit('{{$chartId}}PeriodChanged', 'qrps')
-    });
+    // {{$chartId}}quarterlyCheckbox.addEventListener("click", function() {
+    //     Livewire.emit('{{$chartId}}PeriodChanged', 'qrps')
+    // });
+    // {{$chartId}}fiscalQuarterlyCheckbox.addEventListener("click", function() {
+    //     Livewire.emit('{{$chartId}}PeriodChanged', 'qrps')
+    // });
 
 
 </script>
