@@ -1,17 +1,4 @@
 <div class="w-full">
-    @if($noData)
-        <div class="py-12">
-            <div class="mx-auto flex">
-                <div class="mt-4 px-4 sm:px-6 lg:px-8 bg-white py-4 shadow rounded w-full md:w-1/2 md:mx-auto">
-                    <div class="sm:flex sm:items-center">
-                        <div class="sm:flex-auto">
-                            <h1 class="text-base font-semibold leading-6 text-gray-900">No data available</h1>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </div>
-    @else
     <livewire:slides.right-slide>
     <livewire:slides.left-slide>
     <div id="main-report-div" class="py-0 bg-gray-100">
@@ -204,8 +191,7 @@
                                         <div class=" flex items-center text-sm" x-data="{period: null, periodTypeSelectorOpen: false}" @click.away="periodTypeSelectorOpen = false">Period Type
                                             <div class="relative">
                                                     <button type="submit" :class="[period != null ? 'active' : '', periodTypeSelectorOpen ? 'down' : '']" @click="periodTypeSelectorOpen = !periodTypeSelectorOpen" class="flex items-center flowbite_btn flowbite-select bg-gray-50 border border-gray-700 text-gray-900 text-sm ml-2 p-2" name="period" id="">
-                                                        <span
-                        x-text="(period == null || period == 0) ? 'None' : period"></span>
+                                                        <span x-text="(period == null || period == 0) ? 'None' : period"></span>
                                                         <svg width="16" height="16" viewBox="0 0 16 16" fill="none" xmlns="http://www.w3.org/2000/svg">
                                                             <path d="M10.3083 6.19514L7.72167 8.78378L5.135 6.19514C5.01045 6.07021 4.84135 6 4.665 6C4.48865 6 4.31955 6.07021 4.195 6.19514C3.935 6.45534 3.935 6.87566 4.195 7.13585L7.255 10.1982C7.515 10.4584 7.935 10.4584 8.195 10.1982L11.255 7.13585C11.515 6.87566 11.515 6.45534 11.255 6.19514C10.995 5.94161 10.5683 5.93494 10.3083 6.19514Z" fill="#121A0F"/>
                                                         </svg>
@@ -564,7 +550,19 @@
                                         </div>
                                     </div>
                                 </div>
-
+                                @if($noData)
+                                    <div class="py-12">
+                                        <div class="mx-auto flex">
+                                            <div class="mt-4 px-4 sm:px-6 lg:px-8 bg-white py-4 shadow rounded w-full md:w-1/2 md:mx-auto">
+                                                <div class="sm:flex sm:items-center">
+                                                    <div class="sm:flex-auto">
+                                                        <h1 class="text-base font-semibold leading-6 text-gray-900">No data available</h1>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                @else
                                 <div class="years-range-wrapper my-2">
                                     <div class="dots-wrapper">
                                         @php
@@ -801,6 +799,7 @@
                                         </div>
                                     </div>
                                 </div>
+                                @endif
                             </div>
                         </div>
                     </div>
@@ -808,7 +807,6 @@
             </div>
         </div>
     </div>
-    @endif
 </div>
 @push('scripts')
 <script>
