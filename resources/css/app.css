@@ -238,7 +238,28 @@ input {
     position: sticky;
     top: 20px;
 }
-
+.show-hide-chart-btn {
+    width: 148px;
+height: 32px;
+border-radius: 0px 8px 2px 2px;
+background: rgba(82, 211, 162, 0.20);
+font-size: 12px;
+font-style: normal;
+font-weight: 500;
+line-height: 16px;
+color: #121A0F;
+position: relative;
+}
+.show-hide-chart-btn svg {
+    position: absolute;
+    right: 10px;
+    top: 50%;
+    transform: translateY(-50%);
+    width: 16px;
+    height: 16px;
+    font-size: 16px;
+    color: #121A0F;
+}
 .anchor {
     display: block;
     height: 0.85rem !important;
