@@ -107,7 +107,7 @@
                                         <div class=" flex items-center text-sm" x-data="{view: null, viewTypeSelectorOpen: false}" @click.away="viewTypeSelectorOpen = false">View
                                             <div class="relative">
                                                 <button type="submit" @click="viewTypeSelectorOpen = !viewTypeSelectorOpen" id="dropdownViewButton" data-dropdown-toggle="dropdown-View" class="flex items-center flowbite-select flowbite_btn bg-gray-50 border border-gray-700 text-gray-900 text-sm ml-2 p-2" name="view" id="" :class="[view != null ? 'active' : '', viewTypeSelectorOpen? 'down' : '']">
-                                                    {{(str_replace('(Harmonized)', '', $view))}}
+                                                    <span x-text="(view == null || view == 0) ? 'As Reported' : view.replace('(Harmonized)', '')"></span>
                                                     <svg width="16" height="16" viewBox="0 0 16 16" fill="none" xmlns="http://www.w3.org/2000/svg">
                                                         <path d="M10.3083 6.19514L7.72167 8.78378L5.135 6.19514C5.01045 6.07021 4.84135 6 4.665 6C4.48865 6 4.31955 6.07021 4.195 6.19514C3.935 6.45534 3.935 6.87566 4.195 7.13585L7.255 10.1982C7.515 10.4584 7.935 10.4584 8.195 10.1982L11.255 7.13585C11.515 6.87566 11.515 6.45534 11.255 6.19514C10.995 5.94161 10.5683 5.93494 10.3083 6.19514Z" fill="#121A0F"/>
                                                     </svg>
@@ -191,7 +191,7 @@
                                         <div class=" flex items-center text-sm" x-data="{period: null, periodTypeSelectorOpen: false}" @click.away="periodTypeSelectorOpen = false">Period Type
                                             <div class="relative">
                                                     <button type="submit" :class="[period != null ? 'active' : '', periodTypeSelectorOpen ? 'down' : '']" @click="periodTypeSelectorOpen = !periodTypeSelectorOpen" class="flex items-center flowbite_btn flowbite-select bg-gray-50 border border-gray-700 text-gray-900 text-sm ml-2 p-2" name="period" id="">
-                                                        <span x-text="(period == null || period == 0) ? 'None' : period"></span>
+                                                        <span x-text="(period == null || period == 0) ? 'Annual' : period"></span>
                                                         <svg width="16" height="16" viewBox="0 0 16 16" fill="none" xmlns="http://www.w3.org/2000/svg">
                                                             <path d="M10.3083 6.19514L7.72167 8.78378L5.135 6.19514C5.01045 6.07021 4.84135 6 4.665 6C4.48865 6 4.31955 6.07021 4.195 6.19514C3.935 6.45534 3.935 6.87566 4.195 7.13585L7.255 10.1982C7.515 10.4584 7.935 10.4584 8.195 10.1982L11.255 7.13585C11.515 6.87566 11.515 6.45534 11.255 6.19514C10.995 5.94161 10.5683 5.93494 10.3083 6.19514Z" fill="#121A0F"/>
                                                         </svg>
@@ -311,7 +311,7 @@
                                         <div class=" flex items-center text-sm" x-data="{unitType: null, unitTypeSelectorOpen: false}" @click.away="unitTypeSelectorOpen = false">Unit Type
                                             <div class="relative">
                                                 <button type="submit" :class="[unitType != null ? 'active' : '', unitTypeSelectorOpen ? 'down' : '']" @click="unitTypeSelectorOpen = !unitTypeSelectorOpen" class="flex items-center flowbite_btn flowbite-select bg-gray-50 border border-gray-700 text-gray-900 text-sm ml-2 p-2" name="view" id="">
-                                                    {{$unitType}}
+                                                    <span x-text="(unitType == null || unitType == 0) ? 'Thousands' : unitType"></span>
                                                     <svg width="16" height="16" viewBox="0 0 16 16" fill="none" xmlns="http://www.w3.org/2000/svg">
                                                         <path d="M10.3083 6.19514L7.72167 8.78378L5.135 6.19514C5.01045 6.07021 4.84135 6 4.665 6C4.48865 6 4.31955 6.07021 4.195 6.19514C3.935 6.45534 3.935 6.87566 4.195 7.13585L7.255 10.1982C7.515 10.4584 7.935 10.4584 8.195 10.1982L11.255 7.13585C11.515 6.87566 11.515 6.45534 11.255 6.19514C10.995 5.94161 10.5683 5.93494 10.3083 6.19514Z" fill="#121A0F"/>
                                                     </svg>
@@ -383,7 +383,7 @@
                                         <div class=" flex items-center text-sm" x-data="{decimalDisplay: null, decimalDisplaySelectorOpen: false}" @click.away="decimalDisplaySelectorOpen = false">Decimal
                                             <div class="relative">
                                                 <button type="submit" @click="decimalDisplaySelectorOpen = !decimalDisplaySelectorOpen" :class="[decimalDisplay != null ? 'active' : '', decimalDisplaySelectorOpen ? 'down' : '']" class="flex items-center flowbite_btn flowbite-select bg-gray-50 border border-gray-700 text-gray-900 text-sm ml-2 p-2" name="view" id="">
-                                                    {{$decimalDisplay == 2 ? '.00' : ($decimalDisplay == 3 ? '.000' : 'auto')}}
+                                                    <span x-text="(decimalDisplay == null || decimalDisplay == 0) ? 'Auto' : decimalDisplay"></span>
                                                     <svg width="16" height="16" viewBox="0 0 16 16" fill="none" xmlns="http://www.w3.org/2000/svg">
                                                         <path d="M10.3083 6.19514L7.72167 8.78378L5.135 6.19514C5.01045 6.07021 4.84135 6 4.665 6C4.48865 6 4.31955 6.07021 4.195 6.19514C3.935 6.45534 3.935 6.87566 4.195 7.13585L7.255 10.1982C7.515 10.4584 7.935 10.4584 8.195 10.1982L11.255 7.13585C11.515 6.87566 11.515 6.45534 11.255 6.19514C10.995 5.94161 10.5683 5.93494 10.3083 6.19514Z" fill="#121A0F"/>
                                                     </svg>
@@ -443,7 +443,7 @@
                                         <div class=" flex items-center text-sm" x-data="{reverse: null, reverseSelectorOpen: false}" @click.away="reverseSelectorOpen = false">Order
                                             <div class="relative">
                                                 <button type="submit" @click="reverseSelectorOpen = !reverseSelectorOpen" :class="[reverse != null ? 'active' : '', reverseSelectorOpen ? 'down' : '']" class="flex items-center flowbite_btn flowbite-select bg-gray-50 border border-gray-700 text-gray-900 text-sm ml-2 p-2" name="view" id="">
-                                                    {{$reverse ? 'Latest on the Left' : 'Latest on the Right'}}
+                                                    <span x-text="(reverse == null || reverse === false) ? 'Latest on the Right' : (reverse === false ? 'Latest on the Right' : 'Latest on the Left')"></span>
                                                     <svg width="16" height="16" viewBox="0 0 16 16" fill="none" xmlns="http://www.w3.org/2000/svg">
                                                         <path d="M10.3083 6.19514L7.72167 8.78378L5.135 6.19514C5.01045 6.07021 4.84135 6 4.665 6C4.48865 6 4.31955 6.07021 4.195 6.19514C3.935 6.45534 3.935 6.87566 4.195 7.13585L7.255 10.1982C7.515 10.4584 7.935 10.4584 8.195 10.1982L11.255 7.13585C11.515 6.87566 11.515 6.45534 11.255 6.19514C10.995 5.94161 10.5683 5.93494 10.3083 6.19514Z" fill="#121A0F"/>
                                                     </svg>
@@ -491,7 +491,7 @@
                                         <div class=" flex items-center text-sm" x-data="{freezePanes: null, freezePanesSelectorOpen: false}" @click.away="freezePanesSelectorOpen = false">Freeze Panes
                                             <div class="relative">
                                                 <button @click="freezePanesSelectorOpen = !freezePanesSelectorOpen" :class="[freezePanes != null ? 'active' : '', freezePanesSelectorOpen ? 'down' : '']" type="submit" class="flex items-center flowbite_btn flowbite-select bg-gray-50 border border-gray-700 text-gray-900 text-sm ml-2 p-2" name="view" id="">
-                                                    {{$freezePanes}}
+                                                    <span x-text="(freezePanes == null || freezePanes == 0) ? 'Top Row' : freezePanes"></span>
                                                     <svg width="16" height="16" viewBox="0 0 16 16" fill="none" xmlns="http://www.w3.org/2000/svg">
                                                         <path d="M10.3083 6.19514L7.72167 8.78378L5.135 6.19514C5.01045 6.07021 4.84135 6 4.665 6C4.48865 6 4.31955 6.07021 4.195 6.19514C3.935 6.45534 3.935 6.87566 4.195 7.13585L7.255 10.1982C7.515 10.4584 7.935 10.4584 8.195 10.1982L11.255 7.13585C11.515 6.87566 11.515 6.45534 11.255 6.19514C10.995 5.94161 10.5683 5.93494 10.3083 6.19514Z" fill="#121A0F"/>
                                                     </svg>
