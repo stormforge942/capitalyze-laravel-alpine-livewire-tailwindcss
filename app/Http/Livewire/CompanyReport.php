@@ -754,6 +754,7 @@ class CompanyReport extends Component
     {
         $this->setAsReportedStatementsList();
         $this->getData();
+        $this->generateRows($this->data);
     }
 
     public function setAsReportedStatementsList()
