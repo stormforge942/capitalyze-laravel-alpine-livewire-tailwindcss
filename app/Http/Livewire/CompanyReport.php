@@ -291,7 +291,7 @@ class CompanyReport extends Component
         $this->startDate = $dates[0];
         $this->endDate = $dates[1];
 
-        if ($this->period === 'annual') {
+        if ($this->period === 'annual' || $this->period === 'Fiscal Annual' || $this->period === 'Calendar Annual') {
             if (count($dates) == 2) {
                 $this->tableDates = [];
 
@@ -317,7 +317,7 @@ class CompanyReport extends Component
             }
         }
 
-        if ($this->period === 'quarterly') {
+        if ($this->period === 'quarterly' || $this->period === 'Fiscal Quaterly' || $this->period === 'Calendar Quaterly') {
 
             $this->tableDates = []; // Clears the array
 
