@@ -270,7 +270,7 @@ class CompanyReport extends Component
         $this->period ?? $this->period = 'annual';
 
         // adjust data in case of standardised template and annual period or quarterly period since both are combined in one array
-        $data = ($this->view === 'Standardised Template') ? ($this->period === 'annual' ? $data['annual'] : $data['quarter']) : $data;
+        $data = ($this->view === 'Standardised Template') ? (($this->period === 'annual' || $this->period === 'Fiscal Annual' || $this->period === 'Calendar Annual') ? $data['annual'] : $data['quarter']) : $data;
 
         $this->data = $data;
         $this->generateUI();
@@ -482,7 +482,7 @@ class CompanyReport extends Component
             return $timestamp !== false && $timestamp >= $startTimestamp && $timestamp <= $endTimestamp;
         })));
 
-        if($this->period === 'quarterly') {
+        if($this->period === 'quarterly' || $this->period === 'Fiscal Quaterly' || $this->period === 'Calendar Quaterly') {
             $filteredData = [];
 
             foreach ($this->rangeDates as $date) {
