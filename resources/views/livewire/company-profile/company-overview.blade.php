@@ -104,18 +104,22 @@
     ];
     ?>
     <div
-        class="grid grid-cols-1 md:grid-cols-2 2xl:grid-cols-4 gap-x-6 gap-y-4 text-base leading-normal order-2 lg:order-1">
+        class="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-4 gap-x-6 xl:gap-x-4 gap-y-4 text-base leading-normal order-2 lg:order-1">
         @foreach ($cards as $card)
-            <x-card :title="$card['title']">
-                <div class="grid grid-cols-3 2xl:grid-cols-2 gap-5">
+            <div class="bg-white p-4 md:p-6 xl:p-4 2xl:p-6 rounded-lg">
+                <div class="mb-4 text-sm font-semibold text-blue">
+                    {{ $card['title'] }}
+                </div>
+
+                <div class="grid grid-cols-3 xl:grid-cols-2 gap-x-3 gap-y-5">
                     @foreach ($card['items'] as $item)
                         <div>
-                            <div class="text-dark-light2 text-sm">{{ $item['key'] }}</div>
+                            <div class="text-dark-light2 xl:text-[11px] 2xl:text-sm xl:tracking-[-0.33px] 2xl:tracking-normal">{{ $item['key'] }}</div>
                             <div class="font-semibold">{{ $item['value'] }}</div>
                         </div>
                     @endforeach
                 </div>
-            </x-card>
+            </div>
         @endforeach
     </div>
 
@@ -134,7 +138,7 @@
         showCount: 0,
         updateCount() {
             const width = window.innerWidth;
-
+    
             if (width >= 1536) {
                 this.showCount = 6;
             } else if (width >= 1280) {
