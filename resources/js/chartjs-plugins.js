@@ -1,4 +1,4 @@
-window.chartJsPlugins = {
+const chartJsPlugins = {
     pointLine: {
         id: "pointLine",
         afterDraw: (chart, _, options) => {
@@ -121,6 +121,10 @@ window.chartJsPlugins = {
 
             const tableRoot = tooltipEl.querySelector("table")
 
+            if(!tableRoot) {
+                return
+            }
+
             // Remove old children
             while (tableRoot.firstChild) {
                 tableRoot.firstChild.remove()
@@ -141,6 +145,23 @@ window.chartJsPlugins = {
         tooltipEl.style.padding = 8 + "px " + 19 + "px"
     },
 }
+export default chartJsPlugins
+
+export function formatCmpctNumber(number, options = {}) {
+    if (Number.isNaN(number)) return number
+
+    options = {
+        notation: "compact",
+        compactDisplay: "short",
+        ...options,
+    }
+
+    const usformatter = Intl.NumberFormat("en-US", options)
+    return usformatter.format(number)
+}
+
+window.chartJsPlugins = chartJsPlugins
+window.formatCmpctNumber = formatCmpctNumber
 
 function getOrCreateTooltip(chart) {
     let tooltipEl = chart.canvas.parentNode.querySelector("div")

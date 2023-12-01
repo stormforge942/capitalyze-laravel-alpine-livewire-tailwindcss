@@ -4,7 +4,6 @@ namespace App\Http\Livewire\Ownership;
 
 use Livewire\Component;
 use App\Models\CompanyInsider;
-use App\Http\Livewire\Ownership\History;
 use App\Services\OwnershipHistoryService;
 
 class Fund extends Component
@@ -16,7 +15,6 @@ class Fund extends Component
     public $tabs = [
         FundSummary::class,
         FundHoldings::class,
-        // History::class,
     ];
 
     public function mount($fund, $company = null)
