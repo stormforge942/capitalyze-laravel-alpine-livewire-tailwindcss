@@ -199,13 +199,8 @@ a {
     max-height: 23rem;
     height: 100%;
 }
-<<<<<<< HEAD
 .dropdown-scroll label {
     font-size: 14px;
-=======
-.dropdown-scroll label{
-    font-size: 0.875rem;
->>>>>>> development
     font-weight: 400 !important;
     width: 100%;
 }
