@@ -21,6 +21,7 @@ import "./range-slider"
 import "./css-tables"
 import "./report-text-highlighter"
 import "./chartjs-plugins"
+import "./ownership-pages.js"
 
 Alpine.plugin(focus)
 

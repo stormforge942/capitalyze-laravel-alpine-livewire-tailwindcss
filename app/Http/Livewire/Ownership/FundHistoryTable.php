@@ -2,20 +2,16 @@
 
 namespace App\Http\Livewire\Ownership;
 
-use App\Models\Filing;
-use App\Http\Livewire\AsTab;
+use App\Models\CompanyFilings;
 use App\Powergrid\BaseTable;
 use PowerComponents\LivewirePowerGrid\Column;
 use PowerComponents\LivewirePowerGrid\PowerGrid;
-use Illuminate\Contracts\Database\Eloquent\Builder;
-use Illuminate\Support\Arr;
+use Illuminate\Database\Eloquent\Collection;
 use PowerComponents\LivewirePowerGrid\PowerGridEloquent;
 
-class History extends BaseTable
+class FundHistoryTable extends BaseTable
 {
-    use AsTab;
-
-    public ?string $ticker = '';
+    public ?string $company = '';
     public string $cik;
     public string $sortField = 'report_calendar_or_quarter';
     public string $sortDirection = 'desc';
@@ -23,44 +19,43 @@ class History extends BaseTable
     public function mount(array $data = []): void
     {
         parent::mount();
-        $this->ticker = Arr::get($data, 'company.ticker');
-        $this->cik = Arr::get($data, 'fund.cik');
     }
 
-    public function datasource(): ?Builder
+    public function datasource(): ?Collection
     {
-        return Filing::query()
+        return CompanyFilings::query()
             ->select([
-                'name_of_issuer',
                 'report_calendar_or_quarter',
                 'ssh_prnamt',
                 'value',
-                'change_in_shares',
                 'weight',
+                'change_in_shares',
+                'change_in_shares_percentage',
                 'price_paid',
-                'estimated_average_price',
+                'signature_date',
             ])
-            ->when($this->ticker, fn ($q) => $q->where('symbol', $this->ticker))
-            ->where('cik', $this->cik);
+            ->when($this->company, fn ($q) => $q->where('symbol', $this->company))
+            ->where('cik', $this->cik)
+            ->get();
     }
 
     public function columns(): array
     {
         return [
-            Column::make('Name', 'name_of_issuer')->sortable(),
-            Column::make('Date', 'report_calendar_or_quarter')->sortable()
+            Column::make('Effective Date', 'signature_date')->sortable(),
+            Column::make('Common Stock Equivalent held', 'ssh_prnamt')->sortable()
                 ->headerAttribute('[&>div]:justify-end')->bodyAttribute('text-right'),
-            Column::make('Shares Held', 'ssh_prnamt')->sortable()
+            Column::make('Market Value', 'value')->sortable()
                 ->headerAttribute('[&>div]:justify-end')->bodyAttribute('text-right'),
-            Column::make('Value', 'value')->sortable()
+            Column::make('% of CSO', 'weight')->sortable()
                 ->headerAttribute('[&>div]:justify-end')->bodyAttribute('text-right'),
             Column::make('Change in Shares', 'change_in_shares')->sortable()
                 ->headerAttribute('[&>div]:justify-end')->bodyAttribute('text-right'),
-            Column::make('% of Portfolio', 'weight')->sortable()
+            Column::make('%Change', 'change_in_shares_percentage')->sortable()
                 ->headerAttribute('[&>div]:justify-end')->bodyAttribute('text-right'),
-            Column::make('Price Paid', 'price_paid')->sortable()
+            Column::make('Share Price', 'price_paid')->sortable()
                 ->headerAttribute('[&>div]:justify-end')->bodyAttribute('text-right'),
-            Column::make('Estimated Avg Price Paid', 'estimated_average_price')->sortable()
+            Column::make('Position Date', 'report_calendar_or_quarter')->sortable()
                 ->headerAttribute('[&>div]:justify-end')->bodyAttribute('text-right'),
         ];
     }
@@ -68,29 +63,33 @@ class History extends BaseTable
     public function addColumns(): PowerGridEloquent
     {
         return PowerGrid::eloquent()
-            ->addColumn('name_of_issuer')
-            ->addColumn('report_calendar_or_quarter')
-            ->addColumn('ssh_prnamt', function (Filing $filing) {
+            ->addColumn('signature_date')
+            ->addColumn('ssh_prnamt', function (CompanyFilings $filing) {
                 return number_format($filing->ssh_prnamt);
             })
-            ->addColumn('value', function (Filing $filing) {
+            ->addColumn('value', function (CompanyFilings $filing) {
                 return number_format($filing->value);
             })
-            ->addColumn('change_in_shares', function (Filing $filing) {
+            ->addColumn('weight', function (CompanyFilings $filing) {
+                return preg_replace('/\.?0+$/', '', number_format($filing->weight, 6)) . '%';
+            })
+            ->addColumn('change_in_shares', function (CompanyFilings $filing) {
                 if ($filing->change_in_shares >= 0) {
                     return number_format($filing->change_in_shares);
                 }
 
                 return '<span class="text-red">(' . number_format(-1 * $filing->change_in_shares) . ')</span>';
             })
-            ->addColumn('weight', function (Filing $filing) {
-                return preg_replace('/\.?0+$/', '', number_format($filing->weight, 6)) . '%';
+            ->addColumn('change_in_shares_percentage', function (CompanyFilings $filing) {
+                if ($filing->change_in_shares_percentage >= 0) {
+                    return round($filing->change_in_shares_percentage, 4);
+                }
+
+                return '<span class="text-red">(' . -1 * round($filing->change_in_shares_percentage, 4) . ')</span>';
             })
-            ->addColumn('price_paid', function (Filing $filing) {
+            ->addColumn('price_paid', function (CompanyFilings $filing) {
                 return preg_replace('/\.?0+$/', '', number_format($filing->price_paid, 4));
             })
-            ->addColumn('estimated_average_price', function (Filing $filing) {
-                return preg_replace('/\.?0+$/', '', number_format($filing->estimated_average_price, 4));
-            });
+            ->addColumn('report_calendar_or_quarter');
     }
 }

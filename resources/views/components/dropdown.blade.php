@@ -17,16 +17,16 @@
         })
     },
 }" @hide-dropdown="dropdown.hide()" x-modelable="open" {{ $attributes }}>
-    <button x-ref="trigger">
+    <button class="dropdown-trigger" x-ref="trigger">
         {{ $trigger ?? '' }}
     </button>
 
-    <div class="z-10 hidden" x-ref="body"
+    <div class="z-10 hidden dropdown-body" x-ref="body"
         @if ($shadow) style="box-shadow: 0px 4px 8px 0px rgba(0, 0, 8, 0.08);" @endif>
         @if ($body ?? false)
             {{ $body }}
         @else
-            <div class="bg-white rounded-lg border border-[#D4DDD7]">
+            <div class="bg-white rounded-lg border border-[#E8EBF2]">
                 {{ $slot }}
             </div>
         @endif

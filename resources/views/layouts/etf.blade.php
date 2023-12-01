@@ -49,7 +49,7 @@
         </div>
     @endif
 
-    <main class="px-4 pb-10 transition-all md:px-6 lg:px-8 {{ $tab === 'filings' ? 'lg:ml-56' : 'lg:ml-64' }}" id="main-container">
+    <main class="px-4 pb-10 transition-all md:px-6 lg:pl-8 {{ $tab === 'filings' ? 'lg:ml-56' : 'lg:ml-64' }}" id="main-container">
         @if ($tab == 'holdings')
             <livewire:etf.holdings :etf="$etf" />
         @elseif($tab == 'filings')

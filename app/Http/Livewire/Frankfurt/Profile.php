@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Http\Livewire\Otc;
+namespace App\Http\Livewire\Frankfurt;
 
 use App\Http\Livewire\BaseProfileComponent;
 use Illuminate\Database\Eloquent\Model;

@@ -4,17 +4,16 @@ namespace App\View\Components;
 
 use Illuminate\View\Component;
 
-class Dropdown extends Component
+class NavGroup extends Component
 {
     /**
      * Create a new component instance.
      *
      * @return void
      */
-    public function __construct(
-        public string $placement = 'bottom',
-        public bool $shadow = false,
-    ) {
+    public function __construct(public string $name, public array $items)
+    {
+        //
     }
 
     /**
@@ -24,6 +23,6 @@ class Dropdown extends Component
      */
     public function render()
     {
-        return view('components.dropdown');
+        return view('components.nav-group');
     }
 }
