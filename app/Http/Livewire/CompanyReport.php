@@ -384,7 +384,6 @@ class CompanyReport extends Component
 
     public function generateTableDates()
     {
-
         $this->tableDates = []; // Clears the array
 
         // get all dates possibles and fill tableDates
@@ -395,6 +394,28 @@ class CompanyReport extends Component
             // for the slider date - rangeDates is slider dates
         $this->rangeDates = $this->tableDates;
 
+        if(!is_numeric($this->startDate)){
+            $year = date('Y', strtotime($this->startDate));
+            $startDate = $this->startDate;
+            foreach($this->rangeDates as $date){
+                if(strtotime($date) <= strtotime($this->startDate) && strtotime($date) < strtotime($startDate) && date('Y', strtotime($date)) == date('Y', strtotime($this->startDate))){
+                    $startDate = $date;
+                }
+            }
+
+            $this->startDate = $startDate;
+        }
+        if(!is_numeric($this->endDate)){
+            $year = date('Y', strtotime($this->endDate));
+            $endDate = $this->endDate;
+            foreach($this->rangeDates as $date){
+                if(strtotime($date) >= strtotime($this->endDate) && strtotime($date) > strtotime($endDate) && date('Y', strtotime($date)) == date('Y', strtotime($this->endDate))){
+                    $endDate = $date;
+                }
+            }
+
+            $this->endDate = $endDate;
+        }
 
         // Check and update $this->endDate if applicable
         if (isset($this->endDate) && is_integer($this->endDate)) {
