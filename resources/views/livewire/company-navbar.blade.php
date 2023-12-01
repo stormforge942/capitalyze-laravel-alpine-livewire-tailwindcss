@@ -147,23 +147,62 @@
                         fill="none">
                         <path
                             d="M24.0014 21.173L32.4866 12.6877C33.2676 11.9066 34.534 11.9066 35.315 12.6877C36.096 13.4687 36.096 14.735 35.315 15.5161L26.8298 24.0014L35.315 32.4866C36.096 33.2676 36.096 34.534 35.315 35.315C34.534 36.096 33.2676 36.096 32.4866 35.315L24.0014 26.8298L15.5161 35.315C14.735 36.096 13.4687 36.096 12.6877 35.315C11.9066 34.534 11.9066 33.2676 12.6877 32.4866L21.173 24.0014L12.6876 15.5161C11.9066 14.735 11.9066 13.4687 12.6876 12.6876C13.4687 11.9066 14.735 11.9066 15.5161 12.6876L24.0014 21.173Z"
-                            fill="#121A0F" />
+                            fill="#C22929" />
                     </svg>
                 </button>
             </div>
 
-            <ul class="my-6 overflow-y-auto md:mt-10 space-y-7">
-                @foreach ($navbarItems['main'] as $item)
-                    <li>
-                        <a href="{{ $item['url'] ?? '#' }}"
-                            class="flex items-center justify-between w-full {{ $item['active'] ?? false ? 'font-semibold text-dark' : 'text-dark-light2' }} hover:text-dark">
-                            <div>
-                                {{ $item['title'] }}
-                            </div>
-                        </a>
-                    </li>
-                @endforeach
-            </ul>
+            <div class="my-6 overflow-y-auto md:mt-10 space-y-10">
+                <div>
+                    <div class="flex items-center gap-x-2 text-blue font-semibold">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="16" height="17" viewBox="0 0 16 17"
+                            fill="none">
+                            <path
+                                d="M6.64612 12.3805H9.34866C9.43666 11.5795 9.84546 10.9182 10.5091 10.1956C10.5839 10.1143 11.0633 9.61813 11.1201 9.54727C11.6853 8.8426 11.9974 7.97053 11.9974 7.0472C11.9974 4.83806 10.2065 3.0472 7.9974 3.0472C5.78826 3.0472 3.9974 4.83806 3.9974 7.0472C3.9974 7.97007 4.30922 8.84167 4.87381 9.54613C4.93076 9.6172 5.41127 10.1147 5.48509 10.1951C6.14917 10.9181 6.55808 11.5795 6.64612 12.3805ZM9.33073 13.7139H6.66406V14.3805H9.33073V13.7139ZM3.83336 10.38C3.1017 9.467 2.66406 8.3082 2.66406 7.0472C2.66406 4.10168 5.05188 1.71387 7.9974 1.71387C10.9429 1.71387 13.3307 4.10168 13.3307 7.0472C13.3307 8.30887 12.8926 9.4682 12.1603 10.3815C11.7467 10.8971 10.6641 11.7139 10.6641 12.7139V14.3805C10.6641 15.1169 10.0671 15.7139 9.33073 15.7139H6.66406C5.92768 15.7139 5.33073 15.1169 5.33073 14.3805V12.7139C5.33073 11.7139 4.24712 10.8963 3.83336 10.38ZM8.66406 7.0504H10.3307L7.33073 11.0504V8.38373H5.66406L8.66406 4.38053V7.0504Z"
+                                fill="#3561E7" />
+                        </svg>
+
+                        <span>Idea Generation</span>
+                    </div>
+                    <ul class="mt-6 space-y-8 text-md">
+                        @foreach ($navbarItems['main'] as $item)
+                            <li>
+                                <a href="{{ $item['url'] ?? '#' }}"
+                                    class="flex items-center justify-between w-full {{ $item['active'] ?? false ? 'font-semibold text-dark' : 'text-dark-light2' }} hover:text-dark">
+                                    <div>
+                                        {{ $item['title'] }}
+                                    </div>
+                                </a>
+                            </li>
+                        @endforeach
+                    </ul>
+                </div>
+
+                <div>
+                    <div class="flex items-center gap-x-2 text-blue font-semibold">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="16" height="17" viewBox="0 0 16 17"
+                            fill="none">
+                            <path
+                                d="M10.3333 3.71419C9.04467 3.71419 8 4.75886 8 6.04753C8 7.33619 9.04467 8.38086 10.3333 8.38086C11.622 8.38086 12.6667 7.33619 12.6667 6.04753C12.6667 4.75886 11.622 3.71419 10.3333 3.71419ZM6.66667 6.04753C6.66667 4.02248 8.30827 2.38086 10.3333 2.38086C12.3584 2.38086 14 4.02248 14 6.04753C14 6.81919 13.7616 7.53519 13.3545 8.12586L15.1381 9.90946L14.1953 10.8523L12.4117 9.06866C11.821 9.47579 11.105 9.71419 10.3333 9.71419C8.30827 9.71419 6.66667 8.07259 6.66667 6.04753ZM2 3.04753H5.33333V4.38086H2V3.04753ZM2 7.71419H5.33333V9.04753H2V7.71419ZM14 12.3809V13.7142H2V12.3809H14Z"
+                                fill="#3561E7" />
+                        </svg>
+
+                        <span>{{ $company->ticker }} Research</span>
+                    </div>
+                    <ul class="mt-6 space-y-8 text-md">
+                        @foreach ($navbarItems['company_research'] as $item)
+                            <li>
+                                <a href="{{ $item['url'] ?? '#' }}"
+                                    class="flex items-center justify-between w-full {{ $item['active'] ?? false ? 'font-semibold text-dark' : 'text-dark-light2' }} hover:text-dark">
+                                    <div>
+                                        {{ $item['title'] }}
+                                    </div>
+                                </a>
+                            </li>
+                        @endforeach
+                    </ul>
+                </div>
+            </div>
         </div>
     </div>
 
