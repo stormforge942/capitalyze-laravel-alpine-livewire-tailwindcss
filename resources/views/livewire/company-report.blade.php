@@ -614,7 +614,11 @@
                                                         <div class="py-1" role="none">
                                                             <!-- Active: "bg-gray-100 text-gray-900", Not Active: "text-gray-700" -->
                                                             <div class="links-wrapper mb-3">
-                                                                <a href="#" @click="menuOpen = false; showGraph = false;" class="menu_link" role="menuitem" tabindex="-1" id="menu-item-0">Hide Chart</a>
+                                                                <a href="#" @click="menuOpen = false; showGraph = false;" class="menu_link" role="menuitem" tabindex="-1" id="menu-item-0">
+                                                                    <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 14 14" fill="none">
+                                                                        <path d="M6.99479 13.6666C3.31289 13.6666 0.328125 10.6818 0.328125 6.99992C0.328125 3.31802 3.31289 0.333252 6.99479 0.333252C10.6767 0.333252 13.6615 3.31802 13.6615 6.99992C13.6615 10.6818 10.6767 13.6666 6.99479 13.6666ZM6.99479 6.05712L5.10917 4.17149L4.16636 5.1143L6.05199 6.99992L4.16636 8.88552L5.10917 9.82832L6.99479 7.94272L8.88039 9.82832L9.82319 8.88552L7.93759 6.99992L9.82319 5.1143L8.88039 4.17149L6.99479 6.05712Z" fill="#C22929"/>
+                                                                        </svg>
+                                                                    Hide Chart</a>
                                                                 <a href="#"  chartMenuOpen = false" class="menu_link" role="menuitem" tabindex="-1" id="menu-item-0" style="display: none;">Show Chart</a>
                                                                 <a href="#" class="menu_link" role="menuitem" tabindex="-1" id="menu-item-1">View In Full
                                                                     Screen</a>
@@ -685,7 +689,7 @@
                                             </div>
                                             <div class="w-full flex flex-wrap justify-start items-end space-x-3 px-2 mt-8 space-y-3">
                                                 @foreach($selectedRows as $title => $row)
-                                                    <div class="rounded-full relative whitespace-nowrap border flex space-x-2.5 justify-between items-center h-[40px] px-2">
+                                                    <div x-show="chartItemPhilShow" class="rounded-full relative whitespace-nowrap border flex space-x-2.5 justify-between items-center h-[40px] px-2" @click.away="chartTypeSelectorOpen = false" x-data="{chartType: 'line', chartTypeSelectorOpen: false, chartItemPhilShow: true}">
 
                                                         <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 16 16" fill="none">
                                                             <circle cx="8" cy="8" r="6" fill="{{$row['color'] ?? '#7C8286'}}"/>
@@ -695,49 +699,41 @@
 
 
                                                         </span>
-                                                        @if($row['type'] == 'line')
-                                                        <svg class="hover:cursor-pointer" xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 16 16" fill="none">
+                                                            <svg x-show="chartType == 'line'" class="hover:cursor-pointer" xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 16 16" fill="none">
                                                             <path d="M3.33333 2V12.6667H14V14H2V2H3.33333ZM13.2929 3.95956L14.7071 5.37377L10.6667 9.4142L8.66667 7.414L6.04044 10.0405L4.62623 8.6262L8.66667 4.58579L10.6667 6.586L13.2929 3.95956Z" fill="#3561E7"/>
                                                             </svg>
 
-                                                            @else
-                                                            <svg xmlns="http://www.w3.org/2000/svg" width="14" height="12" viewBox="0 0 14 12" fill="none">
+                                                            <svg x-show="chartType == 'bar'" xmlns="http://www.w3.org/2000/svg" width="14" height="12" viewBox="0 0 14 12" fill="none">
                                                                 <path d="M0.333008 6.66667H4.33301V12H0.333008V6.66667ZM4.99967 0H8.99967V12H4.99967V0ZM9.66634 3.33333H13.6663V12H9.66634V3.33333Z" fill="#3561E7"/>
                                                             </svg>
-                                                            @endif
-                                                            <svg class="hover:cursor-pointer" xmlns="http://www.w3.org/2000/svg" wire:click="toggleChartType('{{$title}}')" width="16" height="16" viewBox="0 0 16 16" fill="none">
+                                                            <svg class="hover:cursor-pointer" xmlns="http://www.w3.org/2000/svg" @click="chartTypeSelectorOpen = !chartTypeSelectorOpen" width="16" height="16" viewBox="0 0 16 16" fill="none">
                                                             <path d="M10.3083 6.19514L7.72167 8.78378L5.135 6.19514C5.01045 6.07021 4.84135 6 4.665 6C4.48865 6 4.31955 6.07021 4.195 6.19514C3.935 6.45534 3.935 6.87566 4.195 7.13585L7.255 10.1982C7.515 10.4584 7.935 10.4584 8.195 10.1982L11.255 7.13585C11.515 6.87566 11.515 6.45534 11.255 6.19514C10.995 5.94161 10.5683 5.93494 10.3083 6.19514Z" fill="#464E49"/>
                                                             </svg>
-                                                        @if($isOpen === $title)
-                                                            <div class="absolute z-20 bg-white top-[45px] right-[-30px] border-[#D4DDD7] shadow-md rounded-lg">
+                                                            <div x-show="chartTypeSelectorOpen" class="absolute z-20 bg-white top-[45px] right-[-30px] border-[#D4DDD7] shadow-md rounded-lg">
                                                                 <ul class="px-4 py-2">
-                                                                    <li onclick="changeChartType('{{$title}}', 'line')" class="flex p-2 items-center hover:cursor-pointer">
+                                                                    <li onclick="changeChartType('{{$title}}', 'line')" @click="chartType = 'line'; chartTypeSelectorOpen=false" class="flex p-2 items-center hover:cursor-pointer">
                                                                         <svg xmlns="http://www.w3.org/2000/svg" width="13" height="12" viewBox="0 0 13 12" fill="none">
                                                                             <path d="M1.33333 0V10.6667H12V12H0V0H1.33333ZM11.2929 1.95956L12.7071 3.37377L8.66667 7.4142L6.66667 5.414L4.04044 8.04047L2.62623 6.6262L6.66667 2.58579L8.66667 4.586L11.2929 1.95956Z" fill="#3561E7"/>
                                                                         </svg>
                                                                         <p class="ml-2 mr-3">Line Chart</p>
-                                                                        @if($chartType === 'line')
-                                                                            <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 16 16" fill="none">
-                                                                                <path d="M7.99967 14.6668C4.31777 14.6668 1.33301 11.682 1.33301 8.00016C1.33301 4.31826 4.31777 1.3335 7.99967 1.3335C11.6815 1.3335 14.6663 4.31826 14.6663 8.00016C14.6663 11.682 11.6815 14.6668 7.99967 14.6668ZM7.99967 13.3335C10.9452 13.3335 13.333 10.9457 13.333 8.00016C13.333 5.05464 10.9452 2.66683 7.99967 2.66683C5.05415 2.66683 2.66634 5.05464 2.66634 8.00016C2.66634 10.9457 5.05415 13.3335 7.99967 13.3335ZM7.33474 10.6668L4.50633 7.83843L5.44915 6.89556L7.33474 8.78123L11.106 5.00998L12.0488 5.95278L7.33474 10.6668Z" fill="#13B05B"/>
-                                                                            </svg>
-                                                                        @endif
+
+                                                                        <svg x-show="chartType == 'line'" xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 16 16" fill="none">
+                                                                            <path d="M7.99967 14.6668C4.31777 14.6668 1.33301 11.682 1.33301 8.00016C1.33301 4.31826 4.31777 1.3335 7.99967 1.3335C11.6815 1.3335 14.6663 4.31826 14.6663 8.00016C14.6663 11.682 11.6815 14.6668 7.99967 14.6668ZM7.99967 13.3335C10.9452 13.3335 13.333 10.9457 13.333 8.00016C13.333 5.05464 10.9452 2.66683 7.99967 2.66683C5.05415 2.66683 2.66634 5.05464 2.66634 8.00016C2.66634 10.9457 5.05415 13.3335 7.99967 13.3335ZM7.33474 10.6668L4.50633 7.83843L5.44915 6.89556L7.33474 8.78123L11.106 5.00998L12.0488 5.95278L7.33474 10.6668Z" fill="#13B05B"/>
+                                                                        </svg>
                                                                     </li>
-                                                                    <li onclick="changeChartType('{{$title}}', 'bar')" class="flex p-2 items-center hover:cursor-pointer">
+                                                                    <li onclick="changeChartType('{{$title}}', 'bar')" @click="chartType = 'bar'; chartTypeSelectorOpen=false" class="flex p-2 items-center hover:cursor-pointer">
                                                                         <svg xmlns="http://www.w3.org/2000/svg" width="14" height="12" viewBox="0 0 14 12" fill="none">
                                                                             <path d="M0.333008 6.66667H4.33301V12H0.333008V6.66667ZM4.99967 0H8.99967V12H4.99967V0ZM9.66634 3.33333H13.6663V12H9.66634V3.33333Z" fill="#3561E7"/>
                                                                         </svg>
                                                                         <p class="ml-2 mr-3">Bar Chart</p>
-                                                                        @if($chartType === 'bar')
-                                                                            <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 16 16" fill="none">
-                                                                                <path d="M7.99967 14.6668C4.31777 14.6668 1.33301 11.682 1.33301 8.00016C1.33301 4.31826 4.31777 1.3335 7.99967 1.3335C11.6815 1.3335 14.6663 4.31826 14.6663 8.00016C14.6663 11.682 11.6815 14.6668 7.99967 14.6668ZM7.99967 13.3335C10.9452 13.3335 13.333 10.9457 13.333 8.00016C13.333 5.05464 10.9452 2.66683 7.99967 2.66683C5.05415 2.66683 2.66634 5.05464 2.66634 8.00016C2.66634 10.9457 5.05415 13.3335 7.99967 13.3335ZM7.33474 10.6668L4.50633 7.83843L5.44915 6.89556L7.33474 8.78123L11.106 5.00998L12.0488 5.95278L7.33474 10.6668Z" fill="#13B05B"/>
-                                                                            </svg>
-                                                                        @endif
+                                                                        <svg x-show="chartType == 'bar'" xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 16 16" fill="none">
+                                                                            <path d="M7.99967 14.6668C4.31777 14.6668 1.33301 11.682 1.33301 8.00016C1.33301 4.31826 4.31777 1.3335 7.99967 1.3335C11.6815 1.3335 14.6663 4.31826 14.6663 8.00016C14.6663 11.682 11.6815 14.6668 7.99967 14.6668ZM7.99967 13.3335C10.9452 13.3335 13.333 10.9457 13.333 8.00016C13.333 5.05464 10.9452 2.66683 7.99967 2.66683C5.05415 2.66683 2.66634 5.05464 2.66634 8.00016C2.66634 10.9457 5.05415 13.3335 7.99967 13.3335ZM7.33474 10.6668L4.50633 7.83843L5.44915 6.89556L7.33474 8.78123L11.106 5.00998L12.0488 5.95278L7.33474 10.6668Z" fill="#13B05B"/>
+                                                                        </svg>
                                                                     </li>
                                                                 </ul>
                                                             </div>
-                                                        @endif
 
-                                                        <span wire:click="unselectRow('{{ $title }}')" class="rounded-full bg-white border-2 border-red-500 text-red-500 w-5 h-5 flex items-center ml_4 justify-center cursor-pointer">
+                                                        <span wire:click="unselectRow('{{ $title }}')" @click="chartItemPhilShow = false" class="rounded-full bg-white border-2 border-red-500 text-red-500 w-5 h-5 flex items-center ml_4 justify-center cursor-pointer">
                                                             <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="4" stroke="currentColor" class="w-3 h-3">
                                                                 <path stroke-linecap="round" stroke-linejoin="round" d="M6 18L18 6M6 6l12 12" />
                                                             </svg>
@@ -1188,7 +1184,12 @@
     function updateChart() {
        if (chart) {
            chart.data.datasets = @this.chartData;
-           chart.update();
+           try{
+               chart.update();
+           }
+           catch(ex){
+            initChart();
+           }
        } else {
            initChart();
        }
@@ -1275,7 +1276,9 @@
                         },
                         type: 'timeseries',
                         time: {
-                            unit: 'year',
+                            displayFormats: {
+                                quarter: 'MMM YYYY'
+                            }
                         },
                         ticks:{
                             source:'data',
