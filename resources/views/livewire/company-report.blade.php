@@ -695,7 +695,7 @@
                                             </div>
                                             <div class="w-full flex flex-wrap justify-start items-end space-x-3 px-2 mt-8 space-y-3">
                                                 @foreach($selectedRows as $title => $row)
-                                                    <div x-show="chartItemPhilShow" class="rounded-full relative whitespace-nowrap border flex space-x-2.5 justify-between items-center h-[40px] px-2" @click.away="chartTypeSelectorOpen = false" x-data="{chartType: 'line', chartTypeSelectorOpen: false, chartItemPhilShow: true}">
+                                                    <div class="rounded-full relative whitespace-nowrap border flex space-x-2.5 justify-between items-center h-[40px] px-2" @click.away="chartTypeSelectorOpen = false" x-data="{chartType: 'line', chartTypeSelectorOpen: false}">
 
                                                         <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 16 16" fill="none">
                                                             <circle cx="8" cy="8" r="6" fill="{{$row['color'] ?? '#7C8286'}}"/>
@@ -739,7 +739,7 @@
                                                                 </ul>
                                                             </div>
 
-                                                        <span wire:click="unselectRow('{{ $title }}')" @click="chartItemPhilShow = false" class="rounded-full bg-white border-2 border-red-500 text-red-500 w-5 h-5 flex items-center ml_4 justify-center cursor-pointer">
+                                                        <span wire:click="unselectRow('{{ $title }}')"  class="rounded-full bg-white border-2 border-red-500 text-red-500 w-5 h-5 flex items-center ml_4 justify-center cursor-pointer">
                                                             <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="4" stroke="currentColor" class="w-3 h-3">
                                                                 <path stroke-linecap="round" stroke-linejoin="round" d="M6 18L18 6M6 6l12 12" />
                                                             </svg>

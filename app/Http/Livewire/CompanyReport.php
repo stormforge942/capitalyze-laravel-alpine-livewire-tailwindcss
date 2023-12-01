@@ -776,6 +776,11 @@ class CompanyReport extends Component
         $this->setAsReportedStatementsList();
         $this->getData();
         $this->generateRows($this->data);
+        if(count($this->selectedRows) > 0){
+            $this->updateSelectRows();
+        }
+        $this->generateChartData();
+        $this->emit('updateCompanyReportChart');
     }
 
     public function setAsReportedStatementsList()
