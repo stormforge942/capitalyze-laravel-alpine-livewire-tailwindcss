@@ -160,9 +160,12 @@ a {
     font-weight: 500;
     border-radius: 4px;
 }
+.custom__border_gray {
+    border: 1px solid rgba(232, 235, 242, 1);
+}
 .dropdown-scroll-wrapper {
-    height: 488px;
-    width: 416px;
+    height: 30rem;
+    width: 26rem;
     position: absolute !important;
     left: 0px !important;
     top: 40px !important;
@@ -189,16 +192,22 @@ a {
 .flowbite_btn svg {
     transition: all 0.2s ease-in-out;
 }
-.flowbite_btn.active svg {
+.flowbite_btn.down svg {
     transform: rotate(-180deg);
 }
 .dropdown-scroll-wrapper .h_23 {
     max-height: 23rem;
     height: 100%;
 }
+<<<<<<< HEAD
 .dropdown-scroll label {
     font-size: 14px;
+=======
+.dropdown-scroll label{
+    font-size: 0.875rem;
+>>>>>>> development
     font-weight: 400 !important;
+    width: 100%;
 }
 .dropdown-scroll::-webkit-scrollbar {
     width: 4px !important;
@@ -461,7 +470,7 @@ a {
 }
 
 .custom-text-xs .text-xs {
-    font-size: 12px;
+    font-size: 0.75rem;
 }
 .custom-text-xs .flowbite-select {
     border: 0.5px solid rgba(147, 149, 152, 0.5);

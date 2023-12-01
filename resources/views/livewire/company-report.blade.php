@@ -115,495 +115,453 @@
 
 
 
-                                <div class="filters-row bg-white py-3 px-4  rounded-lg mb-7">
+                                <div class="filters-row bg-white py-3 px-4  rounded-lg mb-7 custom__border_gray">
                                     <div class="select-wrapper flex gap-x-4 items-center custom-text-xs">
-                                        <div class=" flex items-center text-sm">View
-                                            <button type="submit" id="dropdownViewButton" data-dropdown-toggle="dropdown-View" class="flex items-center flowbite-select bg-gray-50 border border-gray-700 text-gray-900 text-sm ml-2 p-2" name="view" id="">
-                                                {{$view}}
-                                                <svg width="16" height="16" viewBox="0 0 16 16" fill="none" xmlns="http://www.w3.org/2000/svg">
-                                                    <path d="M10.3083 6.19514L7.72167 8.78378L5.135 6.19514C5.01045 6.07021 4.84135 6 4.665 6C4.48865 6 4.31955 6.07021 4.195 6.19514C3.935 6.45534 3.935 6.87566 4.195 7.13585L7.255 10.1982C7.515 10.4584 7.935 10.4584 8.195 10.1982L11.255 7.13585C11.515 6.87566 11.515 6.45534 11.255 6.19514C10.995 5.94161 10.5683 5.93494 10.3083 6.19514Z" fill="#121A0F"/>
-                                                </svg>
-                                            </button>
-                                            <!-- Dropdown menu -->
-                                            <div id="dropdown-View" class="z-10 hidden bg-white divide-y divide-gray-100 rounded-lg shadow w-60 dark:bg-gray-700 dark:divide-gray-600">
-                                                <div class="p-3 text-sm flex items-center justify-between">
-                                                    <div>View</div>
-                                                    <svg id="viewClose" width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
-                                                        <path d="M6.4 19L5 17.6L10.6 12L5 6.4L6.4 5L12 10.6L17.6 5L19 6.4L13.4 12L19 17.6L17.6 19L12 13.4L6.4 19Z" fill="#686868"/>
+                                        <div class=" flex items-center text-sm" x-data="{view: null, viewTypeSelectorOpen: false}" @click.away="viewTypeSelectorOpen = false">View
+                                            <div class="relative">
+                                                <button type="submit" @click="viewTypeSelectorOpen = !viewTypeSelectorOpen" id="dropdownViewButton" data-dropdown-toggle="dropdown-View" class="flex items-center flowbite-select flowbite_btn bg-gray-50 border border-gray-700 text-gray-900 text-sm ml-2 p-2" name="view" id="" :class="[view != null ? 'active' : '', viewTypeSelectorOpen? 'down' : '']">
+                                                    {{(str_replace('(Harmonized)', '', $view))}}
+                                                    <svg width="16" height="16" viewBox="0 0 16 16" fill="none" xmlns="http://www.w3.org/2000/svg">
+                                                        <path d="M10.3083 6.19514L7.72167 8.78378L5.135 6.19514C5.01045 6.07021 4.84135 6 4.665 6C4.48865 6 4.31955 6.07021 4.195 6.19514C3.935 6.45534 3.935 6.87566 4.195 7.13585L7.255 10.1982C7.515 10.4584 7.935 10.4584 8.195 10.1982L11.255 7.13585C11.515 6.87566 11.515 6.45534 11.255 6.19514C10.995 5.94161 10.5683 5.93494 10.3083 6.19514Z" fill="#121A0F"/>
                                                     </svg>
-                                                </div>
-                                                <ul class="p-4 space-y-1 text-sm text-gray-700 dark:text-gray-200 max-h-40 overflow-y-scroll" aria-labelledby="dropdownViewButton">
-                                                    <li>
-                                                        <div class="flex p-2 rounded hover:bg-[#52D3A233] cursor-pointer">
-                                                            <div class="flex items-center h-5 cursor-pointer">
-                                                                <input wire:model="view" @if($view === 'As reported (Harmonized)') checked @endif id="view-radio-1" name="view-radio" type="radio" value="As reported (Harmonized)" class="cursor-pointer w-4 h-4 text-[#686868] bg-transpearent border-[#686868] border-2">
+                                                </button>
+                                                <!-- Dropdown menu -->
+                                                <div id="dropdown-View" x-show="viewTypeSelectorOpen" class="z-10 bg-white divide-y divide-gray-100 rounded-lg shadow  dark:bg-gray-700 dark:divide-gray-600 dropdown-scroll-wrapper">
+                                                    <div class="p-3 text-base flex items-center justify-between font-medium">
+                                                        <div>View</div>
+                                                        <svg id="viewClose" @click="viewTypeSelectorOpen = false" width="24" height="24" viewBox="0 0 24 24" class="cursor-pointer" fill="none" xmlns="http://www.w3.org/2000/svg">
+                                                            <path d="M6.4 19L5 17.6L10.6 12L5 6.4L6.4 5L12 10.6L17.6 5L19 6.4L13.4 12L19 17.6L17.6 19L12 13.4L6.4 19Z" fill="#686868"/>
+                                                        </svg>
+                                                    </div>
+                                                    <ul class="p-4 space-y-1 text-sm text-gray-700 dark:text-gray-200 h_23 overflow-y-scroll dropdown-scroll " aria-labelledby="dropdownViewButton">
+                                                        <li>
+                                                            <div class="flex p-2 rounded hover:bg-[#52D3A233] cursor-pointer">
+                                                                <div class="flex items-center h-5 cursor-pointer">
+                                                                    <input @click='view = "As reported (Harmonized)"' :checked="view == 'As reported (Harmonized)'" id="view-radio-1" name="view-radio" type="radio" value="As reported (Harmonized)" class="cursor-pointer w-4 h-4 text-[#686868] bg-transpearent border-[#686868] border-2">
+                                                                </div>
+                                                                <div class="ml-4 w-full text-sm cursor-pointer">
+                                                                    <label for="view-radio-1" class="cursor-pointer font-medium text-gray-900 dark:text-gray-300">
+                                                                        <div>As reported</div>
+                                                                    </label>
+                                                                </div>
                                                             </div>
-                                                            <div class="ml-4 text-sm cursor-pointer">
-                                                                <label for="view-radio-1" class="cursor-pointer font-medium text-gray-900 dark:text-gray-300">
-                                                                    <div>As reported (Harmonized)</div>
-                                                                </label>
+                                                        </li>
+                                                        <li>
+                                                            <div class="flex p-2 rounded hover:bg-[#52D3A233] cursor-pointer">
+                                                                <div class="flex items-center h-5 cursor-pointer">
+                                                                    <input @click='view = "Adjusted"' :checked="view == 'Adjusted'" id="view-radio-2" name="view-radio" type="radio" value="Adjusted" class="cursor-pointer w-4 h-4 text-[#686868] bg-transpearent border-[#686868] border-2">
+                                                                </div>
+                                                                <div class="ml-4 w-full text-sm cursor-pointer">
+                                                                    <label for="view-radio-2" class="cursor-pointer font-medium text-gray-900 dark:text-gray-300">
+                                                                        <div>Adjusted</div>
+                                                                    </label>
+                                                                </div>
                                                             </div>
-                                                        </div>
-                                                    </li>
-                                                    <li>
-                                                        <div class="flex p-2 rounded hover:bg-[#52D3A233] cursor-pointer">
-                                                            <div class="flex items-center h-5 cursor-pointer">
-                                                                <input wire:model="view" @if($view === 'Adjusted') checked @endif id="view-radio-2" name="view-radio" type="radio" value="Adjusted" class="cursor-pointer w-4 h-4 text-[#686868] bg-transpearent border-[#686868] border-2">
+                                                        </li>
+                                                        <li>
+                                                            <div class="flex p-2 rounded hover:bg-[#52D3A233] cursor-pointer">
+                                                                <div class="flex items-center h-5 cursor-pointer">
+                                                                    <input @click='view ="Standardised Template"' :checked="view == 'Standardised Template'" id="view-radio-3" name="view-radio" type="radio" value="Standardised Template" class="cursor-pointer w-4 h-4 text-[#686868] bg-transpearent border-[#686868] border-2">
+                                                                </div>
+                                                                <div class="ml-4 w-full text-sm cursor-pointer">
+                                                                    <label for="view-radio-3" class="cursor-pointer font-medium text-gray-900 dark:text-gray-300">
+                                                                        <div>Standardised Template</div>
+                                                                    </label>
+                                                                </div>
                                                             </div>
-                                                            <div class="ml-4 text-sm cursor-pointer">
-                                                                <label for="view-radio-2" class="cursor-pointer font-medium text-gray-900 dark:text-gray-300">
-                                                                    <div>Adjusted</div>
-                                                                </label>
+                                                        </li>
+                                                        <li>
+                                                            <div class="flex p-2 rounded hover:bg-[#52D3A233] cursor-pointer">
+                                                                <div class="flex items-center h-5 cursor-pointer">
+                                                                    <input @click='view ="Per Share"' :checked="view == 'Per Share'" id="view-radio-4" name="view-radio" type="radio" value="Per Share" class="cursor-pointer w-4 h-4 text-[#686868] bg-transpearent border-[#686868] border-2">
+                                                                </div>
+                                                                <div class="ml-4 w-full text-sm cursor-pointer">
+                                                                    <label for="view-radio-4" class="cursor-pointer font-medium text-gray-900 dark:text-gray-300">
+                                                                        <div>Per Share</div>
+                                                                    </label>
+                                                                </div>
                                                             </div>
-                                                        </div>
-                                                    </li>
-                                                    <li>
-                                                        <div class="flex p-2 rounded hover:bg-[#52D3A233] cursor-pointer">
-                                                            <div class="flex items-center h-5 cursor-pointer">
-                                                                <input wire:model="view" @if($view === 'Standardised Template') checked @endif id="view-radio-3" name="view-radio" type="radio" value="Standardised Template" class="cursor-pointer w-4 h-4 text-[#686868] bg-transpearent border-[#686868] border-2">
+                                                        </li>
+                                                        <li>
+                                                            <div class="flex p-2 rounded hover:bg-[#52D3A233] cursor-pointer">
+                                                                <div class="flex items-center h-5 cursor-pointer">
+                                                                    <input @click='view ="Common size"' :checked="view == 'Common size'" id="view-radio-5" name="view-radio" type="radio" value="Common size" class="cursor-pointer w-4 h-4 text-[#686868] bg-transpearent border-[#686868] border-2">
+                                                                </div>
+                                                                <div class="ml-4 w-full text-sm cursor-pointer">
+                                                                    <label for="view-radio-5" class="cursor-pointer font-medium text-gray-900 dark:text-gray-300">
+                                                                        <div>Common size</div>
+                                                                    </label>
+                                                                </div>
                                                             </div>
-                                                            <div class="ml-4 text-sm cursor-pointer">
-                                                                <label for="view-radio-3" class="cursor-pointer font-medium text-gray-900 dark:text-gray-300">
-                                                                    <div>Standardised Template</div>
-                                                                </label>
-                                                            </div>
-                                                        </div>
-                                                    </li>
-                                                    <li>
-                                                        <div class="flex p-2 rounded hover:bg-[#52D3A233] cursor-pointer">
-                                                            <div class="flex items-center h-5 cursor-pointer">
-                                                                <input wire:model="view" @if($view === 'Per Share') checked @endif id="view-radio-4" name="view-radio" type="radio" value="Per Share" class="cursor-pointer w-4 h-4 text-[#686868] bg-transpearent border-[#686868] border-2">
-                                                            </div>
-                                                            <div class="ml-4 text-sm cursor-pointer">
-                                                                <label for="view-radio-4" class="cursor-pointer font-medium text-gray-900 dark:text-gray-300">
-                                                                    <div>Per Share</div>
-                                                                </label>
-                                                            </div>
-                                                        </div>
-                                                    </li>
-                                                    <li>
-                                                        <div class="flex p-2 rounded hover:bg-[#52D3A233] cursor-pointer">
-                                                            <div class="flex items-center h-5 cursor-pointer">
-                                                                <input wire:model="view" @if($view === 'Common size') checked @endif id="view-radio-5" name="view-radio" type="radio" value="Common size" class="cursor-pointer w-4 h-4 text-[#686868] bg-transpearent border-[#686868] border-2">
-                                                            </div>
-                                                            <div class="ml-4 text-sm cursor-pointer">
-                                                                <label for="view-radio-5" class="cursor-pointer font-medium text-gray-900 dark:text-gray-300">
-                                                                    <div>Common size</div>
-                                                                </label>
-                                                            </div>
-                                                        </div>
-                                                    </li>
-                                                </ul>
-                                                <div class="mx-3 my-4">
-                                                    <button class="w-full p-1 text-sm bg-[#52D3A2] rounded text-center" id="viewCloseButton">Show Result</button>
+                                                        </li>
+                                                    </ul>
+                                                    <div class="mx-3 my-4">
+                                                        <button @click="$wire.set('view', view); viewTypeSelectorOpen = false" class="w-full p-1 text-base font-medium bg-[#52D3A2] rounded text-center" id="viewCloseButton">Show Result</button>
+                                                    </div>
                                                 </div>
                                             </div>
                                         </div>
-                                        <div class=" flex items-center text-sm">Period Type
-                                            <button type="submit" id="dropdownViewButton" data-dropdown-toggle="dropdown-Period" class="flex items-center flowbite-select bg-gray-50 border border-gray-700 text-gray-900 text-sm ml-2 p-2" name="period" id="">
-                                                {{$period}}
-                                                <svg width="16" height="16" viewBox="0 0 16 16" fill="none" xmlns="http://www.w3.org/2000/svg">
-                                                    <path d="M10.3083 6.19514L7.72167 8.78378L5.135 6.19514C5.01045 6.07021 4.84135 6 4.665 6C4.48865 6 4.31955 6.07021 4.195 6.19514C3.935 6.45534 3.935 6.87566 4.195 7.13585L7.255 10.1982C7.515 10.4584 7.935 10.4584 8.195 10.1982L11.255 7.13585C11.515 6.87566 11.515 6.45534 11.255 6.19514C10.995 5.94161 10.5683 5.93494 10.3083 6.19514Z" fill="#121A0F"/>
-                                                </svg>
-                                            </button>
-                                            <!-- Dropdown menu -->
-                                            <div id="dropdown-Period" class="z-10 hidden bg-white divide-y divide-gray-100 rounded-lg shadow w-60 dark:bg-gray-700 dark:divide-gray-600">
-                                                <div class="p-3 text-sm flex items-center justify-between">
-                                                    <div>Period Type</div>
-                                                    <svg id="periodClose" width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
-                                                        <path d="M6.4 19L5 17.6L10.6 12L5 6.4L6.4 5L12 10.6L17.6 5L19 6.4L13.4 12L19 17.6L17.6 19L12 13.4L6.4 19Z" fill="#686868"/>
-                                                    </svg>
-                                                </div>
-                                                <ul class="p-4 space-y-1 text-sm text-gray-700 dark:text-gray-200 max-h-40 overflow-y-scroll" aria-labelledby="dropdownViewButton">
-                                                    <li>
-                                                        <div class="flex p-2 rounded hover:bg-[#52D3A233] cursor-pointer">
-                                                            <div class="flex items-center h-5 cursor-pointer">
-                                                                <input wire:model="period" @if($period === 'Fiscal Annual') checked @endif id="view-radio-1" name="view-radio" type="radio" value="Fiscal Annual" class="cursor-pointer w-4 h-4 text-[#686868] bg-transpearent border-[#686868] border-2">
+                                        <div class=" flex items-center text-sm" x-data="{period: null, periodTypeSelectorOpen: false}" @click.away="periodTypeSelectorOpen = false">Period Type
+                                            <div class="relative">
+                                                    <button type="submit" :class="[period != null ? 'active' : '', periodTypeSelectorOpen ? 'down' : '']" @click="periodTypeSelectorOpen = !periodTypeSelectorOpen" class="flex items-center flowbite_btn flowbite-select bg-gray-50 border border-gray-700 text-gray-900 text-sm ml-2 p-2" name="period" id="">
+                                                        {{$period}}
+                                                        <svg width="16" height="16" viewBox="0 0 16 16" fill="none" xmlns="http://www.w3.org/2000/svg">
+                                                            <path d="M10.3083 6.19514L7.72167 8.78378L5.135 6.19514C5.01045 6.07021 4.84135 6 4.665 6C4.48865 6 4.31955 6.07021 4.195 6.19514C3.935 6.45534 3.935 6.87566 4.195 7.13585L7.255 10.1982C7.515 10.4584 7.935 10.4584 8.195 10.1982L11.255 7.13585C11.515 6.87566 11.515 6.45534 11.255 6.19514C10.995 5.94161 10.5683 5.93494 10.3083 6.19514Z" fill="#121A0F"/>
+                                                        </svg>
+                                                    </button>
+                                                <!-- Dropdown menu -->
+                                                <div x-show="periodTypeSelectorOpen" id="dropdown-Period" class="z-10 bg-white divide-y divide-gray-100 rounded-lg shadow  dark:bg-gray-700 dark:divide-gray-600 dropdown-scroll-wrapper">
+                                                    <div class="p-3 text-base flex items-center justify-between font-medium">
+                                                        <div>Period Type</div>
+                                                        <svg @click="periodTypeSelectorOpen = false" id="periodClose" width="24" height="24" viewBox="0 0 24 24" class="cursor-pointer" fill="none" xmlns="http://www.w3.org/2000/svg">
+                                                            <path d="M6.4 19L5 17.6L10.6 12L5 6.4L6.4 5L12 10.6L17.6 5L19 6.4L13.4 12L19 17.6L17.6 19L12 13.4L6.4 19Z" fill="#686868"/>
+                                                        </svg>
+                                                    </div>
+                                                    <ul class="p-4 space-y-1 text-sm text-gray-700 dark:text-gray-200 h_23 overflow-y-scroll dropdown-scroll " aria-labelledby="dropdownViewButton">
+                                                        <li>
+                                                            <div class="flex p-2 rounded hover:bg-[#52D3A233] cursor-pointer">
+                                                                <div class="flex items-center h-5 cursor-pointer">
+                                                                    <input @click='period = "Fiscal Annual"' :checked="period == 'Fiscal Annual'" id="period-radio-1" name="view-radio" type="radio" value="Fiscal Annual" class="cursor-pointer w-4 h-4 text-[#686868] bg-transpearent border-[#686868] border-2">
+                                                                </div>
+                                                                <div class="ml-4 w-full text-sm cursor-pointer">
+                                                                    <label for="period-radio-1" class="cursor-pointer font-medium text-gray-900 dark:text-gray-300">
+                                                                        <div>Fiscal Annual</div>
+                                                                    </label>
+                                                                </div>
                                                             </div>
-                                                            <div class="ml-4 text-sm cursor-pointer">
-                                                                <label for="view-radio-1" class="cursor-pointer font-medium text-gray-900 dark:text-gray-300">
-                                                                    <div>Fiscal Annual</div>
-                                                                </label>
+                                                        </li>
+                                                        <li>
+                                                            <div class="flex p-2 rounded hover:bg-[#52D3A233] cursor-pointer">
+                                                                <div class="flex items-center h-5 cursor-pointer">
+                                                                    <input @click='period = "Fiscal Quaterly"' :checked="period == 'Fiscal Quaterly'" id="period-radio-2" name="view-radio" type="radio" value="Fiscal Quaterly" class="cursor-pointer w-4 h-4 text-[#686868] bg-transpearent border-[#686868] border-2">
+                                                                </div>
+                                                                <div class="ml-4 w-full text-sm cursor-pointer">
+                                                                    <label for="period-radio-2" class="cursor-pointer font-medium text-gray-900 dark:text-gray-300">
+                                                                        <div>Fiscal Quaterly</div>
+                                                                    </label>
+                                                                </div>
                                                             </div>
-                                                        </div>
-                                                    </li>
-                                                    <li>
-                                                        <div class="flex p-2 rounded hover:bg-[#52D3A233] cursor-pointer">
-                                                            <div class="flex items-center h-5 cursor-pointer">
-                                                                <input wire:model="period" @if($period === 'Fiscal Quaterly') checked @endif id="view-radio-2" name="view-radio" type="radio" value="Fiscal Quaterly" class="cursor-pointer w-4 h-4 text-[#686868] bg-transpearent border-[#686868] border-2">
+                                                        </li>
+                                                        <li>
+                                                            <div class="flex p-2 rounded hover:bg-[#52D3A233] cursor-pointer">
+                                                                <div class="flex items-center h-5 cursor-pointer">
+                                                                    <input @click='period = "Fiscal Semi-Annual"' :checked="period == 'Fiscal Semi-Annual'" id="period-radio-3" name="view-radio" type="radio" value="Fiscal Semi-Annual" class="cursor-pointer w-4 h-4 text-[#686868] bg-transpearent border-[#686868] border-2">
+                                                                </div>
+                                                                <div class="ml-4 w-full text-sm cursor-pointer">
+                                                                    <label for="period-radio-3" class="cursor-pointer font-medium text-gray-900 dark:text-gray-300">
+                                                                        <div>Fiscal Semi-Annual</div>
+                                                                    </label>
+                                                                </div>
                                                             </div>
-                                                            <div class="ml-4 text-sm cursor-pointer">
-                                                                <label for="view-radio-2" class="cursor-pointer font-medium text-gray-900 dark:text-gray-300">
-                                                                    <div>Fiscal Quaterly</div>
-                                                                </label>
+                                                        </li>
+                                                        <li>
+                                                            <div class="flex p-2 rounded hover:bg-[#52D3A233] cursor-pointer">
+                                                                <div class="flex items-center h-5 cursor-pointer">
+                                                                    <input @click='period = "YTD"' :checked="period == 'YTD'" id="period-radio-4" name="view-radio" type="radio" value="YTD" class="cursor-pointer w-4 h-4 text-[#686868] bg-transpearent border-[#686868] border-2">
+                                                                </div>
+                                                                <div class="ml-4 w-full text-sm cursor-pointer">
+                                                                    <label for="period-radio-4" class="cursor-pointer font-medium text-gray-900 dark:text-gray-300">
+                                                                        <div>YTD</div>
+                                                                    </label>
+                                                                </div>
                                                             </div>
-                                                        </div>
-                                                    </li>
-                                                    <li>
-                                                        <div class="flex p-2 rounded hover:bg-[#52D3A233] cursor-pointer">
-                                                            <div class="flex items-center h-5 cursor-pointer">
-                                                                <input wire:model="period" @if($period === 'Fiscal Semi-Annual') checked @endif id="view-radio-3" name="view-radio" type="radio" value="Fiscal Semi-Annual" class="cursor-pointer w-4 h-4 text-[#686868] bg-transpearent border-[#686868] border-2">
+                                                        </li>
+                                                        <li>
+                                                            <div class="flex p-2 rounded hover:bg-[#52D3A233] cursor-pointer">
+                                                                <div class="flex items-center h-5 cursor-pointer">
+                                                                    <input @click='period = "LTM"' :checked="period == 'LTM'" id="period-radio-5" name="view-radio" type="radio" value="LTM" class="cursor-pointer w-4 h-4 text-[#686868] bg-transpearent border-[#686868] border-2">
+                                                                </div>
+                                                                <div class="ml-4 w-full text-sm cursor-pointer">
+                                                                    <label for="period-radio-5" class="cursor-pointer font-medium text-gray-900 dark:text-gray-300">
+                                                                        <div>LTM</div>
+                                                                    </label>
+                                                                </div>
                                                             </div>
-                                                            <div class="ml-4 text-sm cursor-pointer">
-                                                                <label for="view-radio-3" class="cursor-pointer font-medium text-gray-900 dark:text-gray-300">
-                                                                    <div>Fiscal Semi-Annual</div>
-                                                                </label>
+                                                        </li>
+                                                        <li>
+                                                            <div class="flex p-2 rounded hover:bg-[#52D3A233] cursor-pointer">
+                                                                <div class="flex items-center h-5 cursor-pointer">
+                                                                    <input @click='period = "Calendar Annual"' :checked="period == 'Calendar Annual'" id="period-radio-6" name="view-radio" type="radio" value="Calendar Annual" class="cursor-pointer w-4 h-4 text-[#686868] bg-transpearent border-[#686868] border-2">
+                                                                </div>
+                                                                <div class="ml-4 w-full text-sm cursor-pointer">
+                                                                    <label for="period-radio-6" class="cursor-pointer font-medium text-gray-900 dark:text-gray-300">
+                                                                        <div>Calendar Annual</div>
+                                                                    </label>
+                                                                </div>
                                                             </div>
-                                                        </div>
-                                                    </li>
-                                                    <li>
-                                                        <div class="flex p-2 rounded hover:bg-[#52D3A233] cursor-pointer">
-                                                            <div class="flex items-center h-5 cursor-pointer">
-                                                                <input wire:model="period" @if($period === 'YTD') checked @endif id="view-radio-4" name="view-radio" type="radio" value="YTD" class="cursor-pointer w-4 h-4 text-[#686868] bg-transpearent border-[#686868] border-2">
+                                                        </li>
+                                                        <li>
+                                                            <div class="flex p-2 rounded hover:bg-[#52D3A233] cursor-pointer">
+                                                                <div class="flex items-center h-5 cursor-pointer">
+                                                                    <input @click='period = "Calendar Quaterly"' :checked="period == 'Calendar Quaterly'" id="period-radio-7" name="view-radio" type="radio" value="Calendar Quaterly" class="cursor-pointer w-4 h-4 text-[#686868] bg-transpearent border-[#686868] border-2">
+                                                                </div>
+                                                                <div class="ml-4 w-full text-sm cursor-pointer">
+                                                                    <label for="period-radio-7" class="cursor-pointer font-medium text-gray-900 dark:text-gray-300">
+                                                                        <div>Calendar Quaterly</div>
+                                                                    </label>
+                                                                </div>
                                                             </div>
-                                                            <div class="ml-4 text-sm cursor-pointer">
-                                                                <label for="view-radio-4" class="cursor-pointer font-medium text-gray-900 dark:text-gray-300">
-                                                                    <div>YTD</div>
-                                                                </label>
+                                                        </li>
+                                                        <li>
+                                                            <div class="flex p-2 rounded hover:bg-[#52D3A233] cursor-pointer">
+                                                                <div class="flex items-center h-5 cursor-pointer">
+                                                                    <input @click='period = "Calendar SA"' :checked="period == 'Calendar SA'" id="period-radio-8" name="view-radio" type="radio" value="Calendar SA" class="cursor-pointer w-4 h-4 text-[#686868] bg-transpearent border-[#686868] border-2">
+                                                                </div>
+                                                                <div class="ml-4 w-full text-sm cursor-pointer">
+                                                                    <label for="period-radio-8" class="cursor-pointer font-medium text-gray-900 dark:text-gray-300">
+                                                                        <div>Calendar SA</div>
+                                                                    </label>
+                                                                </div>
                                                             </div>
-                                                        </div>
-                                                    </li>
-                                                    <li>
-                                                        <div class="flex p-2 rounded hover:bg-[#52D3A233] cursor-pointer">
-                                                            <div class="flex items-center h-5 cursor-pointer">
-                                                                <input wire:model="period" @if($period === 'LTM') checked @endif id="view-radio-5" name="view-radio" type="radio" value="LTM" class="cursor-pointer w-4 h-4 text-[#686868] bg-transpearent border-[#686868] border-2">
-                                                            </div>
-                                                            <div class="ml-4 text-sm cursor-pointer">
-                                                                <label for="view-radio-5" class="cursor-pointer font-medium text-gray-900 dark:text-gray-300">
-                                                                    <div>LTM</div>
-                                                                </label>
-                                                            </div>
-                                                        </div>
-                                                    </li>
-                                                    <li>
-                                                        <div class="flex p-2 rounded hover:bg-[#52D3A233] cursor-pointer">
-                                                            <div class="flex items-center h-5 cursor-pointer">
-                                                                <input wire:model="period" @if($period === 'Calendar Annual') checked @endif id="view-radio-5" name="view-radio" type="radio" value="Calendar Annual" class="cursor-pointer w-4 h-4 text-[#686868] bg-transpearent border-[#686868] border-2">
-                                                            </div>
-                                                            <div class="ml-4 text-sm cursor-pointer">
-                                                                <label for="view-radio-5" class="cursor-pointer font-medium text-gray-900 dark:text-gray-300">
-                                                                    <div>Calendar Annual</div>
-                                                                </label>
-                                                            </div>
-                                                        </div>
-                                                    </li>
-                                                    <li>
-                                                        <div class="flex p-2 rounded hover:bg-[#52D3A233] cursor-pointer">
-                                                            <div class="flex items-center h-5 cursor-pointer">
-                                                                <input wire:model="period" @if($period === 'Calendar Quaterly') checked @endif id="view-radio-5" name="view-radio" type="radio" value="Calendar Quaterly" class="cursor-pointer w-4 h-4 text-[#686868] bg-transpearent border-[#686868] border-2">
-                                                            </div>
-                                                            <div class="ml-4 text-sm cursor-pointer">
-                                                                <label for="view-radio-5" class="cursor-pointer font-medium text-gray-900 dark:text-gray-300">
-                                                                    <div>Calendar Quaterly</div>
-                                                                </label>
-                                                            </div>
-                                                        </div>
-                                                    </li>
-                                                    <li>
-                                                        <div class="flex p-2 rounded hover:bg-[#52D3A233] cursor-pointer">
-                                                            <div class="flex items-center h-5 cursor-pointer">
-                                                                <input wire:model="period" @if($period === 'Calendar SA') checked @endif id="view-radio-5" name="view-radio" type="radio" value="Calendar SA" class="cursor-pointer w-4 h-4 text-[#686868] bg-transpearent border-[#686868] border-2">
-                                                            </div>
-                                                            <div class="ml-4 text-sm cursor-pointer">
-                                                                <label for="view-radio-5" class="cursor-pointer font-medium text-gray-900 dark:text-gray-300">
-                                                                    <div>Calendar SA</div>
-                                                                </label>
-                                                            </div>
-                                                        </div>
-                                                    </li>
-                                                </ul>
-                                                <div class="mx-3 my-4">
-                                                    <button class="w-full p-1 text-sm bg-[#52D3A2] rounded text-center" id="periodCloseButton">Show Result</button>
-                                                </div>
-                                            </div>
-                                        </div>
-                                        <div class=" flex items-center text-sm">Unit Type
-                                            <button type="submit" id="dropdownUnitTypeButton" data-dropdown-toggle="dropdown-UnitType" class="flex items-center flowbite-select bg-gray-50 border border-gray-700 text-gray-900 text-sm ml-2 p-2" name="view" id="">
-                                                {{$unitType}}
-                                                <svg width="16" height="16" viewBox="0 0 16 16" fill="none" xmlns="http://www.w3.org/2000/svg">
-                                                    <path d="M10.3083 6.19514L7.72167 8.78378L5.135 6.19514C5.01045 6.07021 4.84135 6 4.665 6C4.48865 6 4.31955 6.07021 4.195 6.19514C3.935 6.45534 3.935 6.87566 4.195 7.13585L7.255 10.1982C7.515 10.4584 7.935 10.4584 8.195 10.1982L11.255 7.13585C11.515 6.87566 11.515 6.45534 11.255 6.19514C10.995 5.94161 10.5683 5.93494 10.3083 6.19514Z" fill="#121A0F"/>
-                                                </svg>
-                                            </button>
-                                            <!-- Dropdown menu -->
-                                            <div id="dropdown-UnitType" class="z-10 hidden bg-white divide-y divide-gray-100 rounded-lg shadow w-60 dark:bg-gray-700 dark:divide-gray-600">
-                                                <div class="p-3 text-sm flex items-center justify-between">
-                                                    <div>Unit Type</div>
-                                                    <svg id="unitTypeClose" width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
-                                                        <path d="M6.4 19L5 17.6L10.6 12L5 6.4L6.4 5L12 10.6L17.6 5L19 6.4L13.4 12L19 17.6L17.6 19L12 13.4L6.4 19Z" fill="#686868"/>
-                                                    </svg>
-                                                </div>
-                                                <ul class="p-4 space-y-1 text-sm text-gray-700 dark:text-gray-200 max-h-40 overflow-y-scroll" aria-labelledby="dropdownViewButton">
-                                                    <li>
-                                                        <div class="flex p-2 rounded hover:bg-[#52D3A233] cursor-pointer">
-                                                            <div class="flex items-center h-5 cursor-pointer">
-                                                                <input wire:model="unitType" @if($view === 'None') checked @endif id="unitType-radio-1" name="unitType-radio" type="radio" value="None" class="cursor-pointer w-4 h-4 text-[#686868] bg-transpearent border-[#686868] border-2">
-                                                            </div>
-                                                            <div class="ml-4 text-sm cursor-pointer">
-                                                                <label for="unitType-radio-1" class="cursor-pointer font-medium text-gray-900 dark:text-gray-300">
-                                                                    <div>None</div>
-                                                                </label>
-                                                            </div>
-                                                        </div>
-                                                    </li>
-                                                    <li>
-                                                        <div class="flex p-2 rounded hover:bg-[#52D3A233] cursor-pointer">
-                                                            <div class="flex items-center h-5 cursor-pointer">
-                                                                <input wire:model="unitType" @if($view === 'Thousands') checked @endif id="unitType-radio-1" name="unitType-radio" type="radio" value="Thousands" class="cursor-pointer w-4 h-4 text-[#686868] bg-transpearent border-[#686868] border-2">
-                                                            </div>
-                                                            <div class="ml-4 text-sm cursor-pointer">
-                                                                <label for="unitType-radio-1" class="cursor-pointer font-medium text-gray-900 dark:text-gray-300">
-                                                                    <div>Thousands</div>
-                                                                </label>
-                                                            </div>
-                                                        </div>
-                                                    </li>
-                                                    <li>
-                                                        <div class="flex p-2 rounded hover:bg-[#52D3A233] cursor-pointer">
-                                                            <div class="flex items-center h-5 cursor-pointer">
-                                                                <input wire:model="unitType" @if($view === 'Millions') checked @endif id="unitType-radio-2" name="unitType-radio" type="radio" value="Millions" class="cursor-pointer w-4 h-4 text-[#686868] bg-transpearent border-[#686868] border-2">
-                                                            </div>
-                                                            <div class="ml-4 text-sm cursor-pointer">
-                                                                <label for="unitType-radio-2" class="cursor-pointer font-medium text-gray-900 dark:text-gray-300">
-                                                                    <div>Millions</div>
-                                                                </label>
-                                                            </div>
-                                                        </div>
-                                                    </li>
-                                                    <li>
-                                                        <div class="flex p-2 rounded hover:bg-[#52D3A233] cursor-pointer">
-                                                            <div class="flex items-center h-5 cursor-pointer">
-                                                                <input wire:model="unitType" @if($view === 'Billions') checked @endif id="unitType-radio-3" name="unitType-radio" type="radio" value="Billions" class="cursor-pointer w-4 h-4 text-[#686868] bg-transpearent border-[#686868] border-2">
-                                                            </div>
-                                                            <div class="ml-4 text-sm cursor-pointer">
-                                                                <label for="unitType-radio-3" class="cursor-pointer font-medium text-gray-900 dark:text-gray-300">
-                                                                    <div>Billions</div>
-                                                                </label>
-                                                            </div>
-                                                        </div>
-                                                    </li>
-                                                </ul>
-                                                <div class="mx-3 my-4">
-                                                    <button class="w-full p-1 text-sm bg-[#52D3A2] rounded text-center" id="unitTypeCloseButton">Show Result</button>
+                                                        </li>
+                                                    </ul>
+                                                    <div class="mx-3 my-4">
+                                                        <button @click="$wire.set('period', period); periodTypeSelectorOpen = false" class="w-full p-1 text-base font-medium bg-[#52D3A2] rounded text-center" id="periodCloseButton">Show Result</button>
+                                                    </div>
                                                 </div>
                                             </div>
                                         </div>
-                                        <div class=" flex items-center text-sm">Decimal
-                                            <button type="submit" id="dropdownDecimalButton" data-dropdown-toggle="dropdown-Decimal" class="flex items-center flowbite-select bg-gray-50 border border-gray-700 text-gray-900 text-sm ml-2 p-2" name="view" id="">
-                                                {{$decimalDisplay == 2 ? '.00' : ($decimalDisplay == 3 ? '.000' : 'auto')}}
-                                                <svg width="16" height="16" viewBox="0 0 16 16" fill="none" xmlns="http://www.w3.org/2000/svg">
-                                                    <path d="M10.3083 6.19514L7.72167 8.78378L5.135 6.19514C5.01045 6.07021 4.84135 6 4.665 6C4.48865 6 4.31955 6.07021 4.195 6.19514C3.935 6.45534 3.935 6.87566 4.195 7.13585L7.255 10.1982C7.515 10.4584 7.935 10.4584 8.195 10.1982L11.255 7.13585C11.515 6.87566 11.515 6.45534 11.255 6.19514C10.995 5.94161 10.5683 5.93494 10.3083 6.19514Z" fill="#121A0F"/>
-                                                </svg>
-                                            </button>
-                                            <!-- Dropdown menu -->
-                                            <div id="dropdown-Decimal" class="z-10 hidden bg-white divide-y divide-gray-100 rounded-lg shadow w-60 dark:bg-gray-700 dark:divide-gray-600">
-                                                <div class="p-3 text-sm flex items-center justify-between">
-                                                    <div>Decimal</div>
-                                                    <svg id="decimalClose" width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
-                                                        <path d="M6.4 19L5 17.6L10.6 12L5 6.4L6.4 5L12 10.6L17.6 5L19 6.4L13.4 12L19 17.6L17.6 19L12 13.4L6.4 19Z" fill="#686868"/>
+                                        <div class=" flex items-center text-sm" x-data="{unitType: null, unitTypeSelectorOpen: false}" @click.away="unitTypeSelectorOpen = false">Unit Type
+                                            <div class="relative">
+                                                <button type="submit" :class="[unitType != null ? 'active' : '', unitTypeSelectorOpen ? 'down' : '']" @click="unitTypeSelectorOpen = !unitTypeSelectorOpen" class="flex items-center flowbite_btn flowbite-select bg-gray-50 border border-gray-700 text-gray-900 text-sm ml-2 p-2" name="view" id="">
+                                                    {{$unitType}}
+                                                    <svg width="16" height="16" viewBox="0 0 16 16" fill="none" xmlns="http://www.w3.org/2000/svg">
+                                                        <path d="M10.3083 6.19514L7.72167 8.78378L5.135 6.19514C5.01045 6.07021 4.84135 6 4.665 6C4.48865 6 4.31955 6.07021 4.195 6.19514C3.935 6.45534 3.935 6.87566 4.195 7.13585L7.255 10.1982C7.515 10.4584 7.935 10.4584 8.195 10.1982L11.255 7.13585C11.515 6.87566 11.515 6.45534 11.255 6.19514C10.995 5.94161 10.5683 5.93494 10.3083 6.19514Z" fill="#121A0F"/>
                                                     </svg>
-                                                </div>
-                                                <ul class="p-4 space-y-1 text-sm text-gray-700 dark:text-gray-200 max-h-40 overflow-y-scroll" aria-labelledby="dropdownViewButton">
-                                                    <li>
-                                                        <div class="flex p-2 rounded hover:bg-[#52D3A233] cursor-pointer">
-                                                            <div class="flex items-center h-5 cursor-pointer">
-                                                                <input wire:model="decimalDisplay" @if($decimalDisplay === '0') checked @endif id="decimal-radio-1" name="decimal-radio" type="radio" value="0" class="cursor-pointer w-4 h-4 text-[#686868] bg-transpearent border-[#686868] border-2">
+                                                </button>
+                                                <!-- Dropdown menu -->
+                                                <div x-show="unitTypeSelectorOpen" class="z-10 bg-white divide-y divide-gray-100 rounded-lg shadow  dark:bg-gray-700 dark:divide-gray-600 dropdown-scroll-wrapper">
+                                                    <div class="p-3 text-base flex items-center justify-between font-medium">
+                                                        <div>Unit Type</div>
+                                                        <svg @click="unitTypeSelectorOpen = false" id="unitTypeClose" width="24" height="24" viewBox="0 0 24 24" class="cursor-pointer" fill="none" xmlns="http://www.w3.org/2000/svg">
+                                                            <path d="M6.4 19L5 17.6L10.6 12L5 6.4L6.4 5L12 10.6L17.6 5L19 6.4L13.4 12L19 17.6L17.6 19L12 13.4L6.4 19Z" fill="#686868"/>
+                                                        </svg>
+                                                    </div>
+                                                    <ul class="p-4 space-y-1 text-sm text-gray-700 dark:text-gray-200 h_23 overflow-y-scroll dropdown-scroll " aria-labelledby="dropdownViewButton">
+                                                        <li>
+                                                            <div class="flex p-2 rounded hover:bg-[#52D3A233] cursor-pointer">
+                                                                <div class="flex items-center h-5 cursor-pointer">
+                                                                    <input @click='unitType = "None"' :checked="unitType == 'None'" id="unitType-radio" name="unitType-radio" type="radio" value="None" class="cursor-pointer w-4 h-4 text-[#686868] bg-transpearent border-[#686868] border-2">
+                                                                </div>
+                                                                <div class="ml-4 w-full text-sm cursor-pointer">
+                                                                    <label for="unitType-radio" class="cursor-pointer font-medium text-gray-900 dark:text-gray-300">
+                                                                        <div>None</div>
+                                                                    </label>
+                                                                </div>
                                                             </div>
-                                                            <div class="ml-4 text-sm cursor-pointer">
-                                                                <label for="decimal-radio-1" class="cursor-pointer font-medium text-gray-900 dark:text-gray-300">
-                                                                    <div>auto</div>
-                                                                </label>
+                                                        </li>
+                                                        <li>
+                                                            <div class="flex p-2 rounded hover:bg-[#52D3A233] cursor-pointer">
+                                                                <div class="flex items-center h-5 cursor-pointer">
+                                                                    <input @click='unitType = "Thousands"' :checked="unitType == 'Thousands'" id="unitType-radio-1" name="unitType-radio" type="radio" value="Thousands" class="cursor-pointer w-4 h-4 text-[#686868] bg-transpearent border-[#686868] border-2">
+                                                                </div>
+                                                                <div class="ml-4 w-full text-sm cursor-pointer">
+                                                                    <label for="unitType-radio-1" class="cursor-pointer font-medium text-gray-900 dark:text-gray-300">
+                                                                        <div>Thousands</div>
+                                                                    </label>
+                                                                </div>
                                                             </div>
-                                                        </div>
-                                                    </li>
-                                                    <li>
-                                                        <div class="flex p-2 rounded hover:bg-[#52D3A233] cursor-pointer">
-                                                            <div class="flex items-center h-5 cursor-pointer">
-                                                                <input wire:model="decimalDisplay" @if($decimalDisplay === '2') checked @endif id="decimal-radio-2" name="decimal-radio" type="radio" value="2" class="cursor-pointer w-4 h-4 text-[#686868] bg-transpearent border-[#686868] border-2">
+                                                        </li>
+                                                        <li>
+                                                            <div class="flex p-2 rounded hover:bg-[#52D3A233] cursor-pointer">
+                                                                <div class="flex items-center h-5 cursor-pointer">
+                                                                    <input @click='unitType = "Millions"' :checked="unitType == 'Millions'" id="unitType-radio-2" name="unitType-radio" type="radio" value="Millions" class="cursor-pointer w-4 h-4 text-[#686868] bg-transpearent border-[#686868] border-2">
+                                                                </div>
+                                                                <div class="ml-4 w-full text-sm cursor-pointer">
+                                                                    <label for="unitType-radio-2" class="cursor-pointer font-medium text-gray-900 dark:text-gray-300">
+                                                                        <div>Millions</div>
+                                                                    </label>
+                                                                </div>
                                                             </div>
-                                                            <div class="ml-4 text-sm cursor-pointer">
-                                                                <label for="decimal-radio-2" class="cursor-pointer font-medium text-gray-900 dark:text-gray-300">
-                                                                    <div>.00</div>
-                                                                </label>
+                                                        </li>
+                                                        <li>
+                                                            <div class="flex p-2 rounded hover:bg-[#52D3A233] cursor-pointer">
+                                                                <div class="flex items-center h-5 cursor-pointer">
+                                                                    <input @click='unitType = "Billions"' :checked="unitType == 'Billions'" id="unitType-radio-3" name="unitType-radio" type="radio" value="Billions" class="cursor-pointer w-4 h-4 text-[#686868] bg-transpearent border-[#686868] border-2">
+                                                                </div>
+                                                                <div class="ml-4 w-full text-sm cursor-pointer">
+                                                                    <label for="unitType-radio-3" class="cursor-pointer font-medium text-gray-900 dark:text-gray-300">
+                                                                        <div>Billions</div>
+                                                                    </label>
+                                                                </div>
                                                             </div>
-                                                        </div>
-                                                    </li>
-                                                    <li>
-                                                        <div class="flex p-2 rounded hover:bg-[#52D3A233] cursor-pointer">
-                                                            <div class="flex items-center h-5 cursor-pointer">
-                                                                <input wire:model="decimalDisplay" @if($decimalDisplay === '3') checked @endif id="decimal-radio-3" name="decimal-radio" type="radio" value="3" class="cursor-pointer w-4 h-4 text-[#686868] bg-transpearent border-[#686868] border-2">
-                                                            </div>
-                                                            <div class="ml-4 text-sm cursor-pointer">
-                                                                <label for="decimal-radio-3" class="cursor-pointer font-medium text-gray-900 dark:text-gray-300">
-                                                                    <div>.000</div>
-                                                                </label>
-                                                            </div>
-                                                        </div>
-                                                    </li>
-                                                </ul>
-                                                <div class="mx-3 my-4">
-                                                    <button class="w-full p-1 text-sm bg-[#52D3A2] rounded text-center" id="decimalCloseButton">Show Result</button>
+                                                        </li>
+                                                    </ul>
+                                                    <div class="mx-3 my-4">
+                                                        <button @click="$wire.set('unitType', unitType); unitTypeSelectorOpen = false" class="w-full p-1 text-base font-medium bg-[#52D3A2] rounded text-center" id="unitTypeCloseButton">Show Result</button>
+                                                    </div>
                                                 </div>
                                             </div>
                                         </div>
-                                        <div class=" flex items-center text-sm">Order
-                                            <button type="submit" id="dropdownOrderButton" data-dropdown-toggle="dropdown-Order" class="flex items-center flowbite-select bg-gray-50 border border-gray-700 text-gray-900 text-sm ml-2 p-2" name="view" id="">
-                                                {{$reverse ? 'Latest on the Left' : 'Latest on the Right'}}
-                                                <svg width="16" height="16" viewBox="0 0 16 16" fill="none" xmlns="http://www.w3.org/2000/svg">
-                                                    <path d="M10.3083 6.19514L7.72167 8.78378L5.135 6.19514C5.01045 6.07021 4.84135 6 4.665 6C4.48865 6 4.31955 6.07021 4.195 6.19514C3.935 6.45534 3.935 6.87566 4.195 7.13585L7.255 10.1982C7.515 10.4584 7.935 10.4584 8.195 10.1982L11.255 7.13585C11.515 6.87566 11.515 6.45534 11.255 6.19514C10.995 5.94161 10.5683 5.93494 10.3083 6.19514Z" fill="#121A0F"/>
-                                                </svg>
-                                            </button>
-                                            <!-- Dropdown menu -->
-                                            <div id="dropdown-Order" class="z-10 hidden bg-white divide-y divide-gray-100 rounded-lg shadow w-60 dark:bg-gray-700 dark:divide-gray-600">
-                                                <div class="p-3 text-sm flex items-center justify-between">
-                                                    <div>Order</div>
-                                                    <svg id="orderClose" width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
-                                                        <path d="M6.4 19L5 17.6L10.6 12L5 6.4L6.4 5L12 10.6L17.6 5L19 6.4L13.4 12L19 17.6L17.6 19L12 13.4L6.4 19Z" fill="#686868"/>
+                                        <div class=" flex items-center text-sm" x-data="{decimalDisplay: null, decimalDisplaySelectorOpen: false}" @click.away="decimalDisplaySelectorOpen = false">Decimal
+                                            <div class="relative">
+                                                <button type="submit" @click="decimalDisplaySelectorOpen = !decimalDisplaySelectorOpen" :class="[decimalDisplay != null ? 'active' : '', decimalDisplaySelectorOpen ? 'down' : '']" class="flex items-center flowbite_btn flowbite-select bg-gray-50 border border-gray-700 text-gray-900 text-sm ml-2 p-2" name="view" id="">
+                                                    {{$decimalDisplay == 2 ? '.00' : ($decimalDisplay == 3 ? '.000' : 'auto')}}
+                                                    <svg width="16" height="16" viewBox="0 0 16 16" fill="none" xmlns="http://www.w3.org/2000/svg">
+                                                        <path d="M10.3083 6.19514L7.72167 8.78378L5.135 6.19514C5.01045 6.07021 4.84135 6 4.665 6C4.48865 6 4.31955 6.07021 4.195 6.19514C3.935 6.45534 3.935 6.87566 4.195 7.13585L7.255 10.1982C7.515 10.4584 7.935 10.4584 8.195 10.1982L11.255 7.13585C11.515 6.87566 11.515 6.45534 11.255 6.19514C10.995 5.94161 10.5683 5.93494 10.3083 6.19514Z" fill="#121A0F"/>
                                                     </svg>
-                                                </div>
-                                                <ul class="p-4 space-y-1 text-sm text-gray-700 dark:text-gray-200 max-h-40 overflow-y-scroll" aria-labelledby="dropdownViewButton">
-                                                    <li>
-                                                        <div class="flex p-2 rounded hover:bg-[#52D3A233] cursor-pointer">
-                                                            <div class="flex items-center h-5 cursor-pointer">
-                                                                <input wire:click="toggleReverse" @if($reverse === false) checked @endif id="order-radio-1" name="order-radio" type="radio" value="false" class="cursor-pointer w-4 h-4 text-[#686868] bg-transpearent border-[#686868] border-2">
+                                                </button>
+                                                <!-- Dropdown menu -->
+                                                <div x-show="decimalDisplaySelectorOpen" class="z-10 bg-white divide-y divide-gray-100 rounded-lg shadow  dark:bg-gray-700 dark:divide-gray-600 dropdown-scroll-wrapper">
+                                                    <div class="p-3 text-base flex items-center justify-between font-medium">
+                                                        <div>Decimal</div>
+                                                        <svg id="decimalClose" @click="decimalDisplaySelectorOpen = false" width="24" height="24" viewBox="0 0 24 24" class="cursor-pointer" fill="none" xmlns="http://www.w3.org/2000/svg">
+                                                            <path d="M6.4 19L5 17.6L10.6 12L5 6.4L6.4 5L12 10.6L17.6 5L19 6.4L13.4 12L19 17.6L17.6 19L12 13.4L6.4 19Z" fill="#686868"/>
+                                                        </svg>
+                                                    </div>
+                                                    <ul class="p-4 space-y-1 text-sm text-gray-700 dark:text-gray-200 h_23 overflow-y-scroll dropdown-scroll " aria-labelledby="dropdownViewButton">
+                                                        <li>
+                                                            <div class="flex p-2 rounded hover:bg-[#52D3A233] cursor-pointer">
+                                                                <div class="flex items-center h-5 cursor-pointer">
+                                                                    <input @click='decimalDisplay = "0"' :checked="'decimalDisplay' == '0'" id="decimal-radio-1" name="decimal-radio" type="radio" value="0" class="cursor-pointer w-4 h-4 text-[#686868] bg-transpearent border-[#686868] border-2">
+                                                                </div>
+                                                                <div class="ml-4 w-full text-sm cursor-pointer">
+                                                                    <label for="decimal-radio-1" class="cursor-pointer font-medium text-gray-900 dark:text-gray-300">
+                                                                        <div>auto</div>
+                                                                    </label>
+                                                                </div>
                                                             </div>
-                                                            <div class="ml-4 text-sm cursor-pointer">
-                                                                <label for="order-radio-1" class="cursor-pointer font-medium text-gray-900 dark:text-gray-300">
-                                                                    <div>Latest on the Right</div>
-                                                                </label>
+                                                        </li>
+                                                        <li>
+                                                            <div class="flex p-2 rounded hover:bg-[#52D3A233] cursor-pointer">
+                                                                <div class="flex items-center h-5 cursor-pointer">
+                                                                    <input @click='decimalDisplay = "2"' :checked="'decimalDisplay' == '2'" id="decimal-radio-2" name="decimal-radio" type="radio" value="2" class="cursor-pointer w-4 h-4 text-[#686868] bg-transpearent border-[#686868] border-2">
+                                                                </div>
+                                                                <div class="ml-4 w-full text-sm cursor-pointer">
+                                                                    <label for="decimal-radio-2" class="cursor-pointer font-medium text-gray-900 dark:text-gray-300">
+                                                                        <div>.00</div>
+                                                                    </label>
+                                                                </div>
                                                             </div>
-                                                        </div>
-                                                    </li>
-                                                    <li>
-                                                        <div class="flex p-2 rounded hover:bg-[#52D3A233] cursor-pointer">
-                                                            <div class="flex items-center h-5 cursor-pointer">
-                                                                <input wire:model="reverse" @if($reverse) checked @endif id="order-radio-1" name="order-radio" type="radio" value="true" class="cursor-pointer w-4 h-4 text-[#686868] bg-transpearent border-[#686868] border-2">
+                                                        </li>
+                                                        <li>
+                                                            <div class="flex p-2 rounded hover:bg-[#52D3A233] cursor-pointer">
+                                                                <div class="flex items-center h-5 cursor-pointer">
+                                                                    <input @click='decimalDisplay = "3"' :checked="'decimalDisplay' == '3'" id="decimal-radio-3" name="decimal-radio" type="radio" value="3" class="cursor-pointer w-4 h-4 text-[#686868] bg-transpearent border-[#686868] border-2">
+                                                                </div>
+                                                                <div class="ml-4 w-full text-sm cursor-pointer">
+                                                                    <label for="decimal-radio-3" class="cursor-pointer font-medium text-gray-900 dark:text-gray-300">
+                                                                        <div>.000</div>
+                                                                    </label>
+                                                                </div>
                                                             </div>
-                                                            <div class="ml-4 text-sm cursor-pointer">
-                                                                <label for="order-radio-1" class="cursor-pointer font-medium text-gray-900 dark:text-gray-300">
-                                                                    <div>Latest on the Left</div>
-                                                                </label>
-                                                            </div>
-                                                        </div>
-                                                    </li>
-                                                </ul>
-                                                <div class="mx-3 my-4">
-                                                    <button class="w-full p-1 text-sm bg-[#52D3A2] rounded text-center" id="orderCloseButton">Show Result</button>
+                                                        </li>
+                                                    </ul>
+                                                    <div class="mx-3 my-4">
+                                                        <button @click="$wire.set('decimalDisplay', decimalDisplay); decimalDisplaySelectorOpen=false;" class="w-full p-1 text-base font-medium bg-[#52D3A2] rounded text-center" id="decimalCloseButton">Show Result</button>
+                                                    </div>
                                                 </div>
                                             </div>
                                         </div>
-                                        <div class=" flex items-center text-sm">Freeze Panes
-                                            <button type="submit" id="dropdownFreezePanesButton" data-dropdown-toggle="dropdown-FreezePanes" class="flex items-center flowbite-select bg-gray-50 border border-gray-700 text-gray-900 text-sm ml-2 p-2" name="view" id="">
-                                                {{$freezePanes}}
-                                                <svg width="16" height="16" viewBox="0 0 16 16" fill="none" xmlns="http://www.w3.org/2000/svg">
-                                                    <path d="M10.3083 6.19514L7.72167 8.78378L5.135 6.19514C5.01045 6.07021 4.84135 6 4.665 6C4.48865 6 4.31955 6.07021 4.195 6.19514C3.935 6.45534 3.935 6.87566 4.195 7.13585L7.255 10.1982C7.515 10.4584 7.935 10.4584 8.195 10.1982L11.255 7.13585C11.515 6.87566 11.515 6.45534 11.255 6.19514C10.995 5.94161 10.5683 5.93494 10.3083 6.19514Z" fill="#121A0F"/>
-                                                </svg>
-                                            </button>
-                                            <!-- Dropdown menu -->
-                                            <div id="dropdown-FreezePanes" class="z-10 hidden bg-white divide-y divide-gray-100 rounded-lg shadow w-60 dark:bg-gray-700 dark:divide-gray-600">
-                                                <div class="p-3 text-sm flex items-center justify-between">
-                                                    <div>Freeze Panes</div>
-                                                    <svg id="freezePanesClose" width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
-                                                        <path d="M6.4 19L5 17.6L10.6 12L5 6.4L6.4 5L12 10.6L17.6 5L19 6.4L13.4 12L19 17.6L17.6 19L12 13.4L6.4 19Z" fill="#686868"/>
+                                        <div class=" flex items-center text-sm" x-data="{reverse: null, reverseSelectorOpen: false}" @click.away="reverseSelectorOpen = false">Order
+                                            <div class="relative">
+                                                <button type="submit" @click="reverseSelectorOpen = !reverseSelectorOpen" :class="[reverse != null ? 'active' : '', reverseSelectorOpen ? 'down' : '']" class="flex items-center flowbite_btn flowbite-select bg-gray-50 border border-gray-700 text-gray-900 text-sm ml-2 p-2" name="view" id="">
+                                                    {{$reverse ? 'Latest on the Left' : 'Latest on the Right'}}
+                                                    <svg width="16" height="16" viewBox="0 0 16 16" fill="none" xmlns="http://www.w3.org/2000/svg">
+                                                        <path d="M10.3083 6.19514L7.72167 8.78378L5.135 6.19514C5.01045 6.07021 4.84135 6 4.665 6C4.48865 6 4.31955 6.07021 4.195 6.19514C3.935 6.45534 3.935 6.87566 4.195 7.13585L7.255 10.1982C7.515 10.4584 7.935 10.4584 8.195 10.1982L11.255 7.13585C11.515 6.87566 11.515 6.45534 11.255 6.19514C10.995 5.94161 10.5683 5.93494 10.3083 6.19514Z" fill="#121A0F"/>
                                                     </svg>
-                                                </div>
-                                                <ul class="p-4 space-y-1 text-sm text-gray-700 dark:text-gray-200 max-h-40 overflow-y-scroll" aria-labelledby="dropdownViewButton">
-                                                    <li>
-                                                        <div class="flex p-2 rounded hover:bg-[#52D3A233] cursor-pointer">
-                                                            <div class="flex items-center h-5 cursor-pointer">
-                                                                <input wire:model="freezePanes" @if($view === 'Top Row') checked @endif id="freezePanes-radio-1" name="freezePanes-radio" type="radio" value="Top Row" class="cursor-pointer w-4 h-4 text-[#686868] bg-transpearent border-[#686868] border-2">
+                                                </button>
+                                                <!-- Dropdown menu -->
+                                                <div x-show="reverseSelectorOpen" class="z-10 bg-white divide-y divide-gray-100 rounded-lg shadow  dark:bg-gray-700 dark:divide-gray-600 dropdown-scroll-wrapper">
+                                                    <div class="p-3 text-base flex items-center justify-between font-medium">
+                                                        <div>Order</div>
+                                                        <svg id="orderClose" width="24" height="24" class="cursor-pointer" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                                                            <path d="M6.4 19L5 17.6L10.6 12L5 6.4L6.4 5L12 10.6L17.6 5L19 6.4L13.4 12L19 17.6L17.6 19L12 13.4L6.4 19Z" fill="#686868"/>
+                                                        </svg>
+                                                    </div>
+                                                    <ul class="p-4 space-y-1 text-sm text-gray-700 dark:text-gray-200 h_23 overflow-y-scroll dropdown-scroll " aria-labelledby="dropdownViewButton">
+                                                        <li>
+                                                            <div class="flex p-2 rounded hover:bg-[#52D3A233] cursor-pointer">
+                                                                <div class="flex items-center h-5 cursor-pointer">
+                                                                    <input @click="reverse = false" :checked="!reverse" id="order-radio-0" name="order-radio" type="radio" value="false" class="cursor-pointer w-4 h-4 text-[#686868] bg-transpearent border-[#686868] border-2">
+                                                                </div>
+                                                                <div class="ml-4 w-full text-sm cursor-pointer">
+                                                                    <label for="order-radio-0" class="cursor-pointer font-medium text-gray-900 dark:text-gray-300">
+                                                                        <div>Latest on the Right</div>
+                                                                    </label>
+                                                                </div>
                                                             </div>
-                                                            <div class="ml-4 text-sm cursor-pointer">
-                                                                <label for="freezePanes-radio-1" class="cursor-pointer font-medium text-gray-900 dark:text-gray-300">
-                                                                    <div>Top Row</div>
-                                                                </label>
+                                                        </li>
+                                                        <li>
+                                                            <div class="flex p-2 rounded hover:bg-[#52D3A233] cursor-pointer">
+                                                                <div class="flex items-center h-5 cursor-pointer">
+                                                                    <input  @click="reverse = true" :checked="reverse" id="order-radio-1" name="order-radio" type="radio" value="true" class="cursor-pointer w-4 h-4 text-[#686868] bg-transpearent border-[#686868] border-2">
+                                                                </div>
+                                                                <div class="ml-4 w-full text-sm cursor-pointer">
+                                                                    <label for="order-radio-1" class="cursor-pointer font-medium text-gray-900 dark:text-gray-300">
+                                                                        <div>Latest on the Left</div>
+                                                                    </label>
+                                                                </div>
                                                             </div>
-                                                        </div>
-                                                    </li>
-                                                    <li>
-                                                        <div class="flex p-2 rounded hover:bg-[#52D3A233] cursor-pointer">
-                                                            <div class="flex items-center h-5 cursor-pointer">
-                                                                <input wire:model="freezePanes" @if($view === 'First Column') checked @endif id="freezePanes-radio-2" name="freezePanes-radio" type="radio" value="First Column" class="cursor-pointer w-4 h-4 text-[#686868] bg-transpearent border-[#686868] border-2">
-                                                            </div>
-                                                            <div class="ml-4 text-sm cursor-pointer">
-                                                                <label for="freezePanes-radio-2" class="cursor-pointer font-medium text-gray-900 dark:text-gray-300">
-                                                                    <div>First Column</div>
-                                                                </label>
-                                                            </div>
-                                                        </div>
-                                                    </li>
-                                                    <li>
-                                                        <div class="flex p-2 rounded hover:bg-[#52D3A233] cursor-pointer">
-                                                            <div class="flex items-center h-5 cursor-pointer">
-                                                                <input wire:model="freezePanes" @if($view === 'Top Row & First Column') checked @endif id="freezePanes-radio-3" name="freezePanes-radio" type="radio" value="Top Row & First Column" class="cursor-pointer w-4 h-4 text-[#686868] bg-transpearent border-[#686868] border-2">
-                                                            </div>
-                                                            <div class="ml-4 text-sm cursor-pointer">
-                                                                <label for="freezePanes-radio-3" class="cursor-pointer font-medium text-gray-900 dark:text-gray-300">
-                                                                    <div>Top Row & First Column</div>
-                                                                </label>
-                                                            </div>
-                                                        </div>
-                                                    </li>
-                                                </ul>
-                                                <div class="mx-3 my-4">
-                                                    <button class="w-full p-1 text-sm bg-[#52D3A2] rounded text-center" id="freezePanesCloseButton">Show Result</button>
+                                                        </li>
+                                                    </ul>
+                                                    <div class="mx-3 my-4">
+                                                        <button @click="$wire.set('reverse', reverse); reverseSelectorOpen = false;" class="w-full p-1 text-base font-medium bg-[#52D3A2] rounded text-center" id="orderCloseButton">Show Result</button>
+                                                    </div>
                                                 </div>
                                             </div>
                                         </div>
-
+                                        <div class=" flex items-center text-sm" x-data="{freezePanes: null, freezePanesSelectorOpen: false}" @click.away="freezePanesSelectorOpen = false">Freeze Panes
+                                            <div class="relative">
+                                                <button @click="freezePanesSelectorOpen = !freezePanesSelectorOpen" :class="[freezePanes != null ? 'active' : '', freezePanesSelectorOpen ? 'down' : '']" type="submit" class="flex items-center flowbite_btn flowbite-select bg-gray-50 border border-gray-700 text-gray-900 text-sm ml-2 p-2" name="view" id="">
+                                                    {{$freezePanes}}
+                                                    <svg width="16" height="16" viewBox="0 0 16 16" fill="none" xmlns="http://www.w3.org/2000/svg">
+                                                        <path d="M10.3083 6.19514L7.72167 8.78378L5.135 6.19514C5.01045 6.07021 4.84135 6 4.665 6C4.48865 6 4.31955 6.07021 4.195 6.19514C3.935 6.45534 3.935 6.87566 4.195 7.13585L7.255 10.1982C7.515 10.4584 7.935 10.4584 8.195 10.1982L11.255 7.13585C11.515 6.87566 11.515 6.45534 11.255 6.19514C10.995 5.94161 10.5683 5.93494 10.3083 6.19514Z" fill="#121A0F"/>
+                                                    </svg>
+                                                </button>
+                                                <!-- Dropdown menu -->
+                                                <div x-show="freezePanesSelectorOpen" class="z-10 bg-white divide-y divide-gray-100 rounded-lg shadow  dark:bg-gray-700 dark:divide-gray-600 dropdown-scroll-wrapper">
+                                                    <div class="p-3 text-base flex items-center justify-between font-medium">
+                                                        <div>Freeze Panes</div>
+                                                        <svg @click="freezePanesSelectorOpen = false" id="freezePanesClose" width="24" height="24" class="cursor-pointer" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                                                            <path d="M6.4 19L5 17.6L10.6 12L5 6.4L6.4 5L12 10.6L17.6 5L19 6.4L13.4 12L19 17.6L17.6 19L12 13.4L6.4 19Z" fill="#686868"/>
+                                                        </svg>
+                                                    </div>
+                                                    <ul class="p-4 space-y-1 text-sm text-gray-700 dark:text-gray-200 h_23 overflow-y-scroll dropdown-scroll " aria-labelledby="dropdownViewButton">
+                                                        <li>
+                                                            <div class="flex p-2 rounded hover:bg-[#52D3A233] cursor-pointer">
+                                                                <div class="flex items-center h-5 cursor-pointer">
+                                                                    <input @click='freezePanes = "Top Row"' :checked="freezePanes == 'Top Row'" id="freezePanes-radio-1" name="freezePanes-radio" type="radio" value="Top Row" class="cursor-pointer w-4 h-4 text-[#686868] bg-transpearent border-[#686868] border-2">
+                                                                </div>
+                                                                <div class="ml-4 w-full text-sm cursor-pointer">
+                                                                    <label for="freezePanes-radio-1" class="cursor-pointer font-medium text-gray-900 dark:text-gray-300">
+                                                                        <div>Top Row</div>
+                                                                    </label>
+                                                                </div>
+                                                            </div>
+                                                        </li>
+                                                        <li>
+                                                            <div class="flex p-2 rounded hover:bg-[#52D3A233] cursor-pointer">
+                                                                <div class="flex items-center h-5 cursor-pointer">
+                                                                    <input @click='freezePanes = "First Column"' :checked="freezePanes == 'First Column'" id="freezePanes-radio-2" name="freezePanes-radio" type="radio" value="First Column" class="cursor-pointer w-4 h-4 text-[#686868] bg-transpearent border-[#686868] border-2">
+                                                                </div>
+                                                                <div class="ml-4 w-full text-sm cursor-pointer">
+                                                                    <label for="freezePanes-radio-2" class="cursor-pointer font-medium text-gray-900 dark:text-gray-300">
+                                                                        <div>First Column</div>
+                                                                    </label>
+                                                                </div>
+                                                            </div>
+                                                        </li>
+                                                        <li>
+                                                            <div class="flex p-2 rounded hover:bg-[#52D3A233] cursor-pointer">
+                                                                <div class="flex items-center h-5 cursor-pointer">
+                                                                    <input @click='freezePanes = "Top Row & First Column"' :checked="freezePanes == 'Top Row & First Column'" id="freezePanes-radio-3" name="freezePanes-radio" type="radio" value="Top Row & First Column" class="cursor-pointer w-4 h-4 text-[#686868] bg-transpearent border-[#686868] border-2">
+                                                                </div>
+                                                                <div class="ml-4 w-full text-sm cursor-pointer">
+                                                                    <label for="freezePanes-radio-3" class="cursor-pointer font-medium text-gray-900 dark:text-gray-300">
+                                                                        <div>Top Row & First Column</div>
+                                                                    </label>
+                                                                </div>
+                                                            </div>
+                                                        </li>
+                                                    </ul>
+                                                    <div class="mx-3 my-4">
+                                                        <button class="w-full p-1 text-base font-medium bg-[#52D3A2] rounded text-center" @click="freezePanesSelectorOpen = false" id="freezePanesCloseButton">Show Result</button>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
                                     </div>
-                                </div>
-                                <div class="filters-row flex hidden items-center mt-2 text-sm">
-                                    <b class="mr-3">Period Type:</b>
-                                    <ul class="flex soft-radio-wrapper big-checked items-center">
-                                        <li class="mr-2">
-                                            <label class="flex items-center pl-3 cursor-pointer">
-                                                <input wire:model="period" value="arf5drs" id="date-fiscal-annual" type="radio" name="date-range" class="w-5 h-5 ">
-                                                <span class="w-full py-3 ml-2 text-sm">Fiscal Annual</span>
-                                            </label>
-                                        </li>
-                                        <li class="mr-2">
-                                            <label class="flex items-center pl-3 cursor-pointer">
-                                                <input wire:model="period" value="qrf5drs" id="date-fiscal-quaterly" type="radio"  name="date-range" class="w-5 h-5 ">
-                                                <span class="w-full py-3 ml-2 text-sm">Fiscal Quaterly</span>
-                                            </label>
-                                        </li>
-                                        <li class="mr-2">
-                                            <label class="flex items-center pl-3 cursor-pointer">
-                                                <input wire:model="period" value="fiscal-semi-annual" id="date-fiscal-semi-annual" type="radio"  name="date-range" class="w-5 h-5 ">
-                                                <span class="w-full py-3 ml-2 text-sm">Fiscal Semi-Annual</span>
-                                            </label>
-                                        </li>
-                                        <li class="mr-2">
-                                            <label class="flex items-center pl-3 cursor-pointer">
-                                                <input wire:model="period" value="YTD" id="date-YTD" type="radio"  name="date-range" class="w-5 h-5 ">
-                                                <span class="w-full py-3 ml-2 text-sm">YTD</span>
-                                            </label>
-                                        </li>
-                                        <li class="mr-2">
-                                            <label class="flex items-center pl-3 cursor-pointer">
-                                                <input wire:model="period" value="LTM" id="date-LTM" type="radio"  name="date-range" class="w-5 h-5 ">
-                                                <span class="w-full py-3 ml-2 text-sm">LTM</span>
-                                            </label>
-                                        </li>
-                                        <li class="mr-2">
-                                            <label class="flex items-center pl-3 cursor-pointer">
-                                                <input wire:model="period" value="annual" id="date-annual" id="date-annual" type="radio" name="date-range" class="w-5 h-5 ">
-                                                <span class="w-full py-3 ml-2 text-sm">Calendar Annual</span>
-                                            </label>
-                                        </li>
-                                        <li class="mr-2">
-                                            <label class="flex items-center pl-3 cursor-pointer">
-                                                <input wire:model="period" value="quarterly" id="date-quarterly" type="radio" name="date-range" class="w-5 h-5 ">
-                                                <span class="w-full py-3 ml-2 text-sm">Calendar Quaterly</span>
-                                            </label>
-                                        </li>
-                                        <li class="mr-2">
-                                            <label class="flex items-center pl-3 cursor-pointer">
-                                                <input wire:model="period" value="SA" id="date-SA" type="radio"  name="date-sa" class="w-5 h-5 ">
-                                                <span class="w-full py-3 ml-2 text-sm">Calendar SA</span>
-                                            </label>
-                                        </li>
-                                    </ul>
                                 </div>
 
                                 <div class="years-range-wrapper my-2">
@@ -620,7 +578,7 @@
                                             @endphp
                                         @endforeach
                                     </div>
-                                    <div id="range-slider-company-report" class="range-slider"></div>
+                                    <div wire:ignore id="range-slider-company-report" class="range-slider"></div>
                                 </div>
 
                                 @if(count($chartData))
@@ -1023,64 +981,64 @@
         }
     });
 
-    const annualCheckbox = document.getElementById("date-annual");
+    // const annualCheckbox = document.getElementById("date-annual");
 
-    annualCheckbox.addEventListener("click", function() {
-        const currentUrl = window.location.href;
+    // annualCheckbox.addEventListener("click", function() {
+    //     const currentUrl = window.location.href;
 
-        const separator = currentUrl.includes('?') ? '&' : '?';
+    //     const separator = currentUrl.includes('?') ? '&' : '?';
 
-        const newUrl = currentUrl + separator + 'period=annual';
+    //     const newUrl = currentUrl + separator + 'period=annual';
 
-        window.location.href = newUrl;
-    });
+    //     window.location.href = newUrl;
+    // });
 
-    const quarterlyCheckbox = document.getElementById("date-quarterly");
+    // const quarterlyCheckbox = document.getElementById("date-quarterly");
 
-    quarterlyCheckbox.addEventListener("click", function() {
-        const currentUrl = window.location.href;
+    // quarterlyCheckbox.addEventListener("click", function() {
+    //     const currentUrl = window.location.href;
 
-        const separator = currentUrl.includes('?') ? '&' : '?';
+    //     const separator = currentUrl.includes('?') ? '&' : '?';
 
-        const newUrl = currentUrl + separator + 'period=quarterly';
+    //     const newUrl = currentUrl + separator + 'period=quarterly';
 
-        window.location.href = newUrl;
-    });
+    //     window.location.href = newUrl;
+    // });
 
-    const viewDropdownCloseIcon = document.getElementById("viewClose");
+    // const viewDropdownCloseIcon = document.getElementById("viewClose");
 
-    viewDropdownCloseIcon.addEventListener("click", function() {
-        document.getElementById('dropdown-View').classList.toggle("hidden");
-    });
-    const periodDropdownCloseIcon = document.getElementById("periodClose");
+    // viewDropdownCloseIcon.addEventListener("click", function() {
+    //     document.getElementById('dropdown-View').classList.toggle("hidden");
+    // });
+    // const periodDropdownCloseIcon = document.getElementById("periodClose");
 
-    periodDropdownCloseIcon.addEventListener("click", function() {
-        document.getElementById('dropdown-Period').classList.toggle("hidden");
-    });
+    // periodDropdownCloseIcon.addEventListener("click", function() {
+    //     document.getElementById('dropdown-Period').classList.toggle("hidden");
+    // });
 
-    const unitTypeDropdownCloseIcon = document.getElementById("unitTypeClose");
+    // const unitTypeDropdownCloseIcon = document.getElementById("unitTypeClose");
 
-    unitTypeDropdownCloseIcon.addEventListener("click", function() {
-        document.getElementById('dropdown-UnitType').classList.toggle("hidden");
-    });
+    // unitTypeDropdownCloseIcon.addEventListener("click", function() {
+    //     document.getElementById('dropdown-UnitType').classList.toggle("hidden");
+    // });
 
-    const templateDropdownCloseIcon = document.getElementById("templateClose");
+    // const templateDropdownCloseIcon = document.getElementById("templateClose");
 
-    templateDropdownCloseIcon.addEventListener("click", function() {
-        document.getElementById('dropdown-Template').classList.toggle("hidden");
-    });
+    // templateDropdownCloseIcon.addEventListener("click", function() {
+    //     document.getElementById('dropdown-Template').classList.toggle("hidden");
+    // });
 
-    const orderDropdownCloseIcon = document.getElementById("orderClose");
+    // const orderDropdownCloseIcon = document.getElementById("orderClose");
 
-    orderDropdownCloseIcon.addEventListener("click", function() {
-        document.getElementById('dropdown-Order').classList.toggle("hidden");
-    });
+    // orderDropdownCloseIcon.addEventListener("click", function() {
+    //     document.getElementById('dropdown-Order').classList.toggle("hidden");
+    // });
 
-    const freezePanesDropdownCloseIcon = document.getElementById("freezePanesClose");
+    // const freezePanesDropdownCloseIcon = document.getElementById("freezePanesClose");
 
-    freezePanesDropdownCloseIcon.addEventListener("click", function() {
-        document.getElementById('dropdown-FreezePanes').classList.toggle("hidden");
-    });
+    // freezePanesDropdownCloseIcon.addEventListener("click", function() {
+    //     document.getElementById('dropdown-FreezePanes').classList.toggle("hidden");
+    // });
 
     const decimalDropdownCloseIcon = document.getElementById("decimalClose");
 
