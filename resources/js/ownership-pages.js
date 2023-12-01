@@ -1,7 +1,6 @@
 import chartJsPlugins, { formatCmpctNumber } from "./chartjs-plugins"
 
 export function initFundHistoryChart(canvas, data) {
-    console.log(data)
     const ctx = canvas.getContext("2d")
 
     const chart = new Chart(ctx, {

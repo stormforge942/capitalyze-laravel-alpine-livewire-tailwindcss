@@ -4,23 +4,23 @@
         collapsed: false,
         toggle() {
             this.collapsed = !this.collapsed
-
+    
             if (this.collapsed) {
                 document.body.classList.add('nav-collapsed')
-
+    
                 document.getElementById('default-sidebar').classList.remove('w-56')
-
+    
                 document.getElementById('main-container').classList.remove('lg:ml-56')
                 document.getElementById('main-container').classList.add('lg:ml-20');
-
+    
                 document.getElementById('navigation').classList.remove('lg:ml-56');
                 document.getElementById('navigation').classList.add('lg:ml-20');
             } else {
                 document.body.classList.remove('nav-collapsed')
-
+    
                 document.getElementById('main-container').classList.remove('lg:ml-20');
                 document.getElementById('main-container').classList.add('lg:ml-56')
-
+    
                 document.getElementById('navigation').classList.remove('lg:ml-20');
                 document.getElementById('navigation').classList.add('lg:ml-56');
             }
@@ -36,7 +36,7 @@
                         fill="#121A0F" />
                 </svg>
             </button>
-            <div class="mb-10 px-6">
+            <div class="mb-10 px-navbar">
                 <a href="{{ route('home') }}">
                     <svg class="inline" x-show="!collapsed" width="145" height="32" viewBox="0 0 145 32"
                         fill="none" xmlns="http://www.w3.org/2000/svg">
@@ -89,108 +89,41 @@
                     </svg>
                 </a>
             </div>
-            <ul class="text-[14px] flex-1 overflow-x-hidden overflow-y-auto space-y-2 px-6">
-                <li class="flex items-center gap-3 p-2 pr-0 font-semibold rounded group text-blue">
-                    <svg width="16" height="28" class="fill-current" viewBox="0 0 16 17" fill="none"
-                        xmlns="http://www.w3.org/2000/svg">
-                        <path
-                            d="M7.77966 5.31441C7.19566 5.31441 6.29165 4.65041 5.33965 4.67441C4.08365 4.69041 2.93165 5.40241 2.28365 6.53041C0.979648 8.79441 1.94765 12.1384 3.21965 13.9784C3.84365 14.8744 4.57965 15.8824 5.55565 15.8504C6.49165 15.8104 6.84366 15.2424 7.97966 15.2424C9.10766 15.2424 9.42766 15.8504 10.4197 15.8264C11.4277 15.8104 12.0677 14.9144 12.6837 14.0104C13.3957 12.9704 13.6917 11.9624 13.7077 11.9064C13.6837 11.8984 11.7477 11.1544 11.7237 8.91441C11.7077 7.04241 13.2517 6.14641 13.3237 6.10641C12.4437 4.81841 11.0917 4.67441 10.6197 4.64241C9.38766 4.54641 8.35566 5.31441 7.77966 5.31441ZM9.85966 3.42641C10.3797 2.80241 10.7237 1.93041 10.6277 1.06641C9.88366 1.09841 8.98766 1.56241 8.45166 2.18641C7.97166 2.73841 7.55566 3.62641 7.66766 4.47441C8.49166 4.53841 9.33966 4.05041 9.85966 3.42641Z" />
-                    </svg>
-                    <span class="tag-collapsed !whitespace-pre-wrap break-words">{{ $company->name }} ({{ $company->ticker }})</span>
-                </li>
-                @foreach ($navbarItems as $item)
-                    <?php
-                    $child = $item['child'] ?? [];
-                    $hasChild = count($child) > 0;
-                    $tag = $hasChild ? 'button' : 'a';
-                    ?>
-                    <li @if ($hasChild) x-data="{open: false}" @endif>
-                        <{{ $tag }} data-tooltip-target="tooltip-{{ $item['title'] }}"
-                            data-tooltip-placement="right" href="{{ $item['url'] ?? '#' }}"
-                            class="w-full flex items-center justify-between p-2 text-dark-light @if ($item['active'] ?? false) bg-green-light font-medium @else hover:bg-[#828c851a] @endif rounded group"
-                            @if ($hasChild) data-dropdown-toggle="dropdownMore" data-dropdown-placement="left-end" @click.prevent="open = !open" @endif>
-                            <div class="flex items-center gap-2">
-                                {!! $item['icon'] !!}
 
-                                <span class="tag-collapsed">{{ $item['title'] }}</span>
-                            </div>
+            <div class="text-[14px] flex-1 overflow-x-hidden overflow-y-auto px-navbar space-y-6">
+                <x-nav-group name="Idea Generation" :items="$navbarItems['main']">
+                    <x-slot name="icon">
+                        <svg class="nav-group-icon" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"
+                            fill="none">
+                            <path
+                                d="M9.97308 18H14.0269C14.1589 16.7984 14.7721 15.8065 15.7676 14.7226C15.8797 14.6006 16.5988 13.8564 16.6841 13.7501C17.5318 12.6931 18 11.385 18 10C18 6.68629 15.3137 4 12 4C8.68629 4 6 6.68629 6 10C6 11.3843 6.46774 12.6917 7.31462 13.7484C7.40004 13.855 8.12081 14.6012 8.23154 14.7218C9.22766 15.8064 9.84103 16.7984 9.97308 18ZM14 20H10V21H14V20ZM5.75395 14.9992C4.65645 13.6297 4 11.8915 4 10C4 5.58172 7.58172 2 12 2C16.4183 2 20 5.58172 20 10C20 11.8925 19.3428 13.6315 18.2443 15.0014C17.624 15.7748 16 17 16 18.5V21C16 22.1046 15.1046 23 14 23H10C8.89543 23 8 22.1046 8 21V18.5C8 17 6.37458 15.7736 5.75395 14.9992ZM13 10.0048H15.5L11 16.0048V12.0048H8.5L13 6V10.0048Z"
+                                fill="#3561E7" />
+                        </svg>
+                    </x-slot>
+                </x-nav-group>
 
-                            @if ($hasChild)
-                                <svg class="tag-collapsed" :class="open ? 'rotate-90' : ''" width="16"
-                                    height="16" viewBox="0 0 16 16" fill="none"
-                                    xmlns="http://www.w3.org/2000/svg">
-                                    <path
-                                        d="M8.78126 8.00047L5.48145 4.70062L6.42425 3.75781L10.6669 8.00047L6.42425 12.2431L5.48145 11.3003L8.78126 8.00047Z"
-                                        fill="#464E49" />
-                                </svg>
-                            @endif
-                            </{{ $tag }}>
-
-                            <div id="tooltip-{{ $item['title'] }}" role="tooltip"
-                                class="absolute z-10 invisible hidden px-3 py-2 text-xs text-white bg-gray-900 rounded-lg shadow-sm opacity-0 tooltip dark:bg-gray-700">
-                                {{ $item['title'] }}
-                                <div class="tooltip-arrow" data-popper-arrow></div>
-                            </div>
-
-                            @if ($hasChild)
-                                <ul class="py-2 space-y-2" :class="(!open || collapsed) ? 'hidden' : ''" x-cloak>
-                                    <li>
-                                        <a class="flex items-center w-full p-2 text-gray-900 transition duration-75 rounded-lg group hover:bg-gray-100 dark:text-white dark:hover:bg-gray-700 @if($currentRoute === 'track-investor') font-bold @endif"
-                                            href="{{ route('company.track-investor', ['ticker' => $this->company->ticker]) }}">
-                                            Track Investors
-                                        </a>
-                                    </li>
-                                    <li>
-                                        <a class="flex items-center w-full p-2 text-gray-900 transition duration-75 rounded-lg group hover:bg-gray-100 dark:text-white dark:hover:bg-gray-700 @if($currentRoute === 'track-investor') font-bold @endif"
-                                            href="{{ route('company.filings-summary', ['ticker' => $this->company->ticker]) }}">
-                                            Filings Summary
-                                        </a>
-                                    </li>
-                                    @foreach ($child as $childItem)
-                                        <li>
-                                            <a class="flex items-center w-full p-2 text-gray-900 transition duration-75 rounded-lg group hover:bg-gray-100 dark:text-white dark:hover:bg-gray-700 @if ($childItem['active']) font-bold @endif"
-                                                href="{{ $childItem['url'] }}">
-                                                {{ $childItem['title'] }}
-                                            </a>
-                                        </li>
-                                    @endforeach
-                                </ul>
-                                <div id="dropdownMore"
-                                    class="hidden overflow-y-auto bg-white divide-y divide-gray-100 rounded-lg shadow max-h-64 w-44 dark:bg-gray-700">
-                                    <div class="py-2 text-gray-700 dark:text-gray-200"
-                                        aria-labelledby="dropdownTopButton" x-show="collapsed" x-cloak>
-                                        <!-- More links -->
-                                        <div class="block px-4 py-2 text-xs text-gray-400">
-                                            {{ __('More') }}
-                                        </div>
-
-                                        <ul>
-                                            @foreach ($child as $childItem)
-                                                <li>
-                                                    <a class="flex items-center w-full p-2 text-gray-900 transition duration-75 pl-4 group hover:bg-gray-100 dark:text-white dark:hover:bg-gray-700 @if ($childItem['active']) font-semibold @endif"
-                                                        href="{{ $childItem['url'] }}">
-                                                        {{ $childItem['title'] }}
-                                                    </a>
-                                                </li>
-                                            @endforeach
-                                        </ul>
-                                    </div>
-                                </div>
-                            @endif
-                    </li>
-                @endforeach
-            </ul>
+                <x-nav-group :name="$company->ticker . ' Research'" :items="$navbarItems['company_research']">
+                    <x-slot name="icon">
+                        <svg class="nav-group-icon" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"
+                            fill="none">
+                            <path
+                                d="M15.5 5C13.567 5 12 6.567 12 8.5C12 10.433 13.567 12 15.5 12C17.433 12 19 10.433 19 8.5C19 6.567 17.433 5 15.5 5ZM10 8.5C10 5.46243 12.4624 3 15.5 3C18.5376 3 21 5.46243 21 8.5C21 9.6575 20.6424 10.7315 20.0317 11.6175L22.7071 14.2929L21.2929 15.7071L18.6175 13.0317C17.7315 13.6424 16.6575 14 15.5 14C12.4624 14 10 11.5376 10 8.5ZM3 4H8V6H3V4ZM3 11H8V13H3V11ZM21 18V20H3V18H21Z"
+                                fill="#3561E7" />
+                        </svg>
+                    </x-slot>
+                </x-nav-group>
+            </div>
 
             <button id="profileButton" data-dropdown-toggle="dropdownProfile" data-dropdown-placement="left-end"
                 type="button"
-                class="mt-5 px-6 gap-x-2 inline-flex items-center font-semibold text-[14px] leading-4 focus:outline-none transition self-start">
+                class="mt-5 px-navbar gap-x-2 inline-flex items-center font-semibold text-[14px] leading-4 focus:outline-none transition self-start">
                 <div class="bg-[#52D3A2] w-9 h-9 leading-9 rounded-full mr-2">{{ Auth::user()->initials }}
                 </div>
 
                 <span class="tag-collapsed">{{ Auth::user()->name }}</span>
 
-                <svg class="tag-collapsed" width="16" height="16" viewBox="0 0 16 16"
-                    fill="none" xmlns="http://www.w3.org/2000/svg">
+                <svg class="tag-collapsed" width="16" height="16" viewBox="0 0 16 16" fill="none"
+                    xmlns="http://www.w3.org/2000/svg">
                     <path
                         d="M8.00033 2C7.26699 2 6.66699 2.6 6.66699 3.33333C6.66699 4.06667 7.26699 4.66667 8.00033 4.66667C8.73366 4.66667 9.33366 4.06667 9.33366 3.33333C9.33366 2.6 8.73366 2 8.00033 2ZM8.00033 11.3333C7.26699 11.3333 6.66699 11.9333 6.66699 12.6667C6.66699 13.4 7.26699 14 8.00033 14C8.73366 14 9.33366 13.4 9.33366 12.6667C9.33366 11.9333 8.73366 11.3333 8.00033 11.3333ZM8.00033 6.66667C7.26699 6.66667 6.66699 7.26667 6.66699 8C6.66699 8.73333 7.26699 9.33333 8.00033 9.33333C8.73366 9.33333 9.33366 8.73333 9.33366 8C9.33366 7.26667 8.73366 6.66667 8.00033 6.66667Z"
                         fill="black" />
@@ -220,50 +153,14 @@
             </div>
 
             <ul class="my-6 overflow-y-auto md:mt-10 space-y-7">
-                @foreach ($navbarItems as $item)
-                    <?php
-                    $child = $item['child'] ?? [];
-                    $hasChild = count($child) > 0;
-                    ?>
-
-                    <li @if ($hasChild) x-data="{open: false}" @endif>
+                @foreach ($navbarItems['main'] as $item)
+                    <li>
                         <a href="{{ $item['url'] ?? '#' }}"
-                            class="flex items-center justify-between w-full {{ $item['active'] ?? false ? 'font-semibold text-dark' : 'text-dark-light2' }} hover:text-dark"
-                            @if ($hasChild) @click.prevent="open = !open" @endif>
-                            <div class="flex items-center gap-2">
-                                {!! $item['icon'] !!}
-
-                                <span>{{ $item['title'] }}</span>
+                            class="flex items-center justify-between w-full {{ $item['active'] ?? false ? 'font-semibold text-dark' : 'text-dark-light2' }} hover:text-dark">
+                            <div>
+                                {{ $item['title'] }}
                             </div>
-
-                            @if ($hasChild)
-                                <svg :class="open ? 'rotate-90' : ''" width="16" height="16"
-                                    viewBox="0 0 16 16" fill="none" xmlns="http://www.w3.org/2000/svg">
-                                    <path
-                                        d="M8.78126 8.00047L5.48145 4.70062L6.42425 3.75781L10.6669 8.00047L6.42425 12.2431L5.48145 11.3003L8.78126 8.00047Z"
-                                        fill="#464E49" />
-                                </svg>
-                            @endif
                         </a>
-
-                        @if ($hasChild)
-                            <ul class="mt-4 ml-6 space-y-4" x-show="open" x-transition.opacity x-cloak>
-                                <li>
-                                    <a class="flex items-center w-full text-gray-900 transition duration-75 rounded-lg group hover:bg-gray-100 dark:text-white dark:hover:bg-gray-700 @if($currentRoute === 'track-investor') font-bold @endif"
-                                        href="{{ route('company.track-investor', ['ticker' => $this->company->ticker]) }}">
-                                        Track Investors
-                                    </a>
-                                </li>
-                                @foreach ($child as $childItem)
-                                    <li class="space-y-2">
-                                        <a href="{{ $childItem['url'] ?? '#' }}"
-                                            class="@if ($childItem['active'] ?? false) text-dark font-semibold @else text-dark-light2 hover:text-dark @endif">
-                                            {{ $childItem['title'] }}
-                                        </a>
-                                    </li>
-                                @endforeach
-                            </ul>
-                        @endif
                     </li>
                 @endforeach
             </ul>

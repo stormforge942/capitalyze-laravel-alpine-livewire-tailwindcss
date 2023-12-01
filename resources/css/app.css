@@ -82,13 +82,6 @@
 }
 /* ownership breadcrumb border */
 
-.nav-collapsed #default-sidebar .tag-collapsed {
-    display: none !important;
-}
-.nav-collapsed #default-sidebar [role="tooltip"] {
-    display: block !important;
-}
-
 .tooltip-caret:before {
     content: "";
     display: block;
@@ -103,19 +96,11 @@
     bottom: -17px;
 }
 
-.wait-list {
-    font-family: IBM Plex Sans, Arial;
-    color: #121a0f;
-}
-
-.wait-list-button-text {
-    color: #52d3a2;
-}
-
 input {
     @apply text-base;
 }
 
+/* company overview */
 .bussiness-information-content p {
     font-size: 14px !important;
     font-weight: 400 !important;
@@ -144,6 +129,8 @@ input {
     color: #121a0f;
     margin-bottom: 15px;
 }
+/* company overview */
+
 .white-card-nav {
     font-size: 0.5em;
     padding: 1.4em 2em;
@@ -793,3 +780,41 @@ div#range-slider-company-analysis-geography {
 .wep-modal-backdrop {
     background-color: rgba(18, 26, 15, 0.5);
 }
+
+/* company navigation */
+.nav-collapsed #default-sidebar .tag-collapsed {
+    display: none !important;
+}
+
+.nav-collapsed #default-sidebar [role="tooltip"] {
+    display: block !important;
+}
+
+.nav-group-icon {
+    @apply h-4 w-4 fill-current inline-block
+}
+
+.nav-collapsed .nav-group-icon {
+    @apply h-6 w-6 mx-auto
+}
+
+.nav-group-head {
+    @apply px-4;
+}
+
+.nav-collapsed .nav-group-head {
+    @apply p-0;
+}
+
+.nav-collapsed .nav-group-head .dropdown-trigger {
+    @apply p-2 rounded hover:bg-[#828c851a] focus:bg-[#828c851a]
+}
+
+.px-navbar {
+    @apply px-4
+}
+
+.nav-collapsed .px-navbar {
+    @apply px-5;
+}
+/* company navigation end */

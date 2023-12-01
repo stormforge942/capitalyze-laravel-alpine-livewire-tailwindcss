@@ -166,8 +166,6 @@ window.formatCmpctNumber = formatCmpctNumber
 function getOrCreateTooltip(chart) {
     let tooltipEl = chart.canvas.parentNode.querySelector("div")
 
-    console.log(tooltipEl)
-
     if (!tooltipEl) {
         tooltipEl = document.createElement("div")
         tooltipEl.style.background = "#fff"
