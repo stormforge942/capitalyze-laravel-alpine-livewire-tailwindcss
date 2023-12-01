@@ -257,7 +257,7 @@ class CompanyReport extends Component
             }
 
             if ($this->activeTabName === 'Ratios') {
-                $data = $this->fakeDataForRatiosPage();
+                $data = json_decode($this->fakeDataForRatiosPage(), true);
             }
             $this->noData = false;
         }
@@ -553,7 +553,7 @@ class CompanyReport extends Component
         }
 
         if ($this->view === 'Standardised Template') {
-            $data = $this->activeTabName == 'Balance Sheet Statement' ? $data['Balance Sheet'] : $data[$this->activeTabName];
+            $data = $this->activeTabName == 'Balance Sheet Statement' ? $data['Balance Sheet'] : $data[$this->activeTabName] ?? $data;
         }
 
 
@@ -776,6 +776,11 @@ class CompanyReport extends Component
         $this->setAsReportedStatementsList();
         $this->getData();
         $this->generateRows($this->data);
+        if(count($this->selectedRows) > 0){
+            $this->updateSelectRows();
+        }
+        $this->generateChartData();
+        $this->emit('updateCompanyReportChart');
     }
 
     public function setAsReportedStatementsList()
