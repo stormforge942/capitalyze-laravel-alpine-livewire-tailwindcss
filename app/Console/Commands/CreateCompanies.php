@@ -1,10 +1,9 @@
 <?php
 
 namespace App\Console\Commands;
-
+use Illuminate\Support\Facades\Http;
 use App\Models\Company;
 use Illuminate\Console\Command;
-use Illuminate\Support\Facades\Http;
 use Illuminate\Support\Facades\Log;
 
 class CreateCompanies extends Command
@@ -23,41 +22,43 @@ class CreateCompanies extends Command
      */
     protected $description = 'Import all companies from the sec website';
 
-    /**
-     * Execute the console command.
-     *
-     * @return mixed
-     */
+
     public function handle()
     {
         $url = 'https://www.sec.gov/files/company_tickers.json';
 
-        $json = Http::acceptJson()
-            ->withHeaders([
-                'User-Agent' => 'Mozilla/5.0 (compatible; MSIE 10.0; Windows NT 6.1; Trident/6.0)',
-                'Accept-Encoding' => 'gzip, deflate',
-                'Host' => 'www.sec.gov'
-            ])
-            ->throw()
-            ->get($url)
-            ->object();
+        // Use Laravel's HTTP client to get the JSON with custom headers
+        $response = Http::withHeaders([
+            'User-Agent' => 'Sample Company Name mgmt@capitalyze.com',
+            'Accept-Encoding' => 'gzip, deflate',
+            'Host' => 'www.sec.gov'
+        ])->get($url);
 
-        foreach ($json as $key => $value) {
-            if (isset($value->ticker) && !empty($value->ticker)) {
-                Log::debug("Ticker is set and not empty: {$value->ticker}");
-                try {
-                    $company = Company::updateOrCreate(
-                        ['cik' => $value->cik_str],
-                        ['ticker' => $value->ticker, 'name' => $value->title]
-                    );
-                } catch (\Exception $e) {
-                    Log::error("Error creating or finding company: {$e->getMessage()}");
+        // Check if the request was successful
+        if ($response->successful()) {
+            $json = $response->json();
+
+            foreach($json as $key => $value) {
+                if (isset($value["ticker"]) && !empty($value["ticker"])) {
+                    Log::debug("Ticker is set and not empty: {$value["ticker"]}");
+                    try {
+                        $company = Company::updateOrCreate(
+                            ['cik' => $value["cik_str"]],
+                            ['ticker' => $value["ticker"], 'name' => $value["title"]]
+                        );
+                    } catch (\Exception $e) {
+                        Log::error("Error creating or finding company: {$e->getMessage()}");
+                    }
+                } else {
+                    Log::warning("Skipping item $key because ticker is not set or empty");
                 }
-            } else {
-                Log::warning("Skipping item $key because ticker is not set or empty");
             }
-        }
 
-        $this->info('Companies imported successfully!');
+            $this->info('Companies imported successfully!');
+        } else {
+            Log::error("Failed to fetch data from SEC: " . $response->body());
+            $this->error('Failed to import companies!');
+        }
     }
+
 }

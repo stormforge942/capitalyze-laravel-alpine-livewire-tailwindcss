@@ -80,7 +80,7 @@ class RevenueByEmployee extends Component
     }
 
     public function rbePeriodChanged($period){
-        $this->period = $period == 'arps' ? 'annual' : 'quarterly';
+        $this->period = ($period == 'arps') || ($period == 'Calendar Annual') || ($period == 'Fiscal Annual') ? 'annual' : 'quarterly';
         $this->getPresentationData();
         $this->getEmployeeCount();
         $this->rangeDates = array_keys($this->revenues);

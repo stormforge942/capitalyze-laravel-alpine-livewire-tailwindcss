@@ -1,17 +1,4 @@
 <div class="w-full">
-    @if($noData)
-        <div class="py-12">
-            <div class="mx-auto flex">
-                <div class="mt-4 px-4 sm:px-6 lg:px-8 bg-white py-4 shadow rounded w-full md:w-1/2 md:mx-auto">
-                    <div class="sm:flex sm:items-center">
-                        <div class="sm:flex-auto">
-                            <h1 class="text-base font-semibold leading-6 text-gray-900">No data available</h1>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </div>
-    @else
     <livewire:slides.right-slide>
     <livewire:slides.left-slide>
     <div id="main-report-div" class="py-0 bg-gray-100">
@@ -59,48 +46,6 @@
                     <div class="align-middle">
                         <div class="block min-w-full sm:rounded-lg">
                             <div class="py-0">
-{{--                                <div class="flex w-full justify-between items-center" >--}}
-{{--                                    <div class="page-titles">--}}
-{{--                                        <b class="company-name">{{ @$companyName }}  @if(@$ticker) ({{ @$ticker }}) @endif </b> <br>--}}
-{{--                                        <span class="brr mt-3"></span>--}}
-{{--                                        <span class="company-price">${{ number_format($cost, 2) }}</span>--}}
-{{--                                        <small id="dynamicValue" class="{{ $dynamic > 0 ? 'text-color-green' : 'text-color-red' }}">--}}
-{{--                                            ({{ $dynamic > 0 ? '+' : '-' }}{{ abs($dynamic) }}%)--}}
-{{--                                        </small>--}}
-{{--                                    </div>--}}
-{{--                                    <div class="download-buttons-wrapper flex">--}}
-{{--                                        <a class="download-button" href="#">--}}
-{{--                                            <svg viewBox="0 0 16 16" fill="none" xmlns="http://www.w3.org/2000/svg">--}}
-{{--                                                <path d="M8.66634 6.66667H11.9997L7.99967 10.6667L3.99967 6.66667H7.33301V2H8.66634V6.66667ZM2.66634 12.6667H13.333V8H14.6663V13.3333C14.6663 13.7015 14.3679 14 13.9997 14H1.99967C1.63149 14 1.33301 13.7015 1.33301 13.3333V8H2.66634V12.6667Z" fill="#121A0F"/>--}}
-{{--                                            </svg>--}}
-{{--                                            Download PDF--}}
-{{--                                        </a>--}}
-{{--                                        <a class="download-button" href="#">--}}
-{{--                                            <svg viewBox="0 0 16 16" fill="none" xmlns="http://www.w3.org/2000/svg">--}}
-{{--                                                <path d="M8.66634 6.66667H11.9997L7.99967 10.6667L3.99967 6.66667H7.33301V2H8.66634V6.66667ZM2.66634 12.6667H13.333V8H14.6663V13.3333C14.6663 13.7015 14.3679 14 13.9997 14H1.99967C1.63149 14 1.33301 13.7015 1.33301 13.3333V8H2.66634V12.6667Z" fill="#121A0F"/>--}}
-{{--                                            </svg>--}}
-{{--                                            Download Excel--}}
-{{--                                        </a>--}}
-{{--                                        <a class="download-button" href="#">--}}
-{{--                                            <svg viewBox="0 0 16 16" fill="none" xmlns="http://www.w3.org/2000/svg">--}}
-{{--                                                <path d="M8.66634 6.66667H11.9997L7.99967 10.6667L3.99967 6.66667H7.33301V2H8.66634V6.66667ZM2.66634 12.6667H13.333V8H14.6663V13.3333C14.6663 13.7015 14.3679 14 13.9997 14H1.99967C1.63149 14 1.33301 13.7015 1.33301 13.3333V8H2.66634V12.6667Z" fill="#121A0F"/>--}}
-{{--                                            </svg>--}}
-{{--                                            Download CSV--}}
-{{--                                        </a>--}}
-{{--                                    </div>--}}
-{{--                                </div>--}}
-
-                                <!-- <div class="flex w-full overflow-x-hidden">
-                                    <div class="tabs-wrapper flex">
-                                        <a href="{{route('company.report', ['ticker' => $company->ticker, 'period' => $period])}}" @class(['tab','px-3', 'active' => $currentRoute === 'company.report'])>Income Statement</a>
-                                        <a href="{{route('company.report', ['ticker' => $company->ticker, 'period' => $period])}}" @class(['tab','px-3' => $currentRoute === 'company.report'])>Balance Sheet</a>
-                                        <a href="{{route('company.report', ['ticker' => $company->ticker, 'period' => $period])}}" @class(['tab','px-3' => $currentRoute === 'company.report'])>Cash Flow</a>
-                                        <a href="{{route('company.geographic', ['ticker' => $company->ticker, 'period' => $period])}}" @class(['tab','px-3', 'active' => $currentRoute === 'company.geographic'])>Segments</a>
-                                        <a href="{{route('company.shareholders', ['ticker' => $company->ticker, 'period' => $period])}}" @class(['tab','px-3', 'active' => $currentRoute === 'company.shareholders'])>Ratios</a>
-                                        <a href="{{route('company.executive.compensation', ['ticker' => $company->ticker, 'period' => $period])}}" @class(['tab','px-3', 'active' => $currentRoute === 'company.executive.compensation'])>Consolidated Statements</a>
-                                    </div>
-                                </div> -->
-
                                 <div class="flex w-full overflow-x-hidden mt-3">
                                     <div class="tabs-container w-full" style="overflow-x: auto; white-space: nowrap;">
                                         <ul class="tabs-wrapper flex gap-2">
@@ -114,456 +59,471 @@
                                 </div>
 
 
-
-                                <div class="filters-row bg-white py-3 px-4  rounded-lg mb-7 custom__border_gray">
-                                    <div class="select-wrapper flex gap-x-4 items-center custom-text-xs">
-                                        <div class=" flex items-center text-sm" x-data="{view: null, viewTypeSelectorOpen: false}" @click.away="viewTypeSelectorOpen = false">View
-                                            <div class="relative">
-                                                <button type="submit" @click="viewTypeSelectorOpen = !viewTypeSelectorOpen" id="dropdownViewButton" data-dropdown-toggle="dropdown-View" class="flex items-center flowbite-select flowbite_btn bg-gray-50 border border-gray-700 text-gray-900 text-sm ml-2 p-2" name="view" id="" :class="[view != null ? 'active' : '', viewTypeSelectorOpen? 'down' : '']">
-                                                    {{(str_replace('(Harmonized)', '', $view))}}
-                                                    <svg width="16" height="16" viewBox="0 0 16 16" fill="none" xmlns="http://www.w3.org/2000/svg">
-                                                        <path d="M10.3083 6.19514L7.72167 8.78378L5.135 6.19514C5.01045 6.07021 4.84135 6 4.665 6C4.48865 6 4.31955 6.07021 4.195 6.19514C3.935 6.45534 3.935 6.87566 4.195 7.13585L7.255 10.1982C7.515 10.4584 7.935 10.4584 8.195 10.1982L11.255 7.13585C11.515 6.87566 11.515 6.45534 11.255 6.19514C10.995 5.94161 10.5683 5.93494 10.3083 6.19514Z" fill="#121A0F"/>
-                                                    </svg>
-                                                </button>
-                                                <!-- Dropdown menu -->
-                                                <div id="dropdown-View" x-show="viewTypeSelectorOpen" class="z-10 bg-white divide-y divide-gray-100 rounded-lg shadow  dark:bg-gray-700 dark:divide-gray-600 dropdown-scroll-wrapper">
-                                                    <div class="p-3 text-base flex items-center justify-between font-medium">
-                                                        <div>View</div>
-                                                        <svg id="viewClose" @click="viewTypeSelectorOpen = false" width="24" height="24" viewBox="0 0 24 24" class="cursor-pointer" fill="none" xmlns="http://www.w3.org/2000/svg">
-                                                            <path d="M6.4 19L5 17.6L10.6 12L5 6.4L6.4 5L12 10.6L17.6 5L19 6.4L13.4 12L19 17.6L17.6 19L12 13.4L6.4 19Z" fill="#686868"/>
-                                                        </svg>
-                                                    </div>
-                                                    <ul class="p-4 space-y-1 text-sm text-gray-700 dark:text-gray-200 h_23 overflow-y-scroll dropdown-scroll " aria-labelledby="dropdownViewButton">
-                                                        <li>
-                                                            <div class="flex p-2 rounded hover:bg-[#52D3A233] cursor-pointer">
-                                                                <div class="flex items-center h-5 cursor-pointer">
-                                                                    <input @click='view = "As reported (Harmonized)"' :checked="view == 'As reported (Harmonized)'" id="view-radio-1" name="view-radio" type="radio" value="As reported (Harmonized)" class="cursor-pointer w-4 h-4 text-[#686868] bg-transpearent border-[#686868] border-2">
-                                                                </div>
-                                                                <div class="ml-4 w-full text-sm cursor-pointer">
-                                                                    <label for="view-radio-1" class="cursor-pointer font-medium text-gray-900 dark:text-gray-300">
-                                                                        <div>As reported</div>
-                                                                    </label>
-                                                                </div>
+                                <div class="mb-7">
+                                    <div class="filters-row bg-white  rounded-lg custom__border_gray">
+                                        <div class=" py-3 px-4">
+                                            <div class="select-wrapper flex gap-x-4 items-center custom-text-xs">
+                                                <div class=" flex items-center text-sm" x-data="{view: null, viewTypeSelectorOpen: false}" @click.away="viewTypeSelectorOpen = false">View
+                                                    <div class="relative">
+                                                        <button type="submit" @click="viewTypeSelectorOpen = !viewTypeSelectorOpen" class="flex items-center flowbite-select flowbite_btn bg-gray-50 border border-gray-700 text-gray-900 text-sm ml-2 p-2" name="view" id="" :class="[view != null ? 'active' : '', viewTypeSelectorOpen? 'down' : '']">
+                                                            <span x-text="(view == null || view == 0) ? 'Standardised' : view.replace('(Harmonized)', '')"></span>
+                                                            <svg width="16" height="16" viewBox="0 0 16 16" fill="none" xmlns="http://www.w3.org/2000/svg">
+                                                                <path d="M10.3083 6.19514L7.72167 8.78378L5.135 6.19514C5.01045 6.07021 4.84135 6 4.665 6C4.48865 6 4.31955 6.07021 4.195 6.19514C3.935 6.45534 3.935 6.87566 4.195 7.13585L7.255 10.1982C7.515 10.4584 7.935 10.4584 8.195 10.1982L11.255 7.13585C11.515 6.87566 11.515 6.45534 11.255 6.19514C10.995 5.94161 10.5683 5.93494 10.3083 6.19514Z" fill="#121A0F"/>
+                                                            </svg>
+                                                        </button>
+                                                        <!-- Dropdown menu -->
+                                                        <div x-cloak id="dropdown-View" x-show="viewTypeSelectorOpen" class="z-10 bg-white divide-y divide-gray-100 rounded-lg shadow  dark:bg-gray-700 dark:divide-gray-600 dropdown-scroll-wrapper">
+                                                            <div class="p-3 text-base flex items-center justify-between font-medium">
+                                                                <div>View</div>
+                                                                <svg id="viewClose" @click="viewTypeSelectorOpen = false" width="24" height="24" viewBox="0 0 24 24" class="cursor-pointer" fill="none" xmlns="http://www.w3.org/2000/svg">
+                                                                    <path d="M6.4 19L5 17.6L10.6 12L5 6.4L6.4 5L12 10.6L17.6 5L19 6.4L13.4 12L19 17.6L17.6 19L12 13.4L6.4 19Z" fill="#686868"/>
+                                                                </svg>
                                                             </div>
-                                                        </li>
-                                                        <li>
-                                                            <div class="flex p-2 rounded hover:bg-[#52D3A233] cursor-pointer">
-                                                                <div class="flex items-center h-5 cursor-pointer">
-                                                                    <input @click='view = "Adjusted"' :checked="view == 'Adjusted'" id="view-radio-2" name="view-radio" type="radio" value="Adjusted" class="cursor-pointer w-4 h-4 text-[#686868] bg-transpearent border-[#686868] border-2">
-                                                                </div>
-                                                                <div class="ml-4 w-full text-sm cursor-pointer">
-                                                                    <label for="view-radio-2" class="cursor-pointer font-medium text-gray-900 dark:text-gray-300">
-                                                                        <div>Adjusted</div>
-                                                                    </label>
-                                                                </div>
+                                                            <ul class="p-4 space-y-1 text-sm text-gray-700 dark:text-gray-200 h_23 overflow-y-scroll dropdown-scroll " aria-labelledby="dropdownViewButton">
+                                                                <li>
+                                                                    <div class="flex p-2 rounded hover:bg-[#52D3A233] cursor-pointer">
+                                                                        <div class="flex items-center h-5 cursor-pointer">
+                                                                            <input @click='view = "As reported"' :checked="view == 'As reported'" id="view-radio-1" name="view-radio" type="radio" value="As reported" class="cursor-pointer w-4 h-4 text-[#686868] bg-transpearent border-[#686868] border-2">
+                                                                        </div>
+                                                                        <div class="ml-4 w-full text-sm cursor-pointer">
+                                                                            <label for="view-radio-1" class="cursor-pointer font-medium text-gray-900 dark:text-gray-300">
+                                                                                <div>As reported</div>
+                                                                            </label>
+                                                                        </div>
+                                                                    </div>
+                                                                </li>
+                                                                <li>
+                                                                    <div class="flex p-2 rounded hover:bg-[#52D3A233] cursor-pointer">
+                                                                        <div class="flex items-center h-5 cursor-pointer">
+                                                                            <input @click='view = "Adjusted"' :checked="view == 'Adjusted'" id="view-radio-2" name="view-radio" type="radio" value="Adjusted" class="cursor-pointer w-4 h-4 text-[#686868] bg-transpearent border-[#686868] border-2">
+                                                                        </div>
+                                                                        <div class="ml-4 w-full text-sm cursor-pointer">
+                                                                            <label for="view-radio-2" class="cursor-pointer font-medium text-gray-900 dark:text-gray-300">
+                                                                                <div>Adjusted</div>
+                                                                            </label>
+                                                                        </div>
+                                                                    </div>
+                                                                </li>
+                                                                <li>
+                                                                    <div class="flex p-2 rounded hover:bg-[#52D3A233] cursor-pointer">
+                                                                        <div class="flex items-center h-5 cursor-pointer">
+                                                                            <input @click='view ="Standardised"' :checked="view == 'Standardised'" id="view-radio-3" name="view-radio" type="radio" value="Standardised" class="cursor-pointer w-4 h-4 text-[#686868] bg-transpearent border-[#686868] border-2">
+                                                                        </div>
+                                                                        <div class="ml-4 w-full text-sm cursor-pointer">
+                                                                            <label for="view-radio-3" class="cursor-pointer font-medium text-gray-900 dark:text-gray-300">
+                                                                                <div>Standardised</div>
+                                                                            </label>
+                                                                        </div>
+                                                                    </div>
+                                                                </li>
+                                                                <li>
+                                                                    <div class="flex p-2 rounded hover:bg-[#52D3A233] cursor-pointer">
+                                                                        <div class="flex items-center h-5 cursor-pointer">
+                                                                            <input @click='view ="Per Share"' :checked="view == 'Per Share'" id="view-radio-4" name="view-radio" type="radio" value="Per Share" class="cursor-pointer w-4 h-4 text-[#686868] bg-transpearent border-[#686868] border-2">
+                                                                        </div>
+                                                                        <div class="ml-4 w-full text-sm cursor-pointer">
+                                                                            <label for="view-radio-4" class="cursor-pointer font-medium text-gray-900 dark:text-gray-300">
+                                                                                <div>Per Share</div>
+                                                                            </label>
+                                                                        </div>
+                                                                    </div>
+                                                                </li>
+                                                                <li>
+                                                                    <div class="flex p-2 rounded hover:bg-[#52D3A233] cursor-pointer">
+                                                                        <div class="flex items-center h-5 cursor-pointer">
+                                                                            <input @click='view ="Common size"' :checked="view == 'Common size'" id="view-radio-5" name="view-radio" type="radio" value="Common size" class="cursor-pointer w-4 h-4 text-[#686868] bg-transpearent border-[#686868] border-2">
+                                                                        </div>
+                                                                        <div class="ml-4 w-full text-sm cursor-pointer">
+                                                                            <label for="view-radio-5" class="cursor-pointer font-medium text-gray-900 dark:text-gray-300">
+                                                                                <div>Common size</div>
+                                                                            </label>
+                                                                        </div>
+                                                                    </div>
+                                                                </li>
+                                                            </ul>
+                                                            <div class="mx-3 my-4">
+                                                                <button @click="$wire.set('view', view); viewTypeSelectorOpen = false" class="w-full p-1 text-base font-medium bg-[#52D3A2] rounded text-center" id="viewCloseButton">Show Result</button>
                                                             </div>
-                                                        </li>
-                                                        <li>
-                                                            <div class="flex p-2 rounded hover:bg-[#52D3A233] cursor-pointer">
-                                                                <div class="flex items-center h-5 cursor-pointer">
-                                                                    <input @click='view ="Standardised Template"' :checked="view == 'Standardised Template'" id="view-radio-3" name="view-radio" type="radio" value="Standardised Template" class="cursor-pointer w-4 h-4 text-[#686868] bg-transpearent border-[#686868] border-2">
-                                                                </div>
-                                                                <div class="ml-4 w-full text-sm cursor-pointer">
-                                                                    <label for="view-radio-3" class="cursor-pointer font-medium text-gray-900 dark:text-gray-300">
-                                                                        <div>Standardised Template</div>
-                                                                    </label>
-                                                                </div>
-                                                            </div>
-                                                        </li>
-                                                        <li>
-                                                            <div class="flex p-2 rounded hover:bg-[#52D3A233] cursor-pointer">
-                                                                <div class="flex items-center h-5 cursor-pointer">
-                                                                    <input @click='view ="Per Share"' :checked="view == 'Per Share'" id="view-radio-4" name="view-radio" type="radio" value="Per Share" class="cursor-pointer w-4 h-4 text-[#686868] bg-transpearent border-[#686868] border-2">
-                                                                </div>
-                                                                <div class="ml-4 w-full text-sm cursor-pointer">
-                                                                    <label for="view-radio-4" class="cursor-pointer font-medium text-gray-900 dark:text-gray-300">
-                                                                        <div>Per Share</div>
-                                                                    </label>
-                                                                </div>
-                                                            </div>
-                                                        </li>
-                                                        <li>
-                                                            <div class="flex p-2 rounded hover:bg-[#52D3A233] cursor-pointer">
-                                                                <div class="flex items-center h-5 cursor-pointer">
-                                                                    <input @click='view ="Common size"' :checked="view == 'Common size'" id="view-radio-5" name="view-radio" type="radio" value="Common size" class="cursor-pointer w-4 h-4 text-[#686868] bg-transpearent border-[#686868] border-2">
-                                                                </div>
-                                                                <div class="ml-4 w-full text-sm cursor-pointer">
-                                                                    <label for="view-radio-5" class="cursor-pointer font-medium text-gray-900 dark:text-gray-300">
-                                                                        <div>Common size</div>
-                                                                    </label>
-                                                                </div>
-                                                            </div>
-                                                        </li>
-                                                    </ul>
-                                                    <div class="mx-3 my-4">
-                                                        <button @click="$wire.set('view', view); viewTypeSelectorOpen = false" class="w-full p-1 text-base font-medium bg-[#52D3A2] rounded text-center" id="viewCloseButton">Show Result</button>
-                                                    </div>
-                                                </div>
-                                            </div>
-                                        </div>
-                                        <div class=" flex items-center text-sm" x-data="{period: null, periodTypeSelectorOpen: false}" @click.away="periodTypeSelectorOpen = false">Period Type
-                                            <div class="relative">
-                                                    <button type="submit" :class="[period != null ? 'active' : '', periodTypeSelectorOpen ? 'down' : '']" @click="periodTypeSelectorOpen = !periodTypeSelectorOpen" class="flex items-center flowbite_btn flowbite-select bg-gray-50 border border-gray-700 text-gray-900 text-sm ml-2 p-2" name="period" id="">
-                                                        {{$period}}
-                                                        <svg width="16" height="16" viewBox="0 0 16 16" fill="none" xmlns="http://www.w3.org/2000/svg">
-                                                            <path d="M10.3083 6.19514L7.72167 8.78378L5.135 6.19514C5.01045 6.07021 4.84135 6 4.665 6C4.48865 6 4.31955 6.07021 4.195 6.19514C3.935 6.45534 3.935 6.87566 4.195 7.13585L7.255 10.1982C7.515 10.4584 7.935 10.4584 8.195 10.1982L11.255 7.13585C11.515 6.87566 11.515 6.45534 11.255 6.19514C10.995 5.94161 10.5683 5.93494 10.3083 6.19514Z" fill="#121A0F"/>
-                                                        </svg>
-                                                    </button>
-                                                <!-- Dropdown menu -->
-                                                <div x-show="periodTypeSelectorOpen" id="dropdown-Period" class="z-10 bg-white divide-y divide-gray-100 rounded-lg shadow  dark:bg-gray-700 dark:divide-gray-600 dropdown-scroll-wrapper">
-                                                    <div class="p-3 text-base flex items-center justify-between font-medium">
-                                                        <div>Period Type</div>
-                                                        <svg @click="periodTypeSelectorOpen = false" id="periodClose" width="24" height="24" viewBox="0 0 24 24" class="cursor-pointer" fill="none" xmlns="http://www.w3.org/2000/svg">
-                                                            <path d="M6.4 19L5 17.6L10.6 12L5 6.4L6.4 5L12 10.6L17.6 5L19 6.4L13.4 12L19 17.6L17.6 19L12 13.4L6.4 19Z" fill="#686868"/>
-                                                        </svg>
-                                                    </div>
-                                                    <ul class="p-4 space-y-1 text-sm text-gray-700 dark:text-gray-200 h_23 overflow-y-scroll dropdown-scroll " aria-labelledby="dropdownViewButton">
-                                                        <li>
-                                                            <div class="flex p-2 rounded hover:bg-[#52D3A233] cursor-pointer">
-                                                                <div class="flex items-center h-5 cursor-pointer">
-                                                                    <input @click='period = "Fiscal Annual"' :checked="period == 'Fiscal Annual'" id="period-radio-1" name="view-radio" type="radio" value="Fiscal Annual" class="cursor-pointer w-4 h-4 text-[#686868] bg-transpearent border-[#686868] border-2">
-                                                                </div>
-                                                                <div class="ml-4 w-full text-sm cursor-pointer">
-                                                                    <label for="period-radio-1" class="cursor-pointer font-medium text-gray-900 dark:text-gray-300">
-                                                                        <div>Fiscal Annual</div>
-                                                                    </label>
-                                                                </div>
-                                                            </div>
-                                                        </li>
-                                                        <li>
-                                                            <div class="flex p-2 rounded hover:bg-[#52D3A233] cursor-pointer">
-                                                                <div class="flex items-center h-5 cursor-pointer">
-                                                                    <input @click='period = "Fiscal Quaterly"' :checked="period == 'Fiscal Quaterly'" id="period-radio-2" name="view-radio" type="radio" value="Fiscal Quaterly" class="cursor-pointer w-4 h-4 text-[#686868] bg-transpearent border-[#686868] border-2">
-                                                                </div>
-                                                                <div class="ml-4 w-full text-sm cursor-pointer">
-                                                                    <label for="period-radio-2" class="cursor-pointer font-medium text-gray-900 dark:text-gray-300">
-                                                                        <div>Fiscal Quaterly</div>
-                                                                    </label>
-                                                                </div>
-                                                            </div>
-                                                        </li>
-                                                        <li>
-                                                            <div class="flex p-2 rounded hover:bg-[#52D3A233] cursor-pointer">
-                                                                <div class="flex items-center h-5 cursor-pointer">
-                                                                    <input @click='period = "Fiscal Semi-Annual"' :checked="period == 'Fiscal Semi-Annual'" id="period-radio-3" name="view-radio" type="radio" value="Fiscal Semi-Annual" class="cursor-pointer w-4 h-4 text-[#686868] bg-transpearent border-[#686868] border-2">
-                                                                </div>
-                                                                <div class="ml-4 w-full text-sm cursor-pointer">
-                                                                    <label for="period-radio-3" class="cursor-pointer font-medium text-gray-900 dark:text-gray-300">
-                                                                        <div>Fiscal Semi-Annual</div>
-                                                                    </label>
-                                                                </div>
-                                                            </div>
-                                                        </li>
-                                                        <li>
-                                                            <div class="flex p-2 rounded hover:bg-[#52D3A233] cursor-pointer">
-                                                                <div class="flex items-center h-5 cursor-pointer">
-                                                                    <input @click='period = "YTD"' :checked="period == 'YTD'" id="period-radio-4" name="view-radio" type="radio" value="YTD" class="cursor-pointer w-4 h-4 text-[#686868] bg-transpearent border-[#686868] border-2">
-                                                                </div>
-                                                                <div class="ml-4 w-full text-sm cursor-pointer">
-                                                                    <label for="period-radio-4" class="cursor-pointer font-medium text-gray-900 dark:text-gray-300">
-                                                                        <div>YTD</div>
-                                                                    </label>
-                                                                </div>
-                                                            </div>
-                                                        </li>
-                                                        <li>
-                                                            <div class="flex p-2 rounded hover:bg-[#52D3A233] cursor-pointer">
-                                                                <div class="flex items-center h-5 cursor-pointer">
-                                                                    <input @click='period = "LTM"' :checked="period == 'LTM'" id="period-radio-5" name="view-radio" type="radio" value="LTM" class="cursor-pointer w-4 h-4 text-[#686868] bg-transpearent border-[#686868] border-2">
-                                                                </div>
-                                                                <div class="ml-4 w-full text-sm cursor-pointer">
-                                                                    <label for="period-radio-5" class="cursor-pointer font-medium text-gray-900 dark:text-gray-300">
-                                                                        <div>LTM</div>
-                                                                    </label>
-                                                                </div>
-                                                            </div>
-                                                        </li>
-                                                        <li>
-                                                            <div class="flex p-2 rounded hover:bg-[#52D3A233] cursor-pointer">
-                                                                <div class="flex items-center h-5 cursor-pointer">
-                                                                    <input @click='period = "Calendar Annual"' :checked="period == 'Calendar Annual'" id="period-radio-6" name="view-radio" type="radio" value="Calendar Annual" class="cursor-pointer w-4 h-4 text-[#686868] bg-transpearent border-[#686868] border-2">
-                                                                </div>
-                                                                <div class="ml-4 w-full text-sm cursor-pointer">
-                                                                    <label for="period-radio-6" class="cursor-pointer font-medium text-gray-900 dark:text-gray-300">
-                                                                        <div>Calendar Annual</div>
-                                                                    </label>
-                                                                </div>
-                                                            </div>
-                                                        </li>
-                                                        <li>
-                                                            <div class="flex p-2 rounded hover:bg-[#52D3A233] cursor-pointer">
-                                                                <div class="flex items-center h-5 cursor-pointer">
-                                                                    <input @click='period = "Calendar Quaterly"' :checked="period == 'Calendar Quaterly'" id="period-radio-7" name="view-radio" type="radio" value="Calendar Quaterly" class="cursor-pointer w-4 h-4 text-[#686868] bg-transpearent border-[#686868] border-2">
-                                                                </div>
-                                                                <div class="ml-4 w-full text-sm cursor-pointer">
-                                                                    <label for="period-radio-7" class="cursor-pointer font-medium text-gray-900 dark:text-gray-300">
-                                                                        <div>Calendar Quaterly</div>
-                                                                    </label>
-                                                                </div>
-                                                            </div>
-                                                        </li>
-                                                        <li>
-                                                            <div class="flex p-2 rounded hover:bg-[#52D3A233] cursor-pointer">
-                                                                <div class="flex items-center h-5 cursor-pointer">
-                                                                    <input @click='period = "Calendar SA"' :checked="period == 'Calendar SA'" id="period-radio-8" name="view-radio" type="radio" value="Calendar SA" class="cursor-pointer w-4 h-4 text-[#686868] bg-transpearent border-[#686868] border-2">
-                                                                </div>
-                                                                <div class="ml-4 w-full text-sm cursor-pointer">
-                                                                    <label for="period-radio-8" class="cursor-pointer font-medium text-gray-900 dark:text-gray-300">
-                                                                        <div>Calendar SA</div>
-                                                                    </label>
-                                                                </div>
-                                                            </div>
-                                                        </li>
-                                                    </ul>
-                                                    <div class="mx-3 my-4">
-                                                        <button @click="$wire.set('period', period); periodTypeSelectorOpen = false" class="w-full p-1 text-base font-medium bg-[#52D3A2] rounded text-center" id="periodCloseButton">Show Result</button>
+                                                        </div>
                                                     </div>
                                                 </div>
-                                            </div>
-                                        </div>
-                                        <div class=" flex items-center text-sm" x-data="{unitType: null, unitTypeSelectorOpen: false}" @click.away="unitTypeSelectorOpen = false">Unit Type
-                                            <div class="relative">
-                                                <button type="submit" :class="[unitType != null ? 'active' : '', unitTypeSelectorOpen ? 'down' : '']" @click="unitTypeSelectorOpen = !unitTypeSelectorOpen" class="flex items-center flowbite_btn flowbite-select bg-gray-50 border border-gray-700 text-gray-900 text-sm ml-2 p-2" name="view" id="">
-                                                    {{$unitType}}
-                                                    <svg width="16" height="16" viewBox="0 0 16 16" fill="none" xmlns="http://www.w3.org/2000/svg">
-                                                        <path d="M10.3083 6.19514L7.72167 8.78378L5.135 6.19514C5.01045 6.07021 4.84135 6 4.665 6C4.48865 6 4.31955 6.07021 4.195 6.19514C3.935 6.45534 3.935 6.87566 4.195 7.13585L7.255 10.1982C7.515 10.4584 7.935 10.4584 8.195 10.1982L11.255 7.13585C11.515 6.87566 11.515 6.45534 11.255 6.19514C10.995 5.94161 10.5683 5.93494 10.3083 6.19514Z" fill="#121A0F"/>
-                                                    </svg>
-                                                </button>
-                                                <!-- Dropdown menu -->
-                                                <div x-show="unitTypeSelectorOpen" class="z-10 bg-white divide-y divide-gray-100 rounded-lg shadow  dark:bg-gray-700 dark:divide-gray-600 dropdown-scroll-wrapper">
-                                                    <div class="p-3 text-base flex items-center justify-between font-medium">
-                                                        <div>Unit Type</div>
-                                                        <svg @click="unitTypeSelectorOpen = false" id="unitTypeClose" width="24" height="24" viewBox="0 0 24 24" class="cursor-pointer" fill="none" xmlns="http://www.w3.org/2000/svg">
-                                                            <path d="M6.4 19L5 17.6L10.6 12L5 6.4L6.4 5L12 10.6L17.6 5L19 6.4L13.4 12L19 17.6L17.6 19L12 13.4L6.4 19Z" fill="#686868"/>
-                                                        </svg>
-                                                    </div>
-                                                    <ul class="p-4 space-y-1 text-sm text-gray-700 dark:text-gray-200 h_23 overflow-y-scroll dropdown-scroll " aria-labelledby="dropdownViewButton">
-                                                        <li>
-                                                            <div class="flex p-2 rounded hover:bg-[#52D3A233] cursor-pointer">
-                                                                <div class="flex items-center h-5 cursor-pointer">
-                                                                    <input @click='unitType = "None"' :checked="unitType == 'None'" id="unitType-radio" name="unitType-radio" type="radio" value="None" class="cursor-pointer w-4 h-4 text-[#686868] bg-transpearent border-[#686868] border-2">
-                                                                </div>
-                                                                <div class="ml-4 w-full text-sm cursor-pointer">
-                                                                    <label for="unitType-radio" class="cursor-pointer font-medium text-gray-900 dark:text-gray-300">
-                                                                        <div>None</div>
-                                                                    </label>
-                                                                </div>
+                                                <div class=" flex items-center text-sm" x-data="{period: null, periodTypeSelectorOpen: false}" @click.away="periodTypeSelectorOpen = false">Period Type
+                                                    <div class="relative">
+                                                            <button type="submit" :class="[period != null ? 'active' : '', periodTypeSelectorOpen ? 'down' : '']" @click="periodTypeSelectorOpen = !periodTypeSelectorOpen" class="flex items-center flowbite_btn flowbite-select bg-gray-50 border border-gray-700 text-gray-900 text-sm ml-2 p-2" name="period" id="">
+                                                                <span x-text="(period == null || period == 0) ? 'Annual' : period"></span>
+                                                                <svg width="16" height="16" viewBox="0 0 16 16" fill="none" xmlns="http://www.w3.org/2000/svg">
+                                                                    <path d="M10.3083 6.19514L7.72167 8.78378L5.135 6.19514C5.01045 6.07021 4.84135 6 4.665 6C4.48865 6 4.31955 6.07021 4.195 6.19514C3.935 6.45534 3.935 6.87566 4.195 7.13585L7.255 10.1982C7.515 10.4584 7.935 10.4584 8.195 10.1982L11.255 7.13585C11.515 6.87566 11.515 6.45534 11.255 6.19514C10.995 5.94161 10.5683 5.93494 10.3083 6.19514Z" fill="#121A0F"/>
+                                                                </svg>
+                                                            </button>
+                                                        <!-- Dropdown menu -->
+                                                        <div x-cloak x-show="periodTypeSelectorOpen" id="dropdown-Period" class="z-10 bg-white divide-y divide-gray-100 rounded-lg shadow  dark:bg-gray-700 dark:divide-gray-600 dropdown-scroll-wrapper">
+                                                            <div class="p-3 text-base flex items-center justify-between font-medium">
+                                                                <div>Period Type</div>
+                                                                <svg @click="periodTypeSelectorOpen = false" id="periodClose" width="24" height="24" viewBox="0 0 24 24" class="cursor-pointer" fill="none" xmlns="http://www.w3.org/2000/svg">
+                                                                    <path d="M6.4 19L5 17.6L10.6 12L5 6.4L6.4 5L12 10.6L17.6 5L19 6.4L13.4 12L19 17.6L17.6 19L12 13.4L6.4 19Z" fill="#686868"/>
+                                                                </svg>
                                                             </div>
-                                                        </li>
-                                                        <li>
-                                                            <div class="flex p-2 rounded hover:bg-[#52D3A233] cursor-pointer">
-                                                                <div class="flex items-center h-5 cursor-pointer">
-                                                                    <input @click='unitType = "Thousands"' :checked="unitType == 'Thousands'" id="unitType-radio-1" name="unitType-radio" type="radio" value="Thousands" class="cursor-pointer w-4 h-4 text-[#686868] bg-transpearent border-[#686868] border-2">
-                                                                </div>
-                                                                <div class="ml-4 w-full text-sm cursor-pointer">
-                                                                    <label for="unitType-radio-1" class="cursor-pointer font-medium text-gray-900 dark:text-gray-300">
-                                                                        <div>Thousands</div>
-                                                                    </label>
-                                                                </div>
+                                                            <ul class="p-4 space-y-1 text-sm text-gray-700 dark:text-gray-200 h_23 overflow-y-scroll dropdown-scroll " aria-labelledby="dropdownViewButton">
+                                                                <li>
+                                                                    <div class="flex p-2 rounded hover:bg-[#52D3A233] cursor-pointer">
+                                                                        <div class="flex items-center h-5 cursor-pointer">
+                                                                            <input @click='period = "Fiscal Annual"' :checked="period == 'Fiscal Annual'" id="period-radio-1" name="view-radio" type="radio" value="Fiscal Annual" class="cursor-pointer w-4 h-4 text-[#686868] bg-transpearent border-[#686868] border-2">
+                                                                        </div>
+                                                                        <div class="ml-4 w-full text-sm cursor-pointer">
+                                                                            <label for="period-radio-1" class="cursor-pointer font-medium text-gray-900 dark:text-gray-300">
+                                                                                <div>Fiscal Annual</div>
+                                                                            </label>
+                                                                        </div>
+                                                                    </div>
+                                                                </li>
+                                                                <li>
+                                                                    <div class="flex p-2 rounded hover:bg-[#52D3A233] cursor-pointer">
+                                                                        <div class="flex items-center h-5 cursor-pointer">
+                                                                            <input @click='period = "Fiscal Quaterly"' :checked="period == 'Fiscal Quaterly'" id="period-radio-2" name="view-radio" type="radio" value="Fiscal Quaterly" class="cursor-pointer w-4 h-4 text-[#686868] bg-transpearent border-[#686868] border-2">
+                                                                        </div>
+                                                                        <div class="ml-4 w-full text-sm cursor-pointer">
+                                                                            <label for="period-radio-2" class="cursor-pointer font-medium text-gray-900 dark:text-gray-300">
+                                                                                <div>Fiscal Quaterly</div>
+                                                                            </label>
+                                                                        </div>
+                                                                    </div>
+                                                                </li>
+                                                                <li>
+                                                                    <div class="flex p-2 rounded hover:bg-[#52D3A233] cursor-pointer">
+                                                                        <div class="flex items-center h-5 cursor-pointer">
+                                                                            <input @click='period = "Fiscal Semi-Annual"' :checked="period == 'Fiscal Semi-Annual'" id="period-radio-3" name="view-radio" type="radio" value="Fiscal Semi-Annual" class="cursor-pointer w-4 h-4 text-[#686868] bg-transpearent border-[#686868] border-2">
+                                                                        </div>
+                                                                        <div class="ml-4 w-full text-sm cursor-pointer">
+                                                                            <label for="period-radio-3" class="cursor-pointer font-medium text-gray-900 dark:text-gray-300">
+                                                                                <div>Fiscal Semi-Annual</div>
+                                                                            </label>
+                                                                        </div>
+                                                                    </div>
+                                                                </li>
+                                                                <li>
+                                                                    <div class="flex p-2 rounded hover:bg-[#52D3A233] cursor-pointer">
+                                                                        <div class="flex items-center h-5 cursor-pointer">
+                                                                            <input @click='period = "YTD"' :checked="period == 'YTD'" id="period-radio-4" name="view-radio" type="radio" value="YTD" class="cursor-pointer w-4 h-4 text-[#686868] bg-transpearent border-[#686868] border-2">
+                                                                        </div>
+                                                                        <div class="ml-4 w-full text-sm cursor-pointer">
+                                                                            <label for="period-radio-4" class="cursor-pointer font-medium text-gray-900 dark:text-gray-300">
+                                                                                <div>YTD</div>
+                                                                            </label>
+                                                                        </div>
+                                                                    </div>
+                                                                </li>
+                                                                <li>
+                                                                    <div class="flex p-2 rounded hover:bg-[#52D3A233] cursor-pointer">
+                                                                        <div class="flex items-center h-5 cursor-pointer">
+                                                                            <input @click='period = "LTM"' :checked="period == 'LTM'" id="period-radio-5" name="view-radio" type="radio" value="LTM" class="cursor-pointer w-4 h-4 text-[#686868] bg-transpearent border-[#686868] border-2">
+                                                                        </div>
+                                                                        <div class="ml-4 w-full text-sm cursor-pointer">
+                                                                            <label for="period-radio-5" class="cursor-pointer font-medium text-gray-900 dark:text-gray-300">
+                                                                                <div>LTM</div>
+                                                                            </label>
+                                                                        </div>
+                                                                    </div>
+                                                                </li>
+                                                                <li>
+                                                                    <div class="flex p-2 rounded hover:bg-[#52D3A233] cursor-pointer">
+                                                                        <div class="flex items-center h-5 cursor-pointer">
+                                                                            <input @click='period = "Calendar Annual"' :checked="period == 'Calendar Annual'" id="period-radio-6" name="view-radio" type="radio" value="Calendar Annual" class="cursor-pointer w-4 h-4 text-[#686868] bg-transpearent border-[#686868] border-2">
+                                                                        </div>
+                                                                        <div class="ml-4 w-full text-sm cursor-pointer">
+                                                                            <label for="period-radio-6" class="cursor-pointer font-medium text-gray-900 dark:text-gray-300">
+                                                                                <div>Calendar Annual</div>
+                                                                            </label>
+                                                                        </div>
+                                                                    </div>
+                                                                </li>
+                                                                <li>
+                                                                    <div class="flex p-2 rounded hover:bg-[#52D3A233] cursor-pointer">
+                                                                        <div class="flex items-center h-5 cursor-pointer">
+                                                                            <input @click='period = "Calendar Quaterly"' :checked="period == 'Calendar Quaterly'" id="period-radio-7" name="view-radio" type="radio" value="Calendar Quaterly" class="cursor-pointer w-4 h-4 text-[#686868] bg-transpearent border-[#686868] border-2">
+                                                                        </div>
+                                                                        <div class="ml-4 w-full text-sm cursor-pointer">
+                                                                            <label for="period-radio-7" class="cursor-pointer font-medium text-gray-900 dark:text-gray-300">
+                                                                                <div>Calendar Quaterly</div>
+                                                                            </label>
+                                                                        </div>
+                                                                    </div>
+                                                                </li>
+                                                                <li>
+                                                                    <div class="flex p-2 rounded hover:bg-[#52D3A233] cursor-pointer">
+                                                                        <div class="flex items-center h-5 cursor-pointer">
+                                                                            <input @click='period = "Calendar SA"' :checked="period == 'Calendar SA'" id="period-radio-8" name="view-radio" type="radio" value="Calendar SA" class="cursor-pointer w-4 h-4 text-[#686868] bg-transpearent border-[#686868] border-2">
+                                                                        </div>
+                                                                        <div class="ml-4 w-full text-sm cursor-pointer">
+                                                                            <label for="period-radio-8" class="cursor-pointer font-medium text-gray-900 dark:text-gray-300">
+                                                                                <div>Calendar SA</div>
+                                                                            </label>
+                                                                        </div>
+                                                                    </div>
+                                                                </li>
+                                                            </ul>
+                                                            <div class="mx-3 my-4">
+                                                                <button @click="$wire.set('period', period); periodTypeSelectorOpen = false" class="w-full p-1 text-base font-medium bg-[#52D3A2] rounded text-center" id="periodCloseButton">Show Result</button>
                                                             </div>
-                                                        </li>
-                                                        <li>
-                                                            <div class="flex p-2 rounded hover:bg-[#52D3A233] cursor-pointer">
-                                                                <div class="flex items-center h-5 cursor-pointer">
-                                                                    <input @click='unitType = "Millions"' :checked="unitType == 'Millions'" id="unitType-radio-2" name="unitType-radio" type="radio" value="Millions" class="cursor-pointer w-4 h-4 text-[#686868] bg-transpearent border-[#686868] border-2">
-                                                                </div>
-                                                                <div class="ml-4 w-full text-sm cursor-pointer">
-                                                                    <label for="unitType-radio-2" class="cursor-pointer font-medium text-gray-900 dark:text-gray-300">
-                                                                        <div>Millions</div>
-                                                                    </label>
-                                                                </div>
-                                                            </div>
-                                                        </li>
-                                                        <li>
-                                                            <div class="flex p-2 rounded hover:bg-[#52D3A233] cursor-pointer">
-                                                                <div class="flex items-center h-5 cursor-pointer">
-                                                                    <input @click='unitType = "Billions"' :checked="unitType == 'Billions'" id="unitType-radio-3" name="unitType-radio" type="radio" value="Billions" class="cursor-pointer w-4 h-4 text-[#686868] bg-transpearent border-[#686868] border-2">
-                                                                </div>
-                                                                <div class="ml-4 w-full text-sm cursor-pointer">
-                                                                    <label for="unitType-radio-3" class="cursor-pointer font-medium text-gray-900 dark:text-gray-300">
-                                                                        <div>Billions</div>
-                                                                    </label>
-                                                                </div>
-                                                            </div>
-                                                        </li>
-                                                    </ul>
-                                                    <div class="mx-3 my-4">
-                                                        <button @click="$wire.set('unitType', unitType); unitTypeSelectorOpen = false" class="w-full p-1 text-base font-medium bg-[#52D3A2] rounded text-center" id="unitTypeCloseButton">Show Result</button>
-                                                    </div>
-                                                </div>
-                                            </div>
-                                        </div>
-                                        <div class=" flex items-center text-sm" x-data="{decimalDisplay: null, decimalDisplaySelectorOpen: false}" @click.away="decimalDisplaySelectorOpen = false">Decimal
-                                            <div class="relative">
-                                                <button type="submit" @click="decimalDisplaySelectorOpen = !decimalDisplaySelectorOpen" :class="[decimalDisplay != null ? 'active' : '', decimalDisplaySelectorOpen ? 'down' : '']" class="flex items-center flowbite_btn flowbite-select bg-gray-50 border border-gray-700 text-gray-900 text-sm ml-2 p-2" name="view" id="">
-                                                    {{$decimalDisplay == 2 ? '.00' : ($decimalDisplay == 3 ? '.000' : 'auto')}}
-                                                    <svg width="16" height="16" viewBox="0 0 16 16" fill="none" xmlns="http://www.w3.org/2000/svg">
-                                                        <path d="M10.3083 6.19514L7.72167 8.78378L5.135 6.19514C5.01045 6.07021 4.84135 6 4.665 6C4.48865 6 4.31955 6.07021 4.195 6.19514C3.935 6.45534 3.935 6.87566 4.195 7.13585L7.255 10.1982C7.515 10.4584 7.935 10.4584 8.195 10.1982L11.255 7.13585C11.515 6.87566 11.515 6.45534 11.255 6.19514C10.995 5.94161 10.5683 5.93494 10.3083 6.19514Z" fill="#121A0F"/>
-                                                    </svg>
-                                                </button>
-                                                <!-- Dropdown menu -->
-                                                <div x-show="decimalDisplaySelectorOpen" class="z-10 bg-white divide-y divide-gray-100 rounded-lg shadow  dark:bg-gray-700 dark:divide-gray-600 dropdown-scroll-wrapper">
-                                                    <div class="p-3 text-base flex items-center justify-between font-medium">
-                                                        <div>Decimal</div>
-                                                        <svg id="decimalClose" @click="decimalDisplaySelectorOpen = false" width="24" height="24" viewBox="0 0 24 24" class="cursor-pointer" fill="none" xmlns="http://www.w3.org/2000/svg">
-                                                            <path d="M6.4 19L5 17.6L10.6 12L5 6.4L6.4 5L12 10.6L17.6 5L19 6.4L13.4 12L19 17.6L17.6 19L12 13.4L6.4 19Z" fill="#686868"/>
-                                                        </svg>
-                                                    </div>
-                                                    <ul class="p-4 space-y-1 text-sm text-gray-700 dark:text-gray-200 h_23 overflow-y-scroll dropdown-scroll " aria-labelledby="dropdownViewButton">
-                                                        <li>
-                                                            <div class="flex p-2 rounded hover:bg-[#52D3A233] cursor-pointer">
-                                                                <div class="flex items-center h-5 cursor-pointer">
-                                                                    <input @click='decimalDisplay = "0"' :checked="'decimalDisplay' == '0'" id="decimal-radio-1" name="decimal-radio" type="radio" value="0" class="cursor-pointer w-4 h-4 text-[#686868] bg-transpearent border-[#686868] border-2">
-                                                                </div>
-                                                                <div class="ml-4 w-full text-sm cursor-pointer">
-                                                                    <label for="decimal-radio-1" class="cursor-pointer font-medium text-gray-900 dark:text-gray-300">
-                                                                        <div>auto</div>
-                                                                    </label>
-                                                                </div>
-                                                            </div>
-                                                        </li>
-                                                        <li>
-                                                            <div class="flex p-2 rounded hover:bg-[#52D3A233] cursor-pointer">
-                                                                <div class="flex items-center h-5 cursor-pointer">
-                                                                    <input @click='decimalDisplay = "2"' :checked="'decimalDisplay' == '2'" id="decimal-radio-2" name="decimal-radio" type="radio" value="2" class="cursor-pointer w-4 h-4 text-[#686868] bg-transpearent border-[#686868] border-2">
-                                                                </div>
-                                                                <div class="ml-4 w-full text-sm cursor-pointer">
-                                                                    <label for="decimal-radio-2" class="cursor-pointer font-medium text-gray-900 dark:text-gray-300">
-                                                                        <div>.00</div>
-                                                                    </label>
-                                                                </div>
-                                                            </div>
-                                                        </li>
-                                                        <li>
-                                                            <div class="flex p-2 rounded hover:bg-[#52D3A233] cursor-pointer">
-                                                                <div class="flex items-center h-5 cursor-pointer">
-                                                                    <input @click='decimalDisplay = "3"' :checked="'decimalDisplay' == '3'" id="decimal-radio-3" name="decimal-radio" type="radio" value="3" class="cursor-pointer w-4 h-4 text-[#686868] bg-transpearent border-[#686868] border-2">
-                                                                </div>
-                                                                <div class="ml-4 w-full text-sm cursor-pointer">
-                                                                    <label for="decimal-radio-3" class="cursor-pointer font-medium text-gray-900 dark:text-gray-300">
-                                                                        <div>.000</div>
-                                                                    </label>
-                                                                </div>
-                                                            </div>
-                                                        </li>
-                                                    </ul>
-                                                    <div class="mx-3 my-4">
-                                                        <button @click="$wire.set('decimalDisplay', decimalDisplay); decimalDisplaySelectorOpen=false;" class="w-full p-1 text-base font-medium bg-[#52D3A2] rounded text-center" id="decimalCloseButton">Show Result</button>
+                                                        </div>
                                                     </div>
                                                 </div>
-                                            </div>
-                                        </div>
-                                        <div class=" flex items-center text-sm" x-data="{reverse: null, reverseSelectorOpen: false}" @click.away="reverseSelectorOpen = false">Order
-                                            <div class="relative">
-                                                <button type="submit" @click="reverseSelectorOpen = !reverseSelectorOpen" :class="[reverse != null ? 'active' : '', reverseSelectorOpen ? 'down' : '']" class="flex items-center flowbite_btn flowbite-select bg-gray-50 border border-gray-700 text-gray-900 text-sm ml-2 p-2" name="view" id="">
-                                                    {{$reverse ? 'Latest on the Left' : 'Latest on the Right'}}
-                                                    <svg width="16" height="16" viewBox="0 0 16 16" fill="none" xmlns="http://www.w3.org/2000/svg">
-                                                        <path d="M10.3083 6.19514L7.72167 8.78378L5.135 6.19514C5.01045 6.07021 4.84135 6 4.665 6C4.48865 6 4.31955 6.07021 4.195 6.19514C3.935 6.45534 3.935 6.87566 4.195 7.13585L7.255 10.1982C7.515 10.4584 7.935 10.4584 8.195 10.1982L11.255 7.13585C11.515 6.87566 11.515 6.45534 11.255 6.19514C10.995 5.94161 10.5683 5.93494 10.3083 6.19514Z" fill="#121A0F"/>
-                                                    </svg>
-                                                </button>
-                                                <!-- Dropdown menu -->
-                                                <div x-show="reverseSelectorOpen" class="z-10 bg-white divide-y divide-gray-100 rounded-lg shadow  dark:bg-gray-700 dark:divide-gray-600 dropdown-scroll-wrapper">
-                                                    <div class="p-3 text-base flex items-center justify-between font-medium">
-                                                        <div>Order</div>
-                                                        <svg id="orderClose" width="24" height="24" class="cursor-pointer" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
-                                                            <path d="M6.4 19L5 17.6L10.6 12L5 6.4L6.4 5L12 10.6L17.6 5L19 6.4L13.4 12L19 17.6L17.6 19L12 13.4L6.4 19Z" fill="#686868"/>
-                                                        </svg>
-                                                    </div>
-                                                    <ul class="p-4 space-y-1 text-sm text-gray-700 dark:text-gray-200 h_23 overflow-y-scroll dropdown-scroll " aria-labelledby="dropdownViewButton">
-                                                        <li>
-                                                            <div class="flex p-2 rounded hover:bg-[#52D3A233] cursor-pointer">
-                                                                <div class="flex items-center h-5 cursor-pointer">
-                                                                    <input @click="reverse = false" :checked="!reverse" id="order-radio-0" name="order-radio" type="radio" value="false" class="cursor-pointer w-4 h-4 text-[#686868] bg-transpearent border-[#686868] border-2">
-                                                                </div>
-                                                                <div class="ml-4 w-full text-sm cursor-pointer">
-                                                                    <label for="order-radio-0" class="cursor-pointer font-medium text-gray-900 dark:text-gray-300">
-                                                                        <div>Latest on the Right</div>
-                                                                    </label>
-                                                                </div>
+                                                <div class=" flex items-center text-sm" x-data="{unitType: null, unitTypeSelectorOpen: false}" @click.away="unitTypeSelectorOpen = false">Unit Type
+                                                    <div class="relative">
+                                                        <button type="submit" :class="[unitType != null ? 'active' : '', unitTypeSelectorOpen ? 'down' : '']" @click="unitTypeSelectorOpen = !unitTypeSelectorOpen" class="flex items-center flowbite_btn flowbite-select bg-gray-50 border border-gray-700 text-gray-900 text-sm ml-2 p-2" name="view" id="">
+                                                            <span x-text="(unitType == null || unitType == 0) ? 'Thousands' : unitType"></span>
+                                                            <svg width="16" height="16" viewBox="0 0 16 16" fill="none" xmlns="http://www.w3.org/2000/svg">
+                                                                <path d="M10.3083 6.19514L7.72167 8.78378L5.135 6.19514C5.01045 6.07021 4.84135 6 4.665 6C4.48865 6 4.31955 6.07021 4.195 6.19514C3.935 6.45534 3.935 6.87566 4.195 7.13585L7.255 10.1982C7.515 10.4584 7.935 10.4584 8.195 10.1982L11.255 7.13585C11.515 6.87566 11.515 6.45534 11.255 6.19514C10.995 5.94161 10.5683 5.93494 10.3083 6.19514Z" fill="#121A0F"/>
+                                                            </svg>
+                                                        </button>
+                                                        <!-- Dropdown menu -->
+                                                        <div x-cloak x-show="unitTypeSelectorOpen" class="z-10 bg-white divide-y divide-gray-100 rounded-lg shadow  dark:bg-gray-700 dark:divide-gray-600 dropdown-scroll-wrapper">
+                                                            <div class="p-3 text-base flex items-center justify-between font-medium">
+                                                                <div>Unit Type</div>
+                                                                <svg @click="unitTypeSelectorOpen = false" id="unitTypeClose" width="24" height="24" viewBox="0 0 24 24" class="cursor-pointer" fill="none" xmlns="http://www.w3.org/2000/svg">
+                                                                    <path d="M6.4 19L5 17.6L10.6 12L5 6.4L6.4 5L12 10.6L17.6 5L19 6.4L13.4 12L19 17.6L17.6 19L12 13.4L6.4 19Z" fill="#686868"/>
+                                                                </svg>
                                                             </div>
-                                                        </li>
-                                                        <li>
-                                                            <div class="flex p-2 rounded hover:bg-[#52D3A233] cursor-pointer">
-                                                                <div class="flex items-center h-5 cursor-pointer">
-                                                                    <input  @click="reverse = true" :checked="reverse" id="order-radio-1" name="order-radio" type="radio" value="true" class="cursor-pointer w-4 h-4 text-[#686868] bg-transpearent border-[#686868] border-2">
-                                                                </div>
-                                                                <div class="ml-4 w-full text-sm cursor-pointer">
-                                                                    <label for="order-radio-1" class="cursor-pointer font-medium text-gray-900 dark:text-gray-300">
-                                                                        <div>Latest on the Left</div>
-                                                                    </label>
-                                                                </div>
+                                                            <ul class="p-4 space-y-1 text-sm text-gray-700 dark:text-gray-200 h_23 overflow-y-scroll dropdown-scroll " aria-labelledby="dropdownViewButton">
+                                                                <li>
+                                                                    <div class="flex p-2 rounded hover:bg-[#52D3A233] cursor-pointer">
+                                                                        <div class="flex items-center h-5 cursor-pointer">
+                                                                            <input @click='unitType = "None"' :checked="unitType == 'None'" id="unitType-radio" name="unitType-radio" type="radio" value="None" class="cursor-pointer w-4 h-4 text-[#686868] bg-transpearent border-[#686868] border-2">
+                                                                        </div>
+                                                                        <div class="ml-4 w-full text-sm cursor-pointer">
+                                                                            <label for="unitType-radio" class="cursor-pointer font-medium text-gray-900 dark:text-gray-300">
+                                                                                <div>None</div>
+                                                                            </label>
+                                                                        </div>
+                                                                    </div>
+                                                                </li>
+                                                                <li>
+                                                                    <div class="flex p-2 rounded hover:bg-[#52D3A233] cursor-pointer">
+                                                                        <div class="flex items-center h-5 cursor-pointer">
+                                                                            <input @click='unitType = "Thousands"' :checked="unitType == 'Thousands'" id="unitType-radio-1" name="unitType-radio" type="radio" value="Thousands" class="cursor-pointer w-4 h-4 text-[#686868] bg-transpearent border-[#686868] border-2">
+                                                                        </div>
+                                                                        <div class="ml-4 w-full text-sm cursor-pointer">
+                                                                            <label for="unitType-radio-1" class="cursor-pointer font-medium text-gray-900 dark:text-gray-300">
+                                                                                <div>Thousands</div>
+                                                                            </label>
+                                                                        </div>
+                                                                    </div>
+                                                                </li>
+                                                                <li>
+                                                                    <div class="flex p-2 rounded hover:bg-[#52D3A233] cursor-pointer">
+                                                                        <div class="flex items-center h-5 cursor-pointer">
+                                                                            <input @click='unitType = "Millions"' :checked="unitType == 'Millions'" id="unitType-radio-2" name="unitType-radio" type="radio" value="Millions" class="cursor-pointer w-4 h-4 text-[#686868] bg-transpearent border-[#686868] border-2">
+                                                                        </div>
+                                                                        <div class="ml-4 w-full text-sm cursor-pointer">
+                                                                            <label for="unitType-radio-2" class="cursor-pointer font-medium text-gray-900 dark:text-gray-300">
+                                                                                <div>Millions</div>
+                                                                            </label>
+                                                                        </div>
+                                                                    </div>
+                                                                </li>
+                                                                <li>
+                                                                    <div class="flex p-2 rounded hover:bg-[#52D3A233] cursor-pointer">
+                                                                        <div class="flex items-center h-5 cursor-pointer">
+                                                                            <input @click='unitType = "Billions"' :checked="unitType == 'Billions'" id="unitType-radio-3" name="unitType-radio" type="radio" value="Billions" class="cursor-pointer w-4 h-4 text-[#686868] bg-transpearent border-[#686868] border-2">
+                                                                        </div>
+                                                                        <div class="ml-4 w-full text-sm cursor-pointer">
+                                                                            <label for="unitType-radio-3" class="cursor-pointer font-medium text-gray-900 dark:text-gray-300">
+                                                                                <div>Billions</div>
+                                                                            </label>
+                                                                        </div>
+                                                                    </div>
+                                                                </li>
+                                                            </ul>
+                                                            <div class="mx-3 my-4">
+                                                                <button @click="$wire.set('unitType', unitType); unitTypeSelectorOpen = false" class="w-full p-1 text-base font-medium bg-[#52D3A2] rounded text-center" id="unitTypeCloseButton">Show Result</button>
                                                             </div>
-                                                        </li>
-                                                    </ul>
-                                                    <div class="mx-3 my-4">
-                                                        <button @click="$wire.set('reverse', reverse); reverseSelectorOpen = false;" class="w-full p-1 text-base font-medium bg-[#52D3A2] rounded text-center" id="orderCloseButton">Show Result</button>
+                                                        </div>
                                                     </div>
                                                 </div>
-                                            </div>
-                                        </div>
-                                        <div class=" flex items-center text-sm" x-data="{freezePanes: null, freezePanesSelectorOpen: false}" @click.away="freezePanesSelectorOpen = false">Freeze Panes
-                                            <div class="relative">
-                                                <button @click="freezePanesSelectorOpen = !freezePanesSelectorOpen" :class="[freezePanes != null ? 'active' : '', freezePanesSelectorOpen ? 'down' : '']" type="submit" class="flex items-center flowbite_btn flowbite-select bg-gray-50 border border-gray-700 text-gray-900 text-sm ml-2 p-2" name="view" id="">
-                                                    {{$freezePanes}}
-                                                    <svg width="16" height="16" viewBox="0 0 16 16" fill="none" xmlns="http://www.w3.org/2000/svg">
-                                                        <path d="M10.3083 6.19514L7.72167 8.78378L5.135 6.19514C5.01045 6.07021 4.84135 6 4.665 6C4.48865 6 4.31955 6.07021 4.195 6.19514C3.935 6.45534 3.935 6.87566 4.195 7.13585L7.255 10.1982C7.515 10.4584 7.935 10.4584 8.195 10.1982L11.255 7.13585C11.515 6.87566 11.515 6.45534 11.255 6.19514C10.995 5.94161 10.5683 5.93494 10.3083 6.19514Z" fill="#121A0F"/>
-                                                    </svg>
-                                                </button>
-                                                <!-- Dropdown menu -->
-                                                <div x-show="freezePanesSelectorOpen" class="z-10 bg-white divide-y divide-gray-100 rounded-lg shadow  dark:bg-gray-700 dark:divide-gray-600 dropdown-scroll-wrapper">
-                                                    <div class="p-3 text-base flex items-center justify-between font-medium">
-                                                        <div>Freeze Panes</div>
-                                                        <svg @click="freezePanesSelectorOpen = false" id="freezePanesClose" width="24" height="24" class="cursor-pointer" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
-                                                            <path d="M6.4 19L5 17.6L10.6 12L5 6.4L6.4 5L12 10.6L17.6 5L19 6.4L13.4 12L19 17.6L17.6 19L12 13.4L6.4 19Z" fill="#686868"/>
-                                                        </svg>
+                                                <div class=" flex items-center text-sm" x-data="{decimalDisplay: null, decimalDisplaySelectorOpen: false}" @click.away="decimalDisplaySelectorOpen = false">Decimal
+                                                    <div class="relative">
+                                                        <button type="submit" @click="decimalDisplaySelectorOpen = !decimalDisplaySelectorOpen" :class="[decimalDisplay != null ? 'active' : '', decimalDisplaySelectorOpen ? 'down' : '']" class="flex items-center flowbite_btn flowbite-select bg-gray-50 border border-gray-700 text-gray-900 text-sm ml-2 p-2" name="view" id="">
+                                                            <span x-text="(decimalDisplay == null || decimalDisplay == 0) ? 'Auto' : decimalDisplay"></span>
+                                                            <svg width="16" height="16" viewBox="0 0 16 16" fill="none" xmlns="http://www.w3.org/2000/svg">
+                                                                <path d="M10.3083 6.19514L7.72167 8.78378L5.135 6.19514C5.01045 6.07021 4.84135 6 4.665 6C4.48865 6 4.31955 6.07021 4.195 6.19514C3.935 6.45534 3.935 6.87566 4.195 7.13585L7.255 10.1982C7.515 10.4584 7.935 10.4584 8.195 10.1982L11.255 7.13585C11.515 6.87566 11.515 6.45534 11.255 6.19514C10.995 5.94161 10.5683 5.93494 10.3083 6.19514Z" fill="#121A0F"/>
+                                                            </svg>
+                                                        </button>
+                                                        <!-- Dropdown menu -->
+                                                        <div x-cloak x-show="decimalDisplaySelectorOpen" class="z-10 bg-white divide-y divide-gray-100 rounded-lg shadow  dark:bg-gray-700 dark:divide-gray-600 dropdown-scroll-wrapper">
+                                                            <div class="p-3 text-base flex items-center justify-between font-medium">
+                                                                <div>Decimal</div>
+                                                                <svg id="decimalClose" @click="decimalDisplaySelectorOpen = false" width="24" height="24" viewBox="0 0 24 24" class="cursor-pointer" fill="none" xmlns="http://www.w3.org/2000/svg">
+                                                                    <path d="M6.4 19L5 17.6L10.6 12L5 6.4L6.4 5L12 10.6L17.6 5L19 6.4L13.4 12L19 17.6L17.6 19L12 13.4L6.4 19Z" fill="#686868"/>
+                                                                </svg>
+                                                            </div>
+                                                            <ul class="p-4 space-y-1 text-sm text-gray-700 dark:text-gray-200 h_23 overflow-y-scroll dropdown-scroll " aria-labelledby="dropdownViewButton">
+                                                                <li>
+                                                                    <div class="flex p-2 rounded hover:bg-[#52D3A233] cursor-pointer">
+                                                                        <div class="flex items-center h-5 cursor-pointer">
+                                                                            <input @click='decimalDisplay = "0"' :checked="'decimalDisplay' == '0'" id="decimal-radio-1" name="decimal-radio" type="radio" value="0" class="cursor-pointer w-4 h-4 text-[#686868] bg-transpearent border-[#686868] border-2">
+                                                                        </div>
+                                                                        <div class="ml-4 w-full text-sm cursor-pointer">
+                                                                            <label for="decimal-radio-1" class="cursor-pointer font-medium text-gray-900 dark:text-gray-300">
+                                                                                <div>auto</div>
+                                                                            </label>
+                                                                        </div>
+                                                                    </div>
+                                                                </li>
+                                                                <li>
+                                                                    <div class="flex p-2 rounded hover:bg-[#52D3A233] cursor-pointer">
+                                                                        <div class="flex items-center h-5 cursor-pointer">
+                                                                            <input @click='decimalDisplay = "2"' :checked="'decimalDisplay' == '2'" id="decimal-radio-2" name="decimal-radio" type="radio" value="2" class="cursor-pointer w-4 h-4 text-[#686868] bg-transpearent border-[#686868] border-2">
+                                                                        </div>
+                                                                        <div class="ml-4 w-full text-sm cursor-pointer">
+                                                                            <label for="decimal-radio-2" class="cursor-pointer font-medium text-gray-900 dark:text-gray-300">
+                                                                                <div>.00</div>
+                                                                            </label>
+                                                                        </div>
+                                                                    </div>
+                                                                </li>
+                                                                <li>
+                                                                    <div class="flex p-2 rounded hover:bg-[#52D3A233] cursor-pointer">
+                                                                        <div class="flex items-center h-5 cursor-pointer">
+                                                                            <input @click='decimalDisplay = "3"' :checked="'decimalDisplay' == '3'" id="decimal-radio-3" name="decimal-radio" type="radio" value="3" class="cursor-pointer w-4 h-4 text-[#686868] bg-transpearent border-[#686868] border-2">
+                                                                        </div>
+                                                                        <div class="ml-4 w-full text-sm cursor-pointer">
+                                                                            <label for="decimal-radio-3" class="cursor-pointer font-medium text-gray-900 dark:text-gray-300">
+                                                                                <div>.000</div>
+                                                                            </label>
+                                                                        </div>
+                                                                    </div>
+                                                                </li>
+                                                            </ul>
+                                                            <div class="mx-3 my-4">
+                                                                <button @click="$wire.set('decimalDisplay', decimalDisplay); decimalDisplaySelectorOpen=false;" class="w-full p-1 text-base font-medium bg-[#52D3A2] rounded text-center" id="decimalCloseButton">Show Result</button>
+                                                            </div>
+                                                        </div>
                                                     </div>
-                                                    <ul class="p-4 space-y-1 text-sm text-gray-700 dark:text-gray-200 h_23 overflow-y-scroll dropdown-scroll " aria-labelledby="dropdownViewButton">
-                                                        <li>
-                                                            <div class="flex p-2 rounded hover:bg-[#52D3A233] cursor-pointer">
-                                                                <div class="flex items-center h-5 cursor-pointer">
-                                                                    <input @click='freezePanes = "Top Row"' :checked="freezePanes == 'Top Row'" id="freezePanes-radio-1" name="freezePanes-radio" type="radio" value="Top Row" class="cursor-pointer w-4 h-4 text-[#686868] bg-transpearent border-[#686868] border-2">
-                                                                </div>
-                                                                <div class="ml-4 w-full text-sm cursor-pointer">
-                                                                    <label for="freezePanes-radio-1" class="cursor-pointer font-medium text-gray-900 dark:text-gray-300">
-                                                                        <div>Top Row</div>
-                                                                    </label>
-                                                                </div>
+                                                </div>
+                                                <div class=" flex items-center text-sm" x-data="{reverse: null, reverseSelectorOpen: false}" @click.away="reverseSelectorOpen = false">Order
+                                                    <div class="relative">
+                                                        <button type="submit" @click="reverseSelectorOpen = !reverseSelectorOpen" :class="[reverse != null ? 'active' : '', reverseSelectorOpen ? 'down' : '']" class="flex items-center flowbite_btn flowbite-select bg-gray-50 border border-gray-700 text-gray-900 text-sm ml-2 p-2" name="view" id="">
+                                                            <span x-text="(reverse == null || reverse === false) ? 'Latest on the Right' : (reverse === false ? 'Latest on the Right' : 'Latest on the Left')"></span>
+                                                            <svg width="16" height="16" viewBox="0 0 16 16" fill="none" xmlns="http://www.w3.org/2000/svg">
+                                                                <path d="M10.3083 6.19514L7.72167 8.78378L5.135 6.19514C5.01045 6.07021 4.84135 6 4.665 6C4.48865 6 4.31955 6.07021 4.195 6.19514C3.935 6.45534 3.935 6.87566 4.195 7.13585L7.255 10.1982C7.515 10.4584 7.935 10.4584 8.195 10.1982L11.255 7.13585C11.515 6.87566 11.515 6.45534 11.255 6.19514C10.995 5.94161 10.5683 5.93494 10.3083 6.19514Z" fill="#121A0F"/>
+                                                            </svg>
+                                                        </button>
+                                                        <!-- Dropdown menu -->
+                                                        <div x-cloak x-show="reverseSelectorOpen" class="z-10 bg-white divide-y divide-gray-100 rounded-lg shadow  dark:bg-gray-700 dark:divide-gray-600 dropdown-scroll-wrapper">
+                                                            <div class="p-3 text-base flex items-center justify-between font-medium">
+                                                                <div>Order</div>
+                                                                <svg @click="reverseSelectorOpen = false" id="orderClose" width="24" height="24" class="cursor-pointer" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                                                                    <path d="M6.4 19L5 17.6L10.6 12L5 6.4L6.4 5L12 10.6L17.6 5L19 6.4L13.4 12L19 17.6L17.6 19L12 13.4L6.4 19Z" fill="#686868"/>
+                                                                </svg>
                                                             </div>
-                                                        </li>
-                                                        <li>
-                                                            <div class="flex p-2 rounded hover:bg-[#52D3A233] cursor-pointer">
-                                                                <div class="flex items-center h-5 cursor-pointer">
-                                                                    <input @click='freezePanes = "First Column"' :checked="freezePanes == 'First Column'" id="freezePanes-radio-2" name="freezePanes-radio" type="radio" value="First Column" class="cursor-pointer w-4 h-4 text-[#686868] bg-transpearent border-[#686868] border-2">
-                                                                </div>
-                                                                <div class="ml-4 w-full text-sm cursor-pointer">
-                                                                    <label for="freezePanes-radio-2" class="cursor-pointer font-medium text-gray-900 dark:text-gray-300">
-                                                                        <div>First Column</div>
-                                                                    </label>
-                                                                </div>
+                                                            <ul class="p-4 space-y-1 text-sm text-gray-700 dark:text-gray-200 h_23 overflow-y-scroll dropdown-scroll " aria-labelledby="dropdownViewButton">
+                                                                <li>
+                                                                    <div class="flex p-2 rounded hover:bg-[#52D3A233] cursor-pointer">
+                                                                        <div class="flex items-center h-5 cursor-pointer">
+                                                                            <input @click="reverse = false" :checked="!reverse" id="order-radio-0" name="order-radio" type="radio" value="false" class="cursor-pointer w-4 h-4 text-[#686868] bg-transpearent border-[#686868] border-2">
+                                                                        </div>
+                                                                        <div class="ml-4 w-full text-sm cursor-pointer">
+                                                                            <label for="order-radio-0" class="cursor-pointer font-medium text-gray-900 dark:text-gray-300">
+                                                                                <div>Latest on the Right</div>
+                                                                            </label>
+                                                                        </div>
+                                                                    </div>
+                                                                </li>
+                                                                <li>
+                                                                    <div class="flex p-2 rounded hover:bg-[#52D3A233] cursor-pointer">
+                                                                        <div class="flex items-center h-5 cursor-pointer">
+                                                                            <input  @click="reverse = true" :checked="reverse" id="order-radio-1" name="order-radio" type="radio" value="true" class="cursor-pointer w-4 h-4 text-[#686868] bg-transpearent border-[#686868] border-2">
+                                                                        </div>
+                                                                        <div class="ml-4 w-full text-sm cursor-pointer">
+                                                                            <label for="order-radio-1" class="cursor-pointer font-medium text-gray-900 dark:text-gray-300">
+                                                                                <div>Latest on the Left</div>
+                                                                            </label>
+                                                                        </div>
+                                                                    </div>
+                                                                </li>
+                                                            </ul>
+                                                            <div class="mx-3 my-4">
+                                                                <button @click="$wire.set('reverse', reverse); reverseSelectorOpen = false;" class="w-full p-1 text-base font-medium bg-[#52D3A2] rounded text-center" id="orderCloseButton">Show Result</button>
                                                             </div>
-                                                        </li>
-                                                        <li>
-                                                            <div class="flex p-2 rounded hover:bg-[#52D3A233] cursor-pointer">
-                                                                <div class="flex items-center h-5 cursor-pointer">
-                                                                    <input @click='freezePanes = "Top Row & First Column"' :checked="freezePanes == 'Top Row & First Column'" id="freezePanes-radio-3" name="freezePanes-radio" type="radio" value="Top Row & First Column" class="cursor-pointer w-4 h-4 text-[#686868] bg-transpearent border-[#686868] border-2">
-                                                                </div>
-                                                                <div class="ml-4 w-full text-sm cursor-pointer">
-                                                                    <label for="freezePanes-radio-3" class="cursor-pointer font-medium text-gray-900 dark:text-gray-300">
-                                                                        <div>Top Row & First Column</div>
-                                                                    </label>
-                                                                </div>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                                <div class=" flex items-center text-sm" x-data="{freezePanes: null, freezePanesSelectorOpen: false}" @click.away="freezePanesSelectorOpen = false">Freeze Panes
+                                                    <div class="relative">
+                                                        <button @click="freezePanesSelectorOpen = !freezePanesSelectorOpen" :class="[freezePanes != null ? 'active' : '', freezePanesSelectorOpen ? 'down' : '']" type="submit" class="flex items-center flowbite_btn flowbite-select bg-gray-50 border border-gray-700 text-gray-900 text-sm ml-2 p-2" name="view" id="">
+                                                            <span x-text="(freezePanes == null || freezePanes == 0) ? 'Top Row' : freezePanes"></span>
+                                                            <svg width="16" height="16" viewBox="0 0 16 16" fill="none" xmlns="http://www.w3.org/2000/svg">
+                                                                <path d="M10.3083 6.19514L7.72167 8.78378L5.135 6.19514C5.01045 6.07021 4.84135 6 4.665 6C4.48865 6 4.31955 6.07021 4.195 6.19514C3.935 6.45534 3.935 6.87566 4.195 7.13585L7.255 10.1982C7.515 10.4584 7.935 10.4584 8.195 10.1982L11.255 7.13585C11.515 6.87566 11.515 6.45534 11.255 6.19514C10.995 5.94161 10.5683 5.93494 10.3083 6.19514Z" fill="#121A0F"/>
+                                                            </svg>
+                                                        </button>
+                                                        <!-- Dropdown menu -->
+                                                        <div x-cloak x-show="freezePanesSelectorOpen" class="z-10 bg-white divide-y divide-gray-100 rounded-lg shadow  dark:bg-gray-700 dark:divide-gray-600 dropdown-scroll-wrapper">
+                                                            <div class="p-3 text-base flex items-center justify-between font-medium">
+                                                                <div>Freeze Panes</div>
+                                                                <svg @click="freezePanesSelectorOpen = false" id="freezePanesClose" width="24" height="24" class="cursor-pointer" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                                                                    <path d="M6.4 19L5 17.6L10.6 12L5 6.4L6.4 5L12 10.6L17.6 5L19 6.4L13.4 12L19 17.6L17.6 19L12 13.4L6.4 19Z" fill="#686868"/>
+                                                                </svg>
                                                             </div>
-                                                        </li>
-                                                    </ul>
-                                                    <div class="mx-3 my-4">
-                                                        <button class="w-full p-1 text-base font-medium bg-[#52D3A2] rounded text-center" @click="freezePanesSelectorOpen = false" id="freezePanesCloseButton">Show Result</button>
+                                                            <ul class="p-4 space-y-1 text-sm text-gray-700 dark:text-gray-200 h_23 overflow-y-scroll dropdown-scroll " aria-labelledby="dropdownViewButton">
+                                                                <li>
+                                                                    <div class="flex p-2 rounded hover:bg-[#52D3A233] cursor-pointer">
+                                                                        <div class="flex items-center h-5 cursor-pointer">
+                                                                            <input @click='freezePanes = "Top Row"' :checked="freezePanes == 'Top Row'" id="freezePanes-radio-1" name="freezePanes-radio" type="radio" value="Top Row" class="cursor-pointer w-4 h-4 text-[#686868] bg-transpearent border-[#686868] border-2">
+                                                                        </div>
+                                                                        <div class="ml-4 w-full text-sm cursor-pointer">
+                                                                            <label for="freezePanes-radio-1" class="cursor-pointer font-medium text-gray-900 dark:text-gray-300">
+                                                                                <div>Top Row</div>
+                                                                            </label>
+                                                                        </div>
+                                                                    </div>
+                                                                </li>
+                                                                <li>
+                                                                    <div class="flex p-2 rounded hover:bg-[#52D3A233] cursor-pointer">
+                                                                        <div class="flex items-center h-5 cursor-pointer">
+                                                                            <input @click='freezePanes = "First Column"' :checked="freezePanes == 'First Column'" id="freezePanes-radio-2" name="freezePanes-radio" type="radio" value="First Column" class="cursor-pointer w-4 h-4 text-[#686868] bg-transpearent border-[#686868] border-2">
+                                                                        </div>
+                                                                        <div class="ml-4 w-full text-sm cursor-pointer">
+                                                                            <label for="freezePanes-radio-2" class="cursor-pointer font-medium text-gray-900 dark:text-gray-300">
+                                                                                <div>First Column</div>
+                                                                            </label>
+                                                                        </div>
+                                                                    </div>
+                                                                </li>
+                                                                <li>
+                                                                    <div class="flex p-2 rounded hover:bg-[#52D3A233] cursor-pointer">
+                                                                        <div class="flex items-center h-5 cursor-pointer">
+                                                                            <input @click='freezePanes = "Top Row & First Column"' :checked="freezePanes == 'Top Row & First Column'" id="freezePanes-radio-3" name="freezePanes-radio" type="radio" value="Top Row & First Column" class="cursor-pointer w-4 h-4 text-[#686868] bg-transpearent border-[#686868] border-2">
+                                                                        </div>
+                                                                        <div class="ml-4 w-full text-sm cursor-pointer">
+                                                                            <label for="freezePanes-radio-3" class="cursor-pointer font-medium text-gray-900 dark:text-gray-300">
+                                                                                <div>Top Row & First Column</div>
+                                                                            </label>
+                                                                        </div>
+                                                                    </div>
+                                                                </li>
+                                                            </ul>
+                                                            <div class="mx-3 my-4">
+                                                                <button class="w-full p-1 text-base font-medium bg-[#52D3A2] rounded text-center" @click="freezePanesSelectorOpen = false" id="freezePanesCloseButton">Show Result</button>
+                                                            </div>
+                                                        </div>
                                                     </div>
                                                 </div>
                                             </div>
                                         </div>
                                     </div>
                                 </div>
-
+                                @if($noData)
+                                    <div class="py-12">
+                                        <div class="mx-auto flex">
+                                            <div class="mt-4 px-4 sm:px-6 lg:px-8 bg-white py-4 shadow rounded w-full md:w-1/2 md:mx-auto">
+                                                <div class="sm:flex sm:items-center">
+                                                    <div class="sm:flex-auto">
+                                                        <h1 class="text-base font-semibold leading-6 text-gray-900">No data available</h1>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                @else
                                 <div class="years-range-wrapper my-2">
                                     <div class="dots-wrapper">
                                         @php
@@ -615,7 +575,11 @@
                                                         <div class="py-1" role="none">
                                                             <!-- Active: "bg-gray-100 text-gray-900", Not Active: "text-gray-700" -->
                                                             <div class="links-wrapper mb-3">
-                                                                <a href="#" @click="menuOpen = false; showGraph = false;" class="menu_link" role="menuitem" tabindex="-1" id="menu-item-0">Hide Chart</a>
+                                                                <a href="#" @click="menuOpen = false; showGraph = false;" class="menu_link" role="menuitem" tabindex="-1" id="menu-item-0">
+                                                                    <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 14 14" fill="none">
+                                                                        <path d="M6.99479 13.6666C3.31289 13.6666 0.328125 10.6818 0.328125 6.99992C0.328125 3.31802 3.31289 0.333252 6.99479 0.333252C10.6767 0.333252 13.6615 3.31802 13.6615 6.99992C13.6615 10.6818 10.6767 13.6666 6.99479 13.6666ZM6.99479 6.05712L5.10917 4.17149L4.16636 5.1143L6.05199 6.99992L4.16636 8.88552L5.10917 9.82832L6.99479 7.94272L8.88039 9.82832L9.82319 8.88552L7.93759 6.99992L9.82319 5.1143L8.88039 4.17149L6.99479 6.05712Z" fill="#C22929"/>
+                                                                        </svg>
+                                                                    Hide Chart</a>
                                                                 <a href="#"  chartMenuOpen = false" class="menu_link" role="menuitem" tabindex="-1" id="menu-item-0" style="display: none;">Show Chart</a>
                                                                 <a href="#" class="menu_link" role="menuitem" tabindex="-1" id="menu-item-1">View In Full
                                                                     Screen</a>
@@ -686,7 +650,7 @@
                                             </div>
                                             <div class="w-full flex flex-wrap justify-start items-end space-x-3 px-2 mt-8 space-y-3">
                                                 @foreach($selectedRows as $title => $row)
-                                                    <div class="rounded-full relative whitespace-nowrap border flex space-x-2.5 justify-between items-center h-[40px] px-2">
+                                                    <div class="rounded-full relative whitespace-nowrap border flex space-x-2.5 justify-between items-center h-[40px] px-2" @click.away="chartTypeSelectorOpen = false" x-data="{chartType: 'line', chartTypeSelectorOpen: false}">
 
                                                         <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 16 16" fill="none">
                                                             <circle cx="8" cy="8" r="6" fill="{{$row['color'] ?? '#7C8286'}}"/>
@@ -696,49 +660,41 @@
 
 
                                                         </span>
-                                                        @if($row['type'] == 'line')
-                                                        <svg class="hover:cursor-pointer" xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 16 16" fill="none">
+                                                            <svg x-show="chartType == 'line'" class="hover:cursor-pointer" xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 16 16" fill="none">
                                                             <path d="M3.33333 2V12.6667H14V14H2V2H3.33333ZM13.2929 3.95956L14.7071 5.37377L10.6667 9.4142L8.66667 7.414L6.04044 10.0405L4.62623 8.6262L8.66667 4.58579L10.6667 6.586L13.2929 3.95956Z" fill="#3561E7"/>
                                                             </svg>
 
-                                                            @else
-                                                            <svg xmlns="http://www.w3.org/2000/svg" width="14" height="12" viewBox="0 0 14 12" fill="none">
+                                                            <svg x-show="chartType == 'bar'" xmlns="http://www.w3.org/2000/svg" width="14" height="12" viewBox="0 0 14 12" fill="none">
                                                                 <path d="M0.333008 6.66667H4.33301V12H0.333008V6.66667ZM4.99967 0H8.99967V12H4.99967V0ZM9.66634 3.33333H13.6663V12H9.66634V3.33333Z" fill="#3561E7"/>
                                                             </svg>
-                                                            @endif
-                                                            <svg class="hover:cursor-pointer" xmlns="http://www.w3.org/2000/svg" wire:click="toggleChartType('{{$title}}')" width="16" height="16" viewBox="0 0 16 16" fill="none">
+                                                            <svg class="hover:cursor-pointer" xmlns="http://www.w3.org/2000/svg" @click="chartTypeSelectorOpen = !chartTypeSelectorOpen" width="16" height="16" viewBox="0 0 16 16" fill="none">
                                                             <path d="M10.3083 6.19514L7.72167 8.78378L5.135 6.19514C5.01045 6.07021 4.84135 6 4.665 6C4.48865 6 4.31955 6.07021 4.195 6.19514C3.935 6.45534 3.935 6.87566 4.195 7.13585L7.255 10.1982C7.515 10.4584 7.935 10.4584 8.195 10.1982L11.255 7.13585C11.515 6.87566 11.515 6.45534 11.255 6.19514C10.995 5.94161 10.5683 5.93494 10.3083 6.19514Z" fill="#464E49"/>
                                                             </svg>
-                                                        @if($isOpen === $title)
-                                                            <div class="absolute z-20 bg-white top-[45px] right-[-30px] border-[#D4DDD7] shadow-md rounded-lg">
+                                                            <div x-show="chartTypeSelectorOpen" class="absolute z-20 bg-white top-[45px] right-[-30px] border-[#D4DDD7] shadow-md rounded-lg">
                                                                 <ul class="px-4 py-2">
-                                                                    <li onclick="changeChartType('{{$title}}', 'line')" class="flex p-2 items-center hover:cursor-pointer">
+                                                                    <li onclick="changeChartType('{{$title}}', 'line')" @click="chartType = 'line'; chartTypeSelectorOpen=false" class="flex p-2 items-center hover:cursor-pointer">
                                                                         <svg xmlns="http://www.w3.org/2000/svg" width="13" height="12" viewBox="0 0 13 12" fill="none">
                                                                             <path d="M1.33333 0V10.6667H12V12H0V0H1.33333ZM11.2929 1.95956L12.7071 3.37377L8.66667 7.4142L6.66667 5.414L4.04044 8.04047L2.62623 6.6262L6.66667 2.58579L8.66667 4.586L11.2929 1.95956Z" fill="#3561E7"/>
                                                                         </svg>
                                                                         <p class="ml-2 mr-3">Line Chart</p>
-                                                                        @if($chartType === 'line')
-                                                                            <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 16 16" fill="none">
-                                                                                <path d="M7.99967 14.6668C4.31777 14.6668 1.33301 11.682 1.33301 8.00016C1.33301 4.31826 4.31777 1.3335 7.99967 1.3335C11.6815 1.3335 14.6663 4.31826 14.6663 8.00016C14.6663 11.682 11.6815 14.6668 7.99967 14.6668ZM7.99967 13.3335C10.9452 13.3335 13.333 10.9457 13.333 8.00016C13.333 5.05464 10.9452 2.66683 7.99967 2.66683C5.05415 2.66683 2.66634 5.05464 2.66634 8.00016C2.66634 10.9457 5.05415 13.3335 7.99967 13.3335ZM7.33474 10.6668L4.50633 7.83843L5.44915 6.89556L7.33474 8.78123L11.106 5.00998L12.0488 5.95278L7.33474 10.6668Z" fill="#13B05B"/>
-                                                                            </svg>
-                                                                        @endif
+
+                                                                        <svg x-show="chartType == 'line'" xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 16 16" fill="none">
+                                                                            <path d="M7.99967 14.6668C4.31777 14.6668 1.33301 11.682 1.33301 8.00016C1.33301 4.31826 4.31777 1.3335 7.99967 1.3335C11.6815 1.3335 14.6663 4.31826 14.6663 8.00016C14.6663 11.682 11.6815 14.6668 7.99967 14.6668ZM7.99967 13.3335C10.9452 13.3335 13.333 10.9457 13.333 8.00016C13.333 5.05464 10.9452 2.66683 7.99967 2.66683C5.05415 2.66683 2.66634 5.05464 2.66634 8.00016C2.66634 10.9457 5.05415 13.3335 7.99967 13.3335ZM7.33474 10.6668L4.50633 7.83843L5.44915 6.89556L7.33474 8.78123L11.106 5.00998L12.0488 5.95278L7.33474 10.6668Z" fill="#13B05B"/>
+                                                                        </svg>
                                                                     </li>
-                                                                    <li onclick="changeChartType('{{$title}}', 'bar')" class="flex p-2 items-center hover:cursor-pointer">
+                                                                    <li onclick="changeChartType('{{$title}}', 'bar')" @click="chartType = 'bar'; chartTypeSelectorOpen=false" class="flex p-2 items-center hover:cursor-pointer">
                                                                         <svg xmlns="http://www.w3.org/2000/svg" width="14" height="12" viewBox="0 0 14 12" fill="none">
                                                                             <path d="M0.333008 6.66667H4.33301V12H0.333008V6.66667ZM4.99967 0H8.99967V12H4.99967V0ZM9.66634 3.33333H13.6663V12H9.66634V3.33333Z" fill="#3561E7"/>
                                                                         </svg>
                                                                         <p class="ml-2 mr-3">Bar Chart</p>
-                                                                        @if($chartType === 'bar')
-                                                                            <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 16 16" fill="none">
-                                                                                <path d="M7.99967 14.6668C4.31777 14.6668 1.33301 11.682 1.33301 8.00016C1.33301 4.31826 4.31777 1.3335 7.99967 1.3335C11.6815 1.3335 14.6663 4.31826 14.6663 8.00016C14.6663 11.682 11.6815 14.6668 7.99967 14.6668ZM7.99967 13.3335C10.9452 13.3335 13.333 10.9457 13.333 8.00016C13.333 5.05464 10.9452 2.66683 7.99967 2.66683C5.05415 2.66683 2.66634 5.05464 2.66634 8.00016C2.66634 10.9457 5.05415 13.3335 7.99967 13.3335ZM7.33474 10.6668L4.50633 7.83843L5.44915 6.89556L7.33474 8.78123L11.106 5.00998L12.0488 5.95278L7.33474 10.6668Z" fill="#13B05B"/>
-                                                                            </svg>
-                                                                        @endif
+                                                                        <svg x-show="chartType == 'bar'" xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 16 16" fill="none">
+                                                                            <path d="M7.99967 14.6668C4.31777 14.6668 1.33301 11.682 1.33301 8.00016C1.33301 4.31826 4.31777 1.3335 7.99967 1.3335C11.6815 1.3335 14.6663 4.31826 14.6663 8.00016C14.6663 11.682 11.6815 14.6668 7.99967 14.6668ZM7.99967 13.3335C10.9452 13.3335 13.333 10.9457 13.333 8.00016C13.333 5.05464 10.9452 2.66683 7.99967 2.66683C5.05415 2.66683 2.66634 5.05464 2.66634 8.00016C2.66634 10.9457 5.05415 13.3335 7.99967 13.3335ZM7.33474 10.6668L4.50633 7.83843L5.44915 6.89556L7.33474 8.78123L11.106 5.00998L12.0488 5.95278L7.33474 10.6668Z" fill="#13B05B"/>
+                                                                        </svg>
                                                                     </li>
                                                                 </ul>
                                                             </div>
-                                                        @endif
 
-                                                        <span wire:click="unselectRow('{{ $title }}')" class="rounded-full bg-white border-2 border-red-500 text-red-500 w-5 h-5 flex items-center ml_4 justify-center cursor-pointer">
+                                                        <span wire:click="unselectRow('{{ $title }}')"  class="rounded-full bg-white border-2 border-red-500 text-red-500 w-5 h-5 flex items-center ml_4 justify-center cursor-pointer">
                                                             <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="4" stroke="currentColor" class="w-3 h-3">
                                                                 <path stroke-linecap="round" stroke-linejoin="round" d="M6 18L18 6M6 6l12 12" />
                                                             </svg>
@@ -750,26 +706,28 @@
                                     </div>
                                </div>
                                 @endif
-                                <div class="flex justify-between mt-7">
-                                    <div class="warning-wrapper ">
-                                        <div class="warning-text">
-                                            <svg viewBox="0 0 16 16" fill="none" xmlns="http://www.w3.org/2000/svg">
-                                                <path d="M7.99967 14.6663C4.31777 14.6663 1.33301 11.6815 1.33301 7.99967C1.33301 4.31777 4.31777 1.33301 7.99967 1.33301C11.6815 1.33301 14.6663 4.31777 14.6663 7.99967C14.6663 11.6815 11.6815 14.6663 7.99967 14.6663ZM7.99967 13.333C10.9452 13.333 13.333 10.9452 13.333 7.99967C13.333 5.05415 10.9452 2.66634 7.99967 2.66634C5.05415 2.66634 2.66634 5.05415 2.66634 7.99967C2.66634 10.9452 5.05415 13.333 7.99967 13.333ZM7.33301 9.99967H8.66634V11.333H7.33301V9.99967ZM7.33301 4.66634H8.66634V8.66634H7.33301V4.66634Z" fill="#DA680B"/>
-                                            </svg>
-                                            Click on any of the row(s) to chart the data
+                                    <div class="flex justify-between items-center mt-7">
+                                        <div class="warning-wrapper">
+                                            <div class="warning-text text-sm">
+                                                <svg viewBox="0 0 16 16" fill="none" xmlns="http://www.w3.org/2000/svg">
+                                                    <path d="M7.99967 14.6663C4.31777 14.6663 1.33301 11.6815 1.33301 7.99967C1.33301 4.31777 4.31777 1.33301 7.99967 1.33301C11.6815 1.33301 14.6663 4.31777 14.6663 7.99967C14.6663 11.6815 11.6815 14.6663 7.99967 14.6663ZM7.99967 13.333C10.9452 13.333 13.333 10.9452 13.333 7.99967C13.333 5.05415 10.9452 2.66634 7.99967 2.66634C5.05415 2.66634 2.66634 5.05415 2.66634 7.99967C2.66634 10.9452 5.05415 13.333 7.99967 13.333ZM7.33301 9.99967H8.66634V11.333H7.33301V9.99967ZM7.33301 4.66634H8.66634V8.66634H7.33301V4.66634Z" fill="#DA680B"/>
+                                                </svg>
+                                                Click on any of the row(s) to chart the data
+                                            </div>
+                                        </div>
+
+                                        <div class="flex justify-end items-baseline">
+                                            <span class="currency-font">Currency: &nbsp;</span>
+                                            <select wire:model="currency" id="currency-select" class="inline-flex font-bold !pr-8 bg-transparent">
+                                                <option value="USD">USD</option>
+                                                <option value="CAD">CAD</option>
+                                                <option value="EUR">EUR</option>
+                                            </select>
                                         </div>
                                     </div>
-                                </div>
-                                <div class="flex justify-end items-baseline" wire:ignore.self>
-                                    <span class="currency-font">Currency: &nbsp;</span>
-                                    <select wire:model="currency" id="currency-select" class="inline-flex font-bold !pr-8 bg-transparent">
-                                        <option value="USD">USD</option>
-                                        <option value="CAD">CAD</option>
-                                        <option value="EUR">EUR</option>
-                                    </select>
-                                </div>
-                                </div>
-                                <div class="w-full">
+
+                            </div>
+                                <div class="w-full table-container">
                                     <div class="table-wrapper w-full" style="font-size: 12px;">
                                         <div class="table" wire:key="{{now()}}">
                                             <div class="row-group">
@@ -799,7 +757,11 @@
                                             </div>
                                         </div>
                                     </div>
+                                    <div class="cus-loader" wire:loading.block>
+                                        <div class="cus-loaderBar"></div>
+                                    </div>
                                 </div>
+                                @endif
                             </div>
                         </div>
                     </div>
@@ -807,7 +769,6 @@
             </div>
         </div>
     </div>
-    @endif
 </div>
 @push('scripts')
 <script>
@@ -871,7 +832,7 @@
 
 
         Livewire.hook('message.processed', (message, component) => {
-            if (message.updateQueue.some(update => update.payload.value === 'Standardised Template' || 'As reported (Harmonized)')) {
+            if (message.updateQueue.some(update => update.payload.value === 'Standardised' || 'As reported')) {
                 updateRangeSlider();
             }
         });
@@ -892,7 +853,6 @@
             if(!el) {
                 return;
             }
-
             let rangeDates = @this.rangeDates
 
             let selectedValue = [];
@@ -1190,7 +1150,12 @@
     function updateChart() {
        if (chart) {
            chart.data.datasets = @this.chartData;
-           chart.update();
+           try{
+               chart.update();
+           }
+           catch(ex){
+            initChart();
+           }
        } else {
            initChart();
        }
@@ -1277,7 +1242,9 @@
                         },
                         type: 'timeseries',
                         time: {
-                            unit: 'year',
+                            displayFormats: {
+                                quarter: 'MMM YYYY'
+                            }
                         },
                         ticks:{
                             source:'data',

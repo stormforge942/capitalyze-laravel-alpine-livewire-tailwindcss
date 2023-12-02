@@ -1,4 +1,4 @@
-<div class="main-graph-wrapper main-graph-rev w-full" wire:ignore x-show="{{$chartId}}showgraph">
+<div class="main-graph-wrapper main-graph-rev w-full" wire:ignore x-cloak x-show="{{$chartId}}showgraph">
     <div x-show="{{$chartId}}showgraph"
         :class="{ 'custom-dropdown-absolute-wrapper': !{{$chartId}}showgraph, 'custom-dropdown-absolute-wrapper abs-custom': {{$chartId}}showgraph }">
         <div class="relative custom-dropdown-absolute-wrapper-inner flex justify-end" x-data="{
@@ -149,13 +149,13 @@
                     <ul class="items-center w-full flex custom_radio_wrapper">
                         @if($chartId != 'rbe')
                         <li class="">
-                            <input value="Values" id="Values" type="radio" name="{{$chartId}}radio-group" checked>
-                            <label for="Values" onclick="{{$chartId}}TypeChanged('values')">Values</label>
+                            <input value="Values" id="{{$chartId}}Values" type="radio" name="{{$chartId}}radio-group" checked>
+                            <label for="{{$chartId}}Values" onclick="{{$chartId}}TypeChanged('values')">Values</label>
                         </li>
                         <li class="">
-                            <input value="Percentage Mix" id="Percentage" type="radio"
+                            <input value="Percentage Mix" id="{{$chartId}}Percentage" type="radio"
                                 name="{{$chartId}}radio-group">
-                            <label for="Percentage" onclick="{{$chartId}}TypeChanged('percentage')">Percentage Mix</label>
+                            <label for="{{$chartId}}Percentage" onclick="{{$chartId}}TypeChanged('percentage')">Percentage Mix</label>
                         </li>
                         @endif
                         <li class="custom_checkbox" x-data="{toggle: false, toggle2: false}">
@@ -282,7 +282,9 @@
     })
 
     Livewire.on('{{$chartId}}PeriodChanged', (v) => {
-        {{$chartId}}Period = v
+        debugger
+        let periodColumn = (v == 'Calendar Annual' || v == 'Fiscal Annual') ? 'arps' : 'qrps'
+        {{$chartId}}Period = periodColumn
         {{$chartId}}InitChart({{$chartId}}FilteredData)
     })
 
@@ -513,7 +515,7 @@
             else {
                 {{$chartId}}FinalData = {{$chartId}}FinalData['quarterly']
             }
-
+            debugger
             let {{$chartId}}Canvas = document.getElementById('{{$chartId}}Canvas');
             if(typeof {{$chartId}}FinalData == 'undefined'){
 

@@ -49,6 +49,7 @@ class CompanyReport extends Component
     public $activeTabName = 'Income Statement';
     public $chartColors = [];
     public $allRows = [];
+    public $datesEmptyStatus = [];
 
     protected $listeners = ['periodChange', 'tabClicked', 'tabSubClicked', 'selectRow', 'unselectRow'];
 
@@ -60,6 +61,7 @@ class CompanyReport extends Component
         'startDate',
         'endDate',
         'activeTabName',
+        'period'
     ];
 
     public function mount(Request $request, $company, $ticker, $period): void
@@ -238,30 +240,37 @@ class CompanyReport extends Component
 
     public function getData() : void
     {
-        $acronym = ($this->period == 'annual') ? 'arf5drs' : 'qrf5drs';
+        $acronym = ($this->period == 'annual') || ($this->period == 'Calendar Annual') || ($this->period == 'Fiscal Annual') ? 'arf5drs' : 'qrf5drs';
 
-        if ($this->view === 'Standardised Template') {
-            $data = InfoTikrPresentation::where('ticker', $this->ticker)->orderByDesc('id')->first()->info;
-        } else {
-            $query = InfoPresentation::query()
-                ->where('ticker', '=', $this->ticker)
-                ->where('acronym', '=', $acronym)
-                ->where('id', '=', $this->activeSubIndex)
-                ->select('info')->value('info');
+        try {
+            if ($this->view === 'Standardised') {
+                $data = InfoTikrPresentation::where('ticker', $this->ticker)->orderByDesc('id')->first()->info;
+            } else {
+                $query = InfoPresentation::query()
+                    ->where('ticker', '=', $this->ticker)
+                    ->where('acronym', '=', $acronym)
+                    ->where('id', '=', $this->activeSubIndex)
+                    ->select('info')->value('info');
 
-            $data = json_decode($query, true);
+                $data = json_decode($query, true);
 
+            }
+
+            if ($this->activeTabName === 'Ratios') {
+                $data = json_decode($this->fakeDataForRatiosPage(), true);
+            }
+            $this->noData = false;
         }
-
-        if ($this->activeTabName === 'Ratios') {
-            $data = $this->fakeDataForRatiosPage();
+        catch(\Exception $e) {
+            $this->noData = true;
+            return;
         }
 
         // handle period is not set by default we put it to annual
         $this->period ?? $this->period = 'annual';
 
-        // adjust data in case of standardised template and annual period or quarterly period since both are combined in one array
-        $data = ($this->view === 'Standardised Template') ? ($this->period === 'annual' ? $data['annual'] : $data['quarter']) : $data;
+        // adjust data in case of Standardised and annual period or quarterly period since both are combined in one array
+        $data = ($this->view === 'Standardised') ? (($this->period === 'annual' || $this->period === 'Fiscal Annual' || $this->period === 'Calendar Annual') ? $data['annual'] : $data['quarter']) : $data;
 
         $this->data = $data;
         $this->generateUI();
@@ -282,7 +291,7 @@ class CompanyReport extends Component
         $this->startDate = $dates[0];
         $this->endDate = $dates[1];
 
-        if ($this->period === 'annual') {
+        if ($this->period === 'annual' || $this->period === 'Fiscal Annual' || $this->period === 'Calendar Annual') {
             if (count($dates) == 2) {
                 $this->tableDates = [];
 
@@ -308,7 +317,7 @@ class CompanyReport extends Component
             }
         }
 
-        if ($this->period === 'quarterly') {
+        if ($this->period === 'quarterly' || $this->period === 'Fiscal Quaterly' || $this->period === 'Calendar Quaterly') {
 
             $this->tableDates = []; // Clears the array
 
@@ -375,7 +384,6 @@ class CompanyReport extends Component
 
     public function generateTableDates()
     {
-
         $this->tableDates = []; // Clears the array
 
         // get all dates possibles and fill tableDates
@@ -386,6 +394,28 @@ class CompanyReport extends Component
             // for the slider date - rangeDates is slider dates
         $this->rangeDates = $this->tableDates;
 
+        if(!is_numeric($this->startDate)){
+            $year = date('Y', strtotime($this->startDate));
+            $startDate = $this->startDate;
+            foreach($this->rangeDates as $date){
+                if(strtotime($date) <= strtotime($this->startDate) && strtotime($date) < strtotime($startDate) && date('Y', strtotime($date)) == date('Y', strtotime($this->startDate))){
+                    $startDate = $date;
+                }
+            }
+
+            $this->startDate = $startDate;
+        }
+        if(!is_numeric($this->endDate)){
+            $year = date('Y', strtotime($this->endDate));
+            $endDate = $this->endDate;
+            foreach($this->rangeDates as $date){
+                if(strtotime($date) >= strtotime($this->endDate) && strtotime($date) > strtotime($endDate) && date('Y', strtotime($date)) == date('Y', strtotime($this->endDate))){
+                    $endDate = $date;
+                }
+            }
+
+            $this->endDate = $endDate;
+        }
 
         // Check and update $this->endDate if applicable
         if (isset($this->endDate) && is_integer($this->endDate)) {
@@ -473,7 +503,7 @@ class CompanyReport extends Component
             return $timestamp !== false && $timestamp >= $startTimestamp && $timestamp <= $endTimestamp;
         })));
 
-        if($this->period === 'quarterly') {
+        if($this->period === 'quarterly' || $this->period === 'Fiscal Quaterly' || $this->period === 'Calendar Quaterly') {
             $filteredData = [];
 
             foreach ($this->rangeDates as $date) {
@@ -496,7 +526,7 @@ class CompanyReport extends Component
         $rows = [];
         $allRows = [];
 
-        if ($this->view !== 'Standardised Template') {
+        if ($this->view !== 'Standardised') {
             if (
                 isset($data['Income Statement']) &&
                 is_array($data['Income Statement']) &&
@@ -522,16 +552,50 @@ class CompanyReport extends Component
             }
         }
 
-        if ($this->view === 'Standardised Template') {
-            $data = $this->activeTabName == 'Balance Sheet Statement' ? $data['Balance Sheet'] : $data[$this->activeTabName];
+        if ($this->view === 'Standardised') {
+            $data = $this->activeTabName == 'Balance Sheet Statement' ? $data['Balance Sheet'] : $data[$this->activeTabName] ?? $data;
         }
+
 
         foreach ($data as $key => $value) {
             $rowArray = $this->generateRow($value, $key);
             $rows[] = $rowArray[0];
+            foreach(array_keys($rowArray[1]['values']) as $date){
+                if(!isset($this->datesEmptyStatus[$date])){
+                    $this->datesEmptyStatus[$date] = false;
+                }
+                if($rowArray[1]['values'][$date]['value'] != '-'){
+                    $this->datesEmptyStatus[$date] = true;
+                }
+            }
             $allRows[] =$rowArray[1];
-
         }
+
+        foreach($rows as $rowKey => $row){
+            $rowValues = [];
+            foreach($row['values'] as $valueKey => $value){
+                if($this->datesEmptyStatus[$valueKey]){
+                    $rowValues[$valueKey] = $value;
+                }
+            }
+            $rows[$rowKey]['values'] = $rowValues;
+        }
+
+        foreach($this->tableDates as $dateKey => $tableDate){
+            if(!$this->datesEmptyStatus[$tableDate]){
+                unset($this->tableDates[$dateKey]);
+            }
+        }
+
+        foreach($this->rangeDates as $dateKey => $tableDate){
+            foreach($this->datesEmptyStatus as $statusKey => $dateStatus){
+                if(date('Y', strtotime($statusKey)) == date('Y', strtotime($tableDate)) && !$dateStatus){
+                    unset($this->rangeDates[$dateKey]);
+                }
+            }
+        }
+        $this->rangeDates = array_values($this->rangeDates);
+        $this->tableDates = array_values($this->tableDates);
 
         $this->rows = $rows;
         $this->allRows = $allRows;
@@ -701,6 +765,7 @@ class CompanyReport extends Component
         }
 
         if ($propertyName === 'view') {
+            $this->setAsReportedStatementsList();
             $this->getData();
             $this->traverseArray($this->allRows);
         }
@@ -711,11 +776,17 @@ class CompanyReport extends Component
     {
         $this->setAsReportedStatementsList();
         $this->getData();
+        $this->generateRows($this->data);
+        if(count($this->selectedRows) > 0){
+            $this->updateSelectRows();
+        }
+        $this->generateChartData();
+        $this->emit('updateCompanyReportChart');
     }
 
     public function setAsReportedStatementsList()
     {
-        $acronym = ($this->period == 'annual') ? 'arf5drs' : 'qrf5drs';
+        $acronym = ($this->period == 'annual') || ($this->period == 'Calendar Annual') || ($this->period == 'Fiscal Annual') ? 'arf5drs' : 'qrf5drs';
 
         $statements = InfoPresentation::where('ticker', '=', $this->ticker)
             ->where('acronym', '=', $acronym)
@@ -735,7 +806,7 @@ class CompanyReport extends Component
         if($this->activeTabName == 'Income Statement' || $this->activeTabName == 'Balance Sheet Statement' || $this->activeTabName == 'Cash Flow Statement') {
             $this->activeIndex = 'Financial Statements [Financial Statements]';
         }
-
+        $this->activeSubIndex = "";
         foreach($statements as $value) {
             if($this->activeTabName == $value['title']) {
                 $this->activeSubIndex = $value['id'];
@@ -760,7 +831,7 @@ class CompanyReport extends Component
         $this->getData();
     }
 
-    public function tabSubClicked($title)
+    public function tabSubClicked($title): void
     {
 
         $this->activeTabName = $title;
@@ -771,7 +842,8 @@ class CompanyReport extends Component
         }
 
         if($this->activeTabName === 'Income Statement' || $this->activeTabName === 'Balance Sheet Statement' || $this->activeTabName === 'Cash Flow Statement') {
-            if($this->view === 'As reported (Harmonized)') {
+            if($this->view === 'As reported') {
+                $this->activeSubIndex = "";
                 foreach($this->asReportedStatementsList as $value) {
                     if($this->activeTabName === $value['title']) {
                         $this->activeSubIndex = $value['id'];
