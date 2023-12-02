@@ -33,10 +33,14 @@ class CreateCompanies extends Command
         $url = 'https://www.sec.gov/files/company_tickers.json';
 
         $json = Http::acceptJson()
-            ->withUserAgent('Mozilla/5.0 (compatible; MSIE 10.0; Windows NT 6.1; Trident/6.0)')
+            ->withHeaders([
+                'User-Agent' => 'Mozilla/5.0 (compatible; MSIE 10.0; Windows NT 6.1; Trident/6.0)',
+                'Accept-Encoding' => 'gzip, deflate',
+                'Host' => 'www.sec.gov'
+            ])
             ->throw()
             ->get($url)
-            ->json();
+            ->object();
 
         foreach ($json as $key => $value) {
             if (isset($value->ticker) && !empty($value->ticker)) {
