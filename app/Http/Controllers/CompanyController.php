@@ -118,10 +118,14 @@ class CompanyController extends BaseController
         ]);
     }
 
-    public function trackInvestor(Request $request, $ticker)
+    public function trackInvestor(Request $request)
     {
+        $ticker = Company::DEFAULT_TICKER;
+
+        $company = Company::where('ticker', $ticker)->get()->first();
+
         return view('layouts.company', [
-            'company' => Company::DEFAULT_TICKER,
+            'company' => $company,
             'ticker' => $ticker,
             'period' => $request->query('period', 'annual'),
             'tab' => 'track-investor'
