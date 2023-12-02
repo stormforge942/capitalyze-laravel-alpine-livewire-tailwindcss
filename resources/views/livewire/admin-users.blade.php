@@ -1,10 +1,5 @@
-<div>
-    <div class="px-4 sm:px-6 lg:px-8 bg-white py-4 shadow rounded max-w-5xl mx-auto">
-        <div class="sm:flex sm:items-start flex-col">
-            <div class="block">
-                <h1 class="text-base font-semibold leading-6 text-gray-900">User management</h1>
-            </div>
-        </div>
+<div class="py-6">
+    <div class="flex px-4 sm:px-6 bg-white lg:px-8 py-4 shadow rounded max-w-5xl mx-auto">
         <div class="mt-8 flow-root rounded-lg overflow-x-auto">
             <table class="table-auto min-w-full border-collapse text-left" x-data>
                 <thead>

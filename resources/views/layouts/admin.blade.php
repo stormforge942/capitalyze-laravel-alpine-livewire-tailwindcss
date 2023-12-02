@@ -22,6 +22,20 @@
 
         <main>
             <div class="container px-3 mx-auto pb-5">
+                <ul class="flex px-4 sm:px-6 lg:px-8 py-4 shadow rounded max-w-5xl mx-auto">
+                    <li class="mr-8">
+                        <a class="nav-link {{ last(request()->segments()) == 'users' ? 'font-bold' : '' }}" aria-current="page" href="{{ route('admin.users') }}" >Users</a>
+                    </li>
+                    <li class="mr-8">
+                            <a class="nav-link {{ last(request()->segments()) == 'permission' ? 'font-bold' : '' }}" href="{{ route('admin.permission-management') }}">Permission Management</a>
+                    </li>
+                    <li class="mr-8">
+                        <a class="nav-link {{ last(request()->segments()) == 'groups' ? 'font-bold' : '' }}" href="{{ route('admin.groups-management') }}">Groups Management</a>
+                    </li>
+                </ul>
+            </div>
+
+            <div class="container px-3 mx-auto pb-5">
                 @if ($tab == 'users')
                     <livewire:admin-users />
                 @endif

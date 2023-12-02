@@ -1,11 +1,6 @@
-<div class="py-12">
+<div class="py-6">
     <div class="mx-auto flex">
         <div class="mt-4 px-4 sm:px-6 lg:px-8 bg-white py-4 shadow rounded w-full md:w-2/3 md:mx-auto">
-            <div class="sm:flex sm:items-start flex-col">
-                <div class="block">
-                    <h1 class="text-base font-semibold leading-6 text-gray-900">Groups Management</h1>
-                </div>
-            </div>
             <div class="mt-8 flow-root rounded-lg overflow-x-auto">
                 <div>Create New Group</div>
                 <input type="text" placeholder="Group Name" wire:change="createGroup($event.target.value)">

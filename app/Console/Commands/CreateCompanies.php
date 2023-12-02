@@ -4,7 +4,6 @@ namespace App\Console\Commands;
 use Illuminate\Support\Facades\Http;
 use App\Models\Company;
 use Illuminate\Console\Command;
-use Illuminate\Support\Facades\Http;
 use Illuminate\Support\Facades\Log;
 
 class CreateCompanies extends Command

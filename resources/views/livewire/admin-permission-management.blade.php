@@ -1,11 +1,6 @@
-<div class="py-12">
+<div class="py-6">
     <div class="mx-auto flex">
-        <div class="mt-4 px-4 sm:px-6 lg:px-8 bg-white py-4 shadow rounded w-full md:w-11/12 md:mx-auto">
-            <div class="sm:flex sm:items-start flex-col">
-                <div class="block">
-                    <h1 class="text-base font-semibold leading-6 text-gray-900">Users Permissions</h1>
-                </div>
-            </div>
+        <div class="flex px-4 sm:px-6 bg-white lg:px-8 py-4 shadow rounded max-w-5xl mx-auto">
             <div class="w-full table-fixed border-collapse">
                 <table class="table-auto w-full overflow-scroll">
                     <thead>

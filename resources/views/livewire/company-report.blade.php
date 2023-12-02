@@ -83,7 +83,7 @@
                                                                 <li>
                                                                     <div class="flex p-2 rounded hover:bg-[#52D3A233] cursor-pointer">
                                                                         <div class="flex items-center h-5 cursor-pointer">
-                                                                            <input @click='view = "As reported (Harmonized)"' :checked="view == 'As reported (Harmonized)'" id="view-radio-1" name="view-radio" type="radio" value="As reported (Harmonized)" class="cursor-pointer w-4 h-4 text-[#686868] bg-transpearent border-[#686868] border-2">
+                                                                            <input @click='view = "As reported"' :checked="view == 'As reported'" id="view-radio-1" name="view-radio" type="radio" value="As reported" class="cursor-pointer w-4 h-4 text-[#686868] bg-transpearent border-[#686868] border-2">
                                                                         </div>
                                                                         <div class="ml-4 w-full text-sm cursor-pointer">
                                                                             <label for="view-radio-1" class="cursor-pointer font-medium text-gray-900 dark:text-gray-300">
@@ -832,7 +832,7 @@
 
 
         Livewire.hook('message.processed', (message, component) => {
-            if (message.updateQueue.some(update => update.payload.value === 'Standardised' || 'As reported (Harmonized)')) {
+            if (message.updateQueue.some(update => update.payload.value === 'Standardised' || 'As reported')) {
                 updateRangeSlider();
             }
         });

@@ -765,6 +765,7 @@ class CompanyReport extends Component
         }
 
         if ($propertyName === 'view') {
+            $this->setAsReportedStatementsList();
             $this->getData();
             $this->traverseArray($this->allRows);
         }
@@ -841,7 +842,7 @@ class CompanyReport extends Component
         }
 
         if($this->activeTabName === 'Income Statement' || $this->activeTabName === 'Balance Sheet Statement' || $this->activeTabName === 'Cash Flow Statement') {
-            if($this->view === 'As reported (Harmonized)') {
+            if($this->view === 'As reported') {
                 $this->activeSubIndex = "";
                 foreach($this->asReportedStatementsList as $value) {
                     if($this->activeTabName === $value['title']) {
