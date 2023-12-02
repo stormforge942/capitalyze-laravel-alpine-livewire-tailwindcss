@@ -46,7 +46,7 @@ class CompanyNavbar extends Component
     public function navbar(): array
     {
         return [
-            'main' => Navbar::getPrimaryLinks(Auth::user()->navbars())
+            'main' => collect(Navbar::getPrimaryLinks(Auth::user()->navbars())
                 ->map(function (Navbar $nav) {
                     return [
                         'title' => $nav->name,
@@ -54,7 +54,19 @@ class CompanyNavbar extends Component
                         'active' => request()->routeIs($nav->route_name)
                     ];
                 })
-                ->toArray(),
+                ->toArray())
+                ->sort(function ($a, $b) {
+                    $order = ['Track Investor', 'Event Filings', 'Insider Transactions', 'Earnings Calendar'];
+                    $aIndex = array_search($a['title'], $order);
+                    $bIndex = array_search($b['title'], $order);
+
+                    $aIndex = $aIndex === false ? PHP_INT_MAX : $aIndex;
+                    $bIndex = $bIndex === false ? PHP_INT_MAX : $bIndex;
+
+                    return $aIndex <=> $bIndex;
+                })
+                ->values()
+                ->all(),
             'company_research' => [
                 [
                     'title' => 'Overview',
