@@ -63,6 +63,10 @@ class CompanyController extends BaseController
     {
         $company = Company::where('ticker', $ticker)->get()->first();
 
+        if (!$company) {
+            return response()->view('errors.ticker-not-found', ['ticker' => $ticker], 404);
+        }
+
         return view('layouts.company', [
             'company' => $company,
             'ticker' => $ticker,

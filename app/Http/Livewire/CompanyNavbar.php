@@ -6,7 +6,10 @@ use App\Models\Navbar;
 use Livewire\Component;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
-
+use Illuminate\Contracts\View\Factory as ViewFactory;
+use Illuminate\Contracts\View\View;
+use Illuminate\Contracts\Foundation\Application;
+use Illuminate\Http\RedirectResponse;
 class CompanyNavbar extends Component
 {
     public $company;
@@ -20,18 +23,18 @@ class CompanyNavbar extends Component
 
     protected $listeners = ['periodChange' => '$refresh'];
 
-    public function changePeriod($period)
+    public function changePeriod($period): RedirectResponse
     {
         $this->period = $period;
         return redirect()->route($this->currentRoute, ['ticker' => $this->company->ticker, 'period' => $period]);
     }
 
-    public function render()
+    public function render(): ViewFactory|View|Application
     {
         return view('livewire.company-navbar');
     }
 
-    public function mount(Request $request)
+    public function mount(Request $request): void
     {
         if (!$this->currentRoute) {
             $this->currentRoute = $request->route()->getName();
@@ -40,7 +43,7 @@ class CompanyNavbar extends Component
         $this->navbarItems = $this->navbar();
     }
 
-    public function navbar()
+    public function navbar(): array
     {
         return [
             'main' => Navbar::getPrimaryLinks(Auth::user()->navbars())

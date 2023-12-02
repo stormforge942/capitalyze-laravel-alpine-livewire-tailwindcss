@@ -43,6 +43,7 @@ class CreateAdminJob implements ShouldQueue
         $user->is_approved = true;
         $user->is_admin = true;
         $user->group_id = Groups::where('name', 'Admins')->first()?->id ?? 0;
+
         $user->save();
     }
 }

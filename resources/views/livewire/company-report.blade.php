@@ -46,48 +46,6 @@
                     <div class="align-middle">
                         <div class="block min-w-full sm:rounded-lg">
                             <div class="py-0">
-{{--                                <div class="flex w-full justify-between items-center" >--}}
-{{--                                    <div class="page-titles">--}}
-{{--                                        <b class="company-name">{{ @$companyName }}  @if(@$ticker) ({{ @$ticker }}) @endif </b> <br>--}}
-{{--                                        <span class="brr mt-3"></span>--}}
-{{--                                        <span class="company-price">${{ number_format($cost, 2) }}</span>--}}
-{{--                                        <small id="dynamicValue" class="{{ $dynamic > 0 ? 'text-color-green' : 'text-color-red' }}">--}}
-{{--                                            ({{ $dynamic > 0 ? '+' : '-' }}{{ abs($dynamic) }}%)--}}
-{{--                                        </small>--}}
-{{--                                    </div>--}}
-{{--                                    <div class="download-buttons-wrapper flex">--}}
-{{--                                        <a class="download-button" href="#">--}}
-{{--                                            <svg viewBox="0 0 16 16" fill="none" xmlns="http://www.w3.org/2000/svg">--}}
-{{--                                                <path d="M8.66634 6.66667H11.9997L7.99967 10.6667L3.99967 6.66667H7.33301V2H8.66634V6.66667ZM2.66634 12.6667H13.333V8H14.6663V13.3333C14.6663 13.7015 14.3679 14 13.9997 14H1.99967C1.63149 14 1.33301 13.7015 1.33301 13.3333V8H2.66634V12.6667Z" fill="#121A0F"/>--}}
-{{--                                            </svg>--}}
-{{--                                            Download PDF--}}
-{{--                                        </a>--}}
-{{--                                        <a class="download-button" href="#">--}}
-{{--                                            <svg viewBox="0 0 16 16" fill="none" xmlns="http://www.w3.org/2000/svg">--}}
-{{--                                                <path d="M8.66634 6.66667H11.9997L7.99967 10.6667L3.99967 6.66667H7.33301V2H8.66634V6.66667ZM2.66634 12.6667H13.333V8H14.6663V13.3333C14.6663 13.7015 14.3679 14 13.9997 14H1.99967C1.63149 14 1.33301 13.7015 1.33301 13.3333V8H2.66634V12.6667Z" fill="#121A0F"/>--}}
-{{--                                            </svg>--}}
-{{--                                            Download Excel--}}
-{{--                                        </a>--}}
-{{--                                        <a class="download-button" href="#">--}}
-{{--                                            <svg viewBox="0 0 16 16" fill="none" xmlns="http://www.w3.org/2000/svg">--}}
-{{--                                                <path d="M8.66634 6.66667H11.9997L7.99967 10.6667L3.99967 6.66667H7.33301V2H8.66634V6.66667ZM2.66634 12.6667H13.333V8H14.6663V13.3333C14.6663 13.7015 14.3679 14 13.9997 14H1.99967C1.63149 14 1.33301 13.7015 1.33301 13.3333V8H2.66634V12.6667Z" fill="#121A0F"/>--}}
-{{--                                            </svg>--}}
-{{--                                            Download CSV--}}
-{{--                                        </a>--}}
-{{--                                    </div>--}}
-{{--                                </div>--}}
-
-                                <!-- <div class="flex w-full overflow-x-hidden">
-                                    <div class="tabs-wrapper flex">
-                                        <a href="{{route('company.report', ['ticker' => $company->ticker, 'period' => $period])}}" @class(['tab','px-3', 'active' => $currentRoute === 'company.report'])>Income Statement</a>
-                                        <a href="{{route('company.report', ['ticker' => $company->ticker, 'period' => $period])}}" @class(['tab','px-3' => $currentRoute === 'company.report'])>Balance Sheet</a>
-                                        <a href="{{route('company.report', ['ticker' => $company->ticker, 'period' => $period])}}" @class(['tab','px-3' => $currentRoute === 'company.report'])>Cash Flow</a>
-                                        <a href="{{route('company.geographic', ['ticker' => $company->ticker, 'period' => $period])}}" @class(['tab','px-3', 'active' => $currentRoute === 'company.geographic'])>Segments</a>
-                                        <a href="{{route('company.shareholders', ['ticker' => $company->ticker, 'period' => $period])}}" @class(['tab','px-3', 'active' => $currentRoute === 'company.shareholders'])>Ratios</a>
-                                        <a href="{{route('company.executive.compensation', ['ticker' => $company->ticker, 'period' => $period])}}" @class(['tab','px-3', 'active' => $currentRoute === 'company.executive.compensation'])>Consolidated Statements</a>
-                                    </div>
-                                </div> -->
-
                                 <div class="flex w-full overflow-x-hidden mt-3">
                                     <div class="tabs-container w-full" style="overflow-x: auto; white-space: nowrap;">
                                         <ul class="tabs-wrapper flex gap-2">
@@ -108,7 +66,7 @@
                                                 <div class=" flex items-center text-sm" x-data="{view: null, viewTypeSelectorOpen: false}" @click.away="viewTypeSelectorOpen = false">View
                                                     <div class="relative">
                                                         <button type="submit" @click="viewTypeSelectorOpen = !viewTypeSelectorOpen" class="flex items-center flowbite-select flowbite_btn bg-gray-50 border border-gray-700 text-gray-900 text-sm ml-2 p-2" name="view" id="" :class="[view != null ? 'active' : '', viewTypeSelectorOpen? 'down' : '']">
-                                                            <span x-text="(view == null || view == 0) ? 'Standardised Template' : view.replace('(Harmonized)', '')"></span>
+                                                            <span x-text="(view == null || view == 0) ? 'Standardised' : view.replace('(Harmonized)', '')"></span>
                                                             <svg width="16" height="16" viewBox="0 0 16 16" fill="none" xmlns="http://www.w3.org/2000/svg">
                                                                 <path d="M10.3083 6.19514L7.72167 8.78378L5.135 6.19514C5.01045 6.07021 4.84135 6 4.665 6C4.48865 6 4.31955 6.07021 4.195 6.19514C3.935 6.45534 3.935 6.87566 4.195 7.13585L7.255 10.1982C7.515 10.4584 7.935 10.4584 8.195 10.1982L11.255 7.13585C11.515 6.87566 11.515 6.45534 11.255 6.19514C10.995 5.94161 10.5683 5.93494 10.3083 6.19514Z" fill="#121A0F"/>
                                                             </svg>
@@ -149,11 +107,11 @@
                                                                 <li>
                                                                     <div class="flex p-2 rounded hover:bg-[#52D3A233] cursor-pointer">
                                                                         <div class="flex items-center h-5 cursor-pointer">
-                                                                            <input @click='view ="Standardised Template"' :checked="view == 'Standardised Template'" id="view-radio-3" name="view-radio" type="radio" value="Standardised Template" class="cursor-pointer w-4 h-4 text-[#686868] bg-transpearent border-[#686868] border-2">
+                                                                            <input @click='view ="Standardised"' :checked="view == 'Standardised'" id="view-radio-3" name="view-radio" type="radio" value="Standardised" class="cursor-pointer w-4 h-4 text-[#686868] bg-transpearent border-[#686868] border-2">
                                                                         </div>
                                                                         <div class="ml-4 w-full text-sm cursor-pointer">
                                                                             <label for="view-radio-3" class="cursor-pointer font-medium text-gray-900 dark:text-gray-300">
-                                                                                <div>Standardised Template</div>
+                                                                                <div>Standardised</div>
                                                                             </label>
                                                                         </div>
                                                                     </div>
@@ -551,9 +509,6 @@
                                                 </div>
                                             </div>
                                         </div>
-                                        <div class="cus-loader" wire:loading.block>
-                                            <div class="cus-loaderBar"></div>
-                                        </div>
                                     </div>
                                 </div>
                                 @if($noData)
@@ -751,26 +706,28 @@
                                     </div>
                                </div>
                                 @endif
-                                <div class="flex justify-between mt-7">
-                                    <div class="warning-wrapper ">
-                                        <div class="warning-text">
-                                            <svg viewBox="0 0 16 16" fill="none" xmlns="http://www.w3.org/2000/svg">
-                                                <path d="M7.99967 14.6663C4.31777 14.6663 1.33301 11.6815 1.33301 7.99967C1.33301 4.31777 4.31777 1.33301 7.99967 1.33301C11.6815 1.33301 14.6663 4.31777 14.6663 7.99967C14.6663 11.6815 11.6815 14.6663 7.99967 14.6663ZM7.99967 13.333C10.9452 13.333 13.333 10.9452 13.333 7.99967C13.333 5.05415 10.9452 2.66634 7.99967 2.66634C5.05415 2.66634 2.66634 5.05415 2.66634 7.99967C2.66634 10.9452 5.05415 13.333 7.99967 13.333ZM7.33301 9.99967H8.66634V11.333H7.33301V9.99967ZM7.33301 4.66634H8.66634V8.66634H7.33301V4.66634Z" fill="#DA680B"/>
-                                            </svg>
-                                            Click on any of the row(s) to chart the data
+                                    <div class="flex justify-between items-center mt-7">
+                                        <div class="warning-wrapper">
+                                            <div class="warning-text text-sm">
+                                                <svg viewBox="0 0 16 16" fill="none" xmlns="http://www.w3.org/2000/svg">
+                                                    <path d="M7.99967 14.6663C4.31777 14.6663 1.33301 11.6815 1.33301 7.99967C1.33301 4.31777 4.31777 1.33301 7.99967 1.33301C11.6815 1.33301 14.6663 4.31777 14.6663 7.99967C14.6663 11.6815 11.6815 14.6663 7.99967 14.6663ZM7.99967 13.333C10.9452 13.333 13.333 10.9452 13.333 7.99967C13.333 5.05415 10.9452 2.66634 7.99967 2.66634C5.05415 2.66634 2.66634 5.05415 2.66634 7.99967C2.66634 10.9452 5.05415 13.333 7.99967 13.333ZM7.33301 9.99967H8.66634V11.333H7.33301V9.99967ZM7.33301 4.66634H8.66634V8.66634H7.33301V4.66634Z" fill="#DA680B"/>
+                                                </svg>
+                                                Click on any of the row(s) to chart the data
+                                            </div>
+                                        </div>
+
+                                        <div class="flex justify-end items-baseline">
+                                            <span class="currency-font">Currency: &nbsp;</span>
+                                            <select wire:model="currency" id="currency-select" class="inline-flex font-bold !pr-8 bg-transparent">
+                                                <option value="USD">USD</option>
+                                                <option value="CAD">CAD</option>
+                                                <option value="EUR">EUR</option>
+                                            </select>
                                         </div>
                                     </div>
-                                </div>
-                                <div class="flex justify-end items-baseline" wire:ignore.self>
-                                    <span class="currency-font">Currency: &nbsp;</span>
-                                    <select wire:model="currency" id="currency-select" class="inline-flex font-bold !pr-8 bg-transparent">
-                                        <option value="USD">USD</option>
-                                        <option value="CAD">CAD</option>
-                                        <option value="EUR">EUR</option>
-                                    </select>
-                                </div>
-                                </div>
-                                <div class="w-full">
+
+                            </div>
+                                <div class="w-full table-container">
                                     <div class="table-wrapper w-full" style="font-size: 12px;">
                                         <div class="table" wire:key="{{now()}}">
                                             <div class="row-group">
@@ -799,6 +756,9 @@
                                                 </div>
                                             </div>
                                         </div>
+                                    </div>
+                                    <div class="cus-loader" wire:loading.block>
+                                        <div class="cus-loaderBar"></div>
                                     </div>
                                 </div>
                                 @endif
@@ -872,7 +832,7 @@
 
 
         Livewire.hook('message.processed', (message, component) => {
-            if (message.updateQueue.some(update => update.payload.value === 'Standardised Template' || 'As reported (Harmonized)')) {
+            if (message.updateQueue.some(update => update.payload.value === 'Standardised' || 'As reported (Harmonized)')) {
                 updateRangeSlider();
             }
         });

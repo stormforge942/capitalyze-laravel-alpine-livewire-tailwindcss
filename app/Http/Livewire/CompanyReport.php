@@ -243,7 +243,7 @@ class CompanyReport extends Component
         $acronym = ($this->period == 'annual') || ($this->period == 'Calendar Annual') || ($this->period == 'Fiscal Annual') ? 'arf5drs' : 'qrf5drs';
 
         try {
-            if ($this->view === 'Standardised Template') {
+            if ($this->view === 'Standardised') {
                 $data = InfoTikrPresentation::where('ticker', $this->ticker)->orderByDesc('id')->first()->info;
             } else {
                 $query = InfoPresentation::query()
@@ -269,8 +269,8 @@ class CompanyReport extends Component
         // handle period is not set by default we put it to annual
         $this->period ?? $this->period = 'annual';
 
-        // adjust data in case of standardised template and annual period or quarterly period since both are combined in one array
-        $data = ($this->view === 'Standardised Template') ? (($this->period === 'annual' || $this->period === 'Fiscal Annual' || $this->period === 'Calendar Annual') ? $data['annual'] : $data['quarter']) : $data;
+        // adjust data in case of Standardised and annual period or quarterly period since both are combined in one array
+        $data = ($this->view === 'Standardised') ? (($this->period === 'annual' || $this->period === 'Fiscal Annual' || $this->period === 'Calendar Annual') ? $data['annual'] : $data['quarter']) : $data;
 
         $this->data = $data;
         $this->generateUI();
@@ -526,7 +526,7 @@ class CompanyReport extends Component
         $rows = [];
         $allRows = [];
 
-        if ($this->view !== 'Standardised Template') {
+        if ($this->view !== 'Standardised') {
             if (
                 isset($data['Income Statement']) &&
                 is_array($data['Income Statement']) &&
@@ -552,7 +552,7 @@ class CompanyReport extends Component
             }
         }
 
-        if ($this->view === 'Standardised Template') {
+        if ($this->view === 'Standardised') {
             $data = $this->activeTabName == 'Balance Sheet Statement' ? $data['Balance Sheet'] : $data[$this->activeTabName] ?? $data;
         }
 
@@ -830,7 +830,7 @@ class CompanyReport extends Component
         $this->getData();
     }
 
-    public function tabSubClicked($title)
+    public function tabSubClicked($title): void
     {
 
         $this->activeTabName = $title;

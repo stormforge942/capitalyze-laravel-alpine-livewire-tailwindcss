@@ -28,7 +28,6 @@ trait HasNavbar
         return NavbarGroupShows::query()
             ->with(['navbar' => fn ($q) => $q->where('is_moddable', $moddable)])
             ->when(
-                !$this->is_admin,
                 fn ($q) => $q->where('group_id', $this->group_id)->where('show', true)
             )
             ->get()
