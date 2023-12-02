@@ -2,7 +2,6 @@
 
 namespace App\Http\Controllers;
 
-use App\Http\Livewire\AllFilings\Ownership;
 use App\Models\Fund;
 use App\Models\Company;
 use Illuminate\Http\Request;
@@ -121,10 +120,8 @@ class CompanyController extends BaseController
 
     public function trackInvestor(Request $request, $ticker)
     {
-        $company = Company::where('ticker', $ticker)->get()->first();
-
         return view('layouts.company', [
-            'company' => $company,
+            'company' => Company::DEFAULT_TICKER,
             'ticker' => $ticker,
             'period' => $request->query('period', 'annual'),
             'tab' => 'track-investor'
