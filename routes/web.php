@@ -49,6 +49,7 @@ Route::get('/', HomeController::class)->name('home');
 
 Route::middleware([])->group(function () {
     Route::middleware(['auth', 'approved', 'verified', 'checkPagePermission'])->group(function () {
+        Route::get('/track-investor', [CompanyController::class, 'trackInvestor'])->name('track-investor');
         Route::get('/calendar/earnings', EarningsCalendar::class)->name('earnings-calendar');
         Route::get('/calendar/economics', EconomicsCalendar::class)->name('economics-calendar');
         Route::get('/calendar/economics/{release_id}/', EconomicRelease::class)->name('economics-release');
@@ -73,7 +74,6 @@ Route::middleware([])->group(function () {
 
         Route::get('/company/{ticker}/', [CompanyController::class, 'profile'])->name('company.product');
         Route::get('/company/{ticker}/profile', [CompanyController::class, 'profile'])->name('company.profile');
-        Route::get('/company/{ticker}/track-investor', [CompanyController::class, 'trackInvestor'])->name('company.track-investor');
         Route::get('/company/{ticker}/filings-summary', [CompanyController::class, 'filingsSummary'])->name('company.filings-summary');
         Route::get('/company/{ticker}/executive-compensation', [CompanyController::class, 'executiveCompensation'])->name('company.executive.compensation');
         Route::get('/company/{ticker}/chart', [CompanyController::class, 'chart'])->name('company.chart');

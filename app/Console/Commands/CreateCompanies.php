@@ -4,6 +4,7 @@ namespace App\Console\Commands;
 use Illuminate\Support\Facades\Http;
 use App\Models\Company;
 use Illuminate\Console\Command;
+use Illuminate\Support\Facades\Http;
 use Illuminate\Support\Facades\Log;
 
 class CreateCompanies extends Command
@@ -29,7 +30,7 @@ class CreateCompanies extends Command
 
         // Use Laravel's HTTP client to get the JSON with custom headers
         $response = Http::withHeaders([
-            'User-Agent' => 'Sample Company Name AdminContact@<sample company domain>.com',
+            'User-Agent' => 'Sample Company Name mgmt@capitalyze.com',
             'Accept-Encoding' => 'gzip, deflate',
             'Host' => 'www.sec.gov'
         ])->get($url);
