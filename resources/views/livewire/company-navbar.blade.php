@@ -36,7 +36,7 @@
                         fill="#121A0F" />
                 </svg>
             </button>
-            <div class="mb-10 px-navbar">
+            <div class="mb-10 px-8" :class="collapsed ? '!px-0 mx-auto' : ''">
                 <a href="{{ route('home') }}">
                     <svg class="inline" x-show="!collapsed" width="145" height="32" viewBox="0 0 145 32"
                         fill="none" xmlns="http://www.w3.org/2000/svg">
@@ -116,7 +116,7 @@
 
             <button id="profileButton" data-dropdown-toggle="dropdownProfile" data-dropdown-placement="left-end"
                 type="button"
-                class="mt-5 px-navbar gap-x-2 inline-flex items-center font-semibold text-[14px] leading-4 focus:outline-none transition self-start">
+                class="mt-5 px-8 gap-x-2 inline-flex items-center font-semibold text-[14px] leading-4 focus:outline-none transition self-start" :class="collapsed ? '!px-0 mx-auto' : ''">
                 <div class="bg-[#52D3A2] w-9 h-9 leading-9 rounded-full mr-2">{{ Auth::user()->initials }}
                 </div>
 
