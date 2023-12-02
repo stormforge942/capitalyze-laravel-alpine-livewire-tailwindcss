@@ -76,7 +76,7 @@
         @elseif($tab == 'fund')
             <livewire:ownership.fund :company="$currentCompany" :fund="$fund" />
         @elseif($tab == 'track-investor')
-            <livewire:track-investor.page :comapany="$company" :tinker="$ticker" :period="$period" />
+            <livewire:track-investor.page />
         @elseif($tab == 'etf-filings')
             <livewire:etf.filings />
         @elseif($tab === 'filings-summary')
