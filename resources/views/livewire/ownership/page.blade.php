@@ -22,7 +22,7 @@
 
     <div class="mt-6">
         <div id="ownership-tab">
-            <livewire:tabs :tabs="$tabs" :data="['company' => $company]">
+            <livewire:tabs :tabs="$tabs" :data="['company' => $company]" :ssr="false">
         </div>
     </div>
 </div>

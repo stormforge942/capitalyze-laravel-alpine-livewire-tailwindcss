@@ -4,7 +4,7 @@
             <span>Quarter to view</span>
             <x-select name="quarter" :options="$quarters" placeholder="Select a quarter" x-model="quarter"></x-select>
 
-            <x-tab-slot id="company-fund-tab">
+            <x-tab-slot id="company-fund-tab" tab="holdings">
                 <x-select name="quarter" :options="$quarters" placeholder="Select a quarter" x-model="quarter"></x-select>
             </x-tab-slot>
         </div>

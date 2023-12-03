@@ -21,7 +21,7 @@
     </div>
 
     <div class="mt-6" id="company-fund-tab">
-        <livewire:tabs :tabs="$tabs" :data="['fund' => $fund, 'company' => $company]">
+        <livewire:tabs :tabs="$tabs" :data="['fund' => $fund, 'company' => $company]" :ssr="false">
     </div>
 </div>
 

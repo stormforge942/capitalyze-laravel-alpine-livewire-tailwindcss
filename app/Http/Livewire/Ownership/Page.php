@@ -6,6 +6,7 @@ use App\Models\Company;
 use Livewire\Component;
 use App\Models\CompanyInsider;
 use App\Services\OwnershipHistoryService;
+use App\Http\Livewire\Ownership\CompanyInsiders;
 
 class Page extends Component
 {
@@ -14,7 +15,7 @@ class Page extends Component
 
     public array $tabs = [
         Shareholders::class,
-        CompanyInsidersTable::class,
+        CompanyInsiders::class,
     ];
 
     public function mount(Company $company)
