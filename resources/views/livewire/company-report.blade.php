@@ -732,8 +732,8 @@
                                         <div class="table" wire:key="{{now()}}">
                                             <div class="row-group">
                                                 <div class="flex flex-row bg-gray-custom-light">
-                                                    <div class="w-[250px] font-bold flex py-2 items-center justify-start text-base">
-                                                        <span class="ml-6">
+                                                    <div class="ml-8 w-[250px] font-bold flex py-2 items-center justify-start text-base">
+                                                        <span>
                                                             {{$companyName}} ({{$ticker}})
                                                         </span>
                                                     </div>
@@ -747,13 +747,11 @@
                                                         @endforeach
                                                     </div>
                                                 </div>
-                                                <div class="divide-y text-base">
-                                                    @if(!$tableLoading)
-                                                        @foreach($rows as $key=> $row)
-                                                            <livewire:company-report-table-row :data="$row" wire:key="{{Str::random()}}" :selectedRows="$selectedRows" :reverse="$reverse" :itemKey="$row['title']" :startDate="$startDate" :endDate="$endDate"/>
-                                                        @endforeach
-                                                    @endif
-                                                </div>
+                                                @if($rows)
+                                                   @include('livewire.company-report-table-row-alpine', [
+                                                    'tableRows' => $rows
+                                                   ])
+                                                @endif
                                             </div>
                                         </div>
                                     </div>

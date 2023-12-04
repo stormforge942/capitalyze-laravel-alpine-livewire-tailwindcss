@@ -579,6 +579,7 @@ class CompanyReport extends Component
                 }
             }
             $rows[$rowKey]['values'] = $rowValues;
+            $rows[$rowKey]['isChecked'] = false;
         }
 
         foreach($this->tableDates as $dateKey => $tableDate){
@@ -664,7 +665,6 @@ class CompanyReport extends Component
         $row['id'] = serialize($row);
         $allrow['segmentation'] = $isSegmentation && count($allrow['children']) === 0;
         $allrow['id'] = serialize($allrow);
-
         return [$row, $allrow];
     }
 
@@ -769,7 +769,6 @@ class CompanyReport extends Component
             $this->getData();
             $this->traverseArray($this->allRows);
         }
-
     }
 
     public function updatedPeriod()
