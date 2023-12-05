@@ -21,7 +21,7 @@
             <div class="mt-6 mb-5 space-y-6">
                 <div class="bg-white rounded-lg p-6" x-data="{
                     init() {
-                        window.initFundHistoryChart($refs.canvas, $wire.chartData)
+                        window.ownership.initFundHistoryChart($refs.canvas, $wire.chartData)
                     }
                 }">
                     <h4 class="font-extrabold mb-6">{{ $company['name'] }}</h4>
