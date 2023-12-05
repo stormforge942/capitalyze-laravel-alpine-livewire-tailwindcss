@@ -26,7 +26,7 @@ class UpgradeAccountModal extends Modal
     public static function attributes(): array
     {
         return [
-            'size' => 'xl',
+            'size' => 'lg',
         ];
     }
 
