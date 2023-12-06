@@ -1,4 +1,8 @@
-<div>
+<div x-data="{
+    scrollToHead() {
+        $el?.parentElement?.parentElement?.scrollIntoView({ behavior: 'smooth', block: 'start' })
+    }
+}">
     @includeIf(data_get($setUp, 'footer.includeViewOnTop'))
     <div @class([
         'justify-between' => data_get($setUp, 'footer.perPage'),
@@ -9,7 +13,7 @@
         @if(data_get($setUp, 'footer.perPage') && count(data_get($setUp, 'footer.perPageValues')) > 1 && blank(data_get($setUp, 'footer.pagination')))
             <div class="flex flex-row justify-center mb-2 md:justify-start md:mb-0">
                 <div class="relative h-10">
-                    <select wire:model.lazy="setUp.footer.perPage"
+                    <select wire:model.lazy="setUp.footer.perPage" @change="scrollToHead()"
                             class="block h-full px-3 py-2 pr-8 leading-tight border rounded bg-pg-primary-50 border-pg-primary-300 text-pg-primary-700 focus:outline-none focus:bg-white focus:border-pg-primary-500 dark:bg-pg-primary-600 dark:text-pg-primary-200 dark:placeholder-pg-primary-100 dark:border-pg-primary-500">
                         @foreach(data_get($setUp, 'footer.perPageValues') as $value)
                             <option value="{{$value}}">

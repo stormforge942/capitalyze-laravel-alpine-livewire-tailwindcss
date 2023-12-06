@@ -50,26 +50,28 @@
         </template>
 
         <template x-if="tabs.length > tabsCount">
-            <div x-data="{ dropdown: null }" x-init="dropdown = new Dropdown($refs.dropdown, $refs.button, { placement: 'bottom-end' })">
-                <button class="flex items-center gap-2" x-ref="button">
-                    <span class="hover:text-dark-light2" :class="tabsCount === 0 ? 'text-blue' : ''"
-                        x-text="tabsCount ? 'More' : tabs[0].name"></span>
-                    <span
-                        class="shrink-0 flex items-center justify-center w-4 h-4 text-xs text-white rounded-full bg-blue"
-                        x-text="tabs.length - (tabsCount || 1)"></span>
-                    <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 16 16"
-                        fill="none">
-                        <path
-                            d="M10.3083 6.19514L7.72167 8.78378L5.135 6.19514C5.01045 6.07021 4.84135 6 4.665 6C4.48865 6 4.31955 6.07021 4.195 6.19514C3.935 6.45534 3.935 6.87566 4.195 7.13585L7.255 10.1982C7.515 10.4584 7.935 10.4584 8.195 10.1982L11.255 7.13585C11.515 6.87566 11.515 6.45534 11.255 6.19514C10.995 5.94161 10.5683 5.93494 10.3083 6.19514Z"
-                            fill="#464E49" />
-                    </svg>
-                </button>
+            <x-dropdown placement="bottom-end" :shadow="true">
+                <x-slot name="trigger">
+                    <div class="flex items-center gap-2" @click="(tabsCount === 0 && tabs.length === 1) ? $event.stopPropagation() : null">
+                        <span class="hover:text-dark-light2" :class="tabsCount === 0 ? 'text-blue' : ''"
+                            x-text="tabsCount ? 'More' : tabs[0].name"></span>
+                        <span
+                            class="shrink-0 flex items-center justify-center w-4 h-4 text-xs text-white rounded-full bg-blue"
+                            x-text="tabs.length - (tabsCount || 1)" x-show="!(tabsCount === 0 && tabs.length === 1)" x-cloak></span>
+                        <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 16 16"
+                            fill="none" x-show="!(tabsCount === 0 && tabs.length === 1)" x-cloak>
+                            <path
+                                d="M10.3083 6.19514L7.72167 8.78378L5.135 6.19514C5.01045 6.07021 4.84135 6 4.665 6C4.48865 6 4.31955 6.07021 4.195 6.19514C3.935 6.45534 3.935 6.87566 4.195 7.13585L7.255 10.1982C7.515 10.4584 7.935 10.4584 8.195 10.1982L11.255 7.13585C11.515 6.87566 11.515 6.45534 11.255 6.19514C10.995 5.94161 10.5683 5.93494 10.3083 6.19514Z"
+                                fill="#464E49" />
+                        </svg>
+                    </div>
+                </x-slot>
 
-                <div class="hidden w-44 p-4 bg-white border border-[#D4DDD7] rounded space-y-6"
-                    style="box-shadow: 4px 0px 8px 0px rgba(0, 0, 8, 0.08);" x-ref="dropdown">
+                <div class="w-56 p-4 space-y-6">
                     <template x-for="tab in tabs.slice((tabsCount || 1), tabs.length)" :key="tab.url" hidden>
                         <div class="flex items-center justify-between gap-2">
                             <a :href="tab.active ? '#' : tab.url"
+                                class="whitespace-nowrap overflow-hidden text-ellipsis"
                                 :class="tab.active ? `text-blue` : `hover:text-dark-light2`" x-text="tab.name">
                             </a>
 
@@ -84,7 +86,7 @@
                         </div>
                     </template>
                 </div>
-            </div>
+            </x-dropdown>
         </template>
 
         <button class="hidden md:block whitespace-nowrap font-semibold lg:block text-red" wire:click="clearHistory"

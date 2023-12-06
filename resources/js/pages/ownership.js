@@ -1,4 +1,4 @@
-import chartJsPlugins, { formatCmpctNumber } from "./chartjs-plugins"
+import chartJsPlugins, { formatCmpctNumber } from "../chartjs-plugins"
 
 export function initFundHistoryChart(canvas, data) {
     const ctx = canvas.getContext("2d")
@@ -27,6 +27,9 @@ export function initFundHistoryChart(canvas, data) {
                 legend: {
                     display: false,
                 },
+                pointLine: {
+                    color: "#C22929",
+                },
                 tooltip: {
                     bodyFont: {
                         size: 15,
@@ -36,20 +39,10 @@ export function initFundHistoryChart(canvas, data) {
                     position: "nearest",
                     callbacks: {
                         title: function (context) {
-                            const inputDate = new Date(context[0].label)
-                            const month = inputDate.getMonth() + 1
-                            const day = inputDate.getDate()
-                            const year = inputDate.getFullYear()
-                            return `${year}-${month
-                                .toString()
-                                .padStart(2, "0")}-${day
-                                .toString()
-                                .padStart(2, "0")}`
+                            return context[0].label
                         },
                         label: function (context) {
-                            return `${context.dataset.label}|${
-                                context.raw || "N/A"
-                            }`
+                            return `${context.dataset.label}|${context.raw}`
                         },
                     },
                 },
@@ -70,7 +63,6 @@ export function initFundHistoryChart(canvas, data) {
                     grid: {
                         display: false,
                     },
-                    type: "timeseries",
                     align: "center",
                 },
                 y1: {
@@ -90,4 +82,6 @@ export function initFundHistoryChart(canvas, data) {
     return chart
 }
 
-window.initFundHistoryChart = initFundHistoryChart
+window.ownership = {
+    initFundHistoryChart,
+}

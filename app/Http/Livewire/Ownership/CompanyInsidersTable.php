@@ -23,12 +23,6 @@ class CompanyInsidersTable extends BaseTable
         return 'Company Insiders';
     }
 
-    public function mount(array $data = []): void
-    {
-        parent::mount();
-        $this->ticker = $data['company']['ticker'];
-    }
-
     public function datasource(): ?Builder
     {
         $query = CompanyInsider::query()

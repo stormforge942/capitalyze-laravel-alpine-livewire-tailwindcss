@@ -14,6 +14,7 @@ class ShareholdersTable extends BaseTable
 {
     public string $ticker = '';
     public $quarter = null;
+    public string $search = '';
     public string $sortField = 'ownership';
     public string $sortDirection = 'desc';
 
@@ -21,22 +22,31 @@ class ShareholdersTable extends BaseTable
     {
         return array_merge(
             parent::getListeners(),
-            ['quarterChanged' => 'setQuarter']
+            [
+                'filtersChanged' => 'setFilters',
+            ]
         );
     }
 
-    public function setQuarter($quarter)
+    public function setFilters($filters)
     {
-        $this->quarter = $quarter;
+        $this->quarter = $filters['quarter'];
+        $this->search = $filters['search'];
         $this->resetPage();
     }
 
     public function datasource(): ?Builder
     {
+
         return CompanyFilings::query()
             ->where('symbol', '=', $this->ticker)
             ->when($this->quarter, function ($query) {
                 return $query->where('report_calendar_or_quarter', '=', $this->quarter);
+            })
+            ->when($this->search, function ($query) {
+                $term = '%' . $this->search . '%';
+
+                return $query->where('investor_name', 'ilike', $term);
             });
     }
 
