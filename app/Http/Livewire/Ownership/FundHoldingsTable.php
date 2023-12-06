@@ -16,18 +16,20 @@ class FundHoldingsTable extends BaseTable
     public string $cik = '';
     public string $sortField = 'ownership';
     public string $sortDirection = 'desc';
+    public string $search = '';
 
     protected function getListeners(): array
     {
         return array_merge(
             parent::getListeners(),
-            ['quarterChanged' => 'setQuarter']
+            ['filtersChanged' => 'setFilters']
         );
     }
 
-    public function setQuarter($quarter)
+    public function setFilters($filters)
     {
-        $this->quarter = $quarter;
+        $this->quarter = $filters['quarter'];
+        $this->search = $filters['search'];
         $this->resetPage();
     }
 
@@ -37,6 +39,13 @@ class FundHoldingsTable extends BaseTable
             ->where('cik', '=', $this->cik)
             ->when($this->quarter, function ($query) {
                 return $query->where('report_calendar_or_quarter', '=', $this->quarter);
+            })
+            ->when($this->search, function ($query) {
+                $term = '%' . $this->search . '%';
+
+                return $query
+                    ->where('symbol', 'ilike', $term)
+                    ->orWhere('name_of_issuer', 'ilike', $term); // remove this if the query is too slow
             });
     }
 
@@ -72,12 +81,12 @@ class FundHoldingsTable extends BaseTable
             ->addColumn('signature_date')
             ->addColumn('report_calendar_or_quarter')
             ->addColumn('history', function (CompanyFilings $companyFilings) {
-                if($companyFilings->name_of_issuer) {
+                if ($companyFilings->name_of_issuer) {
                     $companyName = $companyFilings->name_of_issuer . " (" . $companyFilings->symbol . ")";
-                }else {
+                } else {
                     $companyName = $companyFilings->symbol;
                 }
-                
+
                 return <<<HTML
                 <button class="px-2 py-1 bg-green-light rounded" @click.prevent="Livewire.emit('modal.open', 'ownership.fund-history', { fund: '$this->cik', company: { name: '$companyName', symbol: '$companyFilings->symbol' } })">
                     <svg width="16" height="16" viewBox="0 0 16 16" fill="none" xmlns="http://www.w3.org/2000/svg">

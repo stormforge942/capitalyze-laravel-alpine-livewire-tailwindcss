@@ -38,12 +38,12 @@
                 <div class="flex flex-wrap justify-center items-center mt-2 md:flex-none md:justify-end sm:mt-0">
                     @if (!$paginator->onFirstPage())
                         <a class="p-2 m-1 text-center text-dark bg-gray-100 rounded cursor-pointer border-1 hover:bg-gray-200 dark:text-pg-primary-300"
-                            wire:click="gotoPage(1)">
+                            @click="scrollToHead(); $wire.gotoPage(1)">
                             <x-heroicon-o-chevron-double-left class="h-4 w-4" />
                         </a>
 
                         <a class="p-2 m-1 text-center text-dark bg-gray-100 rounded cursor-pointer border-1 hover:bg-gray-200 dark:text-pg-primary-300"
-                            wire:click="previousPage" rel="next">
+                            @click="scrollToHead(); $wire.previousPage" rel="next">
                             <x-heroicon-o-chevron-left class="h-4 w-4" />
                         </a>
                     @endif
@@ -68,7 +68,7 @@
                                         $page === $paginator->currentPage() - 1 ||
                                         $page === $paginator->currentPage() - 2)
                                     <a class="min-w-[35px] px-2 py-1 m-1 text-center text-dark bg-gray-100 rounded cursor-pointer border-1 hover:bg-gray-200 dark:text-pg-primary-300"
-                                        wire:click="gotoPage({{ $page }})">{{ $page }}</a>
+                                        @click="scrollToHead(); $wire.gotoPage({{ $page }})">{{ $page }}</a>
                                 @endif
 
                                 @if ($paginator->currentPage() < $paginator->lastPage() - 2 && $page === $paginator->lastPage() - 1)
@@ -85,12 +85,12 @@
                     @if ($paginator->hasMorePages())
                         @if ($paginator->lastPage() - $paginator->currentPage() >= 2)
                             <a class="p-2 m-1 text-center text-dark bg-gray-100 rounded cursor-pointer border-1 hover:bg-gray-200 dark:text-pg-primary-300"
-                                wire:click="nextPage" rel="next">
+                                @click="scrollToHead(); $wire.nextPage" rel="next">
                                 <x-heroicon-o-chevron-right class="h-4 w-4" />
                             </a>
                         @endif
                         <a class="p-2 m-1 text-center text-dark bg-gray-100 rounded cursor-pointer border-1 hover:bg-gray-200 dark:text-pg-primary-300"
-                            wire:click="gotoPage({{ $paginator->lastPage() }})">
+                            @click="scrollToHead(); $wire.gotoPage({{ $paginator->lastPage() }})">
                             <x-heroicon-o-chevron-double-right class="h-4 w-4" />
                         </a>
                     @endif
@@ -112,13 +112,13 @@
                             @else
                                 @if (method_exists($paginator, 'getCursorName'))
                                     <button
-                                        wire:click="setPage('{{ $paginator->previousCursor()->encode() }}','{{ $paginator->getCursorName() }}')"
+                                        @click="scrollToHead(); $wire.setPage('{{ $paginator->previousCursor()->encode() }}','{{ $paginator->getCursorName() }}')"
                                         wire:loading.attr="disabled"
                                         class="p-2 m-1 text-center text-dark bg-gray-100 rounded cursor-pointer border-1 hover:bg-gray-200 dark:text-pg-primary-300">
                                         <x-heroicon-o-chevron-double-left class="h-4 w-4" />
                                     </button>
                                 @else
-                                    <button wire:click="previousPage('{{ $paginator->getPageName() }}')"
+                                    <button @click="scrollToHead(); $wire.previousPage('{{ $paginator->getPageName() }}')"
                                         wire:loading.attr="disabled"
                                         class="p-2 m-1 text-center text-dark bg-gray-100 rounded cursor-pointer border-1 hover:bg-gray-200 dark:text-pg-primary-300">
                                         <x-heroicon-o-chevron-double-left class="h-4 w-4" />
@@ -132,13 +132,13 @@
                             @if ($paginator->hasMorePages())
                                 @if (method_exists($paginator, 'getCursorName'))
                                     <button
-                                        wire:click="setPage('{{ $paginator->nextCursor()->encode() }}','{{ $paginator->getCursorName() }}')"
+                                        @click="scrollToHead(); $wire.setPage('{{ $paginator->nextCursor()->encode() }}','{{ $paginator->getCursorName() }}')"
                                         wire:loading.attr="disabled"
                                         class="p-2 m-1 text-center text-dark bg-gray-100 rounded cursor-pointer border-1 hover:bg-gray-200 dark:text-pg-primary-300">
                                         <x-heroicon-o-chevron-double-right class="h-4 w-4" />
                                     </button>
                                 @else
-                                    <button wire:click="nextPage('{{ $paginator->getPageName() }}')"
+                                    <button @click="scrollToHead(); $wire.nextPage('{{ $paginator->getPageName() }}')"
                                         wire:loading.attr="disabled"
                                         class="p-2 m-1 text-center text-dark bg-gray-100 rounded cursor-pointer border-1 hover:bg-gray-200 dark:text-pg-primary-300">
                                         <x-heroicon-o-chevron-double-right class="h-4 w-4" />

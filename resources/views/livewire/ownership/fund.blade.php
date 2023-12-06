@@ -1,27 +1,35 @@
-<div>
-    <h2 class="block mb-4 text-xl font-semibold lg:hidden text-blue">Ownership</h2>
+<div x-data="{ tab: null }" @tab-changed="tab = $event.detail;">
+    <div class="mb-4 flex lg:hidden items-center justify-between">
+        <h2 class="text-xl font-semibold text-blue">Ownership</h2>
+
+        <x-download-data-buttons x-show="tab?.key === 'holdings'" x-cloak />
+    </div>
 
     @livewire('ownership.breadcrumb')
 
-    <div class="mt-6">
-        <h1 class="text-xl font-bold">{{ $fund->name }}</h1>
-        <div class="flex items-center gap-2 mt-2 text-xs">
-            <div class="border rounded border-blue border-opacity-50 px-1.5 py-0.5">
-                CIK:
-                <span class="font-semibold text-blue">{{ $fund->cik }}</span>
-            </div>
-
-            @if (count($formTypes))
+    <div class="mt-6 flex items-center justify-between">
+        <div>
+            <h1 class="text-xl font-bold">{{ $fund->name }}</h1>
+            <div class="flex items-center gap-2 mt-2 text-xs">
                 <div class="border rounded border-blue border-opacity-50 px-1.5 py-0.5">
-                    FORM TYPE:
-                    <span class="font-semibold text-blue">{{ implode(',', $formTypes) }}</span>
+                    CIK:
+                    <span class="font-semibold text-blue">{{ $fund->cik }}</span>
                 </div>
-            @endif
+
+                @if (count($formTypes))
+                    <div class="border rounded border-blue border-opacity-50 px-1.5 py-0.5">
+                        FORM TYPE:
+                        <span class="font-semibold text-blue">{{ implode(',', $formTypes) }}</span>
+                    </div>
+                @endif
+            </div>
         </div>
+
+        <x-download-data-buttons class="hidden lg:block" x-show="tab?.key === 'holdings'" x-cloak />
     </div>
 
     <div class="mt-6" id="company-fund-tab">
-        <livewire:tabs :tabs="$tabs" :data="['fund' => $fund, 'company' => $company]">
+        <livewire:tabs :tabs="$tabs" :data="['fund' => $fund, 'company' => $company]" :ssr="false">
     </div>
 </div>
 

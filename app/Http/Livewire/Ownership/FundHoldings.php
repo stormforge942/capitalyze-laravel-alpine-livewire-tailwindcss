@@ -14,6 +14,7 @@ class FundHoldings extends Component
     public $cik;
     public $quarters;
     public $quarter = null;
+    public string $search = '';
 
     public static function title(): string
     {
@@ -35,9 +36,14 @@ class FundHoldings extends Component
         return view('livewire.ownership.fund-holdings');
     }
 
-    public function updatedQuarter()
+    public function updated($prop)
     {
-        $this->emit('quarterChanged', $this->quarter)->to(ShareholderHoldingsTable::class);
+        if (in_array($prop, ['quarter', 'search'])) {
+            $this->emit('filtersChanged', [
+                'quarter' => $this->quarter,
+                'search' => $this->search,
+            ])->to(FundHoldingsTable::class);
+        }
     }
 
     private function quarters()

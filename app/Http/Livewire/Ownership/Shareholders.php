@@ -14,6 +14,7 @@ class Shareholders extends Component
     public string $ticker;
     public $quarters;
     public $quarter = null;
+    public string $search = '';
 
     public function mount(array $data = [])
     {
@@ -32,9 +33,14 @@ class Shareholders extends Component
         ]);
     }
 
-    public function updatedQuarter()
+    public function updated($prop)
     {
-        $this->emit('quarterChanged', $this->quarter)->to(ShareholdersTable::class);
+        if (in_array($prop, ['quarter', 'search'])) {
+            $this->emit('filtersChanged', [
+                'quarter' => $this->quarter,
+                'search' => $this->search,
+            ])->to(ShareholdersTable::class);
+        }
     }
 
     private function quarters(): array

@@ -2,6 +2,7 @@
 
 namespace App\Http\Livewire\Ownership;
 
+use Carbon\Carbon;
 use Illuminate\Support\Facades\DB;
 use WireElements\Pro\Components\Modal\Modal;
 
@@ -45,6 +46,7 @@ class FundHistory extends Modal
         $data = DB::connection('pgsql-xbrl')
             ->table('filings')
             ->where('cik', $this->fund)
+            ->whereNotNull(['ssh_prnamt', 'estimated_average_price'])
             ->where('symbol', $this->company['symbol'])
             ->orderBy('report_calendar_or_quarter', 'asc')
             ->get([
@@ -54,7 +56,9 @@ class FundHistory extends Modal
             ]);
 
         $this->chartData = [
-            'labels' => $data->pluck('report_calendar_or_quarter')->toArray(),
+            'labels' => $data->pluck('report_calendar_or_quarter')
+                ->map(fn ($item) => Carbon::parse($item)->format('Y M'))
+                ->toArray(),
             'datasets' => [
                 [
                     'label' => 'Average Price Paid',
@@ -69,7 +73,7 @@ class FundHistory extends Modal
                     'label' => 'Common Stock Equivalent Held',
                     'data' => $data->pluck('ssh_prnamt')->toArray(),
                     'backgroundColor' => '#52D3A2',
-                    'hoverBackgroundColor' => '#9edfc6',
+                    'hoverBackgroundColor' => '#13B05B',
                     'borderColor' => '#52D3A2',
                     'borderRadius' => 4,
                 ],
