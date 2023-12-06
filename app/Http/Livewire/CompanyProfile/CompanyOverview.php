@@ -294,14 +294,14 @@ class CompanyOverview extends Component
         $tickerSymbol = $this->profile['symbol'];
 
         $infoAnnualData = InfoTikrPresentation::where('ticker', $tickerSymbol)
-            ->orderByDesc('id')
-            ->first(['info']) // Select only the 'info' column.
-            ->info['annual'];
+            ->where('period', 'annual')
+            ->get(['income_statement']);
 
-        $this->ebitda = $infoAnnualData['Income Statement']['EBITDA'];
-        $this->adjNetIncome = $infoAnnualData['Income Statement']['Net Income'];
-        $this->dilutedEPS = $infoAnnualData['Income Statement']['Diluted EPS Excl Extra Items'];
-        $this->revenues = $infoAnnualData['Income Statement']['Revenues'];
-        $this->dilutedSharesOut = $infoAnnualData['Income Statement']['Weighted Average Diluted Shares Outstanding'];
+
+        $this->ebitda = $infoAnnualData['EBITDA'] ?? null;
+        $this->adjNetIncome = $infoAnnualData['Net Income'] ?? null;
+        $this->dilutedEPS = $infoAnnualData['Diluted EPS Excl Extra Items'] ?? null;
+        $this->revenues = $infoAnnualData['Revenues'] ?? null;
+        $this->dilutedSharesOut = $infoAnnualData['Weighted Average Diluted Shares Outstanding'] ?? null;
     }
 }

@@ -241,10 +241,25 @@ class CompanyReport extends Component
     public function getData() : void
     {
         $acronym = ($this->period == 'annual') || ($this->period == 'Calendar Annual') || ($this->period == 'Fiscal Annual') ? 'arf5drs' : 'qrf5drs';
+        $period = ($this->period == 'annual') || ($this->period == 'Calendar Annual') || ($this->period == 'Fiscal Annual') ? "annual" : "quarter";
 
         try {
             if ($this->view === 'Standardised') {
-                $data = InfoTikrPresentation::where('ticker', $this->ticker)->orderByDesc('id')->first()->info;
+
+                if($this->activeTabName == 'Balance Sheet Statement') {
+                    $query = InfoTikrPresentation::query()
+                        ->where('ticker', $this->ticker)->where("period", $period)->select('balance_sheet')->value('balance_sheet');
+
+                } else if ($this->activeTabName == 'Income Statement') {
+                    $query = InfoTikrPresentation::query()
+                        ->where('ticker', $this->ticker)->where("period", $period)->select('income_statement')->value('income_statement');
+
+                } else if ($this->activeTabName == 'Cash Flow Statement') {
+                    $query = InfoTikrPresentation::query()
+                        ->where('ticker', $this->ticker)->where("period", $period)->select('cash_flow')->value('cash_flow');
+
+
+                }
             } else {
                 $query = InfoPresentation::query()
                     ->where('ticker', '=', $this->ticker)
@@ -252,9 +267,10 @@ class CompanyReport extends Component
                     ->where('id', '=', $this->activeSubIndex)
                     ->select('info')->value('info');
 
-                $data = json_decode($query, true);
 
             }
+
+            $data = json_decode($query, true);
 
             if ($this->activeTabName === 'Ratios') {
                 $data = json_decode($this->fakeDataForRatiosPage(), true);
@@ -269,8 +285,6 @@ class CompanyReport extends Component
         // handle period is not set by default we put it to annual
         $this->period ?? $this->period = 'annual';
 
-        // adjust data in case of Standardised and annual period or quarterly period since both are combined in one array
-        $data = ($this->view === 'Standardised') ? (($this->period === 'annual' || $this->period === 'Fiscal Annual' || $this->period === 'Calendar Annual') ? $data['annual'] : $data['quarter']) : $data;
 
         $this->data = $data;
         $this->generateUI();
@@ -552,9 +566,6 @@ class CompanyReport extends Component
             }
         }
 
-        if ($this->view === 'Standardised') {
-            $data = $this->activeTabName == 'Balance Sheet Statement' ? $data['Balance Sheet'] : $data[$this->activeTabName] ?? $data;
-        }
 
 
         foreach ($data as $key => $value) {
