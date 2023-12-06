@@ -1,5 +1,9 @@
 <div x-data="{ tab: null }" @tab-changed="tab = $event.detail;">
-    <h2 class="block mb-4 text-xl font-semibold lg:hidden text-blue">Ownership</h2>
+    <div class="mb-4 flex lg:hidden items-center justify-between">
+        <h2 class="text-xl font-semibold text-blue">Ownership</h2>
+
+        <x-download-data-buttons />
+    </div>
 
     @livewire('ownership.breadcrumb')
 
@@ -21,9 +25,7 @@
             </div>
         </div>
 
-        <div>
-            <livewire:download-data-buttons />
-        </div>
+        <x-download-data-buttons class="hidden lg:block" />
     </div>
 
     <div class="mt-6">
