@@ -825,6 +825,7 @@ div#range-slider-company-analysis-geography {
     border-style: solid;
     color: white;
     position: relative;
+    background-image: none;
 }
 
 .custom-radio:checked {
