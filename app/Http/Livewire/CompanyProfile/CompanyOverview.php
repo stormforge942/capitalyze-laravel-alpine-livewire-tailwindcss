@@ -295,8 +295,8 @@ class CompanyOverview extends Component
 
         $infoAnnualData = InfoTikrPresentation::where('ticker', $tickerSymbol)
             ->where('period', 'annual')
-            ->get(['income_statement']);
-
+            ->orderByDesc('id')
+            ->get(['income_statement']); // Retrieves a collection
 
         $this->ebitda = $infoAnnualData['EBITDA'] ?? null;
         $this->adjNetIncome = $infoAnnualData['Net Income'] ?? null;
