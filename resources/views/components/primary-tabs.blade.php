@@ -57,14 +57,14 @@ dropdown = new Dropdown($refs.dropdown, $refs.dropdownBtn, { placement: 'bottom-
     <div
         class="hidden lg:flex border border-[#D4DDD7] rounded bg-white w-full items-center gap-2 p-1 overflow-x-auto text-base">
         @foreach ($tabs as $key => $tab)
-            <button class="min-w-[250px] px-3 py-1.5 text-center rounded transition"
+            <button class="px-3 py-1.5 text-center rounded transition"
                 :class="{
                     'bg-green-dark font-semibold': active ===
                         '{{ $key }}',
                     'font-medium text-gray-medium2 hover:bg-gray-light': active !==
                         '{{ $key }}'
                 }"
-                @click="changeTab('{{ $key }}')">
+                @click="changeTab('{{ $key }}')" style="min-width: {{ $minWidth }}">
                 {{ $tab['title'] }}
             </button>
         @endforeach

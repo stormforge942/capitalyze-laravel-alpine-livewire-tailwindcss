@@ -38,9 +38,7 @@
 @push('scripts')
 
 <script>
-
     function loadChildren(){
-        debugger
         try{
             const nestedTable = this.$refs.nestedTable;
             const template = `

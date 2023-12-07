@@ -29,13 +29,7 @@ class Tabs extends Component
             ];
         }
 
-        $active = request()->query('tab', $active);
-
-        if (!in_array($active, array_keys($this->tabs))) {
-            $active = array_key_first($this->tabs);
-        }
-
-        $this->active = $active;
+        $this->active = request()->query('tab', $active);
     }
 
     public function render()

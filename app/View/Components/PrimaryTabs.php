@@ -12,6 +12,7 @@ class PrimaryTabs extends Component
     public function __construct(
         array $tabs = [],
         ?string $active = null,
+        public ?string $minWidth = '250px',
     ) {
         if (!is_array(array_values($tabs)[0])) {
             $tabs_ = [];
