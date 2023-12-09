@@ -1,18 +1,24 @@
 <div x-data="{
     showDropdown: false,
     name: '{{ $name }}',
-    value: '{{ $value }}',
-    tmpValue: '{{ $value }}',
+    value: '',
+    tmpValue: '',
     options: @js($options),
     placeholder: '{{ $placeholder }}',
     init() {
+        $nextTick(() => {
+            if (!Object.keys(this.options).includes(this.value)) {
+                this.value = ''
+            }    
+        })
+
         $watch('showDropdown', value => {
             this.tmpValue = this.value
         })
 
         $watch('value', (newVal, oldVal) => {
             if (newVal !== oldVal) {
-                $dispatch('input', newVal)
+                this.value = newVal
             }
         })
     }
@@ -21,7 +27,7 @@
         <x-slot name="trigger">
             <div class="border-[0.5px] border-[#93959880] p-2 rounded-full flex items-center gap-x-1"
                 :class="showDropdown ? 'bg-[#E2E2E2]' : 'bg-white hover:bg-[#E2E2E2]'">
-                <span class="text-sm" x-text="value ? options[value] : placeholder">
+                <span class="text-sm truncate" x-text="value ? options[value] : placeholder">
                 </span>
 
                 <span :class="showDropdown ? 'rotate-180' : ''" class="transition-transform shrink-0">

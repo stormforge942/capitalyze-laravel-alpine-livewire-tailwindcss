@@ -112,11 +112,56 @@
                         </svg>
                     </x-slot>
                 </x-nav-group>
+
+                <x-nav-group name="More" :items="$navbarItems['more']">
+                    <x-slot name="icon">
+                        <svg class="nav-group-icon" viewBox="0 0 24 24" fill="none"
+                            xmlns="http://www.w3.org/2000/svg">
+                            <path
+                                d="M17.0078 17.9971C17.0078 18.5494 17.4555 18.9971 18.0078 18.9971C18.5601 18.9971 19.0078 18.5494 19.0078 17.9971C19.0078 17.4448 18.5601 16.9971 18.0078 16.9971C17.4555 16.9971 17.0078 17.4448 17.0078 17.9971Z"
+                                stroke="#3561E7" stroke-width="1.83333" stroke-linecap="round"
+                                stroke-linejoin="round" />
+                            <path
+                                d="M11.0078 17.9971C11.0078 18.5494 11.4555 18.9971 12.0078 18.9971C12.5601 18.9971 13.0078 18.5494 13.0078 17.9971C13.0078 17.4448 12.5601 16.9971 12.0078 16.9971C11.4555 16.9971 11.0078 17.4448 11.0078 17.9971Z"
+                                stroke="#3561E7" stroke-width="1.83333" stroke-linecap="round"
+                                stroke-linejoin="round" />
+                            <path
+                                d="M5.00781 17.9971C5.00781 18.5494 5.45553 18.9971 6.00781 18.9971C6.56009 18.9971 7.00781 18.5494 7.00781 17.9971C7.00781 17.4448 6.56009 16.9971 6.00781 16.9971C5.45553 16.9971 5.00781 17.4448 5.00781 17.9971Z"
+                                stroke="#3561E7" stroke-width="1.83333" stroke-linecap="round"
+                                stroke-linejoin="round" />
+                            <path
+                                d="M17.0078 11.9971C17.0078 12.5494 17.4555 12.9971 18.0078 12.9971C18.5601 12.9971 19.0078 12.5494 19.0078 11.9971C19.0078 11.4448 18.5601 10.9971 18.0078 10.9971C17.4555 10.9971 17.0078 11.4448 17.0078 11.9971Z"
+                                stroke="#3561E7" stroke-width="1.83333" stroke-linecap="round"
+                                stroke-linejoin="round" />
+                            <path
+                                d="M11.0078 11.9971C11.0078 12.5494 11.4555 12.9971 12.0078 12.9971C12.5601 12.9971 13.0078 12.5494 13.0078 11.9971C13.0078 11.4448 12.5601 10.9971 12.0078 10.9971C11.4555 10.9971 11.0078 11.4448 11.0078 11.9971Z"
+                                stroke="#3561E7" stroke-width="1.83333" stroke-linecap="round"
+                                stroke-linejoin="round" />
+                            <path
+                                d="M5.00781 11.9971C5.00781 12.5494 5.45553 12.9971 6.00781 12.9971C6.56009 12.9971 7.00781 12.5494 7.00781 11.9971C7.00781 11.4448 6.56009 10.9971 6.00781 10.9971C5.45553 10.9971 5.00781 11.4448 5.00781 11.9971Z"
+                                stroke="#3561E7" stroke-width="1.83333" stroke-linecap="round"
+                                stroke-linejoin="round" />
+                            <path
+                                d="M17.0078 5.99707C17.0078 6.54935 17.4555 6.99707 18.0078 6.99707C18.5601 6.99707 19.0078 6.54935 19.0078 5.99707C19.0078 5.44479 18.5601 4.99707 18.0078 4.99707C17.4555 4.99707 17.0078 5.44479 17.0078 5.99707Z"
+                                stroke="#3561E7" stroke-width="1.83333" stroke-linecap="round"
+                                stroke-linejoin="round" />
+                            <path
+                                d="M11.0078 5.99707C11.0078 6.54935 11.4555 6.99707 12.0078 6.99707C12.5601 6.99707 13.0078 6.54935 13.0078 5.99707C13.0078 5.44479 12.5601 4.99707 12.0078 4.99707C11.4555 4.99707 11.0078 5.44479 11.0078 5.99707Z"
+                                stroke="#3561E7" stroke-width="1.83333" stroke-linecap="round"
+                                stroke-linejoin="round" />
+                            <path
+                                d="M5.00781 5.99707C5.00781 6.54935 5.45553 6.99707 6.00781 6.99707C6.56009 6.99707 7.00781 6.54935 7.00781 5.99707C7.00781 5.44479 6.56009 4.99707 6.00781 4.99707C5.45553 4.99707 5.00781 5.44479 5.00781 5.99707Z"
+                                stroke="#3561E7" stroke-width="1.83333" stroke-linecap="round"
+                                stroke-linejoin="round" />
+                        </svg>
+                    </x-slot>
+                </x-nav-group>
             </div>
 
             <button id="profileButton" data-dropdown-toggle="dropdownProfile" data-dropdown-placement="left-end"
                 type="button"
-                class="mt-5 px-8 gap-x-2 inline-flex items-center font-semibold text-[14px] leading-4 focus:outline-none transition self-start" :class="collapsed ? '!px-0 mx-auto' : ''">
+                class="mt-5 px-8 gap-x-2 inline-flex items-center font-semibold text-[14px] leading-4 focus:outline-none transition self-start"
+                :class="collapsed ? '!px-0 mx-auto' : ''">
                 <div class="bg-[#52D3A2] w-9 h-9 leading-9 rounded-full mr-2">{{ Auth::user()->initials }}
                 </div>
 
@@ -191,6 +236,64 @@
                     </div>
                     <ul class="mt-6 space-y-8 text-md">
                         @foreach ($navbarItems['company_research'] as $item)
+                            <li>
+                                <a href="{{ $item['url'] ?? '#' }}"
+                                    class="flex items-center justify-between w-full {{ $item['active'] ?? false ? 'font-semibold text-dark' : 'text-dark-light2' }} hover:text-dark">
+                                    <div>
+                                        {{ $item['title'] }}
+                                    </div>
+                                </a>
+                            </li>
+                        @endforeach
+                    </ul>
+                </div>
+
+                <div>
+                    <div class="flex items-center gap-x-2 text-blue font-semibold">
+                        <svg width="16" height="16" viewBox="0 0 16 16" fill="none"
+                            xmlns="http://www.w3.org/2000/svg">
+                            <path
+                                d="M11.3359 11.9982C11.3359 12.3664 11.6344 12.6649 12.0026 12.6649C12.3708 12.6649 12.6693 12.3664 12.6693 11.9982C12.6693 11.63 12.3708 11.3315 12.0026 11.3315C11.6344 11.3315 11.3359 11.63 11.3359 11.9982Z"
+                                stroke="#3561E7" stroke-width="1.83333" stroke-linecap="round"
+                                stroke-linejoin="round" />
+                            <path
+                                d="M7.33594 11.9982C7.33594 12.3664 7.6344 12.6649 8.0026 12.6649C8.3708 12.6649 8.66927 12.3664 8.66927 11.9982C8.66927 11.63 8.3708 11.3315 8.0026 11.3315C7.6344 11.3315 7.33594 11.63 7.33594 11.9982Z"
+                                stroke="#3561E7" stroke-width="1.83333" stroke-linecap="round"
+                                stroke-linejoin="round" />
+                            <path
+                                d="M3.33594 11.9982C3.33594 12.3664 3.63442 12.6649 4.0026 12.6649C4.37079 12.6649 4.66927 12.3664 4.66927 11.9982C4.66927 11.63 4.37079 11.3315 4.0026 11.3315C3.63442 11.3315 3.33594 11.63 3.33594 11.9982Z"
+                                stroke="#3561E7" stroke-width="1.83333" stroke-linecap="round"
+                                stroke-linejoin="round" />
+                            <path
+                                d="M11.3359 7.99821C11.3359 8.36641 11.6344 8.66488 12.0026 8.66488C12.3708 8.66488 12.6693 8.36641 12.6693 7.99821C12.6693 7.63001 12.3708 7.33154 12.0026 7.33154C11.6344 7.33154 11.3359 7.63001 11.3359 7.99821Z"
+                                stroke="#3561E7" stroke-width="1.83333" stroke-linecap="round"
+                                stroke-linejoin="round" />
+                            <path
+                                d="M7.33594 7.99821C7.33594 8.36641 7.6344 8.66488 8.0026 8.66488C8.3708 8.66488 8.66927 8.36641 8.66927 7.99821C8.66927 7.63001 8.3708 7.33154 8.0026 7.33154C7.6344 7.33154 7.33594 7.63001 7.33594 7.99821Z"
+                                stroke="#3561E7" stroke-width="1.83333" stroke-linecap="round"
+                                stroke-linejoin="round" />
+                            <path
+                                d="M3.33594 7.99821C3.33594 8.36641 3.63442 8.66488 4.0026 8.66488C4.37079 8.66488 4.66927 8.36641 4.66927 7.99821C4.66927 7.63001 4.37079 7.33154 4.0026 7.33154C3.63442 7.33154 3.33594 7.63001 3.33594 7.99821Z"
+                                stroke="#3561E7" stroke-width="1.83333" stroke-linecap="round"
+                                stroke-linejoin="round" />
+                            <path
+                                d="M11.3359 3.99821C11.3359 4.3664 11.6344 4.66488 12.0026 4.66488C12.3708 4.66488 12.6693 4.3664 12.6693 3.99821C12.6693 3.63002 12.3708 3.33154 12.0026 3.33154C11.6344 3.33154 11.3359 3.63002 11.3359 3.99821Z"
+                                stroke="#3561E7" stroke-width="1.83333" stroke-linecap="round"
+                                stroke-linejoin="round" />
+                            <path
+                                d="M7.33594 3.99821C7.33594 4.3664 7.6344 4.66488 8.0026 4.66488C8.3708 4.66488 8.66927 4.3664 8.66927 3.99821C8.66927 3.63002 8.3708 3.33154 8.0026 3.33154C7.6344 3.33154 7.33594 3.63002 7.33594 3.99821Z"
+                                stroke="#3561E7" stroke-width="1.83333" stroke-linecap="round"
+                                stroke-linejoin="round" />
+                            <path
+                                d="M3.33594 3.99821C3.33594 4.3664 3.63442 4.66488 4.0026 4.66488C4.37079 4.66488 4.66927 4.3664 4.66927 3.99821C4.66927 3.63002 4.37079 3.33154 4.0026 3.33154C3.63442 3.33154 3.33594 3.63002 3.33594 3.99821Z"
+                                stroke="#3561E7" stroke-width="1.83333" stroke-linecap="round"
+                                stroke-linejoin="round" />
+                        </svg>
+
+                        <span>More</span>
+                    </div>
+                    <ul class="mt-6 space-y-8 text-md">
+                        @foreach ($navbarItems['more'] as $item)
                             <li>
                                 <a href="{{ $item['url'] ?? '#' }}"
                                     class="flex items-center justify-between w-full {{ $item['active'] ?? false ? 'font-semibold text-dark' : 'text-dark-light2' }} hover:text-dark">

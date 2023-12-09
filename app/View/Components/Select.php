@@ -9,21 +9,30 @@ class Select extends Component
 {
     public $name;
     public $placeholder;
-    public $value;
 
     public function __construct(
         public array $options,
         ?string $placeholder = null,
-        ?string $value = null,
         ?string $name = null,
     ) {
+        if (!$this->associativeArray($options)) {
+            $this->options = array_reduce($options, function ($carry, $item) {
+                $carry[$item] = $item;
+                return $carry;
+            }, []);
+        }
+
         $this->name = $name ?? Str::random(10);
         $this->placeholder = $placeholder ?? '';
-        $this->value = $value ?? '';
     }
 
     public function render()
     {
         return view('components.select');
+    }
+
+    private function associativeArray(array $array): bool
+    {
+        return array_keys($array) !== range(0, count($array) - 1);
     }
 }

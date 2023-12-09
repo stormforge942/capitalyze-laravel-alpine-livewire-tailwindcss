@@ -14,10 +14,9 @@ class CompanyReport extends Component
 {
     use TableFiltersTrait;
 
-
     public $rows = [];
     public $company;
-    public $decimalDisplay = '0';
+    public $decimalDisplay = '2';
     public $ticker;
     public $chartData = [];
     public $companyName;
@@ -25,7 +24,7 @@ class CompanyReport extends Component
     public $currency = 'USD';
     public $currentRoute;
     public $order = "Latest on the Right";
-    public $period = 'annual';
+    public $period = 'Fiscal Annual';
     public $table;
     public $asReportedStatementsList;
     public $reverse = false;
@@ -71,7 +70,7 @@ class CompanyReport extends Component
         'period'
     ];
 
-    public function mount(Request $request, $company, $ticker, $period): void
+    public function mount(Request $request, $company, $ticker): void
     {
         $this->activeTab = $request->query('tab');
 
@@ -95,7 +94,6 @@ class CompanyReport extends Component
 
         $this->company = $company;
         $this->ticker = $ticker;
-        $this->period = $period;
         $this->companyName = $this->ticker;
 
 
@@ -114,16 +112,6 @@ class CompanyReport extends Component
 
         if (!$this->currentRoute) {
             $this->currentRoute = $request->route()->getName();
-        }
-    }
-
-
-    public function toggleChartType($title)
-    {
-        if ($this->isOpen === $title) {
-            $this->isOpen = null;
-        } else {
-            $this->isOpen = $title;
         }
     }
 
@@ -180,12 +168,6 @@ class CompanyReport extends Component
             $this->chartData = [];
             $this->emit('hideCompanyReportChart');
         }
-    }
-
-    public function toggleReverse()
-    {
-        $this->reverse = !$this->reverse;
-        $this->regenerateTableChart();
     }
 
     public function changeChartType($title, $type)
@@ -283,7 +265,7 @@ class CompanyReport extends Component
         }
 
         // handle period is not set by default we put it to annual
-        $this->period ?? $this->period = 'annual';
+        $this->period ??= 'Fiscal Annual';
 
 
         $this->data = $data;
@@ -563,8 +545,6 @@ class CompanyReport extends Component
                 $data = $data['Statement of Cash Flows'];
             }
         }
-
-
 
         foreach ($data as $key => $value) {
             $rowArray = $this->generateRow($value, $key);
@@ -864,6 +844,41 @@ class CompanyReport extends Component
     {
         return view('livewire.company-report', [
             'tabs' => $this->tabs,
+            'viewTypes' => [
+                'As reported',
+                'Adjusted',
+                'Standardised',
+                'Per Share',
+                'Common size',
+            ],
+            'periodTypes' => [
+                'Fiscal Annual',
+                'Fiscal Quaterly',
+                'Fiscal Semi-Annual',
+                'YTD',
+                'LTM',
+                'Calendar Annual',
+            ],
+            'unitTypes' => [
+                'None',
+                'Thousands',
+                'Millions',
+                'Billions',
+            ],
+            'decimalTypes' => [
+                'auto' => 'Auto',
+                '2' => '.00',
+                '3' => '.000',
+            ],
+            'orderTypes' => [
+                'false' => 'Latest On The Right',
+                'true' => 'Latest On The Left',
+            ],
+            'freezePaneTypes' => [
+                'Top Row',
+                'First Column',
+                'Top Row & First Column',
+            ]
         ]);
     }
 }

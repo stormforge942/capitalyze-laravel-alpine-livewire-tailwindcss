@@ -10,6 +10,7 @@ use Illuminate\Contracts\View\Factory as ViewFactory;
 use Illuminate\Contracts\View\View;
 use Illuminate\Contracts\Foundation\Application;
 use Illuminate\Http\RedirectResponse;
+
 class CompanyNavbar extends Component
 {
     public $company;
@@ -45,18 +46,24 @@ class CompanyNavbar extends Component
 
     public function navbar(): array
     {
+        $links = Navbar::getPrimaryLinks(Auth::user()->navbars())
+            ->map(function (Navbar $nav) {
+                return [
+                    'title' => $nav->name,
+                    'url' => route($nav->route_name, ['ticker' => $this->company->ticker]),
+                    'active' => request()->routeIs($nav->route_name)
+                ];
+            });
+
         return [
-            'main' => collect(Navbar::getPrimaryLinks(Auth::user()->navbars())
-                ->map(function (Navbar $nav) {
-                    return [
-                        'title' => $nav->name,
-                        'url' => route($nav->route_name, ['ticker' => $this->company->ticker]),
-                        'active' => request()->routeIs($nav->route_name)
-                    ];
-                })
-                ->toArray())
+            'main' => $links->where(fn ($link) => in_array($link['title'], ['Track Investor', 'Event Filings', 'Insider Transactions', 'Earnings Calendar']))
                 ->sort(function ($a, $b) {
-                    $order = ['Track Investor', 'Event Filings', 'Insider Transactions', 'Earnings Calendar'];
+                    $order = [
+                        'Track Investor',
+                        'Event Filings',
+                        'Insider Transactions',
+                        'Earnings Calendar',
+                    ];
                     $aIndex = array_search($a['title'], $order);
                     $bIndex = array_search($b['title'], $order);
 
@@ -93,7 +100,17 @@ class CompanyNavbar extends Component
                     'url' => route('company.ownership', ['ticker' => $this->company->ticker]),
                     'active' => request()->routeIs('company.ownership', 'company.fund')
                 ],
-            ]
+            ],
+            'more' => $links->where(
+                fn ($link) => !in_array($link['title'], [
+                    'Track Investor',
+                    'Event Filings',
+                    'Insider Transactions',
+                    'Earnings Calendar',
+                ])
+            )
+                ->values()
+                ->all()
         ];
     }
 }
