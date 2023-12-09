@@ -34,8 +34,8 @@
                         period: $wire.entangle('period'),
                         unitType: $wire.entangle('unitType'),
                         decimalDisplay: $wire.entangle('decimalDisplay'),
-                        'order': $wire.entangle('reverse'),
-                        'freezePane': '',
+                        order: $wire.entangle('order'),
+                        freezePane: '',
                     }">
                         <div class="flex gap-x-4 items-center text-sm">
                             <div class="flex items-center gap-x-1">

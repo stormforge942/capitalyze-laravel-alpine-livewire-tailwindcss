@@ -7,7 +7,7 @@
     placeholder: '{{ $placeholder }}',
     init() {
         $nextTick(() => {
-            if (!Object.keys(this.options).includes(this.value)) {
+            if (this.value !== '' && !Object.keys(this.options).includes(String(this.value))) {
                 this.value = ''
             }    
         })
@@ -17,7 +17,7 @@
         })
 
         $watch('value', (newVal, oldVal) => {
-            if (newVal !== oldVal) {
+            if (newVal != oldVal) {
                 this.value = newVal
             }
         })

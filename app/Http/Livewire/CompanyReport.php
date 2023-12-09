@@ -27,7 +27,6 @@ class CompanyReport extends Component
     public $period = 'Fiscal Annual';
     public $table;
     public $asReportedStatementsList;
-    public $reverse = false;
     public $activeIndex = '';
     public $activeSubIndex = '';
     public $data;
@@ -62,7 +61,6 @@ class CompanyReport extends Component
 
     protected $queryString = [
         'unitType',
-        'reverse',
         'decimalDisplay',
         'view',
         'startDate',
@@ -80,12 +78,12 @@ class CompanyReport extends Component
             ->pluck('adj_close')
             ->toArray();
 
-        $latestPrice = $eodPrices[0] ?? 0;
-        $previousPrice = $eodPrices[1] ?? 0;
+        [$latestPrice, $previousPrice] = [$eodPrices[0] ?? 0, $eodPrices[1] ?? 0];
 
-        if ($latestPrice > 0 && $previousPrice > 0) {
-            $this->percentageChange = round((($latestPrice - $previousPrice) / $previousPrice) * 100, 2);
-        }
+        $this->percentageChange = ($latestPrice > 0 && $previousPrice > 0) ?
+            round((($latestPrice - $previousPrice) / $previousPrice) * 100, 2)
+            : 0;
+
         $this->latestPrice = $latestPrice;
 
         $this->chartColors = [
@@ -95,7 +93,6 @@ class CompanyReport extends Component
         $this->company = $company;
         $this->ticker = $ticker;
         $this->companyName = $this->ticker;
-
 
         $companyData = @json_decode($this->company, true);
 
@@ -667,6 +664,8 @@ class CompanyReport extends Component
 
         $decimalDisplay = intval($this->decimalDisplay);
 
+        $formatter = fn($val) => number_format($val, $decimalDisplay);
+
         if (str_contains($value, '%') || $value == '-' || !is_numeric($value)) {
             return $value;
         }
@@ -681,20 +680,20 @@ class CompanyReport extends Component
         }
 
         if (!isset($units[$unitType])) {
-            return $value;
+            return $formatter($value);
         }
 
         $unitAbbreviation = $units[$unitType];
 
         // Determine the appropriate unit based on the number
         if ($unitAbbreviation == 'B') {
-            return $value / 1000000000;
+            return $formatter($value / 1000000000);
         } elseif ($unitAbbreviation == 'M') {
-            return $value / 1000000;
+            return $formatter($value / 1000000);
         } elseif ($unitAbbreviation == 'T') {
-            return $value / 1000;
+            return $formatter($value / 1000);
         } else {
-            return $value;
+            return $formatter($value);
         }
     }
 
@@ -745,7 +744,6 @@ class CompanyReport extends Component
     {
         if (
             $propertyName === 'unitType'
-            || $propertyName === 'reverse'
             || $propertyName === 'decimalDisplay'
         ) {
             $this->regenerateTableChart();
@@ -844,6 +842,7 @@ class CompanyReport extends Component
     {
         return view('livewire.company-report', [
             'tabs' => $this->tabs,
+            'reverse' => $this->order === 'Latest On The Left',
             'viewTypes' => [
                 'As reported',
                 'Adjusted',
@@ -871,8 +870,8 @@ class CompanyReport extends Component
                 '3' => '.000',
             ],
             'orderTypes' => [
-                'false' => 'Latest On The Right',
-                'true' => 'Latest On The Left',
+                'Latest on the Right',
+                'Latest on the Left',
             ],
             'freezePaneTypes' => [
                 'Top Row',
