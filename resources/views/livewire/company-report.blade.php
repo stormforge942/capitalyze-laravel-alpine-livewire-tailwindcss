@@ -26,8 +26,8 @@
         </div>
 
         <div class="mt-6">
-            <x-primary-tabs :tabs="$tabs" :active="$activeTab" @tab-changed="$wire.tabSubClicked($event.detail.key)"
-                min-width="160px">
+            <x-primary-tabs :tabs="$tabs" :active="$activeTab" @tab-changed="$wire.changeTab($event.detail.key)"
+                min-width="160px"> 
                 <div>
                     <div class="py-3 px-4 bg-white rounded-lg border border-[#D4DDD7]" x-data="{
                         view: $wire.entangle('view'),
@@ -67,7 +67,7 @@
                 </div>
                 @if ($noData)
                     <div class="py-12">
-                        <div class="mx-auto flex">
+                        <div class="mx-auto flex relative">
                             <div
                                 class="mt-4 px-4 sm:px-6 lg:px-8 bg-white py-4 shadow rounded w-full md:w-1/2 md:mx-auto">
                                 <div class="sm:flex sm:items-center">
@@ -78,6 +78,9 @@
                                     </div>
                                 </div>
                             </div>
+                            <div class="cus-loader" wire:loading.block>
+                                <div class="cus-loaderBar"></div>
+                            </div>    
                         </div>
                     </div>
                 @else
@@ -526,10 +529,7 @@
                 selectedValue[0] = startDate ?? rangeMax - 6;
                 selectedValue[1] = endDate ?? rangeMax;
 
-
                 let valueAfter = null;
-
-
 
                 rangeSlider(el, {
                     step: 1,
@@ -638,17 +638,7 @@
         //     document.getElementById('dropdown-FreezePanes').classList.toggle("hidden");
         // });
 
-        const decimalDropdownCloseIcon = document.getElementById("decimalClose");
-
-        decimalDropdownCloseIcon.addEventListener("click", function() {
-            document.getElementById('dropdown-Decimal').classList.toggle("hidden");
-        });
-
         const currencyDropdownCloseIcon = document.getElementById("currencyClose");
-
-        decimalDropdownCloseIcon.addEventListener("click", function() {
-            document.getElementById('dropdown-Currency').classList.toggle("hidden");
-        });
 
         let chart = null;
 

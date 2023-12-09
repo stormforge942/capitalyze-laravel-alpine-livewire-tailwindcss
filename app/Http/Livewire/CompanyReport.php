@@ -70,7 +70,7 @@ class CompanyReport extends Component
 
     public function mount(Request $request, $company, $ticker): void
     {
-        $this->activeTab = $request->query('tab');
+        $this->activeTab = $request->query('tab', 'income-statement');
 
         $eodPrices = EodPrices::where('symbol', strtolower($this->company->ticker))
             ->latest('date')
@@ -664,8 +664,6 @@ class CompanyReport extends Component
 
         $decimalDisplay = intval($this->decimalDisplay);
 
-        $formatter = fn($val) => number_format($val, $decimalDisplay);
-
         if (str_contains($value, '%') || $value == '-' || !is_numeric($value)) {
             return $value;
         }
@@ -680,20 +678,20 @@ class CompanyReport extends Component
         }
 
         if (!isset($units[$unitType])) {
-            return $formatter($value);
+            return ($value);
         }
 
         $unitAbbreviation = $units[$unitType];
 
         // Determine the appropriate unit based on the number
         if ($unitAbbreviation == 'B') {
-            return $formatter($value / 1000000000);
+            return ($value / 1000000000);
         } elseif ($unitAbbreviation == 'M') {
-            return $formatter($value / 1000000);
+            return ($value / 1000000);
         } elseif ($unitAbbreviation == 'T') {
-            return $formatter($value / 1000);
+            return ($value / 1000);
         } else {
-            return $formatter($value);
+            return ($value);
         }
     }
 
@@ -768,6 +766,29 @@ class CompanyReport extends Component
         $this->emit('updateCompanyReportChart');
     }
 
+    public function changeTab($tab)
+    {
+        $this->activeTab = $tab;
+
+        if ($this->asReportedStatementsList == null) {
+            $this->setAsReportedStatementsList();
+        }
+
+        if ($this->activeTab === 'Income Statement' || $this->activeTab === 'Balance Sheet Statement' || $this->activeTab === 'Cash Flow Statement') {
+            if ($this->view === 'As reported') {
+                $this->activeSubIndex = "";
+                foreach ($this->asReportedStatementsList as $value) {
+                    if ($this->activeTab === $value['title']) {
+                        $this->activeSubIndex = $value['id'];
+                        break;
+                    }
+                }
+            }
+        }
+
+        $this->getData();
+    }
+
     public function setAsReportedStatementsList()
     {
         $acronym = ($this->period == 'annual') || ($this->period == 'Calendar Annual') || ($this->period == 'Fiscal Annual') ? 'arf5drs' : 'qrf5drs';
@@ -812,29 +833,6 @@ class CompanyReport extends Component
     public function tabClicked($key): void
     {
         $this->activeIndex = $key;
-        $this->getData();
-    }
-
-    public function tabSubClicked($title): void
-    {
-
-        $this->activeTab = $title;
-
-        if ($this->asReportedStatementsList == null) {
-            $this->setAsReportedStatementsList();
-        }
-
-        if ($this->activeTab === 'Income Statement' || $this->activeTab === 'Balance Sheet Statement' || $this->activeTab === 'Cash Flow Statement') {
-            if ($this->view === 'As reported') {
-                $this->activeSubIndex = "";
-                foreach ($this->asReportedStatementsList as $value) {
-                    if ($this->activeTab === $value['title']) {
-                        $this->activeSubIndex = $value['id'];
-                        break;
-                    }
-                }
-            }
-        }
         $this->getData();
     }
 

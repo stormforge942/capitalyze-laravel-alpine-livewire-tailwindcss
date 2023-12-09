@@ -30,6 +30,10 @@ class Tabs extends Component
         }
 
         $this->active = request()->query('tab', $active);
+
+        if(!in_array($this->active, array_keys($this->tabs))) {
+            $this->active = array_keys($this->tabs)[0];
+        }
     }
 
     public function render()

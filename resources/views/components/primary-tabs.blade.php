@@ -8,18 +8,25 @@
         const tab = this.tabs[key];
         this.active = tab.key;
 
-        // update query string
-        const url = new URL(window.location.href);
-        url.searchParams.set('tab', tab.key);
-        window.history.replaceState({}, '', url);
+        this.setQueryString(tab.key);
 
-        $dispatch('tab-changed', tab)
+        this.$dispatch('tab-changed', tab)
     },
     get activeTab() {
         return this.tabs[this.active];
-    }
-}" x-init="$dispatch('tab-changed', activeTab);
-dropdown = new Dropdown($refs.dropdown, $refs.dropdownBtn, { placement: 'bottom-start' })" {{ $attributes }}>
+    },
+    init() {
+        this.dropdown = new Dropdown(this.$refs.dropdown, this.$refs.dropdownBtn, { placement: 'bottom-start' });
+        this.setQueryString(this.active);
+
+        @if ($triggerChange) this.$nextTick(() => this.$dispatch('tab-changed', this.activeTab)) @endif
+    },
+    setQueryString(tab) {
+        const url = new URL(window.location.href);
+        url.searchParams.set('tab', tab);
+        window.history.replaceState({}, '', url);
+    },
+}" {{ $attributes }}>
     <div class="flex flex-wrap items-center justify-between gap-2 lg:hidden text-base">
         <div>
             <button x-ref="dropdownBtn"
@@ -35,16 +42,15 @@ dropdown = new Dropdown($refs.dropdown, $refs.dropdownBtn, { placement: 'bottom-
 
             <div class="z-10 hidden bg-white divide-y divide-gray-100 rounded shadow min-w-[12rem]" x-ref="dropdown">
                 <div class="py-2 text-sm text-gray-700">
-                    @foreach ($tabs as $key => $tab)
+                    <template x-for="(tab, key) in tabs" :key="key">
                         <button class="block w-full px-4 py-2 text-left"
                             @click="(e) => { 
-                                changeTab('{{ $key }}', false); 
+                                changeTab(key, false); 
                                 dropdown.hide()
                             }"
-                            x-show="active !== '{{ $key }}'">
-                            {{ $tab['title'] }}
+                            x-show="active !== key" x-text="tab.title">
                         </button>
-                    @endforeach
+                    </template>
                 </div>
             </div>
         </div>
@@ -56,18 +62,15 @@ dropdown = new Dropdown($refs.dropdown, $refs.dropdownBtn, { placement: 'bottom-
 
     <div
         class="hidden lg:flex border border-[#D4DDD7] rounded bg-white w-full items-center gap-2 p-1 overflow-x-auto text-base">
-        @foreach ($tabs as $key => $tab)
+        <template x-for="(tab, key) in tabs" :key="key">
             <button class="px-3 py-1.5 text-center rounded transition"
                 :class="{
-                    'bg-green-dark font-semibold': active ===
-                        '{{ $key }}',
-                    'font-medium text-gray-medium2 hover:bg-gray-light': active !==
-                        '{{ $key }}'
+                    'bg-green-dark font-semibold': active === key,
+                    'font-medium text-gray-medium2 hover:bg-gray-light': active !== key
                 }"
-                @click="changeTab('{{ $key }}')" style="min-width: {{ $minWidth }}">
-                {{ $tab['title'] }}
+                @click="changeTab(key)" style="min-width: {{ $minWidth }}" x-text="tab.title">
             </button>
-        @endforeach
+        </template>
     </div>
 
     <div class="mt-4 lg:mt-6">
