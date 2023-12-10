@@ -27,7 +27,7 @@
                 <div class="flex flex-row bg-gray-custom-light">
                     <div class="ml-8 w-[250px] font-bold flex py-2 items-center justify-start text-base">
                         <span>
-                            {{ $companyName }} ({{ $ticker }})
+                            {{ $company['name'] }} ({{ $company['ticker'] }})
                         </span>
                     </div>
                     <div class="w-full flex flex-row bg-gray-custom-light justify-between">

@@ -17,9 +17,7 @@ class CompanyReport extends Component
     public $rows = [];
     public $company;
     public $decimalDisplay = '2';
-    public $ticker;
     public $chartData = [];
-    public $companyName;
     public $unitType = 'Thousands';
     public $currency = 'USD';
     public $currentRoute;
@@ -70,7 +68,7 @@ class CompanyReport extends Component
         'period'
     ];
 
-    public function mount(Request $request, $company, $ticker): void
+    public function mount(Request $request, $company): void
     {
         if (!$this->currentRoute) {
             $this->currentRoute = $request->route()->getName();
@@ -92,14 +90,10 @@ class CompanyReport extends Component
 
         $this->latestPrice = $latestPrice;
 
-        $this->company = $company;
-        $this->ticker = $ticker;
-        $this->companyName = $this->ticker;
-
-        $companyData = @json_decode($this->company, true);
-
-        if ($companyData && count($companyData) && is_array($companyData) && array_key_exists('name', $companyData))
-            $this->companyName = $companyData['name'];
+        $this->company = [
+            'name' => $company['name'] ?? $company['ticker'],
+            'ticker' => $company['ticker'],
+        ];
 
         $this->getData();
     }
@@ -229,14 +223,14 @@ class CompanyReport extends Component
 
                 if ($this->view === 'Standardised' && $column) {
                     $data = InfoTikrPresentation::query()
-                        ->where('ticker', $this->ticker)
+                        ->where('ticker', $this->company['ticker'])
                         ->where("period", $period)
                         ->select($column)
                         ->value($column);
                 } else {
                     $data = InfoPresentation::query()
                         ->where([
-                            'ticker' => $this->ticker,
+                            'ticker' => $this->company['ticker'],
                             'acronym' => $acronym,
                             'title' => $this->tabsTitleMap[$this->activeTab],
                         ])
@@ -692,7 +686,7 @@ class CompanyReport extends Component
         $response = [];
         $response['empty'] = false;
         $response['date'] = $key;
-        $response['ticker'] = $this->ticker;
+        $response['ticker'] = $this->company['ticker'];
 
         foreach ($data as $key => $value) {
             if (in_array('|', str_split($value))) {
@@ -722,7 +716,7 @@ class CompanyReport extends Component
                 'date' => Carbon::createFromFormat('Y-m-d', $date)->format('Y-m-d'),
                 'value' => '',
                 'hash' => '',
-                'ticker' => $this->ticker,
+                'ticker' => $this->company['ticker'],
                 'empty' => true,
             ];
         }

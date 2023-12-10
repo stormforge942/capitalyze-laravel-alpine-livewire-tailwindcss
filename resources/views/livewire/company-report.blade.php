@@ -5,10 +5,7 @@
     <div id="main-report-div" class="py-0 bg-gray-100">
         <div class="flex items-center justify-between">
             <div class="text-lg md:text-xl">
-                <h1 class="font-bold">{{ $companyName }} @if ($ticker)
-                        ({{ $ticker }})
-                    @endif
-                </h1>
+                <h1 class="font-bold">{{ $company['name'] }} ({{ $company['ticker'] }})</h1>
                 <p class="mt-2 flex items-center gap-1">
                     <span class="font-bold">${{ number_format($latestPrice, 2) }}</span>
                     <span class="text-md {{ $percentageChange >= 0 ? 'text-green' : 'text-red' }}">
