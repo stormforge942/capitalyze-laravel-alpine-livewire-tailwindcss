@@ -68,6 +68,7 @@ div.range-slider .range-slider__range {
     justify-content: center;
     width: 100%;
     height: 100%;
+    font-weight: 700;
 }
 
 .years-range-wrapper {

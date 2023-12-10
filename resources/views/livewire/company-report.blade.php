@@ -37,7 +37,7 @@
                         order: $wire.entangle('order'),
                         freezePane: '',
                     }">
-                        <div class="flex gap-x-4 items-center text-sm">
+                        <div class="flex flex-wrap gap-4 items-center text-sm">
                             <div class="flex items-center gap-x-1">
                                 <span>View</span>
                                 <x-select :options="$viewTypes" placeholder="View" x-model="view"></x-select>
@@ -405,9 +405,7 @@
                                         </div>
                                     </div>
                                     @if ($rows)
-                                        @include('livewire.company-report-table-row-alpine', [
-                                            'tableRows' => $rows,
-                                        ])
+                                        @include('livewire.company-report-table-row-alpine')
                                     @endif
                                 </div>
                             </div>
