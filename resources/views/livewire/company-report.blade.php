@@ -25,46 +25,10 @@
             <x-download-data-buttons />
         </div>
 
-        <div class="mt-6">
-            <x-primary-tabs :tabs="$tabs" :active="$activeTab" @tab-changed="$wire.changeTab($event.detail.key)"
-                min-width="160px"> 
-                <div>
-                    <div class="py-3 px-4 bg-white rounded-lg border border-[#D4DDD7]" x-data="{
-                        view: $wire.entangle('view'),
-                        period: $wire.entangle('period'),
-                        unitType: $wire.entangle('unitType'),
-                        decimalDisplay: $wire.entangle('decimalDisplay'),
-                        order: $wire.entangle('order'),
-                        freezePane: '',
-                    }">
-                        <div class="flex flex-wrap gap-4 items-center text-sm">
-                            <div class="flex items-center gap-x-1">
-                                <span>View</span>
-                                <x-select :options="$viewTypes" placeholder="View" x-model="view"></x-select>
-                            </div>
-                            <div class="flex items-center gap-x-1">
-                                <span>Period Type</span>
-                                <x-select :options="$periodTypes" placeholder="Period Type" x-model="period"></x-select>
-                            </div>
-                            <div class="flex items-center gap-x-1">
-                                <span>Unit Type</span>
-                                <x-select :options="$unitTypes" placeholder="Unit Type" x-model="unitType"></x-select>
-                            </div>
-                            <div class="flex items-center gap-x-1">
-                                <span>Decimal</span>
-                                <x-select :options="$decimalTypes" placeholder="Decimal" x-model="decimalDisplay"></x-select>
-                            </div>
-                            <div class="flex items-center gap-x-1">
-                                <span>Order</span>
-                                <x-select :options="$orderTypes" placeholder="Order" x-model="order"></x-select>
-                            </div>
-                            <div class="flex items-center gap-x-1">
-                                <span>Freeze Panes</span>
-                                <x-select :options="$freezePaneTypes" placeholder="Freeze Panes" x-model="freezePane"></x-select>
-                            </div>
-                        </div>
-                    </div>
-                </div>
+        <div class="mt-6" x-data="{ tabActive: $wire.entangle('activeTab') }">
+            <x-primary-tabs :tabs="$tabs" x-modelable="active" x-model="tabActive" min-width="160px">
+                @include('partials.company-report.filters')
+
                 @if ($noData)
                     <div class="py-12">
                         <div class="mx-auto flex relative">
@@ -80,7 +44,7 @@
                             </div>
                             <div class="cus-loader" wire:loading.block>
                                 <div class="cus-loaderBar"></div>
-                            </div>    
+                            </div>
                         </div>
                     </div>
                 @else
@@ -151,8 +115,7 @@
                                                 <div class="py-1" role="none">
                                                     <!-- Active: "bg-gray-100 text-gray-900", Not Active: "text-gray-700" -->
                                                     <div class="links-wrapper mb-3">
-                                                        <a href="#"
-                                                            @click="menuOpen = false; showGraph = false;"
+                                                        <a href="#" @click="menuOpen = false; showGraph = false;"
                                                             class="menu_link" role="menuitem" tabindex="-1"
                                                             id="menu-item-0">
                                                             <svg xmlns="http://www.w3.org/2000/svg" width="14"
@@ -359,61 +322,7 @@
                         </div>
                     @endif
 
-                    <div class="flex justify-between items-center mt-7">
-                        <div class="warning-wrapper">
-                            <div class="warning-text text-sm">
-                                <svg viewBox="0 0 16 16" fill="none" xmlns="http://www.w3.org/2000/svg">
-                                    <path
-                                        d="M7.99967 14.6663C4.31777 14.6663 1.33301 11.6815 1.33301 7.99967C1.33301 4.31777 4.31777 1.33301 7.99967 1.33301C11.6815 1.33301 14.6663 4.31777 14.6663 7.99967C14.6663 11.6815 11.6815 14.6663 7.99967 14.6663ZM7.99967 13.333C10.9452 13.333 13.333 10.9452 13.333 7.99967C13.333 5.05415 10.9452 2.66634 7.99967 2.66634C5.05415 2.66634 2.66634 5.05415 2.66634 7.99967C2.66634 10.9452 5.05415 13.333 7.99967 13.333ZM7.33301 9.99967H8.66634V11.333H7.33301V9.99967ZM7.33301 4.66634H8.66634V8.66634H7.33301V4.66634Z"
-                                        fill="#DA680B" />
-                                </svg>
-                                Click on any of the row(s) to chart the data
-                            </div>
-                        </div>
-
-                        <div class="flex justify-end items-baseline">
-                            <span class="currency-font">Currency: &nbsp;</span>
-                            <select wire:model="currency" id="currency-select"
-                                class="inline-flex font-bold !pr-8 bg-transparent">
-                                <option value="USD">USD</option>
-                                <option value="CAD">CAD</option>
-                                <option value="EUR">EUR</option>
-                            </select>
-                        </div>
-                    </div>
-
-                    <div class="w-full table-container">
-                        <div class="table-wrapper w-full" style="font-size: 12px;">
-                            <div class="table" wire:key="{{ now() }}">
-                                <div class="row-group">
-                                    <div class="flex flex-row bg-gray-custom-light">
-                                        <div
-                                            class="ml-8 w-[250px] font-bold flex py-2 items-center justify-start text-base">
-                                            <span>
-                                                {{ $companyName }} ({{ $ticker }})
-                                            </span>
-                                        </div>
-                                        <div class="w-full flex flex-row bg-gray-custom-light justify-between">
-                                            @foreach ($reverse ? array_reverse($tableDates) : $tableDates as $date)
-                                                <div
-                                                    class="w-[150px] flex items-center justify-center text-base font-bold">
-                                                    <span class="py-2">
-                                                        {{ date('M Y', strtotime($date)) }}
-                                                    </span>
-                                                </div>
-                                            @endforeach
-                                        </div>
-                                    </div>
-                                    @if ($rows)
-                                        @include('livewire.company-report-table-row-alpine')
-                                    @endif
-                                </div>
-                            </div>
-                        </div>
-                        <div class="cus-loader" wire:loading.block>
-                            <div class="cus-loaderBar"></div>
-                        </div>
-                    </div>
+                    @include('partials.company-report.table')
                 @endif
             </x-primary-tabs>
         </div>

@@ -25,10 +25,6 @@ class CompanyReport extends Component
     public $currentRoute;
     public $order = "Latest on the Right";
     public $period = 'Fiscal Annual';
-    public $table;
-    public $asReportedStatementsList;
-    public $activeIndex = '';
-    public $activeSubIndex = '';
     public $data;
     public $tableDates = [];
     public $rangeDates = [];
@@ -38,16 +34,13 @@ class CompanyReport extends Component
     public $percentageChange = 0;
     public $startDate = null;
     public $endDate = null;
-    protected $request;
-    protected $rowCount = 0;
     public $selectedRows = [];
     public $selectedValue = [];
     public $chartType = 'line';
-    public $isOpen = false;
     public $activeTab;
     public $allRows = [];
     public $datesEmptyStatus = [];
-    
+
     protected $chartColors = [
         "#000000", "#454545", "#5e5e5e", "#636363", "#7a7a7a", "#878787", "#7a7e94", "#5d6074", "#4d5060", "#3d404c", "#4f5263"
     ];
@@ -58,6 +51,12 @@ class CompanyReport extends Component
         'cash-flow' => 'Cash Flow',
         'ratios' => 'Ratios',
         'disclosure' => 'Disclosure',
+    ];
+
+    protected $tabsTitleMap = [
+        'income-statement' => 'Income Statement',
+        'balance-sheet' => 'Balance Sheet Statement',
+        'cash-flow' => 'Cash Flow Statement',
     ];
 
     protected $listeners = ['periodChange', 'tabClicked', 'tabSubClicked', 'selectRow', 'unselectRow'];
@@ -73,6 +72,10 @@ class CompanyReport extends Component
 
     public function mount(Request $request, $company, $ticker): void
     {
+        if (!$this->currentRoute) {
+            $this->currentRoute = $request->route()->getName();
+        }
+
         $this->activeTab = $request->query('tab', 'income-statement');
 
         $eodPrices = EodPrices::where('symbol', strtolower($this->company->ticker))
@@ -98,17 +101,7 @@ class CompanyReport extends Component
         if ($companyData && count($companyData) && is_array($companyData) && array_key_exists('name', $companyData))
             $this->companyName = $companyData['name'];
 
-        $this->setAsReportedStatementsList();
-
-        if ($this->noData === true) {
-            return;
-        }
-
         $this->getData();
-
-        if (!$this->currentRoute) {
-            $this->currentRoute = $request->route()->getName();
-        }
     }
 
     public function selectRow($title, $data)
@@ -224,34 +217,42 @@ class CompanyReport extends Component
             ? ['arf5drs', 'annual']
             : ['qrf5drs', 'quarter'];
 
-        if ($this->activeTab === 'Ratios') {
-            $data = json_decode($this->fakeDataForRatiosPage(), true);
-        } else {
-            $column = [
-                'balance-sheet' => 'balance_sheet',
-                'income-statement' => 'income_statement',
-                'cash-flow' => 'cash_flow',
-            ][$this->activeTab] ?? null;
-
-            if ($this->view === 'Standardised' && $column) {
-                $data = InfoTikrPresentation::query()
-                    ->where('ticker', $this->ticker)
-                    ->where("period", $period)
-                    ->select($column)
-                    ->value($column);
+        try {
+            if ($this->activeTab === 'Ratios') {
+                $data = json_decode($this->fakeDataForRatiosPage(), true);
             } else {
-                $data = InfoPresentation::query()
-                    ->where('ticker', '=', $this->ticker)
-                    ->where('acronym', '=', $acronym)
-                    ->where('id', '=', $this->activeSubIndex)
-                    ->select('info')
-                    ->value('info');
-            }
+                $column = [
+                    'balance-sheet' => 'balance_sheet',
+                    'income-statement' => 'income_statement',
+                    'cash-flow' => 'cash_flow',
+                ][$this->activeTab] ?? null;
 
-            $data = json_decode($data, true);
+                if ($this->view === 'Standardised' && $column) {
+                    $data = InfoTikrPresentation::query()
+                        ->where('ticker', $this->ticker)
+                        ->where("period", $period)
+                        ->select($column)
+                        ->value($column);
+                } else {
+                    $data = InfoPresentation::query()
+                        ->where([
+                            'ticker' => $this->ticker,
+                            'acronym' => $acronym,
+                            'title' => $this->tabsTitleMap[$this->activeTab],
+                        ])
+                        ->select('info')
+                        ->value('info');
+                }
+
+                $data = json_decode($data, true);
+            }
+        } catch (\Throwable $th) {
+            $this->noData = true;
         }
 
-        $this->noData = false;
+        if ($this->noData) {
+            return;
+        }
 
         $this->data = $data;
 
@@ -376,7 +377,6 @@ class CompanyReport extends Component
         // for the slider date - rangeDates is slider dates
         $this->rangeDates = $this->tableDates;
 
-        
         if (!is_numeric($this->startDate)) {
             $year = date('Y', strtotime($this->startDate));
             $startDate = $this->startDate;
@@ -388,6 +388,7 @@ class CompanyReport extends Component
 
             $this->startDate = $startDate;
         }
+
         if (!is_numeric($this->endDate)) {
             $year = date('Y', strtotime($this->endDate));
             $endDate = $this->endDate;
@@ -729,105 +730,34 @@ class CompanyReport extends Component
         return $response;
     }
 
-    public function updated($propertyName): void
+    public function updated($prop): void
     {
         if (
-            $propertyName === 'unitType'
-            || $propertyName === 'decimalDisplay'
+            $prop === 'unitType'
+            || $prop === 'decimalDisplay'
         ) {
             $this->regenerateTableChart();
         }
 
-        if ($propertyName === 'view') {
-            $this->setAsReportedStatementsList();
+        if (
+            $prop === 'view' ||
+            $prop === 'activeTab'
+        ) {
             $this->getData();
-            $this->traverseArray($this->allRows);
         }
     }
 
     public function updatedPeriod()
     {
-        $this->setAsReportedStatementsList();
         $this->getData();
         $this->generateRows($this->data);
+
         if (count($this->selectedRows) > 0) {
             $this->updateSelectRows();
         }
+
         $this->generateChartData();
         $this->emit('updateCompanyReportChart');
-    }
-
-    public function changeTab($tab)
-    {
-        $this->activeTab = $tab;
-
-        if ($this->asReportedStatementsList == null) {
-            $this->setAsReportedStatementsList();
-        }
-
-        if ($this->activeTab === 'Income Statement' || $this->activeTab === 'Balance Sheet Statement' || $this->activeTab === 'Cash Flow Statement') {
-            if ($this->view === 'As reported') {
-                $this->activeSubIndex = "";
-                foreach ($this->asReportedStatementsList as $value) {
-                    if ($this->activeTab === $value['title']) {
-                        $this->activeSubIndex = $value['id'];
-                        break;
-                    }
-                }
-            }
-        }
-
-        $this->getData();
-    }
-
-    public function setAsReportedStatementsList()
-    {
-        $acronym = in_array($this->period, [
-            'Calendar Annual',
-            'Fiscal Annual',
-        ]) ? 'arf5drs' : 'qrf5drs';
-
-        $statements = InfoPresentation::where('ticker', '=', $this->ticker)
-            ->where('acronym', '=', $acronym)
-            ->select('statement', 'statement_group', 'id', 'title')
-            ->get()
-            ->toArray();
-
-        $statements = array_map(fn ($object) => (array) $object, $statements);
-
-        if ($statements == []) {
-            $this->noData = true;
-            return;
-        }
-
-        if (in_array($this->activeTab, ['income-statement', 'balance-sheet', 'cash-flow'])) {
-            $this->activeIndex = 'Financial Statements [Financial Statements]';
-        }
-
-        $this->activeSubIndex = "";
-
-        foreach ($statements as $value) {
-            if ($this->tabs[$this->activeTab] === $value['title']) {
-                $this->activeSubIndex = $value['id'];
-                break;
-            }
-        }
-
-        $this->asReportedStatementsList = $statements;
-    }
-
-
-    public function periodChange($period): void
-    {
-        $this->period = $period;
-        $this->setAsReportedStatementsList();
-        $this->getData();
-    }
-
-    public function tabClicked($key): void
-    {
-        $this->activeIndex = $key;
-        $this->getData();
     }
 
     public function render()
