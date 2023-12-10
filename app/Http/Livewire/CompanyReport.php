@@ -20,20 +20,17 @@ class CompanyReport extends Component
     public $chartData = [];
     public $unitType = 'Thousands';
     public $currency = 'USD';
-    public $currentRoute;
     public $order = "Latest on the Right";
     public $period = 'Fiscal Annual';
     public $data;
     public $tableDates = [];
     public $rangeDates = [];
     public $noData = false;
-    public $tableLoading = true;
     public $latestPrice = 0;
     public $percentageChange = 0;
     public $startDate = null;
     public $endDate = null;
     public $selectedRows = [];
-    public $selectedValue = [];
     public $chartType = 'line';
     public $activeTab;
     public $allRows = [];
@@ -51,29 +48,15 @@ class CompanyReport extends Component
         'disclosure' => 'Disclosure',
     ];
 
-    protected $tabsTitleMap = [
-        'income-statement' => 'Income Statement',
-        'balance-sheet' => 'Balance Sheet Statement',
-        'cash-flow' => 'Cash Flow Statement',
-    ];
-
     protected $listeners = ['periodChange', 'tabClicked', 'tabSubClicked', 'selectRow', 'unselectRow'];
 
     protected $queryString = [
-        'unitType',
-        'decimalDisplay',
         'view',
-        'startDate',
-        'endDate',
         'period'
     ];
 
     public function mount(Request $request, $company): void
     {
-        if (!$this->currentRoute) {
-            $this->currentRoute = $request->route()->getName();
-        }
-
         $this->activeTab = $request->query('tab', 'income-statement');
 
         $eodPrices = EodPrices::where('symbol', strtolower($this->company->ticker))
@@ -228,11 +211,17 @@ class CompanyReport extends Component
                         ->select($column)
                         ->value($column);
                 } else {
+                    $tabsTitleMap = [
+                        'income-statement' => 'Income Statement',
+                        'balance-sheet' => 'Balance Sheet Statement',
+                        'cash-flow' => 'Cash Flow Statement',
+                    ];
+
                     $data = InfoPresentation::query()
                         ->where([
                             'ticker' => $this->company['ticker'],
                             'acronym' => $acronym,
-                            'title' => $this->tabsTitleMap[$this->activeTab],
+                            'title' => $tabsTitleMap[$this->activeTab],
                         ])
                         ->select('info')
                         ->value('info');
@@ -262,7 +251,6 @@ class CompanyReport extends Component
 
     public function changeDates($dates)
     {
-        $this->tableLoading = true;
         $this->rows = [];
 
         $this->startDate = $dates[0];
@@ -294,12 +282,7 @@ class CompanyReport extends Component
         }
 
         if (in_array($this->period, ['Fiscal Quaterly', 'Calendar Quaterly'])) {
-            $this->tableDates = []; // Clears the array
-
-            // get all dates possibles and fill tableDates
-            $this->traverseArray($this->data);
-
-            $this->tableDates = array_reverse($this->tableDates);
+            $this->tableDates = array_reverse($this->extractDates($this->data));
 
             if (count($dates) == 2) {
                 if (gettype($dates[0]) === 'integer') {
@@ -330,8 +313,6 @@ class CompanyReport extends Component
             $this->generateChartData();
             $this->emit('updateCompanyReportChart');
         }
-
-        $this->tableLoading = false;
     }
 
     public function generateUI(): void
@@ -341,165 +322,49 @@ class CompanyReport extends Component
         $this->emit('initCompanyReportChart');
     }
 
-    private function traverseArray($array)
+    private function extractDates($array, $dates = [])
     {
         foreach ($array as $key => $value) {
             if (is_array($value)) {
-                if (strtotime($key) !== false && strlen($key) > 5) {
-                    $date = date('Y-m-d', strtotime($key));
+                $timestamp = strtotime($key);
 
-                    if (!in_array($date, $this->tableDates)) {
-                        $this->tableDates[] = $date;
+                if ($timestamp) {
+                    $date = date('Y-m-d', $timestamp);
+
+                    if (!in_array($date, $dates)) {
+                        $dates[] = $date;
                     }
                 }
-                $this->traverseArray($value);
+
+                $dates = $this->extractDates($value, $dates);
             } else {
                 break;
             }
         }
+
+        return $dates;
     }
 
-    public function generateTableDates()
+    private function generateTableDates()
     {
-        $this->tableDates = []; // Clears the array
+        $this->tableDates = collect($this->extractDates($this->data))
+            ->sortBy(fn ($date) => strtotime($date))
+            ->values()
+            ->toArray();
 
-        // get all dates possibles and fill tableDates
-        $this->traverseArray($this->data);
+        $this->rangeDates = collect($this->tableDates)
+            ->map(fn ($date) => date('Y', strtotime($date)))
+            ->unique()
+            ->sort()
+            ->values()
+            ->toArray();
 
-        $this->tableDates = array_reverse($this->tableDates);
-
-        // for the slider date - rangeDates is slider dates
-        $this->rangeDates = $this->tableDates;
-
-        if (!is_numeric($this->startDate)) {
-            $year = date('Y', strtotime($this->startDate));
-            $startDate = $this->startDate;
-            foreach ($this->rangeDates as $date) {
-                if (strtotime($date) <= strtotime($this->startDate) && strtotime($date) < strtotime($startDate) && date('Y', strtotime($date)) == date('Y', strtotime($this->startDate))) {
-                    $startDate = $date;
-                }
-            }
-
-            $this->startDate = $startDate;
-        }
-
-        if (!is_numeric($this->endDate)) {
-            $year = date('Y', strtotime($this->endDate));
-            $endDate = $this->endDate;
-            foreach ($this->rangeDates as $date) {
-                if (strtotime($date) >= strtotime($this->endDate) && strtotime($date) > strtotime($endDate) && date('Y', strtotime($date)) == date('Y', strtotime($this->endDate))) {
-                    $endDate = $date;
-                }
-            }
-
-            $this->endDate = $endDate;
-        }
-
-        // Check and update $this->endDate if applicable
-        if (isset($this->endDate) && is_integer($this->endDate)) {
-            // Extract the year from $this->endDate
-            $year = date('Y', strtotime("{$this->endDate}-01-01"));
-
-            // Search for a date within $this->rangeDates that matches the year
-            foreach ($this->rangeDates as $date) {
-                if (substr($date, 0, 4) == $year) {
-                    $this->endDate = $date;
-                }
-            }
-        }
-
-        // Check and update $this->startDate if applicable
-        if (isset($this->startDate) && is_integer($this->startDate)) {
-            // Extract the year from $this->startDate
-            $year = $this->startDate;
-
-            // Flag to check if a match is found in $this->rangeDates
-            $matchFound = false;
-
-            // Search for a date within $this->rangeDates that matches the year
-            foreach ($this->rangeDates as $date) {
-                if (substr($date, 0, 4) == $year) {
-                    $this->startDate = $date;
-                    $matchFound = true;
-                    break;
-                }
-            }
-
-            // If no match is found, use $this->rangeDates[count($this->rangeDates) - 7] because year is before the first year in $this->rangeDates
-            if (!$matchFound) {
-
-                $year = substr($this->rangeDates[count($this->rangeDates) - 1], 0, 4) - 5;
-
-                // Search for a date within $this->rangeDates that matches the year
-                foreach ($this->rangeDates as $date) {
-                    if (substr($date, 0, 4) == $year) {
-                        $this->startDate = $date;
-                        break;
-                    }
-                }
-            }
-        }
-
-
-        // define selected date for the slider
-        if (count($this->rangeDates) > 0) {
-
-            $firstDate = $this->startDate;
-            if ($this->startDate === null) {
-
-                $year = substr($this->rangeDates[count($this->rangeDates) - 1], 0, 4) - 5;
-
-                $firstDate = $this->rangeDates[count($this->rangeDates) - 1];
-                // Search for a date within $this->rangeDates that matches the year
-                foreach ($this->rangeDates as $date) {
-                    if (substr($date, 0, 4) == $year) {
-                        $firstDate = $date;
-                        break;
-                    }
-                }
-            }
-
-
-
-            $this->selectedValue = [$firstDate, $this->rangeDates[count($this->rangeDates) - 1]];
-        }
-
-        // if the end date is null than define the maximum date of the slider
-        $this->selectedValue[1] = $this->endDate ?? $this->rangeDates[count($this->rangeDates) - 1];
-
-        $this->endDate = $this->endDate ?? $this->selectedValue[1];
-        $this->startDate = $this->startDate ?? $this->selectedValue[0];
-
-
-        // filter tableDates to only keep the selected date from the slider
-        $this->tableDates = array_values(array_unique(array_filter($this->tableDates, function ($date) {
-            $timestamp = strtotime($date);
-            $startTimestamp = strtotime($this->selectedValue[0]);
-            $endTimestamp = strtotime($this->selectedValue[1]);
-
-            return $timestamp !== false && $timestamp >= $startTimestamp && $timestamp <= $endTimestamp;
-        })));
-
-        if ($this->period === 'quarterly' || $this->period === 'Fiscal Quaterly' || $this->period === 'Calendar Quaterly') {
-            $filteredData = [];
-
-            foreach ($this->rangeDates as $date) {
-                $year = date('Y', strtotime($date));
-
-                // Only keep the latest date for each year
-                if (!isset($filteredData[$year]) || $date > $filteredData[$year]) {
-                    $filteredData[$year] = $date;
-                }
-            }
-
-            // $filteredData now contains one date per year (the latest if possible)
-            $this->rangeDates = array_values($filteredData);
-        }
+        $this->endDate = $this->rangeDates[count($this->rangeDates) - 1];
+        $this->startDate = $this->rangeDates[count($this->rangeDates) - 6 ?: 0];
     }
 
     public function generateRows($data)
     {
-        $this->tableLoading = true;
         $rows = [];
         $allRows = [];
 
@@ -560,19 +425,10 @@ class CompanyReport extends Component
             }
         }
 
-        foreach ($this->rangeDates as $dateKey => $tableDate) {
-            foreach ($this->datesEmptyStatus as $statusKey => $dateStatus) {
-                if (date('Y', strtotime($statusKey)) == date('Y', strtotime($tableDate)) && !$dateStatus) {
-                    unset($this->rangeDates[$dateKey]);
-                }
-            }
-        }
-        $this->rangeDates = array_values($this->rangeDates);
         $this->tableDates = array_values($this->tableDates);
 
         $this->rows = $rows;
         $this->allRows = $allRows;
-        $this->tableLoading = false;
     }
 
     public function generateRow($data, $title, $isSegmentation = false): array
@@ -735,23 +591,11 @@ class CompanyReport extends Component
 
         if (
             $prop === 'view' ||
-            $prop === 'activeTab'
+            $prop === 'activeTab' ||
+            $prop === 'period'
         ) {
             $this->getData();
         }
-    }
-
-    public function updatedPeriod()
-    {
-        $this->getData();
-        $this->generateRows($this->data);
-
-        if (count($this->selectedRows) > 0) {
-            $this->updateSelectRows();
-        }
-
-        $this->generateChartData();
-        $this->emit('updateCompanyReportChart');
     }
 
     public function render()

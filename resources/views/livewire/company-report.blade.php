@@ -22,7 +22,64 @@
             <x-download-data-buttons />
         </div>
 
-        <div class="mt-6" x-data="{ tabActive: $wire.entangle('activeTab') }">
+        <div class="mt-6" x-data="{
+            tabActive: $wire.entangle('activeTab'),
+            rows: $wire.rows,
+            tableDates: $wire.tableDates,
+            dateRange: $wire.rangeDates,
+            selectedDateRange: [$wire.startDate, $wire.endDate],
+            filters: {
+                view: $wire.entangle('view'),
+                period: $wire.entangle('period'),
+                unitType: $wire.unitType,
+                decimalDisplay: $wire.decimalDisplay,
+                order: $wire.order,
+                freezePane: '',
+            },
+            get formattedTableDates() {
+                let dates = [...this.tableDates];
+        
+                dates = dates.filter((date) => {
+                    const year = parseInt(date.split('-')[0]);
+        
+                    return year >= this.selectedDateRange[0] && year <= this.selectedDateRange[1];
+                })
+        
+                if (this.filters.order === 'Latest on the Left') {
+                    dates = dates.slice().reverse();
+                }
+        
+                return dates
+            },
+            init() {
+                this.initRangeSlider();
+            },
+            initRangeSlider() {
+                const el = document.getElementById('range-slider-company-report');
+        
+                let rangeMin = this.dateRange[0];
+                let rangeMax = this.dateRange[this.dateRange.length - 1];
+        
+                const alpineThis = this;
+        
+                rangeSlider(el, {
+                    step: 1,
+                    min: rangeMin,
+                    max: rangeMax,
+                    value: this.selectedDateRange,
+                    rangeSlideDisabled: true,
+                    onThumbDragEnd: () => {
+                        window.recognizeDotsStatus(alpineThis.selectedDateRange);
+                    },
+                    onInput: (value) => {
+                        alpineThis.selectedDateRange = value;
+                        window.recognizeDotsStatus(value);
+                    }
+                });
+        
+                window.recognizeDotsStatus(this.selectedDateRange);
+            }
+        }">
             <x-primary-tabs :tabs="$tabs" x-modelable="active" x-model="tabActive" min-width="160px">
                 @include('partials.company-report.filters')
 
@@ -47,16 +104,8 @@
                 @else
                     <div class="years-range-wrapper my-2">
                         <div class="dots-wrapper">
-                            @php
-                                $existingYears = [];
-                            @endphp
-                            @foreach ($rangeDates as $key => $date)
-                                @if (!in_array(date('Y', strtotime($date)), $existingYears))
-                                    <span id="{{ date('Y', strtotime($date)) }}" class="inactive-dots"></span>
-                                @endif
-                                @php
-                                    $existingYears[] = date('Y', strtotime($date));
-                                @endphp
+                            @foreach ($rangeDates as $year)
+                                <span data-year="{{ $year }}" class="inactive-dots"></span>
                             @endforeach
                         </div>
                         <div wire:ignore id="range-slider-company-report" class="range-slider"></div>
@@ -328,6 +377,8 @@
 
 @push('scripts')
     <script>
+        let chart = null;
+
         document.getElementById('main-report-div')?.addEventListener('click', function() {
             let leftSlideOpen = document.getElementById('leftSlideOpen').value
             let rightSlideOpen = document.getElementById('rightSlideOpen').value
@@ -337,137 +388,9 @@
             }
         })
 
-        function generateRangeArray(inputArray) {
-            if (inputArray.length !== 2) {
-                return [];
-            }
-
-            let start = inputArray[0];
-            let end = inputArray[1];
-            let rangeArray = [];
-
-            if (start <= end) {
-                for (let i = start; i <= end; i++) {
-                    rangeArray.push(i);
-                }
-            } else {
-                for (let i = start; i >= end; i--) {
-                    rangeArray.push(i);
-                }
-            }
-
-            return rangeArray;
-        }
-
-        function recognizeDotsStatus(value, baseArray) {
-            let base = generateRangeArray(baseArray)
-            let activeYears = generateRangeArray(value)
-            let intersection = base.filter(x => !activeYears.includes(x));
-
-            activeYears.forEach(id => {
-                let element = document.getElementById(id);
-                if (element) {
-                    element.classList.add('active-dots');
-                    element.classList.remove('inactive-dots');
-                }
-            })
-
-            intersection.forEach(id => {
-                let element = document.getElementById(id);
-                if (element) {
-                    element.classList.remove('active-dots');
-                    element.classList.add('inactive-dots');
-                }
-            })
-        }
-
-        document.addEventListener('DOMContentLoaded', function() {
-            updateRangeSlider();
-
-            Livewire.hook('message.processed', (message, component) => {
-                if (message.updateQueue.some(update => update.payload.value === 'Standardised' ||
-                        'As reported')) {
-                    updateRangeSlider();
-                }
-            });
-
-            function updateRangeSlider() {
-                let el = document.querySelector('#range-slider-company-report');
-
-                if (!el) {
-                    return;
-                }
-                let rangeDates = @this.rangeDates
-
-                let selectedValue = [];
-
-                if (rangeDates.length > 0) {
-                    if (rangeDates[0] > rangeDates[rangeDates.length - 1]) {
-                        rangeDates.reverse();
-                    }
-
-                    selectedValue = [rangeDates[0], rangeDates[rangeDates.length - 1]]
-                }
-
-                let startDate;
-                let endDate;
-
-                if (@this.startDate && Number.isInteger(@this.startDate)) {
-                    startDate = @this.startDate
-                } else {
-                    startDate = new Date(@this.startDate).getFullYear()
-                }
-
-                if (@this.endDate && Number.isInteger(@this.endDate)) {
-                    endDate = @this.endDate
-                } else {
-                    endDate = new Date(@this.endDate).getFullYear()
-                }
-
-
-                let rangeMin = new Date(selectedValue[0]).getFullYear();
-                let rangeMax = selectedValue[1] ? new Date(selectedValue[1]).getFullYear() : new Date()
-                    .getFullYear();
-
-
-                selectedValue[0] = startDate ?? rangeMax - 6;
-                selectedValue[1] = endDate ?? rangeMax;
-
-                let valueAfter = null;
-
-                rangeSlider(el, {
-                    step: 1,
-                    min: rangeMin,
-                    max: rangeMax,
-                    value: selectedValue,
-                    rangeSlideDisabled: true,
-                    onThumbDragEnd: (data) => {
-
-                        recognizeDotsStatus(valueAfter, [rangeMin, rangeMax]);
-                        console.log(valueAfter);
-                        @this.changeDates(valueAfter)
-
-                        // if (chart) {
-                        //     chart.destroy();
-                        // }
-                    },
-                    onInput: (value, userInteraction) => {
-                        if (value.length === 2 && value !== selectedValue) {
-                            valueAfter = value;
-                            recognizeDotsStatus(valueAfter, [rangeMin, rangeMax]);
-                        }
-                    }
-                });
-
-                recognizeDotsStatus(selectedValue, [rangeMin, rangeMax]);
-            }
-        });
-
-
         Livewire.on('slide-over.close', () => {
             slideOpen = false;
         });
-
 
         Livewire.on('initCompanyReportChart', () => {
             initChart();
@@ -482,69 +405,6 @@
                 chart.destroy();
             }
         });
-
-        // const annualCheckbox = document.getElementById("date-annual");
-
-        // annualCheckbox.addEventListener("click", function() {
-        //     const currentUrl = window.location.href;
-
-        //     const separator = currentUrl.includes('?') ? '&' : '?';
-
-        //     const newUrl = currentUrl + separator + 'period=annual';
-
-        //     window.location.href = newUrl;
-        // });
-
-        // const quarterlyCheckbox = document.getElementById("date-quarterly");
-
-        // quarterlyCheckbox.addEventListener("click", function() {
-        //     const currentUrl = window.location.href;
-
-        //     const separator = currentUrl.includes('?') ? '&' : '?';
-
-        //     const newUrl = currentUrl + separator + 'period=quarterly';
-
-        //     window.location.href = newUrl;
-        // });
-
-        // const viewDropdownCloseIcon = document.getElementById("viewClose");
-
-        // viewDropdownCloseIcon.addEventListener("click", function() {
-        //     document.getElementById('dropdown-View').classList.toggle("hidden");
-        // });
-        // const periodDropdownCloseIcon = document.getElementById("periodClose");
-
-        // periodDropdownCloseIcon.addEventListener("click", function() {
-        //     document.getElementById('dropdown-Period').classList.toggle("hidden");
-        // });
-
-        // const unitTypeDropdownCloseIcon = document.getElementById("unitTypeClose");
-
-        // unitTypeDropdownCloseIcon.addEventListener("click", function() {
-        //     document.getElementById('dropdown-UnitType').classList.toggle("hidden");
-        // });
-
-        // const templateDropdownCloseIcon = document.getElementById("templateClose");
-
-        // templateDropdownCloseIcon.addEventListener("click", function() {
-        //     document.getElementById('dropdown-Template').classList.toggle("hidden");
-        // });
-
-        // const orderDropdownCloseIcon = document.getElementById("orderClose");
-
-        // orderDropdownCloseIcon.addEventListener("click", function() {
-        //     document.getElementById('dropdown-Order').classList.toggle("hidden");
-        // });
-
-        // const freezePanesDropdownCloseIcon = document.getElementById("freezePanesClose");
-
-        // freezePanesDropdownCloseIcon.addEventListener("click", function() {
-        //     document.getElementById('dropdown-FreezePanes').classList.toggle("hidden");
-        // });
-
-        const currencyDropdownCloseIcon = document.getElementById("currencyClose");
-
-        let chart = null;
 
         const getOrCreateTooltip = (chart) => {
             let tooltipEl = chart.canvas.parentNode.querySelector('div');
@@ -680,25 +540,6 @@
             tooltipEl.style.padding = 8 + 'px ' + 19 + 'px';
         };
 
-        async function changeChartType(title, type) {
-            await @this.changeChartType(title, type)
-
-            updateChart()
-        }
-
-        function updateChart() {
-            if (chart) {
-                chart.data.datasets = @this.chartData;
-                try {
-                    chart.update();
-                } catch (ex) {
-                    initChart();
-                }
-            } else {
-                initChart();
-            }
-        }
-
         // chart init
         function initChart() {
             if (chart) chart.destroy();
@@ -794,6 +635,40 @@
                     }
                 }
             });
+        }
+
+        function updateChart() {
+            if (chart) {
+                chart.data.datasets = @this.chartData;
+                try {
+                    chart.update();
+                } catch (ex) {
+                    initChart();
+                }
+            } else {
+                initChart();
+            }
+        }
+
+        async function changeChartType(title, type) {
+            await @this.changeChartType(title, type)
+
+            updateChart()
+        }
+
+        function recognizeDotsStatus(selectedRange) {
+            document.querySelectorAll('.dots-wrapper span').forEach(el => {
+                el.classList.remove('active-dots');
+                el.classList.remove('inactive-dots');
+
+                const year = parseInt(el.dataset.year);
+
+                if (year >= selectedRange[0] && year <= selectedRange[1]) {
+                    el.classList.add('active-dots');
+                } else {
+                    el.classList.add('inactive-dots');
+                }
+            })
         }
     </script>
 @endpush
