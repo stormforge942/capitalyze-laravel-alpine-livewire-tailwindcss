@@ -32,7 +32,7 @@
                 view: $wire.entangle('view'),
                 period: $wire.entangle('period'),
                 unitType: $wire.entangle('unitType', true),
-                decimalDisplay: $wire.entangle('decimalDisplay', true),
+                decimalPlaces: $wire.entangle('decimalPlaces', true),
                 order: $wire.entangle('order', true),
                 freezePane: '',
             },

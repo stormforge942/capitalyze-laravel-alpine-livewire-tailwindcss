@@ -65,6 +65,33 @@
                         
                                 return classes;
                             },
+                            formatValue(value) {
+                                if (value === '' || value === '-' || Number.isNaN(value)) return {
+                                    result: value,
+                                };
+                        
+                                value = Number(value);
+                        
+                                let divideBy = {
+                                    Thousands: 1000,
+                                    Millions: 1000000,
+                                    Billions: 1000000000,
+                                } [this.filters.unitType] || 1
+                        
+                                value = value / divideBy;
+
+                                const result = Number(Math.abs(value)).toLocaleString('en-US', {
+                                    style: 'decimal',
+                                    maximumFractionDigits: this.filters.decimalPlaces,
+                                });
+                        
+                                const isNegative = value < 0;
+                        
+                                return {
+                                    result: isNegative ? `(${result})` : result,
+                                    isNegative,
+                                }
+                            }
                         }"
                             x-init="loadChildren" :data-section="formattedValue.section">
                             <div class="flex w-full flex-row"
@@ -86,9 +113,14 @@
                                 </div>
                                 <div class="w-full flex flex-row justify-between ">
                                     <template x-for="(date, idx) in formattedTableDates" :key="idx">
-                                        <div class="w-[150px] flex items-center justify-end text-base last:pr-8">
+                                        <div class="w-[150px] flex items-center justify-end text-base last:pr-8"
+                                            x-data="{
+                                                get formattedValue() {
+                                                    return formatValue(value.values[date]?.value)
+                                                },
+                                            }">
                                             <span class="hover:underline cursor-pointer"
-                                                x-text="value.values[date]?.value || ''"
+                                                :class="formattedValue.isNegative ? 'text-red' : ''" x-text="formattedValue.result"
                                                 @click="$wire.emit('rightSlide', value.values[date])"></span>
                                         </div>
                                     </template>
@@ -128,8 +160,14 @@
                             </div>
                             <div class="w-full flex flex-row justify-between ">
                                 <template x-for="(date, idx) in formattedTableDates" :key="idx">
-                                    <div class="w-[150px] flex items-center justify-end text-base last:pr-8">
-                                        <span class="hover:underline cursor-pointer" x-text="value.values[date]?.value || ''" @click="$wire.emit('rightSlide', value.values[date])"></span>
+                                    <div class="w-[150px] flex items-center justify-end text-base last:pr-8" 
+                                        x-data="{
+                                            get formattedValue() {
+                                                return formatValue(value.values[date]?.value)
+                                            },
+                                        }"
+                                    >
+                                        <span class="hover:underline cursor-pointer" :class="formattedValue.isNegative ? 'text-red' : ''" x-text="formattedValue.result" @click="$wire.emit('rightSlide', value.values[date])"></span>
                                     </div>
                                 </template>
                             </div>

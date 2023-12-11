@@ -15,7 +15,7 @@ class CompanyReport extends Component
 
     public $rows = [];
     public $company;
-    public $decimalDisplay = '2';
+    public $decimalPlaces = 2;
     public $chartData = [];
     public $unitType = 'Thousands';
     public $currency = 'USD';
@@ -461,7 +461,7 @@ class CompanyReport extends Component
             'Billions' => 'B',
         ];
 
-        $decimalDisplay = intval($this->decimalDisplay);
+        $decimalPlaces = intval($this->decimalPlaces);
 
         if (str_contains($value, '%') || $value == '-' || !is_numeric($value)) {
             return $value;
@@ -541,7 +541,7 @@ class CompanyReport extends Component
     {
         if (
             $prop === 'unitType'
-            || $prop === 'decimalDisplay'
+            || $prop === 'decimalPlaces'
         ) {
             $this->regenerateTableChart();
         }
@@ -582,7 +582,7 @@ class CompanyReport extends Component
                 'Billions',
             ],
             'decimalTypes' => [
-                'auto' => 'Auto',
+                '' => 'Auto',
                 '2' => '.00',
                 '3' => '.000',
             ],

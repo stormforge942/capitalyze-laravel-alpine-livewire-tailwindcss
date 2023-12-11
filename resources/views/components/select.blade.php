@@ -43,7 +43,7 @@
 
         <div class="w-[20rem] sm:w-[26rem]">
             <div class="flex justify-between gap-2 px-6 pt-6">
-                <span x-text="placeholder"></span>
+                <span class="font-medium" x-text="placeholder"></span>
 
                 <button @click="dropdown.hide()">
                     <svg width="24" height="24" viewBox="0 0 24 24" fill="none"
