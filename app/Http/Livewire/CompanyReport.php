@@ -322,9 +322,6 @@ class CompanyReport extends Component
 
     public function generateRows($data)
     {
-        $rows = [];
-        $allRows = [];
-
         if ($this->view !== 'Standardised') {
             if (
                 isset($data['Income Statement']) &&
@@ -351,52 +348,18 @@ class CompanyReport extends Component
             }
         }
 
+        $rows = [];
+
         foreach ($data as $key => $value) {
-            $rowArray = $this->generateRow($value, $key);
-            $rows[] = $rowArray[0];
-            foreach (array_keys($rowArray[1]['values']) as $date) {
-                if (!isset($this->datesEmptyStatus[$date])) {
-                    $this->datesEmptyStatus[$date] = false;
-                }
-                if ($rowArray[1]['values'][$date]['value'] != '-') {
-                    $this->datesEmptyStatus[$date] = true;
-                }
-            }
-            $allRows[] = $rowArray[1];
+            $rows[] = $this->generateRow($value, $key);
         }
-
-        foreach ($rows as $rowKey => $row) {
-            $rowValues = [];
-            foreach ($row['values'] as $valueKey => $value) {
-                if ($this->datesEmptyStatus[$valueKey]) {
-                    $rowValues[$valueKey] = $value;
-                }
-            }
-            $rows[$rowKey]['values'] = $rowValues;
-            $rows[$rowKey]['isChecked'] = false;
-        }
-
-        foreach ($this->tableDates as $dateKey => $tableDate) {
-            if (!$this->datesEmptyStatus[$tableDate]) {
-                unset($this->tableDates[$dateKey]);
-            }
-        }
-
-        $this->tableDates = array_values($this->tableDates);
 
         $this->rows = $rows;
-        $this->allRows = $allRows;
     }
 
     public function generateRow($data, $title, $isSegmentation = false): array
     {
         $row = [
-            'title' => $title,
-            'segmentation' => false,
-            'values' => $this->generateEmptyCellsRow(),
-            'children' => [],
-        ];
-        $allrow = [
             'title' => $title,
             'segmentation' => false,
             'values' => $this->generateEmptyCellsRow(),
@@ -421,13 +384,6 @@ class CompanyReport extends Component
                         break;
                     }
                 }
-                foreach ($this->rangeDates as $date) {
-                    $datePart = substr($date, 0, 7);
-                    if ($datePart == $year) {
-                        $allrow['values'][$date] = $this->parseCell($value, $key);
-                        break;
-                    }
-                }
             } else {
                 if (in_array($key, ['#segmentation'])) {
                     foreach ($value as $sKey => $sValue) {
@@ -436,20 +392,16 @@ class CompanyReport extends Component
                         $keynn = array_keys($valuen)[0];
                         $valuenn = $valuen[$keynn];
                         $row['children'][] = $this->generateRow($valuenn, $keynn, true)[0];
-                        $allrow['children'][] = $this->generateRow($valuenn, $keynn, true)[1];
                     }
                 } else {
                     $row['children'][] = $this->generateRow($value, $key, $isSegmentation)[0];
-                    $allrow['children'][] = $this->generateRow($value, $key, $isSegmentation)[1];
                 }
             }
         }
 
         $row['segmentation'] = $isSegmentation && count($row['children']) === 0;
-        $row['id'] = serialize($row);
-        $allrow['segmentation'] = $isSegmentation && count($allrow['children']) === 0;
-        $allrow['id'] = serialize($allrow);
-        return [$row, $allrow];
+        $row['id'] = md5(json_encode($row));
+        return $row;
     }
 
     public function generatePresent($value)
