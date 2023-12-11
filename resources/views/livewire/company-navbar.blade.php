@@ -255,15 +255,26 @@
 
                             <span>{{ $group['name'] }}</span>
                         </div>
-                        <ul class="mt-6 space-y-8 text-md">
+                        <ul class="mt-6 space-y-8 text-md pl-6">
                             @foreach ($group['items'] as $item)
                                 <li>
-                                    <a href="{{ $item['url'] ?? '#' }}"
-                                        class="flex items-center justify-between w-full {{ $item['active'] ?? false ? 'font-semibold text-dark' : 'text-dark-light2' }} hover:text-dark">
-                                        <div>
-                                            {{ $item['title'] }}
-                                        </div>
-                                    </a>
+                                    <div class="inline-flex items-center gap-x-6">
+                                        <a href="{{ $item['url'] ?? '#' }}"
+                                            class="flex items-center justify-between w-full {{ $item['active'] ?? false ? 'font-semibold text-dark' : 'text-dark-light2' }} hover:text-dark">
+                                            <div>
+                                                {{ $item['title'] }}
+                                            </div>
+                                        </a>
+
+                                        @if ($item['active'] ?? false)
+                                            <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16"
+                                                viewBox="0 0 16 16" fill="none">
+                                                <path
+                                                    d="M8.0026 14.6663C4.3207 14.6663 1.33594 11.6815 1.33594 7.99967C1.33594 4.31777 4.3207 1.33301 8.0026 1.33301C11.6845 1.33301 14.6693 4.31777 14.6693 7.99967C14.6693 11.6815 11.6845 14.6663 8.0026 14.6663ZM7.33767 10.6663L12.0517 5.95229L11.1089 5.00949L7.33767 8.78074L5.45208 6.89507L4.50926 7.83794L7.33767 10.6663Z"
+                                                    fill="#3561E7" />
+                                            </svg>
+                                        @endif
+                                    </div>
                                 </li>
                             @endforeach
                         </ul>
