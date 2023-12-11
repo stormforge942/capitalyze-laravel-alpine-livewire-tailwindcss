@@ -39,11 +39,11 @@
                     </div>
                 </div>
                 <div class="divide-y divide-[#D4DDD7] text-base">
-                    <template x-for="(value, index) in formattedRows" :key="index">
+                    <template x-for="(row, index) in rows" :key="index">
                         <div class="flex flex-col" :class="classes" x-data="{
                             lastSection: null,
-                            get formattedValue() {
-                                let splitted = this.value.title.split('|');
+                            get rowContext() {
+                                let splitted = this.row.title.split('|');
                         
                                 if (splitted.length === 1) return { text: splitted[0] };
                         
@@ -57,7 +57,7 @@
                             get classes() {
                                 let classes = '';
                         
-                                if (!this.formattedValue.hasBorder) {
+                                if (!this.rowContext.hasBorder) {
                                     classes += 'flex-col-border-less ';
                                 }
                         
@@ -65,50 +65,23 @@
                         
                                 return classes;
                             },
-                            formatValue(value) {
-                                if (value === '' || value === '-' || Number.isNaN(value)) return {
-                                    result: value,
-                                };
-                        
-                                value = Number(value);
-                        
-                                let divideBy = {
-                                    Thousands: 1000,
-                                    Millions: 1000000,
-                                    Billions: 1000000000,
-                                } [this.filters.unitType] || 1
-                        
-                                value = value / divideBy;
-
-                                const result = Number(Math.abs(value)).toLocaleString('en-US', {
-                                    style: 'decimal',
-                                    maximumFractionDigits: this.filters.decimalPlaces,
-                                });
-                        
-                                const isNegative = value < 0;
-                        
-                                return {
-                                    result: isNegative ? `(${result})` : result,
-                                    isNegative,
-                                }
-                            }
                         }"
-                            x-init="loadChildren" :data-section="formattedValue.section">
+                            x-init="loadChildren" :data-section="rowContext.section">
                             <div class="flex w-full flex-row"
-                                :class="[value.isChecked ? 'bg-[#52D3A2]/20' : (value.segmentation ?
+                                :class="[row.isChecked ? 'bg-[#52D3A2]/20' : (row.segmentation ?
                                     'bg-[#52C6FF]/10' : 'bg-white')]">
                                 <div class="flex justify-end items-center ml-2">
-                                    <input x-show="value.isChecked" type="checkbox" wire:click.stop="select"
-                                        :checked="value.isChecked" name="selected-chart">
+                                    <input x-show="row.isChecked" type="checkbox" wire:click.stop="select"
+                                        :checked="row.isChecked" name="selected-chart">
                                 </div>
                                 <div wire:click.stop="select"
                                     class="cursor-default py-2  w-[250px] truncate flex flex-row items-center"
-                                    :class="value.isChecked ? 'ml-2' : 'ml-6'" style="">
+                                    :class="row.isChecked ? 'ml-2' : 'ml-6'" style="">
                                     <span
-                                        @click="value.isChecked = true; $wire.emit('selectRow', value.title, value.values)"
-                                        x-text="formattedValue.text"
+                                        @click="row.isChecked = true; $wire.emit('selectRow', row.title, row.values)"
+                                        x-text="rowContext.text"
                                         class="whitespace-nowrap truncate text-base cursor-pointer"
-                                        :class="formattedValue.isBold ? 'font-bold' : ''">
+                                        :class="rowContext.isBold ? 'font-bold' : ''">
                                     </span>
                                 </div>
                                 <div class="w-full flex flex-row justify-between ">
@@ -116,12 +89,12 @@
                                         <div class="w-[150px] flex items-center justify-end text-base last:pr-8"
                                             x-data="{
                                                 get formattedValue() {
-                                                    return formatValue(value.values[date]?.value)
+                                                    return formatTableValue(row.values[date]?.value)
                                                 },
                                             }">
                                             <span class="hover:underline cursor-pointer"
                                                 :class="formattedValue.isNegative ? 'text-red' : ''" x-text="formattedValue.result"
-                                                @click="$wire.emit('rightSlide', value.values[date])"></span>
+                                                @click="$wire.emit('rightSlide', row.values[date])"></span>
                                         </div>
                                     </template>
                                 </div>
@@ -144,18 +117,18 @@
         function loadChildren() {
             const nestedTable = this.$refs.nestedTable;
             const template = `
-                <template x-for="(value, index) in value.children">
+                <template x-for="(row, index) in row.children">
                     <div class="flex flex-col flex-col- :data-section="formattedValue.section"border-less" x-init="loadChildren">
-                        <div class="flex w-full flex-row" :class="[value.isChecked ? 'bg-[#52D3A2]/20' : (value.segmentation ? 'bg-[#52C6FF]/10' : 'bg-white')]">
+                        <div class="flex w-full flex-row" :class="[row.isChecked ? 'bg-[#52D3A2]/20' : (row.segmentation ? 'bg-[#52C6FF]/10' : 'bg-white')]">
                             <div class="flex justify-end items-center ml-2">
-                                <input x-show="value.isChecked" type="checkbox" wire:click.stop="select"
-                                    :checked="value.isChecked" name="selected-chart">
+                                <input x-show="row.isChecked" type="checkbox" wire:click.stop="select"
+                                    :checked="row.isChecked" name="selected-chart">
                             </div>
                             <div wire:click.stop="select"
                                 class="cursor-default py-2  w-[250px] truncate flex flex-row items-center"
-                                :class="value.isChecked ? 'ml-2' : 'ml-6'" style="">
-                                <span @click="value.isChecked = true; $wire.emit('selectRow', value.title, value.values)"
-                                    x-text="value.title" class="whitespace-nowrap truncate text-base cursor-pointer">
+                                :class="row.isChecked ? 'ml-2' : 'ml-6'" style="">
+                                <span @click="row.isChecked = true; $wire.emit('selectRow', row.title, row.values)"
+                                    x-text="row.title" class="whitespace-nowrap truncate text-base cursor-pointer">
                                 </span>
                             </div>
                             <div class="w-full flex flex-row justify-between ">
@@ -163,11 +136,11 @@
                                     <div class="w-[150px] flex items-center justify-end text-base last:pr-8" 
                                         x-data="{
                                             get formattedValue() {
-                                                return formatValue(value.values[date]?.value)
+                                                return formatTableValue(row.values[date]?.value)
                                             },
                                         }"
                                     >
-                                        <span class="hover:underline cursor-pointer" :class="formattedValue.isNegative ? 'text-red' : ''" x-text="formattedValue.result" @click="$wire.emit('rightSlide', value.values[date])"></span>
+                                        <span class="hover:underline cursor-pointer" :class="formattedValue.isNegative ? 'text-red' : ''" x-text="formattedValue.result" @click="$wire.emit('rightSlide', row.values[date])"></span>
                                     </div>
                                 </template>
                             </div>

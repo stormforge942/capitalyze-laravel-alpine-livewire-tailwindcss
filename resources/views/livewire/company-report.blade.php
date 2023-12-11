@@ -51,20 +51,8 @@
         
                 return dates
             },
-            get formattedRows() {
-                const rows = JSON.parse(JSON.stringify(this.rows));
-        
-                if (this.filters.unitType) {
-                    this.applyUnit(rows);
-                }
-        
-                return rows
-            },
             init() {
                 this.initRangeSlider();
-            },
-            applyUnit(rows) {
-                return rows
             },
             initRangeSlider() {
                 const el = document.getElementById('range-slider-company-report');
@@ -95,6 +83,33 @@
             isYearInRange(year) {
                 return year >= this.selectedDateRange[0] && year <= this.selectedDateRange[1];
             },
+            formatTableValue(value) {
+                if (value === '' || value === '-' || Number.isNaN(value)) return {
+                    result: value,
+                };
+        
+                value = Number(value);
+        
+                let divideBy = {
+                    Thousands: 1000,
+                    Millions: 1000000,
+                    Billions: 1000000000,
+                } [this.filters.unitType] || 1
+        
+                value = value / divideBy;
+
+                const result = Number(Math.abs(value)).toLocaleString('en-US', {
+                    style: 'decimal',
+                    maximumFractionDigits: this.filters.decimalPlaces,
+                });
+        
+                const isNegative = value < 0;
+        
+                return {
+                    result: isNegative ? `(${result})` : result,
+                    isNegative,
+                }
+            }
         }" wire:key="{{ now() }}">
             <x-primary-tabs :tabs="$tabs" x-modelable="active" x-model="tabActive" min-width="160px">
                 @include('partials.company-report.filters')
