@@ -6,7 +6,6 @@ use App\Models\EodPrices;
 use App\Models\InfoPresentation;
 use App\Models\InfoTikrPresentation;
 use Carbon\Carbon;
-use DateTime;
 use Livewire\Component;
 use Illuminate\Http\Request;
 
@@ -28,13 +27,12 @@ class CompanyReport extends Component
     public $noData = false;
     public $latestPrice = 0;
     public $percentageChange = 0;
-    public $startDate = null;
-    public $endDate = null;
     public $selectedRows = [];
     public $chartType = 'line';
     public $activeTab;
     public $allRows = [];
     public $datesEmptyStatus = [];
+    public $selectedDateRange = [null, null];
 
     protected $chartColors = [
         "#000000", "#454545", "#5e5e5e", "#636363", "#7a7a7a", "#878787", "#7a7e94", "#5d6074", "#4d5060", "#3d404c", "#4f5263"
@@ -149,8 +147,8 @@ class CompanyReport extends Component
 
                 if (!$cell['empty']) {
                     $selectedYear = date('Y', strtotime($cell['date']));
-                    $startYear = !is_numeric($this->startDate) ? date('Y', strtotime($this->startDate)) : $this->startDate;
-                    $endYear = !is_numeric($this->endDate) ? date('Y', strtotime($this->endDate)) : $this->endDate;
+                    $startYear = !is_numeric($this->selectedDateRange[0]) ? date('Y', strtotime($this->selectedDateRange[0])) : $this->selectedDateRange[0];
+                    $endYear = !is_numeric($this->selectedDateRange[1]) ? date('Y', strtotime($this->selectedDateRange[1])) : $this->selectedDateRange[1];
                     if (!($selectedYear < $startYear) && !($selectedYear > $endYear)) {
                         $data[] = [
                             'y' => $cell['value'],
@@ -249,72 +247,6 @@ class CompanyReport extends Component
         $this->emit('hideCompanyReportChart');
     }
 
-    public function changeDates($dates)
-    {
-        $this->rows = [];
-
-        $this->startDate = $dates[0];
-        $this->endDate = $dates[1];
-
-        if (in_array($this->period, ['Fiscal Annual', 'Calendar Annual'])) {
-            if (count($dates) == 2) {
-                $this->tableDates = [];
-
-                if (gettype($dates[0]) === 'integer') {
-                    $date = new DateTime($dates[0] . '-01-01');
-                    $dates[0] = $date->format('Y-m-d');
-                }
-
-                if (gettype($dates[1]) === 'integer') {
-                    $date = new DateTime($dates[1] . '-12-31');
-                    $dates[1] = $date->format('Y-m-d');
-                }
-
-                // filter tableDates to only keep the selected date from the slider
-                $this->tableDates = array_values(array_unique(array_filter($this->rangeDates, function ($date) use ($dates) {
-                    $timestamp = strtotime($date);
-                    $startTimestamp = strtotime($dates[0]);
-                    $endTimestamp = strtotime($dates[1]);
-
-                    return $timestamp !== false && $timestamp >= $startTimestamp && $timestamp <= $endTimestamp;
-                })));
-            }
-        }
-
-        if (in_array($this->period, ['Fiscal Quaterly', 'Calendar Quaterly'])) {
-            $this->tableDates = array_reverse($this->extractDates($this->data));
-
-            if (count($dates) == 2) {
-                if (gettype($dates[0]) === 'integer') {
-                    $date = new DateTime($dates[0] . '-01-01');
-                    $dates[0] = $date->format('Y-m-d');
-                }
-
-                if (gettype($dates[1]) === 'integer') {
-                    $date = new DateTime($dates[1] . '-12-31');
-                    $dates[1] = $date->format('Y-m-d');
-                }
-
-                // filter tableDates to only keep the selected date from the slider
-                $this->tableDates = array_values(array_unique(array_filter($this->tableDates, function ($date) use ($dates) {
-                    $timestamp = strtotime($date);
-                    $startTimestamp = strtotime($dates[0]);
-                    $endTimestamp = strtotime($dates[1]);
-
-                    return $timestamp !== false && $timestamp >= $startTimestamp && $timestamp <= $endTimestamp;
-                })));
-            }
-        }
-
-        $this->generateRows($this->data);
-
-        if (count($this->selectedRows)) {
-            $this->updateSelectRows();
-            $this->generateChartData();
-            $this->emit('updateCompanyReportChart');
-        }
-    }
-
     public function generateUI(): void
     {
         $this->generateTableDates();
@@ -359,8 +291,33 @@ class CompanyReport extends Component
             ->values()
             ->toArray();
 
-        $this->endDate = $this->rangeDates[count($this->rangeDates) - 1];
-        $this->startDate = $this->rangeDates[count($this->rangeDates) - 6 ?: 0];
+        $this->updateDateRangeIfNeeded();
+    }
+
+    /**
+     * if there is no range i.e [null, null], create new range,
+     * if there is a range, check if the start and end date are in the range,
+     * if not, update the range
+     */
+    private function updateDateRangeIfNeeded()
+    {
+        $start = $this->selectedDateRange[0];
+        $end = $this->selectedDateRange[1];
+
+        if (!$start || !$end) {
+            $start = $this->rangeDates[count($this->rangeDates) - 6 ?: 0];
+            $end = $this->rangeDates[count($this->rangeDates) - 1];
+        } else {
+            if ($start < $this->rangeDates[0]) {
+                $start = $this->rangeDates[0];
+            }
+
+            if ($end > $this->rangeDates[count($this->rangeDates) - 1]) {
+                $end = $this->rangeDates[count($this->rangeDates) - 1];
+            }
+        }
+
+        $this->selectedDateRange = [$start, $end];
     }
 
     public function generateRows($data)

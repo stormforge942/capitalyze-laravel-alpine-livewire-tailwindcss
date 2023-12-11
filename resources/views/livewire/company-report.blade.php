@@ -27,13 +27,13 @@
             rows: $wire.rows,
             tableDates: $wire.tableDates,
             dateRange: $wire.rangeDates,
-            selectedDateRange: [$wire.startDate, $wire.endDate],
+            selectedDateRange: $wire.entangle('selectedDateRange', true),
             filters: {
                 view: $wire.entangle('view'),
                 period: $wire.entangle('period'),
-                unitType: $wire.unitType,
-                decimalDisplay: $wire.decimalDisplay,
-                order: $wire.order,
+                unitType: $wire.entangle('unitType', true),
+                decimalDisplay: $wire.entangle('decimalDisplay', true),
+                order: $wire.entangle('order', true),
                 freezePane: '',
             },
             get formattedTableDates() {
@@ -61,7 +61,6 @@
                 return rows
             },
             init() {
-                console.log(this.rows)
                 this.initRangeSlider();
             },
             applyUnit(rows) {
@@ -88,9 +87,9 @@
             },
             formattedTableDate(date) {
                 let [year, month] = date.split('-');
-
+        
                 month = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'][parseInt(month) - 1];
-
+        
                 return `${month} ${year}`;
             },
             isYearInRange(year) {

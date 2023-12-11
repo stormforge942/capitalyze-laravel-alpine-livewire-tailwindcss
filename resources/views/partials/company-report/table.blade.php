@@ -32,43 +32,69 @@
                     </div>
                     <div class="w-full flex flex-row bg-gray-custom-light justify-between">
                         <template x-for="(date, idx) in formattedTableDates" :key="idx">
-                            <div class="w-[150px] flex items-center justify-center text-base font-bold">
+                            <div class="w-[150px] flex items-center justify-end text-base font-bold last:pr-8">
                                 <span class="py-2" x-text="formattedTableDate(date)"></span>
                             </div>
                         </template>
                     </div>
                 </div>
-                <div class="divide-y text-base">
+                <div class="divide-y divide-[#D4DDD7] text-base">
                     <template x-for="(value, index) in formattedRows" :key="index">
-                        <div x-init="loadChildren">
-                            <div class="flex flex-col flex-col-border-less">
-                                <div class="flex w-full flex-row hover:bg-gray-light"
-                                    :class="[value.isChecked ? 'bg-[#52D3A2]/20' : (value.segmentation ?
-                                        'bg-[#52C6FF]/10' : 'bg-white')]">
-                                    <div class="flex justify-center items-center ml-2">
-                                        <input x-show="value.isChecked" type="checkbox" wire:click.stop="select"
-                                            :checked="value.isChecked" name="selected-chart">
-                                    </div>
-                                    <div wire:click.stop="select"
-                                        class="cursor-default py-2  w-[250px] truncate flex flex-row items-center"
-                                        :class="value.isChecked ? 'ml-2' : 'ml-6'" style="">
-                                        <span
-                                            @click="value.isChecked = true; $wire.emit('selectRow', value.title, value.values)"
-                                            x-text="value.title"
-                                            class="whitespace-nowrap truncate text-base cursor-pointer">
-                                        </span>
-                                    </div>
-                                    <div class="w-full flex flex-row justify-between ">
-                                        <template x-for="(date, idx) in formattedTableDates" :key="idx">
-                                            <div class="w-[150px] flex items-center justify-center text-base">
-                                                <span class="hover:underline cursor-pointer" x-text="value.values[date]?.value || ''"
-                                                    @click="$wire.emit('rightSlide', value.values[date])"></span>
-                                            </div>
-                                        </template>
-                                    </div>
+                        <div class="flex flex-col" :class="classes" x-data="{
+                            lastSection: null,
+                            get formattedValue() {
+                                let splitted = this.value.title.split('|');
+                        
+                                if (splitted.length === 1) return { text: splitted[0] };
+                        
+                                return {
+                                    text: splitted[0],
+                                    isBold: splitted[1] === 'true',
+                                    hasBorder: splitted[2] === 'true',
+                                    section: parseInt(splitted[3]),
+                                };
+                            },
+                            get classes() {
+                                let classes = '';
+                        
+                                if (!this.formattedValue.hasBorder) {
+                                    classes += 'flex-col-border-less ';
+                                }
+                        
+                                {{-- @todo: handle section change --}}
+                        
+                                return classes;
+                            },
+                        }"
+                            x-init="loadChildren" :data-section="formattedValue.section">
+                            <div class="flex w-full flex-row"
+                                :class="[value.isChecked ? 'bg-[#52D3A2]/20' : (value.segmentation ?
+                                    'bg-[#52C6FF]/10' : 'bg-white')]">
+                                <div class="flex justify-end items-center ml-2">
+                                    <input x-show="value.isChecked" type="checkbox" wire:click.stop="select"
+                                        :checked="value.isChecked" name="selected-chart">
                                 </div>
-                                <div x-ref="nestedTable"></div>
+                                <div wire:click.stop="select"
+                                    class="cursor-default py-2  w-[250px] truncate flex flex-row items-center"
+                                    :class="value.isChecked ? 'ml-2' : 'ml-6'" style="">
+                                    <span
+                                        @click="value.isChecked = true; $wire.emit('selectRow', value.title, value.values)"
+                                        x-text="formattedValue.text"
+                                        class="whitespace-nowrap truncate text-base cursor-pointer"
+                                        :class="formattedValue.isBold ? 'font-bold' : ''">
+                                    </span>
+                                </div>
+                                <div class="w-full flex flex-row justify-between ">
+                                    <template x-for="(date, idx) in formattedTableDates" :key="idx">
+                                        <div class="w-[150px] flex items-center justify-end text-base last:pr-8">
+                                            <span class="hover:underline cursor-pointer"
+                                                x-text="value.values[date]?.value || ''"
+                                                @click="$wire.emit('rightSlide', value.values[date])"></span>
+                                        </div>
+                                    </template>
+                                </div>
                             </div>
+                            <div x-ref="nestedTable"></div>
                         </div>
                     </template>
                 </div>
@@ -87,30 +113,28 @@
             const nestedTable = this.$refs.nestedTable;
             const template = `
                 <template x-for="(value, index) in value.children">
-                    <div x-init="loadChildren">
-                        <div class="flex flex-col flex-col-border-less">
-                            <div class="flex w-full flex-row hover:bg-gray-light" :class="[value.isChecked ? 'bg-[#52D3A2]/20' : (value.segmentation ? 'bg-[#52C6FF]/10' : 'bg-white')]">
-                                <div class="flex justify-center items-center ml-2">
-                                    <input x-show="value.isChecked" type="checkbox" wire:click.stop="select"
-                                        :checked="value.isChecked" name="selected-chart">
-                                </div>
-                                <div wire:click.stop="select"
-                                    class="cursor-default py-2  w-[250px] truncate flex flex-row items-center"
-                                    :class="value.isChecked ? 'ml-2' : 'ml-6'" style="">
-                                    <span @click="value.isChecked = true; $wire.emit('selectRow', value.title, value.values)"
-                                        x-text="value.title" class="whitespace-nowrap truncate text-base cursor-pointer">
-                                    </span>
-                                </div>
-                                <div class="w-full flex flex-row justify-between ">
-                                    <template x-for="(date, idx) in formattedTableDates" :key="idx">
-                                        <div class="w-[150px] flex items-center justify-center text-base">
-                                            <span class="hover:underline cursor-pointer" x-text="value.values[date]?.value || ''" @click="$wire.emit('rightSlide', value.values[date])"></span>
-                                        </div>
-                                    </template>
-                                </div>
+                    <div class="flex flex-col flex-col- :data-section="formattedValue.section"border-less" x-init="loadChildren">
+                        <div class="flex w-full flex-row" :class="[value.isChecked ? 'bg-[#52D3A2]/20' : (value.segmentation ? 'bg-[#52C6FF]/10' : 'bg-white')]">
+                            <div class="flex justify-end items-center ml-2">
+                                <input x-show="value.isChecked" type="checkbox" wire:click.stop="select"
+                                    :checked="value.isChecked" name="selected-chart">
                             </div>
-                            <div x-ref="nestedTable"></div>
+                            <div wire:click.stop="select"
+                                class="cursor-default py-2  w-[250px] truncate flex flex-row items-center"
+                                :class="value.isChecked ? 'ml-2' : 'ml-6'" style="">
+                                <span @click="value.isChecked = true; $wire.emit('selectRow', value.title, value.values)"
+                                    x-text="value.title" class="whitespace-nowrap truncate text-base cursor-pointer">
+                                </span>
+                            </div>
+                            <div class="w-full flex flex-row justify-between ">
+                                <template x-for="(date, idx) in formattedTableDates" :key="idx">
+                                    <div class="w-[150px] flex items-center justify-end text-base last:pr-8">
+                                        <span class="hover:underline cursor-pointer" x-text="value.values[date]?.value || ''" @click="$wire.emit('rightSlide', value.values[date])"></span>
+                                    </div>
+                                </template>
+                            </div>
                         </div>
+                        <div x-ref="nestedTable"></div>
                     </div>
                 </template>
                 `
