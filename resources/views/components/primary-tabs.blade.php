@@ -61,7 +61,7 @@
     </div>
 
     <div
-        class="hidden lg:flex border border-[#D4DDD7] rounded bg-white w-full items-center gap-2 p-1 overflow-x-auto text-base">
+        class="hidden lg:flex border border-[#D4DDD7] rounded bg-white w-full items-center gap-2 p-1 overflow-x-auto text-base" wire:ignore>
         <template x-for="(tab, key) in tabs" :key="key">
             <button class="px-3 py-1.5 text-center rounded transition"
                 :class="{

@@ -51,8 +51,21 @@
         
                 return dates
             },
+            get formattedRows() {
+                const rows = JSON.parse(JSON.stringify(this.rows));
+        
+                if (this.filters.unitType) {
+                    this.applyUnit(rows);
+                }
+        
+                return rows
+            },
             init() {
+                console.log(this.rows)
                 this.initRangeSlider();
+            },
+            applyUnit(rows) {
+                return rows
             },
             initRangeSlider() {
                 const el = document.getElementById('range-slider-company-report');
@@ -68,18 +81,22 @@
                     max: rangeMax,
                     value: this.selectedDateRange,
                     rangeSlideDisabled: true,
-                    onThumbDragEnd: () => {
-                        window.recognizeDotsStatus(alpineThis.selectedDateRange);
-                    },
                     onInput: (value) => {
                         alpineThis.selectedDateRange = value;
-                        window.recognizeDotsStatus(value);
                     }
                 });
-        
-                window.recognizeDotsStatus(this.selectedDateRange);
-            }
-        }">
+            },
+            formattedTableDate(date) {
+                let [year, month] = date.split('-');
+
+                month = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'][parseInt(month) - 1];
+
+                return `${month} ${year}`;
+            },
+            isYearInRange(year) {
+                return year >= this.selectedDateRange[0] && year <= this.selectedDateRange[1];
+            },
+        }" wire:key="{{ now() }}">
             <x-primary-tabs :tabs="$tabs" x-modelable="active" x-model="tabActive" min-width="160px">
                 @include('partials.company-report.filters')
 
@@ -104,11 +121,11 @@
                 @else
                     <div class="years-range-wrapper my-2">
                         <div class="dots-wrapper">
-                            @foreach ($rangeDates as $year)
-                                <span data-year="{{ $year }}" class="inactive-dots"></span>
-                            @endforeach
+                            <template x-for="year in dateRange" :key="year">
+                                <span :class="isYearInRange(year) ? 'active-dots' : 'inactive-dots'"></span>
+                            </template>
                         </div>
-                        <div wire:ignore id="range-slider-company-report" class="range-slider"></div>
+                        <div id="range-slider-company-report" class="range-slider" wire:ignore></div>
                     </div>
 
                     @if (count($chartData))
@@ -654,21 +671,6 @@
             await @this.changeChartType(title, type)
 
             updateChart()
-        }
-
-        function recognizeDotsStatus(selectedRange) {
-            document.querySelectorAll('.dots-wrapper span').forEach(el => {
-                el.classList.remove('active-dots');
-                el.classList.remove('inactive-dots');
-
-                const year = parseInt(el.dataset.year);
-
-                if (year >= selectedRange[0] && year <= selectedRange[1]) {
-                    el.classList.add('active-dots');
-                } else {
-                    el.classList.add('inactive-dots');
-                }
-            })
         }
     </script>
 @endpush

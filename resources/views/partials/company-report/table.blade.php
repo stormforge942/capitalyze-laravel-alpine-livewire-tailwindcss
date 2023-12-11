@@ -33,13 +33,13 @@
                     <div class="w-full flex flex-row bg-gray-custom-light justify-between">
                         <template x-for="(date, idx) in formattedTableDates" :key="idx">
                             <div class="w-[150px] flex items-center justify-center text-base font-bold">
-                                <span class="py-2" x-text="date"></span>
+                                <span class="py-2" x-text="formattedTableDate(date)"></span>
                             </div>
                         </template>
                     </div>
                 </div>
                 <div class="divide-y text-base">
-                    <template x-for="(value, index) in rows" :key="index">
+                    <template x-for="(value, index) in formattedRows" :key="index">
                         <div x-init="loadChildren">
                             <div class="flex flex-col flex-col-border-less">
                                 <div class="flex w-full flex-row hover:bg-gray-light"
@@ -61,7 +61,8 @@
                                     <div class="w-full flex flex-row justify-between ">
                                         <template x-for="(date, idx) in formattedTableDates" :key="idx">
                                             <div class="w-[150px] flex items-center justify-center text-base">
-                                                <span x-text="value.values[date]?.value || ''"></span>
+                                                <span class="hover:underline cursor-pointer" x-text="value.values[date]?.value || ''"
+                                                    @click="$wire.emit('rightSlide', value.values[date])"></span>
                                             </div>
                                         </template>
                                     </div>
@@ -103,7 +104,7 @@
                                 <div class="w-full flex flex-row justify-between ">
                                     <template x-for="(date, idx) in formattedTableDates" :key="idx">
                                         <div class="w-[150px] flex items-center justify-center text-base">
-                                            <span x-text="value.values[date]?.value || ''"></span>
+                                            <span class="hover:underline cursor-pointer" x-text="value.values[date]?.value || ''" @click="$wire.emit('rightSlide', value.values[date])"></span>
                                         </div>
                                     </template>
                                 </div>

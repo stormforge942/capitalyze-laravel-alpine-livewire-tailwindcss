@@ -20,6 +20,7 @@ class RightSlide extends Component
     public $open = false;
 
     protected $listeners = ['rightSlide', 'loadData', 'closeSlide'];
+
     public function closeSlide(){
         $this->open = false;
     }
@@ -29,6 +30,7 @@ class RightSlide extends Component
         $this->loaded = false;
         $this->emitSelf('loadData', $data);
     }
+    
     public function loadData($data){
         $this->ticker = $data['ticker'];
         $this->value = $data['value'];
