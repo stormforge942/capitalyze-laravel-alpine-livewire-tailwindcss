@@ -11,8 +11,11 @@ class NavGroup extends Component
      *
      * @return void
      */
-    public function __construct(public string $name, public array $items)
-    {
+    public function __construct(
+        public string $name,
+        public array $items,
+        public bool $collapsed = false,
+    ) {
         //
     }
 

@@ -14,6 +14,7 @@ class Dropdown extends Component
     public function __construct(
         public string $placement = 'bottom',
         public bool $shadow = false,
+        public bool $fullWidthTrigger = false,
     ) {
     }
 

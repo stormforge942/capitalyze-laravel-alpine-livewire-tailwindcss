@@ -8,10 +8,12 @@ class PrimaryTabs extends Component
 {
     public array $tabs = [];
     public ?string $active = null;
+    public bool $triggerChange = false;
 
     public function __construct(
         array $tabs = [],
         ?string $active = null,
+        public ?string $minWidth = '250px',
     ) {
         if (!is_array(array_values($tabs)[0])) {
             $tabs_ = [];
@@ -28,9 +30,13 @@ class PrimaryTabs extends Component
             $this->tabs = $tabs;
         }
 
+        if ($active && !in_array($active, array_keys($this->tabs))) {
+            $this->triggerChange = true;
+        }
+
         if ($active && in_array($active, array_keys($this->tabs))) {
             $this->active = $active;
-        }else {
+        } else {
             $this->active = array_key_first($this->tabs);
         }
     }

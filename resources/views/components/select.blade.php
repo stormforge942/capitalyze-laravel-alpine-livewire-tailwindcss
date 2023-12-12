@@ -1,18 +1,24 @@
 <div x-data="{
     showDropdown: false,
     name: '{{ $name }}',
-    value: '{{ $value }}',
-    tmpValue: '{{ $value }}',
+    value: '',
+    tmpValue: '',
     options: @js($options),
     placeholder: '{{ $placeholder }}',
     init() {
+        $nextTick(() => {
+            if (this.value !== '' && !Object.keys(this.options).includes(String(this.value))) {
+                this.value = ''
+            }    
+        })
+
         $watch('showDropdown', value => {
             this.tmpValue = this.value
         })
 
         $watch('value', (newVal, oldVal) => {
-            if (newVal !== oldVal) {
-                $dispatch('input', newVal)
+            if (newVal != oldVal) {
+                this.value = newVal
             }
         })
     }
@@ -21,7 +27,7 @@
         <x-slot name="trigger">
             <div class="border-[0.5px] border-[#93959880] p-2 rounded-full flex items-center gap-x-1"
                 :class="showDropdown ? 'bg-[#E2E2E2]' : 'bg-white hover:bg-[#E2E2E2]'">
-                <span class="text-sm" x-text="value ? options[value] : placeholder">
+                <span class="text-sm truncate" x-text="value ? options[value] : placeholder">
                 </span>
 
                 <span :class="showDropdown ? 'rotate-180' : ''" class="transition-transform shrink-0">
@@ -37,7 +43,7 @@
 
         <div class="w-[20rem] sm:w-[26rem]">
             <div class="flex justify-between gap-2 px-6 pt-6">
-                <span x-text="placeholder"></span>
+                <span class="font-medium" x-text="placeholder"></span>
 
                 <button @click="dropdown.hide()">
                     <svg width="24" height="24" viewBox="0 0 24 24" fill="none"

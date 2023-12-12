@@ -10,12 +10,13 @@ use Illuminate\Contracts\View\Factory as ViewFactory;
 use Illuminate\Contracts\View\View;
 use Illuminate\Contracts\Foundation\Application;
 use Illuminate\Http\RedirectResponse;
+
 class CompanyNavbar extends Component
 {
     public $company;
     public $period = "annual";
     public $currentRoute;
-    public $navbarItems;
+    public $groups;
 
     protected $queryString = [
         'period' => ['except' => 'annual']
@@ -40,59 +41,87 @@ class CompanyNavbar extends Component
             $this->currentRoute = $request->route()->getName();
         }
 
-        $this->navbarItems = $this->navbar();
+        $this->groups = $this->navbar();
     }
 
     public function navbar(): array
     {
+        $links = Navbar::getPrimaryLinks(Auth::user()->navbars())
+            ->map(function (Navbar $nav) {
+                return [
+                    'title' => $nav->name,
+                    'url' => route($nav->route_name, ['ticker' => $this->company->ticker]),
+                    'active' => request()->routeIs($nav->route_name)
+                ];
+            });
+
         return [
-            'main' => collect(Navbar::getPrimaryLinks(Auth::user()->navbars())
-                ->map(function (Navbar $nav) {
-                    return [
-                        'title' => $nav->name,
-                        'url' => route($nav->route_name, ['ticker' => $this->company->ticker]),
-                        'active' => request()->routeIs($nav->route_name)
-                    ];
-                })
-                ->toArray())
-                ->sort(function ($a, $b) {
-                    $order = ['Track Investor', 'Event Filings', 'Insider Transactions', 'Earnings Calendar'];
-                    $aIndex = array_search($a['title'], $order);
-                    $bIndex = array_search($b['title'], $order);
+            'main' => [
+                'name' => 'Idea Generation',
+                'items' => $links->where(fn ($link) => in_array($link['title'], ['Track Investor', 'Event Filings', 'Insider Transactions', 'Earnings Calendar']))
+                    ->sort(function ($a, $b) {
+                        $order = [
+                            'Track Investor',
+                            'Event Filings',
+                            'Insider Transactions',
+                            'Earnings Calendar',
+                        ];
+                        $aIndex = array_search($a['title'], $order);
+                        $bIndex = array_search($b['title'], $order);
 
-                    $aIndex = $aIndex === false ? PHP_INT_MAX : $aIndex;
-                    $bIndex = $bIndex === false ? PHP_INT_MAX : $bIndex;
+                        $aIndex = $aIndex === false ? PHP_INT_MAX : $aIndex;
+                        $bIndex = $bIndex === false ? PHP_INT_MAX : $bIndex;
 
-                    return $aIndex <=> $bIndex;
-                })
-                ->values()
-                ->all(),
+                        return $aIndex <=> $bIndex;
+                    })
+                    ->values()
+                    ->all(),
+                'collapsed' => false
+            ],
             'company_research' => [
-                [
-                    'title' => 'Overview',
-                    'url' => route('company.profile', ['ticker' => $this->company->ticker]),
-                    'active' => request()->routeIs('company.profile', 'company.product')
+                'name' => $this->company->ticker . ' Research',
+                'items' => [
+                    [
+                        'title' => 'Overview',
+                        'url' => route('company.profile', ['ticker' => $this->company->ticker]),
+                        'active' => request()->routeIs('company.profile', 'company.product')
+                    ],
+                    [
+                        'title' => 'Financials',
+                        'url' => route('company.report', ['ticker' => $this->company->ticker]),
+                        'active' => request()->routeIs('company.report')
+                    ],
+                    [
+                        'title' => 'Analysis',
+                        'url' => route('company.analysis', ['ticker' => $this->company->ticker]),
+                        'active' => request()->routeIs('company.analysis')
+                    ],
+                    [
+                        'title' => 'Filings',
+                        'url' => route('company.filings-summary', ['ticker' => $this->company->ticker]),
+                        'active' => request()->routeIs('company.filings-summary')
+                    ],
+                    [
+                        'title' => 'Ownership',
+                        'url' => route('company.ownership', ['ticker' => $this->company->ticker]),
+                        'active' => request()->routeIs('company.ownership', 'company.fund')
+                    ],
                 ],
-                [
-                    'title' => 'Financials',
-                    'url' => route('company.report', ['ticker' => $this->company->ticker]),
-                    'active' => request()->routeIs('company.report')
-                ],
-                [
-                    'title' => 'Analysis',
-                    'url' => route('company.analysis', ['ticker' => $this->company->ticker]),
-                    'active' => request()->routeIs('company.analysis')
-                ],
-                [
-                    'title' => 'Filings',
-                    'url' => route('company.filings-summary', ['ticker' => $this->company->ticker]),
-                    'active' => request()->routeIs('company.filings-summary')
-                ],
-                [
-                    'title' => 'Ownership',
-                    'url' => route('company.ownership', ['ticker' => $this->company->ticker]),
-                    'active' => request()->routeIs('company.ownership', 'company.fund')
-                ],
+                'collapsed' => false
+            ],
+            'more' => [
+                'name' => 'More',
+                'items' => $links->where(
+                    fn ($link) => !in_array($link['title'], [
+                        'Track Investor',
+                        'Event Filings',
+                        'Insider Transactions',
+                        'Earnings Calendar',
+                    ])
+                )
+                    ->values()
+                    ->all(),
+                'collapsed' => true
             ]
         ];
     }

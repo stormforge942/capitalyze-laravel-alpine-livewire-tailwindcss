@@ -3,7 +3,7 @@
         <h1 class="font-bold">{{ $company->name }} ({{ $company->ticker }})</h1>
         <p class="mt-2 flex items-center gap-1">
             <span class="font-bold">${{ number_format($cost) }}</span>
-            <span class="text-md {{ $dynamic >= 0 ? 'text-green' : 'text-danger' }}">
+            <span class="text-md {{ $dynamic >= 0 ? 'text-green' : 'text-red' }}">
                 ({{ $dynamic >= 0 ? '+' : '-' }}{{ abs($dynamic) }}%)
             </span>
         </p>

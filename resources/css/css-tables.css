@@ -129,7 +129,7 @@
 .dots-wrapper .active-dots {
     width: 10px;
     height: 10px;
-    background: black;
+    background: #464E49;
     border-radius: 5px;
     display: inline-block;
 }
@@ -137,7 +137,7 @@
 .dots-wrapper .inactive-dots {
     width: 10px;
     height: 10px;
-    background: #D1D3D5;
+    background: #D4DDD7;
     border-radius: 5px;
     display: inline-block;
 }
