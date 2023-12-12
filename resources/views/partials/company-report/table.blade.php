@@ -45,14 +45,36 @@
                             get rowContext() {
                                 let splitted = this.row.title.split('|');
                         
-                                if (splitted.length === 1) return { text: splitted[0] };
+                                if (splitted.length === 1) return { title: splitted[0] };
                         
                                 return {
-                                    text: splitted[0],
+                                    title: splitted[0],
                                     isBold: splitted[1] === 'true',
                                     hasBorder: splitted[2] === 'true',
                                     section: parseInt(splitted[3]),
                                 };
+                            },
+                            get isRowSelectedForChart() {
+                                return this.selectedChartRows.find(item => item.id === row.id) ? true : false;
+                            },
+                            toggleRowForChart() {
+                                if (this.isRowSelectedForChart) {
+                                    this.selectedChartRows = this.selectedChartRows.filter(item => item.id !== row.id);
+                                } else {
+                                    let values = {};
+
+                                    for (const [key, value] of Object.entries(row.values)) {
+                                        values[key] = value.value;
+                                    }
+
+                                    this.selectedChartRows.push({
+                                        id: row.id,
+                                        title: this.rowContext.title,
+                                        values,
+                                        color: '#7C8286',
+                                        type: 'line',
+                                    });
+                                }
                             },
                             get classes() {
                                 let classes = '';
@@ -68,21 +90,18 @@
                         }"
                             x-init="loadChildren" :data-section="rowContext.section">
                             <div class="flex w-full flex-row"
-                                :class="[row.isChecked ? 'bg-[#52D3A2]/20' : (row.segmentation ?
+                                :class="[isRowSelectedForChart ? 'bg-[#52D3A2]/20' : (row.segmentation ?
                                     'bg-[#52C6FF]/10' : 'bg-white')]">
                                 <div class="flex justify-end items-center ml-2">
-                                    <input x-show="row.isChecked" type="checkbox" wire:click.stop="select"
-                                        :checked="row.isChecked" name="selected-chart">
+                                    <input x-show="isRowSelectedForChart" type="checkbox" class="custom-checkbox"
+                                        :checked="isRowSelectedForChart" @change="toggleRowForChart">
                                 </div>
-                                <div wire:click.stop="select"
-                                    class="cursor-default py-2  w-[250px] truncate flex flex-row items-center"
-                                    :class="row.isChecked ? 'ml-2' : 'ml-6'" style="">
-                                    <span
-                                        @click="row.isChecked = true; $wire.emit('selectRow', row.title, row.values)"
-                                        x-text="rowContext.text"
-                                        class="whitespace-nowrap truncate text-base cursor-pointer"
+                                <div class="cursor-default py-2  w-[250px] truncate flex flex-row items-center"
+                                    :class="isRowSelectedForChart ? 'ml-2' : 'ml-6'" style="">
+                                    <a href="#" @click.prevent="toggleRowForChart" x-text="rowContext.title"
+                                        class="whitespace-nowrap truncate text-base"
                                         :class="rowContext.isBold ? 'font-bold' : ''">
-                                    </span>
+                                    </a>
                                 </div>
                                 <div class="w-full flex flex-row justify-between ">
                                     <template x-for="(date, idx) in formattedTableDates" :key="idx">
@@ -93,7 +112,8 @@
                                                 },
                                             }">
                                             <span class="hover:underline cursor-pointer"
-                                                :class="formattedValue.isNegative ? 'text-red' : ''" x-text="formattedValue.result"
+                                                :class="formattedValue.isNegative ? 'text-red' : ''"
+                                                x-text="formattedValue.result"
                                                 @click="$wire.emit('rightSlide', row.values[date])"></span>
                                         </div>
                                     </template>
@@ -118,16 +138,30 @@
             const nestedTable = this.$refs.nestedTable;
             const template = `
                 <template x-for="(row, index) in row.children">
-                    <div class="flex flex-col flex-col- :data-section="formattedValue.section"border-less" x-init="loadChildren">
-                        <div class="flex w-full flex-row" :class="[row.isChecked ? 'bg-[#52D3A2]/20' : (row.segmentation ? 'bg-[#52C6FF]/10' : 'bg-white')]">
+                    <div class="flex flex-col flex-col-border-less" x-data="{
+                            get isChecked() {
+                                return this.selectedChartRows.find(item => item.id === row.id) ? true : false;
+                            },
+                            toggleRowForChart() {
+                                if (this.isRowSelectedForChart) {
+                                    this.selectedChartRows = this.selectedChartRows.filter(item => item.id !== row.id);
+                                } else {
+                                    this.selectedChartRows.push({
+                                        id: row.id,
+                                        title: this.rowContext.title,
+                                        values: row.values,
+                                    });
+                                }
+                            },
+                        }" x-init="loadChildren">
+                        <div class="flex w-full flex-row" :class="[isChecked ? 'bg-[#52D3A2]/20' : (row.segmentation ? 'bg-[#52C6FF]/10' : 'bg-white')]">
                             <div class="flex justify-end items-center ml-2">
-                                <input x-show="row.isChecked" type="checkbox" wire:click.stop="select"
-                                    :checked="row.isChecked" name="selected-chart">
+                                <input x-show="isChecked" type="checkbox" class="custom-checkbox"
+                                    :checked="isChecked" @change="toggleRowForChart">
                             </div>
-                            <div wire:click.stop="select"
-                                class="cursor-default py-2  w-[250px] truncate flex flex-row items-center"
-                                :class="row.isChecked ? 'ml-2' : 'ml-6'" style="">
-                                <span @click="row.isChecked = true; $wire.emit('selectRow', row.title, row.values)"
+                            <div class="cursor-default py-2 w-[250px] truncate flex flex-row items-center"
+                                :class="isChecked ? 'ml-2' : 'ml-6'" style="">
+                                <span @click="toggleRowForChart"
                                     x-text="row.title" class="whitespace-nowrap truncate text-base cursor-pointer">
                                 </span>
                             </div>

@@ -3,9 +3,10 @@
         <x-slot name="trigger">
             <div class="flex gap-3 items-center justify-between"
                 @click="(e) => {
-                if(!collapsed) e.stopPropagation();
-
-                expanded = !expanded;
+                if(!collapsed) {
+                    e.stopPropagation();
+                    expanded = !expanded;
+                };
             }">
                 <div class="flex flex-1 items-center gap-2 text-blue">
                     {{ $icon ?? '' }}

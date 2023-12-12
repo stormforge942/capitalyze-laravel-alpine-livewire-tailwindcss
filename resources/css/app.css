@@ -223,7 +223,6 @@ a {
     top: 20px;
 }
 
-
 .cus-loader {
     position: absolute;
     top: -0.1875rem;
@@ -236,51 +235,51 @@ a {
     position: relative;
 }
 
-  .cus-loader .cus-loaderBar {
-    position:absolute;
-    border-radius:10px;
-    top:0;
-    right:100%;
-    bottom:0;
-    left:0;
-    background:#4285f4;
-    width:0;
-    animation:borealisBar 2s linear infinite;
-  }
+.cus-loader .cus-loaderBar {
+    position: absolute;
+    border-radius: 10px;
+    top: 0;
+    right: 100%;
+    bottom: 0;
+    left: 0;
+    background: #4285f4;
+    width: 0;
+    animation: borealisBar 2s linear infinite;
+}
 
-  @keyframes borealisBar {
+@keyframes borealisBar {
     0% {
-      left:0%;
-      right:100%;
-      width:0%;
+        left: 0%;
+        right: 100%;
+        width: 0%;
     }
     10% {
-      left:0%;
-      right:75%;
-      width:25%;
+        left: 0%;
+        right: 75%;
+        width: 25%;
     }
     90% {
-      right:0%;
-      left:75%;
-      width:25%;
+        right: 0%;
+        left: 75%;
+        width: 25%;
     }
     100% {
-      left:100%;
-      right:0%;
-      width:0%;
+        left: 100%;
+        right: 0%;
+        width: 0%;
     }
-  }
+}
 .show-hide-chart-btn {
     width: 148px;
-height: 32px;
-border-radius: 0px 8px 2px 2px;
-background: rgba(82, 211, 162, 0.20);
-font-size: 12px;
-font-style: normal;
-font-weight: 500;
-line-height: 16px;
-color: #121A0F;
-position: relative;
+    height: 32px;
+    border-radius: 0px 8px 2px 2px;
+    background: rgba(82, 211, 162, 0.2);
+    font-size: 12px;
+    font-style: normal;
+    font-weight: 500;
+    line-height: 16px;
+    color: #121a0f;
+    position: relative;
 }
 .show-hide-chart-btn svg {
     position: absolute;
@@ -290,7 +289,7 @@ position: relative;
     width: 16px;
     height: 16px;
     font-size: 16px;
-    color: #121A0F;
+    color: #121a0f;
 }
 .anchor {
     display: block;
@@ -851,6 +850,17 @@ div#range-slider-company-analysis-geography {
 }
 /* end custom radio */
 
+/* custom checkbox */
+.custom-checkbox {
+    border-radius: 4px;
+    border: 2px solid white !important;
+    color: black;
+    filter: invert(1);
+
+    @apply focus:outline-none focus:ring-0;
+}
+/* end custom checkbox */
+
 .wep-modal-backdrop {
     background-color: rgba(18, 26, 15, 0.5);
 }
@@ -865,11 +875,11 @@ div#range-slider-company-analysis-geography {
 }
 
 .nav-group-icon {
-    @apply h-4 w-4 fill-current inline-block
+    @apply h-4 w-4 fill-current inline-block;
 }
 
 .nav-collapsed .nav-group-icon {
-    @apply h-6 w-6 mx-auto
+    @apply h-6 w-6 mx-auto;
 }
 
 .nav-group-head {
@@ -881,11 +891,11 @@ div#range-slider-company-analysis-geography {
 }
 
 .nav-collapsed .nav-group-head .dropdown-trigger {
-    @apply p-2 rounded hover:bg-[#828c851a] focus:bg-[#828c851a]
+    @apply p-2 rounded hover:bg-[#828c851a] focus:bg-[#828c851a];
 }
 
 .px-navbar {
-    @apply px-4
+    @apply px-4;
 }
 
 .nav-collapsed .px-navbar {

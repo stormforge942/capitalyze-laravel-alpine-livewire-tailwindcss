@@ -11,28 +11,27 @@ use Illuminate\Http\Request;
 
 class CompanyReport extends Component
 {
-    use TableFiltersTrait;
+    // filters 
+    public $view;
+    public $period;
+    public $unitType;
+    public $decimalPlaces;
+    public $order;
+    public $freezePane;
 
-    public $rows = [];
+    public $activeTab;
     public $company;
-    public $decimalPlaces = 2;
-    public $chartData = [];
-    public $unitType = 'Thousands';
+    public $rows = [];
     public $currency = 'USD';
-    public $order = "Latest on the Right";
-    public $period = 'Fiscal Annual';
-    public $data;
     public $tableDates = [];
     public $rangeDates = [];
-    public $noData = false;
     public $latestPrice = 0;
     public $percentageChange = 0;
     public $selectedRows = [];
-    public $chartType = 'line';
-    public $activeTab;
-    public $allRows = [];
-    public $datesEmptyStatus = [];
     public $selectedDateRange = [null, null];
+    public $noData = false;
+
+    protected $data;
 
     protected $chartColors = [
         "#000000", "#454545", "#5e5e5e", "#636363", "#7a7a7a", "#878787", "#7a7e94", "#5d6074", "#4d5060", "#3d404c", "#4f5263"
@@ -48,14 +47,15 @@ class CompanyReport extends Component
 
     protected $listeners = ['periodChange', 'tabClicked', 'tabSubClicked', 'selectRow', 'unselectRow'];
 
-    protected $queryString = [
-        'view',
-        'period'
-    ];
-
     public function mount(Request $request, $company): void
     {
         $this->activeTab = $request->query('tab', 'income-statement');
+        $this->view = $request->query('view', 'Standardised');
+        $this->period = $request->query('period', 'Fiscal Annual');
+        $this->unitType = $request->query('unitType', 'Thousands');
+        $this->decimalPlaces = $request->query('decimalPlaces', 2);
+        $this->order = $request->query('order', 'Latest on the Right');
+        $this->freezePane = $request->query('freezePane', 'Top Row & First Column');
 
         $eodPrices = EodPrices::where('symbol', strtolower($this->company->ticker))
             ->latest('date')
@@ -77,113 +77,6 @@ class CompanyReport extends Component
         ];
 
         $this->getData();
-    }
-
-    public function selectRow($title, $data)
-    {
-        if (count($this->selectedRows) < 5) {
-            $this->selectedRows[$title]['dates'] = $data;
-            $this->selectedRows[$title]['type'] = 'line';
-            $this->selectedRows[$title]['color'] = $this->chartColors[count($this->selectedRows) - 1];
-        }
-
-        $this->generateChartData();
-        //        $this->emit('initCompanyReportChart');
-    }
-
-    public function updateSelectRows()
-    {
-
-        $index = 0;
-        foreach ($this->selectedRows as $title => $row) {
-            foreach ($this->rows as $key => $value) {
-                if (isset($value['title']) && $value['title'] === $title) {
-                    $index = $key;
-                    break; // Stop the loop once the target title is found
-                }
-            }
-
-            $rowFind = $this->rows[$index];
-            $this->selectedRows[$title]['dates'] =  $rowFind['values'];
-        }
-    }
-
-    public function regenerateTableChart(): void
-    {
-        $this->generateUI();
-    }
-
-    public function unselectRow($title)
-    {
-        unset($this->selectedRows[$title]);
-
-        if (in_array($title, $this->selectedRows)) {
-            $this->emit('resetSelection', $title);
-        }
-
-        if (count($this->selectedRows)) {
-            $this->generateChartData(true);
-        } else {
-            $this->chartData = [];
-            $this->emit('hideCompanyReportChart');
-        }
-    }
-
-    public function changeChartType($title, $type)
-    {
-        $this->selectedRows[$title]['type'] = $type;
-
-        $this->chartType = $type;
-
-        $this->generateChartData();
-    }
-
-    public function generateChartData($initChart = false): void
-    {
-        $chartData = [];
-        foreach ($this->selectedRows as $title => $row) {
-            $data = [];
-            foreach ($row['dates'] as $key => $cell) {
-
-                if (!$cell['empty']) {
-                    $selectedYear = date('Y', strtotime($cell['date']));
-                    $startYear = !is_numeric($this->selectedDateRange[0]) ? date('Y', strtotime($this->selectedDateRange[0])) : $this->selectedDateRange[0];
-                    $endYear = !is_numeric($this->selectedDateRange[1]) ? date('Y', strtotime($this->selectedDateRange[1])) : $this->selectedDateRange[1];
-                    if (!($selectedYear < $startYear) && !($selectedYear > $endYear)) {
-                        $data[] = [
-                            'y' => $cell['value'],
-                            'x' => $cell['date'],
-                        ];
-                    }
-                } else {
-                    $data[] = [
-                        'y' => null,
-                        'x' => null,
-                    ];
-                }
-            }
-            $chartData[] = [
-                'data' => $data,
-                'type' => $row['type'],
-                'label' => $title,
-                'borderColor' => $row['color'],
-                'pointRadius' => 1,
-                'pointHoverRadius' => 8,
-                'tension' => 0.5,
-                'fill' => true,
-                'pointHoverBorderColor' => '#fff',
-                'pointHoverBorderWidth' => 4,
-                'pointHoverBackgroundColor' => 'rgba(104, 104, 104, 0.87)'
-            ];
-        }
-
-        $this->chartData = $chartData;
-
-        if ($initChart) {
-            $this->emit('initCompanyReportChart');
-        } else {
-            $this->emit('updateCompanyReportChart');
-        }
     }
 
     public function getData(): void
@@ -240,18 +133,10 @@ class CompanyReport extends Component
         $this->generateUI();
     }
 
-    public function closeChart()
-    {
-        $this->chartData = [];
-        $this->selectedRows = [];
-        $this->emit('hideCompanyReportChart');
-    }
-
     public function generateUI(): void
     {
         $this->generateTableDates();
         $this->generateRows($this->data);
-        $this->emit('initCompanyReportChart');
     }
 
     private function extractDates($array, $dates = [])
@@ -391,16 +276,16 @@ class CompanyReport extends Component
                         $valuen = $sValue[$keyn];
                         $keynn = array_keys($valuen)[0];
                         $valuenn = $valuen[$keynn];
-                        $row['children'][] = $this->generateRow($valuenn, $keynn, true)[0];
+                        $row['children'][] = $this->generateRow($valuenn, $keynn, true);
                     }
                 } else {
-                    $row['children'][] = $this->generateRow($value, $key, $isSegmentation)[0];
+                    $row['children'][] = $this->generateRow($value, $key, $isSegmentation);
                 }
             }
         }
 
         $row['segmentation'] = $isSegmentation && count($row['children']) === 0;
-        $row['id'] = md5(json_encode($row));
+        $row['id'] = crc32(json_encode($row)); // just for the charts
         return $row;
     }
 
@@ -491,18 +376,7 @@ class CompanyReport extends Component
 
     public function updated($prop): void
     {
-        if (
-            $prop === 'unitType'
-            || $prop === 'decimalPlaces'
-        ) {
-            $this->regenerateTableChart();
-        }
-
-        if (
-            $prop === 'view' ||
-            $prop === 'activeTab' ||
-            $prop === 'period'
-        ) {
+        if (in_array($prop, ['view', 'activeTab', 'period'])) {
             $this->getData();
         }
     }
