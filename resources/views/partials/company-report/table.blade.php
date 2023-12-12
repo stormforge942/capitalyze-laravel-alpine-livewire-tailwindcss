@@ -24,13 +24,13 @@
     <div class="table-wrapper w-full" style="font-size: 12px;">
         <div class="table">
             <div class="row-group">
-                <div class="flex flex-row bg-gray-custom-light">
+                <div class="flex flex-row bg-[#EDEDED]">
                     <div class="ml-8 w-[250px] font-bold flex py-2 items-center justify-start text-base">
                         <span>
                             {{ $company['name'] }} ({{ $company['ticker'] }})
                         </span>
                     </div>
-                    <div class="w-full flex flex-row bg-gray-custom-light justify-between">
+                    <div class="w-full flex flex-row bg-[#EDEDED] justify-between">
                         <template x-for="(date, idx) in formattedTableDates" :key="idx">
                             <div class="w-[150px] flex items-center justify-end text-base font-bold last:pr-8">
                                 <span class="py-2" x-text="formattedTableDate(date)"></span>
@@ -38,10 +38,10 @@
                         </template>
                     </div>
                 </div>
-                <div class="divide-y divide-[#D4DDD7] text-base">
-                    <template x-for="(row, index) in rows" :key="index">
+                <div class="divide-y divide-[#D4DDD7] text-base" x-data="{ lastSection: null }">
+                    <template x-for="(row, index) in rows" :key="index + `-${row.title}`">
                         <div class="flex flex-col" :class="classes" x-data="{
-                            lastSection: null,
+                            isNewSection: false,
                             get rowContext() {
                                 let splitted = this.row.title.split('|');
                         
@@ -51,30 +51,11 @@
                                     title: splitted[0],
                                     isBold: splitted[1] === 'true',
                                     hasBorder: splitted[2] === 'true',
-                                    section: parseInt(splitted[3]),
+                                    section: parseInt(splitted[3]) || this.lastSection,
                                 };
                             },
                             get isRowSelectedForChart() {
                                 return this.selectedChartRows.find(item => item.id === row.id) ? true : false;
-                            },
-                            toggleRowForChart() {
-                                if (this.isRowSelectedForChart) {
-                                    this.selectedChartRows = this.selectedChartRows.filter(item => item.id !== row.id);
-                                } else {
-                                    let values = {};
-
-                                    for (const [key, value] of Object.entries(row.values)) {
-                                        values[key] = value.value;
-                                    }
-
-                                    this.selectedChartRows.push({
-                                        id: row.id,
-                                        title: this.rowContext.title,
-                                        values,
-                                        color: '#7C8286',
-                                        type: 'line',
-                                    });
-                                }
                             },
                             get classes() {
                                 let classes = '';
@@ -83,9 +64,40 @@
                                     classes += 'flex-col-border-less ';
                                 }
                         
-                                {{-- @todo: handle section change --}}
+                                if(this.isNewSection) {
+                                    classes += 'mt-4 ';
+                                }
                         
                                 return classes;
+                            },
+                            init() {
+                                if (
+                                    index > 0 &&
+                                    (this.rowContext.section !== this.lastSection)
+                                ) {
+                                    this.isNewSection = true;
+                                }
+                        
+                                this.lastSection = this.rowContext.section;
+                            },
+                            toggleRowForChart() {
+                                if (this.isRowSelectedForChart) {
+                                    this.selectedChartRows = this.selectedChartRows.filter(item => item.id !== row.id);
+                                } else {
+                                    let values = {};
+                        
+                                    for (const [key, value] of Object.entries(row.values)) {
+                                        values[key] = value.value;
+                                    }
+                        
+                                    this.selectedChartRows.push({
+                                        id: row.id,
+                                        title: this.rowContext.title,
+                                        values,
+                                        color: '#7C8286',
+                                        type: 'line',
+                                    });
+                                }
                             },
                         }"
                             x-init="loadChildren" :data-section="rowContext.section">

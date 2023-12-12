@@ -165,6 +165,8 @@
                 }
             },
             renderChart() {
+                {{-- @todo: find efficient way to do this --}}
+
                 this.chart?.destroy();
                 this.chart = null;
         
