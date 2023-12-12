@@ -107,17 +107,19 @@
                 }, { deep: true })
         
                 this.$watch('selectedChartRows', this.renderChart.bind(this), { deep: true })
-
+        
                 this.$watch('selectedDateRange', (newVal) => {
                     const url = new URL(window.location.href);
                     url.searchParams.set('selectedDateRange', newVal.join(','));
                     window.history.replaceState({}, '', url);
-                    
+        
                     Alpine.debounce(this.renderChart.bind(this), 300)()
                 }, { deep: true })
             },
             initRangeSlider() {
                 const el = document.getElementById('range-slider-company-report');
+        
+                if (!el) return;
         
                 let rangeMin = this.dateRange[0];
                 let rangeMax = this.dateRange[this.dateRange.length - 1];

@@ -2,6 +2,7 @@
     active: '{{ $active }}',
     dropdown: null,
     tabs: @js($tabs),
+    showActive: false,
     changeTab(key) {
         if (this.active === key) return;
 
@@ -20,6 +21,10 @@
         this.setQueryString(this.active);
 
         @if ($triggerChange) this.$nextTick(() => this.$dispatch('tab-changed', this.activeTab)) @endif
+
+        this.$nextTick(() => {
+            this.showActive = true;
+        })
     },
     setQueryString(tab) {
         const url = new URL(window.location.href);
@@ -65,7 +70,7 @@
         <template x-for="(tab, key) in tabs" :key="key">
             <button class="px-3 py-1.5 text-center rounded transition"
                 :class="{
-                    'bg-green-dark font-semibold': active === key,
+                    'bg-green-dark font-semibold': active === key && showActive,
                     'font-medium text-gray-medium2 hover:bg-gray-light': active !== key
                 }"
                 @click="changeTab(key)" style="min-width: {{ $minWidth }}" x-text="tab.title">
