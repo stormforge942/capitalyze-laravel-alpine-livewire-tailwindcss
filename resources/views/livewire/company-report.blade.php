@@ -438,6 +438,7 @@
                 plugins: [chartJsPlugins.pointLine],
                 maintainAspectRatio: false,
                 aspectRatio: 3,
+                responsive: true,
                 type: 'line',
                 data,
                 options: {

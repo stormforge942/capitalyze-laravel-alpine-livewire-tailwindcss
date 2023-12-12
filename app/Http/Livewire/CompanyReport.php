@@ -2,12 +2,13 @@
 
 namespace App\Http\Livewire;
 
-use App\Models\EodPrices;
-use App\Models\InfoPresentation;
-use App\Models\InfoTikrPresentation;
 use Carbon\Carbon;
 use Livewire\Component;
+use App\Models\EodPrices;
+use Illuminate\Support\Str;
 use Illuminate\Http\Request;
+use App\Models\InfoPresentation;
+use App\Models\InfoTikrPresentation;
 
 class CompanyReport extends Component
 {
@@ -292,7 +293,7 @@ class CompanyReport extends Component
         }
 
         $row['segmentation'] = $isSegmentation && count($row['children']) === 0;
-        $row['id'] = crc32(json_encode($row)); // just for the charts
+        $row['id'] = Str::uuid() . '-' . Str::uuid(); // just for the charts
         return $row;
     }
 

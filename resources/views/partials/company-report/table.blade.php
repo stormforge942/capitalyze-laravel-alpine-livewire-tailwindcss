@@ -64,7 +64,7 @@
                                     classes += 'flex-col-border-less ';
                                 }
                         
-                                if(this.isNewSection) {
+                                if (this.isNewSection) {
                                     classes += 'mt-4 ';
                                 }
                         
@@ -100,7 +100,7 @@
                                 }
                             },
                         }"
-                            x-init="loadChildren" :data-section="rowContext.section">
+                            x-init="loadChildren">
                             <div class="flex w-full flex-row"
                                 :class="[isRowSelectedForChart ? 'bg-[#52D3A2]/20' : (row.segmentation ?
                                     'bg-[#52C6FF]/10' : 'bg-white')]">
@@ -151,31 +151,49 @@
             const template = `
                 <template x-for="(row, index) in row.children">
                     <div class="flex flex-col flex-col-border-less" x-data="{
-                            get isChecked() {
+                            showChildren: false,
+                            get isRowSelectedForChart() {
                                 return this.selectedChartRows.find(item => item.id === row.id) ? true : false;
                             },
                             toggleRowForChart() {
+                                if(row.children?.length) {
+                                    return;
+                                }
+
                                 if (this.isRowSelectedForChart) {
                                     this.selectedChartRows = this.selectedChartRows.filter(item => item.id !== row.id);
                                 } else {
+                                    let values = {};
+                        
+                                    for (const [key, value] of Object.entries(row.values)) {
+                                        values[key] = value.value;
+                                    }
+
                                     this.selectedChartRows.push({
                                         id: row.id,
-                                        title: this.rowContext.title,
-                                        values: row.values,
+                                        title: row.title,
+                                        values: values,
+                                        color: '#7C8286',
+                                        type: 'line',
                                     });
                                 }
                             },
                         }" x-init="loadChildren">
-                        <div class="flex w-full flex-row" :class="[isChecked ? 'bg-[#52D3A2]/20' : (row.segmentation ? 'bg-[#52C6FF]/10' : 'bg-white')]">
+                        <div class="flex w-full flex-row" :class="[isRowSelectedForChart ? 'bg-[#52D3A2]/20' : (row.segmentation ? 'bg-[#52C6FF]/10' : 'bg-white')]">
                             <div class="flex justify-end items-center ml-2">
-                                <input x-show="isChecked" type="checkbox" class="custom-checkbox"
-                                    :checked="isChecked" @change="toggleRowForChart">
+                                <input x-show="isRowSelectedForChart" type="checkbox" class="custom-checkbox"
+                                    :checked="isRowSelectedForChart" @change="toggleRowForChart">
                             </div>
-                            <div class="cursor-default py-2 w-[250px] truncate flex flex-row items-center"
-                                :class="isChecked ? 'ml-2' : 'ml-6'" style="">
-                                <span @click="toggleRowForChart"
+                            <div class="cursor-default py-2 w-[250px] truncate flex flex-row items-center gap-1"
+                                :class="isRowSelectedForChart ? 'ml-2' : 'ml-6'" style="">
+                                <a href="#" @click.prevent="toggleRowForChart"
                                     x-text="row.title" class="whitespace-nowrap truncate text-base cursor-pointer">
-                                </span>
+                                </a>
+                                <button class="shrink-0" x-show="row.children?.length" :class="showChildren ? '' : '-rotate-90'" x-cloak @click="showChildren = !showChildren">
+                                    <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 16 16" fill="none">
+                                        <path d="M14.668 7.99992C14.668 4.32659 11.6746 1.33325 8.0013 1.33325C4.32797 1.33325 1.33464 4.32658 1.33464 7.99992C1.33464 11.6733 4.32797 14.6666 8.0013 14.6666C11.6746 14.6666 14.668 11.6733 14.668 7.99992ZM7.64797 9.85992L5.29464 7.50658C5.19464 7.40658 5.14797 7.27992 5.14797 7.15325C5.14797 7.02658 5.19464 6.89992 5.29464 6.79992C5.48797 6.60658 5.80797 6.60658 6.0013 6.79992L8.0013 8.79992L10.0013 6.79992C10.1946 6.60658 10.5146 6.60658 10.708 6.79992C10.9013 6.99325 10.9013 7.31325 10.708 7.50658L8.35464 9.85992C8.1613 10.0599 7.8413 10.0599 7.64797 9.85992Z" fill="#3561E7"/>
+                                    </svg>
+                                </button>
                             </div>
                             <div class="w-full flex flex-row justify-between ">
                                 <template x-for="(date, idx) in formattedTableDates" :key="idx">
@@ -191,7 +209,7 @@
                                 </template>
                             </div>
                         </div>
-                        <div x-ref="nestedTable"></div>
+                        <div x-ref="nestedTable" x-show="showChildren" x-cloak></div>
                     </div>
                 </template>
                 `
