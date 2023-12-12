@@ -29,35 +29,36 @@ class CompanyAnalysisGraph extends Component
 
     public function initChart($selectedYears = null, $source)
     {
-        if($this->chartId == 'rbg'){
+        if ($this->chartId == 'rbg') {
             $this->getProducts('args');
             $this->chartData['annual'] = $this->generateChartData($selectedYears);
-        }elseif($this->chartId == 'rbp'){
+        } elseif ($this->chartId == 'rbp') {
             $this->getProducts('arps');
             $this->chartData['annual'] = $this->generateChartData($selectedYears);
         }
-        if($this->chartId == 'rbg'){
+        if ($this->chartId == 'rbg') {
             $this->getProducts('qrgs');
             $this->chartData['quarterly'] = $this->generateChartData($selectedYears);
-        }elseif($this->chartId == 'rbp'){
+        } elseif ($this->chartId == 'rbp') {
             $this->getProducts('qrps');
             $this->chartData['quarterly'] = $this->generateChartData($selectedYears);
         }
-        if($this->chartId == 'rbe'){
+        if ($this->chartId == 'rbe') {
             $this->chartData = $this->generateChartData($selectedYears);
         }
-        $this->dispatchBrowserEvent($this->chartId.'refreshChart', $this->chartData);
+        $this->dispatchBrowserEvent($this->chartId . 'refreshChart', $this->chartData);
     }
 
-    public function getEmployeeCount(){
+    public function getEmployeeCount()
+    {
         $counts = DB::connection('pgsql-xbrl')
-        ->table('employee_count')
-        ->where('symbol', $this->ticker)->get()->toArray();
+            ->table('employee_count')
+            ->where('symbol', $this->ticker)->get()->toArray();
         $this->employeeCount = [];
-        foreach($counts as $item){
+        foreach ($counts as $item) {
 
-            foreach(array_keys($this->revenues) as $year){
-                if(date('Y', strtotime($year)) == date('Y', strtotime($item->period_of_report))){
+            foreach (array_keys($this->revenues) as $year) {
+                if (date('Y', strtotime($year)) == date('Y', strtotime($item->period_of_report))) {
                     $this->employeeCount[$year] = $item->count;
                 }
             }
@@ -73,8 +74,9 @@ class CompanyAnalysisGraph extends Component
         return $data['Income Statement']['Revenues'];
     }
 
-    public function generateChartData($selectedYears = null){
-        if($selectedYears){
+    public function generateChartData($selectedYears = null)
+    {
+        if ($selectedYears) {
             $this->years = $selectedYears;
         }
         $dataSets = [];
@@ -93,7 +95,7 @@ class CompanyAnalysisGraph extends Component
             "#fff",
         ];
 
-        if($this->chartId == 'rbe'){
+        if ($this->chartId == 'rbe') {
             $annualRevenueData = $this->getPresentationData();
             $annualEmployeeData = $this->getEmployeeCount();
             $this->startPoint = min($annualEmployeeData) - ((min($annualEmployeeData) / 100) * 20);
@@ -124,7 +126,7 @@ class CompanyAnalysisGraph extends Component
             foreach ($annualRevenueData as $date => $item) {
                 $set = [];
                 $set["x"] = $date;
-                $set["y"] = (double)explode("|", $item[0])[0];
+                $set["y"] = (float)explode("|", $item[0])[0];
                 $set['backgroundColor'] = $colors[2];
                 $set['datalabels'] = ['color' => $fontColors[2]];
                 $annualDataSet["revenue"]["data"][] = $set;
@@ -156,16 +158,16 @@ class CompanyAnalysisGraph extends Component
                 }
             }
 
-            foreach($quarterlyData as $date => $item){
+            foreach ($quarterlyData as $date => $item) {
                 $set = [];
                 $set["x"] = $date;
-                $set["y"] = (double)explode("|", $item[0])[0];
+                $set["y"] = (float)explode("|", $item[0])[0];
                 $set['backgroundColor'] = $colors[2];
                 $set['datalabels'] = ['color' => $fontColors[2]];
                 $quarterDataSet["revenue"]["data"][] = $set;
 
-                foreach($this->employeeCount as $eDate => $eCount){
-                    if(date('Y', strtotime($date)) == date('Y', strtotime($eDate))){
+                foreach ($this->employeeCount as $eDate => $eCount) {
+                    if (date('Y', strtotime($date)) == date('Y', strtotime($eDate))) {
                         $date;
                         $eDate;
                         $quarterDataSet["employee"]["data"][] = [
@@ -220,18 +222,18 @@ class CompanyAnalysisGraph extends Component
                 "fill" => true,
             ];
 
-            if(isset($colors[$key]))
-            {
+            if (isset($colors[$key])) {
                 $set['backgroundColor'] = $colors[$key];
                 $set['datalabels'] = ['color' => $fontColors[$key]];
             }
             $set['datalabels']['weight'] = 400;
             foreach ($this->products as $date => $data) {
                 $sum = array_sum($this->products[$date]);
+                $data[$product] ??= 0;
                 $set["data"][] = [
                     "x" => $date,
-                    "y" => $data[$product],
-                    "percentage" => count($this->segments) > 1 ? (($data[$product]/$sum) * 100) : 100,
+                    "y" => $data[$product] ?? 0,
+                    "percentage" => count($this->segments) > 1 ? (($data[$product] / $sum) * 100) : 100,
                     "revenue" => $data[$product],
                     "fontColor" => $fontColors[$key] ?? "#000"
                 ];
@@ -243,14 +245,13 @@ class CompanyAnalysisGraph extends Component
 
     public function getProducts($period = null)
     {
-        if($this->chartId == 'rbg'){
+        if ($this->chartId == 'rbg') {
             $source = ($this->period == 'annual' || $this->period == 'fiscal-annual') ? 'args' : 'qrgs';
-        }
-        elseif($this->chartId == 'rbp') {
+        } elseif ($this->chartId == 'rbp') {
             $source = ($this->period == 'annual' || $this->period == 'fiscal-annual') ? 'arps' : 'qrps';
         }
 
-        if($period){
+        if ($period) {
             $source = $period;
         }
 
@@ -284,17 +285,17 @@ class CompanyAnalysisGraph extends Component
         }
 
         // $this->json = base64_encode($json);
-        if($source == 'arps'){
+        if ($source == 'arps') {
             $this->products = array_slice($products, 0, 6);
             $this->segments = array_slice($segments, 0, 6);
-        }
-        else{
+        } else {
             $this->products = $products;
             $this->segments = $segments;
         }
     }
 
-    public function mount(){
+    public function mount()
+    {
         $this->initChart(null, 'arps');
     }
 

@@ -151,12 +151,12 @@
             const template = `
                 <template x-for="(row, index) in row.children">
                     <div class="flex flex-col flex-col-border-less" x-data="{
-                            showChildren: false,
+                            showChildren: true,
                             get isRowSelectedForChart() {
                                 return this.selectedChartRows.find(item => item.id === row.id) ? true : false;
                             },
                             toggleRowForChart() {
-                                if(row.children?.length) {
+                                if(row.seg_start) {
                                     return;
                                 }
 
@@ -189,7 +189,7 @@
                                 <a href="#" @click.prevent="toggleRowForChart"
                                     x-text="row.title" class="whitespace-nowrap truncate text-base cursor-pointer">
                                 </a>
-                                <button class="shrink-0" x-show="row.children?.length" :class="showChildren ? '' : '-rotate-90'" x-cloak @click="showChildren = !showChildren">
+                                <button class="shrink-0" x-show="row.seg_start" :class="showChildren ? '' : '-rotate-90'" x-cloak @click="showChildren = !showChildren">
                                     <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 16 16" fill="none">
                                         <path d="M14.668 7.99992C14.668 4.32659 11.6746 1.33325 8.0013 1.33325C4.32797 1.33325 1.33464 4.32658 1.33464 7.99992C1.33464 11.6733 4.32797 14.6666 8.0013 14.6666C11.6746 14.6666 14.668 11.6733 14.668 7.99992ZM7.64797 9.85992L5.29464 7.50658C5.19464 7.40658 5.14797 7.27992 5.14797 7.15325C5.14797 7.02658 5.19464 6.89992 5.29464 6.79992C5.48797 6.60658 5.80797 6.60658 6.0013 6.79992L8.0013 8.79992L10.0013 6.79992C10.1946 6.60658 10.5146 6.60658 10.708 6.79992C10.9013 6.99325 10.9013 7.31325 10.708 7.50658L8.35464 9.85992C8.1613 10.0599 7.8413 10.0599 7.64797 9.85992Z" fill="#3561E7"/>
                                     </svg>
@@ -209,7 +209,7 @@
                                 </template>
                             </div>
                         </div>
-                        <div x-ref="nestedTable" x-show="showChildren" x-cloak></div>
+                        <div x-ref="nestedTable" x-show="showChildren || !row.seg_start" x-cloak></div>
                     </div>
                 </template>
                 `

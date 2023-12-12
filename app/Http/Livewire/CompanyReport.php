@@ -254,26 +254,17 @@ class CompanyReport extends Component
     {
         $row = [
             'title' => $title,
+            'seg_start' => false,
             'segmentation' => false,
             'values' => $this->generateEmptyCellsRow(),
             'children' => [],
         ];
 
         foreach ($data as $key => $value) {
-            $isDate = true;
-            try {
-                Carbon::createFromFormat('Y-m-d', $key);
-            } catch (\Exception $e) {
-                $isDate = false;
-            }
-
-            if ($isDate) {
-                $year = Carbon::createFromFormat('Y-m-d', $key)->format('Y-m');
-
-                foreach ($this->tableDates as $date) {
-                    $datePart = substr($date, 0, 7);
-                    if ($datePart == $year) {
-                        $row['values'][$date] = $this->parseCell($value, $key);
+            if (strtotime($key)) {
+                foreach ($this->tableDates as $tableDate) {
+                    if (substr($tableDate, 0, 7) == substr($key, 0, 7)) {
+                        $row['values'][$tableDate] = $this->parseCell($value, $key);
                         break;
                     }
                 }
@@ -291,6 +282,8 @@ class CompanyReport extends Component
                 }
             }
         }
+
+        $row['seg_start'] = count($row['children']) && collect($row['children'])->some(fn ($child) => $child['segmentation']);
 
         $row['segmentation'] = $isSegmentation && count($row['children']) === 0;
         $row['id'] = Str::uuid() . '-' . Str::uuid(); // just for the charts
