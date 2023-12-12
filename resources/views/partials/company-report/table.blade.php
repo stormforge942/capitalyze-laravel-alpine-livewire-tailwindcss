@@ -1,4 +1,4 @@
-<div class="flex justify-between items-center mt-7">
+<div class="flex justify-between items-center mt-6">
     <div class="warning-wrapper">
         <div class="warning-text text-sm">
             <svg viewBox="0 0 16 16" fill="none" xmlns="http://www.w3.org/2000/svg">
@@ -20,10 +20,11 @@
     </div>
 </div>
 
-<div class="w-full table-container">
-    <div class="table-wrapper w-full" style="font-size: 12px;">
-        <div class="table">
-            <div class="row-group">
+<div class="table-wrapper w-full" style="font-size: 12px;">
+    <div class="table w-full">
+        <div class="table-cell text-center">
+            <div class="row-group !inline-block mx-auto">
+
                 <div class="flex flex-row bg-[#EDEDED]">
                     <div class="ml-8 w-[250px] font-bold flex py-2 items-center justify-start text-base">
                         <span>
@@ -138,9 +139,9 @@
             </div>
         </div>
     </div>
-    <div class="cus-loader" wire:loading.block>
-        <div class="cus-loaderBar"></div>
-    </div>
+</div>
+<div class="cus-loader" wire:loading.block>
+    <div class="cus-loaderBar"></div>
 </div>
 
 
