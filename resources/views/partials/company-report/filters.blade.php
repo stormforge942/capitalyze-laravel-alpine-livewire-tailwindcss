@@ -37,6 +37,14 @@
                         this.tmpValue = this.value
                     })
                 },
+                increase() {
+                    this.tmpValue = Number(this.tmpValue) + 1
+                },
+                decrease() {
+                    if(this.tmpValue <= 0) return;
+
+                    this.tmpValue = Number(this.tmpValue) - 1
+                },
             }" x-modelable="value" x-model="filters.decimalPlaces" class="inline-block">
                 <x-dropdown x-model="showDropdown" placement="bottom-start">
                     <x-slot name="trigger">
@@ -71,7 +79,7 @@
                         </div>
 
                         <div class="p-4 flex items-center justify-between">
-                            <button @click="tmpValue = tmpValue > 0 ? tmpValue - 1 : 0">
+                            <button @click="decrease">
                                 <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24"
                                     viewBox="0 0 24 24" fill="none">
                                     <path
@@ -80,7 +88,7 @@
                                 </svg>
                             </button>
                             <div class="flex-1 text-center" x-text="tmpValueText"></div>
-                            <button @click="tmpValue += 1">
+                            <button @click="increase">
                                 <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24"
                                     viewBox="0 0 24 24" fill="none">
                                     <path
