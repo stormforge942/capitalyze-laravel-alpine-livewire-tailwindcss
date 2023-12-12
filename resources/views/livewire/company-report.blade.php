@@ -107,7 +107,14 @@
                 }, { deep: true })
         
                 this.$watch('selectedChartRows', this.renderChart.bind(this), { deep: true })
-                this.$watch('selectedDateRange', this.renderChart.bind(this))
+
+                this.$watch('selectedDateRange', (newVal) => {
+                    const url = new URL(window.location.href);
+                    url.searchParams.set('selectedDateRange', newVal.join(','));
+                    window.history.replaceState({}, '', url);
+                    
+                    Alpine.debounce(this.renderChart.bind(this), 300)()
+                }, { deep: true })
             },
             initRangeSlider() {
                 const el = document.getElementById('range-slider-company-report');
@@ -166,7 +173,7 @@
             },
             renderChart() {
                 {{-- @todo: find efficient way to do this --}}
-
+        
                 this.chart?.destroy();
                 this.chart = null;
         
@@ -292,8 +299,7 @@
                                     <div class="mt-10">
                                         <canvas id="chart-company-report" class="chart-company-report"></canvas>
                                     </div>
-                                    <div
-                                        class="mt-8 flex flex-wrap justify-start items-end gap-3">
+                                    <div class="mt-8 flex flex-wrap justify-start items-end gap-3">
                                         <template x-for="item in selectedChartRows" :key="item.id"
                                             :shadow="true">
                                             <x-dropdown placement="bottom-start">

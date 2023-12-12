@@ -28,7 +28,7 @@ class CompanyReport extends Component
     public $latestPrice = 0;
     public $percentageChange = 0;
     public $selectedRows = [];
-    public $selectedDateRange = [null, null];
+    public $selectedDateRange;
     public $noData = false;
 
     protected $data;
@@ -49,6 +49,7 @@ class CompanyReport extends Component
 
     public function mount(Request $request, $company): void
     {
+        // set properties from query string 
         $this->activeTab = $request->query('tab', 'income-statement');
         $this->view = $request->query('view', 'Standardised');
         $this->period = $request->query('period', 'Fiscal Annual');
@@ -56,6 +57,13 @@ class CompanyReport extends Component
         $this->decimalPlaces = intval($request->query('decimalPlaces', 2));
         $this->order = $request->query('order', 'Latest on the Right');
         $this->freezePane = $request->query('freezePane', 'Top Row & First Column');
+
+        $range = explode(',', $request->query('selectedDateRange', ''));
+        if (count($range) === 2 && is_numeric($range[0]) && is_numeric($range[1])) {
+            $this->selectedDateRange = [intval($range[0]), intval($range[1])];
+        } else {
+            $this->selectedDateRange = [null, null];
+        }
 
         $eodPrices = EodPrices::where('symbol', strtolower($this->company->ticker))
             ->latest('date')
