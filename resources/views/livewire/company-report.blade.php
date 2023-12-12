@@ -207,8 +207,8 @@
                     </div>
 
                     <template x-if="selectedChartRows.length">
-                        <div x-data="{ showGraph: true, menuOpen: false }">
-                            <div class="flex justify-end mt-4">
+                        <div class="mt-6" x-data="{ showGraph: true }">
+                            <div class="flex justify-end">
                                 <button class="show-hide-chart-btn" @click="showGraph = true" x-show="!showGraph">
                                     Show Chart
                                     <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16"
@@ -219,106 +219,79 @@
                                     </svg>
                                 </button>
                             </div>
+
                             <div>
-                                <div class="mb-4 mt-7 pb-5 w-full px-5 bg-white flex flex-col rounded-lg" x-show="showGraph">
-                                    <div class="flex justify-between w-full my-12 pl-6 pr-3">
-                                        <div class="text-lg text-blue font-bold">
-                                            {{ $company['name'] }} ({{ $company['ticker'] }})
-                                        </div>
-                                        <div class="flex items-start relative">
-
-                                            <button type="button" class="custom-drop-down-button hide-mobile"
-                                                aria-expanded="true" aria-haspopup="true">
-
-                                                <svg xmlns="http://www.w3.org/2000/svg" @click="menuOpen = true"
-                                                    x-show="!menuOpen" fill="#121A0F" viewBox="0 0 24 24"
-                                                    stroke-width="2" stroke="currentColor" class="w-6 h-6">
-                                                    <path stroke-linecap="round" stroke-linejoin="round"
-                                                        d="M12 6.75a.75.75 0 110-1.5.75.75 0 010 1.5zM12 12.75a.75.75 0 110-1.5.75.75 0 010 1.5zM12 18.75a.75.75 0 110-1.5.75.75 0 010 1.5z">
-                                                    </path>
+                                <div class="bg-white rounded-lg p-10 relative" x-show="showGraph">
+                                    <div class="absolute top-2 right-2 xl:top-3 xl:right-5">
+                                        <x-dropdown placement="bottom-start" :shadow="true">
+                                            <x-slot name="trigger">
+                                                <svg :class="open ? `rotate-90` : ''" width="24" height="24"
+                                                    viewBox="0 0 24 24" fill="none"
+                                                    xmlns="http://www.w3.org/2000/svg">
+                                                    <path
+                                                        d="M9 21.998L15 21.998C20 21.998 22 19.998 22 14.998L22 8.99805C22 3.99805 20 1.99805 15 1.99805L9 1.99805C4 1.99805 2 3.99805 2 8.99805L2 14.998C2 19.998 4 21.998 9 21.998Z"
+                                                        stroke="#121A0F" stroke-width="2" stroke-linecap="round"
+                                                        stroke-linejoin="round" />
+                                                    <circle cx="12" cy="8" r="1" fill="#121A0F" />
+                                                    <circle cx="12" cy="12" r="1" fill="#121A0F" />
+                                                    <circle cx="12" cy="16" r="1" fill="#121A0F" />
                                                 </svg>
+                                            </x-slot>
 
-                                                <svg xmlns="http://www.w3.org/2000/svg" @click="menuOpen = false"
-                                                    x-show="menuOpen" fill="#121A0F" viewBox="0 0 24 24"
-                                                    stroke-width="2" stroke="currentColor" class="w-6 h-6"
-                                                    style="display: none;">
-                                                    <path stroke-linecap="round" stroke-linejoin="round"
-                                                        d="M6.75 12a.75.75 0 11-1.5 0 .75.75 0 011.5 0zM12.75 12a.75.75 0 11-1.5 0 .75.75 0 011.5 0zM18.75 12a.75.75 0 11-1.5 0 .75.75 0 011.5 0z">
-                                                    </path>
-                                                </svg>
+                                            <div class="py-4 text-sm+ w-52">
+                                                <div class="[&>*]:px-4 [&>*]:w-full [&>*]:p-2 [&>*]:text-left">
+                                                    <button class="hover:bg-gray-100"
+                                                        @click="showGraph = !showGraph; dropdown.hide();"
+                                                        x-text="showGraph ? 'Show Chart' : 'Hide Chart'"></button>
+                                                    <button class="hover:bg-gray-100">View in Full Screen</button>
+                                                    <button class="hover:bg-gray-100">Print Chart</button>
+                                                </div>
+                                                <hr class="my-4">
+                                                <div class="[&>*]:px-4 [&>*]:w-full [&>*]:p-2">
+                                                    <button class="hover:bg-gray-100 flex items-center gap-x-2">
+                                                        <svg width="16" height="16" viewBox="0 0 16 16"
+                                                            fill="none" xmlns="http://www.w3.org/2000/svg">
+                                                            <path
+                                                                d="M8.66927 6.66667H12.0026L8.0026 10.6667L4.0026 6.66667H7.33594V2H8.66927V6.66667ZM2.66927 12.6667H13.3359V8H14.6693V13.3333C14.6693 13.7015 14.3708 14 14.0026 14H2.0026C1.63442 14 1.33594 13.7015 1.33594 13.3333V8H2.66927V12.6667Z"
+                                                                fill="#121A0F" />
+                                                        </svg>
 
-                                            </button>
+                                                        <span>Download as PDF</span>
+                                                    </button>
+                                                    <button class="hover:bg-gray-100 flex items-center gap-x-2">
+                                                        <svg width="16" height="16" viewBox="0 0 16 16"
+                                                            fill="none" xmlns="http://www.w3.org/2000/svg">
+                                                            <path
+                                                                d="M8.66927 6.66667H12.0026L8.0026 10.6667L4.0026 6.66667H7.33594V2H8.66927V6.66667ZM2.66927 12.6667H13.3359V8H14.6693V13.3333C14.6693 13.7015 14.3708 14 14.0026 14H2.0026C1.63442 14 1.33594 13.7015 1.33594 13.3333V8H2.66927V12.6667Z"
+                                                                fill="#121A0F" />
+                                                        </svg>
 
-                                            <div class="absolute custom-drop-down right-0 z-10 bg-white focus:outline-none"
-                                                x-show="menuOpen" role="menu" x-show="showGraph=true"
-                                                aria-orientation="vertical" aria-labelledby="menu-button" tabindex="-1"
-                                                style="">
-                                                <div class="py-1" role="none">
-                                                    <!-- Active: "bg-gray-100 text-gray-900", Not Active: "text-gray-700" -->
-                                                    <div class="links-wrapper mb-3">
-                                                        <a href="#" @click="menuOpen = false; showGraph = false;"
-                                                            class="menu_link" role="menuitem" tabindex="-1"
-                                                            id="menu-item-0">
-                                                            <svg xmlns="http://www.w3.org/2000/svg" width="14"
-                                                                height="14" viewBox="0 0 14 14" fill="none">
-                                                                <path
-                                                                    d="M6.99479 13.6666C3.31289 13.6666 0.328125 10.6818 0.328125 6.99992C0.328125 3.31802 3.31289 0.333252 6.99479 0.333252C10.6767 0.333252 13.6615 3.31802 13.6615 6.99992C13.6615 10.6818 10.6767 13.6666 6.99479 13.6666ZM6.99479 6.05712L5.10917 4.17149L4.16636 5.1143L6.05199 6.99992L4.16636 8.88552L5.10917 9.82832L6.99479 7.94272L8.88039 9.82832L9.82319 8.88552L7.93759 6.99992L9.82319 5.1143L8.88039 4.17149L6.99479 6.05712Z"
-                                                                    fill="#C22929" />
-                                                            </svg>
-                                                            Hide Chart</a>
-                                                        <a href="#" chartMenuOpen=false" class="menu_link"
-                                                            role="menuitem" tabindex="-1" id="menu-item-0"
-                                                            style="display: none;">Show
-                                                            Chart</a>
-                                                        <a href="#" class="menu_link" role="menuitem"
-                                                            tabindex="-1" id="menu-item-1">View In Full
-                                                            Screen</a>
-                                                        <a href="#" class="menu_link" role="menuitem"
-                                                            tabindex="-1" id="menu-item-2">Print
-                                                            Chart</a>
-                                                    </div>
-                                                    <hr class="mb-3">
-                                                    <div class="links-wrapper">
-                                                        <a href="#" class="menu_link" role="menuitem"
-                                                            tabindex="-1" id="menu-item-3"> <svg
-                                                                xmlns="http://www.w3.org/2000/svg" fill="none"
-                                                                viewBox="0 0 24 24" stroke-width="1.5"
-                                                                stroke="currentColor" class="w-6 h-6">
-                                                                <path stroke-linecap="round" stroke-linejoin="round"
-                                                                    d="M3 16.5v2.25A2.25 2.25 0 005.25 21h13.5A2.25 2.25 0 0021 18.75V16.5M16.5 12L12 16.5m0 0L7.5 12m4.5 4.5V3">
-                                                                </path>
-                                                            </svg>
-                                                            Download As PNG</a>
-                                                        <a href="#" class="menu_link" role="menuitem"
-                                                            tabindex="-1" id="menu-item-4"> <svg
-                                                                xmlns="http://www.w3.org/2000/svg" fill="none"
-                                                                viewBox="0 0 24 24" stroke-width="1.5"
-                                                                stroke="currentColor" class="w-6 h-6">
-                                                                <path stroke-linecap="round" stroke-linejoin="round"
-                                                                    d="M3 16.5v2.25A2.25 2.25 0 005.25 21h13.5A2.25 2.25 0 0021 18.75V16.5M16.5 12L12 16.5m0 0L7.5 12m4.5 4.5V3">
-                                                                </path>
-                                                            </svg>
-                                                            Download As PNG</a>
-                                                        <a href="#" class="menu_link" role="menuitem"
-                                                            tabindex="-1" id="menu-item-5"> <svg
-                                                                xmlns="http://www.w3.org/2000/svg" fill="none"
-                                                                viewBox="0 0 24 24" stroke-width="1.5"
-                                                                stroke="currentColor" class="w-6 h-6">
-                                                                <path stroke-linecap="round" stroke-linejoin="round"
-                                                                    d="M3 16.5v2.25A2.25 2.25 0 005.25 21h13.5A2.25 2.25 0 0021 18.75V16.5M16.5 12L12 16.5m0 0L7.5 12m4.5 4.5V3">
-                                                                </path>
-                                                            </svg>
-                                                            Download As PNG</a>
-                                                    </div>
+                                                        <span>Download as JPEG</span>
+                                                    </button>
+                                                    <button class="hover:bg-gray-100 flex items-center gap-x-2">
+                                                        <svg width="16" height="16" viewBox="0 0 16 16"
+                                                            fill="none" xmlns="http://www.w3.org/2000/svg">
+                                                            <path
+                                                                d="M8.66927 6.66667H12.0026L8.0026 10.6667L4.0026 6.66667H7.33594V2H8.66927V6.66667ZM2.66927 12.6667H13.3359V8H14.6693V13.3333C14.6693 13.7015 14.3708 14 14.0026 14H2.0026C1.63442 14 1.33594 13.7015 1.33594 13.3333V8H2.66927V12.6667Z"
+                                                                fill="#121A0F" />
+                                                        </svg>
+
+                                                        <span>Download as PNG</span>
+                                                    </button>
                                                 </div>
                                             </div>
-                                        </div>
+                                        </x-dropdown>
                                     </div>
-                                    <div class="px-6 w-full" wire:ignore>
+
+                                    <div class="text-xl text-blue font-bold">
+                                        {{ $company['name'] }} ({{ $company['ticker'] }})
+                                    </div>
+
+                                    <div class="mt-10">
                                         <canvas id="chart-company-report" class="chart-company-report"></canvas>
                                     </div>
                                     <div
-                                        class="w-full flex flex-wrap justify-start items-end space-x-3 px-2 mt-8 space-y-3">
+                                        class="mt-8 flex flex-wrap justify-start items-end gap-3">
                                         <template x-for="item in selectedChartRows" :key="item.id"
                                             :shadow="true">
                                             <x-dropdown placement="bottom-start">
