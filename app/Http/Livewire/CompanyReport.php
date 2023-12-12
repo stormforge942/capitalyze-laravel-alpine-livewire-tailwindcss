@@ -296,48 +296,6 @@ class CompanyReport extends Component
         return $row;
     }
 
-    public function generatePresent($value)
-    {
-        $unitType = $this->unitType;
-        $units = [
-            'Thousands' => 'T',
-            'Millions' => 'M',
-            'Billions' => 'B',
-        ];
-
-        $decimalPlaces = intval($this->decimalPlaces);
-
-        if (str_contains($value, '%') || $value == '-' || !is_numeric($value)) {
-            return $value;
-        }
-        if ($value <= 100 && $value > -1000) {
-            return round($value, 2);
-        }
-
-        if (str_contains($value, '.') || str_contains($value, ',')) {
-            $float = floatval(str_replace(',', '', $value));
-
-            $value = intval($float);
-        }
-
-        if (!isset($units[$unitType])) {
-            return ($value);
-        }
-
-        $unitAbbreviation = $units[$unitType];
-
-        // Determine the appropriate unit based on the number
-        if ($unitAbbreviation == 'B') {
-            return ($value / 1000000000);
-        } elseif ($unitAbbreviation == 'M') {
-            return ($value / 1000000);
-        } elseif ($unitAbbreviation == 'T') {
-            return ($value / 1000);
-        } else {
-            return ($value);
-        }
-    }
-
     public function parseCell($data, $key): array
     {
         $response = [];
@@ -349,8 +307,7 @@ class CompanyReport extends Component
             if (in_array('|', str_split($value))) {
                 $array = explode('|', $value);
 
-                $response['value'] = $this->generatePresent($array[0]);
-                $response['present'] = $this->generatePresent($array[0]);
+                $response['value'] = $array[0];
                 $response['hash'] = $array[1];
 
                 if (array_key_exists(2, $array)) {
