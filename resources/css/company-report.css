@@ -37,7 +37,7 @@
 
 div.range-slider {
     height: 4px;
-    background: #D1D3D5;
+    background: #D4DDD7;
     max-width: 100%;
 }
 .range-slider input[type=range] {display: none;}

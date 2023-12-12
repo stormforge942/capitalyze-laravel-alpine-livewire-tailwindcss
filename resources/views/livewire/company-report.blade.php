@@ -207,7 +207,7 @@
                     </div>
 
                     <template x-if="selectedChartRows.length">
-                        <div class="mt-6" x-data="{ showGraph: true }">
+                        <div class="mt-7" x-data="{ showGraph: true }">
                             <div class="flex justify-end">
                                 <button class="show-hide-chart-btn" @click="showGraph = true" x-show="!showGraph">
                                     Show Chart
