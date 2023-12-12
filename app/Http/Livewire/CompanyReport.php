@@ -27,7 +27,6 @@ class CompanyReport extends Component
     public $rangeDates = [];
     public $latestPrice = 0;
     public $percentageChange = 0;
-    public $selectedRows = [];
     public $selectedDateRange;
     public $noData = false;
 
@@ -385,6 +384,7 @@ class CompanyReport extends Component
     public function updated($prop): void
     {
         if (in_array($prop, ['view', 'activeTab', 'period'])) {
+            $this->noData = false;
             $this->getData();
         }
     }

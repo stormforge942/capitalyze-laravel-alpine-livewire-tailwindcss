@@ -9,8 +9,6 @@
         const tab = this.tabs[key];
         this.active = tab.key;
 
-        this.setQueryString(tab.key);
-
         this.$dispatch('tab-changed', tab)
     },
     get activeTab() {
@@ -22,8 +20,13 @@
 
         @if ($triggerChange) this.$nextTick(() => this.$dispatch('tab-changed', this.activeTab)) @endif
 
+        {{-- to remove the glitch when using this component with x-modelable --}}
         this.$nextTick(() => {
             this.showActive = true;
+        })
+
+        this.$watch('active', (value) => {
+            this.setQueryString(value);
         })
     },
     setQueryString(tab) {
@@ -71,7 +74,7 @@
             <button class="px-3 py-1.5 text-center rounded transition"
                 :class="{
                     'bg-green-dark font-semibold': active === key && showActive,
-                    'font-medium text-gray-medium2 hover:bg-gray-light': active !== key
+                    'font-medium text-gray-medium2 hover:bg-gray-light': active !== key || !showActive
                 }"
                 @click="changeTab(key)" style="min-width: {{ $minWidth }}" x-text="tab.title">
             </button>

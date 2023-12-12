@@ -214,7 +214,7 @@
                                 <span :class="isYearInRange(year) ? 'active-dots' : 'inactive-dots'"></span>
                             </template>
                         </div>
-                        <div id="range-slider-company-report" class="range-slider" wire:ignore></div>
+                        <div id="range-slider-company-report" class="range-slider"></div>
                     </div>
 
                     <template x-if="selectedChartRows.length">
