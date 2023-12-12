@@ -129,11 +129,10 @@
                 });
             },
             formattedTableDate(date) {
-                let [year, month] = date.split('-');
-        
-                month = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'][parseInt(month) - 1];
-        
-                return `${month} ${year}`;
+                return new Date(date).toLocaleString('en-US', {
+                    month: 'short',
+                    year: 'numeric',
+                })
             },
             isYearInRange(year) {
                 return year >= this.selectedDateRange[0] && year <= this.selectedDateRange[1];
@@ -169,7 +168,6 @@
                 this.chart?.destroy();
                 this.chart = null;
         
-                console.log(this)
                 if (!this.selectedChartRows.length) {
                     return;
                 }
@@ -222,7 +220,7 @@
                                 </button>
                             </div>
                             <div>
-                                <div class="mb-4 mt-7 pb-5 w-full px-5 bg-white flex flex-col" x-show="showGraph">
+                                <div class="mb-4 mt-7 pb-5 w-full px-5 bg-white flex flex-col rounded-lg" x-show="showGraph">
                                     <div class="flex justify-between w-full my-12 pl-6 pr-3">
                                         <div class="text-lg text-blue font-bold">
                                             {{ $company['name'] }} ({{ $company['ticker'] }})
@@ -451,7 +449,6 @@
         });
 
         function renderCompanyReportChart(data) {
-            console.log(data)
             const ctx = document.getElementById("chart-company-report").getContext("2d");
 
             return new Chart(ctx, {
@@ -489,11 +486,13 @@
                             enabled: false,
                             callbacks: {
                                 title: function(context) {
-                                    const inputDate = new Date(context[0].label);
-                                    return inputDate.getFullYear();
+                                    return new Date(context[0].label).toLocaleString('en-US', {
+                                        month: 'short',
+                                        year: 'numeric',
+                                    })
                                 },
                                 label: function(context) {
-                                    return context.dataset.raw
+                                    return context.dataset.label + '|' + context.formattedValue
                                 }
                             },
                         }
