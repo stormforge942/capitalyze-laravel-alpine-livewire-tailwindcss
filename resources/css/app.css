@@ -526,9 +526,9 @@ a {
 }
 
 .chart-company-report {
-    max-height: 350px !important;
+    max-height: 400px !important;
     display: block !important;
-    height: 350px !important;
+    height: 400px !important;
     width: 100% !important;
 }
 

@@ -306,8 +306,11 @@
                                         <div
                                             class="border border-[#D4DDD7] rounded-full p-2 flex items-center justify-between gap-x-6">
                                             <div class="flex items-center gap-x-1" x-data>
-                                                <label class="h-4 w-4 overflow-clip rounded-full gird place-items-center cursor-pointer" :style="`background: ${item.color}`">
-                                                    <input type="color" x-model="item.color" class="invisible" x-ref="input">
+                                                <label
+                                                    class="h-4 w-4 overflow-clip rounded-full gird place-items-center cursor-pointer"
+                                                    :style="`background: ${item.color}`">
+                                                    <input type="color" x-model="item.color" class="invisible"
+                                                        x-ref="input">
                                                 </label>
 
                                                 <x-dropdown placement="bottom-start">
@@ -334,6 +337,13 @@
                                                                         fill="#3561E7" />
                                                                 </svg>
                                                             </template>
+
+                                                            <svg xmlns="http://www.w3.org/2000/svg" width="16"
+                                                                height="16" viewBox="0 0 16 16" fill="none">
+                                                                <path
+                                                                    d="M10.3083 6.19514L7.72167 8.78378L5.135 6.19514C5.01045 6.07021 4.84135 6 4.665 6C4.48865 6 4.31955 6.07021 4.195 6.19514C3.935 6.45534 3.935 6.87566 4.195 7.13585L7.255 10.1982C7.515 10.4584 7.935 10.4584 8.195 10.1982L11.255 7.13585C11.515 6.87566 11.515 6.45534 11.255 6.19514C10.995 5.94161 10.5683 5.93494 10.3083 6.19514Z"
+                                                                    fill="#464E49" />
+                                                            </svg>
                                                         </div>
                                                     </x-slot>
 
@@ -432,6 +442,17 @@
         function renderCompanyReportChart(data) {
             const ctx = document.getElementById("chart-company-report").getContext("2d");
 
+            data.datasets.sort((a, b) => {
+                // If 'type' is 'line', prioritize it over 'bar'
+                if (a.type === 'line' && b.type === 'bar') {
+                    return -1;
+                } else if (a.type === 'bar' && b.type === 'line') {
+                    return 1;
+                } else {
+                    return 0; // Maintain the order if both are 'line' or both are 'bar'
+                }
+            })
+
             return new Chart(ctx, {
                 plugins: [chartJsPlugins.pointLine],
                 maintainAspectRatio: false,
@@ -481,7 +502,6 @@
                     },
                     scales: {
                         x: {
-                            offset: false,
                             grid: {
                                 display: false
                             },
