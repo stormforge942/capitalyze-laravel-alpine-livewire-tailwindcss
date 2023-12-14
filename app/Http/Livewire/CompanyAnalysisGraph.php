@@ -94,11 +94,6 @@ class CompanyAnalysisGraph extends Component
         $this->revenues = $revenues;
 
         return $revenues;
-
-        // $data = InfoTikrPresentation::where('ticker', $this->ticker)
-        //     ->orderByDesc('id')->first()->info[$period];
-        // $this->revenues = $data['Income Statement']['Revenues'];
-        // return $data['Income Statement']['Revenues'];
     }
 
     public function generateChartData($selectedYears = null)
