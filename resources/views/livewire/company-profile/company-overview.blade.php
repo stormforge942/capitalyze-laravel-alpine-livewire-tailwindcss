@@ -284,11 +284,11 @@
 
             <tbody>
                 <tr class="border-b-2 border-b-[#E6E6E6]">
-                    <th class="bg-white rounded-tl pl-6 py-3 whitespace-nowrap font-extrabold">
+                    <th class="bg-white rounded-tl-lg pl-6 py-3 whitespace-nowrap font-extrabold">
                         EBITDA
                     </th>
                     @foreach (array_keys($products) as $date)
-                        <th class="bg-white last:rounded-tr pl-6 py-3 last:pr-6 text-right font-extrabold">
+                        <th class="bg-white last:rounded-tr-lg pl-6 py-3 last:pr-6 text-right font-extrabold">
                             {{ isset($ebitda[$date]) ? number_format((float) explode('|', str_replace(',', '', $ebitda[$date][0]))[0], 2) : 'N/A' }}
                         </th>
                     @endforeach
@@ -362,11 +362,11 @@
 
             <tbody>
                 <tr class="border-b-2 border-b-[#E6E6E6]">
-                    <th class="bg-white rounded-tl pl-6 py-3 whitespace-nowrap font-extrabold">
+                    <th class="bg-white rounded-tl-lg pl-6 py-3 whitespace-nowrap font-extrabold">
                         Adj. Net Income
                     </th>
                     @foreach (array_keys($products) as $date)
-                        <th class="bg-white last:rounded-tr pl-6 py-3 last:pr-6 text-right font-extrabold">
+                        <th class="bg-white last:rounded-tr-lg pl-6 py-3 last:pr-6 text-right font-extrabold">
                             {{ isset($adjNetIncome[$date][0]) ? number_format(floatval(explode('|', str_replace(',', '', $adjNetIncome[$date][0]))[0]), 2) : 'N/A' }}
                         </th>
                     @endforeach
@@ -459,7 +459,7 @@
     </div>
 
     <div class="bg-white rounded p-2 overflow-auto order-6">
-        <table class="rounded text-left" style="background: rgba(82, 198, 255, 0.10)">
+        <table class="rounded-lg text-left" style="background: rgba(82, 198, 255, 0.10)">
             <thead>
                 <tr>
                     <th class="pl-6 pt-4 font-extrabold whitespace-nowrap text-dark">Adj. Diluted EPS</th>
