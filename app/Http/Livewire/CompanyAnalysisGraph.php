@@ -68,10 +68,37 @@ class CompanyAnalysisGraph extends Component
 
     public function getPresentationData($period = "annual")
     {
-        $data = InfoTikrPresentation::where('ticker', $this->ticker)
-            ->orderByDesc('id')->first()->info[$period];
-        $this->revenues = $data['Income Statement']['Revenues'];
-        return $data['Income Statement']['Revenues'];
+        if ($period == 'quarterly') {
+            $period = 'quarter';
+        }
+
+        $data = json_decode(
+            InfoTikrPresentation::where('ticker', $this->ticker)
+                ->where('period', $period)
+                ->orderByDesc('id')
+                ->select(['income_statement'])
+                ->first()
+                ?->income_statement ?? "{}",
+            true
+        );
+
+        $revenues = [];
+
+        foreach ($data as $key => $value) {
+            if (str_starts_with($key, 'Revenues|')) {
+                $revenues = $value;
+                break;
+            }
+        }
+
+        $this->revenues = $revenues;
+
+        return $revenues;
+
+        // $data = InfoTikrPresentation::where('ticker', $this->ticker)
+        //     ->orderByDesc('id')->first()->info[$period];
+        // $this->revenues = $data['Income Statement']['Revenues'];
+        // return $data['Income Statement']['Revenues'];
     }
 
     public function generateChartData($selectedYears = null)

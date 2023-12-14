@@ -15,7 +15,7 @@ class RevenueByEmployee extends Component
     public $company;
     public $ticker;
     public $companyName;
-    public $unit= 0;
+    public $unit = 0;
     public $currency = 'USD';
     public $period = "annual";
     public $rangeDates = [];
@@ -42,22 +42,25 @@ class RevenueByEmployee extends Component
     public $employeeCount;
     protected $listeners = ['tabClicked', 'tabSubClicked', 'rbeAnalysisDatesChanged', 'rbeDecimalChange', 'rbePeriodChanged', 'rbeUnitChanged'];
 
-    public function rbeDecimalChange($decimal){
+    public function rbeDecimalChange($decimal)
+    {
         $this->decimalPoint = $decimal;
     }
 
-    public function rbeUnitChanged($unit){
+    public function rbeUnitChanged($unit)
+    {
         $this->unit = $unit;
     }
 
-    public function getSelectedUnitProperty(){
+    public function getSelectedUnitProperty()
+    {
         return $this->unit;
     }
 
     public function rbeAnalysisDatesChanged($value)
     {
         $this->years = array_reverse(array_keys($this->revenues));
-        if($this->reverseOrder){
+        if ($this->reverseOrder) {
             $this->years = array_reverse(array_keys($this->revenues));
         }
         $this->minDate = $value[0];
@@ -73,23 +76,24 @@ class RevenueByEmployee extends Component
 
     function getSelectedRangeProperty()
     {
-        if($this->reverseOrder){
+        if ($this->reverseOrder) {
             return array_reverse($this->years);
         }
         return $this->years;
     }
 
-    public function rbePeriodChanged($period){
+    public function rbePeriodChanged($period)
+    {
         $this->period = ($period == 'arps') || ($period == 'Calendar Annual') || ($period == 'Fiscal Annual') ? 'annual' : 'quarterly';
         $this->getPresentationData();
         $this->getEmployeeCount();
         $this->rangeDates = array_keys($this->revenues);
 
         $this->years = array_reverse(array_keys($this->revenues));
-        if($this->reverseOrder){
+        if ($this->reverseOrder) {
             $this->years = array_keys($this->revenues);
         }
-        if($this->period != "annual"){
+        if ($this->period != "annual") {
             $this->rangeDates = [
                 min($this->rangeDates),
                 max($this->rangeDates)
@@ -123,10 +127,10 @@ class RevenueByEmployee extends Component
         $this->getEmployeeCount();
         $this->rangeDates = array_keys($this->revenues);
         $this->years = array_reverse(array_keys($this->revenues));
-        if($this->reverseOrder){
+        if ($this->reverseOrder) {
             $this->years = array_keys($this->revenues);
         }
-        if($this->period != "annual"){
+        if ($this->period != "annual") {
             $this->rangeDates = [
                 min($this->rangeDates),
                 max($this->rangeDates)
@@ -136,15 +140,16 @@ class RevenueByEmployee extends Component
         $this->maxDate = $this->years[0];
     }
 
-    public function getEmployeeCount(){
+    public function getEmployeeCount()
+    {
         $counts = DB::connection('pgsql-xbrl')
-        ->table('employee_count')
-        ->where('symbol', $this->ticker)->get()->toArray();
+            ->table('employee_count')
+            ->where('symbol', $this->ticker)->get()->toArray();
         $this->employeeCount = [];
-        foreach($counts as $item){
+        foreach ($counts as $item) {
 
-            foreach(array_keys($this->revenues) as $year){
-                if(date('Y', strtotime($year)) == date('Y', strtotime($item->period_of_report))){
+            foreach (array_keys($this->revenues) as $year) {
+                if (date('Y', strtotime($year)) == date('Y', strtotime($item->period_of_report))) {
                     $this->employeeCount[$year] = $item->count;
                 }
             }
@@ -154,12 +159,31 @@ class RevenueByEmployee extends Component
     public function getPresentationData()
     {
         $period = $this->period;
-        if($this->period == 'quarterly'){
+        if ($this->period == 'quarterly') {
             $period = 'quarter';
         }
-        $data = InfoTikrPresentation::where('ticker', $this->ticker)
-            ->orderByDesc('id')->first()->info[$period];
-        $this->revenues = $data['Income Statement']['Revenues'];
+        $data = json_decode(
+            InfoTikrPresentation::where('ticker', $this->ticker)
+                ->where('period', $period)
+                ->orderByDesc('id')
+                ->select(['income_statement'])
+                ->first()
+                ?->income_statement ?? "{}",
+            true
+        );
+
+        $revenues = [];
+
+        foreach ($data as $key => $value) {
+            if (str_starts_with($key, 'Revenues|')) {
+                $revenues = $value;
+                break;
+            }
+        }
+
+        $this->revenues = array_map(function ($value) {
+            return explode('|', $value[0])[0];
+        }, $revenues);
     }
     public function render()
     {
