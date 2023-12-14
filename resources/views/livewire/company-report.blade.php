@@ -430,7 +430,11 @@
         });
 
         function renderCompanyReportChart(data) {
-            const ctx = document.getElementById("chart-company-report").getContext("2d");
+            const ctx = document.getElementById("chart-company-report")?.getContext("2d");
+
+            if (!ctx) {
+                renderCompanyReportChart(data);
+            }
 
             data.datasets.sort((a, b) => {
                 // If 'type' is 'line', prioritize it over 'bar'
