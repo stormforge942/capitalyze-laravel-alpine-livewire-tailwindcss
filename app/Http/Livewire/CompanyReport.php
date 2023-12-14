@@ -4,7 +4,6 @@ namespace App\Http\Livewire;
 
 use Carbon\Carbon;
 use Livewire\Component;
-use App\Models\EodPrices;
 use Illuminate\Support\Str;
 use Illuminate\Http\Request;
 use App\Models\InfoPresentation;
@@ -26,8 +25,6 @@ class CompanyReport extends Component
     public $currency = 'USD';
     public $tableDates = [];
     public $rangeDates = [];
-    public $latestPrice = 0;
-    public $percentageChange = 0;
     public $selectedDateRange;
     public $noData = false;
 
@@ -64,20 +61,6 @@ class CompanyReport extends Component
         } else {
             $this->selectedDateRange = [null, null];
         }
-
-        $eodPrices = EodPrices::where('symbol', strtolower($this->company->ticker))
-            ->latest('date')
-            ->take(2)
-            ->pluck('adj_close')
-            ->toArray();
-
-        [$latestPrice, $previousPrice] = [$eodPrices[0] ?? 0, $eodPrices[1] ?? 0];
-
-        $this->percentageChange = ($latestPrice > 0 && $previousPrice > 0) ?
-            round((($latestPrice - $previousPrice) / $previousPrice) * 100, 2)
-            : 0;
-
-        $this->latestPrice = $latestPrice;
 
         $this->company = [
             'name' => $company['name'] ?? $company['ticker'],

@@ -55,7 +55,7 @@
         </x-dropdown>
     </div>
     <div class="hidden lg:flex  font-medium rounded-lg overflow-hidden text-sm items-center">
-        <button class="pl-6 pr-2 py-4 flex items-center gap-1 bg-[#EDEDED] hover:bg-gray-medium"
+        <button class="pl-6 pr-2 py-4 flex items-center gap-1 bg-[#EDEDED] hover:bg-[#cacaca]"
             @click.prevent="download('pdf')">
             <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4" viewBox="0 0 16 16" fill="none">
                 <path
@@ -65,7 +65,7 @@
 
             <span>Download PDF</span>
         </button>
-        <button class="px-2 py-4 flex items-center gap-1 bg-[#EDEDED] hover:bg-gray-medium"
+        <button class="px-2 py-4 flex items-center gap-1 bg-[#EDEDED] hover:bg-[#cacaca]"
             @click.prevent="download('excel')">
             <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4" viewBox="0 0 16 16" fill="none">
                 <path
@@ -74,7 +74,7 @@
             </svg>
             <span>Download Excel</span>
         </button>
-        <button class="pr-6 pl-2 py-4 flex items-center gap-1 bg-[#EDEDED] hover:bg-gray-medium"
+        <button class="pr-6 pl-2 py-4 flex items-center gap-1 bg-[#EDEDED] hover:bg-[#cacaca]"
             @click.prevent="download('csv')">
             <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4" viewBox="0 0 16 16" fill="none">
                 <path
