@@ -160,8 +160,14 @@ export function formatCmpctNumber(number, options = {}) {
     return usformatter.format(number)
 }
 
+export function hex2rgb(hex, alpha = 1) {
+    const [r, g, b] = hex.match(/\w\w/g).map((x) => parseInt(x, 16))
+    return `rgba(${r},${g},${b},${alpha})`
+}
+
 window.chartJsPlugins = chartJsPlugins
 window.formatCmpctNumber = formatCmpctNumber
+window.hex2rgb = hex2rgb
 
 function getOrCreateTooltip(chart) {
     let tooltipEl = chart.canvas.parentNode.querySelector("div")
