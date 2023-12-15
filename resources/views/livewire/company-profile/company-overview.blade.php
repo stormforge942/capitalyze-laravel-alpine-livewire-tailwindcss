@@ -191,7 +191,7 @@
     </x-card>
 
     <div class="overflow-auto order-5">
-        <table class="w-full rounded-lg text-right whitespace-nowrap" id="main-table">
+        <table class="w-full rounded-lg overflow-hidden text-right whitespace-nowrap" id="main-table">
             <thead class="font-sm font-semibold capitalize bg-[#EDEDED] text-dark">
                 <tr class="font-bold text-base">
                     <th class="pl-8 py-2 text-left">{{ $profile['registrant_name'] }}
@@ -475,11 +475,13 @@
         
                 copyMainTableWidth(mainCells, targetCells) {
                     mainCells.forEach((cell, index) => {
-                        targetCells[index].style.minWidth = cell.offsetWidth + 'px';
+                        {{-- subtract the padding size from each cell --}}
+                        targetCells[index].style.minWidth = (cell.offsetWidth - {{ 16 / count($products) }}) + 'px';
                     });
                 }
         }" style="min-width: max-content">
-            <table class="rounded-lg text-left" style="background: rgba(82, 198, 255, 0.10)">
+            <table class="w-full rounded-lg overflow-hidden text-left whitespace-nowrap"
+                style="background: rgba(82, 198, 255, 0.10)">
                 <thead>
                     <tr>
                         <th class="pl-6 pt-4 font-bold whitespace-nowrap text-dark">Adj. Diluted EPS</th>
