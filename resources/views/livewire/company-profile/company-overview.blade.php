@@ -190,6 +190,7 @@
         </div>
     </x-card>
 
+    {{-- @todo: extract all the value logic to component itself --}}
     <div class="overflow-auto order-5">
         <table class="w-full rounded-lg overflow-hidden text-right whitespace-nowrap" id="main-table">
             <thead class="font-sm font-semibold capitalize bg-[#EDEDED] text-dark">
@@ -212,8 +213,13 @@
                         </td>
                         @foreach (array_keys($products) as $date)
                             @if (array_key_exists($segment, $products[$date]))
+                                <?php
+                                $value = $products[$date][$segment];
+                                ?>
                                 <td class="pl-6 last:pr-8">
-                                    {{ number_format($products[$date][$segment]) }}
+                                    {!! redIfNegative($value, fn($val) => custom_number_format($val)) !!}
+
+                                    <x-review-number-button x-data="{ amount: '{{ $value }}', date: '{{ $date }}' }"></x-review-number-button>
                                 </td>
                             @endif
                         @endforeach
@@ -225,19 +231,13 @@
                         @foreach (array_keys($products) as $key => $date)
                             @if (array_key_exists($segment, $products[$date]))
                                 <td class="pl-6 last:pr-8">
-                                    @if ($key == 0)
-                                        0.0%
-                                    @else
-                                        {!! redIfNegative(
-                                            round(
-                                                (($products[$date][$segment] - $products[array_keys($products)[$key - 1]][$segment]) /
-                                                    $products[$date][$segment]) *
-                                                    100,
-                                                2,
-                                            ),
-                                            fn($v) => $v . '%',
-                                        ) !!}
-                                    @endif
+                                    <?php
+                                    $value = $key == 0 ? 0 : round((($products[$date][$segment] - $products[array_keys($products)[$key - 1]][$segment]) / $products[$date][$segment]) * 100, 2);
+                                    ?>
+
+                                    {!! redIfNegative($value, fn($val) => $val . '%') !!}
+
+                                    <x-review-number-button x-data="{ amount: '{{ $value }}', date: '{{ $date }}' }"></x-review-number-button>
                                 </td>
                             @endif
                         @endforeach
@@ -248,8 +248,11 @@
                         Total Revenues
                     </td>
                     @foreach (array_keys($products) as $date)
+                        <?php $value = array_sum($products[$date]); ?>
                         <td class="pl-6 last:pr-8">
-                            {{ number_format(array_sum($products[$date])) }}
+                            {!! redIfNegative($value, fn($val) => custom_number_format($val)) !!}
+
+                            <x-review-number-button x-data="{ amount: '{{ $value }}', date: '{{ $date }}' }"></x-review-number-button>
                         </td>
                     @endforeach
                 </tr>
@@ -259,19 +262,13 @@
                     </td>
                     @foreach (array_keys($products) as $key => $date)
                         <td class="last:rounded-br-lg pl-6 last:pr-8">
-                            @if ($key == 0)
-                                0.0%
-                            @else
-                                {!! redIfNegative(
-                                    round(
-                                        ((array_sum($products[$date]) - array_sum($products[array_keys($products)[$key - 1]])) /
-                                            array_sum($products[$date])) *
-                                            100,
-                                        2,
-                                    ),
-                                    fn($val) => $val . '%',
-                                ) !!}
-                            @endif
+                            <?php
+                            $value = $key == 0 ? 0 : round(((array_sum($products[$date]) - array_sum($products[array_keys($products)[$key - 1]])) / array_sum($products[$date])) * 100, 2);
+                            ?>
+
+                            {!! redIfNegative($value, fn($val) => $val . '%') !!}
+
+                            <x-review-number-button x-data="{ amount: '{{ $value }}', date: '{{ $date }}' }"></x-review-number-button>
                         </td>
                     @endforeach
                 </tr>
@@ -291,7 +288,23 @@
                     </td>
                     @foreach (array_keys($products) as $date)
                         <td class="last:rounded-tr-lg pl-6 last:pr-8">
-                            {{ isset($ebitda[$date]) ? number_format((float) explode('|', str_replace(',', '', $ebitda[$date][0]))[0], 2) : 'N/A' }}
+                            <?php
+                            if (isset($ebitda[$date][0])) {
+                                $value = str_replace(',', '', explode('|', $ebitda[$date][0])[0]);
+                            
+                                if (!is_numeric($value)) {
+                                    $value = 'N/A';
+                                }
+                            
+                                $value = floatval($value);
+                            } else {
+                                $value = 'N/A';
+                            }
+                            ?>
+
+                            {!! redIfNegative($value, fn($val) => custom_number_format($val)) !!}
+
+                            <x-review-number-button x-data="{ amount: '{{ $value }}', date: '{{ $date }}' }"></x-review-number-button>
                         </td>
                     @endforeach
                 </tr>
@@ -301,22 +314,21 @@
                     </td>
                     @foreach (array_keys($products) as $key => $date)
                         <td class="pl-6 last:pr-8">
-                            @if ($key == 0)
-                                0.0%
-                            @else
-                                @php
-                                    $previousKey = array_keys($products)[$key - 1];
-                                    $currentEbitDAValue = isset($ebitda[$date][0]) ? str_replace(',', '', explode('|', $ebitda[$date][0])[0]) : 0;
-                                    $previousEbitDAValue = isset($ebitda[$previousKey][0]) ? str_replace(',', '', explode('|', $ebitda[$previousKey][0])[0]) : 0;
-                                    $currentEbitDA = floatval($currentEbitDAValue);
-                                    $previousEbitDA = floatval($previousEbitDAValue);
-                                @endphp
-                                @if ($previousEbitDA != 0)
-                                    {!! redIfNegative(round((($currentEbitDA - $previousEbitDA) / $previousEbitDA) * 100, 2), fn($v) => $v . '%') !!}
-                                @else
-                                    N/A
-                                @endif
-                            @endif
+                            <?php
+                            if ($key == 0) {
+                                $value = 0;
+                            } else {
+                                $previousKey = array_keys($products)[$key - 1];
+                                $currentEbitDA = floatval(isset($ebitda[$date][0]) ? str_replace(',', '', explode('|', $ebitda[$date][0])[0]) : 0);
+                                $previousEbitDA = floatval(isset($ebitda[$previousKey][0]) ? str_replace(',', '', explode('|', $ebitda[$previousKey][0])[0]) : 0);
+                            
+                                $value = $previousEbitDA != 0 ? round((($currentEbitDA - $previousEbitDA) / $previousEbitDA) * 100, 2) : 'N/A';
+                            }
+                            ?>
+
+                            {!! redIfNegative($value, fn($val) => $val . '%') !!}
+
+                            <x-review-number-button x-data="{ amount: '{{ $value }}', date: '{{ $date }}' }"></x-review-number-button>
                         </td>
                     @endforeach
                 </tr>
@@ -326,30 +338,30 @@
                     </td>
                     @foreach (array_keys($products) as $key => $date)
                         <td class="last:rounded-br-lg  pl-6 last:pr-8">
-                            @if ($key == 0)
-                                0.0%
-                            @else
-                                @php
-                                    $currentEbitdaValue = 0;
-                                    $currentRevenueValue = 0;
+                            <?php
+                            if ($key == 0) {
+                                $value = 0;
+                            } else {
+                                $currentEbitdaValue = 0;
+                                $currentRevenueValue = 0;
+                            
+                                // Check if the key exists in the $ebitda array and if so, remove commas and convert to float
+                                if (isset($ebitda[$date][0])) {
+                                    $currentEbitdaValue = floatval(str_replace(',', '', explode('|', $ebitda[$date][0])[0]));
+                                }
+                            
+                                // Check if the key exists in the $revenues array and if so, remove commas and convert to float
+                                if (isset($revenues[$date][0])) {
+                                    $currentRevenueValue = floatval(str_replace(',', '', explode('|', $revenues[$date][0])[0]));
+                                }
+                            
+                                $value = $currentRevenueValue != 0 ? round(($currentEbitdaValue / $currentRevenueValue) * 100, 2) : 'N/A';
+                            }
+                            ?>
 
-                                    // Check if the key exists in the $ebitda array and if so, remove commas and convert to float
-                                    if (isset($ebitda[$date][0])) {
-                                        $currentEbitdaValue = floatval(str_replace(',', '', explode('|', $ebitda[$date][0])[0]));
-                                    }
+                            {!! redIfNegative($value, fn($val) => $val . '%') !!}
 
-                                    // Check if the key exists in the $revenues array and if so, remove commas and convert to float
-                                    if (isset($revenues[$date][0])) {
-                                        $currentRevenueValue = floatval(str_replace(',', '', explode('|', $revenues[$date][0])[0]));
-                                    }
-                                @endphp
-                                {{-- Ensure that $currentEbitdaValue is not zero to avoid division by zero --}}
-                                @if ($currentEbitdaValue != 0)
-                                    {!! redIfNegative(round($currentRevenueValue / $currentEbitdaValue, 2)) !!}
-                                @else
-                                    N/A
-                                @endif
-                            @endif
+                            <x-review-number-button x-data="{ amount: '{{ $value }}', date: '{{ $date }}' }"></x-review-number-button>
                         </td>
                     @endforeach
                 </tr>
@@ -369,7 +381,23 @@
                     </td>
                     @foreach (array_keys($products) as $date)
                         <td class="last:rounded-tr-lg pl-6 last:pr-8">
-                            {{ isset($adjNetIncome[$date][0]) ? number_format(floatval(explode('|', str_replace(',', '', $adjNetIncome[$date][0]))[0]), 2) : 'N/A' }}
+                            <?php
+                            if (isset($adjNetIncome[$date][0])) {
+                                $value = str_replace(',', '', explode('|', $adjNetIncome[$date][0])[0]);
+                            
+                                if (!is_numeric($value)) {
+                                    $value = 'N/A';
+                                }
+                            
+                                $value = floatval($value);
+                            } else {
+                                $value = 'N/A';
+                            }
+                            ?>
+
+                            {!! redIfNegative($value, fn($val) => custom_number_format($val)) !!}
+
+                            <x-review-number-button x-data="{ amount: '{{ $value }}', date: '{{ $date }}' }"></x-review-number-button>
                         </td>
                     @endforeach
                 </tr>
@@ -379,26 +407,21 @@
                     </td>
                     @foreach (array_keys($products) as $key => $date)
                         <td class="pl-6 last:pr-8">
-                            @if ($key == 0)
-                                0.0%
-                            @else
-                                @php
-                                    $currentKey = array_keys($products)[$key];
-                                    $previousKey = array_keys($products)[$key - 1];
+                            <?php
+                            if ($key == 0) {
+                                $value = 0;
+                            } else {
+                                $previousKey = array_keys($products)[$key - 1];
+                                $currentAdjNetIncome = floatval(isset($adjNetIncome[$date][0]) ? str_replace(',', '', explode('|', $adjNetIncome[$date][0])[0]) : 0);
+                                $previousAdjNetIncome = floatval(isset($adjNetIncome[$previousKey][0]) ? str_replace(',', '', explode('|', $adjNetIncome[$previousKey][0])[0]) : 0);
+                            
+                                $value = $previousAdjNetIncome != 0 ? round((($currentAdjNetIncome - $previousAdjNetIncome) / $previousAdjNetIncome) * 100, 2) : 'N/A';
+                            }
+                            ?>
 
-                                    $currentAdjNetIncome = isset($adjNetIncome[$currentKey][0]) ? floatval(str_replace(',', '', explode('|', $adjNetIncome[$currentKey][0])[0])) : 0;
-                                    $previousAdjNetIncome = isset($adjNetIncome[$previousKey][0]) ? floatval(str_replace(',', '', explode('|', $adjNetIncome[$previousKey][0])[0])) : 0;
-                                @endphp
+                            {!! redIfNegative($value, fn($val) => $val . '%') !!}
 
-                                @if ($previousAdjNetIncome != 0)
-                                    {!! redIfNegative(
-                                        round((($currentAdjNetIncome - $previousAdjNetIncome) / $previousAdjNetIncome) * 100, 2),
-                                        fn($v) => $v . '%',
-                                    ) !!}
-                                @else
-                                    N/A
-                                @endif
-                            @endif
+                            <x-review-number-button x-data="{ amount: '{{ $value }}', date: '{{ $date }}' }"></x-review-number-button>
                         </td>
                     @endforeach
                 </tr>
@@ -408,20 +431,20 @@
                     </td>
                     @foreach (array_keys($products) as $key => $date)
                         <td class="pl-6 last:pr-8">
-                            @if ($key == 0)
-                                0.0%
-                            @else
-                                @php
-                                    $currentNetIncome = isset($adjNetIncome[$date][0]) ? floatval(str_replace(',', '', explode('|', $adjNetIncome[$date][0])[0])) : 0;
-                                    $currentRevenue = isset($revenues[$date][0]) ? floatval(str_replace(',', '', explode('|', $revenues[$date][0])[0])) : 0;
-                                @endphp
+                            <?php
+                            if ($key == 0) {
+                                $value = 0;
+                            } else {
+                                $currentNetIncome = isset($adjNetIncome[$date][0]) ? floatval(str_replace(',', '', explode('|', $adjNetIncome[$date][0])[0])) : 0;
+                                $currentRevenue = isset($revenues[$date][0]) ? floatval(str_replace(',', '', explode('|', $revenues[$date][0])[0])) : 0;
+                            
+                                $value = $currentNetIncome != 0 ? round(($currentRevenue / $currentNetIncome) * 100, 2) : 'N/A';
+                            }
+                            ?>
 
-                                @if ($currentNetIncome != 0)
-                                    {!! redIfNegative(round(($currentRevenue / $currentNetIncome) * 100, 2), fn($v) => $v . '%') !!}
-                                @else
-                                    N/A
-                                @endif
-                            @endif
+                            {!! redIfNegative($value, fn($val) => $val . '%') !!}
+
+                            <x-review-number-button x-data="{ amount: '{{ $value }}', date: '{{ $date }}' }"></x-review-number-button>
                         </td>
                     @endforeach
                 </tr>
@@ -431,7 +454,13 @@
                     </td>
                     @foreach (array_keys($products) as $key => $date)
                         <td class="pl-6 last:pr-8">
-                            {{ isset($dilutedSharesOut[$date][0]) ? str_replace(',', '', explode('|', $dilutedSharesOut[$date][0])[0]) : 'N/A' }}
+                            <?php
+                            $value = isset($dilutedSharesOut[$date][0]) && is_numeric($dilutedSharesOut[$date][0]) ? floatval(str_replace(',', '', explode('|', $dilutedSharesOut[$date][0])[0])) : 'N/A';
+                            ?>
+
+                            {!! redIfNegative($value, fn($val) => custom_number_format($val)) !!}
+
+                            <x-review-number-button x-data="{ amount: '{{ $value }}', date: '{{ $date }}' }"></x-review-number-button>
                         </td>
                     @endforeach
                 </tr>
@@ -441,18 +470,20 @@
                     </td>
                     @foreach (array_keys($products) as $key => $date)
                         <td class="last:rounded-br-lg  pl-6 last:pr-8">
-                            @if ($key == 0)
-                                0.0%
-                            @else
-                                @php
-                                    $previousDate = array_keys($products)[$key - 1];
-                                    $currentDilutedSharesOut = isset($dilutedSharesOut[$date][0]) ? floatval(str_replace(',', '', explode('|', $dilutedSharesOut[$date][0])[0])) : 0;
-                                    $previousDilutedSharesOut = isset($dilutedSharesOut[$previousDate][0]) ? floatval(str_replace(',', '', explode('|', $dilutedSharesOut[$previousDate][0])[0])) : 0;
+                            <?php
+                            if ($key == 0) {
+                                $value = 0;
+                            } else {
+                                $previousDate = array_keys($products)[$key - 1];
+                                $currentDilutedSharesOut = isset($dilutedSharesOut[$date][0]) ? floatval(str_replace(',', '', explode('|', $dilutedSharesOut[$date][0])[0])) : 0;
+                                $previousDilutedSharesOut = isset($dilutedSharesOut[$previousDate][0]) ? floatval(str_replace(',', '', explode('|', $dilutedSharesOut[$previousDate][0])[0])) : 0;
+                            
+                                $value = $previousDilutedSharesOut != 0 ? round((($currentDilutedSharesOut - $previousDilutedSharesOut) / $previousDilutedSharesOut) * 100, 2) : 'N/A';
+                            }
+                            ?>
+                            {!! redIfNegative($value, fn($v) => $v . '%') !!}
 
-                                    $percentageChange = $previousDilutedSharesOut != 0 ? round((($currentDilutedSharesOut - $previousDilutedSharesOut) / $previousDilutedSharesOut) * 100, 2) : 'N/A';
-                                @endphp
-                                {!! redIfNegative($percentageChange, fn($v) => $v . '%') !!}
-                            @endif
+                            <x-review-number-button x-data="{ amount: '{{ $value }}', date: '{{ $date }}' }"></x-review-number-button>
                         </td>
                     @endforeach
                 </tr>
@@ -487,7 +518,11 @@
                         <th class="pl-6 pt-4 font-bold whitespace-nowrap text-dark">Adj. Diluted EPS</th>
                         @foreach (array_keys($products) as $key => $date)
                             <th class="pl-6 last:pr-8 pt-4 font-bold whitespace-nowrap text-dark text-right">
-                                {{ isset($dilutedEPS[$date][0]) ? str_replace(',', '', explode('|', $dilutedEPS[$date][0])[0]) : 'N/A' }}
+                                <?php $value = isset($dilutedEPS[$date][0]) ? str_replace(',', '', explode('|', $dilutedEPS[$date][0])[0]) : 'N/A'; ?>
+
+                                {!! redIfNegative($value, fn($val) => custom_number_format($val)) !!}
+
+                                <x-review-number-button x-data="{ amount: '{{ $value }}', date: '{{ $date }}' }"></x-review-number-button>
                             </th>
                         @endforeach
                     </tr>
@@ -500,23 +535,21 @@
                         </td>
                         @foreach (array_keys($products) as $key => $date)
                             <td class="pl-6 py-4 last:pr-8 text-right">
-                                @if ($key == 0)
-                                    0.0%
-                                @else
-                                    @php
-                                        $previousDate = array_keys($products)[$key - 1];
-                                        $currentDilutedEPS = isset($dilutedEPS[$date][0]) ? floatval(str_replace(',', '', explode('|', $dilutedEPS[$date][0])[0])) : 0;
-                                        $previousDilutedEPS = isset($dilutedEPS[$previousDate][0]) ? floatval(str_replace(',', '', explode('|', $dilutedEPS[$previousDate][0])[0])) : 0;
-                                    @endphp
-                                    @if ($previousDilutedEPS != 0)
-                                        {!! redIfNegative(
-                                            round((($currentDilutedEPS - $previousDilutedEPS) / $previousDilutedEPS) * 100, 2),
-                                            fn($v) => $v . '%',
-                                        ) !!}
-                                    @else
-                                        N/A
-                                    @endif
-                                @endif
+                                <?php
+                                if ($key == 0) {
+                                    $value = 0;
+                                } else {
+                                    $previousDate = array_keys($products)[$key - 1];
+                                    $currentDilutedEPS = isset($dilutedEPS[$date][0]) ? floatval(str_replace(',', '', explode('|', $dilutedEPS[$date][0])[0])) : 0;
+                                    $previousDilutedEPS = isset($dilutedEPS[$previousDate][0]) ? floatval(str_replace(',', '', explode('|', $dilutedEPS[$previousDate][0])[0])) : 0;
+                                
+                                    $value = $previousDilutedEPS != 0 ? round((($currentDilutedEPS - $previousDilutedEPS) / $previousDilutedEPS) * 100, 2) : 'N/A';
+                                }
+                                ?>
+
+                                {!! redIfNegative($value, fn($v) => $v . '%') !!}
+
+                                <x-review-number-button x-data="{ amount: '{{ $value }}', date: '{{ $date }}' }"></x-review-number-button>
                             </td>
                         @endforeach
                     </tr>

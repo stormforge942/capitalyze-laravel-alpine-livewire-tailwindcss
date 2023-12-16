@@ -306,14 +306,13 @@ class CompanyOverview extends Component
         $data = [];
 
         foreach ($rawData as $key => $value) {
-            info($value);
             try {
                 $key = explode('|', $key)[0];
                 $data[$key] = $value;
             } catch (\Throwable $th) {
             }
         }
-
+        
         $this->ebitda = $data['EBITDA'] ?? null;
         $this->adjNetIncome = $data['Net Income'] ?? null;
         $this->dilutedEPS = $data['Diluted EPS Excl Extra Items'] ?? null;

@@ -18,7 +18,7 @@
                     Previous amount:
                 </label>
                 <div class="display-text">
-                    ${{ number_format($previousAmount) }}
+                    ${{ number_format($previousAmount, 2) }}
                 </div>
             </div>
 

@@ -57,7 +57,7 @@ function asTabs(array $tabs)
 
 function redIfNegative($value, ?callable $formatter = null)
 {
-    if (!is_numeric($value)) return $value;
+    if (!is_numeric($value)) return e($value);
 
     if ($value < 0) {
         if ($formatter) {
@@ -72,4 +72,12 @@ function redIfNegative($value, ?callable $formatter = null)
     }
 
     return $value;
+}
+
+function custom_number_format($number, $decimals = 2, $dec_point = '.', $thousands_sep = ',')
+{
+    if (!is_numeric($number)) return $number;
+
+    $number = number_format($number, $decimals, $dec_point, $thousands_sep);
+    return $number;
 }
