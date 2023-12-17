@@ -83,6 +83,8 @@
             <livewire:comapany-filings-summary :company="$company" :tinker="$ticker" :period="$period" />
         @elseif($tab == 'analysis')
             <livewire:company-analysis :company="$company" :ticker="$ticker" :period="$period" />
+        @elseif($tab == 'earnings-calendar')
+            <livewire:earnings-calendar.page :company="$company" />
         @endif
     </main>
 

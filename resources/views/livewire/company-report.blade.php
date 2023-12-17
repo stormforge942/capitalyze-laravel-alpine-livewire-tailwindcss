@@ -177,7 +177,7 @@
                 this.chart = window.renderCompanyReportChart(this.formattedChartData);
             }
         }" wire:key="{{ now() }}">
-            <x-primary-tabs :tabs="$tabs" x-modelable="active" x-model="tabActive" min-width="160px">
+            <x-primary-tabs :tabs="$tabs" @tab-changed="$wire.changeTab($event.detail.key)" min-width="160px">
                 @include('partials.company-report.filters')
 
                 @if ($noData)

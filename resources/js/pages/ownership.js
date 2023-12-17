@@ -1,5 +1,11 @@
 import chartJsPlugins, { formatCmpctNumber } from "../chartjs-plugins"
 
+export function updateQueryParam(key, value) {
+    const url = new URL(window.location.href)
+    url.searchParams.set(key, value)
+    window.history.replaceState({}, "", url)
+}
+
 export function initFundHistoryChart(canvas, data) {
     const ctx = canvas.getContext("2d")
 
@@ -81,6 +87,8 @@ export function initFundHistoryChart(canvas, data) {
 
     return chart
 }
+
+window.updateQueryParam = updateQueryParam
 
 window.ownership = {
     initFundHistoryChart,

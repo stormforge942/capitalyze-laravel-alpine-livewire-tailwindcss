@@ -14,6 +14,7 @@ class PrimaryTabs extends Component
         array $tabs = [],
         ?string $active = null,
         public ?string $minWidth = '250px',
+        public array $badges = [],
     ) {
         if (!is_array(array_values($tabs)[0])) {
             $tabs_ = [];
