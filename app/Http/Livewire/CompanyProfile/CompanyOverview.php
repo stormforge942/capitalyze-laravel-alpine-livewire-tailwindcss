@@ -291,17 +291,32 @@ class CompanyOverview extends Component
 
     private function getPresentationData()
     {
-        $tickerSymbol = $this->profile['symbol'];
+        $ticker = $this->profile['symbol'];
 
-        $infoAnnualData = InfoTikrPresentation::where('ticker', $tickerSymbol)
-            ->where('period', 'annual')
-            ->orderByDesc('id')
-            ->get(['income_statement']); // Retrieves a collection
+        $rawData = json_decode(
+            InfoTikrPresentation::where('ticker', $ticker)
+                ->where('period', 'annual')
+                ->orderByDesc('id')
+                ->select(['income_statement'])
+                ->first()
+                ?->income_statement ?? "{}",
+            true
+        );
 
-        $this->ebitda = $infoAnnualData['EBITDA'] ?? null;
-        $this->adjNetIncome = $infoAnnualData['Net Income'] ?? null;
-        $this->dilutedEPS = $infoAnnualData['Diluted EPS Excl Extra Items'] ?? null;
-        $this->revenues = $infoAnnualData['Revenues'] ?? null;
-        $this->dilutedSharesOut = $infoAnnualData['Weighted Average Diluted Shares Outstanding'] ?? null;
+        $data = [];
+
+        foreach ($rawData as $key => $value) {
+            try {
+                $key = explode('|', $key)[0];
+                $data[$key] = $value;
+            } catch (\Throwable $th) {
+            }
+        }
+        
+        $this->ebitda = $data['EBITDA'] ?? null;
+        $this->adjNetIncome = $data['Net Income'] ?? null;
+        $this->dilutedEPS = $data['Diluted EPS Excl Extra Items'] ?? null;
+        $this->revenues = $data['Revenues'] ?? null;
+        $this->dilutedSharesOut = $data['Weighted Avg. Diluted Shares Outstanding'] ?? null;
     }
 }

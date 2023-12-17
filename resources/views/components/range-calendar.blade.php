@@ -47,16 +47,16 @@
         calendar.init()
     },
 }" x-modelable="value" {{ $attributes }}>
-    <x-dropdown placement="bottom-end" x-model="showDropdown">
+    <x-dropdown placement="{{ $placement }}" x-model="showDropdown">
         <x-slot name="trigger">
             <div
-                class="text-left text-sm border-2 border-[#F3F3F3] rounded-lg flex relative divide-x-2 divide-[#F3F3F3] [&>*]:px-4">
+                class="text-left text-sm border border-[#D1D3D5] rounded-lg flex relative divide-x divide-[#F3F3F3] [&>*]:px-4 bg-white">
                 <div class="py-2">
-                    <label class="text-dark-light2">From</label>
+                    <label class="text-[#7C8286]">From</label>
                     <p x-text="formattedStartsAt"></p>
                 </div>
                 <div class="py-2">
-                    <label class="text-dark-light2">To</label>
+                    <label class="text-[#7C8286]">To</label>
                     <p x-text="formattedEndsAt"></p>
                 </div>
                 <div class="grid place-items-center">

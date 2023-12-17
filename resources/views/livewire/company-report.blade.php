@@ -35,7 +35,7 @@
                             }).map(entry => {
                                 let value = entry[1];
         
-                                if (Number.isNaN(value)) {
+                                if (Number.isNaN(value) || value.trim() === '') {
                                     value = null;
                                 } else {
                                     value = Number(value);
@@ -49,11 +49,16 @@
                             type: row.type,
                             label: row.title,
                             borderColor: row.color,
-                            backgroundColor: row.color,
+        
+                            backgroundColor: row.type === 'line' ?
+                                chartJsPlugins.makeLinearGradientBackgroundColor([
+                                    [0.1, window.hex2rgb(row.color, .2)],
+                                    [1, window.hex2rgb(row.color, 0)],
+                                ]) : row.color,
                             pointRadius: 1,
                             pointHoverRadius: 8,
                             tension: 0.5,
-                            fill: row.type !== 'line',
+                            fill: true,
                             pointHoverBorderColor: '#fff',
                             pointHoverBorderWidth: 4,
                             pointHoverBackgroundColor: row.color,
@@ -163,16 +168,16 @@
                 {{-- @todo: find efficient way to do this --}}
         
                 this.chart?.destroy();
-                this.chart = null;
         
                 if (!this.selectedChartRows.length) {
+                    this.chart = null;
                     return;
                 }
         
                 this.chart = window.renderCompanyReportChart(this.formattedChartData);
             }
         }" wire:key="{{ now() }}">
-            <x-primary-tabs :tabs="$tabs" x-modelable="active" x-model="tabActive" min-width="160px">
+            <x-primary-tabs :tabs="$tabs" @tab-changed="$wire.changeTab($event.detail.key)" min-width="160px">
                 @include('partials.company-report.filters')
 
                 @if ($noData)
@@ -425,7 +430,11 @@
         });
 
         function renderCompanyReportChart(data) {
-            const ctx = document.getElementById("chart-company-report").getContext("2d");
+            const ctx = document.getElementById("chart-company-report")?.getContext("2d");
+
+            if (!ctx) {
+                renderCompanyReportChart(data);
+            }
 
             data.datasets.sort((a, b) => {
                 // If 'type' is 'line', prioritize it over 'bar'

@@ -70,6 +70,15 @@ class CompanyReport extends Component
         $this->getData();
     }
 
+    public function changeTab(string $tab)
+    {
+        if (!in_array($tab, array_keys($this->tabs))) {
+            return;
+        }
+
+        $this->activeTab = $tab;
+    }
+
     public function getData(): void
     {
         [$acronym, $period] = in_array($this->period, ['Calendar Annual', 'Fiscal Annual'])

@@ -128,6 +128,8 @@
                                                 :class="formattedValue.isNegative ? 'text-red' : ''"
                                                 x-text="formattedValue.result"
                                                 @click="$wire.emit('rightSlide', row.values[date])"></span>
+
+                                            <x-review-number-button x-data="{ amount: row.values[date]?.value || 0, date }"></x-review-number-button>
                                         </div>
                                     </template>
                                 </div>

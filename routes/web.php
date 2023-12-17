@@ -30,6 +30,7 @@ use App\Http\Controllers\JapanController;
 use App\Http\Livewire\CompanyFilingsPage;
 use App\Http\Livewire\CompanyIdentifiers;
 use App\Http\Controllers\CompanyController;
+use App\Http\Controllers\EarningsCalendarController;
 use App\Http\Controllers\EtfController;
 use App\Http\Controllers\EuronextController;
 use App\Http\Controllers\ShanghaiController;
@@ -50,7 +51,7 @@ Route::get('/', HomeController::class)->name('home');
 Route::middleware([])->group(function () {
     Route::middleware(['auth', 'approved', 'verified', 'checkPagePermission'])->group(function () {
         Route::get('/track-investor', [CompanyController::class, 'trackInvestor'])->name('track-investor');
-        Route::get('/calendar/earnings', EarningsCalendar::class)->name('earnings-calendar');
+        Route::get('/calendar/earnings', EarningsCalendarController::class)->name('earnings-calendar');
         Route::get('/calendar/economics', EconomicsCalendar::class)->name('economics-calendar');
         Route::get('/calendar/economics/{release_id}/', EconomicRelease::class)->name('economics-release');
         Route::get('/calendar/economics/{release_id}/{series_id}/', EconomicReleaseSeries::class)->name('economics-release-series');

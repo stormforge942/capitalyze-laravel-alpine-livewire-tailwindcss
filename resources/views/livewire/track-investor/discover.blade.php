@@ -1,5 +1,5 @@
 <div>
-    <div class="hidden md:flex items-baseline justify-between">
+    <div class="hidden lg:flex items-baseline justify-between">
         <h2 class="text-xl font-semibold">Discover Funds</h2>
 
         @include('livewire.track-investor.search')
