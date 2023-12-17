@@ -124,7 +124,7 @@ class CompanyController extends BaseController
 
     public function trackInvestor(Request $request)
     {
-        $ticker = Company::DEFAULT_TICKER;
+        $ticker = $request->query('ticker', Company::DEFAULT_TICKER);
 
         $company = Company::where('ticker', $ticker)->get()->first();
 

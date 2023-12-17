@@ -3,12 +3,15 @@
 namespace App\Http\Controllers;
 
 use App\Models\Company;
+use Illuminate\Http\Request;
 
 class EarningsCalendarController extends Controller
 {
-    public function __invoke()
+    public function __invoke(Request $request)
     {
-        $company = Company::where('ticker', Company::DEFAULT_TICKER)->get()->first();
+        $ticker = $request->query('ticker', Company::DEFAULT_TICKER);
+        
+        $company = Company::where('ticker', $ticker)->get()->first();
 
         return view('layouts.company', [
             'tab' => 'earnings-calendar',

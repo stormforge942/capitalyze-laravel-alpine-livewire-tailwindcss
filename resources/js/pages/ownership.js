@@ -2,7 +2,13 @@ import chartJsPlugins, { formatCmpctNumber } from "../chartjs-plugins"
 
 export function updateQueryParam(key, value) {
     const url = new URL(window.location.href)
-    url.searchParams.set(key, value)
+
+    if (value) {
+        url.searchParams.set(key, value)
+    } else {
+        url.searchParams.delete(key)
+    }
+    
     window.history.replaceState({}, "", url)
 }
 

@@ -47,7 +47,7 @@
         calendar.init()
     },
 }" x-modelable="value" {{ $attributes }}>
-    <x-dropdown placement="bottom-end" x-model="showDropdown">
+    <x-dropdown placement="{{ $placement }}" x-model="showDropdown">
         <x-slot name="trigger">
             <div
                 class="text-left text-sm border border-[#D1D3D5] rounded-lg flex relative divide-x divide-[#F3F3F3] [&>*]:px-4 bg-white">

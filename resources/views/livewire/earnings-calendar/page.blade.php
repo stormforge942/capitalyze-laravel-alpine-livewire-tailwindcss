@@ -8,13 +8,13 @@
         <x-primary-tabs :tabs="$tabs" :active="$activeTab" min-width="160px" :x-init="'badges = '.$badges">
             <div x-data="{
                 data: @js($data),
-                exchange: '{{ $exchange }}',
+                exchange: '',
                 search: '',
                 sort: {
                     column: '',
                     direction: 'asc',
                 },
-                customDate: [null, null],
+                customDateRange: @js($customDateRange),
                 loading: false,
                 get rows() {
                     const data = JSON.parse(JSON.stringify(this.data[this.activeTab.key]));
@@ -43,11 +43,13 @@
                     return rows;
                 },
                 init() {
-                    this.$watch('customDate', () => {
+                    this.loadCustomData();
+            
+                    this.$watch('customDateRange', () => {
+                        window.updateQueryParam('customDateRange', !this.customDateRange[0] ? `` : `${this.customDateRange[0] || ''},${this.customDateRange[1] || ''}`)
+            
                         this.loadCustomData();
                     })
-
-                    this.$watch('search')
                 },
                 sortBy(column) {
                     if (this.sort.column === column) {
@@ -67,7 +69,7 @@
                     this.data.custom = [];
                     this.badges.custom = null;
             
-                    const [from, to] = this.customDate;
+                    const [from, to] = this.customDateRange;
             
                     if (!from || !to) {
                         return;
@@ -84,9 +86,9 @@
                             this.loading = false;
                         });
                 }
-            }">
+            }" @tab-changed.window="search = ''; exchange = '';">
                 <div x-show="activeTab.key === 'custom'">
-                    <x-range-calendar x-model="customDate"></x-range-calendar>
+                    <x-range-calendar x-model="customDateRange" placement="bottom-start"></x-range-calendar>
                 </div>
 
                 <div class="mt-4 grid grid-cols-12 gap-2 mb-2">
@@ -211,12 +213,12 @@
                             <template x-if="!rows.length">
                                 <tr>
                                     <td class="text-center py-4 text-dark-light" colspan="7">
-                                        <template x-if="loading">
+                                        <template x-if="loading && activeTab.key === 'custom'">
                                             <div class="grid py-10 place-items-center">
                                                 <span class="mx-auto simple-loader !text-green-dark"></span>
                                             </div>
                                         </template>
-                                        <template x-if="!loading">
+                                        <template x-if="!loading || activeTab.key !== 'custom'">
                                             <span>No records found</span>
                                         </template>
                                     </td>

@@ -10,11 +10,11 @@ use Illuminate\Support\Js;
 
 class Page extends Component
 {
-    public $exchange = '';
     public $exchanges;
     protected $dates = [];
 
     public $activeTab;
+    public $customDateRange;
     protected $tabs = [
         'yesterday' => 'Yesterday',
         'today' => 'Today',
@@ -27,6 +27,11 @@ class Page extends Component
     public function mount(Request $request)
     {
         $this->activeTab = $request->query('tab', 'today');
+
+        $this->customDateRange = [null, null];
+        if (count(explode(',', request()->query('customDateRange', ''))) === 2) {
+            $this->customDateRange = explode(',', request()->query('customDateRange', ''));
+        }
 
         $this->exchanges = DB::connection('pgsql-xbrl')
             ->table('new_earnings')
