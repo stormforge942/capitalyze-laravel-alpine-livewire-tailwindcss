@@ -41,7 +41,7 @@
             </div>
         </x-slot>
 
-        <div class="w-[20rem] sm:w-[26rem]">
+        <form class="w-[20rem] sm:w-[26rem]">
             <div class="flex justify-between gap-2 px-6 pt-6">
                 <span class="font-medium" x-text="placeholder"></span>
 
@@ -57,7 +57,7 @@
 
             <div class="max-h-[19rem] overflow-y-auto dropdown-scroll mr-1">
                 <div class="space-y-2 px-6">
-                    <template x-for="(label, key) in options" :key="key">
+                    <template x-for="(label, key) in options" :key="label + key">
                         <label class="cursor-pointer rounded flex items-center p-4 hover:bg-green-light gap-x-4">
                             <input type="radio" :name="name" :value="key"
                                 class="custom-radio border-dark focus:ring-0" x-model="tmpValue">
@@ -75,6 +75,6 @@
                     Show Result
                 </button>
             </div>
-        </div>
+        </form>
     </x-dropdown>
 </div>

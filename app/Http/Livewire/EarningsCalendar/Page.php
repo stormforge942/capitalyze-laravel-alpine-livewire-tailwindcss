@@ -12,9 +12,9 @@ class Page extends Component
 {
     public $exchanges;
     protected $dates = [];
-
     public $activeTab;
     public $customDateRange;
+
     protected $tabs = [
         'yesterday' => 'Yesterday',
         'today' => 'Today',
@@ -65,7 +65,7 @@ class Page extends Component
             ->whereBetween('date', [$start, $end])
             ->get()
             ->map(function ($item) {
-                $item->origin = '8-k';
+                $item->origin = '8-K';
                 $item->pub_time = $item->acceptance_time;
                 unset($item->acceptance_time);
                 return $item;
@@ -77,7 +77,7 @@ class Page extends Component
             ->whereBetween('date', [$start, $end])
             ->get()
             ->map(function ($item) {
-                $item->origin = 'press-release';
+                $item->origin = 'Press Release';
                 return $item;
             });
 
