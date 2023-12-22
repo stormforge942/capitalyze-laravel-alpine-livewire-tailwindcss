@@ -52,7 +52,7 @@ class Page extends Component
     public function getData($start = null, $end = null)
     {
         if (!$start) {
-            $start = strtotime($this->dates['yesterday']) < strtotime($this->dates['this_week_start']) ? $this->dates['yeserday'] : $this->dates['this_week_start'];
+            $start = strtotime($this->dates['yesterday']) < strtotime($this->dates['this_week_start']) ? $this->dates['yesterday'] : $this->dates['this_week_start'];
         }
 
         if (!$end) {

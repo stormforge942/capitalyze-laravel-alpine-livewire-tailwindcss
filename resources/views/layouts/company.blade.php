@@ -56,7 +56,7 @@
         @elseif($tab == 'executiveCompensation')
             <livewire:company-executive-compensation :company="$company" :ticker="$ticker" :period="$period" />
         @elseif($tab == 'report')
-            <livewire:company-report :company="$company" :ticker="$ticker" />
+            <livewire:company-report.page :company="$company" :ticker="$ticker" />
         @elseif($tab == 'shareholders')
             <livewire:company-shareholders :company="$company" :ticker="$ticker" :period="$period" />
         @elseif($tab == 'summary')

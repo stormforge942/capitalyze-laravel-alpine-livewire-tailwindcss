@@ -1,0 +1,434 @@
+<?php
+
+namespace App\Http\Livewire\CompanyReport;
+
+use Carbon\Carbon;
+use Livewire\Component;
+use Illuminate\Support\Str;
+use Illuminate\Http\Request;
+use App\Models\InfoPresentation;
+use App\Models\InfoTikrPresentation;
+use Illuminate\Support\Facades\DB;
+
+class Page extends Component
+{
+    // filters 
+    public $view;
+    public $period;
+    public $unitType;
+    public $decimalPlaces;
+    public $order;
+    public $freezePane;
+
+    public $activeTab;
+    public $company;
+    public $rows = [];
+    public $currency = 'USD';
+    public $tableDates = [];
+    public $rangeDates = [];
+    public $selectedDateRange;
+    public $noData = false;
+
+    public $disclosureTabs = [];
+    public $disclosureTab = '';
+    public $disclosureFootnotes = [];
+    public $disclosureFootnote = '';
+
+    protected $chartColors = [
+        "#000000", "#454545", "#5e5e5e", "#636363", "#7a7a7a", "#878787", "#7a7e94", "#5d6074", "#4d5060", "#3d404c", "#4f5263"
+    ];
+
+    protected $tabs = [
+        'income-statement' => 'Income Statement',
+        'balance-sheet' => 'Balance Sheet',
+        'cash-flow' => 'Cash Flow',
+        'ratios' => 'Ratios',
+        'disclosure' => 'Disclosure',
+    ];
+
+    protected $listeners = ['periodChange', 'tabClicked', 'tabSubClicked', 'selectRow', 'unselectRow'];
+
+    public function mount(Request $request, $company): void
+    {
+        // set properties from query string 
+        $this->activeTab = $request->query('tab', 'income-statement');
+        $this->view = $request->query('view', 'Standardised');
+        $this->period = $request->query('period', 'Fiscal Annual');
+        $this->unitType = $request->query('unitType', 'Thousands');
+        $this->decimalPlaces = intval($request->query('decimalPlaces', 2));
+        $this->order = $request->query('order', 'Latest on the Right');
+        $this->freezePane = $request->query('freezePane', 'Top Row & First Column');
+        $this->disclosureTab = $request->query('disclosureTab', '');
+        $this->disclosureFootnote = $request->query('disclosureFootnote', '');
+
+        $range = explode(',', $request->query('selectedDateRange', ''));
+        if (count($range) === 2 && is_numeric($range[0]) && is_numeric($range[1])) {
+            $this->selectedDateRange = [intval($range[0]), intval($range[1])];
+        } else {
+            $this->selectedDateRange = [null, null];
+        }
+
+        $this->company = [
+            'name' => $company['name'] ?? $company['ticker'],
+            'ticker' => $company['ticker'],
+        ];
+
+        $this->setupTabData();
+    }
+
+    public function updated($prop): void
+    {
+        if (in_array($prop, ['view', 'activeTab', 'period', 'disclosureTab', 'disclosureFootnote'])) {
+            $this->setupTabData();
+        }
+    }
+
+    public function render()
+    {
+        return view('livewire.company-report.page', [
+            'tabs' => $this->tabs,
+            'reverse' => $this->order === 'Latest on the Left',
+            'viewTypes' => [
+                'As reported',
+                'Adjusted',
+                'Standardised',
+                'Per Share',
+                'Common size',
+            ],
+            'periodTypes' => [
+                'Fiscal Annual',
+                'Fiscal Quaterly',
+                'Fiscal Semi-Annual',
+                'YTD',
+                'LTM',
+                'Calendar Annual',
+            ],
+            'unitTypes' => [
+                'None',
+                'Thousands',
+                'Millions',
+                'Billions',
+            ],
+            'decimalTypes' => [
+                '' => 'Auto',
+                '2' => '.00',
+                '3' => '.000',
+            ],
+            'orderTypes' => [
+                'Latest on the Right',
+                'Latest on the Left',
+            ],
+            'freezePaneTypes' => [
+                'Top Row',
+                'First Column',
+                'Top Row & First Column',
+            ],
+        ]);
+    }
+
+    public function setupTabData()
+    {
+        $this->noData = false;
+
+        $data = rescue(fn () => json_decode($this->getData(), true), null, false);
+
+        if (!$data) {
+            $this->noData = true;
+            return;
+        }
+
+        $this->generateTableDates($data);
+        $this->generateRows($data);
+    }
+
+    public function getData(): ?string
+    {
+        [$acronym, $period] = in_array($this->period, ['Calendar Annual', 'Fiscal Annual'])
+            ? ['arf5drs', 'annual']
+            : ['qrf5drs', 'quarter'];
+
+        if ($this->activeTab === 'disclosure') {
+            $response = InfoPresentation::query()
+                ->where([
+                    'ticker' => $this->company['ticker'],
+                    'acronym' => $acronym,
+                ])
+                // we already have dedicated tabs for these
+                ->whereNotIn('title',  [
+                    'Income Statement',
+                    'Balance Sheet Statement',
+                    'Cash Flow Statement',
+                ])
+                // trim because title has extra space at the end
+                ->get([DB::raw('TRIM(title) as title'), 'statement_group']);
+
+            $this->disclosureTabs = [];
+
+            foreach ($response as $item) {
+                if ($item->statement_group === 'Financial Statements [Financial Statements]') {
+                    $this->disclosureTabs[$item->title] = $item->title;
+                } else {
+                    $this->disclosureFootnotes[] = $item->title;
+                }
+            }
+
+            if (!$response->count()) {
+                return null;
+            }
+
+            if (count($this->disclosureFootnotes)) {
+                $this->disclosureTabs['footnotes'] = "Footnotes";
+
+                if (!$this->disclosureFootnote || !in_array($this->disclosureFootnote, $this->disclosureFootnotes)) {
+                    $this->disclosureFootnote = $this->disclosureFootnotes[0];
+                }
+            }
+
+            if (!$this->disclosureTab || !in_array($this->disclosureTab, array_keys($this->disclosureTabs))) {
+                $this->disclosureTab = array_key_first($this->disclosureTabs);
+            }
+
+            $statement = $this->disclosureTab === 'footnotes'
+                ? $this->disclosureFootnote
+                : $this->disclosureTab;
+
+            return InfoPresentation::query()
+                ->where([
+                    'ticker' => $this->company['ticker'],
+                    'acronym' => $acronym,
+                ])
+                // trim because title has extra space at the end
+                ->where(DB::raw('TRIM(title)'), $statement)
+                ->select('info')
+                ->first()
+                ?->info;
+        }
+
+        if ($this->view === 'Standardised') {
+            $column = [
+                'balance-sheet' => 'balance_sheet',
+                'income-statement' => 'income_statement',
+                'cash-flow' => 'cash_flow',
+                'ratios' => 'ratios',
+            ][$this->activeTab] ?? null;
+
+            if (!$column) {
+                return null;
+            }
+
+            return InfoTikrPresentation::query()
+                ->where('ticker', $this->company['ticker'])
+                ->where("period", $period)
+                ->select($column)
+                ->first()
+                ?->{$column};
+        }
+
+        $title = [
+            'income-statement' => 'Income Statement',
+            'balance-sheet' => 'Balance Sheet Statement',
+            'cash-flow' => 'Cash Flow Statement',
+        ][$this->activeTab] ?? null;
+
+        if (!$title) {
+            return null;
+        }
+
+        return InfoPresentation::query()
+            ->where([
+                'ticker' => $this->company['ticker'],
+                'acronym' => $acronym,
+                'title' => $title,
+                'statement_group' => 'Financial Statements [Financial Statements]'
+            ])
+            ->select('info')
+            ->first()
+            ?->info;
+    }
+
+    private function extractDates($array, $dates = [])
+    {
+        foreach ($array as $key => $value) {
+            if (is_array($value)) {
+                $timestamp = strtotime($key);
+
+                if ($timestamp) {
+                    $date = date('Y-m-d', $timestamp);
+
+                    if (!in_array($date, $dates)) {
+                        $dates[] = $date;
+                    }
+                }
+
+                $dates = $this->extractDates($value, $dates);
+            } else {
+                break;
+            }
+        }
+
+        return $dates;
+    }
+
+    private function generateTableDates($data)
+    {
+        $this->tableDates = collect($this->extractDates($data))
+            ->sortBy(fn ($date) => strtotime($date))
+            ->values()
+            ->toArray();
+
+        $years = collect($this->tableDates)
+            ->map(fn ($date) => date('Y', strtotime($date)));
+
+        $this->rangeDates = range($years->min(), $years->max());
+
+        $this->updateDateRangeIfNeeded();
+    }
+
+    /**
+     * if there is no range i.e [null, null], create new range,
+     * if there is a range, check if the start and end date are in the range,
+     * if not, update the range
+     */
+    private function updateDateRangeIfNeeded()
+    {
+        $start = $this->selectedDateRange[0];
+        $end = $this->selectedDateRange[1];
+
+        if (!$start || !$end) {
+            $idx = count($this->rangeDates) - 6;
+            $start = $this->rangeDates[$idx < 0 ? 0 : $idx];
+
+            $idx = count($this->rangeDates) - 1;
+            $end = $this->rangeDates[$idx < 0 ? 0 : $idx];
+        } else {
+            if ($start < $this->rangeDates[0]) {
+                $start = $this->rangeDates[0];
+            }
+
+            if ($end > $this->rangeDates[count($this->rangeDates) - 1]) {
+                $end = $this->rangeDates[count($this->rangeDates) - 1];
+            }
+        }
+
+        $this->selectedDateRange = [$start, $end];
+    }
+
+    private function generateRows($data)
+    {
+        if ($this->view !== 'Standardised') {
+            if (
+                isset($data['Income Statement']) &&
+                is_array($data['Income Statement']) &&
+                isset($data['Income Statement']['Statement']) &&
+                is_array($data['Income Statement']['Statement']) &&
+                isset($data['Income Statement']['Statement']['Statement'])
+            ) {
+                $data = $data['Income Statement']['Statement']['Statement'];
+            }
+
+            if (
+                isset($data['Statement of Financial Position']) &&
+                is_array($data['Statement of Financial Position'])
+            ) {
+                $data = $data['Statement of Financial Position'];
+            }
+
+            if (
+                isset($data['Statement of Cash Flows']) &&
+                is_array($data['Statement of Cash Flows'])
+            ) {
+                $data = $data['Statement of Cash Flows'];
+            }
+        }
+
+        $rows = [];
+
+        foreach ($data as $key => $value) {
+            $rows[] = $this->generateRow($value, $key);
+        }
+
+        $this->rows = $rows;
+    }
+
+    private function generateRow($data, $title, $isSegmentation = false): array
+    {
+        $row = [
+            'title' => $title,
+            'seg_start' => false,
+            'segmentation' => false,
+            'values' => $this->generateEmptyCellsRow(),
+            'children' => [],
+        ];
+
+        foreach ($data as $key => $value) {
+            if (strtotime($key)) {
+                foreach ($this->tableDates as $tableDate) {
+                    if (substr($tableDate, 0, 7) == substr($key, 0, 7)) {
+                        $row['values'][$tableDate] = $this->parseCell($value, $key);
+                        break;
+                    }
+                }
+            } else {
+                if (in_array($key, ['#segmentation'])) {
+                    foreach ($value as $sKey => $sValue) {
+                        $keyn = array_keys($value[$sKey])[0];
+                        $valuen = $sValue[$keyn];
+                        $keynn = array_keys($valuen)[0];
+                        $valuenn = $valuen[$keynn];
+                        $row['children'][] = $this->generateRow($valuenn, $keynn, true);
+                    }
+                } else {
+                    $row['children'][] = $this->generateRow($value, $key, $isSegmentation);
+                }
+            }
+        }
+
+        $row['seg_start'] = count($row['children']) && collect($row['children'])->some(fn ($child) => $child['segmentation']);
+
+        $row['segmentation'] = $isSegmentation && count($row['children']) === 0;
+        $row['id'] = Str::uuid() . '-' . Str::uuid(); // just for the charts
+        return $row;
+    }
+
+    private function parseCell($data, $key): array
+    {
+        $response = [];
+        $response['empty'] = false;
+        $response['date'] = $key;
+        $response['ticker'] = $this->company['ticker'];
+
+        foreach ($data as $key => $value) {
+            if (in_array('|', str_split($value))) {
+                $array = explode('|', $value);
+
+                $response['value'] = $array[0];
+                $response['hash'] = $array[1];
+
+                if (array_key_exists(2, $array)) {
+                    $response['secondHash'] = $array[2];
+                }
+            } else {
+                $response[$key] = $value;
+            }
+        }
+
+        return $response;
+    }
+
+    private function generateEmptyCellsRow(): array
+    {
+        $response = [];
+
+        foreach ($this->tableDates as $date) {
+            $response[$date] = [
+                'date' => Carbon::createFromFormat('Y-m-d', $date)->format('Y-m-d'),
+                'value' => '',
+                'hash' => '',
+                'ticker' => $this->company['ticker'],
+                'empty' => true,
+            ];
+        }
+
+        return $response;
+    }
+}

@@ -14,6 +14,7 @@ class Select extends Component
         public array $options,
         ?string $placeholder = null,
         ?string $name = null,
+        public bool $searchable = false,
     ) {
         if (!$this->associativeArray($options)) {
             $this->options = array_reduce($options, function ($carry, $item) {

@@ -1,6 +1,12 @@
 <div class="py-3 px-4 bg-white rounded-lg border border-[#D4DDD7]">
     <div class="flex flex-wrap gap-4 items-center text-sm">
-        <div class="flex items-center gap-x-1">
+        <div class="flex items-center gap-x-1" x-show="$wire.activeTab === 'disclosure' && disclosureTab === 'footnotes'"
+            x-cloak>
+            <span>Footnotes</span>
+            <x-select :options="$disclosureFootnotes" placeholder="Footnotes" :searchable="true" :large="true" x-model="filters.footnote"></x-select>
+        </div>
+        <div class="flex items-center gap-x-1"
+            x-show="!($wire.activeTab === 'disclosure' && disclosureTab === 'footnotes')" x-cloak>
             <span>View</span>
             <x-select :options="$viewTypes" placeholder="View" x-model="filters.view"></x-select>
         </div>
@@ -41,8 +47,8 @@
                     this.tmpValue = Number(this.tmpValue) + 1
                 },
                 decrease() {
-                    if(this.tmpValue <= 0) return;
-
+                    if (this.tmpValue <= 0) return;
+            
                     this.tmpValue = Number(this.tmpValue) - 1
                 },
             }" x-modelable="value" x-model="filters.decimalPlaces" class="inline-block">

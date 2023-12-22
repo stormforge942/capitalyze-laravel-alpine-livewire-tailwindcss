@@ -121,7 +121,7 @@ const chartJsPlugins = {
 
             const tableRoot = tooltipEl.querySelector("table")
 
-            if(!tableRoot) {
+            if (!tableRoot) {
                 return
             }
 
@@ -148,7 +148,7 @@ const chartJsPlugins = {
 export default chartJsPlugins
 
 export function formatCmpctNumber(number, options = {}) {
-    if (Number.isNaN(number)) return number
+    if (isNaN(Number(number))) return number
 
     options = {
         notation: "compact",

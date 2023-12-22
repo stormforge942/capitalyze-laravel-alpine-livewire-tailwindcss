@@ -4,12 +4,28 @@
     value: '',
     tmpValue: '',
     options: @js($options),
+    search: '',
     placeholder: '{{ $placeholder }}',
+    get computedOptions() {
+        if (!this.search) {
+            return this.options
+        }
+
+        let options = {};
+
+        for (const [key, value] of Object.entries(this.options)) {
+            if (value.toLowerCase().includes(this.search.toLowerCase())) {
+                options[key] = value
+            }
+        }
+
+        return options
+    },
     init() {
         $nextTick(() => {
             if (this.value !== '' && !Object.keys(this.options).includes(String(this.value))) {
                 this.value = ''
-            }    
+            }
         })
 
         $watch('showDropdown', value => {
@@ -26,7 +42,7 @@
     <x-dropdown x-model="showDropdown" placement="bottom-start">
         <x-slot name="trigger">
             <div class="border-[0.5px] border-[#93959880] p-2 rounded-full flex items-center gap-x-1"
-                :class="showDropdown ? 'bg-[#E2E2E2]' : 'bg-white hover:bg-[#E2E2E2]'">
+                :class="showDropdown ? 'bg-[#E2E2E2]' : 'bg-white hover:bg-[#E2E2E2]'" style="max-width: 15rem">
                 <span class="text-sm truncate" x-text="options[value] || placeholder">
                 </span>
 
@@ -55,9 +71,23 @@
                 </button>
             </div>
 
+            @if ($searchable)
+                <div class="mx-6 bg-white rounded p-4 gap-4 flex items-center border boder-[#D4DDD7] mt-4 mb-2">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24"
+                        fill="none">
+                        <path
+                            d="M15.8645 14.3208H15.0515L14.7633 14.0429C15.7719 12.8696 16.3791 11.3465 16.3791 9.68954C16.3791 5.99485 13.3842 3 9.68954 3C5.99485 3 3 5.99485 3 9.68954C3 13.3842 5.99485 16.3791 9.68954 16.3791C11.3465 16.3791 12.8696 15.7719 14.0429 14.7633L14.3208 15.0515V15.8645L19.4666 21L21 19.4666L15.8645 14.3208ZM9.68954 14.3208C7.12693 14.3208 5.05832 12.2521 5.05832 9.68954C5.05832 7.12693 7.12693 5.05832 9.68954 5.05832C12.2521 5.05832 14.3208 7.12693 14.3208 9.68954C14.3208 12.2521 12.2521 14.3208 9.68954 14.3208Z"
+                            fill="#464E49" />
+                    </svg>
+                    <input type="search" placeholder="Search"
+                        class="border-none flex-1 focus:outline-none focus:ring-0 h-6 min-w-0"
+                        x-model.debounce="search">
+                </div>
+            @endif
+
             <div class="max-h-[19rem] overflow-y-auto dropdown-scroll mr-1">
                 <div class="space-y-2 px-6">
-                    <template x-for="(label, key) in options" :key="label + key">
+                    <template x-for="(label, key) in computedOptions" :key="label + key">
                         <label class="cursor-pointer rounded flex items-center p-4 hover:bg-green-light gap-x-4">
                             <input type="radio" :name="name" :value="key"
                                 class="custom-radio border-dark focus:ring-0" x-model="tmpValue">

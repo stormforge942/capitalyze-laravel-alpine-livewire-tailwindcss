@@ -20,130 +20,146 @@
     </div>
 </div>
 
-<div class="table-wrapper w-full" style="font-size: 12px;">
-    <div class="table w-full">
-        <div class="table-cell text-center">
-            <div class="row-group !inline-block mx-auto">
+<div class="relative" x-cloak>
+    <div class="table-wrapper" style="font-size: 12px;">
+        <div class="table w-full">
+            <div class="table-cell text-center">
+                <div class="row-group !inline-block mx-auto">
 
-                <div class="flex flex-row bg-[#EDEDED]">
-                    <div class="ml-8 w-[250px] font-bold flex py-2 items-center justify-start text-base">
-                        <span>
-                            {{ $company['name'] }} ({{ $company['ticker'] }})
-                        </span>
+                    <div class="flex flex-row bg-[#EDEDED]">
+                        <div class="ml-8 w-[250px] font-bold flex py-2 items-center justify-start text-base">
+                            <span>
+                                {{ $company['name'] }} ({{ $company['ticker'] }})
+                            </span>
+                        </div>
+                        <div class="w-full flex flex-row bg-[#EDEDED] justify-between">
+                            <template x-for="(date, idx) in formattedTableDates" :key="idx">
+                                <div class="w-[150px] flex items-center justify-end text-base font-bold last:pr-8">
+                                    <span class="py-2" x-text="formattedTableDate(date)"></span>
+                                </div>
+                            </template>
+                        </div>
                     </div>
-                    <div class="w-full flex flex-row bg-[#EDEDED] justify-between">
-                        <template x-for="(date, idx) in formattedTableDates" :key="idx">
-                            <div class="w-[150px] flex items-center justify-end text-base font-bold last:pr-8">
-                                <span class="py-2" x-text="formattedTableDate(date)"></span>
+                    <div class="divide-y divide-[#D4DDD7] text-base" x-data="{ lastSection: null }">
+                        <template x-for="(row, index) in rows" :key="`${index}-${row.title}`">
+                            <div class="flex flex-col" :class="classes" x-data="{
+                                isNewSection: false,
+                                get rowContext() {
+                                    let splitted = this.row.title.split('|');
+                            
+                                    if (splitted.length === 1) return { title: splitted[0] };
+                            
+                                    return {
+                                        title: splitted[0],
+                                        isBold: splitted[1] === 'true',
+                                        hasBorder: splitted[2] === 'true',
+                                        section: parseInt(splitted[3]) || this.lastSection,
+                                    };
+                                },
+                                get isRowSelectedForChart() {
+                                    return this.selectedChartRows.find(item => item.id === row.id) ? true : false;
+                                },
+                                get classes() {
+                                    let classes = '';
+                            
+                                    if (!this.rowContext.hasBorder) {
+                                        classes += 'flex-col-border-less ';
+                                    }
+                            
+                                    if (this.isNewSection) {
+                                        classes += 'mt-4 ';
+                                    }
+                            
+                                    return classes;
+                                },
+                                init() {
+                                    if (
+                                        index > 0 &&
+                                        (this.rowContext.section !== this.lastSection)
+                                    ) {
+                                        this.isNewSection = true;
+                                    }
+                            
+                                    this.lastSection = this.rowContext.section;
+                                },
+                                toggleRowForChart() {
+                                    if (this.isRowSelectedForChart) {
+                                        this.selectedChartRows = this.selectedChartRows.filter(item => item.id !== row.id);
+                                    } else {
+                                        let values = {};
+                            
+                                        for (const [key, value] of Object.entries(row.values)) {
+                                            values[key] = value.value;
+                                        }
+                            
+                                        this.selectedChartRows.push({
+                                            id: row.id,
+                                            title: this.rowContext.title,
+                                            values,
+                                            color: '#7C8286',
+                                            type: 'line',
+                                        });
+                                    }
+                                },
+                            }"
+                                x-init="loadChildren">
+                                <div class="flex w-full flex-row"
+                                    :class="[isRowSelectedForChart ? 'bg-[#52D3A2]/20' : (row.segmentation ?
+                                        'bg-[#52C6FF]/10' : 'bg-white')]">
+                                    <div class="flex justify-end items-center ml-2">
+                                        <input x-show="isRowSelectedForChart" type="checkbox" class="custom-checkbox"
+                                            :checked="isRowSelectedForChart" @change="toggleRowForChart">
+                                    </div>
+                                    <div class="cursor-default py-2  w-[250px] truncate flex flex-row items-center"
+                                        :class="isRowSelectedForChart ? 'ml-2' : 'ml-6'" style="">
+                                        <a href="#" @click.prevent="toggleRowForChart" x-text="rowContext.title"
+                                            class="whitespace-nowrap truncate text-base"
+                                            :class="rowContext.isBold ? 'font-bold' : ''">
+                                        </a>
+                                    </div>
+                                    <div class="w-full flex flex-row justify-between ">
+                                        <template x-for="(date, idx) in formattedTableDates" :key="idx">
+                                            <div class="w-[150px] flex items-center justify-end text-base last:pr-8"
+                                                x-data="{
+                                                    get formattedValue() {
+                                                        return formatTableValue(row.values[date]?.value)
+                                                    },
+                                                }">
+
+                                                <template x-if="formattedValue.isLink">
+                                                    <button class="flex items-center underline">
+                                                        Link
+                                                    </button>
+                                                </template>
+
+                                                <template x-if="!formattedValue.isLink">
+                                                    <div>
+                                                        <span class="hover:underline cursor-pointer"
+                                                            :class="formattedValue.isNegative ? 'text-red' : ''"
+                                                            x-text="formattedValue.result"
+                                                            @click="$wire.emit('rightSlide', row.values[date])">
+                                                        </span>
+
+                                                        <x-review-number-button
+                                                            x-data="{ amount: row.values[date]?.value || 0, date }"></x-review-number-button>
+                                                    </div>
+                                                </template>
+                                            </div>
+                                        </template>
+                                    </div>
+                                </div>
+                                <div x-ref="nestedTable"></div>
                             </div>
                         </template>
                     </div>
                 </div>
-                <div class="divide-y divide-[#D4DDD7] text-base" x-data="{ lastSection: null }">
-                    <template x-for="(row, index) in rows" :key="index + `-${row.title}`">
-                        <div class="flex flex-col" :class="classes" x-data="{
-                            isNewSection: false,
-                            get rowContext() {
-                                let splitted = this.row.title.split('|');
-                        
-                                if (splitted.length === 1) return { title: splitted[0] };
-                        
-                                return {
-                                    title: splitted[0],
-                                    isBold: splitted[1] === 'true',
-                                    hasBorder: splitted[2] === 'true',
-                                    section: parseInt(splitted[3]) || this.lastSection,
-                                };
-                            },
-                            get isRowSelectedForChart() {
-                                return this.selectedChartRows.find(item => item.id === row.id) ? true : false;
-                            },
-                            get classes() {
-                                let classes = '';
-                        
-                                if (!this.rowContext.hasBorder) {
-                                    classes += 'flex-col-border-less ';
-                                }
-                        
-                                if (this.isNewSection) {
-                                    classes += 'mt-4 ';
-                                }
-                        
-                                return classes;
-                            },
-                            init() {
-                                if (
-                                    index > 0 &&
-                                    (this.rowContext.section !== this.lastSection)
-                                ) {
-                                    this.isNewSection = true;
-                                }
-                        
-                                this.lastSection = this.rowContext.section;
-                            },
-                            toggleRowForChart() {
-                                if (this.isRowSelectedForChart) {
-                                    this.selectedChartRows = this.selectedChartRows.filter(item => item.id !== row.id);
-                                } else {
-                                    let values = {};
-                        
-                                    for (const [key, value] of Object.entries(row.values)) {
-                                        values[key] = value.value;
-                                    }
-                        
-                                    this.selectedChartRows.push({
-                                        id: row.id,
-                                        title: this.rowContext.title,
-                                        values,
-                                        color: '#7C8286',
-                                        type: 'line',
-                                    });
-                                }
-                            },
-                        }"
-                            x-init="loadChildren">
-                            <div class="flex w-full flex-row"
-                                :class="[isRowSelectedForChart ? 'bg-[#52D3A2]/20' : (row.segmentation ?
-                                    'bg-[#52C6FF]/10' : 'bg-white')]">
-                                <div class="flex justify-end items-center ml-2">
-                                    <input x-show="isRowSelectedForChart" type="checkbox" class="custom-checkbox"
-                                        :checked="isRowSelectedForChart" @change="toggleRowForChart">
-                                </div>
-                                <div class="cursor-default py-2  w-[250px] truncate flex flex-row items-center"
-                                    :class="isRowSelectedForChart ? 'ml-2' : 'ml-6'" style="">
-                                    <a href="#" @click.prevent="toggleRowForChart" x-text="rowContext.title"
-                                        class="whitespace-nowrap truncate text-base"
-                                        :class="rowContext.isBold ? 'font-bold' : ''">
-                                    </a>
-                                </div>
-                                <div class="w-full flex flex-row justify-between ">
-                                    <template x-for="(date, idx) in formattedTableDates" :key="idx">
-                                        <div class="w-[150px] flex items-center justify-end text-base last:pr-8"
-                                            x-data="{
-                                                get formattedValue() {
-                                                    return formatTableValue(row.values[date]?.value)
-                                                },
-                                            }">
-                                            <span class="hover:underline cursor-pointer"
-                                                :class="formattedValue.isNegative ? 'text-red' : ''"
-                                                x-text="formattedValue.result"
-                                                @click="$wire.emit('rightSlide', row.values[date])"></span>
-
-                                            <x-review-number-button x-data="{ amount: row.values[date]?.value || 0, date }"></x-review-number-button>
-                                        </div>
-                                    </template>
-                                </div>
-                            </div>
-                            <div x-ref="nestedTable"></div>
-                        </div>
-                    </template>
-                </div>
             </div>
         </div>
     </div>
-</div>
-<div class="cus-loader" wire:loading.block>
-    <div class="cus-loaderBar"></div>
+
+    <div class="cus-loader" wire:loading.block>
+        <div class="cus-loaderBar"></div>
+    </div>
 </div>
 
 
@@ -207,12 +223,33 @@
                                             },
                                         }"
                                     >
-                                        <span class="hover:underline cursor-pointer" :class="formattedValue.isNegative ? 'text-red' : ''" x-text="formattedValue.result" @click="$wire.emit('rightSlide', row.values[date])"></span>
+                                        <template x-if="formattedValue.isLink">
+                                            <button type="button" class="flex gap-0.5 items-center underline" @click="Livewire.emit('modal.open', 'company-report.value-html-modal', { value: formattedValue.result, ticker: $wire.company.ticker })">
+                                                <span>Show</span>
+                                                <svg data-slot="icon" class="h-2.5 w-2.5" fill="none" stroke-width="2.5" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
+                                                <path stroke-linecap="round" stroke-linejoin="round" d="m4.5 19.5 15-15m0 0H8.25m11.25 0v11.25"></path>
+                                                </svg>
+                                            </button>
+                                        </template>
+
+                                        <template x-if="!formattedValue.isLink">
+                                            <div>
+                                                <span class="hover:underline cursor-pointer"
+                                                    :class="formattedValue.isNegative ? 'text-red' : ''"
+                                                    x-text="formattedValue.result"
+                                                    @click="$wire.emit('rightSlide', row.values[date])">
+                                                </span>
+
+                                                <x-review-number-button x-data="{ amount: row.values[date]?.value || 0, date }"/>
+                                            </div>
+                                        </template>
                                     </div>
                                 </template>
                             </div>
                         </div>
-                        <div x-ref="nestedTable" x-show="showChildren || !row.seg_start" x-cloak></div>
+                        <div x-show="showChildren || !row.seg_start" x-cloak>
+                            <div x-ref="nestedTable"></div>
+                        </div>
                     </div>
                 </template>
                 `

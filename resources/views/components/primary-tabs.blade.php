@@ -31,7 +31,7 @@
         })
     },
 }" {{ $attributes }}>
-    <div class="flex flex-wrap items-center justify-between gap-2 lg:hidden text-base">
+    <div class="flex flex-wrap items-center justify-between gap-2 lg:hidden text-base" x-cloak>
         <div>
             <button x-ref="dropdownBtn"
                 class="sm:min-w-[190px] bg-green-dark font-semibold rounded px-4 py-2.5 flex items-center justify-between gap-x-2"
@@ -41,7 +41,7 @@
 
                     <template x-if="badges.hasOwnProperty(activeTab.key) && badges[activeTab.key] !== null">
                         <span class="text-white font-semibold px-1.5 py-1 text-xs rounded-full grid place-items-center bg-dark"
-                            style="min-width: 1.5rem;" x-text="badges[activeTab.key]" x-cloak></span>
+                            style="min-width: 1.5rem;" x-text="badges[activeTab.key]"></span>
                     </template>
                 </div>
 
@@ -72,7 +72,7 @@
                                         'bg-dark': active === key && showActive,
                                         'bg-gray-medium2': active !== key || !showActive
                                     }"
-                                    x-text="badges[key]" x-cloak></span>
+                                    x-text="badges[key]"></span>
                             </template>
                         </button>
                     </template>
@@ -86,7 +86,7 @@
     </div>
 
     <div class="hidden lg:flex border border-[#D4DDD7] rounded bg-white w-full items-center gap-2 p-1 overflow-x-auto text-base"
-        wire:ignore>
+        wire:ignore x-cloak>
         <template x-for="(tab, key) in tabs" :key="key">
             <button class="px-3 py-1.5 text-center rounded transition flex justify-center items-center gap-2"
                 :class="{
@@ -103,7 +103,7 @@
                             'bg-dark': active === key && showActive,
                             'bg-gray-medium2': active !== key || !showActive
                         }"
-                        x-text="badges[key]" x-cloak></span>
+                        x-text="badges[key]"></span>
                 </template>
             </button>
         </template>
