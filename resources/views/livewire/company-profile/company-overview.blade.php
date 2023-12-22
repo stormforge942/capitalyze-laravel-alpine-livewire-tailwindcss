@@ -455,7 +455,7 @@
                     @foreach (array_keys($products) as $key => $date)
                         <td class="pl-6 last:pr-8">
                             <?php
-                            $value = isset($dilutedSharesOut[$date][0]) && is_numeric($dilutedSharesOut[$date][0]) ? floatval(str_replace(',', '', explode('|', $dilutedSharesOut[$date][0])[0])) : 'N/A';
+                            $value = isset($dilutedSharesOut[$date][0]) ? floatval(str_replace(',', '', explode('|', $dilutedSharesOut[$date][0])[0])) : 'N/A';
                             ?>
 
                             {!! redIfNegative($value, fn($val) => custom_number_format($val)) !!}

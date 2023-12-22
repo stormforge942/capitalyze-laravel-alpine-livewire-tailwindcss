@@ -312,10 +312,10 @@ class CompanyOverview extends Component
             } catch (\Throwable $th) {
             }
         }
-        
+
         $this->ebitda = $data['EBITDA'] ?? null;
-        $this->adjNetIncome = $data['Net Income'] ?? null;
-        $this->dilutedEPS = $data['Diluted EPS Excl Extra Items'] ?? null;
+        $this->adjNetIncome = $data['Net Income to Company'] ?? null;
+        $this->dilutedEPS = $data['Diluted Earnings Per Share'] ?? null;
         $this->revenues = $data['Revenues'] ?? null;
         $this->dilutedSharesOut = $data['Weighted Avg. Diluted Shares Outstanding'] ?? null;
     }

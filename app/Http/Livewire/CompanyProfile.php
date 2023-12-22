@@ -83,10 +83,9 @@ class CompanyProfile extends Component
         $data = json_decode(InfoTikrPresentation::where('ticker', $this->ticker)->orderByDesc('id')->first()->info, true)['annual'];
         $this->ebitda = $data['Income Statement']['EBITDA'];
         $this->adjNetIncome = $data['Income Statement']['Net Income'];
-        $this->dilutedEPS = $data['Income Statement']['Diluted EPS Excl Extra Items'];
+        $this->dilutedEPS = $data['Income Statement']['Diluted Earnings Per Share'];
         $this->revenues = $data['Income Statement']['Revenues'];
-        $this->dilutedSharesOut = $data['Income Statement']['Weighted Average Diluted Shares Outstanding'];
-        // dd($this->ebitda, $this->adjNetIncome, $this->dilutedEPS);
+        $this->dilutedSharesOut = $data['Income Statement']['Weighted Avg. Diluted Shares Outstanding'];
     }
 
     public function getCompanyProfile()
