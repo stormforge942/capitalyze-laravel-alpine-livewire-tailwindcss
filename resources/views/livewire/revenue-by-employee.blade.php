@@ -471,13 +471,13 @@
                             @if(isset($revenues[$date]))
                                 <div class="cell">
                                     @if($this->selectedUnit == 0)
-                                        {{ number_format((float)explode('|', $revenues[$date][0])[0], $decimalPoint) }}
+                                        {{ number_format($revenues[$date], $decimalPoint) }}
                                     @elseif($this->selectedUnit == 'thousands')
-                                        {{ number_format((float)explode('|', $revenues[$date][0])[0]/1000, $decimalPoint) }}
+                                        {{ number_format($revenues[$date]/1000, $decimalPoint) }}
                                     @elseif($this->selectedUnit == 'millions')
-                                        {{ number_format((float)explode('|', $revenues[$date][0])[0]/1000000, $decimalPoint) }}
+                                        {{ number_format($revenues[$date]/1000000, $decimalPoint) }}
                                     @elseif($this->selectedUnit == 'billions')
-                                        {{ number_format((float)explode('|', $revenues[$date][0])[0]/1000000000, $decimalPoint) }}
+                                        {{ number_format($revenues[$date]/1000000000, $decimalPoint) }}
                                     @endif
                                 </div>
                             @endif
@@ -495,8 +495,11 @@
                             @if ($key == 0)
                                 0.0%
                             @else
-                                {{ number_format(((float)explode('|', $revenues[$date][0])[0] - (float)explode('|', $revenues[$years[$key - 1]][0])[0]) /
-                                    ((float)explode('|', $revenues[$years[$key - 1]][0])[0] != 0 ? (float)explode('|', $revenues[$years[$key - 1]][0])[0] : 1) * 100, $decimalPoint) }}
+                                {{ number_format(
+                                    (((float)$revenues[$date] - (float)$revenues[$years[$key - 1]]) /
+                                    ((float)$revenues[$years[$key - 1]] != 0 ? (float)$revenues[$years[$key - 1]] : 1)) * 100,
+                                    $decimalPoint
+                                ) }} %
                             @endif
                         </div>
                         @endforeach
@@ -531,7 +534,7 @@
                                 {{ isset($employeeCount[$date], $employeeCount[$years[$key - 1]]) ?
                                 number_format(($employeeCount[$date] - $employeeCount[$years[$key - 1]]) /
                                 ($employeeCount[$date] != 0 ? $employeeCount[$date] : 1) * 100, $decimalPoint) :
-                                'N/A' }}
+                                'N/A' }} %
                             @endif
                         </div>
                         @endforeach
@@ -543,13 +546,13 @@
                                 <div class="cell font-bold">
                                     @if(isset($revenues[$date][0], $employeeCount[$date]))
                                         @if($this->selectedUnit == 0)
-                                            {{ number_format(explode('|', $revenues[$date][0])[0] / $employeeCount[$date], $decimalPoint) }}
+                                            {{ number_format($revenues[$date] / $employeeCount[$date], $decimalPoint) }}
                                         @elseif($this->selectedUnit == 'thousands')
-                                            {{ number_format(explode('|', $revenues[$date][0])[0] / $employeeCount[$date] / 1000, $decimalPoint) }}
+                                            {{ number_format($revenues[$date]/1000 / $employeeCount[$date], $decimalPoint) }}
                                         @elseif($this->selectedUnit == 'millions')
-                                            {{ number_format(explode('|', $revenues[$date][0])[0] / $employeeCount[$date] / 1000000, $decimalPoint) }}
+                                            {{ number_format($revenues[$date]/1000000 / $employeeCount[$date], $decimalPoint) }}
                                         @elseif($this->selectedUnit == 'billions')
-                                            {{ number_format(explode('|', $revenues[$date][0])[0] / $employeeCount[$date] / 1000000000, $decimalPoint) }}
+                                            {{ number_format($revenues[$date]/1000000000 / $employeeCount[$date], $decimalPoint) }}
                                         @endif
                                     @else
                                         N/A
@@ -571,17 +574,17 @@
                                 0.0%
                             @else
                                 @php
-                                    $current = isset($revenues[$date][0], $employeeCount[$date]) ?
-                                        explode('|', $revenues[$date][0])[0] / $employeeCount[$date] :
-                                        null;
+                                    $current = isset($revenues[$date], $employeeCount[$date]) ?
+                                    $revenues[$date] / $employeeCount[$date] :
+                                    null;
 
-                                    $previous = isset($revenues[$years[$key - 1]][0], $employeeCount[$years[$key - 1]]) ?
-                                        explode('|', $revenues[$years[$key - 1]][0])[0] / $employeeCount[$years[$key - 1]] :
-                                        null;
+                                    $previous = isset($revenues[$years[$key - 1]], $employeeCount[$years[$key - 1]]) ?
+                                    $revenues[$years[$key - 1]] / $employeeCount[$years[$key - 1]] :
+                                    null;
                                 @endphp
 
                                 @if ($current !== null && $previous !== null && $current !== 0)
-                                    {{ number_format((($current - $previous) / $current) * 100, $decimalPoint) }}%
+                                    {{ number_format((($current - $previous) / $current) * 100, $decimalPoint) }} %
                                 @else
                                     N/A
                                 @endif
