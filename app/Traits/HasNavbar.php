@@ -10,9 +10,7 @@ trait HasNavbar
 {
     public function hasNavbar($routeName): bool
     {
-        return
-            $this->isAdmin() ||
-            Navbar::where('route_name', $routeName)
+        return Navbar::where('route_name', $routeName)
             ->where('is_moddable', true)
             ->whereHas(
                 'navbarGroupShows',

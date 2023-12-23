@@ -29,28 +29,17 @@ class CreateGroups extends Command
      */
     public function handle()
     {
-        $query = [
-            (object)['name' => 'Admins'],
-            (object)['name' => 'Developers'],
-            (object)['name' => 'Testers'],
-            (object)['name' => 'Users'],
+        $groups = [
+            'Admins',
+            'Developers',
+            'Testers',
+            'Users',
         ];
 
-        $collection = collect($query);
-        
-        foreach($collection as $value) {
-            if (isset($value->name) && !empty($value->name)) {
-                Log::debug("`Name` is set and not empty: {$value->name}");
-                try {
-                    $groups = Groups::updateOrCreate(
-                        [ 
-                            'name' => $value->name
-                        ],
-                    );
-                } catch (\Exception $e) {
-                    Log::error("Error creating or finding navbar item: {$e->getMessage()}");
-                }
-            }
+        foreach ($groups as $name) {
+            $groups = Groups::updateOrCreate([
+                'name' => $name
+            ]);
         }
         $this->info('Groups imported successfully!');
     }

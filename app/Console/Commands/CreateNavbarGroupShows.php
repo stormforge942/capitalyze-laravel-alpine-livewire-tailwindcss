@@ -59,19 +59,12 @@ class CreateNavbarGroupShows extends Command
 
             if ($isBottomNavbar || $isUpperNavbar) {
                 foreach ($groups as $group) {
-                    // Check if NavbarGroupShows entry already exists
-                    $existingEntry = NavbarGroupShows::where('navbar_id', $navbar->id)
-                        ->where('group_id', $group->id)
-                        ->first();
-
-                    if (!$existingEntry) {
-                        // Create a new NavbarGroupShows entry
-                        NavbarGroupShows::create([
-                            'navbar_id' => $navbar->id,
-                            'group_id' => $group->id,
-                            'show' => true
-                        ]);
-                    }
+                    NavbarGroupShows::query()->updateOrCreate([
+                        'navbar_id' => $navbar->id,
+                        'group_id' => $group->id,
+                    ], [
+                        'show' => true
+                    ]);
                 }
             }
         }

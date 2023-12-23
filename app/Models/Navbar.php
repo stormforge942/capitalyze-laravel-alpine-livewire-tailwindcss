@@ -64,6 +64,7 @@ class Navbar extends Model
                 $nav->route_name,
                 ['company.', 'lse.', 'tsx.', 'fund.', 'mutual-fund.', 'etf.', 'shanghai.', 'japan.', 'hkex.', 'otc.', 'frankfurt.', 'euronext.', 'shenzhen.', 'economics-release', 'create.']
             );
-        });
+        })
+        ->values();
     }
 }

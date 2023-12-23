@@ -26,7 +26,19 @@ class CreateNavbar extends Command
 
     public function titleCase($input)
     {
-        return implode(' ', array_map('ucfirst', explode('.', str_replace('-', '.', $input))));
+        $map = [
+            'track-investor' => 'Track Investor',
+            'event-filings' => 'Event Filings',
+            'earnings-calendar' => 'Earnings Calendar',
+            'economics-calendar' => 'Economics Calendar',
+            'company.profile' => 'Overview',
+            'company.report' => 'Financials',
+            'company.analysis' => 'Analysis',
+            'company.filings-summary' => 'Filings',
+            'company.ownership' => 'Ownership',
+        ];
+
+        return $map[$input] ?? implode(' ', array_map('ucfirst', explode('.', str_replace('-', '.', $input))));
     }
     /**
      * Execute the console command.
@@ -37,7 +49,7 @@ class CreateNavbar extends Command
     {
         $routeCollection = Route::getRoutes();
 
-        foreach ($routeCollection as $key => $value) {
+        foreach ($routeCollection as $value) {
             if ($value->getName()) {
                 $query[] = $value->getName();
             }
@@ -46,91 +58,71 @@ class CreateNavbar extends Command
         $collection = collect($query);
 
         foreach ($collection as $value) {
-            try {
-                if (!Navbar::where('route_name', $value)->exists()) {
-                    Log::debug("Navbar creation: {$value}");
-                    $isModdable = true;
+            Navbar::query()
+                ->updateOrCreate([
+                    'route_name' => $value,
+                ], [
+                    'name' => $this->titleCase($value),
+                    'is_moddable' => false,
+                    'is_route' => true,
+                ]);
 
-                    $notModdable = $value === 'login'
-                        || $value === 'password.request'
-                        || $value === 'logout'
-                        || $value === 'password.reset'
-                        || $value === 'password.email'
-                        || $value === 'password.update'
-                        || $value === 'register'
-                        || $value === 'verification.notice'
-                        || $value === 'verification.verify'
-                        || $value === 'verification.send'
-                        || $value === 'user-profile-information.update'
-                        || $value === 'user-password.update'
-                        || $value === 'password.confirmation'
-                        || $value === 'password.confirm'
-                        || $value === 'two-factor.login'
-                        || $value === 'two-factor.enable'
-                        || $value === 'two-factor.confirm'
-                        || $value === 'two-factor.disable'
-                        || $value === 'two-factor.qr-code'
-                        || $value === 'two-factor.secret-key'
-                        || $value === 'two-factor.recovery-codes'
-                        || $value === 'profile.show'
-                        || $value === 'sanctum.csrf-cookie'
-                        || $value === 'livewire.message'
-                        || $value === 'livewire.message-localized'
-                        || $value === 'livewire.upload-file'
-                        || $value === 'livewire.preview-file'
-                        || $value === 'ignition.healthCheck'
-                        || $value === 'ignition.executeSolution'
-                        || $value === 'ignition.updateConfig'
-                        || $value === 'home'
-                        || $value === 'dashboard'
-                        || $value === 'admin.users'
-                        || $value === 'admin.permission-management'
-                        || $value === 'admin.groups-management'
-                        || $value === 'waiting-for-approval';
+            $isModdable = !in_array($value, [
+                'login',
+                'password.request',
+                'logout',
+                'password.reset',
+                'password.email',
+                'password.update',
+                'register',
+                'verification.notice',
+                'verification.verify',
+                'verification.send',
+                'user-profile-information.update',
+                'user-password.update',
+                'password.confirmation',
+                'password.confirm',
+                'two-factor.login',
+                'two-factor.enable',
+                'two-factor.confirm',
+                'two-factor.disable',
+                'two-factor.qr-code',
+                'two-factor.secret-key',
+                'two-factor.recovery-codes',
+                'profile.show',
+                'sanctum.csrf-cookie',
+                'livewire.message',
+                'livewire.message-localized',
+                'livewire.upload-file',
+                'livewire.preview-file',
+                'ignition.healthCheck',
+                'ignition.executeSolution',
+                'ignition.updateConfig',
+                'home',
+                'dashboard',
+                'admin.users',
+                'admin.permission-management',
+                'admin.groups-management',
+                'waiting-for-approval',
+            ]);
 
-                    if ($notModdable) {
-                        $isModdable = false;
-                    }
-
-                    // admin.navbar-management is renamed to admin.permission-management
-                    if (
-                        $value === 'admin.permission-management' &&
-                        Navbar::where('route_name', 'admin.navbar-management')->exists()
-                    ) {
-                        $navbar = Navbar::where('route_name', 'admin.navbar-management')->first();
-
-                        $navbar->update([
-                            'name' => $this->titleCase($value),
-                            'route_name' => $value,
-                            'is_moddable' => $isModdable
-                        ]);
-
-                        continue;
-                    }
-
-                    Navbar::create(
-                        [
-                            'name' => $this->titleCase($value),
-                            'route_name' => $value,
-                            'is_moddable' => $isModdable
-                        ],
-                    );
-                }
-            } catch (\Exception $e) {
-                Log::error("Error creating or finding navbar item: {$e->getMessage()}");
-            }
+            Navbar::query()
+                ->updateOrCreate([
+                    'route_name' => $value
+                ], [
+                    'name' => $this->titleCase($value),
+                    'is_moddable' => $isModdable
+                ]);
         }
 
-        if (!Navbar::where('route_name', "create.company.segment.report")->exists()) {
-            $navbar = Navbar::create(
-                [
-                    'name' => $this->titleCase("Reviewer Access"),
-                    'route_name' => "create.company.segment.report",
-                    'is_moddable' => true,
-                    'is_route' => false,
-                ],
-            );
-        }
+        Navbar::query()
+            ->updateOrCreate([
+                'route_name' => 'create.company.segment.report',
+            ], [
+                'name' => $this->titleCase("Reviewer Access"),
+                'is_moddable' => true,
+                'is_route' => false,
+            ]);
 
         $this->info('Navbar imported successfully!');
     }

@@ -28,13 +28,6 @@ class NavImport extends Command
      */
     public function handle()
     {
-        if(!app()->environment('local')){
-            $this->error("This command can only be run in local environment");
-            return;
-        }
-
-        Navbar::get()->each->delete();
-
         $this->call('navbar:import');
         $this->call('groups:import');
         $this->call('navbarGroupShows:create');
