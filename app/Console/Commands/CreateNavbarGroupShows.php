@@ -37,22 +37,25 @@ class CreateNavbarGroupShows extends Command
 
         foreach ($navbars as $navbar) {
             $isBottomNavbar = Str::startsWith($navbar->route_name, ['company.', 'company-', 'lse.', 'tsx.', 'fund.', 'mutual-fund.', 'etf.', 'fund-', 'mutual-fund-', 'shanghai.', 'japan.', 'hkex.', 'euronext.', 'otc.', 'frankfurt.', 'shenzhen.']);
-            $isUpperNavbar = $navbar->route_name === '' 
-            || $navbar->route_name === 'track-investor'
-            || $navbar->route_name === 'earnings-calendar'
-            || $navbar->route_name === 'economics-calendar'
-            || $navbar->route_name === 'delistings'
-            || $navbar->route_name === 'etf-filings'
-            || $navbar->route_name === 'euronexts'
-            || $navbar->route_name === 'lses'
-            || $navbar->route_name === 'tsxs'
-            || $navbar->route_name === 'shanghais'
-            || $navbar->route_name === 'japans'
-            || $navbar->route_name === 'hkexs'
-            || $navbar->route_name === 'otcs'
-            || $navbar->route_name === 'frankfurts'
-            || $navbar->route_name === 'shenzhens'
-            || $navbar->route_name === 'press.release';
+            $isUpperNavbar = in_array($navbar->route_name, [
+                '',
+                'track-investor',
+                'event-filings',
+                'earnings-calendar',
+                'economics-calendar',
+                'delistings',
+                'etf-filings',
+                'euronexts',
+                'lses',
+                'tsxs',
+                'shanghais',
+                'japans',
+                'hkexs',
+                'otcs',
+                'frankfurts',
+                'shenzhens',
+                'press.release',
+            ]);
 
             if ($isBottomNavbar || $isUpperNavbar) {
                 foreach ($groups as $group) {

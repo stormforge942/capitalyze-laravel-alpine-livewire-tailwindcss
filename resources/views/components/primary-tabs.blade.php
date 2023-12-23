@@ -40,7 +40,8 @@
                     <span x-text="activeTab.title"></span>
 
                     <template x-if="badges.hasOwnProperty(activeTab.key) && badges[activeTab.key] !== null">
-                        <span class="text-white font-semibold px-1.5 py-1 text-xs rounded-full grid place-items-center bg-dark"
+                        <span
+                            class="text-white font-semibold px-1.5 py-1 text-xs rounded-full grid place-items-center bg-dark"
                             style="min-width: 1.5rem;" x-text="badges[activeTab.key]"></span>
                     </template>
                 </div>
@@ -66,7 +67,8 @@
                             <span x-text="tab.title"></span>
 
                             <template x-if="badges.hasOwnProperty(key) && badges[key] !== null">
-                                <span class="text-white font-semibold px-1.5 py-1 text-xs rounded-full grid place-items-center"
+                                <span
+                                    class="text-white font-semibold px-1.5 py-1 text-xs rounded-full grid place-items-center"
                                     style="min-width: 1.5rem;"
                                     :class="{
                                         'bg-dark': active === key && showActive,
@@ -88,13 +90,13 @@
     <div class="hidden lg:flex border border-[#D4DDD7] rounded bg-white w-full items-center gap-2 p-1 overflow-x-auto text-base"
         wire:ignore x-cloak>
         <template x-for="(tab, key) in tabs" :key="key">
-            <button class="px-3 py-1.5 text-center rounded transition flex justify-center items-center gap-2"
+            <button class="px-2 py-1.5 text-center rounded transition flex justify-center items-center gap-2 box-content"
                 :class="{
                     'bg-green-dark font-semibold': active === key && showActive,
                     'font-medium text-gray-medium2 hover:bg-gray-light': active !== key || !showActive
                 }"
                 @click="changeTab(key)" style="min-width: {{ $minWidth }}">
-                <span x-text="tab.title"></span>
+                <span class="whitespace-nowrap" x-text="tab.title"></span>
 
                 <template x-if="badges.hasOwnProperty(key) && badges[key] !== null">
                     <span class="text-white font-semibold px-1.5 py-1 text-xs rounded-full grid place-items-center"

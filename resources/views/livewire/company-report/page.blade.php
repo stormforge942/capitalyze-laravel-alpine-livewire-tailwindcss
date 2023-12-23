@@ -205,7 +205,7 @@
                             @foreach ($disclosureTabs as $dtab => $title)
                                 <button class="px-6 py-2"
                                     :class="disclosureTab === `{{ $dtab }}` ?
-                                        'font-medium text-dark border-b-2 border-green' : ''"
+                                        'font-medium border-b-2 border-green' : ''"
                                     @click="disclosureTab = `{{ $dtab }}`">
                                     {{ $title }}
                                 </button>

@@ -40,8 +40,14 @@
 
     <livewire:company-navbar :company="$company" />
 
-    <main class="px-4 pb-10 transition-all md:px-6 lg:pl-8 lg:ml-56" id="main-container">
-        @if ($tab == 'geographical')
+    <main class="px-4 pb-10 transition-all md:px-6 lg:pl-8 lg:ml-56 overflow-x-hidden" id="main-container">
+        @if ($tab == 'track-investor')
+            <livewire:track-investor.page />
+        @elseif($tab == 'event-filings')
+            <livewire:event-filings.page />
+        @elseif($tab == 'earnings-calendar')
+            <livewire:earnings-calendar.page />
+        @elseif ($tab == 'geographical')
             <livewire:company-geographical :company="$company" :ticker="$ticker" :period="$period" />
         @elseif($tab == 'products')
             <livewire:company-products :company="$company" :ticker="$ticker" :period="$period" />
@@ -75,16 +81,12 @@
             <livewire:ownership.page :company="$currentCompany" />
         @elseif($tab == 'fund')
             <livewire:ownership.fund :company="$currentCompany" :fund="$fund" />
-        @elseif($tab == 'track-investor')
-            <livewire:track-investor.page />
         @elseif($tab == 'etf-filings')
             <livewire:etf.filings />
         @elseif($tab === 'filings-summary')
             <livewire:comapany-filings-summary :company="$company" :tinker="$ticker" :period="$period" />
         @elseif($tab == 'analysis')
             <livewire:company-analysis :company="$company" :ticker="$ticker" :period="$period" />
-        @elseif($tab == 'earnings-calendar')
-            <livewire:earnings-calendar.page :company="$company" />
         @endif
     </main>
 

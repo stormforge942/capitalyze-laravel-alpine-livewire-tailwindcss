@@ -33,6 +33,7 @@ use App\Http\Controllers\CompanyController;
 use App\Http\Controllers\EarningsCalendarController;
 use App\Http\Controllers\EtfController;
 use App\Http\Controllers\EuronextController;
+use App\Http\Controllers\EventFilingsController;
 use App\Http\Controllers\ShanghaiController;
 use App\Http\Livewire\EconomicReleaseSeries;
 use App\Http\Livewire\MutualFundFilingsPage;
@@ -42,6 +43,7 @@ use App\Http\Controllers\VerifyEmailController;
 use App\Http\Controllers\ResetLinkSentController;
 use App\Http\Controllers\ResetPasswordSuccessfulController;
 use App\Http\Controllers\ShenzhenController;
+use App\Http\Controllers\TrackInvestorController;
 use Laravel\Fortify\Http\Controllers\AuthenticatedSessionController;
 
 Route::get('/permission-denied', PermissionDenied::class)->name('permission-denied');
@@ -50,8 +52,10 @@ Route::get('/', HomeController::class)->name('home');
 
 Route::middleware([])->group(function () {
     Route::middleware(['auth', 'approved', 'verified', 'checkPagePermission'])->group(function () {
-        Route::get('/track-investor', [CompanyController::class, 'trackInvestor'])->name('track-investor');
+        Route::get('/track-investor', TrackInvestorController::class)->name('track-investor');
+        Route::get('/event-filings', EventFilingsController::class)->name('event-filings');
         Route::get('/calendar/earnings', EarningsCalendarController::class)->name('earnings-calendar');
+
         Route::get('/calendar/economics', EconomicsCalendar::class)->name('economics-calendar');
         Route::get('/calendar/economics/{release_id}/', EconomicRelease::class)->name('economics-release');
         Route::get('/calendar/economics/{release_id}/{series_id}/', EconomicReleaseSeries::class)->name('economics-release-series');
