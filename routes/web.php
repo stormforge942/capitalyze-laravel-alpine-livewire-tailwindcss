@@ -78,7 +78,7 @@ Route::middleware([])->group(function () {
         Route::get('/press-release', PressRelease::class)->name('press.release');
 
         Route::get('/company/{ticker}', [CompanyController::class, 'profile'])->name('company.profile');
-        Route::get('/company/{ticker}/products', [CompanyController::class, 'product'])->name('company.products');
+        Route::get('/company/{ticker}/products', [CompanyController::class, 'product'])->name('company.profiles');
         Route::get('/company/{ticker}/filings-summary', [CompanyController::class, 'filingsSummary'])->name('company.filings-summary');
         Route::get('/company/{ticker}/executive-compensation', [CompanyController::class, 'executiveCompensation'])->name('company.executive.compensation');
         Route::get('/company/{ticker}/chart', [CompanyController::class, 'chart'])->name('company.chart');

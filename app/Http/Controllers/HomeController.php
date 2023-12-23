@@ -19,6 +19,6 @@ class HomeController extends Controller
             return redirect()->route('waiting-for-approval');
         }
 
-        return redirect()->route('company.product', 'AAPL');
+        return redirect()->route('company.profile', 'AAPL');
     }
 }

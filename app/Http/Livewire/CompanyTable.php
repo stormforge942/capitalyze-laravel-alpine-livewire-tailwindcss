@@ -178,7 +178,7 @@ final class CompanyTable extends PowerGridComponent
          </svg>
          ')
                ->class('bg-indigo-500 cursor-pointer btn btn-outline-danger')
-               ->route('company.product', ['ticker' => 'ticker']),
+               ->route('company.profile', ['ticker' => 'ticker']),
         ];
     }
 

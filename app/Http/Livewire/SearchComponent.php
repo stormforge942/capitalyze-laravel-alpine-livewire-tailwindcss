@@ -43,6 +43,6 @@ class SearchComponent extends Component
 
     public function redirectToProduct($ticker)
     {
-        return redirect()->route('company.product', ['ticker' => $ticker]);
+        return redirect()->route('company.profile', ['ticker' => $ticker]);
     }
 }
