@@ -40,9 +40,9 @@
                             </template>
                         </div>
                     </div>
-                    <div class="divide-y divide-[#D4DDD7] text-base" x-data="{ lastSection: null }">
+                    <div class="divide-y divide-[#D4DDD7] text-base" x-data="{ lastSection: null, nestingLevel: 0, loadChildren }">
                         <template x-for="(row, index) in rows" :key="`${index}-${row.title}`">
-                            <div class="flex flex-col" :class="classes" x-data="{
+                            <div class="flex flex-col" :class="[rowContext.isBold ? 'font-bold' : '', classes]" x-data="{
                                 isNewSection: false,
                                 get rowContext() {
                                     let splitted = this.row.title.split('|');
@@ -102,7 +102,7 @@
                                     }
                                 },
                             }"
-                                x-init="loadChildren">
+                                x-init="loadChildren(this, nestingLevel + 1)">
                                 <div class="flex w-full flex-row"
                                     :class="[isRowSelectedForChart ? 'bg-[#52D3A2]/20' : (row.segmentation ?
                                         'bg-[#52C6FF]/10' : 'bg-white')]">
@@ -165,7 +165,7 @@
 
 @push('scripts')
     <script>
-        function loadChildren() {
+        function loadChildren(componentInstance, nestingLevel) {
             const nestedTable = this.$refs.nestedTable;
             const template = `
                 <template x-for="(row, index) in row.children">
@@ -197,14 +197,14 @@
                                     });
                                 }
                             },
-                        }" x-init="loadChildren">
-                        <div class="flex w-full flex-row" :class="[isRowSelectedForChart ? 'bg-[#52D3A2]/20' : (row.segmentation ? 'bg-[#52C6FF]/10' : 'bg-white')]">
+                        }" x-init="loadChildren(this, ${nestingLevel + 1})">
+                        <div class="flex w-full flex-row" :class="[isRowSelectedForChart ? 'bg-[#52D3A2]/20' : (row.segmentation ? 'bg-[#52C6FF]/10' : 'bg-white')]" >
                             <div class="flex justify-end items-center ml-2">
                                 <input x-show="isRowSelectedForChart" type="checkbox" class="custom-checkbox"
                                     :checked="isRowSelectedForChart" @change="toggleRowForChart">
                             </div>
                             <div class="cursor-default py-2 w-[250px] truncate flex flex-row items-center gap-1"
-                                :class="isRowSelectedForChart ? 'ml-2' : 'ml-6'" style="">
+                                :class="isRowSelectedForChart ? 'ml-2' : 'ml-6'" :style="{ paddingLeft: ${nestingLevel} + 'rem' }">
                                 <a href="#" @click.prevent="toggleRowForChart"
                                     x-text="row.title" class="whitespace-nowrap truncate text-base cursor-pointer">
                                 </a>
@@ -216,7 +216,7 @@
                             </div>
                             <div class="w-full flex flex-row justify-between ">
                                 <template x-for="(date, idx) in formattedTableDates" :key="idx">
-                                    <div class="w-[150px] flex items-center justify-end text-base last:pr-8" 
+                                    <div class="w-[150px] flex items-center justify-end text-base last:pr-8"
                                         x-data="{
                                             get formattedValue() {
                                                 return formatTableValue(row.values[date]?.value)
