@@ -36,7 +36,7 @@
             x-model.debounce.500ms="filters.search">
     </div>
 
-    <div class="lg:col-span-10 px-4 py-3 bg-white border border-[#D4DDD7] rounded flex flex-wrap whitespace-nowrap items-center gap-2.5 text-sm">
+    <div class="lg:col-span-10 px-4 py-3 bg-white border border-[#D4DDD7] rounded flex flex-wrap items-center gap-2.5 text-sm">
         <div class="inline-flex items-center gap-1">
             <span>Transaction Filing</span>
             <x-select name="transaction-filing" :options="config('capitalyze.transaction_code_map')" placeholder="Transaction Filing" :multiple="true"
