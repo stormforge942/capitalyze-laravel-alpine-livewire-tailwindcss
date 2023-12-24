@@ -45,6 +45,8 @@
             <livewire:track-investor.page />
         @elseif($tab == 'event-filings')
             <livewire:event-filings.page />
+        @elseif($tab == 'insider-transactions')
+            <livewire:insider-transactions.page />
         @elseif($tab == 'earnings-calendar')
             <livewire:earnings-calendar.page />
         @elseif ($tab == 'geographical')

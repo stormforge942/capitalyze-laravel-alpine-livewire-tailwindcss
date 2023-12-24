@@ -1,11 +1,12 @@
 <div x-data="{
     showDropdown: false,
     name: '{{ $name }}',
-    value: '',
-    tmpValue: '',
+    value: @if ($multiple) [] @else '``' @endif,
+    tmpValue: @if ($multiple) [] @else '``' @endif,
     options: @js($options),
     search: '',
     placeholder: '{{ $placeholder }}',
+    multiple: {{ $multiple ? 'true' : 'false' }},
     get computedOptions() {
         if (!this.search) {
             return this.options
@@ -14,38 +15,65 @@
         let options = {};
 
         for (const [key, value] of Object.entries(this.options)) {
-            if (value.toLowerCase().includes(this.search.toLowerCase())) {
+            const value_ = typeof value === 'object' ? value.label + ' ' + value.description : value
+
+            if (value_.toLowerCase().includes(this.search.toLowerCase())) {
                 options[key] = value
             }
         }
 
         return options
     },
+    get pillText() {
+        if (this.multiple) {
+            const values = this.value.map(value => this.options[value].label || this.options[value] || null).filter(value => value !== null)
+
+            if (this.value.length === 0) {
+                return this.placeholder
+            }
+
+            return values.join(', ')
+        }
+
+        return this.options[this.value] || this.placeholder
+    },
     init() {
-        $nextTick(() => {
+        this.$nextTick(() => {
+            @if(!$multiple)
             if (this.value !== '' && !Object.keys(this.options).includes(String(this.value))) {
                 this.value = ''
             }
+            @else
+            const values = Object.keys(this.options)
+            const tmp = this.value.filter(value => values.includes(String(value)))
+
+            if (tmp.length !== this.value.length) {
+                this.value = tmp
+            }
+            @endif
         })
 
-        $watch('showDropdown', value => {
+        this.$watch('showDropdown', value => {
             this.tmpValue = this.value
         })
 
-        $watch('value', (newVal, oldVal) => {
-            if (newVal != oldVal) {
-                this.value = newVal
-            }
+        this.$watch('search', (val) => {
+            this.$dipatch('search', val)
         })
-    }
+    },
 }" x-modelable="value" {{ $attributes->merge(['class' => 'inline-block']) }}>
     <x-dropdown x-model="showDropdown" placement="bottom-start">
         <x-slot name="trigger">
             <div class="border-[0.5px] border-[#93959880] p-2 rounded-full flex items-center gap-x-1"
                 :class="showDropdown ? 'bg-[#E2E2E2]' : 'bg-white hover:bg-[#E2E2E2]'" style="max-width: 15rem">
-                <span class="text-sm truncate" x-text="options[value] || placeholder">
+                <span class="text-sm truncate" x-text="pillText">
                 </span>
 
+                @if ($multiple)
+                    <span class="inline-block rounded-full text-white bg-blue text-xs"
+                        style="min-height: 1rem; min-width: 1rem;" x-text="value.length" x-show="value.length > 0"
+                        x-cloak></span>
+                @endif
                 <span :class="showDropdown ? 'rotate-180' : ''" class="transition-transform shrink-0">
                     <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 16 16"
                         fill="none">
@@ -61,7 +89,7 @@
             <div class="flex justify-between gap-2 px-6 pt-6">
                 <span class="font-medium" x-text="placeholder"></span>
 
-                <button @click="dropdown.hide()">
+                <button type="button" @click="dropdown.hide()">
                     <svg width="24" height="24" viewBox="0 0 24 24" fill="none"
                         xmlns="http://www.w3.org/2000/svg">
                         <path
@@ -87,13 +115,35 @@
 
             <div class="max-h-[19rem] overflow-y-auto dropdown-scroll mr-1">
                 <div class="space-y-2 px-6">
-                    <template x-for="(label, key) in computedOptions" :key="label + key">
+                    <template x-for="(value, key) in computedOptions" :key="'a' + key">
                         <label class="cursor-pointer rounded flex items-center p-4 hover:bg-green-light gap-x-4">
-                            <input type="radio" :name="name" :value="key"
-                                class="custom-radio border-dark focus:ring-0" x-model="tmpValue">
+                            <template x-if="multiple">
+                                <input type="checkbox" :name="name" :value="key"
+                                    class="custom-checkbox border-dark focus:ring-0" x-model="tmpValue">
+                            </template>
 
-                            <span x-text="label">label</span>
+                            <template x-if="!multiple">
+                                <input type="radio" :name="name" :value="key"
+                                    class="custom-radio border-dark focus:ring-0" x-model="tmpValue">
+                            </template>
+
+                            <template x-if="typeof value === 'object'">
+                                <div>
+                                    <p x-text="value.label"></p>
+                                    <p class="text-sm text-gray-medium2" x-text="value.description"></p>
+                                </div>
+                            </template>
+
+                            <template x-if="typeof value === 'string'">
+                                <span x-text="value"></span>
+                            </template>
                         </label>
+                    </template>
+
+                    <template x-if="!Object.keys(computedOptions).length">
+                        <p class="text-sm text-gray-medium2 text-center">
+                            No options found.
+                        </p>
                     </template>
                 </div>
             </div>

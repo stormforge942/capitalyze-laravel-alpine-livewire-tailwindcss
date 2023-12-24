@@ -10,14 +10,15 @@ trait HasNavbar
 {
     public function hasNavbar($routeName): bool
     {
-        return Navbar::where('route_name', $routeName)
-            ->where('is_moddable', true)
-            ->whereHas(
-                'navbarGroupShows',
-                fn ($query) => $query
-                    ->where('navbar_group_shows.group_id', $this->group_id)
-                    ->where('navbar_group_shows.show', true)
-            )
+        $navbar = Navbar::where('route_name', $routeName)->first();
+
+        if (!$navbar->is_moddable) {
+            return true;
+        }
+
+        return $navbar->navbarGroupShows()
+            ->where('group_id', $this->group_id)
+            ->where('show', true)
             ->exists();
     }
 

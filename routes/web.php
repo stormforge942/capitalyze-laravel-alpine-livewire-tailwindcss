@@ -19,7 +19,6 @@ use App\Http\Livewire\FundFilingsPage;
 use App\Http\Controllers\LseController;
 use App\Http\Controllers\OtcController;
 use App\Http\Controllers\TsxController;
-use App\Http\Livewire\EarningsCalendar;
 use App\Http\Livewire\PermissionDenied;
 use App\Http\Controllers\FundController;
 use App\Http\Controllers\HkexController;
@@ -38,6 +37,7 @@ use App\Http\Controllers\ShanghaiController;
 use App\Http\Livewire\EconomicReleaseSeries;
 use App\Http\Livewire\MutualFundFilingsPage;
 use App\Http\Controllers\FrankfurtController;
+use App\Http\Controllers\InsiderTransactionsController;
 use App\Http\Controllers\MutualFundController;
 use App\Http\Controllers\VerifyEmailController;
 use App\Http\Controllers\ResetLinkSentController;
@@ -54,6 +54,7 @@ Route::middleware([])->group(function () {
     Route::middleware(['auth', 'approved', 'verified', 'checkPagePermission'])->group(function () {
         Route::get('/track-investor', TrackInvestorController::class)->name('track-investor');
         Route::get('/event-filings', EventFilingsController::class)->name('event-filings');
+        Route::get('/insider-transactions', InsiderTransactionsController::class)->name('insider-transactions');
         Route::get('/calendar/earnings', EarningsCalendarController::class)->name('earnings-calendar');
 
         Route::get('/calendar/economics', EconomicsCalendar::class)->name('economics-calendar');
@@ -149,23 +150,9 @@ Route::middleware([])->group(function () {
 });
 
 Route::middleware(['auth', 'verified', 'ensureUserIsApproved'])->group(function () {
-    Route::middleware(['auth:sanctum', config('jetstream.auth_session')])->group(function () {
-        Route::get('/dashboard', function () {
-            return view('welcome');
-        })->name('dashboard');
-    });
-
-    Route::middleware(['auth:sanctum', 'verified', 'ensureUserIsAdmin'])->group(function () {
-        Route::get('/admin/users', [AdminController::class, 'index'])->name('admin.users');
-    });
-
-    Route::middleware(['auth:sanctum', 'verified', 'ensureUserIsAdmin'])->group(function () {
-        Route::get('/admin/permission', [AdminController::class, 'permission'])->name('admin.permission-management');
-    });
-
-    Route::middleware(['auth:sanctum', 'verified', 'ensureUserIsAdmin'])->group(function () {
-        Route::get('/admin/groups', [AdminController::class, 'groups'])->name('admin.groups-management');
-    });
+    Route::get('/admin/users', [AdminController::class, 'index'])->name('admin.users');
+    Route::get('/admin/permission', [AdminController::class, 'permission'])->name('admin.permission-management');
+    Route::get('/admin/groups', [AdminController::class, 'groups'])->name('admin.groups-management');
 });
 
 Route::middleware(['auth', 'custom.email.verification'])->group(function () {

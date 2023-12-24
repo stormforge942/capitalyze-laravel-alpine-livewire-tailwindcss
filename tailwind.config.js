@@ -48,7 +48,6 @@ module.exports = {
                     light: "#1B2718",
                     light2: "#464E49",
                     lighter: "#9DA3A8",
-                    medium: "#828C85",
                 },
                 green: {
                     ...defaultTheme.colors.green,

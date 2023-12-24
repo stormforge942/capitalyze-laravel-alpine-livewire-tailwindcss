@@ -79,7 +79,7 @@ class User extends Authenticatable implements MustVerifyEmail
                     $initials .= strtoupper(substr($part, 0, 1));
                 }
 
-                return $initials;
+                return substr($initials, 0, 2);
             }
         );
     }

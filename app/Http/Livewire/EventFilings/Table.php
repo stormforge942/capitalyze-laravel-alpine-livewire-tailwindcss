@@ -22,26 +22,27 @@ class Table extends BaseTable
         ]);
     }
 
+    public function updateProps(array $config, ?string $search)
+    {
+        $this->config = $config;
+        $this->search = $search ?? '';
+
+        $this->resetPage();
+    }
+
     public function datasource()
     {
-        // dd(1);
         return DB::connection('pgsql-xbrl')
             ->table('company_links')
             ->when(isset($this->config['in']), function ($query) {
                 $query->whereIn('form_type', $this->config['in']);
             })
-            // ->when(isset($this->config['patterns']), function ($query) {
-            //     foreach ($this->config['patterns'] as $pattern) {
-            //         $query->orWhere('form_type', 'ilike', $pattern);
-            //     }
-            // })
+            ->when(isset($this->config['patterns']), function ($query) {
+                foreach ($this->config['patterns'] as $pattern) {
+                    $query->orWhere('form_type', 'ilike', $pattern);
+                }
+            })
             ->when($this->search, fn ($q) => $q->where('registrant_name', 'ilike', "%{$this->search}%"));
-    }
-
-    public function updateProps(array $config, ?string $search)
-    {
-        $this->config = $config;
-        $this->search = $search ?? '';
     }
 
     public function columns(): array

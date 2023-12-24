@@ -4,9 +4,6 @@ namespace App\Http\Middleware;
 
 use Closure;
 use Illuminate\Support\Facades\Auth;
-use App\Models\Navbar;
-use App\Models\Groups;
-use App\Models\NavbarGroupShows;
 
 class CheckPagePermission
 {

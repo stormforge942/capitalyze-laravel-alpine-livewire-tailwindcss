@@ -11,10 +11,12 @@ class Select extends Component
     public $placeholder;
 
     public function __construct(
-        public array $options,
+        public array $options = [],
         ?string $placeholder = null,
         ?string $name = null,
         public bool $searchable = false,
+        public bool $multiple = false,
+        public string $callback = "",
     ) {
         if (!$this->associativeArray($options)) {
             $this->options = array_reduce($options, function ($carry, $item) {

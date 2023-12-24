@@ -59,10 +59,16 @@ class CreateNavbarGroupShows extends Command
 
             if ($isBottomNavbar || $isUpperNavbar) {
                 foreach ($groups as $group) {
-                    NavbarGroupShows::query()->updateOrCreate([
+                    if (NavbarGroupShows::query()->where([
+                        'navbar_id' => $navbar->id,
+                        'group_id' => $group->id
+                    ])->exists()) {
+                        continue;
+                    }
+
+                    NavbarGroupShows::query()->create([
                         'navbar_id' => $navbar->id,
                         'group_id' => $group->id,
-                    ], [
                         'show' => true
                     ]);
                 }

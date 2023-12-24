@@ -849,12 +849,9 @@ div#range-slider-company-analysis-geography {
 
 /* custom checkbox */
 .custom-checkbox {
-    border-radius: 4px;
-    border: 2px solid white !important;
     color: black;
-    filter: invert(1);
-
-    @apply focus:outline-none focus:ring-0;
+    border-radius: 2px;
+    border: 2px solid black;
 }
 /* end custom checkbox */
 

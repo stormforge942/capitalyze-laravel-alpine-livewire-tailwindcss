@@ -43,17 +43,17 @@ class FundHistoryTable extends BaseTable
     {
         return [
             Column::make('Effective Date', 'signature_date')->sortable(),
-            Column::make('Common Stock Equivalent held', 'ssh_prnamt')->sortable()
+            Column::make('Common Stock Equivalent held', 'formatted_ssh_prnamt', 'ssh_prnamt')->sortable()
                 ->headerAttribute('[&>div]:justify-end')->bodyAttribute('text-right'),
-            Column::make('Market Value', 'value')->sortable()
+            Column::make('Market Value', 'formatted_value', 'value')->sortable()
                 ->headerAttribute('[&>div]:justify-end')->bodyAttribute('text-right'),
-            Column::make('% of CSO', 'weight')->sortable()
+            Column::make('% of CSO', 'formatted_weight', 'weight')->sortable()
                 ->headerAttribute('[&>div]:justify-end')->bodyAttribute('text-right'),
-            Column::make('Change in Shares', 'change_in_shares')->sortable()
+            Column::make('Change in Shares', 'formatted_change_in_shares', 'change_in_shares')->sortable()
                 ->headerAttribute('[&>div]:justify-end')->bodyAttribute('text-right'),
-            Column::make('%Change', 'change_in_shares_percentage')->sortable()
+            Column::make('%Change', 'formatted_change_in_shares_percentage', 'change_in_shares_percentage')->sortable()
                 ->headerAttribute('[&>div]:justify-end')->bodyAttribute('text-right'),
-            Column::make('Share Price', 'price_paid')->sortable()
+            Column::make('Share Price', 'formatted_price_paid', 'price_paid')->sortable()
                 ->headerAttribute('[&>div]:justify-end')->bodyAttribute('text-right'),
             Column::make('Position Date', 'report_calendar_or_quarter')->sortable()
                 ->headerAttribute('[&>div]:justify-end')->bodyAttribute('text-right'),
@@ -64,30 +64,30 @@ class FundHistoryTable extends BaseTable
     {
         return PowerGrid::eloquent()
             ->addColumn('signature_date')
-            ->addColumn('ssh_prnamt', function (CompanyFilings $filing) {
+            ->addColumn('formatted_ssh_prnamt', function (CompanyFilings $filing) {
                 return number_format($filing->ssh_prnamt);
             })
-            ->addColumn('value', function (CompanyFilings $filing) {
+            ->addColumn('formatted_value', function (CompanyFilings $filing) {
                 return number_format($filing->value);
             })
-            ->addColumn('weight', function (CompanyFilings $filing) {
+            ->addColumn('formatted_weight', function (CompanyFilings $filing) {
                 return preg_replace('/\.?0+$/', '', number_format($filing->weight, 6)) . '%';
             })
-            ->addColumn('change_in_shares', function (CompanyFilings $filing) {
+            ->addColumn('formatted_change_in_shares', function (CompanyFilings $filing) {
                 if ($filing->change_in_shares >= 0) {
                     return number_format($filing->change_in_shares);
                 }
 
                 return '<span class="text-red">(' . number_format(-1 * $filing->change_in_shares) . ')</span>';
             })
-            ->addColumn('change_in_shares_percentage', function (CompanyFilings $filing) {
+            ->addColumn('formatted_change_in_shares_percentage', function (CompanyFilings $filing) {
                 if ($filing->change_in_shares_percentage >= 0) {
                     return round($filing->change_in_shares_percentage, 4);
                 }
 
                 return '<span class="text-red">(' . -1 * round($filing->change_in_shares_percentage, 4) . ')</span>';
             })
-            ->addColumn('price_paid', function (CompanyFilings $filing) {
+            ->addColumn('formatted_price_paid', function (CompanyFilings $filing) {
                 return preg_replace('/\.?0+$/', '', number_format($filing->price_paid, 4));
             })
             ->addColumn('report_calendar_or_quarter');
