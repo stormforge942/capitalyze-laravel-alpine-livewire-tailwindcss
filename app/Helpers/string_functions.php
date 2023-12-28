@@ -40,6 +40,58 @@ function niceNumber($n)
     return number_format($n);
 }
 
+function getFilingsSummaryTab(){
+    return $data = [
+        [
+            'name' => 'All Documents',
+            'value' => 'all-documents',
+            'params'=> [],
+
+        ],
+        [
+            'name' => 'Financials',
+            'value' => 'financials',
+            'params'=> ['10-Q', '8-K'],
+
+        ],
+        [
+            'name' => 'News',
+            'value' => 'news',
+            'params' => []
+        ],
+        [
+            'name' => 'Registration and Prospectus',
+            'value' => 'registrations-and-prospectuses',
+            'params' => ['S-1']
+        ],
+        [
+            'name' => 'Proxy Materials',
+            'value' => 'proxy-materials',
+            'params' => ['DEF 14A']
+        ],
+        [
+            'name' => 'Ownership',
+            'value' => 'ownership',
+            'params' =>['3','4','5']
+        ],
+        [
+            'name' => 'Insider Equity',
+            'value' => 'insider-equity',
+            'params' => ['3','4','5', '144']
+        ],
+        [
+            'name' => 'Others',
+            'value' => 'other',
+            'params' => []
+        ]
+    ];
+}
+
+function falingsSummaryTabFilteredValue($val){
+    $data = getFilingsSummaryTab();
+    return collect($data)->where('value', $val)->first();
+}
+
 function escapeJSText(string $string)
 {
     return str_replace("\n", '\n', str_replace('"', '\"', addcslashes(str_replace("\r", '', (string)$string), "\0..\37'\\")));

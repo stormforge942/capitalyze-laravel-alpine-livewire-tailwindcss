@@ -8,13 +8,26 @@ use DB;
 class Summary extends Component
 {
     public $data = [];
+    public $company;
     public $titles = [];
     public $financials = [];
+    public $sortByDateTitle = [];
+    public $search = [];
+
     public $col = "acceptance_time";
     public $order = "desc";
 
     public function mount(){
-        $this->financials = $this->getDataFromDB();
+        foreach(getFilingsSummaryTab() as $item){
+            $this->data[] = [
+                'name' => $item['name'],
+                'params' => $item['params'],
+                'value' => $item['value'],
+                'values' => $this->getDataFromDB($item['params'])->toArray()
+            ];
+        }
+        $this->data = collect($this->data);
+        // dd($this->data);
     }
 
     public function handleSorting($data){
@@ -24,14 +37,45 @@ class Summary extends Component
             $this->order = 'asc';
         }
         $this->col = $data[0];
-        $this->financials = $this->getDataFromDB();
+        $params = falingsSummaryTabFilteredValue($data[2])['params'];
+        
+        $financials = $this->getDataFromDB($params);
+        $this->data = $this->data->map(function($item) use($data, $financials){
+            if($item['value'] === $data[2]){
+                $item['values'] = $financials->toArray();
+            }
+            return $item;
+        });
+        $sortByDateTitle = [];
+        $sortByDateTitle[$data[2]] = $data[0];
+        $this->sortByDateTitle = $sortByDateTitle;
     }
 
-    public function getDataFromDB(){
+    public function handleSearch($data){
+        $params = falingsSummaryTabFilteredValue($data[1])['params'];
+        $financials = $this->getDataFromDB($params, $data[0]);
+        $this->data = $this->data->map(function($item) use($data, $financials){
+            if($item['value'] === $data[1]){
+                $item['values'] = $financials->toArray();
+            }
+            return $item;
+        });
+        $search = [];
+        $search[$data[1]] = $data[0];
+        $this->search = $search;
+    }
+
+    public function getDataFromDB($data, $search=null){
         $query = DB::connection('pgsql-xbrl')
         ->table('company_links')
-        ->where('symbol', 'AAPL')
-        ->whereIn('form_type', ['10-Q', '8-K'])
+        ->where('symbol', $this->company->ticker)
+        ->when($data, function($query, $data){
+            return $query->whereIn('form_type', $data);
+        })
+        ->when($search, function($query) use($search) {
+            return $query->where('form_type', 'like', "%$search%")
+            ->orWhere('registrant_name', 'like', "%$search%");
+        })
         ->orderBy($this->col, $this->order)
         ->get();
         return $query;
@@ -39,48 +83,10 @@ class Summary extends Component
 
     public function render()
     {
-        $this->titles = [
-            [
-                'name' => 'Financials',
-                'value' => 'financials'
-            ],
-            [
-                'name' => 'News',
-                'value' => 'news'
-            ],
-            [
-                'name' => 'Registration and Prospectus',
-                'value' => 'registrations-and-prospectuses'
-            ],
-            [
-                'name' => 'Proxy Materials',
-                'value' => 'proxy-materials'
-            ],
-            [
-                'name' => 'Ownership',
-                'value' => 'ownership'
-            ],
-            [
-                'name' => 'Insider Equity',
-                'value' => 'insider-equity'
-            ],
-            [
-                'name' => 'Others',
-                'value' => 'other'
-            ]
-        ];
-        for($i=0; $i<200; $i++){
-            $this->data[] = [
-                'name'=>'10-K',
-                'desc' => 'Other event, financial statement and exhibits',
-                'date_1' =>'05/04/2023', 
-                'date_2' => '05/04/2023'
-            ];
-        }
-        return view('livewire.filings-summary.summary', [
-            'data'=>$this->data,
-            'titles' => $this->titles
-        ]);
+        // if($this->sortByDateTitle){
+        //     dd($this->data);
+        // }
+        return view('livewire.filings-summary.summary');
     }
 
     public function handleViewAll($val){

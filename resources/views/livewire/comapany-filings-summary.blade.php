@@ -80,3 +80,8 @@
         </div>
     </div>
 </div>
+@push('script')
+<script>
+alert('slkjdlkasj')
+</script>
+@endpush

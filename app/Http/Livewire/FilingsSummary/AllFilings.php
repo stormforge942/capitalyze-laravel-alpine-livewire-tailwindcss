@@ -8,17 +8,12 @@ class AllFilings extends Component
 {
     public $company;
     public $ticker;
-    public $model = false;
     public $selectedTab = "all-documents";
-    public $checkedCount;
-    protected $listeners = ['handleAllFilingsTabs' => 'handleTabs', 'emitCountInAllfilings'];
+    protected $listeners = ['handleAllFilingsTabs' => 'handleTabs'];
 
     public function handleTabs($tab){
-        $this->selectedTab = $tab;
-    }
-
-    public function emitCountInAllfilings($selectChecked){
-        $this->checkedCount = count($selectChecked);
+        $this->selectedTab = is_array($tab) ? $tab[0] : $tab;
+        $this->emit('passTabNameInParent', $this->selectedTab);
     }
 
     public function handleFilingBrowserType($val){

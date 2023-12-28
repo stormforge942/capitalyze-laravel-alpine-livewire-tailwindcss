@@ -11,14 +11,17 @@ class News extends Component
     public $data = [];
     public $col = "acceptance_time";
     public $order = "desc";
+    public $company;
+    public $filtered;
     public $selectChecked = [];
 
     protected $listeners = ['emitCountInAllfilings', 'sortingOrder'];
 
     public function emitCountInAllfilings($selected){
-        $this->checkedCount = count($selected ?? []);
-        $this->selectChecked = $selected ?? [];
-        $this->data = $this->getDataFromDB($selected);
+        $count = json_decode($selected);
+        $this->checkedCount = count($count ?? []);
+        $this->selectChecked = $count ?? [];
+        $this->data = $this->getDataFromDB($count);
     }
 
     public function sortingOrder($data){
@@ -36,13 +39,16 @@ class News extends Component
     }
 
     public function mount(){
-        $this->data = $this->getDataFromDB();
+        $filtered = falingsSummaryTabFilteredValue('news')['params'];
+        $this->filtered = $filtered;
+        $this->data = $this->getDataFromDB($filtered);
     }
 
     public function getDataFromDB($selected=null, $search=null){
+        $selected = $selected ?? $this->filtered;
         $query = DB::connection('pgsql-xbrl')
         ->table('company_links')
-        ->where('symbol', 'AAPL')
+        ->where('symbol', $this->company->ticker)
         // ->whereIn('form_type', $selected)
         ->when($selected, function($query, $selected) {
             return $query->whereIn('form_type', $selected); 

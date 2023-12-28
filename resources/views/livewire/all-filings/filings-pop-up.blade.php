@@ -17,13 +17,13 @@
         </div>
         <div class="flex flex-col md:hidden my-2">
             <div class="flex justify-start items-center p-2">
-                <input type="radio" class="mr-3 focus:ring-0 text-[#121A0F] focus:border-transparent" name="sort" class="" id="sort"/>
+                <input type="radio" wire:model="sortBy" value="filing_date" wire:change="handleChange()" class="mr-3 focus:ring-0 text-[#121A0F] focus:border-transparent" name="sort" class="" id="sort"/>
                 <label for="sort">By Date</label>
             </div>
         </div>
         <div class="flex rounded flex-col md:hidden bg-[#FAFAFA] my-2">
             <div class="flex justify-start items-center p-2">
-                <input type="radio" class="mr-3 focus:ring-0 text-[#121A0F] focus:border-transparent" name="sort" class="" id="sort"/>
+                <input type="radio" wire:model="sortBy" value="form_type" wire:change="handleChange()" class="mr-3 focus:ring-0 text-[#121A0F] focus:border-transparent" name="sort" class="" id="sort"/>
                 <label for="sort">By file type</label>
             </div>
         </div> 
@@ -36,7 +36,7 @@
         <div class="mt-3">
             <div class="overflow-y-auto h-[30rem]">
                 <div class="flex flex-col w-[100%] m-0">
-                    <div class="search">
+                    <div class="search hidden md:flex flex-col">
                         <label for="default-search" class="mb-2 text-sm font-medium text-gray-900 sr-only dark:text-gray-400">Search</label>
                         <div class="relative p-0 m-0 sm:mt-3 md:mt-3">
                             <div class="absolute inset-y-0 left-0 flex items-center pl-3 pointer-events-none">
@@ -44,7 +44,7 @@
                                     <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="m19 19-4-4m0-7A7 7 0 1 1 1 8a7 7 0 0 1 14 0Z"/>
                                 </svg>
                             </div>
-                            <input type="search" id="default-search" class="flex rounded-sm border-[#E8EBF2] ring-[#E8EBF2] focus:ring-[#E8EBF2] focus:outline-none focus:ring-0  h-0 leading-3 w-full p-4 pl-10 text-sm text-gray-900 bg-white dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white" placeholder="Search">
+                            <input type="search" wire:model="search" wire:keydown="handleSearch($event?.target?.value)" id="default-search" class="flex rounded-sm border-[#E8EBF2] ring-[#E8EBF2] focus:ring-[#E8EBF2] focus:outline-none focus:ring-0  h-0 leading-3 w-full p-4 pl-10 text-sm text-gray-900 bg-white dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white" placeholder="Search">
                         </div>
                     </div>
                     <div class="flex justify-start items-center overflow-auto-x bg-[#E8EBF2] my-4 rounded">
@@ -70,7 +70,7 @@
     </div>
     <div class="mt-5 sm:mt-6">
         <span class="flex w-full rounded-md shadow-sm">
-            <button wire:click.prevent="handleCheckBox" @click="open=false" class="inline-flex text-base {{count($selectedIds) > 0 ? 'bg-[#52D3A2] text-[#121A0F]' : 'bg-[#D1D3D5] text-[#fff]' }} font-[500] justify-center w-full px-4 py-2  rounded ">
+            <button wire:click.prevent="$emit('emitCountInAllfilings', '{{json_encode($selectedIds)}}')" @click="open=false" class="inline-flex text-base {{count($selectedIds) > 0 ? 'bg-[#52D3A2] text-[#121A0F]' : 'bg-[#D1D3D5] text-[#fff]' }} font-[500] justify-center w-full px-4 py-2  rounded ">
                 Show Result
             </button>
         </span>

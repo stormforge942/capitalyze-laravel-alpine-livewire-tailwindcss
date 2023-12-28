@@ -10,6 +10,8 @@ class FilingsPopUp extends Component
     public $model = false;
     public $selectedIds = [];
     public $selectedTab = "D-9";
+    public $search;
+    public $sortBy = "form_type";
     public $formTypes = [
         'D-9', 'A-G', 'H-N', 'O-Q', 'Q-W', 'X-Z'
     ];
@@ -20,26 +22,33 @@ class FilingsPopUp extends Component
         $this->model = $val;
     }
 
-    public function getDataFromDB(){
+    public function mount(){
+        $this->handleFormTypeTabs($this->selectedTab);
+    }
+
+    public function handleSearch($val){
+        $this->data = $this->getDataFromDB($val);
+    }
+
+    public function getDataFromDB($search=null){
         $data = CompanyLinks::where('symbol', 'AAPL')
         ->select('form_type')
         ->distinct()
+        ->when($search, function($query) use($search){
+            return $query->where('form_type','like', "%$search%");
+        })
         ->pluck('form_type');
         Cache::put('form_type_data', $data, 15);
         return $data;
     }
 
+    public function handleChange(){
+        $this->getDataFromDB();
+    }
+
     public function handleFormTypeTabs($tab){
         $this->selectedIds = [];
         $this->selectedTab = $tab;
-    }
-
-    public function handleCheckBox(){
-      $this->emit('emitCountInAllfilings', $this->selectedIds);  
-    }
-
-    public function render()
-    {
         if(Cache::has('form_type_data')){
             $data = Cache::get('form_type_data');
         }
@@ -69,10 +78,11 @@ class FilingsPopUp extends Component
                 }
             }
         }
-        
-        return view('livewire.all-filings.filings-pop-up', [
-            'data' => $dta,
-            'formTypes' => $this->formTypes,
-        ]);
+        $this->data = $dta;
+    }
+
+    public function render()
+    {
+        return view('livewire.all-filings.filings-pop-up');
     }
 }

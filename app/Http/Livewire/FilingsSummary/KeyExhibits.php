@@ -12,6 +12,7 @@ class KeyExhibits extends Component
 
     public function handleSelectTab($tab){
         $this->selectedTab = $tab;
+        $this->emit('passTabNameInParent', $this->selectedTab);
     }
 
     public function render()

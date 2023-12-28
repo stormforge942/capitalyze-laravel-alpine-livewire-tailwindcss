@@ -7,6 +7,7 @@
     "require": {
         "php": "^8.0.2",
         "ext-exif": "*",
+        "barryvdh/laravel-dompdf": "^2.0",
         "blade-ui-kit/blade-heroicons": "^2.1",
         "blade-ui-kit/blade-icons": "^1.5",
         "guzzlehttp/guzzle": "^7.2",
@@ -17,6 +18,7 @@
         "laravel/vapor-cli": "^1.58",
         "laravel/vapor-core": "^2.31",
         "livewire/livewire": "^2.12",
+        "maatwebsite/excel": "^3.1",
         "openspout/openspout": "^4",
         "power-components/livewire-powergrid": "^4.9",
         "wire-elements/pro": "^3.0"

@@ -9,16 +9,19 @@ class Financials extends Component
 {
     public $checkedCount;
     public $data = [];
+    public $company;
     public $col = "acceptance_time";
     public $order = "desc";
     public $selectChecked = [];
+    public $filtered;
 
     protected $listeners = ['emitCountInAllfilings', 'sortingOrder'];
 
     public function emitCountInAllfilings($selected){
-        $this->checkedCount = count($selected ?? []);
-        $this->selectChecked = $selected ?? [];
-        $this->data = $this->getDataFromDB($selected);
+        $count = json_decode($selected);
+        $this->checkedCount = count($count ?? []);
+        $this->selectChecked = $count ?? [];
+        $this->data = $this->getDataFromDB($count);
     }
 
     public function sortingOrder($data){
@@ -36,16 +39,18 @@ class Financials extends Component
     }
 
     public function mount(){
-        $this->data = $this->getDataFromDB();
+        $filtered = falingsSummaryTabFilteredValue('financials')['params'];
+        $this->filtered = $filtered;
+        $this->data = $this->getDataFromDB($filtered);
     }
 
     public function getDataFromDB($selected=null, $search=null){
         $query = DB::connection('pgsql-xbrl')
         ->table('company_links')
-        ->where('symbol', 'AAPL')
+        ->where('symbol', $this->company->ticker)
         // ->whereIn('form_type', $selected)
-        ->when($selected, function($query, $selected) {
-            return $query->whereIn('form_type', $selected); 
+        ->when($selected, function($query, $filtered) {
+            return $query->whereIn('form_type', $filtered); 
         })
         ->when($search, function($query, $search){
             return $query->where('form_type', 'like', "%$search%");

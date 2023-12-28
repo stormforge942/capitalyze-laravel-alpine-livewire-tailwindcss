@@ -13,6 +13,8 @@ class ArticlesIncBylaws extends Component
     public $col = "acceptance_time";
     public $order = "desc";
     public $selectChecked = [];
+    public $company;
+    public $filtered;
 
     protected $listeners = ['emitCountInAllfilings', 'sortingOrder'];
 
@@ -43,7 +45,7 @@ class ArticlesIncBylaws extends Component
     public function getDataFromDB($selected=null, $search=null){
         $query = DB::connection('pgsql-xbrl')
         ->table('company_links')
-        ->where('symbol', 'AAPL')
+        ->where('symbol', $this->company->ticker)
         // ->whereIn('form_type', $selected)
         ->when($selected, function($query, $selected) {
             return $query->whereIn('form_type', $selected); 
@@ -57,8 +59,7 @@ class ArticlesIncBylaws extends Component
     }
 
     public function render()
-    {
-        
+    {        
         return view('livewire.key-exhibits.articles-inc-bylaws');
     }
 }

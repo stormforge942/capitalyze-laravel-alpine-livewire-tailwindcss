@@ -1,19 +1,52 @@
-<div x-cloak  class="flex flex-col lg:flex-row justify-start items-center flex-wrap" x-data="{open: false, id:null}">
+<div x-cloak  class="flex flex-col lg:flex-row justify-start items-center flex-wrap" x-data="
+{
+    open: false, 
+    search: {}, 
+    items: @js($data),
+    order: @js($order),
+    sortByDateTitle: {},
+    get filteredItems() {
+        const filteredData = this.items.map(item => ({
+            ...item,
+            values: item.values.filter((value) => {
+                const searchValue = this.search[item.value]?.toLowerCase()
+                if (!searchValue) {
+                    return true; 
+                }
+                const matchesFormType = value.form_type?.toLowerCase().startsWith(searchValue);
+                const matchesRegistrantName = value.registrant_name?.toLowerCase().startsWith(searchValue);
+                return matchesFormType || matchesRegistrantName;
+            }).
+            sort((a, b) => {
+                if (this.sortByDateTitle[item.value] === 'form_type') {
+                    return a.form_type.localeCompare(b.form_type);
+                } else if (this.sortByDateTitle[item.value] === 'filing_date') {
+                    return new Date(a.filing_date) - new Date(b.filing_date);
+                }
+                return 0;
+            })
+        }));
+        return filteredData;
+    }
+}">
+    <!-- <div class="place-items-center fixed top-0 left-0 right-0 bottom-0 w-full h-screen z-50 overflow-hidden bg-transparent" wire:loading.grid>
+        <span class="mx-auto simple-loader !text-blue"></span>
+    </div>  -->
     <?php $i = 0;?>
-    @foreach($titles as $item)
+    <template  x-for="item in filteredItems" >
         <div class="bg-white p-3 rounded w-full lg:w-[calc(50%-1rem)] mr-0 lg-0 {{$i%2 === 0 ? 'lg:mr-3': 'lg:ml-4'}} mb-5">
             <div class="flex justify-between items-center content-center py-2 mx-[-0.75rem] mb-1 border-b border-grey-light">
                 <div>
-                    <h4 class="mx-3 text-[#3561E7] font-[600] text-[0.8125rem]">{{$item['name']}}</h4>
+                    <h4 x-text="item.name" class="mx-3 text-[#3561E7] font-[600] text-[0.8125rem]"/>
                 </div>
-                <!-- <div class="hidden 2xl:flex justify-start items-center content-center">
-                    <div class="mx-2">
-                        <input name="sort_by_date" class="text-sm mx-1 mt-[-0.125rem]" type="radio">
+                <div class="hidden xl:flex justify-start items-center content-center">
+                    <div class="mx-1">
+                        <input x-model="sortByDateTitle[item.value]" :name="sortByDateTitle[item.value]" value="filing_date" class="mr-1 focus:ring-0 text-[#121A0F] focus:border-transparent text-sm mx-1 mt-[-0.125rem]" type="radio">
                             <label class="text-sm mt-1">Sort by date</label>
                         </input>
                     </div>
-                    <div class="mr-2">
-                        <input name="sort_by_date" class="text-sm mx-1 mt-[-0.125rem]" type="radio">
+                    <div class="mr-1">
+                        <input x-model="sortByDateTitle[item.value]" :name="sortByDateTitle[item.value]" value="form_type"  class="mr-1 focus:ring-0 text-[#121A0F] focus:border-transparent text-sm mx-1 mt-[-0.125rem]" type="radio">
                             <label class="text-sm mt-1">Sort by title</label>
                         </input>
                     </div>
@@ -21,64 +54,45 @@
                         <div class="m-0 p-0"> 
                             <img class="mt-1 mr-0" src="{{asset('/svg/search.svg')}}"/>
                         </div>
-                        <input type="search" class="focus:ring-0 focus:border-blue-500 placeholder:text-sm text-sm  border-none w-[9rem] leading-[1.45rem] h-[1.45rem]" placeholder="search document"/>
+                        <input x-model="search[item.value]" type="search" class="focus:ring-0 focus:border-blue-500 placeholder:text-sm text-sm  border-none w-[9rem] leading-[1.45rem] h-[1.45rem]" placeholder="search document"/>
                     </div>
-                </div> -->
-                <div class="flex justify-between items-center">
-                    @if($item['value'] === 'financials')  
-                        <select wire:change="handleSorting([$event?.target?.value, '{{$order}}'])" id="countries" class="h-7 py-0.75 px-3 rounded-full border border-solid border-[#939598] text-sm">
-                            <option selected>Choose a value</option>
-                            <option value="form_type">Sort by form type</option>
-                            <option value="filing_date">Sort by filing Date</option>
-                        </select>
-                    @else 
-                        <select id="countries" class="h-7 py-0.75 px-3 rounded-full border border-solid border-[#939598] text-sm">
-                            <option selected>Choose a value</option>
-                            <option value="form_type">Sort by form type</option>
-                            <option value="filing_date">Sort by filing Date</option>
-                        </select>
-                    @endif
-                    <div class="ml-3 p-0"> 
+                </div>
+                <div class="2xl:hidden xl:hidden md:flex flex justify-between items-center">
+                    <select x-model="sortByDateTitle[item.value]" id="countries" class="h-7 py-0.75 px-3 rounded-full border border-solid border-[#939598] text-sm">
+                        <option selected>Choose a value</option>
+                        <option value="form_type">Sort by form type</option>
+                        <option value="filing_date">Sort by filing Date</option>
+                    </select>
+                    <div class="ml-3 p-0 xs:flex md:hidden xl:hidden" > 
                         <img class="mt-1 mr-0" src="{{asset('/svg/search.svg')}}"/>
                     </div>
                     <div class="xs:flex md:hidden xl:hidden 2xl:flex">
-                        <input type="search" class="focus:ring-0 focus:border-blue-500 placeholder:text-sm text-sm  border-none w-[9rem] leading-[1.45rem] h-[1.45rem]" placeholder="search document"/>
+                        <input x-model="search[item.value]" type="search" class="focus:ring-0 focus:border-blue-500 placeholder:text-sm text-sm  border-none w-[9rem] leading-[1.45rem] h-[1.45rem]" placeholder="search document"/>
                     </div>
                 </div>
                 <div class="mx-3">
-                    <a hre="#" class="text-sm text-[#F78400]" wire:click="handleViewAll('{{$item['value']}}')">View All</a>
+                    <a hre="#" class="text-sm text-[#F78400]" @click="$wire.emit('handleFilingsSummaryTab',['all-filings', item.value])">View All</a>
                 </div>
             </div>
-            <div class="overflow-hidden -mt-1 overflow-x-auto border h-[20rem] overflow-y-auto border-gray-200 dark:border-gray-700">    
+            <div class="overflow-hidden -mt-1 border h-[20rem] overflow-y-auto border-gray-200 dark:border-gray-700">    
                 <table class="min-w-full divide-y divide-gray-200 dark:divide-gray-700">
                     <tbody class="bg-white divide-y divide-gray-200 dark:divide-gray-700 dark:bg-gray-900">
-                        @if($item['value'] === 'financials')
-                            @foreach($financials as $row)
-                                <tr class="hover:bg-gray-50" @click="open=true">
-                                    <td class="px-4 py-3 text-base  font-[400] text-[#121A0F] whitespace-nowrap">{{$row->form_type ?? ''}}</td>
-                                    <td class="px-4 py-3 text-base  font-[400] text-[#121A0F] whitespace-nowrap">{{$row->form_type ?? ''}}</td>
-                                    <td class="px-4 py-3 text-base  font-[400] text-[#121A0F] whitespace-nowrap">{{$row->filing_date ?? ''}}</td>
-                                    <td class="px-4 py-3 text-base  font-[400] text-[#121A0F] whitespace-nowrap">{{$row->filing_date ?? ''}}</td>
-                                </tr>
-                            @endforeach
-                        @else 
-                            @foreach($data as $item)
-                                <tr class="hover:bg-gray-50" @click="open=true">
-                                    <td class="px-4 py-3 text-base  font-[400] text-[#121A0F] whitespace-nowrap">{{$item['name'] ?? ''}}</td>
-                                    <td class="px-4 py-3 text-base  font-[400] text-[#121A0F] whitespace-nowrap">{{$item['desc'] ?? ''}}</td>
-                                    <td class="px-4 py-3 text-base  font-[400] text-[#121A0F] whitespace-nowrap">{{$item['date_1'] ?? ''}}</td>
-                                    <td class="px-4 py-3 text-base  font-[400] text-[#121A0F] whitespace-nowrap">{{$item['date_2'] ?? ''}}</td>
-                                </tr>
-                            @endforeach
-                        @endif
+                        <template x-for="val in item.values" >
+                            <tr @click="$wire.emit('passDataInViewPopModel',[JSON.stringify(val), JSON.stringify(item.params)]); open=true" class="hover:bg-gray-50 cursor-pointer">
+                                <td class="px-4 py-3 text-base  font-[400] text-[#121A0F] whitespace-nowrap" x-text="val.form_type"></td>
+                                <td class="px-4 py-3 text-base  font-[400] text-[#121A0F] whitespace-nowrap"><p class="truncate w-36" x-text="val.description"></p></td>
+                                <td class="px-4 py-3 text-base  font-[400] text-[#121A0F] whitespace-nowrap" x-text="val.filing_date"></td>
+                                <td class="px-4 py-3 text-base  font-[400] text-[#121A0F] whitespace-nowrap" x-text="val.filing_date"></td>
+                            </tr>
+                        </template>
                     </tbody>
                 </table>
             </div>
         </div>
         <?php $i++;?>
-    @endforeach
+    </template>
     <!-- Dialog (full screen) -->
-    <div class="absolute top-10  left-0 flex items-center justify-center w-full h-full" style="background-color: rgba(0,0,0,.5);" x-show="open"  >
-        <livewire:filings-summary.view-pop-up-model/>
+    <div class="fixed  inset-0 z-50 flex items-center justify-center w-96" style="background-color: rgba(0,0,0,.5); width: 100%" x-show="open" @click.away="open=true" @click.outside="open=true">
+        <livewire:filings-summary.view-pop-up-model :company="$company"/>
     </div>
 </div>
