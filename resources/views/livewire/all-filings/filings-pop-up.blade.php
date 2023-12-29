@@ -4,7 +4,7 @@
     </div>    
     <div class="flex justify-between items-center m-0">
         <h4 class="text-base font-[500] text-[#121A0F]">Browse Filing Types</h4>
-        <div class="cursor-pointer" @click="open = false">   
+        <div class="cursor-pointer" @click="openFilingPop = false">   
             <img src="{{asset('/svg/close.svg')}}" alt="close icon"/>
         </div>
     </div> 
@@ -70,7 +70,7 @@
     </div>
     <div class="mt-5 sm:mt-6">
         <span class="flex w-full rounded-md shadow-sm">
-            <button wire:click.prevent="$emit('emitCountInAllfilings', '{{json_encode($selectedIds)}}')" @click="open=false" class="inline-flex text-base {{count($selectedIds) > 0 ? 'bg-[#52D3A2] text-[#121A0F]' : 'bg-[#D1D3D5] text-[#fff]' }} font-[500] justify-center w-full px-4 py-2  rounded ">
+            <button wire:click.prevent="$emit('emitCountInAllfilings', '{{json_encode($selectedIds)}}')" @click="openFilingPop=false" class="inline-flex text-base {{count($selectedIds) > 0 ? 'bg-[#52D3A2] text-[#121A0F]' : 'bg-[#D1D3D5] text-[#fff]' }} font-[500] justify-center w-full px-4 py-2  rounded ">
                 Show Result
             </button>
         </span>

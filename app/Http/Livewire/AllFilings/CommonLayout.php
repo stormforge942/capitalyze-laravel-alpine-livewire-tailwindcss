@@ -11,6 +11,8 @@ class CommonLayout extends Component
     public $col;
     public $filtered;
     public $company;
+    public $search;
+    public $checkedCount;
 
     public function handleSorting($column){
         $this->emit('sortingOrder', [$column, $this->order]);

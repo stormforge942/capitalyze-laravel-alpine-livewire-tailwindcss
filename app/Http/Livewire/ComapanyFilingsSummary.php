@@ -16,10 +16,12 @@ class ComapanyFilingsSummary extends Component
     public $ticker;
     public $period;
     public $childTabName;
+    public $loading = true;
 
     protected $listeners = ['handleFilingsSummaryTab' => 'setTabName', 'passTabNameInParent'];
 
     public function setTabName($tab){
+        $this->loading = true;
         $selectedTab = is_array($tab) ? $tab[0] : $tab;
         $this->tabName = $selectedTab;
         if(is_array($tab)){
@@ -29,6 +31,7 @@ class ComapanyFilingsSummary extends Component
 
     public function passTabNameInParent($tab){
         $this->childTabName = $tab;
+        $this->loading = false;
     }
 
     public function downloadFile($file, $tabName){

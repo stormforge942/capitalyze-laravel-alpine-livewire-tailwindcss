@@ -1,8 +1,11 @@
-<div class="flex flex-col">
-    <div class="place-items-center fixed top-0 left-0 right-0 bottom-0 w-full h-screen z-50 overflow-hidden bg-transparent"
-        wire:loading.grid>
-        <span class="mx-auto simple-loader !text-blue"></span>
-    </div>
+<div class="flex flex-col" x-data="{
+    activeTab: 'summary'
+}">
+    @if($loading)
+        <div class="cus-loader" wire:loading.block style="top: 16.8125rem !important;">
+            <div class="cus-loaderBar"></div>
+        </div>
+    @endif
 
     <div class="flex flex-col mx-6 md:lg-0 ml-0">
         <x-company-info-header :company="['name' => $company->name, 'ticker' => $company->ticker]">
@@ -14,15 +17,15 @@
                 <div @class([
                     'tab text-base font-[500]',
                     'active font-[600]' => $tabName == 'summary',
-                ]) wire:click="setTabName('summary')">Filings Summary</div>
+                ]) wire:click="setTabName('summary')" @click="activeTab = 'summary'" :class="{ 'active': activeTab === 'summary' }">Filings Summary</div>
                 <div @class([
                     'tab text-base font-[500]',
                     'active font-[600]' => $tabName == 'all-filings',
-                ]) wire:click="setTabName('all-filings')">All Filings</div>
+                ]) wire:click="setTabName('all-filings')" @click="activeTab = 'all-filings'" :class="{ 'active': activeTab === 'all-filings' }">All Filings</div>
                 <div @class([
                     'tab text-base font-[500]',
                     'active font-[600]' => $tabName == 'key-exhibits',
-                ]) wire:click="setTabName('key-exhibits')">Key Exhibits</div>
+                ]) wire:click="setTabName('key-exhibits')" @click="activeTab = 'key-exhibits'" :class="{ 'active': activeTab === 'key-exhibits' }">Key Exhibits</div>
             </div>
             <div class="flex lg:hidden justify-between relative w-full mt-0 mx-0 mb-3" x-data="{ dropdownMenu: false }"
                 @keydown.window.escape="dropdownMenu = false" @click.away="dropdownMenu = false">

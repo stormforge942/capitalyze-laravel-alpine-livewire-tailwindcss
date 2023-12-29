@@ -9,46 +9,30 @@ class Summary extends Component
 {
     public $data = [];
     public $company;
-    public $titles = [];
-    public $financials = [];
-    public $sortByDateTitle = [];
-    public $search = [];
-
     public $col = "acceptance_time";
     public $order = "desc";
 
     public function mount(){
-        foreach(getFilingsSummaryTab() as $item){
-            $this->data[] = [
+        $data = $this->getDataFromDB();
+        $filingsSummaryTab = getFilingsSummaryTab();
+
+        $this->data = array_map(function ($item) use ($data) {
+            $filteredValues = [];
+            if (empty($item['params'])) {
+                $filteredValues = $data->values()->all();
+            } else {
+                $filteredValues = $data->filter(function ($val) use ($item) {
+                    return in_array($val->form_type, $item['params']);
+                })->values()->all();
+            }
+        
+            return [
                 'name' => $item['name'],
                 'params' => $item['params'],
                 'value' => $item['value'],
-                'values' => $this->getDataFromDB($item['params'])->toArray()
+                'values' => $filteredValues,
             ];
-        }
-        $this->data = collect($this->data);
-        // dd($this->data);
-    }
-
-    public function handleSorting($data){
-        if ($this->col === $data[0]) {
-            $this->order = $data[1] === 'asc' ? 'desc' : 'asc';
-        } else {
-            $this->order = 'asc';
-        }
-        $this->col = $data[0];
-        $params = falingsSummaryTabFilteredValue($data[2])['params'];
-        
-        $financials = $this->getDataFromDB($params);
-        $this->data = $this->data->map(function($item) use($data, $financials){
-            if($item['value'] === $data[2]){
-                $item['values'] = $financials->toArray();
-            }
-            return $item;
-        });
-        $sortByDateTitle = [];
-        $sortByDateTitle[$data[2]] = $data[0];
-        $this->sortByDateTitle = $sortByDateTitle;
+        }, $filingsSummaryTab);
     }
 
     public function handleSearch($data){
@@ -69,13 +53,6 @@ class Summary extends Component
         $query = DB::connection('pgsql-xbrl')
         ->table('company_links')
         ->where('symbol', $this->company->ticker)
-        ->when($data, function($query, $data){
-            return $query->whereIn('form_type', $data);
-        })
-        ->when($search, function($query) use($search) {
-            return $query->where('form_type', 'like', "%$search%")
-            ->orWhere('registrant_name', 'like', "%$search%");
-        })
         ->orderBy($this->col, $this->order)
         ->get();
         return $query;
@@ -83,14 +60,10 @@ class Summary extends Component
 
     public function render()
     {
-        // if($this->sortByDateTitle){
-        //     dd($this->data);
-        // }
         return view('livewire.filings-summary.summary');
     }
 
     public function handleViewAll($val){
-        //$this->emit('handleAllFilingsTabs', $val);
         $this->emit('handleFilingsSummaryTab', ['all-filings', $val]);
         
     }

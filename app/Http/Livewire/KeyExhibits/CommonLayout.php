@@ -10,6 +10,7 @@ class CommonLayout extends Component
     public $data;
     public $order;
     public $col;
+    public $company;
 
     public function handleSorting($column){
         $this->emit('sortingOrder', [$column, $this->order]);

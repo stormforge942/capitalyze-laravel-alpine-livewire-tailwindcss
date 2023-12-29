@@ -12,6 +12,7 @@ class AllDocuments extends Component
     public $col = "acceptance_time";
     public $order = "desc";
     public $company;
+    public $search;
     public $filtered;
     public $selectChecked = [];
 
