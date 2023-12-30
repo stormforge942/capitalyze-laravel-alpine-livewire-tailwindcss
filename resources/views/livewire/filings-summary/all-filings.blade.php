@@ -83,6 +83,4 @@
     </div>
     
     <!-- Dialog (full screen) -->
-    
 </div>
-

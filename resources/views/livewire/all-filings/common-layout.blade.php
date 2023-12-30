@@ -5,7 +5,7 @@
     items: @js($data),
     filtered: @js($filtered),
     filteredData: [],
-    sortCol:null,
+    sortCol:'',
     sortOrder:false,
     order: @js($order),
     sortByDateTitle: {},
@@ -48,7 +48,7 @@
         <div class="flex justify-start items-center">
             <div class="flex ml-2 relative justify-center mt-0 mx-0 mb-3" x-data="{dropdownMenu: false}" @keydown.window.escape="dropdownMenu = false" @click.away="dropdownMenu = false">
                 <button @click="dropdownMenu = ! dropdownMenu" class="flex items-center py-2 px-4 rounded-full w-full border-[#939598] bg-[#fff] z-20">
-                    <span class="mr-4 text-sm p-x-4 font-[400]"> Sort by {{$col}}</span>
+                    <span class="mr-4 text-sm p-x-4 font-[400]" x-text="`Sort by ${sortCol}`"></span>
                     <svg class="w-5 h-5 text-gray-800 dark:text-white" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20"
                         fill="currentColor">
                         <path fill-rule="evenodd"

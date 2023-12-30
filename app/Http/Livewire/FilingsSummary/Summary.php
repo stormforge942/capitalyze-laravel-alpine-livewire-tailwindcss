@@ -49,7 +49,7 @@ class Summary extends Component
         $this->search = $search;
     }
 
-    public function getDataFromDB($data, $search=null){
+    public function getDataFromDB(){
         $query = DB::connection('pgsql-xbrl')
         ->table('company_links')
         ->where('symbol', $this->company->ticker)
@@ -64,7 +64,6 @@ class Summary extends Component
     }
 
     public function handleViewAll($val){
-        $this->emit('handleFilingsSummaryTab', ['all-filings', $val]);
-        
+        $this->emit('handleFilingsSummaryTab', ['all-filings', $val]);        
     }
 }
