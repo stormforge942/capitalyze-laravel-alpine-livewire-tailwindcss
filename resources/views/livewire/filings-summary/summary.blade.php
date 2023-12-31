@@ -2,13 +2,21 @@
 {
     open: false, 
     search: {}, 
-    items: @js($data),
+    items: @js($items),
     order: @js($order),
+    values: @js($values),
     sortByDateTitle: {},
     get filteredItems() {
         const filteredData = this.items.map(item => ({
             ...item,
-            values: item.values.filter((value) => {
+            values: this.values.filter((value) => {
+                if (item.params.length === 0) {
+                    return true;
+                } else {
+                    return item.params.includes(value.form_type);
+                }
+            }).
+            filter((value)=>{
                 const searchValue = this.search[item.value]?.toLowerCase()
                 if (!searchValue) {
                     return true; 

@@ -11,48 +11,20 @@ class Summary extends Component
     public $company;
     public $col = "acceptance_time";
     public $order = "desc";
+    public $values = [];
+    public $items;
 
     public function mount(){
         $data = $this->getDataFromDB();
-        $filingsSummaryTab = getFilingsSummaryTab();
-
-        $this->data = array_map(function ($item) use ($data) {
-            $filteredValues = [];
-            if (empty($item['params'])) {
-                $filteredValues = $data->values()->all();
-            } else {
-                $filteredValues = $data->filter(function ($val) use ($item) {
-                    return in_array($val->form_type, $item['params']);
-                })->values()->all();
-            }
-        
-            return [
-                'name' => $item['name'],
-                'params' => $item['params'],
-                'value' => $item['value'],
-                'values' => $filteredValues,
-            ];
-        }, $filingsSummaryTab);
-    }
-
-    public function handleSearch($data){
-        $params = falingsSummaryTabFilteredValue($data[1])['params'];
-        $financials = $this->getDataFromDB($params, $data[0]);
-        $this->data = $this->data->map(function($item) use($data, $financials){
-            if($item['value'] === $data[1]){
-                $item['values'] = $financials->toArray();
-            }
-            return $item;
-        });
-        $search = [];
-        $search[$data[1]] = $data[0];
-        $this->search = $search;
+        $this->values = $data;
+        $this->items = getFilingsSummaryTab();
     }
 
     public function getDataFromDB(){
         $query = DB::connection('pgsql-xbrl')
         ->table('company_links')
         ->where('symbol', $this->company->ticker)
+        ->whereRaw("SUBSTRING(acceptance_time, 1, 4)::integer > 2018")
         ->orderBy($this->col, $this->order)
         ->get();
         return $query;

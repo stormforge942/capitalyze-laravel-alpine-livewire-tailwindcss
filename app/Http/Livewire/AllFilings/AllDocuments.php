@@ -49,12 +49,9 @@ class AllDocuments extends Component
         $query = DB::connection('pgsql-xbrl')
         ->table('company_links')
         ->where('symbol', $this->company->ticker)
-        // ->whereIn('form_type', $selected)
+        ->whereRaw("SUBSTRING(acceptance_time, 1, 4)::integer > 2018")
         ->when($selected, function($query, $selected) {
             return $query->whereIn('form_type', $selected); 
-        })
-        ->when($search, function($query, $search){
-            return $query->where('form_type', 'like', "%$search%");
         })
         ->orderBy($this->col, $this->order)
         ->get();
