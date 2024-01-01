@@ -167,7 +167,7 @@
         <livewire:filings-summary.view-pop-up-model :company="$company"/>
     </div>
     <div class="fixed z-50 top-0 left-0 flex items-center justify-center w-full h-full" style="background-color: rgba(0,0,0,.5);" x-show="openFilingPop"  >
-        <livewire:all-filings.filings-pop-up/>
+        <livewire:all-filings.filings-pop-up :selectChecked="$selectChecked"/>
     </div>
 </div>
 

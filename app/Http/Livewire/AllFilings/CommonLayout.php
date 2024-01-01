@@ -13,6 +13,7 @@ class CommonLayout extends Component
     public $company;
     public $search;
     public $checkedCount;
+    public $selectChecked;
 
     public function handleSorting($column){
         $this->emit('sortingOrder', [$column, $this->order]);

@@ -33,10 +33,11 @@
     class="text-left bg-white rounded-lg overflow-hidden shadow-xl sm:w-[100%] md:w-[60%]" 
     @click.away="open = false"
 >
-    <div class="cus-loader" wire:loading.block style="top:  7.80rem !important;">
-        <div class="cus-loaderBar"></div>
-    </div>
     <div class=" bg-[#fff] p-3">
+        <div class="cus-loader" wire:loading.block style="top:  7.80rem !important; left: 24% !important;
+    width: 54% !important;">
+            <div class="cus-loaderBar"></div>
+        </div>
         <div class="flex justify-between items-center content-center">
             <div>
                 <select wire:model="form_type" wire:change="handleFormType" class="rounded-lg border-2 border-[#D1D3D5] ring-1 ring-[#D1D3D5] outline-[#D1D3D5] p-2">

@@ -12,6 +12,7 @@ class FilingsPopUp extends Component
     public $selectedTab = "D-9";
     public $search;
     public $sortBy = "form_type";
+    public $selectChecked;
     public $formTypes = [
         'D-9', 'A-G', 'H-N', 'O-Q', 'Q-W', 'X-Z'
     ];
