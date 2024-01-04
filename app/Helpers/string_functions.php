@@ -43,12 +43,6 @@ function niceNumber($n)
 function getFilingsSummaryTab(){
     return $data = [
         [
-            'name' => 'All Documents',
-            'value' => 'all-documents',
-            'params'=> [],
-
-        ],
-        [
             'name' => 'Financials',
             'value' => 'financials',
             'params'=> ['NT 10-K','10-KT/A','10-KT','10-K','10-Q','10-QT/A','NT 10-Q/A','20-F','NT 20-F','20-F/A','40-F','40-F/A','1-K/A','1-K','1-SA','1-SA/A','18-K','18-K/A','N-CEN/A','N-CEN','N-30D','N-CSRS','N-CSRS/A','N-CSRS','NT 11-K','NT 11-K/A','QRTLYRPT','ANNLRPT'],
@@ -73,11 +67,6 @@ function getFilingsSummaryTab(){
             'name' => 'Ownership',
             'value' => 'ownership',
             'params' =>['3','4','5','3/A','4/A','5/A','SC 13D','SC 13G','SC14D1F','SC 13D/A','SC 13G/A','SC14D1F/A','144','144/A','13F-HR','13F-HR/A']
-        ],
-        [
-            'name' => 'Insider Equity',
-            'value' => 'insider-equity',
-            'params' => ['3','4','5', '144']
         ],
         [
             'name' => 'Others',
