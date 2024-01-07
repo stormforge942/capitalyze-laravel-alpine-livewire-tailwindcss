@@ -1,5 +1,5 @@
 <div class="flex flex-col" x-data="{
-    activeTab: 'summary'
+    activeTab: '{{$tabName}}'
 }">
     @if($loading)
         <div class="cus-loader" wire:loading.block style="top: 16.8125rem !important;">

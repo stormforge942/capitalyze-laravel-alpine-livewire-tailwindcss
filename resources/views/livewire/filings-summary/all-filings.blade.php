@@ -1,4 +1,4 @@
-<div class="flex flex-col" x-data="{ openFilingPop: false, activeTab:'all-documents' }">
+<div class="flex flex-col" x-data="{ openFilingPop: false, activeTab:@js($selectedTab) }" x-init="$watch('activeTab', value => console.log(value))">
     <div class="cus-loader" wire:loading.block style="top:  24.30rem !important;">
         <div class="cus-loaderBar"></div>
     </div>

@@ -40,7 +40,7 @@ class AllDocuments extends Component
     }
 
     public function mount(){
-        $filtered = falingsSummaryTabFilteredValue('all-documents')['params'];
+        $filtered = falingsSummaryTabFilteredValue('all-documents')['params'] ?? [];
         $this->filtered = $filtered;
         $this->data = $this->getDataFromDB($filtered);
     }

@@ -1,5 +1,5 @@
 <div class="flex flex-col" x-data="{
-    activeTab: 'articles-inc-bylaws'
+    activeTab: '{{$selectedTab}}'
 }">
     <div class="cus-loader" wire:loading.block style="top:  24rem !important;">
         <div class="cus-loaderBar"></div>
