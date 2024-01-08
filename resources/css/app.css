@@ -27,11 +27,11 @@
 
 .innertab-active ::after {
     content: " ";
-    width: 120%;
-    border: 2px solid #13b05b;
+    width: 100%;
+    border: 1.5px solid #13b05b;
     display: flex;
     margin-top: 4px;
-    margin-left: -11px;
+    margin-left: 0px;
 }
 
 .change-select-chevron {

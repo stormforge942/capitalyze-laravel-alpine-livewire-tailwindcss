@@ -6,49 +6,49 @@
         <div 
             wire:click.prevent="handleTabs('all-documents')" 
             @click="activeTab = 'all-documents'" :class="{ 'innertab-active text-[#121A0F]': activeTab === 'all-documents' }"
-            class="mx-3 mt-1 -mb-0.5 text-[#121A0F] font-[500] text-base {{$selectedTab === 'all-documents' ? 'innertab-active text-[#121A0F]' : 'text-[#A5A5A5]'}}"
+            class="mx-3 mt-1 -mb-0.5 text-[#121A0F] font-[500] text-base {{$selectedTab === 'all-documents' ? 'border-b-[3px] border-[#13b05b] text-[#121A0F]' : 'text-[#A5A5A5]'}}"
         >
             <a href="#">All Documents </a>
         </div>
         <div 
             wire:click.prevent="handleTabs('financials')" 
             @click="activeTab = 'financials'" :class="{ 'innertab-active text-[#121A0F]': activeTab === 'financials' }"
-            class="mx-3 mt-1 -mb-0.5 font-[500] text-base {{$selectedTab === 'financials' ? 'innertab-active text-[#121A0F]' : 'text-[#A5A5A5]'}}"
+            class="mx-3 mt-1 -mb-0.5 font-[500] text-base {{$selectedTab === 'financials' ? 'border-b-[3px] border-[#13b05b] text-[#121A0F]' : 'text-[#A5A5A5]'}}"
         >
             <a href="#">Financials </a>
         </div>
         <div 
             wire:click.prevent="handleTabs('news')" 
             @click="activeTab = 'news'" :class="{ 'innertab-active text-[#121A0F]': activeTab === 'news' }"
-            class="mx-3 mt-1 -mb-0.5 font-[500] text-base {{$selectedTab === 'news' ? 'innertab-active text-[#121A0F]' : 'text-[#A5A5A5]'}}"
+            class="mx-3 mt-1 -mb-0.5 font-[500] text-base {{$selectedTab === 'news' ? 'border-b-[3px] border-[#13b05b] text-[#121A0F]' : 'text-[#A5A5A5]'}}"
         >
             <a href="#">News </a>
         </div>
         <div 
             wire:click.prevent="handleTabs('registrations-and-prospectuses')" 
             @click="activeTab = 'registrations-and-prospectuses'" :class="{ 'innertab-active text-[#121A0F]': activeTab === 'registrations-and-prospectuses' }"
-            class="mx-3 mt-1 -mb-0.5 font-[500] text-base {{$selectedTab === 'registrations-and-prospectuses' ? 'innertab-active text-[#121A0F]' : 'text-[#A5A5A5]'}}"
+            class="mx-3 mt-1 -mb-0.5 font-[500] text-base {{$selectedTab === 'registrations-and-prospectuses' ? 'border-b-[3px] border-[#13b05b] text-[#121A0F]' : 'text-[#A5A5A5]'}}"
         >
             <a href="#">Registrations and Prospectuses </a>
         </div>
         <div 
             wire:click.prevent="handleTabs('proxy-materials')" 
             @click="activeTab = 'proxy-materials'" :class="{ 'innertab-active text-[#121A0F]': activeTab === 'proxy-materials' }"
-            class="mx-3 mt-1 -mb-0.5 font-[500] text-base {{$selectedTab === 'proxy-materials' ? 'innertab-active text-[#121A0F]' : 'text-[#A5A5A5]'}}"
+            class="mx-3 mt-1 -mb-0.5 font-[500] text-base {{$selectedTab === 'proxy-materials' ? 'border-b-[3px] border-[#13b05b] text-[#121A0F]' : 'text-[#A5A5A5]'}}"
         >
             <a href="#">Proxy Materials</a>
         </div>
         <div 
             wire:click.prevent="handleTabs('ownership')" 
             @click="activeTab = 'ownership'" :class="{ 'innertab-active text-[#121A0F]': activeTab === 'ownership' }"
-            class="mx-3 mt-1 -mb-0.5 font-[500] text-base {{$selectedTab === 'ownership' ? 'innertab-active text-[#121A0F]' : 'text-[#A5A5A5]'}}"
+            class="mx-3 mt-1 -mb-0.5 font-[500] text-base {{$selectedTab === 'ownership' ? 'border-b-[3px] border-[#13b05b] text-[#121A0F]' : 'text-[#A5A5A5]'}}"
         >
             <a href="#">Ownership</a>
         </div>
         <div 
             wire:click.prevent="handleTabs('other')" 
             @click="activeTab = 'other'" :class="{ 'innertab-active text-[#121A0F]': activeTab === 'other' }"
-            class="mx-3 mt-1 -mb-0.5 font-[500] text-base {{$selectedTab === 'other' ? 'innertab-active text-[#121A0F]' : 'text-[#A5A5A5]'}}"
+            class="mx-3 mt-1 -mb-0.5 font-[500] text-base {{$selectedTab === 'other' ? 'border-b-[3px] border-[#13b05b] text-[#121A0F]' : 'text-[#A5A5A5]'}}"
         >
             <a href="#">Others </a>
         </div>

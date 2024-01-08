@@ -8,12 +8,17 @@ class AllFilings extends Component
 {
     public $company;
     public $ticker;
-    public $selectedTab = "all-documents";
+    public $selectedTab;
     protected $listeners = ['handleAllFilingsTabs' => 'handleTabs'];
 
     public function handleTabs($tab){
-        $this->selectedTab = is_array($tab) ? $tab[0] : $tab;
+        $tabName = is_array($tab) ? $tab[0] : $tab;
+        $this->selectedTab = $tabName;
         $this->emit('passTabNameInParent', $this->selectedTab);
+    }
+
+    public function mount() {
+        $this->selectedTab = $this->selectedTab;
     }
 
     public function handleFilingBrowserType($val){
@@ -22,6 +27,6 @@ class AllFilings extends Component
 
     public function render()
     {
-        return view('livewire.filings-summary.all-filings');
+        return view('livewire.filings-summary.all-filings', ['selectedTab'=>$this->selectedTab]);
     }
 }
