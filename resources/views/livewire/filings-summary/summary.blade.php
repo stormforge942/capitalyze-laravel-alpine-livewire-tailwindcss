@@ -55,24 +55,26 @@
                             <label class="text-sm mt-1">Sort by title</label>
                         </input>
                     </div>
-                    <div class="flex justify-center items-center content-center">
+                    <div class="flex justify-start items-center content-center">
                         <div class="m-0 p-0"> 
                             <img class="mt-1 mr-0" src="{{asset('/svg/search.svg')}}"/>
                         </div>
                         <input x-model="search[item.value]" type="search" class="focus:ring-0 focus:border-blue-500 placeholder:text-sm text-sm  border-none w-[9rem] leading-[1.45rem] h-[1.45rem]" placeholder="search document"/>
                     </div>
                 </div>
-                <div class="2xl:hidden xl:hidden md:flex flex justify-between items-center">
+                <div class="2xl:hidden xl:hidden xs:flex-col sm:flex-row lg:flex-col xl:flex-row flex justify-between items-center">
                     <select x-model="sortByDateTitle[item.value]" id="countries" class="h-7 py-0.75 px-3 rounded-full border border-solid border-[#939598] text-sm">
                         <option selected>Choose a value</option>
                         <option value="form_type">Sort by form type</option>
                         <option value="filing_date">Sort by filing Date</option>
                     </select>
-                    <div class="ml-3 p-0 xs:flex md:hidden xl:hidden" > 
-                        <img class="mt-1 mr-0" src="{{asset('/svg/search.svg')}}"/>
-                    </div>
-                    <div class="xs:flex md:hidden xl:hidden 2xl:flex">
-                        <input x-model="search[item.value]" type="search" class="focus:ring-0 focus:border-blue-500 placeholder:text-sm text-sm  border-none w-[9rem] leading-[1.45rem] h-[1.45rem]" placeholder="search document"/>
+                    <div class="flex justify-start items-start">
+                        <div class="ml-3 p-0" > 
+                            <img class="mt-1 mr-0" src="{{asset('/svg/search.svg')}}"/>
+                        </div>
+                        <div class="xs:flex xl:hidden 2xl:flex">
+                            <input x-model="search[item.value]" type="search" class="focus:ring-0 focus:border-blue-500 placeholder:text-sm text-sm  border-none w-[9rem] leading-[1.45rem] h-[1.45rem]" placeholder="search document"/>
+                        </div>
                     </div>
                 </div>
                 <div class="mx-3">

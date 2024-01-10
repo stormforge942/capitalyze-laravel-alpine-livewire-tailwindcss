@@ -17,8 +17,13 @@ class AllFilings extends Component
         $this->emit('passTabNameInParent', $this->selectedTab);
     }
 
+    public function updateSelectedTab($tabName)
+    {
+        $this->selectedTab = $tabName;
+    }
+
     public function mount() {
-        $this->selectedTab = $this->selectedTab;
+        $this->selectedTab = 'financials';
     }
 
     public function handleFilingBrowserType($val){

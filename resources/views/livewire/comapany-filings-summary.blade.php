@@ -27,7 +27,7 @@
                     'active font-[600]' => $tabName == 'key-exhibits',
                 ]) wire:click="setTabName('key-exhibits')" @click="activeTab = 'key-exhibits'" :class="{ 'active': activeTab === 'key-exhibits' }">Key Exhibits</div>
             </div>
-            <div class="flex lg:hidden justify-between relative w-full mt-0 mx-0 mb-3" x-data="{ dropdownMenu: false }"
+            <div class="flex lg:hidden justify-between relative w-full mt-2 mx-0 mb-3" x-data="{ dropdownMenu: false }"
                 @keydown.window.escape="dropdownMenu = false" @click.away="dropdownMenu = false">
                 <button @click="dropdownMenu = ! dropdownMenu"
                     class="flex items-center py-2 px-4 bg-[#52D3A2]  rounded">
@@ -83,8 +83,4 @@
         </div>
     </div>
 </div>
-@push('script')
-<script>
-alert('slkjdlkasj')
-</script>
-@endpush
+
