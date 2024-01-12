@@ -2,9 +2,13 @@
     scrolling: false,
     activeTab: @if (count($sidebarLinks)) '{{ $sidebarLinks[0]['link'] }}' @else null @endif,
     openSource() {
-        window.livewire.emit('slide-over.open', 'business-information-source-slide', { sourceLink: `{{ $menuLinks['s3_url'] }}` }, {
-            force: true
-        });
+        let sourceLink = `{{ $menuLinks['s3_url'] ?? '' }}`
+
+        if (sourceLink) {
+            window.livewire.emit('slide-over.open', 'business-information-source-slide', { sourceLink }, {
+                force: true
+            });
+        }
     },
     toggle(tab, clear = true) {
         if (this.activeTab === tab && clear) {
@@ -54,9 +58,13 @@
     <x-card class="block lg:hidden max-w-[612px] w-full">
         <div class="flex items-center justify-between gap-4">
             <h3 class="font-semibold text-lg">Business</h3>
-            <a href="{{ $menuLinks['s3_url'] }}" @click.prevent="openSource" class="underline text-xs">
-                Source: FY {{ date('Y', strtotime($menuLinks['acceptance_time'])) }} 10-K
-            </a>
+            @if (($menuLinks['s3_url'] ?? false) && ($menuLinks['acceptance_time'] ?? false))
+                <a href="{{ $menuLinks['s3_url'] ?? '#' }}" @click.prevent="openSource" class="underline text-xs">
+                    Source: FY {{ date('Y', strtotime($menuLinks['acceptance_time'])) }} 10-K
+                </a>
+            @else
+                <span></span>
+            @endif
         </div>
 
         <div class="mt-4 space-y-6">
@@ -111,11 +119,13 @@
                             </button>
                         @endforeach
                     </div>
-                    <div class="mt-3.5 px-4 flex justify-end">
-                        <a href="{{ $menuLinks['s3_url'] }}" @click.prevent="openSource" class="underline text-xs">
-                            Source: FY {{ date('Y', strtotime($menuLinks['acceptance_time'])) }} 10-K
-                        </a>
-                    </div>
+                    @if (($menuLinks['s3_url'] ?? false) && ($menuLinks['acceptance_time'] ?? false))
+                        <div class="mt-3.5 px-4 flex justify-end">
+                            <a href="{{ $menuLinks['s3_url'] }}" @click.prevent="openSource" class="underline text-xs">
+                                Source: FY {{ date('Y', strtotime($menuLinks['acceptance_time'])) }} 10-K
+                            </a>
+                        </div>
+                    @endif
                 </x-card>
             </div>
         @endif

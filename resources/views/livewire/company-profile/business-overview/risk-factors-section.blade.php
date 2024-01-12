@@ -1,5 +1,5 @@
 @php
-    $businessContent = $menuLinks['risk_factors'];
+    $businessContent = $menuLinks['risk_factors'] ?? '';
     $businessContent = preg_replace('/\s+/', ' ', $businessContent);
     $businessContent = str_replace('\n', '', $businessContent);
     $businessContent = str_replace('\n', '', $businessContent);

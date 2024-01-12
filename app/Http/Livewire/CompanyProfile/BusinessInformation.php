@@ -21,7 +21,7 @@ class BusinessInformation extends Component
             ->where('symbol', $ticker)
             ->orderByDesc('acceptance_time')
             ->first()
-            ?->toArray();
+            ?->toArray() ?? [];
     }
 
     public function render()

@@ -1,5 +1,5 @@
 @php
-    $businessContent = $menuLinks['legal_proceedings'];
+    $businessContent = $menuLinks['legal_proceedings'] ?? '';
     $businessContent = preg_replace('/\s+/', ' ', $businessContent);
     $businessContent = str_replace('\n', '', $businessContent);
     $businessContent = str_replace('\n', '', $businessContent);

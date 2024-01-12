@@ -13,13 +13,12 @@ class CompanyOverview extends Component
 
     public $profile;
     public $period;
-    public $products;
-    public $segments;
-    public $ebitda;
-    public $adjNetIncome;
-    public $dilutedEPS;
-    public $revenues;
-    public $dilutedSharesOut;
+    private $products;
+    private $ebitda;
+    private $adjNetIncome;
+    private $dilutedEPS;
+    private $revenues;
+    private $dilutedSharesOut;
 
     public function mount(array $data = [])
     {
@@ -32,7 +31,122 @@ class CompanyOverview extends Component
 
     public function render()
     {
-        return view('livewire.company-profile.company-overview');
+        return view('livewire.company-profile.company-overview', [
+            'table' => $this->makeTableData(),
+        ]);
+    }
+
+    private function makeTableData()
+    {
+        $dates = array_unique([
+            ...array_keys(array_values($this->products)[0] ?? []),
+            ...array_keys($this->ebitda),
+            ...array_keys($this->adjNetIncome),
+            ...array_keys($this->dilutedEPS),
+        ]);
+
+        usort($dates, fn ($a, $b) => strtotime($a) - strtotime($b));
+
+        $dates = array_slice($dates, -6);
+
+        $data = [
+            'dates' => $dates,
+            'products' => tap([], function (&$val) {
+                foreach ($this->products as $product => $_) {
+                    $val[$product] = [
+                        'timeline' => [],
+                        'yoy_change' => [],
+                    ];
+                }
+            }),
+            'total_revenue' => [
+                'timeline' => [],
+                'yoy_change' => [],
+            ],
+            'ebitda' => [
+                'timeline' => [],
+                'yoy_change' => [],
+                'margin' => [],
+            ],
+            'adj_net_income' => [
+                'timeline' => [],
+                'change_yoy' => [],
+                'margin' => [],
+                'shares_out' => [],
+            ],
+            'diluted_shares_out' => [
+                'timeline' => [],
+                'change_yoy' => [],
+            ],
+            'adj_diluted_eps' => [
+                'timeline' => [],
+                'change_yoy' => [],
+            ],
+        ];
+
+        foreach ($this->products as $product => $timeline) {
+            $lastVal = 0;
+
+            foreach ($dates as $idx => $date) {
+                $value = $timeline[$date] ?? 0;
+
+                $data['products'][$product]['timeline'][$date] = $value;
+                $data['products'][$product]['yoy_change'][$date] = $idx && $lastVal
+                    ? (($value - $lastVal) /  $value) * 100
+                    : 0;
+            }
+
+            $lastVal = $value;
+        }
+
+        $lastEbitda = 0;
+        $lastAdjNetIncome = 0;
+        $lastDiluteEps = 0;
+        $lastDilutedShares = 0;
+        $lastTotalRevenue = 0;
+
+        foreach ($dates as $idx => $date) {
+            $total = $this->revenues[$date] ?? 0;
+            $data['total_revenue']['timeline'][$date] = $total;
+            $data['total_revenue']['yoy_change'][$date] = $idx && $lastTotalRevenue
+                ? (($total - $lastTotalRevenue) /  $total) * 100
+                : 0;
+
+            $ebitda = $this->ebitda[$date] ?? 0;
+            $data['ebitda']['timeline'][$date] = $ebitda;
+            $data['ebitda']['yoy_change'][$date] = $idx && $ebitda
+                ? (($ebitda - $lastEbitda) /  $ebitda) * 100
+                : 0;
+            $data['ebitda']['margin'][$date] = $total
+                ? ($ebitda / $total) * 100
+                : 0;
+            $lastEbitda = $ebitda;
+
+            $adjNetIncome = $this->adjNetIncome[$date] ?? 0;
+            $data['adj_net_income']['timeline'][$date] = $adjNetIncome;
+            $data['adj_net_income']['yoy_change'][$date] = $idx && $adjNetIncome
+                ? (($adjNetIncome - $lastAdjNetIncome) /  $adjNetIncome) * 100
+                : 0;
+            $data['adj_net_income']['margin'][$date] = $total
+                ? ($adjNetIncome / $total) * 100
+                : 0;
+            $lastAdjNetIncome = $adjNetIncome;
+
+            $dilutedSharesOut = $this->dilutedSharesOut[$date] ?? 0;
+            $data['diluted_shares_out']['timeline'][$date] = $dilutedSharesOut;
+            $data['diluted_shares_out']['yoy_change'][$date] = $idx && $dilutedSharesOut
+                ? (($dilutedSharesOut - $lastDilutedShares) /  $dilutedSharesOut) * 100
+                : 0;
+            $lastDilutedShares = $dilutedSharesOut;
+
+            $dilutedEPS = $this->dilutedEPS[$date] ?? 0;
+            $data['adj_diluted_eps']['timeline'][$date] = $dilutedEPS;
+            $data['adj_diluted_eps']['yoy_change'][$date] = $idx && $dilutedEPS
+                ? (($dilutedEPS - $lastDiluteEps) /  $dilutedEPS) * 100
+                : 0;
+            $lastDiluteEps = $dilutedEPS;
+        }
+        return $data;
     }
 
     private function formatProfile($profile)
@@ -265,28 +379,25 @@ class CompanyOverview extends Component
             ->value('api_return_open_ai');
 
         $data = json_decode($json, true);
-        $dates = [];
         $this->products = [];
-        $this->segments = [];
 
         if ($json === null) {
             return;
         }
 
-        foreach ($data as $date) {
-            $key = array_key_first($date);
-            $dates[] = $key;
-            $this->products[$key] = $date[$key];
-            $keys = array_keys($this->products[$key]);
-            foreach ($keys as $subkey) {
-                if (!in_array($subkey, $this->segments, true)) {
-                    $this->segments[] = $subkey;
+        foreach ($data as $item) {
+            $date = array_key_first($item);
+
+            foreach ($item[$date] as $key => $value) {
+                $name = str_replace(' [Member]', '', $key);
+
+                if (!isset($this->products[$name])) {
+                    $this->products[$name] = [];
                 }
+
+                $this->products[$name][$date] = $value;
             }
         }
-
-        $this->products = array_reverse(array_slice($this->products, 0, 6));
-        $this->segments = array_slice($this->segments, 0, 6);
     }
 
     private function getPresentationData()
@@ -313,10 +424,14 @@ class CompanyOverview extends Component
             }
         }
 
-        $this->ebitda = $data['EBITDA'] ?? null;
-        $this->adjNetIncome = $data['Net Income to Company'] ?? null;
-        $this->dilutedEPS = $data['Diluted Earnings Per Share'] ?? null;
-        $this->revenues = $data['Revenues'] ?? null;
-        $this->dilutedSharesOut = $data['Weighted Avg. Diluted Shares Outstanding'] ?? null;
+        $this->ebitda = $data['EBITDA'] ?? [];
+        $this->adjNetIncome = $data['Net Income to Company'] ?? [];
+        $this->dilutedEPS = $data['Diluted Earnings Per Share'] ?? [];
+        $this->revenues = $data['Revenues'] ?? [];
+        $this->dilutedSharesOut = $data['Weighted Avg. Diluted Shares Outstanding'] ?? [];
+
+        foreach (['ebitda', 'adjNetIncome', 'dilutedEPS', 'dilutedSharesOut', 'revenues'] as $var) {
+            $this->{$var} = array_map(fn ($val) => intval(explode('|', $val[0])[0]), $this->{$var});
+        }
     }
 }
