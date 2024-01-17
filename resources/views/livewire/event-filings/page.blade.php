@@ -42,11 +42,11 @@
             <div>
                 <div class="overflow-x-auto flex border-b border-[#D4DDD7]">
                     <template x-for="subtab in subTabs" :key="subtab.title">
-                        <a href="#" class="inline-block min-w-[12rem] py-2.5 px-2 text-center border-b-2"
+                        <a href="#" class="inline-block w-[12rem] py-2.5 px-4 text-center border-b-2"
                             :class="activeSubTab === subtab.title ? 'border-green-dark' : 'border-transparent'"
                             @click.prevent="activeSubTab = subtab.title">
-                            <p class="font-medium" x-text="subtab.title"></p>
-                            <p class="mt-1 text-sm text-dark-light2 leading-4" x-text="subtab.description"></p>
+                            <p class="font-medium" :class="activeSubTab === subtab.title ? 'text-dark' : 'text-gray-medium2'" x-text="subtab.title"></p>
+                            <p class="mt-1 text-sm leading-4" :class="activeSubTab === subtab.title ? 'text-dark-light2' : 'text-gray-medium2'" x-text="subtab.description"></p>
                         </a>
                     </template>
                 </div>

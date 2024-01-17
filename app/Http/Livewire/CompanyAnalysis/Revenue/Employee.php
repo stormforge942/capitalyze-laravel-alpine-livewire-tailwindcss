@@ -1,0 +1,204 @@
+<?php
+
+namespace App\Http\Livewire\CompanyAnalysis\Revenue;
+
+use Livewire\Component;
+use Illuminate\Support\Facades\DB;
+use App\Models\InfoTikrPresentation;
+use App\Http\Livewire\CompanyAnalysis\HasFilters;
+
+class Employee extends Component
+{
+    use HasFilters;
+
+    public $company;
+    public $rawData = [];
+    public $chartConfig = [
+        'showLabel' => true,
+    ];
+
+    public function mount()
+    {
+        $data = $this->getData();
+        $this->extractDates($data);
+        $this->formatData($data);
+    }
+
+    public function updated($prop)
+    {
+        if (in_array($prop, ['period'])) {
+            $data = $this->getData();
+            $this->extractDates($data);
+            $this->formatData($data);
+        }
+    }
+
+    public function render()
+    {
+        return view('livewire.company-analysis.revenue.employee', [
+            'data' => $this->makeData(),
+            'chart' => [
+                'data' => $this->makeChartData(),
+                'key' => $this->makeChartKey(),
+            ]
+        ]);
+    }
+
+    private function makeData()
+    {
+        $this->updateSelectedDates();
+
+        $data = $this->rawData;
+
+        foreach ($data as $k0 => $v0) {
+            foreach ($v0 as $k1 => $v1) {
+                foreach ($v1 as $date => $val) {
+                    if ($k1 === 'timeline') {
+                        $formatted = !$val ? 'N/A' : $this->formatValue($val);
+                    } else {
+                        $formatted = $this->formatPercentageValue($val);
+                    }
+
+                    $data[$k0][$k1][$date] = [
+                        'formatted' => $formatted,
+                        'value' => $val,
+                    ];
+                }
+            }
+        }
+
+        return $data;
+    }
+
+    private function makeChartData()
+    {
+        $data = $this->rawData;
+
+        return [
+            [
+                'label' => 'Employees',
+                'data' => array_map(fn ($date) => [
+                    'x' => $date,
+                    'y' => $data['employee_count']['timeline'][$date],
+                ], $this->selectedDates),
+                "fill" => false,
+                "yAxisID" => 'y1',
+                "backgroundColor" => '#C22929',
+                "borderColor" => '#C22929',
+                'type' => 'line',
+            ],
+            [
+                'label' => 'Revenue',
+                'data' => array_map(fn ($date) => [
+                    'x' => $date,
+                    'y' => $data['revenues']['timeline'][$date],
+                ], $this->selectedDates),
+                "borderRadius" => 2,
+                "fill" => true,
+                "backgroundColor" => $this->chartColors[2],
+            ],
+        ];
+    }
+
+    private function formatData($raw)
+    {
+        $data = [
+            'revenues' => [
+                'timeline' => $raw['revenues'],
+                'yoy_change' => calculateYoyChange($raw['revenues'], $this->dates),
+            ],
+            'employee_count' => [
+                'timeline' => [],
+                'yoy_change' => [],
+            ],
+            'rev_by_emp' => [
+                'timeline' => [],
+                'yoy_change' => [],
+            ],
+        ];
+
+        $findEmployeeCount = function ($date) use ($raw) {
+            if (isset($raw['employee_count'][$date])) {
+                return $raw['employee_count'][$date];
+            }
+
+            foreach ($raw['employee_count'] as $_date => $count) {
+                $date_ = explode('-', $date);
+                $_date_ = explode('-', $_date);
+
+                // try to match the month and year
+                if ($date_[0] == $_date_[0] && $date_[1] == $_date_[1]) {
+                    return $count;
+                }
+
+                // try to match the year
+                if ($date_[0] == $_date_[0]) {
+                    return $count;
+                }
+            }
+
+            return 0;
+        };
+
+        foreach ($this->dates as $date) {
+            $revenue = $data['revenues']['timeline'][$date];
+            $empCount = $findEmployeeCount($date);
+
+            $data['employee_count']['timeline'][$date] = $empCount;
+
+            $data['rev_by_emp']['timeline'][$date] = $empCount ? $revenue / $empCount : 0;
+        }
+
+        $data['employee_count']['yoy_change'] = calculateYoyChange($data['employee_count']['timeline'], $this->dates);
+        $data['rev_by_emp']['yoy_change'] = calculateYoyChange($data['rev_by_emp']['timeline'], $this->dates);
+
+        $this->rawData = $data;
+    }
+
+    private function getData()
+    {
+        $period = ($this->period == 'quarterly') ? 'quarter' : 'annual';
+
+        $stmt = rescue(fn () => json_decode(
+            InfoTikrPresentation::where('ticker', $this->company['ticker'])
+                ->where('period', $period)
+                ->orderByDesc('id')
+                ->select(['income_statement'])
+                ->first()
+                ?->income_statement ?? "{}",
+            true
+        ), [], false);
+
+        $revenues = [];
+
+        foreach ($stmt as $key => $value) {
+            if (str_starts_with($key, 'Revenues|')) {
+                $revenues = array_map(function ($value) {
+                    return intval(explode('|', $value[0])[0]);
+                }, $value);
+                break;
+            }
+        }
+
+        return [
+            'revenues' => $revenues,
+            'employee_count' => DB::connection('pgsql-xbrl')
+                ->table('employee_count')
+                ->where('symbol', $this->company['ticker'])
+                ->pluck("count", "period_of_report")
+                ->toArray()
+        ];
+    }
+
+    private function extractDates($data)
+    {
+        if (!count($data['revenues'])) {
+            $this->dates = [];
+            return;
+        }
+
+        $dates = array_keys($data['revenues']);
+
+        $this->selectDates($dates);
+    }
+}

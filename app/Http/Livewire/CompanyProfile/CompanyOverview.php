@@ -87,12 +87,12 @@ class CompanyOverview extends Component
         foreach ($this->products as $product => $timeline) {
             $lastVal = 0;
 
-            foreach ($dates as $idx => $date) {
+            foreach ($dates as $date) {
                 $value = $timeline[$date] ?? 0;
 
                 $data['products'][$product]['timeline'][$date] = $value;
-                $data['products'][$product]['yoy_change'][$date] = $idx && $lastVal
-                    ? (($value - $lastVal) /  $value) * 100
+                $data['products'][$product]['yoy_change'][$date] = $lastVal
+                    ? (($value / $lastVal) - 1) * 100
                     : 0;
             }
 
@@ -104,18 +104,17 @@ class CompanyOverview extends Component
         $lastDiluteEps = 0;
         $lastDilutedShares = 0;
         $lastTotalRevenue = 0;
-
-        foreach ($dates as $idx => $date) {
+        foreach ($dates as $date) {
             $total = $this->revenues[$date] ?? 0;
             $data['total_revenue']['timeline'][$date] = $total;
-            $data['total_revenue']['yoy_change'][$date] = $idx && $lastTotalRevenue
-                ? (($total - $lastTotalRevenue) /  $total) * 100
+            $data['total_revenue']['yoy_change'][$date] = $lastTotalRevenue
+                ? (($total / $lastTotalRevenue) - 1) * 100
                 : 0;
 
             $ebitda = $this->ebitda[$date] ?? 0;
             $data['ebitda']['timeline'][$date] = $ebitda;
-            $data['ebitda']['yoy_change'][$date] = $idx && $ebitda
-                ? (($ebitda - $lastEbitda) /  $ebitda) * 100
+            $data['ebitda']['yoy_change'][$date] = $lastEbitda
+                ? (($ebitda / $lastEbitda) - 1) * 100
                 : 0;
             $data['ebitda']['margin'][$date] = $total
                 ? ($ebitda / $total) * 100
@@ -124,8 +123,8 @@ class CompanyOverview extends Component
 
             $adjNetIncome = $this->adjNetIncome[$date] ?? 0;
             $data['adj_net_income']['timeline'][$date] = $adjNetIncome;
-            $data['adj_net_income']['yoy_change'][$date] = $idx && $adjNetIncome
-                ? (($adjNetIncome - $lastAdjNetIncome) /  $adjNetIncome) * 100
+            $data['adj_net_income']['yoy_change'][$date] = $lastAdjNetIncome
+                ? (($adjNetIncome / $lastAdjNetIncome) - 1) * 100
                 : 0;
             $data['adj_net_income']['margin'][$date] = $total
                 ? ($adjNetIncome / $total) * 100
@@ -134,15 +133,15 @@ class CompanyOverview extends Component
 
             $dilutedSharesOut = $this->dilutedSharesOut[$date] ?? 0;
             $data['diluted_shares_out']['timeline'][$date] = $dilutedSharesOut;
-            $data['diluted_shares_out']['yoy_change'][$date] = $idx && $dilutedSharesOut
-                ? (($dilutedSharesOut - $lastDilutedShares) /  $dilutedSharesOut) * 100
+            $data['diluted_shares_out']['yoy_change'][$date] = $lastDilutedShares
+                ? (($dilutedSharesOut / $lastDilutedShares) - 1) * 100
                 : 0;
             $lastDilutedShares = $dilutedSharesOut;
 
             $dilutedEPS = $this->dilutedEPS[$date] ?? 0;
             $data['adj_diluted_eps']['timeline'][$date] = $dilutedEPS;
-            $data['adj_diluted_eps']['yoy_change'][$date] = $idx && $dilutedEPS
-                ? (($dilutedEPS - $lastDiluteEps) /  $dilutedEPS) * 100
+            $data['adj_diluted_eps']['yoy_change'][$date] =  $lastDiluteEps
+                ? (($dilutedEPS / $lastDiluteEps) - 1) * 100
                 : 0;
             $lastDiluteEps = $dilutedEPS;
         }

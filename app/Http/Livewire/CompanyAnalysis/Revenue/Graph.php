@@ -1,20 +1,17 @@
 <?php
 
-namespace App\Http\Livewire;
+namespace App\Http\Livewire\CompanyAnalysis\Revenue;
 
 use App\Models\InfoTikrPresentation;
 use Illuminate\Support\Facades\DB;
 use Livewire\Component;
 
-class CompanyAnalysisGraph extends Component
+class Graph extends Component
 {
     public $years;
-    public $minDate;
-    public $maxDate;
     public $percentage;
-    public $ticker;
+    public $company;
     public $chartData;
-    public $name;
     public $segments;
     public $products;
     public $period;
@@ -27,7 +24,7 @@ class CompanyAnalysisGraph extends Component
     protected $listeners = ['initChart'];
 
 
-    public function initChart($selectedYears = null, $source)
+    public function initChart($selectedYears = null)
     {
         if ($this->chartId == 'rbg') {
             $this->getProducts('args');
@@ -53,7 +50,7 @@ class CompanyAnalysisGraph extends Component
     {
         $counts = DB::connection('pgsql-xbrl')
             ->table('employee_count')
-            ->where('symbol', $this->ticker)->get()->toArray();
+            ->where('symbol', $this->company['ticker'])->get()->toArray();
         $this->employeeCount = [];
         foreach ($counts as $item) {
 
@@ -73,7 +70,7 @@ class CompanyAnalysisGraph extends Component
         }
 
         $data = json_decode(
-            InfoTikrPresentation::where('ticker', $this->ticker)
+            InfoTikrPresentation::where('ticker', $this->company['ticker'])
                 ->where('period', $period)
                 ->orderByDesc('id')
                 ->select(['income_statement'])
@@ -262,6 +259,7 @@ class CompanyAnalysisGraph extends Component
             }
             $dataSets[] = $set;
         }
+
         return $dataSets;
     }
 
@@ -279,7 +277,7 @@ class CompanyAnalysisGraph extends Component
 
         $json = DB::connection('pgsql-xbrl')
             ->table('as_reported_sec_segmentation_api')
-            ->where('ticker', '=', $this->ticker)
+            ->where('ticker', '=', $this->company['ticker'])
             ->where('endpoint', '=', $source)
             ->value('api_return_open_ai');
 

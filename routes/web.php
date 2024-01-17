@@ -50,8 +50,8 @@ Route::get('/permission-denied', PermissionDenied::class)->name('permission-deni
 
 Route::get('/', HomeController::class)->name('home');
 
-Route::middleware([])->group(function () {
-    Route::middleware(['auth', 'approved', 'verified', 'checkPagePermission'])->group(function () {
+Route::middleware(['auth', 'approved', 'verified', 'checkPagePermission'])
+    ->group(function () {
         Route::get('/track-investor', TrackInvestorController::class)->name('track-investor');
         Route::get('/event-filings', EventFilingsController::class)->name('event-filings');
         Route::get('/insider-transactions', InsiderTransactionsController::class)->name('insider-transactions');
@@ -147,7 +147,6 @@ Route::middleware([])->group(function () {
 
         Route::get('/shenzhen/{ticker}/', [ShenzhenController::class, 'metrics'])->name('shenzhen.metrics');
     });
-});
 
 Route::middleware(['auth', 'verified', 'ensureUserIsApproved'])->group(function () {
     Route::get('/admin/users', [AdminController::class, 'index'])->name('admin.users');

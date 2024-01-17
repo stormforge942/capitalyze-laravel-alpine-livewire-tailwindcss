@@ -109,11 +109,6 @@ class Page extends Component
                 'Millions',
                 'Billions',
             ],
-            'decimalTypes' => [
-                '' => 'Auto',
-                '2' => '.00',
-                '3' => '.000',
-            ],
             'orderTypes' => [
                 'Latest on the Right',
                 'Latest on the Left',

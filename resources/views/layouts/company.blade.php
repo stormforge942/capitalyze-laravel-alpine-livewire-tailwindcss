@@ -88,7 +88,7 @@
         @elseif($tab === 'filings-summary')
             <livewire:comapany-filings-summary :company="$company" :tinker="$ticker" :period="$period" />
         @elseif($tab == 'analysis')
-            <livewire:company-analysis :company="$company" :ticker="$ticker" :period="$period" />
+            <livewire:company-analysis.page :company="$company" :ticker="$ticker" :period="$period" />
         @endif
     </main>
 

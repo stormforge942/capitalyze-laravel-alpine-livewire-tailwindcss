@@ -13,7 +13,6 @@
                 <div x-data="{
                     rows: $wire.rows,
                     tableDates: $wire.tableDates,
-                    dateRange: $wire.rangeDates,
                     selectedDateRange: $wire.entangle('selectedDateRange', true),
                     chart: null,
                     disclosureTab: $wire.entangle('disclosureTab'),
@@ -83,9 +82,7 @@
                 
                         return dates
                     },
-                    init() {
-                        this.initRangeSlider();
-                
+                    init() {                
                         this.$watch('filters', (newVal) => {
                             const url = new URL(window.location.href);
                 
@@ -109,27 +106,6 @@
                 
                             Alpine.debounce(this.renderChart.bind(this), 300)()
                         }, { deep: true })
-                    },
-                    initRangeSlider() {
-                        const el = document.getElementById('range-slider-company-report');
-                
-                        if (!el) return;
-                
-                        let rangeMin = this.dateRange[0];
-                        let rangeMax = this.dateRange[this.dateRange.length - 1];
-                
-                        const alpineThis = this;
-                
-                        rangeSlider(el, {
-                            step: 1,
-                            min: rangeMin,
-                            max: rangeMax,
-                            value: this.selectedDateRange,
-                            rangeSlideDisabled: true,
-                            onInput: (value) => {
-                                alpineThis.selectedDateRange = value;
-                            }
-                        });
                     },
                     formattedTableDate(date) {
                         return new Date(date).toLocaleString('en-US', {
@@ -234,13 +210,9 @@
                             </div>
                         </div>
                     @else
-                        <div class="years-range-wrapper my-2">
-                            <div class="dots-wrapper">
-                                <template x-for="year in dateRange" :key="year">
-                                    <span :class="isYearInRange(year) ? 'active-dots' : 'inactive-dots'"></span>
-                                </template>
-                            </div>
-                            <div id="range-slider-company-report" class="range-slider"></div>
+                        <div class="mt-6 mb-8">
+                            <x-range-slider :min="$rangeDates[0]" :max="$rangeDates[count($rangeDates) - 1]" :value="$selectedDateRange" @range-updated="selectedDateRange = $event.detail">
+                            </x-range-slider>
                         </div>
 
                         <template x-if="selectedChartRows.length">
@@ -468,7 +440,9 @@
         });
 
         function renderCompanyReportChart(data) {
-            const ctx = document.getElementById("chart-company-report").getContext("2d");
+            const ctx = document.getElementById("chart-company-report")?.getContext("2d");
+
+            if(!ctx) return;
 
             data.datasets.sort((a, b) => {
                 // If 'type' is 'line', prioritize it over 'bar'

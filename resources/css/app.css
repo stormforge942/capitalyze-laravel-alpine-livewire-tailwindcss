@@ -822,6 +822,8 @@ div#range-slider-company-analysis-geography {
     color: white;
     position: relative;
     background-image: none;
+
+    @apply focus:ring-0 focus:outline-none
 }
 
 .custom-radio:checked {
@@ -835,8 +837,8 @@ div#range-slider-company-analysis-geography {
     left: 50%;
     transform: translate(-50%, -50%);
     opacity: 0;
-    width: 10px;
-    height: 10px;
+    width: 60%;
+    height: 60%;
     border-radius: 100%;
     background-color: #121a0f;
     transition: all 0.25s ease-in-out;

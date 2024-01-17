@@ -1,13 +1,16 @@
-<div class="main-graph-wrapper main-graph-rev w-full" wire:ignore x-cloak x-show="{{$chartId}}showgraph">
-    <div x-show="{{$chartId}}showgraph"
-        :class="{ 'custom-dropdown-absolute-wrapper': !{{$chartId}}showgraph, 'custom-dropdown-absolute-wrapper abs-custom': {{$chartId}}showgraph }">
+<div class="main-graph-wrapper main-graph-rev w-full" wire:ignore x-cloak x-show="{{ $chartId }}showgraph">
+    <div x-show="{{ $chartId }}showgraph"
+        :class="{
+            'custom-dropdown-absolute-wrapper': !
+                {{ $chartId }}showgraph,
+            'custom-dropdown-absolute-wrapper abs-custom': {{ $chartId }}showgraph
+        }">
         <div class="relative custom-dropdown-absolute-wrapper-inner flex justify-end" x-data="{
             chartMenuOpen: false
         }">
-            <div x-show="{{$chartId}}showgraph">
-                <button type="button" @click="chartMenuOpen = !chartMenuOpen"
-                    class="custom-drop-down-button hide-mobile" id="menu-button" aria-expanded="true"
-                    aria-haspopup="true">
+            <div x-show="{{ $chartId }}showgraph">
+                <button type="button" @click="chartMenuOpen = !chartMenuOpen" class="custom-drop-down-button hide-mobile"
+                    id="menu-button" aria-expanded="true" aria-haspopup="true">
 
                     <svg x-show="!chartMenuOpen" xmlns="http://www.w3.org/2000/svg" fill="#121A0F" viewBox="0 0 24 24"
                         stroke-width="2" stroke="currentColor" class="w-6 h-6">
@@ -31,9 +34,11 @@
                 <div class="py-1" role="none">
                     <!-- Active: "bg-gray-100 text-gray-900", Not Active: "text-gray-700" -->
                     <div class="links-wrapper mb-3">
-                        <a href="#" x-show="{{$chartId}}showgraph" @click="{{$chartId}}showgraph = !{{$chartId}}showgraph; chartMenuOpen = false"
+                        <a href="#" x-show="{{ $chartId }}showgraph"
+                            @click="{{ $chartId }}showgraph = !{{ $chartId }}showgraph; chartMenuOpen = false"
                             class="menu_link" role="menuitem" tabindex="-1" id="menu-item-0">Hide Chart</a>
-                        <a href="#" x-show="!{{$chartId}}showgraph" @click="{{$chartId}}showgraph = !{{$chartId}}showgraph; chartMenuOpen = false"
+                        <a href="#" x-show="!{{ $chartId }}showgraph"
+                            @click="{{ $chartId }}showgraph = !{{ $chartId }}showgraph; chartMenuOpen = false"
                             class="menu_link" role="menuitem" tabindex="-1" id="menu-item-0">Show Chart</a>
                         <a href="#" class="menu_link" role="menuitem" tabindex="-1" id="menu-item-1">View In Full
                             Screen</a>
@@ -57,8 +62,8 @@
                             </svg>
                             Download As PNG</a>
                         <a href="#" class="menu_link" role="menuitem" tabindex="-1" id="menu-item-5"> <svg
-                                xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5"
-                                stroke="currentColor" class="w-6 h-6">
+                                xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24"
+                                stroke-width="1.5" stroke="currentColor" class="w-6 h-6">
                                 <path stroke-linecap="round" stroke-linejoin="round"
                                     d="M3 16.5v2.25A2.25 2.25 0 005.25 21h13.5A2.25 2.25 0 0021 18.75V16.5M16.5 12L12 16.5m0 0L7.5 12m4.5 4.5V3" />
                             </svg>
@@ -73,12 +78,15 @@
         <div class="graph-wrapper graph-wrapper-rev ">
             <div class="graph-header graph-header-flex relative mb-5">
                 <div class="pr-3">
-                    <p class="title revenue-title" wire:click="load()">{{ $name }}. ({{ $ticker }}) </p>
-                    <p class="revenue-subtitle">{{$title}} </p>
+                    <p class="title revenue-title">
+                        {{ $company['name'] }}. ({{ $company['ticker'] }})
+                    </p>
+                    <p class="revenue-subtitle">{{ $title }} </p>
                 </div>
 
                 <div>
-                    <div class="relative custom-dropdown-absolute-wrapper-inner mobile-show flex justify-end" x-data="{
+                    <div class="relative custom-dropdown-absolute-wrapper-inner mobile-show flex justify-end"
+                        x-data="{
                             openMobileGraph: false
                         }">
                         <div>
@@ -106,36 +114,41 @@
 
 
                         <div @click.away="openMobileGraph = false" x-show="openMobileGraph"
-                            class="absolute custom-drop-down right-0 z-10    bg-white  focus:outline-none" role="menu"
-                            aria-orientation="vertical" aria-labelledby="menu-button" tabindex="-1">
+                            class="absolute custom-drop-down right-0 z-10    bg-white  focus:outline-none"
+                            role="menu" aria-orientation="vertical" aria-labelledby="menu-button" tabindex="-1">
                             <div class="py-1" role="none">
                                 <!-- Active: "bg-gray-100 text-gray-900", Not Active: "text-gray-700" -->
                                 <div class="links-wrapper mb-3">
 
-                                    <a href="#" class="menu_link" role="menuitem" tabindex="-1" id="menu-item-1">View In
+                                    <a href="#" class="menu_link" role="menuitem" tabindex="-1"
+                                        id="menu-item-1">View In
                                         Full Screen</a>
-                                    <a href="#" class="menu_link" role="menuitem" tabindex="-1" id="menu-item-2">Print
+                                    <a href="#" class="menu_link" role="menuitem" tabindex="-1"
+                                        id="menu-item-2">Print
                                         Chart</a>
                                 </div>
                                 <hr class="mb-3">
                                 <div class="links-wrapper">
-                                    <a href="#" class="menu_link" role="menuitem" tabindex="-1" id="menu-item-3"> <svg
-                                            xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24"
-                                            stroke-width="1.5" stroke="currentColor" class="w-6 h-6">
+                                    <a href="#" class="menu_link" role="menuitem" tabindex="-1"
+                                        id="menu-item-3"> <svg xmlns="http://www.w3.org/2000/svg" fill="none"
+                                            viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor"
+                                            class="w-6 h-6">
                                             <path stroke-linecap="round" stroke-linejoin="round"
                                                 d="M3 16.5v2.25A2.25 2.25 0 005.25 21h13.5A2.25 2.25 0 0021 18.75V16.5M16.5 12L12 16.5m0 0L7.5 12m4.5 4.5V3" />
                                         </svg>
                                         Download As PNG</a>
-                                    <a href="#" class="menu_link" role="menuitem" tabindex="-1" id="menu-item-4"> <svg
-                                            xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24"
-                                            stroke-width="1.5" stroke="currentColor" class="w-6 h-6">
+                                    <a href="#" class="menu_link" role="menuitem" tabindex="-1"
+                                        id="menu-item-4"> <svg xmlns="http://www.w3.org/2000/svg" fill="none"
+                                            viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor"
+                                            class="w-6 h-6">
                                             <path stroke-linecap="round" stroke-linejoin="round"
                                                 d="M3 16.5v2.25A2.25 2.25 0 005.25 21h13.5A2.25 2.25 0 0021 18.75V16.5M16.5 12L12 16.5m0 0L7.5 12m4.5 4.5V3" />
                                         </svg>
                                         Download As PNG</a>
-                                    <a href="#" class="menu_link" role="menuitem" tabindex="-1" id="menu-item-5"> <svg
-                                            xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24"
-                                            stroke-width="1.5" stroke="currentColor" class="w-6 h-6">
+                                    <a href="#" class="menu_link" role="menuitem" tabindex="-1"
+                                        id="menu-item-5"> <svg xmlns="http://www.w3.org/2000/svg" fill="none"
+                                            viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor"
+                                            class="w-6 h-6">
                                             <path stroke-linecap="round" stroke-linejoin="round"
                                                 d="M3 16.5v2.25A2.25 2.25 0 005.25 21h13.5A2.25 2.25 0 0021 18.75V16.5M16.5 12L12 16.5m0 0L7.5 12m4.5 4.5V3" />
                                         </svg>
@@ -147,42 +160,41 @@
                 </div>
                 <div class="select-graph-date-wrapper desktop-show ml-12 flex">
                     <ul class="items-center w-full flex custom_radio_wrapper">
-                        @if($chartId != 'rbe')
-                        <li class="">
-                            <input value="Values" id="{{$chartId}}Values" type="radio" name="{{$chartId}}radio-group" checked>
-                            <label for="{{$chartId}}Values" onclick="{{$chartId}}TypeChanged('values')">Values</label>
-                        </li>
-                        <li class="">
-                            <input value="Percentage Mix" id="{{$chartId}}Percentage" type="radio"
-                                name="{{$chartId}}radio-group">
-                            <label for="{{$chartId}}Percentage" onclick="{{$chartId}}TypeChanged('percentage')">Percentage Mix</label>
-                        </li>
+                        @if ($chartId != 'rbe')
+                            <li class="">
+                                <input value="Values" id="{{ $chartId }}Values" type="radio"
+                                    name="{{ $chartId }}radio-group" checked>
+                                <label for="{{ $chartId }}Values"
+                                    onclick="{{ $chartId }}TypeChanged('values')">Values</label>
+                            </li>
+                            <li class="">
+                                <input value="Percentage Mix" id="{{ $chartId }}Percentage" type="radio"
+                                    name="{{ $chartId }}radio-group">
+                                <label for="{{ $chartId }}Percentage"
+                                    onclick="{{ $chartId }}TypeChanged('percentage')">Percentage Mix</label>
+                            </li>
                         @endif
-                        <li class="custom_checkbox" x-data="{toggle: false, toggle2: false}">
+                        <li class="custom_checkbox" x-data="{ toggle: false, toggle2: false }">
                             <button
                                 class="flex items-center transition ease-in-out duration-300 w-7 h-3 bg-gray-custom rounded-full focus:outline-none"
                                 class="bg-gray-custom"
-                                x-on:click="toggle2 = !toggle2; {{$chartId}}ShowLabels(toggle2)">
+                                x-on:click="toggle2 = !toggle2; {{ $chartId }}ShowLabels(toggle2)">
                                 <div class="transition ease-in-out duration-300 rounded-full h-4 w-4 bg-white shadow border"
                                     :class="{ 'transform translate-x-full ': toggle2 }"></div>
                             </button> <span class="title">Show Labels</span>
                         </li>
-
                     </ul>
-
                 </div>
+            </div>
 
+            <div class="mt-3 mr-5" wire:loading.remove x-show="{{ $chartId }}showgraph" x-transition>
+                <canvas id="{{ $chartId }}Canvas" wire:ignore></canvas>
             </div>
-            {{-- <div class="place-items-center h-96" wire:loading.grid>
-                <span class="mx-auto simple-loader !text-green-dark"></span>
-            </div>
-            --}}
-            <div class="mt-3 mr-5" wire:loading.remove x-show="{{$chartId}}showgraph" x-transition>
-                <canvas id="{{$chartId}}Canvas" wire:ignore></canvas>
-            </div>
+
             <div class="flex justify-end">
                 <div class="mr-5 mt-5">
-                    <svg xmlns="http://www.w3.org/2000/svg" width="65" height="16" viewBox="0 0 80 16" fill="none">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="65" height="16" viewBox="0 0 80 16"
+                        fill="none">
                         <path
                             d="M29.8334 5.61422C30.1938 6.30619 30.374 7.11691 30.374 8.04719C30.374 8.95371 30.1938 9.75297 29.8334 10.4449C29.473 11.1369 28.9726 11.6717 28.3329 12.0492C27.6932 12.4267 26.9666 12.6159 26.1524 12.6159C25.4898 12.6159 24.914 12.4938 24.4258 12.2498C23.9376 12.0058 23.5477 11.6741 23.257 11.2557V15.9996H21.373V3.58252L23.0129 3.58252L23.2398 4.90832C23.9606 3.95512 24.932 3.47852 26.1533 3.47852C26.9674 3.47852 27.694 3.66113 28.3337 4.028C28.9734 4.39487 29.473 4.92225 29.8334 5.61422ZM28.4549 8.04719C28.4549 7.16359 28.2133 6.44868 27.7308 5.90247C27.2484 5.35626 26.6177 5.08275 25.8379 5.08275C25.059 5.08275 24.4307 5.35299 23.954 5.89347C23.4773 6.43394 23.2389 7.14066 23.2389 8.01279C23.2389 8.90786 23.4773 9.63422 23.954 10.1927C24.4307 10.7504 25.059 11.0296 25.8379 11.0296C26.6169 11.0296 27.2476 10.7504 27.7308 10.1927C28.2141 9.63504 28.4549 8.91932 28.4549 8.04719Z"
                             fill="#121A0F" />
@@ -225,261 +237,267 @@
 </div>
 
 @push('scripts')
-<script src="https://cdn.jsdelivr.net/npm/chartjs-plugin-datalabels@2.0.0/dist/chartjs-plugin-datalabels.min.js">
-</script>
-<script>
-    let {{$chartId}}LabelsVisible = false
-    let {{$chartId}}Chart = null
-    let {{$chartId}}Period =  'arps'
-    if('{{$chartId}}' == 'rbg'){
-        {{$chartId}}Period =  'args'
-    }
-    let {{$chartId}}Data = {!!json_encode($chartData)!!};
-    let {{$chartId}}ReverseData = false;
-    document.addEventListener('DOMContentLoaded', function() {
-        {{$chartId}}InitChart()
-    })
-    let {{$chartId}}FilteredData = {!!json_encode($chartData)!!}
+    <script src="https://cdn.jsdelivr.net/npm/chartjs-plugin-datalabels@2.0.0/dist/chartjs-plugin-datalabels.min.js">
+    </script>
+    <script>
+        let {{ $chartId }}LabelsVisible = false
+        let {{ $chartId }}Chart = null
+        let {{ $chartId }}Period = 'arps'
+        if ('{{ $chartId }}' == 'rbg') {
+            {{ $chartId }}Period = 'args'
+        }
+        let {{ $chartId }}Data = {!! json_encode($chartData) !!};
+        let {{ $chartId }}ReverseData = false;
+        document.addEventListener('DOMContentLoaded', function() {
+            {{ $chartId }}InitChart()
+        })
+        let {{ $chartId }}FilteredData = {!! json_encode($chartData) !!}
 
-    function {{$chartId}}ShowLabels(v){
-        {{$chartId}}LabelsVisible = v
-        {{$chartId}}InitChart({{$chartId}}FilteredData)
-    }
-    let {{$chartId}}ChartType = 'values'
-    function {{$chartId}}TypeChanged(type){
-        {{$chartId}}ChartType = type
-        {{$chartId}}FilteredData['quarterly'].forEach((value, pindex) => {
-            let {{$chartId}}FinalData = []
-            value.data.forEach((data, cindex) => {
-                if(type == 'percentage'){
-                    data.y = data.percentage
-                }
-                else {
-                    data.y = data.revenue
-                }
-                {{$chartId}}FinalData.push(data)
+        function {{ $chartId }}ShowLabels(v) {
+            {{ $chartId }}LabelsVisible = v
+            {{ $chartId }}InitChart({{ $chartId }}FilteredData)
+        }
+        let {{ $chartId }}ChartType = 'values'
+
+        function {{ $chartId }}TypeChanged(type) {
+            {{ $chartId }}ChartType = type
+            {{ $chartId }}FilteredData['quarterly'].forEach((value, pindex) => {
+                let {{ $chartId }}FinalData = []
+                value.data.forEach((data, cindex) => {
+                    if (type == 'percentage') {
+                        data.y = data.percentage
+                    } else {
+                        data.y = data.revenue
+                    }
+                    {{ $chartId }}FinalData.push(data)
+                })
+                {{ $chartId }}FilteredData['quarterly'][pindex].data = {{ $chartId }}FinalData
             })
-            {{$chartId}}FilteredData['quarterly'][pindex].data = {{$chartId}}FinalData
+
+            {{ $chartId }}FilteredData['annual'].forEach((value, pindex) => {
+                let {{ $chartId }}FinalData = []
+                value.data.forEach((data, cindex) => {
+                    if (type == 'percentage') {
+                        data.y = data.percentage
+                    } else {
+                        data.y = data.revenue
+                    }
+                    {{ $chartId }}FinalData.push(data)
+                })
+                {{ $chartId }}FilteredData['annual'][pindex].data = {{ $chartId }}FinalData
+            })
+            {{ $chartId }}InitChart({{ $chartId }}FilteredData)
+        }
+        Livewire.on('{{ $chartId }}DecimalChanged', () => {
+            {{ $chartId }}InitChart({{ $chartId }}FilteredData)
         })
 
-        {{$chartId}}FilteredData['annual'].forEach((value, pindex) => {
-            let {{$chartId}}FinalData = []
-            value.data.forEach((data, cindex) => {
-                if(type == 'percentage'){
-                    data.y = data.percentage
-                }
-                else {
-                    data.y = data.revenue
-                }
-                {{$chartId}}FinalData.push(data)
-            })
-            {{$chartId}}FilteredData['annual'][pindex].data = {{$chartId}}FinalData
-        })
-        {{$chartId}}InitChart({{$chartId}}FilteredData)
-    }
-    Livewire.on('{{$chartId}}DecimalChanged', () => {
-        {{$chartId}}InitChart({{$chartId}}FilteredData)
-    })
-
-    Livewire.on('{{$chartId}}PeriodChanged', (v) => {
-        let periodColumn = (v == 'Calendar Annual' || v == 'Fiscal Annual') ? 'arps' : 'qrps'
-        {{$chartId}}Period = periodColumn
-        {{$chartId}}InitChart({{$chartId}}FilteredData)
-    })
-
-    Livewire.on('{{$chartId}}UnitChanged', (v) => {
-        {{$chartId}}FilteredData = {!!json_encode($chartData)!!}
-        {{$chartId}}FilteredData[({{$chartId}}Period == 'arps' || {{$chartId}}Period == 'args') ? 'annual' : 'quarterly'].forEach((value, pindex) => {
-            let {{$chartId}}FinalData = []
-            value.data.forEach((data, cindex) => {
-                if(v == 'thousands'){
-                    data.y = parseInt(data.y) / 1000
-                    {{$chartId}}FinalData.push(data)
-                }
-
-                if(v == 'millions'){
-                    data.y = parseInt(data.y) / 1000000
-                    {{$chartId}}FinalData.push(data)
-                }
-
-                if(v == 'billions'){
-                    data.y = parseInt(data.y) / 1000000000
-                    {{$chartId}}FinalData.push(data)
-                }
-
-                if(v == '0'){
-                    {{$chartId}}FinalData.push(data)
-                }
-            })
-            {{$chartId}}FilteredData[({{$chartId}}Period == 'arps' || {{$chartId}}Period == 'args' )? 'annual' : 'quarterly'][pindex].data = {{$chartId}}FinalData
+        Livewire.on('{{ $chartId }}PeriodChanged', (v) => {
+            let periodColumn = (v == 'Calendar Annual' || v == 'Fiscal Annual') ? 'arps' : 'qrps'
+            {{ $chartId }}Period = periodColumn
+            {{ $chartId }}InitChart({{ $chartId }}FilteredData)
         })
 
-        {{$chartId}}InitChart({{$chartId}}FilteredData)
-    })
-    Livewire.on('{{$chartId}}OrderChanged',(v) => {
-        {{$chartId}}ReverseData = v
-        {{$chartId}}InitChart({{$chartId}}FilteredData)
-    })
-    Livewire.on('{{$chartId}}AnalysisDatesChanged', (dates) => {
-        {{$chartId}}FilteredData = {!!json_encode($chartData)!!}
-        let {{$chartId}}StartDate = dates[0]
-        let {{$chartId}}EndDate = dates[1]
-        {{$chartId}}FilteredData['quarterly'].forEach((value, pindex) => {
-            let {{$chartId}}FinalData = []
-            value.data.forEach((data, cindex) => {
-                let {{$chartId}}CurrentDate = parseInt(new Date(data.x).getFullYear())
-                if(!({{$chartId}}CurrentDate < parseInt({{$chartId}}StartDate) || {{$chartId}}CurrentDate > parseInt({{$chartId}}EndDate))){
-                    {{$chartId}}FinalData.push(data)
-                }
+        Livewire.on('{{ $chartId }}UnitChanged', (v) => {
+            {{ $chartId }}FilteredData = {!! json_encode($chartData) !!}
+            {{ $chartId }}FilteredData[({{ $chartId }}Period == 'arps' || {{ $chartId }}Period ==
+                'args') ? 'annual' : 'quarterly'].forEach((value, pindex) => {
+                let {{ $chartId }}FinalData = []
+                value.data.forEach((data, cindex) => {
+                    if (v == 'thousands') {
+                        data.y = parseInt(data.y) / 1000
+                        {{ $chartId }}FinalData.push(data)
+                    }
+
+                    if (v == 'millions') {
+                        data.y = parseInt(data.y) / 1000000
+                        {{ $chartId }}FinalData.push(data)
+                    }
+
+                    if (v == 'billions') {
+                        data.y = parseInt(data.y) / 1000000000
+                        {{ $chartId }}FinalData.push(data)
+                    }
+
+                    if (v == '0') {
+                        {{ $chartId }}FinalData.push(data)
+                    }
+                })
+                {{ $chartId }}FilteredData[({{ $chartId }}Period == 'arps' ||
+                        {{ $chartId }}Period == 'args') ? 'annual' : 'quarterly'][pindex].data =
+                    {{ $chartId }}FinalData
             })
-            {{$chartId}}FilteredData['quarterly'][pindex].data = {{$chartId}}FinalData
+
+            {{ $chartId }}InitChart({{ $chartId }}FilteredData)
+        })
+        Livewire.on('{{ $chartId }}OrderChanged', (v) => {
+            {{ $chartId }}ReverseData = v
+            {{ $chartId }}InitChart({{ $chartId }}FilteredData)
+        })
+        Livewire.on('{{ $chartId }}AnalysisDatesChanged', (dates) => {
+            {{ $chartId }}FilteredData = {!! json_encode($chartData) !!}
+            let {{ $chartId }}StartDate = dates[0]
+            let {{ $chartId }}EndDate = dates[1]
+            {{ $chartId }}FilteredData['quarterly'].forEach((value, pindex) => {
+                let {{ $chartId }}FinalData = []
+                value.data.forEach((data, cindex) => {
+                    let {{ $chartId }}CurrentDate = parseInt(new Date(data.x).getFullYear())
+                    if (!({{ $chartId }}CurrentDate < parseInt(
+                                {{ $chartId }}StartDate) || {{ $chartId }}CurrentDate >
+                            parseInt({{ $chartId }}EndDate))) {
+                        {{ $chartId }}FinalData.push(data)
+                    }
+                })
+                {{ $chartId }}FilteredData['quarterly'][pindex].data = {{ $chartId }}FinalData
+            })
+
+            {{ $chartId }}FilteredData['annual'].forEach((value, pindex) => {
+                let {{ $chartId }}FinalData = []
+                value.data.forEach((data, cindex) => {
+                    let {{ $chartId }}CurrentDate = parseInt(new Date(data.x).getFullYear())
+                    if (!({{ $chartId }}CurrentDate < parseInt(
+                                {{ $chartId }}StartDate) || {{ $chartId }}CurrentDate >
+                            parseInt({{ $chartId }}EndDate))) {
+                        {{ $chartId }}FinalData.push(data)
+                    }
+                })
+                {{ $chartId }}FilteredData['annual'][pindex].data = {{ $chartId }}FinalData
+            })
+            {{ $chartId }}InitChart({{ $chartId }}FilteredData)
         })
 
-        {{$chartId}}FilteredData['annual'].forEach((value, pindex) => {
-            let {{$chartId}}FinalData = []
-            value.data.forEach((data, cindex) => {
-                let {{$chartId}}CurrentDate = parseInt(new Date(data.x).getFullYear())
-                if(!({{$chartId}}CurrentDate < parseInt({{$chartId}}StartDate) || {{$chartId}}CurrentDate > parseInt({{$chartId}}EndDate))){
-                    {{$chartId}}FinalData.push(data)
-                }
-            })
-            {{$chartId}}FilteredData['annual'][pindex].data = {{$chartId}}FinalData
+        document.addEventListener('{{ $chartId }}refreshChart', (data) => {
+            {{ $chartId }}FilteredData = data.detail
+            {{ $chartId }}InitChart({{ $chartId }}FilteredData)
         })
-        {{$chartId}}InitChart({{$chartId}}FilteredData)
-    })
+        Livewire.on('{{ $chartId }}refreshChart', (data) => {
+            alert('here')
+            {{ $chartId }}FilteredData = data.detail ?? null
+            {{ $chartId }}InitChart({{ $chartId }}FilteredData)
+        })
 
-    document.addEventListener('{{$chartId}}refreshChart', (data) => {
-        {{$chartId}}FilteredData = data.detail
-        {{$chartId}}InitChart({{$chartId}}FilteredData)
-    })
-    Livewire.on('{{$chartId}}refreshChart', (data) => {
-        alert('here')
-        {{$chartId}}FilteredData = data.detail ?? null
-        {{$chartId}}InitChart({{$chartId}}FilteredData)
-    })
+        const {{ $chartId }}GetOrCreateTooltip = (chart) => {
+            let {{ $chartId }}TooltipEl = chart.canvas.parentNode.querySelector('div');
 
-    const {{$chartId}}GetOrCreateTooltip = (chart) => {
-            let {{$chartId}}TooltipEl = chart.canvas.parentNode.querySelector('div');
-
-            if (!{{$chartId}}TooltipEl) {
-                {{$chartId}}TooltipEl = document.createElement('div');
-                {{$chartId}}TooltipEl.style.background = '#fff';
-                {{$chartId}}TooltipEl.style.borderRadius = '25px';
-                {{$chartId}}TooltipEl.style.color = 'black';
-                {{$chartId}}TooltipEl.style.opacity = 1;
-                {{$chartId}}TooltipEl.style.pointerEvents = 'none';
-                {{$chartId}}TooltipEl.style.position = 'absolute';
-                {{$chartId}}TooltipEl.style.transform = 'translate(-50%, 0)';
-                {{$chartId}}TooltipEl.style.transition = 'all .1s ease';
-                {{$chartId}}TooltipEl.style.minWidth = '230px';
-                {{$chartId}}TooltipEl.style.filter =
+            if (!{{ $chartId }}TooltipEl) {
+                {{ $chartId }}TooltipEl = document.createElement('div');
+                {{ $chartId }}TooltipEl.style.background = '#fff';
+                {{ $chartId }}TooltipEl.style.borderRadius = '25px';
+                {{ $chartId }}TooltipEl.style.color = 'black';
+                {{ $chartId }}TooltipEl.style.opacity = 1;
+                {{ $chartId }}TooltipEl.style.pointerEvents = 'none';
+                {{ $chartId }}TooltipEl.style.position = 'absolute';
+                {{ $chartId }}TooltipEl.style.transform = 'translate(-50%, 0)';
+                {{ $chartId }}TooltipEl.style.transition = 'all .1s ease';
+                {{ $chartId }}TooltipEl.style.minWidth = '230px';
+                {{ $chartId }}TooltipEl.style.filter =
                     'drop-shadow(0px 10.732307434082031px 21.464614868164062px rgba(50, 50, 71, 0.06)) drop-shadow(0px 10.732307434082031px 10.732307434082031px rgba(50, 50, 71, 0.08))';
-                {{$chartId}}TooltipEl.classList.add('tooltip-caret')
+                {{ $chartId }}TooltipEl.classList.add('tooltip-caret')
 
-                const {{$chartId}}Table = document.createElement('table');
-                {{$chartId}}Table.style.margin = '0px';
+                const {{ $chartId }}Table = document.createElement('table');
+                {{ $chartId }}Table.style.margin = '0px';
 
-                {{$chartId}}TooltipEl.appendChild({{$chartId}}Table);
-                {{$chartId}}Chart.canvas.parentNode.appendChild({{$chartId}}TooltipEl);
+                {{ $chartId }}TooltipEl.appendChild({{ $chartId }}Table);
+                {{ $chartId }}Chart.canvas.parentNode.appendChild({{ $chartId }}TooltipEl);
             }
 
-            return {{$chartId}}TooltipEl;
+            return {{ $chartId }}TooltipEl;
         };
 
-        const {{$chartId}}ExternalTooltipHandler = (context) => {
+        const {{ $chartId }}ExternalTooltipHandler = (context) => {
             // Tooltip Element
             const {
                 chart,
                 tooltip
             } = context;
-            const {{$chartId}}TooltipEl = {{$chartId}}GetOrCreateTooltip(chart);
+            const {{ $chartId }}TooltipEl = {{ $chartId }}GetOrCreateTooltip(chart);
 
             // Hide if no tooltip
             if (tooltip.opacity === 0) {
-                {{$chartId}}TooltipEl.style.opacity = 0;
+                {{ $chartId }}TooltipEl.style.opacity = 0;
                 return;
             }
 
             // Set Text
             if (tooltip.body) {
-                const {{$chartId}}TitleLines = tooltip.title || [];
-                const {{$chartId}}bodyLines = tooltip.body.map(b => b.lines);
+                const {{ $chartId }}TitleLines = tooltip.title || [];
+                const {{ $chartId }}bodyLines = tooltip.body.map(b => b.lines);
 
-                const {{$chartId}}TableHead = document.createElement('thead');
+                const {{ $chartId }}TableHead = document.createElement('thead');
 
-                {{$chartId}}TableHead.style.color = '#3561E7';
-                {{$chartId}}TableHead.style.textAlign = 'left';
-                {{$chartId}}TableHead.style.marginBottom = '8px';
+                {{ $chartId }}TableHead.style.color = '#3561E7';
+                {{ $chartId }}TableHead.style.textAlign = 'left';
+                {{ $chartId }}TableHead.style.marginBottom = '8px';
 
-                {{$chartId}}TitleLines.forEach(title => {
-                    const {{$chartId}}Tr = document.createElement('tr');
-                    {{$chartId}}Tr.style.borderWidth = 0;
+                {{ $chartId }}TitleLines.forEach(title => {
+                    const {{ $chartId }}Tr = document.createElement('tr');
+                    {{ $chartId }}Tr.style.borderWidth = 0;
 
-                    const {{$chartId}}Th = document.createElement('th');
-                    {{$chartId}}Th.style.borderWidth = 0;
-                    const {{$chartId}}Text = document.createTextNode(title);
+                    const {{ $chartId }}Th = document.createElement('th');
+                    {{ $chartId }}Th.style.borderWidth = 0;
+                    const {{ $chartId }}Text = document.createTextNode(title);
 
-                    {{$chartId}}Th.appendChild({{$chartId}}Text);
-                    {{$chartId}}Tr.appendChild({{$chartId}}Th);
-                    {{$chartId}}TableHead.appendChild({{$chartId}}Tr);
+                    {{ $chartId }}Th.appendChild({{ $chartId }}Text);
+                    {{ $chartId }}Tr.appendChild({{ $chartId }}Th);
+                    {{ $chartId }}TableHead.appendChild({{ $chartId }}Tr);
                 });
 
-                const {{$chartId}}TableBody = document.createElement('tbody');
-                {{$chartId}}bodyLines.reverse().forEach((body, i) => {
+                const {{ $chartId }}TableBody = document.createElement('tbody');
+                {{ $chartId }}bodyLines.reverse().forEach((body, i) => {
                     const [label, value] = body[0].split('|');
 
                     //label
 
-                    const {{$chartId}}TrLabel = document.createElement('tr');
-                    {{$chartId}}TrLabel.style.backgroundColor = 'inherit';
-                    {{$chartId}}TrLabel.style.borderWidth = '0';
-                    {{$chartId}}TrLabel.style.fontSize = '12px';
-                    {{$chartId}}TrLabel.style.fontWeight = '400';
-                    {{$chartId}}TrLabel.style.color = '#464E49';
-                    {{$chartId}}TrLabel.style.paddingBottom = '0px';
-                    {{$chartId}}TrLabel.style.marginBottom = '0px';
+                    const {{ $chartId }}TrLabel = document.createElement('tr');
+                    {{ $chartId }}TrLabel.style.backgroundColor = 'inherit';
+                    {{ $chartId }}TrLabel.style.borderWidth = '0';
+                    {{ $chartId }}TrLabel.style.fontSize = '12px';
+                    {{ $chartId }}TrLabel.style.fontWeight = '400';
+                    {{ $chartId }}TrLabel.style.color = '#464E49';
+                    {{ $chartId }}TrLabel.style.paddingBottom = '0px';
+                    {{ $chartId }}TrLabel.style.marginBottom = '0px';
 
 
-                    const {{$chartId}}TdLabel = document.createElement('td');
-                    {{$chartId}}TdLabel.style.borderWidth = 0;
+                    const {{ $chartId }}TdLabel = document.createElement('td');
+                    {{ $chartId }}TdLabel.style.borderWidth = 0;
 
-                    const {{$chartId}}TextLabel = document.createTextNode(label);
+                    const {{ $chartId }}TextLabel = document.createTextNode(label);
 
-                    {{$chartId}}TdLabel.appendChild({{$chartId}}TextLabel);
-                    {{$chartId}}TrLabel.appendChild({{$chartId}}TdLabel);
+                    {{ $chartId }}TdLabel.appendChild({{ $chartId }}TextLabel);
+                    {{ $chartId }}TrLabel.appendChild({{ $chartId }}TdLabel);
 
-                    {{$chartId}}TableBody.appendChild({{$chartId}}TrLabel);
+                    {{ $chartId }}TableBody.appendChild({{ $chartId }}TrLabel);
 
 
                     //value
-                    const {{$chartId}}Tr = document.createElement('tr');
-                    {{$chartId}}Tr.style.backgroundColor = 'inherit';
-                    {{$chartId}}Tr.style.borderWidth = '0';
-                    {{$chartId}}Tr.style.fontSize = '16px';
-                    {{$chartId}}Tr.style.fontWeight = '700';
-                    {{$chartId}}Tr.style.color = '#464E49';
+                    const {{ $chartId }}Tr = document.createElement('tr');
+                    {{ $chartId }}Tr.style.backgroundColor = 'inherit';
+                    {{ $chartId }}Tr.style.borderWidth = '0';
+                    {{ $chartId }}Tr.style.fontSize = '16px';
+                    {{ $chartId }}Tr.style.fontWeight = '700';
+                    {{ $chartId }}Tr.style.color = '#464E49';
 
-                    const {{$chartId}}Td = document.createElement('td');
-                    {{$chartId}}Td.style.borderWidth = 0;
+                    const {{ $chartId }}Td = document.createElement('td');
+                    {{ $chartId }}Td.style.borderWidth = 0;
 
-                    const {{$chartId}}Text = document.createTextNode(value);
+                    const {{ $chartId }}Text = document.createTextNode(value);
 
-                    {{$chartId}}Td.appendChild({{$chartId}}Text);
-                    {{$chartId}}Tr.appendChild({{$chartId}}Td);
+                    {{ $chartId }}Td.appendChild({{ $chartId }}Text);
+                    {{ $chartId }}Tr.appendChild({{ $chartId }}Td);
 
-                    {{$chartId}}TableBody.appendChild({{$chartId}}Tr);
+                    {{ $chartId }}TableBody.appendChild({{ $chartId }}Tr);
                 });
 
-                const {{$chartId}}TableRoot = {{$chartId}}TooltipEl.querySelector('table');
+                const {{ $chartId }}TableRoot = {{ $chartId }}TooltipEl.querySelector('table');
 
                 // Remove old children
-                while ({{$chartId}}TableRoot.firstChild) {
-                    {{$chartId}}TableRoot.firstChild.remove();
+                while ({{ $chartId }}TableRoot.firstChild) {
+                    {{ $chartId }}TableRoot.firstChild.remove();
                 }
 
                 // Add new children
-                {{$chartId}}TableRoot.appendChild({{$chartId}}TableHead);
-                {{$chartId}}TableRoot.appendChild({{$chartId}}TableBody);
+                {{ $chartId }}TableRoot.appendChild({{ $chartId }}TableHead);
+                {{ $chartId }}TableRoot.appendChild({{ $chartId }}TableBody);
             }
 
             const {
@@ -488,70 +506,71 @@
             } = chart.canvas;
 
             // Display, position, and set styles for font
-            {{$chartId}}TooltipEl.style.opacity = 1;
-            {{$chartId}}TooltipEl.style.left = positionX + tooltip.caretX + 'px';
-            {{$chartId}}TooltipEl.style.top = positionY + tooltip.caretY - 155 + 'px';
-            {{$chartId}}TooltipEl.style.font = tooltip.options.bodyFont.string;
-            {{$chartId}}TooltipEl.style.padding = 8 + 'px ' + 19 + 'px';
+            {{ $chartId }}TooltipEl.style.opacity = 1;
+            {{ $chartId }}TooltipEl.style.left = positionX + tooltip.caretX + 'px';
+            {{ $chartId }}TooltipEl.style.top = positionY + tooltip.caretY - 155 + 'px';
+            {{ $chartId }}TooltipEl.style.font = tooltip.options.bodyFont.string;
+            {{ $chartId }}TooltipEl.style.padding = 8 + 'px ' + 19 + 'px';
         };
 
-        function {{$chartId}}InitChart({{$chartId}}FilteredData = null) {
-            if({{$chartId}}Data['annual'] == null)return
-            if ({{$chartId}}Chart) {{$chartId}}Chart.destroy();
-            let {{$chartId}}FinalData;
-            if({{$chartId}}FilteredData){
+        function {{ $chartId }}InitChart({{ $chartId }}FilteredData = null) {
+            if ({{ $chartId }}Data['annual'] == null) return
+            if ({{ $chartId }}Chart) {{ $chartId }}Chart.destroy();
+            let {{ $chartId }}FinalData;
+            if ({{ $chartId }}FilteredData) {
 
-                {{$chartId}}FinalData = {{$chartId}}FilteredData
-            }
-            else {
-                {{$chartId}}FinalData = {{$chartId}}Data
+                {{ $chartId }}FinalData = {{ $chartId }}FilteredData
+            } else {
+                {{ $chartId }}FinalData = {{ $chartId }}Data
             }
 
-            if({{$chartId}}Period == 'arps' || {{$chartId}}Period == 'args'){
+            if ({{ $chartId }}Period == 'arps' || {{ $chartId }}Period == 'args') {
 
-                {{$chartId}}FinalData = {{$chartId}}FinalData['annual']
+                {{ $chartId }}FinalData = {{ $chartId }}FinalData['annual']
+            } else {
+                {{ $chartId }}FinalData = {{ $chartId }}FinalData['quarterly']
             }
-            else {
-                {{$chartId}}FinalData = {{$chartId}}FinalData['quarterly']
-            }
-            let {{$chartId}}Canvas = document.getElementById('{{$chartId}}Canvas');
-            if(typeof {{$chartId}}FinalData == 'undefined'){
+            let {{ $chartId }}Canvas = document.getElementById('{{ $chartId }}Canvas');
+            if (typeof {{ $chartId }}FinalData == 'undefined') {
 
                 return;
             }
 
-            if (!{{$chartId}}Canvas){
+            if (!{{ $chartId }}Canvas) {
 
                 return;
 
             }
-            let {{$chartId}}Ctx = document.getElementById('{{$chartId}}Canvas').getContext('2d');
+            let {{ $chartId }}Ctx = document.getElementById('{{ $chartId }}Canvas').getContext('2d');
 
-            let {{$chartId}}GradientBg = {{$chartId}}Ctx.createLinearGradient(0, 0, 0, {{$chartId}}Canvas.height * 2.5)
-            {{$chartId}}GradientBg.addColorStop(0.8, 'rgba(19,176,91,0.18)')
-            {{$chartId}}GradientBg.addColorStop(1, 'rgba(19,176,91,0.05)')
-            {{$chartId}}Chart = new Chart({{$chartId}}Ctx, {
+            let {{ $chartId }}GradientBg = {{ $chartId }}Ctx.createLinearGradient(0, 0, 0,
+                {{ $chartId }}Canvas.height * 2.5)
+            {{ $chartId }}GradientBg.addColorStop(0.8, 'rgba(19,176,91,0.18)')
+            {{ $chartId }}GradientBg.addColorStop(1, 'rgba(19,176,91,0.05)')
+            {{ $chartId }}Chart = new Chart({{ $chartId }}Ctx, {
                 plugins: [ChartDataLabels, {
                     afterDraw: chart => {
                         if (chart.tooltip?._active?.length) {
-                            let {{$chartId}}X = chart.tooltip._active[0].element.x;
-                            let {{$chartId}}Y = chart.tooltip._active[0].element.y;
-                            let {{$chartId}}bottomBarY = false
-                            if(chart.tooltip._active.length > 1){
-                                {{$chartId}}bottomBarY = chart.tooltip._active[1].element.y;
+                            let {{ $chartId }}X = chart.tooltip._active[0].element.x;
+                            let {{ $chartId }}Y = chart.tooltip._active[0].element.y;
+                            let {{ $chartId }}bottomBarY = false
+                            if (chart.tooltip._active.length > 1) {
+                                {{ $chartId }}bottomBarY = chart.tooltip._active[1].element.y;
                             }
-                            let {{$chartId}}Ctx = chart.ctx;
-                            {{$chartId}}Ctx.save();
-                            {{$chartId}}Ctx.beginPath();
-                            {{$chartId}}Ctx.moveTo({{$chartId}}X, {{$chartId}}Y);
-                            if({{$chartId}}bottomBarY){
-                            {{$chartId}}Ctx.lineTo({{$chartId}}X, {{$chartId}}bottomBarY + 9);
+                            let {{ $chartId }}Ctx = chart.ctx;
+                            {{ $chartId }}Ctx.save();
+                            {{ $chartId }}Ctx.beginPath();
+                            {{ $chartId }}Ctx.moveTo({{ $chartId }}X,
+                                {{ $chartId }}Y);
+                            if ({{ $chartId }}bottomBarY) {
+                                {{ $chartId }}Ctx.lineTo({{ $chartId }}X,
+                                    {{ $chartId }}bottomBarY + 9);
                             }
-                            {{$chartId}}Ctx.lineWidth = 1;
-                            {{$chartId}}Ctx.strokeStyle = '#13B05BDE';
-                            {{$chartId}}Ctx.setLineDash([5, 5])
-                            {{$chartId}}Ctx.stroke();
-                            {{$chartId}}Ctx.restore();
+                            {{ $chartId }}Ctx.lineWidth = 1;
+                            {{ $chartId }}Ctx.strokeStyle = '#13B05BDE';
+                            {{ $chartId }}Ctx.setLineDash([5, 5])
+                            {{ $chartId }}Ctx.stroke();
+                            {{ $chartId }}Ctx.restore();
                         }
                     },
                 }],
@@ -560,7 +579,7 @@
                 responsive: true,
                 type: 'bar',
                 data: {
-                    datasets: {{$chartId}}FinalData
+                    datasets: {{ $chartId }}FinalData
                 },
                 options: {
                     interaction: {
@@ -577,16 +596,16 @@
                     },
                     plugins: {
                         datalabels: {
-                            display: {{$chartId}}ChartType == 'percentage' ? true : false,
+                            display: {{ $chartId }}ChartType == 'percentage' ? true : false,
                             anchor: 'center',
                             align: 'center',
                             formatter: (v) => {
-                                if({{$chartId}}ChartType == 'values'){
-                                    let {{$chartId}}Value = parseInt(v.y)
-                                        return {{$chartId}}Value.toFixed({{$chartId}}DecimalPoints ?? 0)
-                                }
-                                else {
-                                    return parseInt(v.y).toFixed({{$chartId}}DecimalPoints ?? 0) + '%'
+                                if ({{ $chartId }}ChartType == 'values') {
+                                    let {{ $chartId }}Value = parseInt(v.y)
+                                    return {{ $chartId }}Value.toFixed(
+                                        {{ $chartId }}DecimalPoints ?? 0)
+                                } else {
+                                    return parseInt(v.y).toFixed({{ $chartId }}DecimalPoints ?? 0) + '%'
                                 }
                             },
                             font: {
@@ -598,16 +617,20 @@
                             bodyFont: {
                                 size: 15
                             },
-                            external: {{$chartId}}ExternalTooltipHandler,
+                            external: {{ $chartId }}ExternalTooltipHandler,
                             enabled: false,
                             position: 'nearest',
                             callbacks: {
                                 title: function(context) {
-                                    const {{$chartId}}InputDate = new Date(context[0].label);
-                                    const {{$chartId}}Month = {{$chartId}}InputDate.getMonth() + 1;
-                                    const {{$chartId}}Day = {{$chartId}}InputDate.getDate();
-                                    const {{$chartId}}Year = {{$chartId}}InputDate.getFullYear();
-                                    return {{$chartId}}Year + '-' +{{$chartId}}Month.toString().padStart(2, '0')+ '-' + {{$chartId}}Day.toString().padStart(2, '0');
+                                    const {{ $chartId }}InputDate = new Date(context[0].label);
+                                    const {{ $chartId }}Month = {{ $chartId }}InputDate
+                                        .getMonth() + 1;
+                                    const {{ $chartId }}Day = {{ $chartId }}InputDate.getDate();
+                                    const {{ $chartId }}Year = {{ $chartId }}InputDate
+                                        .getFullYear();
+                                    return {{ $chartId }}Year + '-' + {{ $chartId }}Month
+                                        .toString().padStart(2, '0') + '-' + {{ $chartId }}Day.toString()
+                                        .padStart(2, '0');
                                 },
                                 label: function(context) {
                                     return `${context.dataset.label}|${context.raw.y}`;
@@ -615,7 +638,7 @@
                             },
                         },
                         legend: {
-                            display: {{$chartId}}LabelsVisible,
+                            display: {{ $chartId }}LabelsVisible,
                             position: 'bottom',
                             labels: {
                                 boxWidth: 16,
@@ -640,12 +663,12 @@
                         },
                         y1: {
                             stacked: true,
-                            display: '{{$chartId}}' == 'rbe' ? true : false,
+                            display: '{{ $chartId }}' == 'rbe' ? true : false,
                             position: 'right',
                             type: 'linear',
                             beginAtZero: false,
-                            @if($startPoint)
-                            min: {{$startPoint}},
+                            @if ($startPoint)
+                                min: {{ $startPoint }},
                             @endif
                             grid: {
                                 drawOnChartArea: false, // only want the grid lines for one axis to show up
@@ -656,6 +679,6 @@
             });
 
         }
-    // }
-</script>
+        // }
+    </script>
 @endpush

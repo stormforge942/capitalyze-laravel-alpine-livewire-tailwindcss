@@ -22,6 +22,7 @@ import "./css-tables"
 import "./report-text-highlighter"
 import "./chartjs-plugins"
 import "./pages/ownership"
+import './pages/analysis'
 
 Alpine.plugin(focus)
 

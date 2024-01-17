@@ -1,0 +1,221 @@
+<?php
+
+namespace App\Http\Livewire\CompanyAnalysis\Efficiency;
+
+use Livewire\Component;
+use App\Http\Livewire\CompanyAnalysis\HasFilters;
+
+class CostStructure extends Component
+{
+    use HasFilters;
+
+    public $company;
+    public $statements;
+    public $rawData = [];
+    public $chartConfig = [
+        'showLabel' => true,
+        'type' => 'values',
+    ];
+
+    public function mount()
+    {
+        $this->extractDates();
+
+        $this->formatData();
+    }
+
+    public function updated($prop)
+    {
+        if (in_array($prop, ['period'])) {
+            $this->extractDates();
+            $this->formatData();
+        }
+    }
+
+    public function render()
+    {
+        return view('livewire.company-analysis.efficiency.cost-structure', [
+            'data' => $this->makeData(),
+            'chart' => [
+                'data' => $this->makeChartData(),
+                'key' => $this->makeChartKey(),
+            ]
+        ]);
+    }
+
+    private function makeChartData(): array
+    {
+        $data = $this->rawData;
+
+        $dataset = [];
+
+        foreach ($data['segments'] as $idx => $segment) {
+            $bg = $this->chartColors[$idx] ?? random_color();
+
+            $dataset[] = [
+                'label' => $segment['title'],
+                'data' => array_map(fn ($date) => [
+                    'x' => $date,
+                    'value' => $segment['timeline'][$date],
+                    'percent' => round($segment['revenue_percentage'][$date], 2),
+                ], $this->selectedDates),
+                "borderRadius" => 2,
+                "fill" => true,
+                "backgroundColor" => $bg,
+                "datalabels" => ['color' => '#fff'],
+            ];
+        }
+
+        return $dataset;
+    }
+
+    private function formatData()
+    {
+        $statement = $this->statements[$this->period]['income_statement'];
+
+        $data = [
+            'segments' => [],
+            'total_expenses' => [
+                'timeline' => array_reduce(
+                    $this->dates,
+                    function ($carry, $date) use ($statement) {
+                        $carry[$date] =  abs($statement['Cost of Goods Sold'][$date] ?? 0) +
+                            abs($statement['R&D Expenses'][$date] ?? 0) +
+                            abs($statement['SG&A Expenses'][$date] ?? 0);
+
+                        return $carry;
+                    },
+                    []
+                ),
+                'yoy_change' => [],
+                'revenue_percentage' => [],
+            ],
+            'revenues' => [
+                'timeline' => array_combine($this->dates, array_map(fn ($date) => $statement['Total Revenues'][$date] ?? 0, $this->dates)),
+                'yoy_change' => [],
+            ],
+        ];
+
+        // update yoy change
+        foreach (['total_expenses', 'revenues'] as $key) {
+            $lastValue = 0;
+            foreach ($this->dates as $idx => $date) {
+                $value = $data[$key]['timeline'][$date];
+
+                $data[$key]['yoy_change'][$date] = $lastValue && $idx
+                    ? (($value / $lastValue) - 1) * 100
+                    : 0;
+
+                $lastValue = $value;
+            }
+        }
+
+        // calculate expenses revenue percentage
+        foreach ($this->dates as $date) {
+            $data['total_expenses']['revenue_percentage'][$date] = $data['total_expenses']['timeline'][$date] / $data['revenues']['timeline'][$date] * 100;
+        }
+
+        $segments = [
+            [
+                'title' => 'Cost of Goods Sold',
+                'key' => 'Cost of Goods Sold',
+            ],
+            [
+                'title' => 'R&D Expenses',
+                'key' => 'R&D Expenses',
+            ],
+            [
+                'title' => 'SG&A Expenses',
+                'key' => 'SG&A Expenses',
+            ],
+        ];
+
+        foreach ($segments as $seg) {
+            $segment = [
+                'title' => $seg['title'],
+                'timeline' => [],
+                'yoy_change' => [],
+                'revenue_percentage' => [],
+                'expense_percentage' => [],
+            ];
+
+            $lastValue = 0;
+            foreach ($this->dates as $idx => $date) {
+                $value = abs($statement[$seg['key']][$date] ?? 0);
+
+                $segment['timeline'][$date] = $value;
+
+                $segment['yoy_change'][$date] = $lastValue && $idx
+                    ? (($value / $lastValue) - 1) * 100
+                    : 0;
+
+                $segment['revenue_percentage'][$date] = $value / ($statement['Total Revenues'][$date] ?? 0) * 100;
+                $segment['expense_percentage'][$date] = $value / $data['total_expenses']['timeline'][$date] * 100;
+
+                $lastValue = $value;
+            }
+
+            $data['segments'][] = $segment;
+        }
+
+        $this->rawData = $data;
+    }
+
+    private function extractDates()
+    {
+        $dates = [];
+
+        foreach ($this->statements[$this->period]['income_statement'] as $values) {
+            foreach ($values as $date => $_) {
+                if (!in_array($date, $dates)) {
+                    $dates[] = $date;
+                }
+            }
+        }
+
+        $this->selectDates($dates);
+    }
+
+    private function makeData()
+    {
+        $data = $this->rawData;
+
+        foreach ($data['segments'] as $idx => $segment) {
+            $data['segments'][$idx]['timeline'] = array_map(fn ($value) => [
+                'value' => $value,
+                'formatted' => $this->formatValue($value),
+            ], $segment['timeline']);
+
+            foreach (['yoy_change', 'revenue_percentage', 'expense_percentage'] as $key) {
+                $data['segments'][$idx][$key] = array_map(fn ($value) => [
+                    'value' => $value,
+                    'formatted' => $this->formatPercentageValue($value),
+                ], $segment[$key]);
+            }
+        }
+
+        foreach (['total_expenses', 'revenues'] as $key) {
+            $data[$key]['timeline'] = array_map(fn ($value) => [
+                'value' => $value,
+                'formatted' => $this->formatValue($value),
+            ], $data[$key]['timeline']);
+
+            if ($key == 'total_expenses') {
+                $data[$key]['revenue_percentage'] = array_map(
+                    fn ($value) => [
+                        'value' => $value,
+                        'formatted' => $this->formatPercentageValue($value),
+                    ],
+                    $data[$key]['revenue_percentage']
+                );
+            }
+
+            $data[$key]['yoy_change'] = array_map(fn ($value) => [
+                'value' => $value,
+                'formatted' => $this->formatPercentageValue($value),
+            ], $data[$key]['yoy_change']);
+        }
+
+        return $data;
+    }
+}
