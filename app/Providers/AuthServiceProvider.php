@@ -27,16 +27,5 @@ class AuthServiceProvider extends ServiceProvider
     public function boot()
     {
         $this->registerPolicies();
-
-        $groupsThatCanReviewData = DB::table('navbar_group_shows')
-            ->join('navbars', 'navbar_group_shows.navbar_id', '=', 'navbars.id')
-            ->where('navbars.route_name', '=', 'create.company.segment.report')
-            ->where('navbar_group_shows.show', '=', true)
-            ->pluck('group_id')
-            ->toArray();
-
-        // dd($groupsThatCanReviewData);
-
-        Gate::define('review-data', fn ($user) => in_array($user->group_id, $groupsThatCanReviewData));
     }
 }
