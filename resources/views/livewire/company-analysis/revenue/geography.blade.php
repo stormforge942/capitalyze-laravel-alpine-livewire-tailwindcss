@@ -4,7 +4,7 @@
     @include('livewire.company-analysis.filters')
 
     @if (count($dates))
-        <div class="my-6" wire:ignore>
+        <div class="my-6" wire:key="{{ $this->rangeSliderKey() }}">
             <x-range-slider :min="explode('-', $dates[0])[0]" :max="explode('-', $dates[count($dates) - 1])[0]" :value="$selectedDateRange"
                 @range-updated="$wire.selectedDateRange = $event.detail"></x-range-slider>
         </div>
@@ -12,10 +12,8 @@
 
     <div class="mt-6 relative">
         @if (count($dates))
-            @include('livewire.company-analysis.base-graph', [
-                'name' => 'Revenue By Geography',
-                ...$chart,
-            ])
+            <x-analysis-chart-box title="Revenue By Geography" :company="$company" :chart="$chart"
+                function="renderBasicChart"></x-analysis-chart-box>
 
             <div class="mt-6 overflow-auto">
                 <table class="w-full rounded-lg overflow-hidden text-right whitespace-nowrap">

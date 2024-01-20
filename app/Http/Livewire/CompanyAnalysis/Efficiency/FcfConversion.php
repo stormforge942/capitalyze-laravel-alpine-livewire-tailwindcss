@@ -14,6 +14,7 @@ class FcfConversion extends Component
     public $rawData = [];
     public $chartConfig = [
         'showLabel' => true,
+        'type' => 'percentage',
     ];
 
     public function mount()
@@ -49,47 +50,50 @@ class FcfConversion extends Component
         $dataset = [];
 
         $items = [
-            'levered_free_cashflow' => 'Levered Free $',
             'free_cashflow' => 'Free Cashflow',
             'cash_interest' => 'Cash Interest',
             'cash_taxes' => 'Cash Taxes',
             'capital_expenditures' => 'Capital Expenditures',
         ];
 
+        $dataset[] = [
+            'label' => 'Free Cashflow $',
+            'data' => array_map(fn ($date) => [
+                'x' => $this->formatDateForChart($date),
+                'y' => $data['free_cashflow']['timeline'][$date] ?? 0,
+            ], $this->selectedDates),
+            "fill" => false,
+            "borderColor" => '#121A0F',
+            "backgroundColor" => '#121A0F',
+            "type" => 'line',
+            "yAxisID" => "y1",
+            "datalabels" => ['color' => '#fff'],
+            'pointRadius' => 0,
+        ];
+
         $idx = 0;
         foreach ($items as $key => $label) {
-            $values = $data[$key];
+            $values = $key === 'free_cashflow$' ? $data['free_cashflow'] : $data[$key];
 
-            if ($key === 'levered_free_cashflow') {
-                $dataset[] = [
-                    'label' => $label,
-                    'data' => array_map(fn ($date) => [
-                        'x' => $date,
-                        'y' => $values['timeline'][$date] ?? 0,
-                    ], $this->selectedDates),
-                    "fill" => false,
-                    "borderColor" => '#121A0F',
-                    "backgroundColor" => '#121A0F',
-                    "type" => 'line',
-                    "yAxisID" => "y1",
-                ];
-            } else {
-                $dataset[] = [
-                    'label' => $label,
-                    'data' => array_map(fn ($date) => [
-                        'x' => $date,
-                        'y' => $values['timeline'][$date] ?? 0,
-                    ], $this->selectedDates),
-                    "borderRadius" => 2,
-                    "fill" => true,
-                    "backgroundColor" => $this->chartColors[$idx] ?? random_color(),
-                ];
-            }
+            $dataset[] = [
+                'label' => $label,
+                'data' => array_map(fn ($date) => [
+                    'x' => $this->formatDateForChart($date),
+                    'y' => round(abs($values['ebitda_percentage'][$date] ?? 0), 2),
+                ], $this->selectedDates),
+                "borderRadius" => 2,
+                "fill" => true,
+                "backgroundColor" => $this->chartColors[$idx] ?? random_color(),
+                "datalabels" => ['color' => '#fff'],
+            ];
 
             $idx++;
         }
 
-        return $dataset;
+        return [
+            'datasets' => $dataset,
+            'avgFcf' => array_sum(array_map(fn ($date) => $data['free_cashflow']['ebitda_percentage'][$date] ?? 0, $this->selectedDates)) / count($this->selectedDates),
+        ];
     }
 
     private function formatData()

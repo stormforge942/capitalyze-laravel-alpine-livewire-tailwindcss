@@ -6,7 +6,7 @@
     @include('livewire.company-analysis.filters')
 
     @if (count($dates))
-        <div class="my-6" wire:ignore>
+        <div class="my-6" wire:key="{{ $this->rangeSliderKey() }}">
             <x-range-slider :min="explode('-', $dates[0])[0]" :max="explode('-', $dates[count($dates) - 1])[0]" :value="$selectedDateRange"
                 @range-updated="$wire.selectedDateRange = $event.detail"></x-range-slider>
         </div>
@@ -26,17 +26,13 @@
                 </div>
 
                 <div class="mt-6" x-show="subSubTab === 'book-value'" x-cloak>
-                    @include('livewire.company-analysis.capital-structure-graph', [
-                        'name' => 'Capital Structure (Book Value)',
-                        ...$chart['book'],
-                    ])
+                    <x-analysis-chart-box title="Capital Structure (Book Value)" :enclosed="true" :company="$company" :hasPercentageMix="false"
+                        :chart="$chart['book']" function="renderCapitalStructureChart"></x-analysis-chart-box>
                 </div>
 
                 <div class="mt-6" x-show="subSubTab === 'market-value'" x-cloak>
-                    @include('livewire.company-analysis.capital-structure-graph', [
-                        'name' => 'Capital Structure (Market Value)',
-                        ...$chart['market'],
-                    ])
+                    <x-analysis-chart-box title="Capital Structure (Market Value)" :enclosed="true" :company="$company" :hasPercentageMix="false"
+                        :chart="$chart['market']" function="renderCapitalStructureChart"></x-analysis-chart-box>
                 </div>
             </div>
 

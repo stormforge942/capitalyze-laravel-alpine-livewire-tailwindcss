@@ -49,15 +49,40 @@ class CostStructure extends Component
 
         $dataset = [];
 
+        $labelMap = [
+            'Cost of Goods Sold' => 'COGS',
+            'R&D Expenses' => 'R&D',
+            'SG&A Expenses' => 'SG&A',
+        ];
+
         foreach ($data['segments'] as $idx => $segment) {
-            $bg = $this->chartColors[$idx] ?? random_color();
+            $bg = $this->chartColors[$idx++ + count($data['segments'])] ?? random_color();
 
             $dataset[] = [
-                'label' => $segment['title'],
+                'label' => $labelMap[$segment['title']] . ' as % of Revenue',
                 'data' => array_map(fn ($date) => [
-                    'x' => $date,
+                    'x' => $this->formatDateForChart($date),
+                    'y' => round($segment['revenue_percentage'][$date], 2),
+                ], $this->selectedDates),
+                "fill" => false,
+                "backgroundColor" => $bg,
+                "borderColor" => $bg,
+                "type" => "line",
+                'yAxisID' => 'y1',
+                'pointRadius' => 0,
+            ];
+        }
+
+        $idx = 0;
+        foreach ($data['segments'] as $idx => $segment) {
+            $bg = $this->chartColors[$idx++] ?? random_color();
+
+            $dataset[] = [
+                'label' => $labelMap[$segment['title']],
+                'data' => array_map(fn ($date) => [
+                    'x' => $this->formatDateForChart($date),
                     'value' => $segment['timeline'][$date],
-                    'percent' => round($segment['revenue_percentage'][$date], 2),
+                    'percent' => round($segment['expense_percentage'][$date], 2),
                 ], $this->selectedDates),
                 "borderRadius" => 2,
                 "fill" => true,
@@ -178,6 +203,8 @@ class CostStructure extends Component
 
     private function makeData()
     {
+        $this->updateSelectedDates();
+        
         $data = $this->rawData;
 
         foreach ($data['segments'] as $idx => $segment) {

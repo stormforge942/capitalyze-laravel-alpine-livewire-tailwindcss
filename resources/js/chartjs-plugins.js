@@ -4,7 +4,19 @@ const chartJsPlugins = {
         afterDraw: (chart, _, options) => {
             if (chart.tooltip?._active?.length) {
                 let x = chart.tooltip._active[0].element.x
-                let y = chart.tooltip._active[0].element.y
+                // find max y 
+                let y = chart.tooltip._active
+                    .filter(
+                        (el) => el.element.constructor.name === "PointElement"
+                    )
+                    .sort((a, b) => a.element.y - b.element.y)[0]
+
+                if (!y) {
+                    return
+                }
+
+                y = y.element.y
+
                 let yAxis = chart.scales.y
                 let ctx = chart.ctx
                 ctx.save()
@@ -77,8 +89,13 @@ const chartJsPlugins = {
             })
 
             const tableBody = document.createElement("tbody")
-            bodyLines.reverse().forEach((body, i) => {
-                const [label, value] = body[0].split("|")
+            bodyLines.forEach((body) => {
+                let [label, value] = body[0].split("|")
+
+                // format number if possible
+                if(!Number.isNaN(Number(value))) {
+                    value = Intl.NumberFormat("en-US").format(value)
+                }
 
                 //label
                 const trLabel = document.createElement("tr")
@@ -139,6 +156,7 @@ const chartJsPlugins = {
 
         // Display, position, and set styles for font
         tooltipEl.style.opacity = 1
+        tooltipEl.style.zIndex = 9999
         tooltipEl.style.left = positionX + tooltip.caretX + "px"
         tooltipEl.style.top = positionY + tooltip.caretY - 155 + "px"
         tooltipEl.style.font = tooltip.options.bodyFont.string

@@ -10,6 +10,9 @@
         }
 
         this.$watch('activeSubTab', value => {
+            {{-- to fix input rangeslider --}}
+            setTimeout(() => window.dispatchEvent(new Event('resize')), 100)
+
             window.updateQueryParam('subtab', value);
         });
     }

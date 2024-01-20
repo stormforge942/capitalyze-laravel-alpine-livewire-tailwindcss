@@ -49,5 +49,5 @@
             <span :class="isInRange({{ $item }}) ? 'active-dots' : 'inactive-dots'"></span>
         @endforeach
     </div>
-    <div class="range-slider"></div>
+    <div class="range-slider" wire:ignore></div>
 </div>
