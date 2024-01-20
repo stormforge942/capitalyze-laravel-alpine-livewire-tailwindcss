@@ -42,67 +42,67 @@
                     </div>
                     <div class="divide-y divide-[#D4DDD7] text-base" x-data="{ lastSection: null, nestingLevel: 0, loadChildren }">
                         <template x-for="(row, index) in rows" :key="`${index}-${row.title}`">
-                            <div class="flex flex-col" :class="[rowContext.isBold ? 'font-bold' : '', classes]" x-data="{
-                                isNewSection: false,
-                                get rowContext() {
-                                    let splitted = this.row.title.split('|');
-                            
-                                    if (splitted.length === 1) return { title: splitted[0] };
-                            
-                                    return {
-                                        title: splitted[0],
-                                        isBold: splitted[1] === 'true',
-                                        hasBorder: splitted[2] === 'true',
-                                        section: parseInt(splitted[3]) || this.lastSection,
-                                    };
-                                },
-                                get isRowSelectedForChart() {
-                                    return this.selectedChartRows.find(item => item.id === row.id) ? true : false;
-                                },
-                                get classes() {
-                                    let classes = '';
-                            
-                                    if (!this.rowContext.hasBorder) {
-                                        classes += 'flex-col-border-less ';
-                                    }
-                            
-                                    if (this.isNewSection) {
-                                        classes += 'mt-4 ';
-                                    }
-                            
-                                    return classes;
-                                },
-                                init() {
-                                    if (
-                                        index > 0 &&
-                                        (this.rowContext.section !== this.lastSection)
-                                    ) {
-                                        this.isNewSection = true;
-                                    }
-                            
-                                    this.lastSection = this.rowContext.section;
-                                },
-                                toggleRowForChart() {
-                                    if (this.isRowSelectedForChart) {
-                                        this.selectedChartRows = this.selectedChartRows.filter(item => item.id !== row.id);
-                                    } else {
-                                        let values = {};
-                            
-                                        for (const [key, value] of Object.entries(row.values)) {
-                                            values[key] = value.value;
+                            <div class="flex flex-col" :class="[rowContext.isBold ? 'font-bold' : '', classes]"
+                                x-data="{
+                                    isNewSection: false,
+                                    get rowContext() {
+                                        let splitted = row.title.split('|');
+                                
+                                        if (splitted.length === 1) return { title: splitted[0] };
+                                
+                                        return {
+                                            title: splitted[0],
+                                            isBold: splitted[1] === 'true',
+                                            hasBorder: splitted[2] === 'true',
+                                            section: parseInt(splitted[3]) || this.lastSection,
+                                        };
+                                    },
+                                    get isRowSelectedForChart() {
+                                        return this.selectedChartRows.find(item => item.id === row.id) ? true : false;
+                                    },
+                                    get classes() {
+                                        let classes = '';
+                                
+                                        if (!this.rowContext.hasBorder) {
+                                            classes += 'flex-col-border-less ';
                                         }
-                            
-                                        this.selectedChartRows.push({
-                                            id: row.id,
-                                            title: this.rowContext.title,
-                                            values,
-                                            color: '#7C8286',
-                                            type: 'line',
-                                        });
-                                    }
-                                },
-                            }"
-                                x-init="loadChildren(this, nestingLevel + 1)">
+                                
+                                        if (this.isNewSection) {
+                                            classes += 'mt-4 ';
+                                        }
+                                
+                                        return classes;
+                                    },
+                                    init() {
+                                        if (
+                                            index > 0 &&
+                                            (this.rowContext.section !== this.lastSection)
+                                        ) {
+                                            this.isNewSection = true;
+                                        }
+                                
+                                        this.lastSection = this.rowContext.section;
+                                    },
+                                    toggleRowForChart() {
+                                        if (this.isRowSelectedForChart) {
+                                            this.selectedChartRows = this.selectedChartRows.filter(item => item.id !== row.id);
+                                        } else {
+                                            let values = {};
+                                
+                                            for (const [key, value] of Object.entries(row.values)) {
+                                                values[key] = value.value;
+                                            }
+                                
+                                            this.selectedChartRows.push({
+                                                id: row.id,
+                                                title: this.rowContext.title,
+                                                values,
+                                                color: '#7C8286',
+                                                type: 'line',
+                                            });
+                                        }
+                                    },
+                                }" x-init="loadChildren(this, nestingLevel + 1)">
                                 <div class="flex w-full flex-row"
                                     :class="[isRowSelectedForChart ? 'bg-[#52D3A2]/20' : (row.segmentation ?
                                         'bg-[#52C6FF]/10' : 'bg-white')]">
@@ -122,7 +122,11 @@
                                             <div class="w-[150px] flex items-center justify-end text-base last:pr-8"
                                                 x-data="{
                                                     get formattedValue() {
-                                                        return formatTableValue(row.values[date]?.value)
+                                                        const isPercent = rowContext.title.includes('%') ||
+                                                            rowContext.title.includes('yoy') ||
+                                                            rowContext.title.includes('per');
+
+                                                        return formatTableValue(row.values[date]?.value, isPercent)
                                                     },
                                                 }">
 
@@ -219,7 +223,12 @@
                                     <div class="w-[150px] flex items-center justify-end text-base last:pr-8"
                                         x-data="{
                                             get formattedValue() {
-                                                return formatTableValue(row.values[date]?.value)
+                                                const title = row.title.toLowerCase();
+                                                const isPercent = title.includes('%') ||
+                                                            title.includes('yoy') ||
+                                                            title.includes('per');
+
+                                                return formatTableValue(row.values[date]?.value, isPercent)
                                             },
                                         }"
                                     >

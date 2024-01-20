@@ -411,9 +411,7 @@
                     const targetCells = $el.querySelectorAll('table thead th');
         
                     this.copyMainTableWidth(mainCells, targetCells);
-        
-                    console.log('done')
-        
+                
                     setInterval(() => {
                         this.copyMainTableWidth(mainCells, targetCells);
                     }, 2000);
