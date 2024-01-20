@@ -8,7 +8,7 @@ use Illuminate\Support\Facades\DB;
 use App\Models\TrackInvestorFavorite;
 use Illuminate\Support\Facades\Auth;
 
-class Discover extends Component
+class MutualFunds extends Component
 {
     use AsTab;
 
@@ -19,16 +19,6 @@ class Discover extends Component
 
     public $perPage = 20;
     public $search = "";
-
-    public static function title(): string
-    {
-        return 'Funds';
-    }
-
-    public static function key(): string
-    {
-        return 'discover';
-    }
 
     public function loadMore()
     {
@@ -64,7 +54,7 @@ class Discover extends Component
                 return (array) $item;
             });
 
-        return view('livewire.track-investor.discover', [
+        return view('livewire.track-investor.mutual-funds', [
             'funds' => $funds,
         ]);
     }
