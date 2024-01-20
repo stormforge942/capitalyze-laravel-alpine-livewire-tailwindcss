@@ -4,7 +4,7 @@
     @include('livewire.company-analysis.filters')
 
     @if (count($dates))
-        <div class="my-6" wire:ignore>
+        <div class="my-6" wire:key="{{ $this->rangeSliderKey() }}">
             <x-range-slider :min="explode('-', $dates[0])[0]" :max="explode('-', $dates[count($dates) - 1])[0]" :value="$selectedDateRange"
                 @range-updated="$wire.selectedDateRange = $event.detail"></x-range-slider>
         </div>

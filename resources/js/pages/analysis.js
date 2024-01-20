@@ -128,22 +128,7 @@ function renderRevenueByEmployeeChart(canvas, datasets, config) {
                 },
             },
             scales: {
-                y: {
-                    stacked: true,
-                    display: true,
-                    ticks: {
-                        callback: formatCmpctNumber,
-                    },
-                },
-                x: {
-                    stacked: true,
-                    offset: true,
-                    grid: {
-                        display: false,
-                    },
-                    type: "timeseries",
-                    align: "center",
-                },
+                ...scales(),
                 y1: {
                     ticks: {
                         callback: (val) => val + "%",
