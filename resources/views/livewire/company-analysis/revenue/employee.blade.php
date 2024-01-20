@@ -12,10 +12,8 @@
 
     <div class="mt-6 relative">
         @if (count($dates))
-            @include('livewire.company-analysis.base-graph', [
-                'name' => 'Revenue By Employee',
-                ...$chart,
-            ])
+            <x-analysis-chart-box title="Revenue By Employee" :company="$company" :chart="$chart" :hasPercentageMix="false"
+                function="renderRevenueByEmployeeChart"></x-analysis-chart-box>
 
             <div class="mt-6 overflow-auto">
                 <table class="w-full rounded-lg overflow-hidden text-right whitespace-nowrap">

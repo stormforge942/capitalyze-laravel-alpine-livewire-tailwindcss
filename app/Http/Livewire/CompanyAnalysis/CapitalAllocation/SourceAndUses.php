@@ -57,28 +57,28 @@ class SourceAndUses extends Component
 
         $datasets = [];
 
+        $keyTitleMap = $for === 'sources' ? [
+            'free_cashflow' => 'Free Cash Flow',
+            'net_debt' => 'Total Debt Issued',
+            'preferred_stock' => 'Issuance of Preferred Stock',
+            'common_stock' => 'Issuance of Common Stock',
+        ] : [
+            'acquisition' => 'Acquisitions',
+            'debt_repaid' => 'Total Debt Repaid',
+            'preferred_repurchase' => 'Repurchase of Preferred Stock',
+            'common_repurchase' => 'Repurchase of Common Stock',
+            'dividends' => 'Total Dividends Paid',
+            'other' => 'Cash Build / Other',
+        ];
+
         $idx = 0;
         foreach ($data as $key => $value) {
             if ($key == 'total') continue;
 
-            $keyTitleMap = $for === 'sources' ? [
-                'free_cashflow' => 'Free Cash Flow',
-                'net_debt' => 'Total Debt Issued',
-                'preferred_stock' => 'Issuance of Preferred Stock',
-                'common_stock' => 'Issuance of Common Stock',
-            ] : [
-                'acquisition' => 'Acquisitions',
-                'debt_repaid' => 'Total Debt Repaid',
-                'preferred_repurchase' => 'Repurchase of Preferred Stock',
-                'common_repurchase' => 'Repurchase of Common Stock',
-                'dividends' => 'Total Dividends Paid',
-                'other' => 'Cash Build / Other',
-            ];
-
             $datasets[] = [
                 'label' => $keyTitleMap[$key],
                 'data' => array_map(fn ($date) => [
-                    'x' => $date,
+                    'x' => $this->formatDateForChart($date),
                     'value' => $value['timeline'][$date],
                     'percent' => round($value['total_percent'][$date], 2),
                 ], $this->selectedDates),
@@ -89,6 +89,25 @@ class SourceAndUses extends Component
             ];
 
             $idx++;
+        }
+
+        // calculate average for each dataset and add as data to each dataset
+        foreach ($datasets as $idx => $dataset) {
+            $average = [
+                'x' => 'Average',
+                'value' => 0,
+                'percent' => 0,
+            ];
+
+            foreach ($dataset['data'] as $data) {
+                $average['value'] += $data['value'];
+                $average['percent'] += $data['percent'];
+            }
+
+            $average['value'] = round($average['value'] / count($dataset['data']), 2);
+            $average['percent'] = round($average['percent'] / count($dataset['data']), 2);
+
+            $datasets[$idx]['data'][] = $average;
         }
 
         return $datasets;

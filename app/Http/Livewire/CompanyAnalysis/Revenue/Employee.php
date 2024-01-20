@@ -76,22 +76,23 @@ class Employee extends Component
 
         return [
             [
-                'label' => 'Employees',
+                'label' => '% Change YoY',
                 'data' => array_map(fn ($date) => [
-                    'x' => $date,
-                    'y' => $data['employee_count']['timeline'][$date],
+                    'x' => $this->formatDateForChart($date),
+                    'y' => round($data['rev_by_emp']['yoy_change'][$date], 2),
                 ], $this->selectedDates),
                 "fill" => false,
                 "yAxisID" => 'y1',
                 "backgroundColor" => '#C22929',
                 "borderColor" => '#C22929',
                 'type' => 'line',
+                'pointRadius' => 0,
             ],
             [
-                'label' => 'Revenue',
+                'label' => 'Revenue / Employee',
                 'data' => array_map(fn ($date) => [
-                    'x' => $date,
-                    'y' => $data['revenues']['timeline'][$date],
+                    'x' => $this->formatDateForChart($date),
+                    'y' => $data['rev_by_emp']['timeline'][$date],
                 ], $this->selectedDates),
                 "borderRadius" => 2,
                 "fill" => true,

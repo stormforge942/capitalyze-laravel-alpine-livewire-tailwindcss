@@ -11,7 +11,8 @@
         </button>
     </div>
 
-    <div x-show="!hide" x-transition>
+    <div class="@if (!$enclosed) bg-white px-4 py-6 md:px-6 rounded-lg relative @endif" x-show="!hide"
+        x-transition>
         <div class="absolute top-2 right-2 xl:top-3 xl:right-5">
             <x-dropdown placement="bottom-start" :shadow="true">
                 <x-slot name="trigger">
@@ -72,31 +73,53 @@
 
         <div x-data="{
             showLabel: $wire.entangle('chartConfig.showLabel', true),
-            data: @js($data ?? []),
+            type: @if (isset($chartConfig['type'])) $wire.entangle('chartConfig.type', true) @else '{{ $defaultType }}' @endif,
+            data: @js($chart['data'] ?? []),
             init() {
                 this.renderChart();
-                this.$watch('showLabel', () => this.renderChart())
+        
+                this.$watch('type', () => this.renderChart())
+                this.$watch('showLabel', () => {
+                    const chart = window.analysisCharts['{{ $title }}']
+        
+                    chart.options.plugins.legend.display = this.showLabel
+                    chart.update()
+                })
             },
             renderChart() {
                 if (!window.analysisCharts) window.analysisCharts = {};
         
-                window.analysisCharts?.['{{ $name }}']?.destroy();
+                window.analysisCharts?.['{{ $title }}']?.destroy();
         
-                window.analysisCharts['{{ $name }}'] = window.analysisPage.renderCapitalStructureChart(this.$refs.canvas, this.data, {
+                window.analysisCharts['{{ $title }}'] = window.analysisPage.{{ $function }}(this.$refs.canvas, this.data, {
+                    type: this.type,
                     showLabel: this.showLabel,
                 })
             },
-        }" wire:key="{{ $key }}">
-            <div class="flex items-center gap-x-5">
+        }" wire:key="{{ $chart['key'] }}">
+            <div class="flex items-center gap-x-5 justify-between">
                 <div>
                     <p class="font-bold text-md">{{ $company['name'] }} ({{ $company['ticker'] }})</p>
                     <p class="mt-2 font-semibold text-blue">
-                        {{ $name }}
+                        {{ $title }}
                     </p>
                 </div>
 
-                <form class="flex-1 flex justify-center gap-8 text-sm text-gray-medium2">
-                    <label class="relative inline-flex items-center cursor-pointer">
+                <form class="flex items-center gap-8 text-sm text-gray-medium2 mr-10">
+                    @if ($hasPercentageMix)
+                        <label class="cursor-pointer flex items-center gap-1">
+                            <input type="radio" value="values" class="custom-radio !h-4 !w-4 focus:ring-0"
+                                :class="type === 'values' ? 'text-dark' : ''" x-model="type">
+                            <span>Values</span>
+                        </label>
+
+                        <label class="cursor-pointer flex items-center gap-1">
+                            <input type="radio" value="percentage" class="custom-radio !h-4 !w-4 focus:ring-0"
+                                :class="type === 'percentage' ? 'text-dark' : ''" x-model="type">
+                            <span>Percentage Mix</span>
+                        </label>
+                    @endif
+                    <label class="relative inline-flex items-center cursor-pointer flex-shrink-0">
                         <input type="checkbox" value="yes" class="sr-only peer" :checked="showLabel"
                             @change="showLabel = $event.target.checked">
                         <div
@@ -107,7 +130,7 @@
                 </form>
             </div>
 
-            <div class="mt-3">
+            <div class="mt-6 w-full relative" style="max-height: 700px;" wire:ignore>
                 <canvas x-ref="canvas"></canvas>
             </div>
         </div>

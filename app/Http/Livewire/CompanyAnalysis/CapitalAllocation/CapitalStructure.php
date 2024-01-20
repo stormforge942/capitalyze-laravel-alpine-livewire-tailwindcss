@@ -63,60 +63,51 @@ class CapitalStructure extends Component
         $datasets[] = [
             'label' => 'Net Debt / Capital',
             'data' => array_map(fn ($date) => [
-                'x' => $date,
+                'x' => $this->formatDateForChart($date),
                 'y' => round($data['net_debt_by_capital'][$date], 2),
             ], $this->selectedDates),
             "fill" => false,
             "borderColor" => '#121A0F',
             "backgroundColor" => '#121A0F',
-            'type' => 'line',
             'yAxisID' => 'y1',
+            'pointRadius' => 0,
         ];
 
         $datasets[] = [
             'label' => $for === 'book' ? 'Book Value of Common Equity' : 'Market Value Equity',
             'data' => array_map(fn ($date) => [
-                'x' => $date,
+                'x' => $this->formatDateForChart($date),
                 'y' => $data['equity']['timeline'][$date],
             ], $this->selectedDates),
             "fill" => true,
             "borderColor" => 'rgba(70, 78, 73, 0.40)',
             "backgroundColor" => 'rgba(70, 78, 73, 0.40)',
-            'type' => 'line',
+            'pointRadius' => 0,
         ];
 
         $datasets[] = [
             'label' => 'Total Debt',
             'data' => array_map(fn ($date) => [
-                'x' => $date,
+                'x' => $this->formatDateForChart($date),
                 'y' => $data['net_debt']['timeline'][$date],
             ], $this->selectedDates),
             "fill" => true,
             "borderColor" => 'rgba(53, 97, 231, 0.40)',
             "backgroundColor" => 'rgba(53, 97, 231, 0.40)',
-            'type' => 'line',
+            'pointRadius' => 0,
         ];
 
         $datasets[] = [
             'label' => 'Minority Interest',
             'data' => array_map(fn ($date) => [
-                'x' => $date,
+                'x' => $this->formatDateForChart($date),
                 'y' => $data['minority_interest']['timeline'][$date],
             ], $this->selectedDates),
             "fill" => true,
             "borderColor" => 'rgba(82, 211, 162, 0.40)',
             "backgroundColor" => 'rgba(82, 211, 162, 0.40)',
-            'type' => 'line',
+            'pointRadius' => 0,
         ];
-
-        return $datasets;
-    }
-
-    private function makeChartDataMarket(): array
-    {
-        $data = $this->rawData['market'];
-
-        $datasets = [];
 
         return $datasets;
     }
@@ -232,34 +223,33 @@ class CapitalStructure extends Component
 
             $total = $equity + $debt + $prefEquity + $minorityInterest;
 
-            $data['book']['total_value']['timeline'][$date] = $total;
-            $data['book']['total_value']['yoy_change'][$date] = $lastTotal && $idx
+            $data['book']['total_value']['timeline'][$date] = (string) $total;
+            $data['book']['total_value']['yoy_change'][$date] = (string) ($lastTotal && $idx
                 ? (($total / $lastTotal) - 1) * 100
-                : 0;
+                : 0);
             $lastTotal = $total;
 
-            $data['book']['equity']['timeline'][$date] = $equity;
-            $data['book']['equity']['yoy_change'][$date] = $lastEquity && $idx
+            $data['book']['equity']['timeline'][$date] = (string) $equity;
+            $data['book']['equity']['yoy_change'][$date] = (string) ($lastEquity && $idx
                 ? (($equity / $lastEquity) - 1) * 100
-                : 0;
-            $data['book']['equity']['total_percent'][$date] = $total ? $equity / $total * 100 : 0;
+                : 0);
+            $data['book']['equity']['total_percent'][$date] = (string) ($total ? $equity / $total * 100 : 0);
             $lastEquity = $equity;
 
-            $data['book']['net_debt']['timeline'][$date] = $debt;
-            $data['book']['net_debt']['yoy_change'][$date] = $lastDebt && $idx
+            $data['book']['net_debt']['timeline'][$date] = (string) $debt;
+            $data['book']['net_debt']['yoy_change'][$date] = (string) ($lastDebt && $idx
                 ? (($debt / $lastDebt) - 1) * 100
-                : 0;
-            $data['book']['net_debt']['total_percent'][$date] = $total ? $debt / $total * 100 : 0;
+                : 0);
+            $data['book']['net_debt']['total_percent'][$date] = (string) ($total ? $debt / $total * 100 : 0);
             $lastDebt = $debt;
 
-            $data['book']['preferred_equity']['timeline'][$date] = $prefEquity;
-            $data['book']['preferred_equity']['total_percent'][$date] = $total ? $prefEquity / $total * 100 : 0;
+            $data['book']['preferred_equity']['timeline'][$date] = (string) $prefEquity;
+            $data['book']['preferred_equity']['total_percent'][$date] = (string) ($total ? $prefEquity / $total * 100 : 0);
 
-            $data['book']['minority_interest']['timeline'][$date] = $minorityInterest;
-            $data['book']['minority_interest']['total_percent'][$date] = $total ? $minorityInterest / $total * 100 : 0;
+            $data['book']['minority_interest']['timeline'][$date] = (string) $minorityInterest;
+            $data['book']['minority_interest']['total_percent'][$date] = (string) ($total ? $minorityInterest / $total * 100 : 0);
 
-
-            $data['book']['net_debt_by_capital'][$date] = $debt / $total * 100;
+            $data['book']['net_debt_by_capital'][$date] = (string) ($debt / $total * 100);
         }
 
         // for market
@@ -274,34 +264,34 @@ class CapitalStructure extends Component
 
             $total = $equity + $debt + $prefEquity + $minorityInterest;
 
-            $data['market']['total_value']['timeline'][$date] = $total;
-            $data['market']['total_value']['yoy_change'][$date] = $lastTotal && $idx
+            $data['market']['total_value']['timeline'][$date] = (string) $total;
+            $data['market']['total_value']['yoy_change'][$date] = (string) ($lastTotal && $idx
                 ? (($total / $lastTotal) - 1) * 100
-                : 0;
+                : 0);
             $lastTotal = $total;
 
-            $data['market']['equity']['timeline'][$date] = $equity;
-            $data['market']['equity']['yoy_change'][$date] = $lastEquity && $idx
+            $data['market']['equity']['timeline'][$date] = (string) $equity;
+            $data['market']['equity']['yoy_change'][$date] = (string) ($lastEquity && $idx
                 ? (($equity / $lastEquity) - 1) * 100
-                : 0;
-            $data['market']['equity']['total_percent'][$date] = $total ? $equity / $total * 100 : 0;
+                : 0);
+            $data['market']['equity']['total_percent'][$date] = (string) ($total ? $equity / $total * 100 : 0);
             $lastEquity = $equity;
 
-            $data['market']['net_debt']['timeline'][$date] = $debt;
-            $data['market']['net_debt']['yoy_change'][$date] = $lastDebt && $idx
+            $data['market']['net_debt']['timeline'][$date] = (string) $debt;
+            $data['market']['net_debt']['yoy_change'][$date] = (string) ($lastDebt && $idx
                 ? (($debt / $lastDebt) - 1)  * 100
-                : 0;
-            $data['market']['net_debt']['total_percent'][$date] = $total ? $debt / $total * 100 : 0;
+                : 0);
+            $data['market']['net_debt']['total_percent'][$date] = (string) ($total ? $debt / $total * 100 : 0);
             $lastDebt = $debt;
 
-            $data['market']['preferred_equity']['timeline'][$date] = $prefEquity;
-            $data['market']['preferred_equity']['total_percent'][$date] = $total ? $prefEquity / $total * 100 : 0;
+            $data['market']['preferred_equity']['timeline'][$date] = (string) $prefEquity;
+            $data['market']['preferred_equity']['total_percent'][$date] = (string) ($total ? $prefEquity / $total * 100 : 0);
 
-            $data['market']['minority_interest']['timeline'][$date] = $minorityInterest;
-            $data['market']['minority_interest']['total_percent'][$date] = $total ? $minorityInterest / $total * 100 : 0;
+            $data['market']['minority_interest']['timeline'][$date] = (string) $minorityInterest;
+            $data['market']['minority_interest']['total_percent'][$date] = (string) ($total ? $minorityInterest / $total * 100 : 0);
 
 
-            $data['market']['net_debt_by_capital'][$date] = $debt / $total * 100;
+            $data['market']['net_debt_by_capital'][$date] = (string) ($debt / $total * 100);
         }
 
         $this->rawData = $data;

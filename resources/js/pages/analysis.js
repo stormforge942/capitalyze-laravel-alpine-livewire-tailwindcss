@@ -1,139 +1,107 @@
 import chartJsPlugins, { formatCmpctNumber } from "../chartjs-plugins"
 
-function renderBaseChart(canvas, datasets, config) {
-    let ctx = canvas.getContext("2d")
+const tooltipConfig = {
+    bodyFont: {
+        size: 15,
+    },
+    external: chartJsPlugins.largeTooltip,
+    enabled: false,
+    position: "nearest",
+    callbacks: {
+        title: (context) => context[0].label,
+        label: (context) => `${context.dataset.label}|${context.raw.y}`,
+    },
+}
 
-    if (!config.isRBE) {
+const legendConfig = (show) => ({
+    display: show,
+    position: "bottom",
+    align: "start",
+    labels: {
+        boxWidth: 12,
+        boxHeight: 12,
+    },
+})
+
+const dataLabelConfig = (formatter = null) => ({
+    display: (ctx) => ctx.dataset?.type !== "line",
+    anchor: "center",
+    align: "center",
+    formatter:
+        formatter ||
+        ((v) => {
+            return Number(v.y).toFixed(2 ?? 0) + "%"
+        }),
+    font: {
+        weight: 500,
+        size: 12,
+    },
+})
+
+const scales = (percentage = false, xOffset = true) => ({
+    y: {
+        stacked: true,
+        display: true,
+        ticks: {
+            callback: percentage ? (val) => val + "%" : formatCmpctNumber,
+        },
+    },
+    x: {
+        stacked: true,
+        offset: xOffset,
+        grid: {
+            display: true,
+        },
+        align: "center",
+    },
+})
+
+function renderBasicChart(canvas, datasets, config) {
+    if (config.type === "percentage") {
         datasets.forEach((dataset) => {
-            dataset.data = dataset.data.map((value) => {
-                value.y =
-                    config.type == "percentage" ? value.percent : value.value
+            dataset.data.map((value) => {
+                value.y = value.percent
                 return value
             })
         })
+
+        return percentageBarChart(canvas, datasets, config.showLabel)
     }
 
-    console.log(datasets)
-
-    return new Chart(ctx, {
-        plugins: [window.ChartDataLabels, chartJsPlugins.pointLine],
-        maintainAspectRatio: false,
-        aspectRatio: 3,
-        responsive: true,
-        type: "bar",
-        data: {
-            datasets,
-        },
-        options: {
-            interaction: {
-                intersect: false,
-                mode: "index",
-            },
-            title: {
-                display: false,
-            },
-            elements: {
-                line: {
-                    tension: 0,
-                },
-            },
-            plugins: {
-                datalabels: {
-                    display: config.type == "percentage" ? true : false,
-                    anchor: "center",
-                    align: "center",
-                    formatter: (v) => Number(v.y).toFixed(2 ?? 0) + "%",
-                    font: {
-                        weight: 500,
-                        size: 12,
-                    },
-                },
-                tooltip: {
-                    bodyFont: {
-                        size: 15,
-                    },
-                    external: chartJsPlugins.largeTooltip,
-                    enabled: false,
-                    position: "nearest",
-                    callbacks: {
-                        title: function (context) {
-                            const InputDate = new Date(context[0].label)
-                            const Month = InputDate.getMonth() + 1
-                            const Day = InputDate.getDate()
-                            const Year = InputDate.getFullYear()
-                            return (
-                                Year +
-                                "-" +
-                                Month.toString().padStart(2, "0") +
-                                "-" +
-                                Day.toString().padStart(2, "0")
-                            )
-                        },
-                        label: function (context) {
-                            return `${context.dataset.label}|${context.raw.y}`
-                        },
-                    },
-                },
-                legend: {
-                    display: config.showLabel || false,
-                    position: "bottom",
-                    labels: {
-                        boxWidth: 16,
-                        boxHeight: 16,
-                    },
-                },
-                pointLine: {
-                    color: "#13B05BDE",
-                },
-            },
-            scales: {
-                y: {
-                    stacked: true,
-                    display: true,
-                    ticks: {
-                        callback: (val) => {
-                            if (config.type == "percentage")
-                                return val + "%"
-
-                            return formatCmpctNumber(val)
-                        },
-                    },
-                },
-                x: {
-                    stacked: true,
-                    offset: true,
-                    grid: {
-                        display: false,
-                    },
-                    type: "timeseries",
-                    align: "center",
-                },
-                ...(config.isRBE
-                    ? {
-                          y1: {
-                              stacked: true,
-                              ticks: {
-                                  callback: (val) => {
-                                      return formatCmpctNumber(val)
-                                  },
-                              },
-                              display: true,
-                              position: "right",
-                              type: "linear",
-                              beginAtZero: false,
-                              grid: {
-                                  drawOnChartArea: false,
-                              },
-                          },
-                      }
-                    : {}),
-            },
-        },
+    datasets.forEach((dataset) => {
+        dataset.data.map((value) => {
+            value.y = value.value || value.y || 0
+            return value
+        })
     })
+
+    return basicBarChart(canvas, datasets, config.showLabel)
 }
 
-function renderCapitalStructureChart(canvas, datasets, config) {
-    let ctx = canvas.getContext("2d")
+function renderSourcesAndUsesChart(canvas, datasets, config) {
+    if (config.type === "percentage") {
+        datasets.forEach((dataset) => {
+            dataset.data.map((value) => {
+                value.y = value.percent
+                return value
+            })
+        })
+
+        return percentageBarChart(canvas, datasets, config.showLabel)
+    }
+
+    datasets.forEach((dataset) => {
+        dataset.data.map((value) => {
+            value.y = value.value || value.y || 0
+            return value
+        })
+    })
+
+    return basicBarChart(canvas, datasets, config.showLabel, true)
+}
+
+function renderRevenueByEmployeeChart(canvas, datasets, config) {
+    const ctx = canvas.getContext("2d")
 
     return new Chart(ctx, {
         plugins: [chartJsPlugins.pointLine],
@@ -152,45 +120,11 @@ function renderCapitalStructureChart(canvas, datasets, config) {
             title: {
                 display: false,
             },
-            elements: {
-                line: {
-                    tension: 0,
-                },
-            },
             plugins: {
-                tooltip: {
-                    bodyFont: {
-                        size: 15,
-                    },
-                    external: chartJsPlugins.largeTooltip,
-                    enabled: false,
-                    position: "nearest",
-                    callbacks: {
-                        title: function (context) {
-                            const InputDate = new Date(context[0].label)
-                            const Month = InputDate.getMonth() + 1
-                            const Day = InputDate.getDate()
-                            const Year = InputDate.getFullYear()
-                            return (
-                                Year +
-                                "-" +
-                                Month.toString().padStart(2, "0") +
-                                "-" +
-                                Day.toString().padStart(2, "0")
-                            )
-                        },
-                        label: function (context) {
-                            return `${context.dataset.label}|${context.raw.y}`
-                        },
-                    },
-                },
-                legend: {
-                    display: config.showLabel || false,
-                    position: "bottom",
-                    labels: {
-                        boxWidth: 16,
-                        boxHeight: 16,
-                    },
+                tooltip: tooltipConfig,
+                legend: legendConfig(config.showLabel),
+                pointLine: {
+                    color: "#C22929",
                 },
             },
             scales: {
@@ -198,9 +132,7 @@ function renderCapitalStructureChart(canvas, datasets, config) {
                     stacked: true,
                     display: true,
                     ticks: {
-                        callback: (val) => {
-                            return formatCmpctNumber(val)
-                        },
+                        callback: formatCmpctNumber,
                     },
                 },
                 x: {
@@ -213,11 +145,211 @@ function renderCapitalStructureChart(canvas, datasets, config) {
                     align: "center",
                 },
                 y1: {
-                    stacked: true,
                     ticks: {
-                        callback: (val) => {
-                            return formatCmpctNumber(val)
+                        callback: (val) => val + "%",
+                    },
+                    display: true,
+                    position: "right",
+                    type: "linear",
+                    beginAtZero: false,
+                    grid: {
+                        drawOnChartArea: false,
+                    },
+                },
+            },
+        },
+    })
+}
+
+function renderCostStructureChart(canvas, datasets, config) {
+    const ctx = canvas.getContext("2d")
+
+    datasets.forEach((dataset) => {
+        dataset.data.map((value) => {
+            if (dataset.yAxisID === "y1") {
+                return value
+            }
+
+            value.y =
+                (config.type === "percentage" ? value.percent : value.value) ||
+                0
+            return value
+        })
+    })
+
+    return new Chart(ctx, {
+        plugins: [window.ChartDataLabels, chartJsPlugins.pointLine],
+        maintainAspectRatio: false,
+        aspectRatio: 3,
+        responsive: true,
+        type: "bar",
+        data: {
+            datasets,
+        },
+        options: {
+            interaction: {
+                intersect: false,
+                mode: "index",
+            },
+            title: {
+                display: false,
+            },
+            plugins: {
+                tooltip: tooltipConfig,
+                legend: legendConfig(config.showLabel),
+                datalabels: dataLabelConfig((v) => {
+                    if (config.type === "percentage") {
+                        return Number(v.y).toFixed(2 ?? 0) + "%"
+                    }
+
+                    return formatCmpctNumber(v.y)
+                }),
+                pointLine: {
+                    color: "#ccc",
+                },
+            },
+            scales: {
+                ...scales(config.type === "percentage"),
+                y1: {
+                    display: true,
+                    ticks: {
+                        callback: (val) => val + "%",
+                    },
+                    position: "right",
+                    type: "linear",
+                    beginAtZero: false,
+                    grid: {
+                        drawOnChartArea: false,
+                    },
+                },
+            },
+        },
+    })
+}
+
+function renderFcfConversionChart(canvas, data, config) {
+    const ctx = canvas.getContext("2d")
+
+    return new Chart(ctx, {
+        plugins: [window.ChartDataLabels, chartJsPlugins.pointLine],
+        maintainAspectRatio: false,
+        aspectRatio: 3,
+        responsive: true,
+        type: "bar",
+        data: {
+            datasets: data.datasets,
+        },
+        options: {
+            interaction: {
+                intersect: false,
+                mode: "index",
+            },
+            title: {
+                display: false,
+            },
+            plugins: {
+                annotation: {
+                    clip: false,
+                    annotations: {
+                        average: {
+                            type: "line",
+                            scaleID: "y",
+                            value: data.avgFcf,
+                            borderColor: "#828C85",
+                            borderWidth: 2,
+                            borderDash: [10, 10],
+                            display: (ctx) => {
+                                const chart = Object.getPrototypeOf(ctx)?.chart
+
+                                if (!chart) return true
+
+                                return !chart.legend.legendItems.find(
+                                    (item) => item.text === "Free Cashflow $"
+                                )?.hidden
+                            },
+                            label: {
+                                display: true,
+                                backgroundColor: "rgba(0,0,0,1)",
+                                position: "end",
+                                xAdjust: 10,
+                                content: data.avgFcf.toFixed(2) + "%",
+                                color: "#fff",
+                            },
                         },
+                    },
+                },
+                tooltip: tooltipConfig,
+                legend: legendConfig(config.showLabel),
+                datalabels: {
+                    ...dataLabelConfig(),
+                    formatter: (v, ctx) => {
+                        if (ctx.dataset.label === "Free Cashflow $") {
+                            return "$" + formatCmpctNumber(v.y)
+                        }
+
+                        return Number(v.y).toFixed(2 ?? 0) + "%"
+                    },
+                },
+                pointLine: {
+                    color: "#ffff",
+                },
+            },
+            scales: {
+                ...scales(true),
+                y1: {
+                    display: true,
+                    ticks: {
+                        callback: formatCmpctNumber,
+                    },
+                    position: "right",
+                    type: "linear",
+                    beginAtZero: false,
+                    grid: {
+                        drawOnChartArea: false,
+                    },
+                },
+            },
+        },
+    })
+}
+
+function renderCapitalStructureChart(canvas, datasets, config) {
+    const ctx = canvas.getContext("2d")
+
+    return new Chart(ctx, {
+        plugins: [chartJsPlugins.pointLine],
+        maintainAspectRatio: false,
+        aspectRatio: 3,
+        responsive: true,
+        type: "line",
+        data: {
+            datasets,
+        },
+        options: {
+            interaction: {
+                intersect: false,
+                mode: "index",
+            },
+            title: {
+                display: false,
+            },
+            elements: {
+                line: {
+                    tension: 0,
+                },
+            },
+            plugins: {
+                tooltip: tooltipConfig,
+                legend: legendConfig(config.showLabel),
+                pointLine: {
+                    color: "#121A0F",
+                },
+            },
+            scales: {
+                ...scales(false, false),
+                y1: {
+                    ticks: {
+                        callback: (val) => val + "%",
                     },
                     display: true,
                     position: "right",
@@ -233,6 +365,90 @@ function renderCapitalStructureChart(canvas, datasets, config) {
 }
 
 window.analysisPage = {
-    renderBaseChart,
+    renderBasicChart,
+    renderRevenueByEmployeeChart,
+    renderCostStructureChart,
+    renderFcfConversionChart,
     renderCapitalStructureChart,
+    renderSourcesAndUsesChart,
+}
+
+function basicBarChart(
+    canvas,
+    datasets,
+    showLabel = false,
+    lastIsAverage = false
+) {
+    const ctx = canvas.getContext("2d")
+
+    return new Chart(ctx, {
+        plugins: [],
+        maintainAspectRatio: false,
+        aspectRatio: 3,
+        responsive: true,
+        type: "bar",
+        data: {
+            datasets,
+        },
+        options: {
+            interaction: {
+                intersect: false,
+                mode: "index",
+            },
+            title: {
+                display: false,
+            },
+            plugins: {
+                tooltip: tooltipConfig,
+                legend: legendConfig(showLabel),
+                ...(!lastIsAverage
+                    ? {}
+                    : {
+                          annotation: {
+                              annotations: {
+                                  averageBar: {
+                                      type: "box",
+                                      backgroundColor: "rgba(0, 0, 0, 0)",
+                                      borderWidth: 1,
+                                      borderDash: [5, 5],
+                                      xMax: datasets[0].data.length - 0.55,
+                                      xMin: datasets[0].data.length - 1.45,
+                                  },
+                              },
+                          },
+                      }),
+            },
+            scales: scales(),
+        },
+    })
+}
+
+function percentageBarChart(canvas, datasets, showLabel = false) {
+    const ctx = canvas.getContext("2d")
+
+    return new Chart(ctx, {
+        plugins: [window.ChartDataLabels],
+        maintainAspectRatio: false,
+        aspectRatio: 3,
+        responsive: true,
+        type: "bar",
+        data: {
+            datasets,
+        },
+        options: {
+            interaction: {
+                intersect: false,
+                mode: "index",
+            },
+            title: {
+                display: false,
+            },
+            plugins: {
+                tooltip: tooltipConfig,
+                legend: legendConfig(showLabel),
+                datalabels: dataLabelConfig(),
+            },
+            scales: scales(true),
+        },
+    })
 }

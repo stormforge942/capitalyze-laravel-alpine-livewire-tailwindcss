@@ -61,7 +61,7 @@ class Product extends Component
             $dataset[] = [
                 'label' => $product,
                 'data' => array_map(fn ($date) => [
-                    'x' => $date,
+                    'x' => $this->formatDateForChart($date),
                     'value' => $values['timeline'][$date],
                     'percent' => round($values['total_percent'][$date], 2),
                 ], $this->selectedDates),

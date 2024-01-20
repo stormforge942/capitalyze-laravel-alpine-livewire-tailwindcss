@@ -6,7 +6,7 @@
     @include('livewire.company-analysis.filters')
 
     @if (count($dates))
-        <div class="my-6" wire:ignore>
+        <div class="my-6" wire:key="{{ $this->rangeSliderKey() }}">
             <x-range-slider :min="explode('-', $dates[0])[0]" :max="explode('-', $dates[count($dates) - 1])[0]" :value="$selectedDateRange"
                 @range-updated="$wire.selectedDateRange = $event.detail"></x-range-slider>
         </div>
@@ -26,19 +26,13 @@
                 </div>
 
                 <div class="mt-6" x-show="subSubTab === 'sources'" x-cloak>
-                    @include('livewire.company-analysis.base-graph', [
-                        'name' => 'Sources of Cash',
-                        'enclosed' => true,
-                        ...$chart['sources'],
-                    ])
+                    <x-analysis-chart-box title="Sources of Cash" :company="$company" :chart="$chart['sources']" :enclosed="true"
+                        function="renderSourcesAndUsesChart"></x-analysis-chart-box>
                 </div>
 
                 <div class="mt-6" x-show="subSubTab === 'uses'" x-cloak>
-                    @include('livewire.company-analysis.base-graph', [
-                        'name' => 'Uses of Cash',
-                        'enclosed' => true,
-                        ...$chart['uses'],
-                    ])
+                    <x-analysis-chart-box title="Uses of Cash" :company="$company" :chart="$chart['uses']" :enclosed="true"
+                        function="renderSourcesAndUsesChart"></x-analysis-chart-box>
                 </div>
             </div>
 
@@ -255,6 +249,7 @@
                                     </td>
                                 @endforeach
                             </tr>
+                           
                             <tr>
                                 <td class="pl-8 pt-2 pb-2 text-left">
                                     Total Debt Repaid
@@ -269,6 +264,7 @@
                                         <x-review-number-button x-data="{ amount: '{{ $value['value'] }}', date: '{{ $date }}' }"></x-review-number-button>
                                     </td>
                                 @endforeach
+                            
                             </tr>
                             <tr>
                                 <td class="pl-8 pt-2 pb-2 text-left">
@@ -284,6 +280,7 @@
                                     </td>
                                 @endforeach
                             </tr>
+                            
                             <tr>
                                 <td class="pl-8 pt-2 pb-2 text-left">
                                     Repurchase of Preferred Stock
@@ -298,6 +295,7 @@
                                         <x-review-number-button x-data="{ amount: '{{ $value['value'] }}', date: '{{ $date }}' }"></x-review-number-button>
                                     </td>
                                 @endforeach
+                            
                             </tr>
                             <tr>
                                 <td class="pl-8 pt-2 pb-2 text-left">
@@ -313,6 +311,7 @@
                                     </td>
                                 @endforeach
                             </tr>
+
                             <tr>
                                 <td class="pl-8 pt-2 pb-2 text-left">
                                     Repurchase of Common Stock
@@ -342,6 +341,37 @@
                                     </td>
                                 @endforeach
                             </tr>
+
+                            <tr>
+                                <td class="pl-8 pt-2 pb-2 text-left">
+                                    Total Dividends Paid
+                                </td>
+                                @foreach ($selectedDates as $date)
+                                    <?php $value = $data['uses']['dividends']['timeline'][$date]; ?>
+
+                                    <td
+                                        class="pl-6 pt-2 pb-2 last:pr-8 @if (!$loop->first) last:rounded-tr-lg @endif">
+                                        {!! redIfNegative($value) !!}
+
+                                        <x-review-number-button x-data="{ amount: '{{ $value['value'] }}', date: '{{ $date }}' }"></x-review-number-button>
+                                    </td>
+                                @endforeach
+                            </tr>
+                            <tr>
+                                <td class="pl-8 pt-2 pb-2 text-left">
+                                    <span class="pl-4">% of Total Uses</span>
+                                </td>
+                                @foreach ($selectedDates as $date)
+                                    <td class="pl-6 pt-2 pb-2 last:pr-8">
+                                        <?php $value = $data['uses']['dividends']['total_percent'][$date]; ?>
+
+                                        {!! redIfNegative($value) !!}
+
+                                        <x-review-number-button x-data="{ amount: '{{ $value['value'] }}', date: '{{ $date }}' }"></x-review-number-button>
+                                    </td>
+                                @endforeach
+                            </tr>
+                           
                             <tr>
                                 <td class="pl-8 pt-2 pb-2 text-left">
                                     Cash Build / Other

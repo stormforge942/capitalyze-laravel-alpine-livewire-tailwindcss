@@ -2,6 +2,8 @@
 
 namespace App\Http\Livewire\CompanyAnalysis;
 
+use Carbon\Carbon;
+
 trait HasFilters
 {
     public string $period = 'annual';
@@ -78,21 +80,27 @@ trait HasFilters
             return;
         }
 
+        $dateRange = [
+            (int) explode('-', $dates[0])[0],
+            (int) explode('-', end($dates))[0],
+        ];
+
         $startYear = ((int) explode('-', end($dates))[0]) - 5;
 
-        $this->selectedDates = array_values(
-            array_filter($dates, fn ($date) => intval(explode('-', $date)[0]) >= $startYear)
-        );
-
-        if (count($this->selectedDates)) {
-            $this->selectedDateRange = [
-                intval(explode('-', $this->selectedDates[0])[0]),
-                intval(explode('-', $this->selectedDates[count($this->selectedDates) - 1])[0]),
-            ];
-
-            $this->selectedDateRange[0] = min(...$this->selectedDateRange);
-            $this->selectedDateRange[1] = max(...$this->selectedDateRange);
+        // update selected date range only if its needed
+        if (count($this->selectedDateRange) === 2) {
+            $this->selectedDateRange[0] = $this->selectedDateRange[0] >= $dateRange[0]
+                ? $this->selectedDateRange[0]
+                : $dateRange[0];
+            $this->selectedDateRange[1] = $this->selectedDateRange[1] <= $dateRange[1]
+                ? $this->selectedDateRange[1]
+                : $dateRange[1];
+        } else {
+            $this->selectedDateRange[0] = $startYear;
+            $this->selectedDateRange[1] = $dateRange[1];
         }
+
+        $this->updateSelectedDates();
     }
 
     private function updateSelectedDates()
@@ -109,5 +117,24 @@ trait HasFilters
     private function makeChartKey(): string
     {
         return $this->period . '-' . json_encode($this->selectedDateRange);
+    }
+
+    private function rangeSliderKey(): string
+    {
+        return json_encode([
+            $this->dates[0],
+            $this->dates[count($this->dates) - 1],
+            $this->selectedDateRange[0] ?? null,
+            $this->selectedDateRange[1] ?? null,
+        ]);
+    }
+
+    private function formatDateForChart(string $date)
+    {
+        if ($this->period === 'annual') {
+            return explode("-", $date)[0];
+        }
+
+        return Carbon::parse($date)->format('M Y');
     }
 }
