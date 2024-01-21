@@ -6,7 +6,7 @@
     </div>
 
     <x-tab-slot id="track-ownership-tabs" tab="mutual-funds">
-        @include('livewire.track-investor.search', ['useAlpine' => true, 'event' => 'search:discover'])
+        @include('livewire.track-investor.search', ['useAlpine' => true, 'event' => 'search:mutual-funds'])
     </x-tab-slot>
 
     <div class="mt-6">
@@ -27,7 +27,7 @@
                 <div
                     class="grid gap-4 grid-cols-1 md:grid-cols-2 lg:grid-cols-[repeat(auto-fill,minmax(17.19rem,1fr))]">
                     @foreach ($funds as $fund)
-                        <livewire:track-investor.fund-card :fund="$fund" :wire:key="Str::random(5)" />
+                        <livewire:track-investor.mutual-fund-card :fund="$fund" :wire:key="Str::random(5)" />
                     @endforeach
                 </div>
 

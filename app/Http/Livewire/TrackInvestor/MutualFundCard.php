@@ -3,10 +3,10 @@
 namespace App\Http\Livewire\TrackInvestor;
 
 use Livewire\Component;
-use App\Models\TrackInvestorFavorite;
 use Illuminate\Support\Facades\Auth;
+use App\Models\TrackInvestorFavorite;
 
-class FundCard extends Component
+class MutualFundCard extends Component
 {
     public $fund;
     public $hideIfNotFavorite = false;
@@ -15,7 +15,7 @@ class FundCard extends Component
     {
         $entry = TrackInvestorFavorite::query()
             ->where('identifier', $fund['id'])
-            ->where('type', TrackInvestorFavorite::TYPE_FUND)
+            ->where('type', TrackInvestorFavorite::TYPE_MUTUAL_FUND)
             ->where('user_id', Auth::id())
             ->first();
 
@@ -23,9 +23,9 @@ class FundCard extends Component
 
         if (!$entry) {
             TrackInvestorFavorite::create([
-                'name' => $fund['investor_name'],
+                'investor_name' => $fund['registrant_name'],
                 'user_id' => Auth::id(),
-                'type' => TrackInvestorFavorite::TYPE_FUND,
+                'type' => TrackInvestorFavorite::TYPE_MUTUAL_FUND,
                 'identifier' => $fund['id'],
             ]);
         } else {
@@ -35,7 +35,7 @@ class FundCard extends Component
         $this->fund['isFavorite'] = $isFavorite;
 
         if ($this->hideIfNotFavorite) {
-            $this->emitTo(Discover::class, 'update');
+            $this->emitTo(MutualFunds::class, 'update');
         }
 
         $this->emitTo(Favorites::class, 'update');
@@ -44,6 +44,6 @@ class FundCard extends Component
 
     public function render()
     {
-        return view('livewire.track-investor.fund-card');
+        return view('livewire.track-investor.mutual-fund-card');
     }
 }
