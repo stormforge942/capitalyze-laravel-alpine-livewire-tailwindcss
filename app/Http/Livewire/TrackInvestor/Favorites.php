@@ -55,7 +55,7 @@ class Favorites extends Component
     {
         if (empty($funds)) return collect();
 
-        $q = DB::connection('pgsql-xbrl')
+        return DB::connection('pgsql-xbrl')
             ->table('filings_summary')
             ->select('fs.investor_name', 'fs.total_value', 'fs.cik', 'fs.portfolio_size', 'fs.change_in_total_value', 'latest_dates.max_date')
             ->from('filings_summary as fs')
@@ -70,10 +70,8 @@ class Favorites extends Component
             })
             ->where(function ($q) use ($funds) {
                 foreach ($funds as $fund) {
-                    $q->orWhere(function ($q) use ($fund) {
-                        $q->where('fs.investor_name', $fund['investor_name'])
-                            ->where('fs.cik', $fund['cik']);
-                    });
+                    $q->orWhere(fn ($q) => $q->where('fs.investor_name', $fund['investor_name'])
+                        ->where('fs.cik', $fund['cik']));
                 }
 
                 return $q;
@@ -96,7 +94,7 @@ class Favorites extends Component
     {
         if (empty($funds)) return collect();
 
-        $q = DB::connection('pgsql-xbrl')
+        return DB::connection('pgsql-xbrl')
             ->table('mutual_fund_holdings_summary')
             ->select('hs.registrant_name', 'hs.cik', 'hs.fund_symbol', 'hs.series_id', 'hs.class_id', 'hs.class_name', 'hs.total_value', 'hs.portfolio_size', 'hs.change_in_total_value', 'hs.date')
             ->from('mutual_fund_holdings_summary as hs')
@@ -115,16 +113,16 @@ class Favorites extends Component
             })
             ->where(function ($q) use ($funds) {
                 foreach ($funds as $fund) {
-                    $q->orWhere(function ($q) use ($fund) {
-                        $q->where('hs.registrant_name', $fund['registrant_name'])
+                    $q->orWhere(
+                        fn ($q) => $q->where('hs.registrant_name', $fund['registrant_name'])
                             ->where('hs.cik', $fund['cik'])
                             ->where('hs.fund_symbol', $fund['fund_symbol'])
                             ->where('hs.series_id', $fund['series_id'])
                             ->where('hs.class_id', $fund['class_id'])
-                            ->where('hs.class_name', $fund['class_name']);
-                    });
+                            ->where('hs.class_name', $fund['class_name'])
+                    );
                 }
-                
+
                 return $q;
             })
             ->get()
