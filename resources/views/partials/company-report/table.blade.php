@@ -125,7 +125,7 @@
                                                         const isPercent = rowContext.title.includes('%') ||
                                                             rowContext.title.includes('yoy') ||
                                                             rowContext.title.includes('per');
-
+                                                
                                                         return formatTableValue(row.values[date]?.value, isPercent)
                                                     },
                                                 }">
@@ -138,14 +138,13 @@
 
                                                 <template x-if="!formattedValue.isLink">
                                                     <div>
-                                                        <span class="hover:underline cursor-pointer"
-                                                            :class="formattedValue.isNegative ? 'text-red' : ''"
-                                                            x-text="formattedValue.result"
-                                                            @click="$wire.emit('rightSlide', row.values[date])">
-                                                        </span>
-
-                                                        <x-review-number-button
-                                                            x-data="{ amount: row.values[date]?.value || 0, date }"></x-review-number-button>
+                                                        <x-review-number-button x-data="{ amount: row.values[date]?.value || 0, date }">
+                                                            <span class="hover:underline cursor-pointer"
+                                                                :class="formattedValue.isNegative ? 'text-red' : ''"
+                                                                x-text="formattedValue.result"
+                                                                @click="$wire.emit('rightSlide', row.values[date])">
+                                                            </span>
+                                                        </x-review-number-button>
                                                     </div>
                                                 </template>
                                             </div>
@@ -243,13 +242,13 @@
 
                                         <template x-if="!formattedValue.isLink">
                                             <div>
-                                                <span class="hover:underline cursor-pointer"
+                                                <x-review-number-button x-data="{ amount: row.values[date]?.value || 0, date }">
+                                                    <span class="hover:underline cursor-pointer"
                                                     :class="formattedValue.isNegative ? 'text-red' : ''"
                                                     x-text="formattedValue.result"
                                                     @click="$wire.emit('rightSlide', row.values[date])">
-                                                </span>
-
-                                                <x-review-number-button x-data="{ amount: row.values[date]?.value || 0, date }"/>
+                                                    </span>
+                                                </x-review-number-button>
                                             </div>
                                         </template>
                                     </div>

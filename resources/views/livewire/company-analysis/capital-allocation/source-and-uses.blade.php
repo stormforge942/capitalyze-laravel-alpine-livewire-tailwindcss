@@ -63,9 +63,9 @@
 
                                     <td
                                         class="pl-6 pt-4 last:pr-8 @if (!$loop->first) last:rounded-tr-lg @endif">
-                                        {!! redIfNegative($value) !!}
-
-                                        <x-review-number-button x-data="{ amount: '{{ $value['value'] }}', date: '{{ $date }}' }"></x-review-number-button>
+                                        <x-review-number-button x-data="{ amount: '{{ $value['value'] }}', date: '{{ $date }}' }">
+                                            {!! redIfNegative($value) !!}
+                                        </x-review-number-button>
                                     </td>
                                 @endforeach
                             </tr>
@@ -77,9 +77,9 @@
                                     <td class="pl-6 pt-2 pb-2 last:pr-8">
                                         <?php $value = $data['sources']['free_cashflow']['total_percent'][$date]; ?>
 
-                                        {!! redIfNegative($value) !!}
-
-                                        <x-review-number-button x-data="{ amount: '{{ $value['value'] }}', date: '{{ $date }}' }"></x-review-number-button>
+                                        <x-review-number-button x-data="{ amount: '{{ $value['value'] }}', date: '{{ $date }}' }">
+                                            {!! redIfNegative($value) !!}
+                                        </x-review-number-button>
                                     </td>
                                 @endforeach
                             </tr>
@@ -92,9 +92,9 @@
 
                                     <td
                                         class="pl-6 pt-2 pb-2 last:pr-8 @if (!$loop->first) last:rounded-tr-lg @endif">
-                                        {!! redIfNegative($value) !!}
-
-                                        <x-review-number-button x-data="{ amount: '{{ $value['value'] }}', date: '{{ $date }}' }"></x-review-number-button>
+                                        <x-review-number-button x-data="{ amount: '{{ $value['value'] }}', date: '{{ $date }}' }">
+                                            {!! redIfNegative($value) !!}
+                                        </x-review-number-button>
                                     </td>
                                 @endforeach
                             </tr>
@@ -106,9 +106,9 @@
                                     <td class="pl-6 pt-2 pb-2 last:pr-8">
                                         <?php $value = $data['sources']['net_debt']['total_percent'][$date]; ?>
 
-                                        {!! redIfNegative($value) !!}
-
-                                        <x-review-number-button x-data="{ amount: '{{ $value['value'] }}', date: '{{ $date }}' }"></x-review-number-button>
+                                        <x-review-number-button x-data="{ amount: '{{ $value['value'] }}', date: '{{ $date }}' }">
+                                            {!! redIfNegative($value) !!}
+                                        </x-review-number-button>
                                     </td>
                                 @endforeach
                             </tr>
@@ -121,9 +121,9 @@
 
                                     <td
                                         class="pl-6 pt-2 pb-2 last:pr-8 @if (!$loop->first) last:rounded-tr-lg @endif">
-                                        {!! redIfNegative($value) !!}
-
-                                        <x-review-number-button x-data="{ amount: '{{ $value['value'] }}', date: '{{ $date }}' }"></x-review-number-button>
+                                        <x-review-number-button x-data="{ amount: '{{ $value['value'] }}', date: '{{ $date }}' }">
+                                            {!! redIfNegative($value) !!}
+                                        </x-review-number-button>
                                     </td>
                                 @endforeach
                             </tr>
@@ -135,9 +135,9 @@
                                     <td class="pl-6 pt-2 pb-2 last:pr-8">
                                         <?php $value = $data['sources']['preferred_stock']['total_percent'][$date]; ?>
 
-                                        {!! redIfNegative($value) !!}
-
-                                        <x-review-number-button x-data="{ amount: '{{ $value['value'] }}', date: '{{ $date }}' }"></x-review-number-button>
+                                        <x-review-number-button x-data="{ amount: '{{ $value['value'] }}', date: '{{ $date }}' }">
+                                            {!! redIfNegative($value) !!}
+                                        </x-review-number-button>
                                     </td>
                                 @endforeach
                             </tr>
@@ -150,9 +150,9 @@
 
                                     <td
                                         class="pl-6 pt-2 pb-2 last:pr-8 @if (!$loop->first) last:rounded-tr-lg @endif">
-                                        {!! redIfNegative($value) !!}
-
-                                        <x-review-number-button x-data="{ amount: '{{ $value['value'] }}', date: '{{ $date }}' }"></x-review-number-button>
+                                        <x-review-number-button x-data="{ amount: '{{ $value['value'] }}', date: '{{ $date }}' }">
+                                            {!! redIfNegative($value) !!}
+                                        </x-review-number-button>
                                     </td>
                                 @endforeach
                             </tr>
@@ -164,9 +164,9 @@
                                     <td class="pl-6 pt-2 pb-4 last:pr-8">
                                         <?php $value = $data['sources']['common_stock']['total_percent'][$date]; ?>
 
-                                        {!! redIfNegative($value) !!}
-
-                                        <x-review-number-button x-data="{ amount: '{{ $value['value'] }}', date: '{{ $date }}' }"></x-review-number-button>
+                                        <x-review-number-button x-data="{ amount: '{{ $value['value'] }}', date: '{{ $date }}' }">
+                                            {!! redIfNegative($value) !!}
+                                        </x-review-number-button>
                                     </td>
                                 @endforeach
                             </tr>
@@ -179,9 +179,9 @@
                                     <?php $value = $data['sources']['total']['timeline'][$date]; ?>
 
                                     <td class="pl-6 pt-4 pb-2 last:pr-8">
-                                        {!! redIfNegative($value) !!}
-
-                                        <x-review-number-button x-data="{ amount: '{{ $value['value'] }}', date: '{{ $date }}' }"></x-review-number-button>
+                                        <x-review-number-button x-data="{ amount: '{{ $value['value'] }}', date: '{{ $date }}' }">
+                                            {!! redIfNegative($value) !!}
+                                        </x-review-number-button>
                                     </td>
                                 @endforeach
                             </tr>
@@ -193,9 +193,9 @@
                                     <td class="pl-6 pt-2 pb-4 last:pr-8 last:rounded-br-lg">
                                         <?php $value = $data['sources']['total']['yoy_change'][$date]; ?>
 
-                                        {!! redIfNegative($value) !!}
-
-                                        <x-review-number-button x-data="{ amount: '{{ $value['value'] }}', date: '{{ $date }}' }"></x-review-number-button>
+                                        <x-review-number-button x-data="{ amount: '{{ $value['value'] }}', date: '{{ $date }}' }">
+                                            {!! redIfNegative($value) !!}
+                                        </x-review-number-button>
                                     </td>
                                 @endforeach
                             </tr>
@@ -229,9 +229,9 @@
 
                                     <td
                                         class="pl-6 pt-4 last:pr-8 @if (!$loop->first) last:rounded-tr-lg @endif">
-                                        {!! redIfNegative($value) !!}
-
-                                        <x-review-number-button x-data="{ amount: '{{ $value['value'] }}', date: '{{ $date }}' }"></x-review-number-button>
+                                        <x-review-number-button x-data="{ amount: '{{ $value['value'] }}', date: '{{ $date }}' }">
+                                            {!! redIfNegative($value) !!}
+                                        </x-review-number-button>
                                     </td>
                                 @endforeach
                             </tr>
@@ -243,13 +243,13 @@
                                     <td class="pl-6 pt-2 pb-2 last:pr-8">
                                         <?php $value = $data['uses']['acquisition']['total_percent'][$date]; ?>
 
-                                        {!! redIfNegative($value) !!}
-
-                                        <x-review-number-button x-data="{ amount: '{{ $value['value'] }}', date: '{{ $date }}' }"></x-review-number-button>
+                                        <x-review-number-button x-data="{ amount: '{{ $value['value'] }}', date: '{{ $date }}' }">
+                                            {!! redIfNegative($value) !!}
+                                        </x-review-number-button>
                                     </td>
                                 @endforeach
                             </tr>
-                           
+
                             <tr>
                                 <td class="pl-8 pt-2 pb-2 text-left">
                                     Total Debt Repaid
@@ -259,12 +259,12 @@
 
                                     <td
                                         class="pl-6 pt-2 pb-2 last:pr-8 @if (!$loop->first) last:rounded-tr-lg @endif">
-                                        {!! redIfNegative($value) !!}
-
-                                        <x-review-number-button x-data="{ amount: '{{ $value['value'] }}', date: '{{ $date }}' }"></x-review-number-button>
+                                        <x-review-number-button x-data="{ amount: '{{ $value['value'] }}', date: '{{ $date }}' }">
+                                            {!! redIfNegative($value) !!}
+                                        </x-review-number-button>
                                     </td>
                                 @endforeach
-                            
+
                             </tr>
                             <tr>
                                 <td class="pl-8 pt-2 pb-2 text-left">
@@ -274,13 +274,13 @@
                                     <td class="pl-6 pt-2 pb-2 last:pr-8">
                                         <?php $value = $data['uses']['debt_repaid']['total_percent'][$date]; ?>
 
-                                        {!! redIfNegative($value) !!}
-
-                                        <x-review-number-button x-data="{ amount: '{{ $value['value'] }}', date: '{{ $date }}' }"></x-review-number-button>
+                                        <x-review-number-button x-data="{ amount: '{{ $value['value'] }}', date: '{{ $date }}' }">
+                                            {!! redIfNegative($value) !!}
+                                        </x-review-number-button>
                                     </td>
                                 @endforeach
                             </tr>
-                            
+
                             <tr>
                                 <td class="pl-8 pt-2 pb-2 text-left">
                                     Repurchase of Preferred Stock
@@ -290,12 +290,12 @@
 
                                     <td
                                         class="pl-6 pt-2 pb-2 last:pr-8 @if (!$loop->first) last:rounded-tr-lg @endif">
-                                        {!! redIfNegative($value) !!}
-
-                                        <x-review-number-button x-data="{ amount: '{{ $value['value'] }}', date: '{{ $date }}' }"></x-review-number-button>
+                                        <x-review-number-button x-data="{ amount: '{{ $value['value'] }}', date: '{{ $date }}' }">
+                                            {!! redIfNegative($value) !!}
+                                        </x-review-number-button>
                                     </td>
                                 @endforeach
-                            
+
                             </tr>
                             <tr>
                                 <td class="pl-8 pt-2 pb-2 text-left">
@@ -305,9 +305,9 @@
                                     <td class="pl-6 pt-2 pb-2 last:pr-8">
                                         <?php $value = $data['uses']['preferred_repurchase']['total_percent'][$date]; ?>
 
-                                        {!! redIfNegative($value) !!}
-
-                                        <x-review-number-button x-data="{ amount: '{{ $value['value'] }}', date: '{{ $date }}' }"></x-review-number-button>
+                                        <x-review-number-button x-data="{ amount: '{{ $value['value'] }}', date: '{{ $date }}' }">
+                                            {!! redIfNegative($value) !!}
+                                        </x-review-number-button>
                                     </td>
                                 @endforeach
                             </tr>
@@ -321,9 +321,9 @@
 
                                     <td
                                         class="pl-6 pt-2 pb-2 last:pr-8 @if (!$loop->first) last:rounded-tr-lg @endif">
-                                        {!! redIfNegative($value) !!}
-
-                                        <x-review-number-button x-data="{ amount: '{{ $value['value'] }}', date: '{{ $date }}' }"></x-review-number-button>
+                                        <x-review-number-button x-data="{ amount: '{{ $value['value'] }}', date: '{{ $date }}' }">
+                                            {!! redIfNegative($value) !!}
+                                        </x-review-number-button>
                                     </td>
                                 @endforeach
                             </tr>
@@ -335,9 +335,9 @@
                                     <td class="pl-6 pt-2 pb-2 last:pr-8">
                                         <?php $value = $data['uses']['common_repurchase']['total_percent'][$date]; ?>
 
-                                        {!! redIfNegative($value) !!}
-
-                                        <x-review-number-button x-data="{ amount: '{{ $value['value'] }}', date: '{{ $date }}' }"></x-review-number-button>
+                                        <x-review-number-button x-data="{ amount: '{{ $value['value'] }}', date: '{{ $date }}' }">
+                                            {!! redIfNegative($value) !!}
+                                        </x-review-number-button>
                                     </td>
                                 @endforeach
                             </tr>
@@ -351,9 +351,9 @@
 
                                     <td
                                         class="pl-6 pt-2 pb-2 last:pr-8 @if (!$loop->first) last:rounded-tr-lg @endif">
-                                        {!! redIfNegative($value) !!}
-
-                                        <x-review-number-button x-data="{ amount: '{{ $value['value'] }}', date: '{{ $date }}' }"></x-review-number-button>
+                                        <x-review-number-button x-data="{ amount: '{{ $value['value'] }}', date: '{{ $date }}' }">
+                                            {!! redIfNegative($value) !!}
+                                        </x-review-number-button>
                                     </td>
                                 @endforeach
                             </tr>
@@ -365,13 +365,13 @@
                                     <td class="pl-6 pt-2 pb-2 last:pr-8">
                                         <?php $value = $data['uses']['dividends']['total_percent'][$date]; ?>
 
-                                        {!! redIfNegative($value) !!}
-
-                                        <x-review-number-button x-data="{ amount: '{{ $value['value'] }}', date: '{{ $date }}' }"></x-review-number-button>
+                                        <x-review-number-button x-data="{ amount: '{{ $value['value'] }}', date: '{{ $date }}' }">
+                                            {!! redIfNegative($value) !!}
+                                        </x-review-number-button>
                                     </td>
                                 @endforeach
                             </tr>
-                           
+
                             <tr>
                                 <td class="pl-8 pt-2 pb-2 text-left">
                                     Cash Build / Other
@@ -381,9 +381,9 @@
 
                                     <td
                                         class="pl-6 pt-2 pb-2 last:pr-8 @if (!$loop->first) last:rounded-tr-lg @endif">
-                                        {!! redIfNegative($value) !!}
-
-                                        <x-review-number-button x-data="{ amount: '{{ $value['value'] }}', date: '{{ $date }}' }"></x-review-number-button>
+                                        <x-review-number-button x-data="{ amount: '{{ $value['value'] }}', date: '{{ $date }}' }">
+                                            {!! redIfNegative($value) !!}
+                                        </x-review-number-button>
                                     </td>
                                 @endforeach
                             </tr>
@@ -395,9 +395,9 @@
                                     <td class="pl-6 pt-2 pb-4 last:pr-8">
                                         <?php $value = $data['uses']['other']['total_percent'][$date]; ?>
 
-                                        {!! redIfNegative($value) !!}
-
-                                        <x-review-number-button x-data="{ amount: '{{ $value['value'] }}', date: '{{ $date }}' }"></x-review-number-button>
+                                        <x-review-number-button x-data="{ amount: '{{ $value['value'] }}', date: '{{ $date }}' }">
+                                            {!! redIfNegative($value) !!}
+                                        </x-review-number-button>
                                     </td>
                                 @endforeach
                             </tr>
@@ -410,9 +410,9 @@
                                     <?php $value = $data['uses']['total']['timeline'][$date]; ?>
 
                                     <td class="pl-6 pt-4 pb-2 last:pr-8">
-                                        {!! redIfNegative($value) !!}
-
-                                        <x-review-number-button x-data="{ amount: '{{ $value['value'] }}', date: '{{ $date }}' }"></x-review-number-button>
+                                        <x-review-number-button x-data="{ amount: '{{ $value['value'] }}', date: '{{ $date }}' }">
+                                            {!! redIfNegative($value) !!}
+                                        </x-review-number-button>
                                     </td>
                                 @endforeach
                             </tr>
@@ -424,9 +424,9 @@
                                     <td class="pl-6 pt-2 pb-4 last:pr-8 last:rounded-br-lg">
                                         <?php $value = $data['uses']['total']['yoy_change'][$date]; ?>
 
-                                        {!! redIfNegative($value) !!}
-
-                                        <x-review-number-button x-data="{ amount: '{{ $value['value'] }}', date: '{{ $date }}' }"></x-review-number-button>
+                                        <x-review-number-button x-data="{ amount: '{{ $value['value'] }}', date: '{{ $date }}' }">
+                                            {!! redIfNegative($value) !!}
+                                        </x-review-number-button>
                                     </td>
                                 @endforeach
                             </tr>
