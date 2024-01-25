@@ -6,6 +6,7 @@ use App\Powergrid\BaseTable;
 use App\Models\MutualFundsPage;
 use PowerComponents\LivewirePowerGrid\Column;
 use Illuminate\Contracts\Database\Query\Builder;
+use Illuminate\Support\Js;
 use PowerComponents\LivewirePowerGrid\PowerGrid;
 use PowerComponents\LivewirePowerGrid\PowerGridEloquent;
 
@@ -49,52 +50,49 @@ class MutualFundHoldingsTable extends BaseTable
             ->when($this->search, function ($query) {
                 $term = '%' . $this->search . '%';
 
-                return $query->where('registrant_name', 'ilike', $term);
+                return $query->where(
+                    fn ($q) => $q->where('name', 'ilike', $term)
+                        ->orWhere('symbol', $this->search)
+                );
             });
     }
 
     public function columns(): array
     {
         return [
-            Column::add()
-                ->title('Company')
-                ->field('name', 'name')
+            Column::make('Company', 'name', 'name')
                 ->sortable()
                 ->searchable(),
 
-            Column::make('Shares Held', 'shares_held')
+            Column::make('Balance', 'balance_formatted', 'balance')
                 ->sortable()
                 ->headerAttribute('[&>div]:justify-end')->bodyAttribute('text-right'),
 
-            Column::make('Market Value', 'market_value')
+            Column::make('Market Value', 'market_value', 'val_usd')
                 ->sortable()
                 ->headerAttribute('[&>div]:justify-end')->bodyAttribute('text-right'),
 
-            Column::make('% of Portfolio', 'portfolio_percent')
+            Column::make('% of Portfolio', 'portfolio_percent', 'weight')
                 ->sortable()
                 ->headerAttribute('[&>div]:justify-end')->bodyAttribute('text-right'),
 
-            Column::make('Prior % of Portfolio', 'last_portfolio_percent')
+            Column::make('Prior % of Portfolio', 'last_portfolio_percent', 'previous_weight')
                 ->sortable()
                 ->headerAttribute('[&>div]:justify-end')->bodyAttribute('text-right'),
 
-            Column::make('Change in Shares', 'change_in_shares')
+            Column::make('Change in Balance', 'change_in_balance_formatted', 'change_in_balance')
                 ->sortable()
                 ->headerAttribute('[&>div]:justify-end')->bodyAttribute('text-right'),
 
             Column::make('% Ownership', 'ownership')
+                // ->sortable()
+                ->headerAttribute('[&>div]:justify-end')->bodyAttribute('text-right'),
+
+            Column::make('Date reported', 'period_of_report', 'period_of_report')
                 ->sortable()
                 ->headerAttribute('[&>div]:justify-end')->bodyAttribute('text-right'),
 
-            Column::make('Date reported', 'period_of_report')
-                ->sortable()
-                ->headerAttribute('[&>div]:justify-end')->bodyAttribute('text-right'),
-
-            Column::add()
-                ->title('Estimated Avg Price Paid')
-                ->field('estimated_average_price')
-                ->sortable()
-                ->headerAttribute('[&>div]:justify-end')->bodyAttribute('text-right'),
+            Column::make('', 'history'),
         ];
     }
 
@@ -102,37 +100,62 @@ class MutualFundHoldingsTable extends BaseTable
     {
         return PowerGrid::eloquent()
             ->addColumn('name')
-            ->addColumn('balance')
-            ->addColumn('shares_held', function (MutualFundsPage $fund) {
-                return custom_number_format($fund->balance);
-            })
-            ->addColumn('val_usd')
-            ->addColumn('market_value', function (MutualFundsPage $fund) {
-                return number_format($fund->val_usd, 4);
-            })
-            ->addColumn('weight')
-            ->addColumn('portfolio_percent', function (MutualFundsPage $fund) {
-                return number_format($fund->weight, 4) . '%';
-            })
-            ->addColumn('last_weight')
-            ->addColumn('last_portfolio_percent', function (MutualFundsPage $fund) {
-                return number_format($fund->last_weight, 4) . '%';
-            })
-            ->addColumn('change_in_balance')
-            ->addColumn('change_in_shares', function (MutualFundsPage $fund) {
-                if ($fund->change_in_balance >= 0) {
-                    return number_format($fund->change_in_balance);
-                }
 
-                return '<span class="text-red">(' . number_format(-1 * $fund->change_in_balance) . ')</span>';
-            })
-            ->addColumn('ownership', function (MutualFundsPage $fund) {
-                return '-';
-            })
-            ->addColumn('period_of_report')
-            ->addColumn('estimated_average_price')
-            ->addColumn('estimated_average_price', function (MutualFundsPage $fund) {
-                return number_format($fund->estimated_average_price, 4);
+            ->addColumn('balance')
+            ->addColumn(
+                'balance_formatted',
+                fn ($fund) => redIfNegative($fund->balance, number_format(...))
+            )
+
+            ->addColumn('val_usd')
+            ->addColumn(
+                'market_value',
+                fn ($fund) => redIfNegative($fund->val_usd, number_format(...))
+            )
+
+            ->addColumn('weight')
+            ->addColumn(
+                'portfolio_percent',
+                fn ($fund) => redIfNegative($fund->weight, fn ($val) => round($val, 4) . '%')
+            )
+
+            ->addColumn('previous_weight')
+            ->addColumn(
+                'last_portfolio_percent',
+                fn ($fund) => redIfNegative($fund->previous_weight, fn ($val) => round($val, 4) . '%')
+            )
+
+            ->addColumn('change_in_balance')
+            ->addColumn(
+                'change_in_balance_formatted',
+                fn ($fund) => redIfNegative($fund->change_in_balance, number_format(...))
+            )
+
+            ->addColumn(
+                'ownership',
+                fn ($fund) => '-'
+            )
+
+            ->addColumn('history', function (MutualFundsPage $fund) {
+                $company = Js::from([
+                    'name' => $fund->name,
+                    'symbol' => $fund->symbol,
+                ])->toHtml();
+
+                $fund = Js::from([
+                    'fund_symbol' => $this->fund['fund_symbol'],
+                    'cik' => $this->fund['cik'],
+                    'series_id' => $this->fund['series_id'],
+                    'class_id' => $this->fund['class_id'],
+                ])->toHtml();
+
+                return <<<HTML
+                <button class="px-2 py-1 bg-green-light rounded" @click.prevent="Livewire.emit('modal.open', 'ownership.mutual-fund-history', { fund: $fund, company: $company })">
+                    <svg width="16" height="16" viewBox="0 0 16 16" fill="none" xmlns="http://www.w3.org/2000/svg">
+                        <path d="M2 7.99992H4.66667V13.9999H2V7.99992ZM11.3333 5.33325H14V13.9999H11.3333V5.33325ZM6.66667 1.33325H9.33333V13.9999H6.66667V1.33325Z" fill="#121A0F"/>
+                    </svg>
+                </button>
+                HTML;
             });
     }
 }

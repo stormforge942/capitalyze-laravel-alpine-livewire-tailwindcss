@@ -44,51 +44,49 @@ class MutualFundsTable extends BaseTable
             ->when($this->search, function ($query) {
                 $term = '%' . $this->search . '%';
 
-                return $query->where('registrant_name', 'ilike', $term)
-                    ->orWhere('fund_symbol', $this->search);
+                return $query->where(
+                    fn ($q) => $q->where('registrant_name', 'ilike', $term)
+                        ->orWhere('fund_symbol', $this->search)
+                );
             });
     }
 
     public function columns(): array
     {
         return [
-            Column::add()
-                ->title('Fund')
-                ->field('registrant_name_formated', 'registrant_name')
+            Column::make('Fund', 'registrant_name_formated', 'registrant_name')
                 ->sortable()
                 ->searchable(),
 
-            Column::make('Shares Held', 'shares_held')
+            Column::make('Balance', 'balance_formatted', 'balance')
                 ->sortable()
                 ->headerAttribute('[&>div]:justify-end')->bodyAttribute('text-right'),
 
-            Column::make('Market Value', 'market_value')
+            Column::make('Market Value', 'market_value', 'val_usd')
                 ->sortable()
                 ->headerAttribute('[&>div]:justify-end')->bodyAttribute('text-right'),
 
-            Column::make('% of Portfolio', 'portfolio_percent')
+            Column::make('% of Portfolio', 'portfolio_percent', 'weight')
                 ->sortable()
                 ->headerAttribute('[&>div]:justify-end')->bodyAttribute('text-right'),
 
-            Column::make('Prior % of Portfolio', 'last_portfolio_percent')
+            Column::make('Prior % of Portfolio', 'last_portfolio_percent', 'previous_weight')
                 ->sortable()
                 ->headerAttribute('[&>div]:justify-end')->bodyAttribute('text-right'),
 
-            Column::make('Change in Shares', 'change_in_shares')
+            Column::make('Change in Balance', 'change_in_balance_formatted', 'change_in_balance')
                 ->sortable()
                 ->headerAttribute('[&>div]:justify-end')->bodyAttribute('text-right'),
 
             Column::make('% Ownership', 'ownership')
+                // ->sortable()
+                ->headerAttribute('[&>div]:justify-end')->bodyAttribute('text-right'),
+
+            Column::make('Date reported', 'period_of_report', 'period_of_report')
                 ->sortable()
                 ->headerAttribute('[&>div]:justify-end')->bodyAttribute('text-right'),
 
-            Column::make('Date reported', 'period_of_report')
-                ->sortable()
-                ->headerAttribute('[&>div]:justify-end')->bodyAttribute('text-right'),
-
-            Column::add()
-                ->title('Estimated Avg Price Paid')
-                ->field('estimated_average_price')
+            Column::make('Estimated Avg Price Paid', 'estimated_average_price_formatted', 'estimated_average_price')
                 ->sortable()
                 ->headerAttribute('[&>div]:justify-end')->bodyAttribute('text-right'),
         ];
@@ -106,37 +104,48 @@ class MutualFundsTable extends BaseTable
                 $url = route('company.mutual-fund', [$fund->cik, $fund->fund_symbol, $fund->series_id, $fund->class_id]);
                 return ("<a class=\"text-blue\" href=\"{$url}\">{$fund->registrant_name}</a>");
             })
-            ->addColumn('balance')
-            ->addColumn('shares_held', function (MutualFundsPage $fund) {
-                return custom_number_format($fund->balance);
-            })
-            ->addColumn('val_usd')
-            ->addColumn('market_value', function (MutualFundsPage $fund) {
-                return number_format($fund->val_usd, 4);
-            })
-            ->addColumn('weight')
-            ->addColumn('portfolio_percent', function (MutualFundsPage $fund) {
-                return number_format($fund->weight, 4) . '%';
-            })
-            ->addColumn('last_weight')
-            ->addColumn('last_portfolio_percent', function (MutualFundsPage $fund) {
-                return number_format($fund->last_weight, 4) . '%';
-            })
-            ->addColumn('change_in_balance')
-            ->addColumn('change_in_shares', function (MutualFundsPage $fund) {
-                if ($fund->change_in_balance >= 0) {
-                    return number_format($fund->change_in_balance);
-                }
 
-                return '<span class="text-red">(' . number_format(-1 * $fund->change_in_balance) . ')</span>';
-            })
-            ->addColumn('ownership', function (MutualFundsPage $fund) {
-                return '-';
-            })
+            ->addColumn('balance')
+            ->addColumn(
+                'balance_formatted',
+                fn ($fund) => redIfNegative($fund->balance, number_format(...))
+            )
+
+            ->addColumn('val_usd')
+            ->addColumn(
+                'market_value',
+                fn ($fund) => redIfNegative($fund->val_usd, number_format(...))
+            )
+
+            ->addColumn('weight')
+            ->addColumn(
+                'portfolio_percent',
+                fn ($fund) => redIfNegative($fund->weight, fn ($val) => round($val, 4) . '%')
+            )
+
+            ->addColumn('previous_weight')
+            ->addColumn(
+                'last_portfolio_percent',
+                fn ($fund) => redIfNegative($fund->previous_weight, fn ($val) => round($val, 4) . '%')
+            )
+
+            ->addColumn('change_in_balance')
+            ->addColumn(
+                'change_in_balance_formatted',
+                fn ($fund) => redIfNegative($fund->change_in_balance, number_format(...))
+            )
+
+            ->addColumn(
+                'ownership',
+                fn ($fund) => '-'
+            )
+
             ->addColumn('period_of_report')
+
             ->addColumn('estimated_average_price')
-            ->addColumn('estimated_average_price', function (MutualFundsPage $fund) {
-                return number_format($fund->estimated_average_price, 4);
-            });
+            ->addColumn(
+                'estimated_average_price_formatted',
+                fn ($fund) => round($fund->estimated_average_price, 4)
+            );
     }
 }

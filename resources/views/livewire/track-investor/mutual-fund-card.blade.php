@@ -1,7 +1,7 @@
 <div
     class="{{ $hideIfNotFavorite && !$fund['isFavorite'] ? 'hidden' : '' }} bg-white rounded border-[0.5px] border-[#D4DDD7] px-4 py-6 overflow-hidden">
     <div class="flex items-center justify-between gap-2">
-        <a href="{{ route('company.fund', ['fund' => $fund['cik'], 'tab' => 'holdings']) }}">
+        <a href="{{ $url }}">
             <h4 class="text-blue font-semibold">{{ $fund['registrant_name'] }}</h4>
         </a>
 

@@ -41,9 +41,19 @@ class MutualFundCard extends Component
         $this->emitTo(Favorites::class, 'update');
     }
 
-
     public function render()
     {
-        return view('livewire.track-investor.mutual-fund-card');
+        return view('livewire.track-investor.mutual-fund-card', [
+            'url' => route(
+                'company.mutual-fund',
+                [
+                    'cik' => $this->fund['cik'],
+                    'fund_symbol' => $this->fund['fund_symbol'],
+                    'series_id' => $this->fund['series_id'],
+                    'class_id' => $this->fund['class_id'],
+                    'tab' => 'holdings'
+                ]
+            )
+        ]);
     }
 }

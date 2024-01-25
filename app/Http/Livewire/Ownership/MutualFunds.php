@@ -25,7 +25,7 @@ class MutualFunds extends Component
         return view('livewire.ownership.mutual-funds');
     }
 
-    public function updatedFilters($value)
+    public function updatedFilters()
     {
         $this->emitTo(MutualFundsTable::class, 'filtersChanged', $this->filters);
     }
