@@ -39,10 +39,10 @@ class FundHoldings extends Component
     public function updated($prop)
     {
         if (in_array($prop, ['quarter', 'search'])) {
-            $this->emit('filtersChanged', [
+            $this->emitTo(FundHoldingsTable::class, 'filtersChanged', [
                 'quarter' => $this->quarter,
                 'search' => $this->search,
-            ])->to(FundHoldingsTable::class);
+            ]);
         }
     }
 

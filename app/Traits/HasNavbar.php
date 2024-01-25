@@ -12,7 +12,7 @@ trait HasNavbar
     {
         $navbar = Navbar::where('route_name', $routeName)->first();
 
-        if (!$navbar->is_moddable) {
+        if (!$navbar?->is_moddable) {
             return true;
         }
 

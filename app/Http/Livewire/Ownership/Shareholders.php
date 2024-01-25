@@ -36,10 +36,10 @@ class Shareholders extends Component
     public function updated($prop)
     {
         if (in_array($prop, ['quarter', 'search'])) {
-            $this->emit('filtersChanged', [
+            $this->emitTo(ShareholdersTable::class, 'filtersChanged', [
                 'quarter' => $this->quarter,
                 'search' => $this->search,
-            ])->to(ShareholdersTable::class);
+            ]);
         }
     }
 

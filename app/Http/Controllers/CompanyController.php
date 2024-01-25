@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Models\Fund;
 use App\Models\Company;
+use App\Models\MutualFunds;
 use Illuminate\Http\Request;
 use App\Services\OwnershipHistoryService;
 use Illuminate\Routing\Controller as BaseController;
@@ -244,6 +245,33 @@ class CompanyController extends BaseController
             'company' => $intialCompany,
             'currentCompany' => $currentCompany,
             'tab' => 'fund',
+            'fund' => $fund,
+        ]);
+    }
+
+    public function mutualFund(Request $request, ?string $company = null)
+    {
+        $fund = MutualFunds::query()
+            ->where('cik', $request->route('cik'))
+            ->where('fund_symbol', $request->route('fund_symbol'))
+            ->where('series_id', $request->route('series_id'))
+            ->where('class_id', $request->route('class_id'))
+            ->firstOrFail();
+
+        $currentCompany = $company
+            ? Company::query()
+            ->where('ticker', $company)
+            ->first()
+            : null;
+
+        $intialCompany = Company::query()
+            ->where('ticker', OwnershipHistoryService::getCompany())
+            ->firstOrFail();
+
+        return view('layouts.company', [
+            'company' => $intialCompany,
+            'currentCompany' => $currentCompany,
+            'tab' => 'mutual-fund',
             'fund' => $fund,
         ]);
     }

@@ -1,4 +1,9 @@
-<div x-data="{ tab: null }" @tab-changed="tab = $event.detail;">
+<div x-data="{
+    tab: null,
+    get formType() {
+        return $wire.formTypes[this.tab?.key || '{{ request('tab') }}']
+    }
+}" @tab-changed="tab = $event.detail;">
     <div class="mb-4 flex lg:hidden items-center justify-between">
         <h2 class="text-xl font-semibold text-blue">Ownership</h2>
 
@@ -19,7 +24,7 @@
                 @if (count($formTypes))
                     <div class="border rounded border-blue border-opacity-50 px-1.5 py-0.5">
                         FORM TYPE:
-                        <span class="font-semibold text-blue">{{ implode(',', $formTypes) }}</span>
+                        <span class="font-semibold text-blue" x-text="formType"></span>
                     </div>
                 @endif
             </div>

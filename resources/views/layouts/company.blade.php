@@ -86,6 +86,8 @@
             <livewire:ownership.page :company="$currentCompany" />
         @elseif($tab == 'fund')
             <livewire:ownership.fund :company="$currentCompany" :fund="$fund" />
+        @elseif($tab == 'mutual-fund')
+            <livewire:ownership.mutual-fund :company="$currentCompany" :fund="$fund" />
         @elseif($tab == 'etf-filings')
             <livewire:etf.filings />
         @elseif($tab === 'filings-summary')

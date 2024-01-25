@@ -25,7 +25,14 @@ class MutualFundsPage extends Model
      *
      * @var array
      */
-    protected $primaryKey = ['cik', 'acceptance_time'];
+    protected $primaryKey = [
+        'cik',
+        'registrant_name',
+        'fund_symbol',
+        'series_id',
+        'class_id',
+        'class_name',
+    ];
 
     /**
      * Indicates if the IDs are auto-incrementing.

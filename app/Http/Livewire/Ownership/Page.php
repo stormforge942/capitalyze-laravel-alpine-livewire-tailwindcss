@@ -15,6 +15,7 @@ class Page extends Component
 
     public array $tabs = [
         Shareholders::class,
+        MutualFunds::class,
         CompanyInsiders::class,
     ];
 
@@ -27,10 +28,14 @@ class Page extends Component
             'url' => request()->url(),
         ]);
 
-        $this->formTypes = $this->getFormTypes();
+        $this->formTypes = [
+            'shareholders' => '13F',
+            'mutual-funds' => 'NPORT-P',
+            'company-insiders' => implode(',', $this->insiderFormTypes()),
+        ];
     }
 
-    public function getFormTypes()
+    public function insiderFormTypes()
     {
         return CompanyInsider::query()
             ->where('symbol', $this->company->ticker)

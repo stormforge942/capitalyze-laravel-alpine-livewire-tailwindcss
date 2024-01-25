@@ -37,7 +37,6 @@ class ShareholdersTable extends BaseTable
 
     public function datasource(): ?Builder
     {
-
         return CompanyFilings::query()
             ->where('symbol', '=', $this->ticker)
             ->when($this->quarter, function ($query) {
