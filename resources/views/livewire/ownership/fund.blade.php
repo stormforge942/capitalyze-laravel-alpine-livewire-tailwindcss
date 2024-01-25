@@ -15,13 +15,6 @@
                     CIK:
                     <span class="font-semibold text-blue">{{ $fund->cik }}</span>
                 </div>
-
-                @if (count($formTypes))
-                    <div class="border rounded border-blue border-opacity-50 px-1.5 py-0.5">
-                        FORM TYPE:
-                        <span class="font-semibold text-blue">{{ implode(',', $formTypes) }}</span>
-                    </div>
-                @endif
             </div>
         </div>
 
