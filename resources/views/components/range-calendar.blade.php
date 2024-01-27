@@ -70,7 +70,7 @@
         </x-slot>
 
         <x-slot name="body">
-            <div class="bg-white rounded-lg border border-blue">
+            <div class="bg-white rounded-lg border border-blue sm:min-w-[550px]">
                 <div class="range-calendar-box"></div>
             </div>
         </x-slot>

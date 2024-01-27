@@ -3,17 +3,16 @@
 namespace App\Http\Livewire\Ownership;
 
 use Livewire\Component;
-use App\Models\CompanyInsider;
 use App\Services\OwnershipHistoryService;
 
-class Fund extends Component
+class MutualFund extends Component
 {
     public $company;
     public $fund;
 
     public $tabs = [
-        FundSummary::class,
-        FundHoldings::class,
+        MutualFundSummary::class,
+        MutualFundHoldings::class,
     ];
 
     public function mount($fund, $company = null)
@@ -22,13 +21,13 @@ class Fund extends Component
         $this->company = $company;
 
         OwnershipHistoryService::push([
-            'name' => $this->fund->name,
+            'name' => $this->fund->registrant_name,
             'url' => request()->url(),
         ]);
     }
 
     public function render()
     {
-        return view('livewire.ownership.fund');
+        return view('livewire.ownership.mutual-fund');
     }
 }

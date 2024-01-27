@@ -8,6 +8,10 @@ use Illuminate\Database\Eloquent\Model;
 class TrackInvestorFavorite extends Model
 {
     use HasFactory;
+
+    public const TYPE_FUND = 'fund';
+    public const TYPE_MUTUAL_FUND = 'mutual_fund';
+
      /**
      * The primary key associated with the table.
      *
@@ -28,8 +32,10 @@ class TrackInvestorFavorite extends Model
      * @var string[]
      */
     protected $fillable = [
-        'investor_name',
+        'name',
         'user_id',
+        'type',
+        'identifier',
     ];
 
     /**

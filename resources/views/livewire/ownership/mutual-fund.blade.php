@@ -9,11 +9,19 @@
 
     <div class="mt-6 flex items-center justify-between">
         <div>
-            <h1 class="text-xl font-bold">{{ $fund->name }}</h1>
+            <h1 class="text-xl font-bold">{{ $fund->registrant_name }}</h1>
             <div class="flex items-center gap-2 mt-2 text-xs">
                 <div class="border rounded border-blue border-opacity-50 px-1.5 py-0.5">
                     CIK:
                     <span class="font-semibold text-blue">{{ $fund->cik }}</span>
+                </div>
+                <div class="border rounded border-blue border-opacity-50 px-1.5 py-0.5">
+                    Series ID:
+                    <span class="font-semibold text-blue">{{ $fund->series_id }}</span>
+                </div>
+                <div class="border rounded border-blue border-opacity-50 px-1.5 py-0.5">
+                    Class ID:
+                    <span class="font-semibold text-blue">{{ $fund->class_id }}</span>
                 </div>
             </div>
         </div>
@@ -213,13 +221,11 @@
                     }]
                 },
                 options: {
-                    maintainAspectRatio: false,
                     responsive: true,
-                    aspectRatio: 1,
+                    aspectRatio: 2,
                     plugins: {
                         legend: {
-                            display: true,
-                            position: 'bottom',
+                            display: false,
                         },
                     },
                 }

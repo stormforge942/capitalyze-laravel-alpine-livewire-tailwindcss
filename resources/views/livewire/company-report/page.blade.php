@@ -116,7 +116,7 @@
                     isYearInRange(year) {
                         return year >= this.selectedDateRange[0] && year <= this.selectedDateRange[1];
                     },
-                    formatTableValue(value) {
+                    formatTableValue(value, isPercent) {
                         if (value === '' || value === '-' || isNaN(Number(value))) {
                             const isLink = value.startsWith('@@@');
                 
@@ -130,14 +130,16 @@
                 
                         value = Number(value);
                 
-                        let divideBy = {
-                            Thousands: 1000,
-                            Millions: 1000000,
-                            Billions: 1000000000,
-                        } [this.filters.unitType] || 1
-                
-                        value = value / divideBy;
-                
+                        if(!isPercent){
+                            let divideBy = {
+                                Thousands: 1000,
+                                Millions: 1000000,
+                                Billions: 1000000000,
+                            } [this.filters.unitType] || 1
+                    
+                            value = value / divideBy;
+                        }
+                        
                         const result = Number(Math.abs(value)).toLocaleString('en-US', {
                             style: 'decimal',
                             maximumFractionDigits: this.filters.decimalPlaces,

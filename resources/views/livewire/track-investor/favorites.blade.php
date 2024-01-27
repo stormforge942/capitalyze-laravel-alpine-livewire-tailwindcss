@@ -17,9 +17,9 @@
         </div>
 
         <div wire:loading.remove wire:target="search">
-            @if (!count($funds ?? []))
+            @if (!count($funds ?? []) && !count($mutualFunds ?? []))
                 <div class="text-dark-light2">
-                    No funds found @if ($search)
+                    No result found @if ($search)
                         for search "{{ $search }}"
                     @endif
                 </div>
@@ -27,36 +27,22 @@
                 <div
                     class="grid gap-4 grid-cols-1 md:grid-cols-2 lg:grid-cols-[repeat(auto-fill,minmax(17.19rem,1fr))]">
                     @foreach ($funds as $fund)
-                        <livewire:track-investor.fund-card :fund="$fund"
-                            :wire:key="$fund['cik'] . $fund['investor_name']" :hide-if-not-favorite="true" />
+                        <livewire:track-investor.fund-card :fund="$fund" :wire:key="$fund['id']"
+                            :hide-if-not-favorite="true" />
                     @endforeach
                 </div>
 
-                @if ($funds->hasMorePages())
-                    <div x-data="{
-                        loading: false,
-                        observe() {
-                            if (this.loading) return;
-                    
-                            let observer = new IntersectionObserver((entries) => {
-                                entries.forEach(entry => {
-                                    if (entry.isIntersecting) {
-                                        $wire.call('loadMore').finally(() => {
-                                            this.loading = false;
-                                        });
-                                    }
-                                })
-                            }, {
-                                root: null
-                            })
-                            observer.observe(this.$el)
-                        },
-                    }" x-init="observe" wire:key="{{ $perPage }}"></div>
-
-                    <div class="place-items-center" wire:loading.grid wire:target="loadMore">
-                        <span class="mx-auto simple-loader !text-green-dark"></span>
-                    </div>
+                @if (count($funds) && count($mutualFunds))
+                    <hr class="my-4 md:my-6">
                 @endif
+
+                <div
+                    class="grid gap-4 grid-cols-1 md:grid-cols-2 lg:grid-cols-[repeat(auto-fill,minmax(17.19rem,1fr))]">
+                    @foreach ($mutualFunds as $fund)
+                        <livewire:track-investor.mutual-fund-card :fund="$fund" :wire:key="$fund['id']"
+                            :hide-if-not-favorite="true" />
+                    @endforeach
+                </div>
             @endif
         </div>
     </div>

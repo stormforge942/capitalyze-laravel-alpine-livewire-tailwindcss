@@ -1,28 +1,33 @@
 .vanilla-calendar-grid {
-    @apply sm:flex sm:gap-[1.75rem];
+    @apply sm:grid sm:grid-cols-2 gap-x-4;
 }
 
-[data-calendar-theme=light] .vanilla-calendar-arrow:before {
+[data-calendar-theme="light"] .vanilla-calendar-arrow:before {
     @apply bg-blue;
 }
 
-[data-calendar-theme=light] .vanilla-calendar-month, .vanilla-calendar-year {
+[data-calendar-theme="light"] .vanilla-calendar-month,
+.vanilla-calendar-year {
     @apply font-normal text-dark text-base;
 }
 
-[data-calendar-theme=light] .vanilla-calendar-day__btn_today {
+[data-calendar-theme="light"] .vanilla-calendar-day__btn_today {
     @apply bg-white border border-blue rounded-full text-dark font-normal;
 }
 
-[data-calendar-theme=light] .vanilla-calendar-day__btn_today:hover {
+[data-calendar-theme="light"] .vanilla-calendar-day__btn_today:hover {
     @apply text-blue;
 }
 
-[data-calendar-theme=light] .vanilla-calendar-day__btn_selected, [data-calendar-theme=light] .vanilla-calendar-day__btn_selected:hover {
+[data-calendar-theme="light"] .vanilla-calendar-day__btn_selected,
+[data-calendar-theme="light"] .vanilla-calendar-day__btn_selected:hover {
     @apply bg-blue rounded-full text-white font-normal;
 }
 
-[data-calendar-theme=light] .vanilla-calendar-day__btn_selected.vanilla-calendar-day__btn_intermediate, [data-calendar-theme=light] .vanilla-calendar-day__btn_selected.vanilla-calendar-day__btn_intermediate:hover {
+[data-calendar-theme="light"]
+    .vanilla-calendar-day__btn_selected.vanilla-calendar-day__btn_intermediate,
+[data-calendar-theme="light"]
+    .vanilla-calendar-day__btn_selected.vanilla-calendar-day__btn_intermediate:hover {
     @apply bg-blue text-white;
 }
 
@@ -38,11 +43,16 @@
     @apply rounded-full;
 }
 
-[data-calendar-theme=light] .vanilla-calendar-week__day {
+[data-calendar-theme="light"] .vanilla-calendar-week__day {
     font-size: 0;
     @apply block font-normal text-center text-dark first-letter:text-sm;
 }
 
-[data-calendar-theme=light] .vanilla-calendar-years__year.vanilla-calendar-years__year_selected {
+[data-calendar-theme="light"]
+    .vanilla-calendar-years__year.vanilla-calendar-years__year_selected {
     @apply bg-blue rounded-full text-white font-normal;
+}
+
+.vanilla-calendar-years__year {
+    @apply whitespace-nowrap;
 }

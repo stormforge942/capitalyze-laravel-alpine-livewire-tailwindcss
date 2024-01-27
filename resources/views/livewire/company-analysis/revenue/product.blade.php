@@ -43,9 +43,10 @@
 
                                     <td
                                         class="pl-6 pt-4 pb-4 last:pr-8 @if (!$loop->first) last:rounded-tr-lg @endif">
-                                        {!! redIfNegative($value, fn($val) => number_format($val)) !!}
 
-                                        <x-review-number-button x-data="{ amount: '{{ $value['value'] }}', date: '{{ $date }}' }"></x-review-number-button>
+                                        <x-review-number-button x-data="{ amount: '{{ $value['value'] }}', date: '{{ $date }}' }">
+                                            {!! redIfNegative($value, fn($val) => number_format($val)) !!}
+                                        </x-review-number-button>
                                     </td>
                                 @endforeach
                             </tr>
@@ -57,9 +58,9 @@
                                     <td class="pl-6 pt-4 pb-2 last:pr-8">
                                         <?php $value = $result['yoy_change'][$date]; ?>
 
-                                        {!! redIfNegative($value, fn($val) => $val . '%') !!}
-
-                                        <x-review-number-button x-data="{ amount: '{{ $value['value'] }}', date: '{{ $date }}' }"></x-review-number-button>
+                                        <x-review-number-button x-data="{ amount: '{{ $value['value'] }}', date: '{{ $date }}' }">
+                                            {!! redIfNegative($value, fn($val) => $val . '%') !!}
+                                        </x-review-number-button>
                                     </td>
                                 @endforeach
                             </tr>
@@ -71,9 +72,9 @@
                                     <td class="pl-6 pt-2 pb-4 last:pr-8 last:rounded-br-lg">
                                         <?php $value = $result['total_percent'][$date]; ?>
 
-                                        {!! redIfNegative($value, fn($val) => $val . '%') !!}
-
-                                        <x-review-number-button x-data="{ amount: '{{ $value['value'] }}', date: '{{ $date }}' }"></x-review-number-button>
+                                        <x-review-number-button x-data="{ amount: '{{ $value['value'] }}', date: '{{ $date }}' }">
+                                            {!! redIfNegative($value, fn($val) => $val . '%') !!}
+                                        </x-review-number-button>
                                     </td>
                                 @endforeach
                             </tr>
@@ -97,9 +98,9 @@
                                 <?php $value = $data['total']['timeline'][$date]; ?>
 
                                 <td class="pl-6 pt-2 pb-4 last:pr-8 last:rounded-tr-lg">
-                                    {!! redIfNegative($value, fn($val) => number_format($val)) !!}
-
-                                    <x-review-number-button x-data="{ amount: '{{ $value['value'] }}', date: '{{ $date }}' }"></x-review-number-button>
+                                    <x-review-number-button x-data="{ amount: '{{ $value['value'] }}', date: '{{ $date }}' }">
+                                        {!! redIfNegative($value, fn($val) => number_format($val)) !!}
+                                    </x-review-number-button>
                                 </td>
                             @endforeach
                         </tr>
@@ -111,9 +112,9 @@
                                 <td class="pl-6 pt-2 pb-2 last:pr-8">
                                     <?php $value = $data['total']['yoy_change'][$date]; ?>
 
-                                    {!! redIfNegative($value, fn($val) => $val . '%') !!}
-
-                                    <x-review-number-button x-data="{ amount: '{{ $value['value'] }}', date: '{{ $date }}' }"></x-review-number-button>
+                                    <x-review-number-button x-data="{ amount: '{{ $value['value'] }}', date: '{{ $date }}' }">
+                                        {!! redIfNegative($value, fn($val) => $val . '%') !!}
+                                    </x-review-number-button>
                                 </td>
                             @endforeach
                         </tr>

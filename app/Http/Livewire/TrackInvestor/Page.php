@@ -11,6 +11,7 @@ class Page extends Component
         return view('livewire.track-investor.page', [
             'tabs' => [
                 Discover::class,
+                MutualFunds::class,
                 Favorites::class,
             ]
         ]);
