@@ -220,7 +220,9 @@
                                 <template x-if="rows.length">
                                     <template x-for="(row, idx) in rows" :key="idx">
                                         <tr>
-                                            <td class="pl-6 py-4 whitespace-nowrap" x-text="row.symbol"></td>
+                                            <td class="pl-6 py-4 whitespace-nowrap">
+                                                <a :href="`/company/${row.symbol}`" class="text-blue hover:underline" x-text="row.symbol"></a>
+                                            </td>
                                             <td class="pl-6 py-4 whitespace-nowrap" x-text="row.company_name"></td>
                                             <td class="pl-6 py-4 whitespace-nowrap" x-text="row.origin"></td>
                                             <td class="pl-6 py-4 whitespace-nowrap" x-text="row.exchange"></td>

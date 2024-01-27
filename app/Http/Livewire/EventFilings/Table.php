@@ -48,7 +48,7 @@ class Table extends BaseTable
     public function columns(): array
     {
         return [
-            Column::make('Company Name', 'registrant_name')->sortable(),
+            Column::make('Company Name', 'company', 'registrant_name')->sortable(),
             Column::make('Filing Type', 'form_type')->sortable(),
             Column::make('Description', 'description'),
             Column::make('Filing Date', 'filing_date')->sortable(),
@@ -59,6 +59,10 @@ class Table extends BaseTable
     {
         return PowerGrid::columns()
             ->addColumn('registrant_name')
+            ->addColumn('company', function ($row) {
+                $url = route('company.profile', $row->symbol);
+                return "<a class=\"text-blue hover:underline\" href=\"{$url}\">{$row->registrant_name}</a>";
+            })
             ->addColumn('form_type')
             ->addColumn('description')
             ->addColumn('filing_date');
