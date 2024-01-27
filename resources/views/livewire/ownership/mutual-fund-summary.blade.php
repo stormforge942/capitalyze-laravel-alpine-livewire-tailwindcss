@@ -1,4 +1,4 @@
-{{-- Check resources/views/livewire/ownership/fund.blade.php for js code --}}
+{{-- Check resources/views/livewire/ownership/mutual-fund.blade.php for js code --}}
 <div>
     <div class="grid grid-cols-12 gap-6">
         <div class="order-1 col-span-12 xl:col-span-8 2xl:col-span-9 bg-white rounded">
@@ -14,7 +14,7 @@
 
         <div
             class="order-2 col-span-12 md:col-span-6 md:order-3 xl:col-span-4 2xl:col-span-3 xl:order-2 p-6 bg-white rounded">
-            <h3 class="mb-4 text-sm font-semibold text-blue">13F Holding Summary</h3>
+            <h3 class="mb-4 text-sm font-semibold text-blue">NPORT-P Holding Summary</h3>
 
             <x-defer-data-loading use-alpine="true" on-init="getHoldingSummary" class="h-32">
                 <div class="space-y-4" :data-result="JSON.stringify(result)">
@@ -41,7 +41,7 @@
             <x-tabs :tabs="['Top Buys', 'Top Sells']">
                 <x-defer-data-loading use-alpine="true" on-init="getTopBuySells" class="h-80">
                     <div class="space-y-4" :class="active == 0 ? 'block' : 'hidden'" :data-active="active">
-                        <template x-for="item in result.topBuys" :key="`${item.name}-${item.width}`">
+                        <template x-for="item in result.topBuys" :key="item.key">
                             <div class="grid items-center grid-cols-12 gap-4">
                                 <div class="cursor-pointer col-span-8 xl:col-span-9 px-2 py-1.5 bg-[#F0F6FF] rounded-[40px]"
                                     :title="item.change_in_balance">
@@ -57,7 +57,7 @@
                     </div>
 
                     <div class="space-y-4" :class="active == 1 ? 'block' : 'hidden'">
-                        <template x-for="item in result.topSells" :key="`${item.name}-${item.width}`">
+                        <template x-for="item in result.topSells" :key="item.key">
                             <div class="grid items-center grid-cols-12 gap-4 ">
                                 <div class="cursor-pointer col-span-8 xl:col-span-9 px-2 py-1.5 bg-[#F0F6FF] rounded-[40px]"
                                     :title="item.change_in_balance">
@@ -76,7 +76,7 @@
         </div>
 
         <div class="order-4 col-span-12 xl:col-span-6 p-6 bg-white rounded">
-            <x-tabs :tabs="['13F Sector Allocation Overtime', '13F Sector Allocation last Quarter']">
+            <x-tabs :tabs="['NPORT-P Sector Allocation Overtime', 'NPORT-P Sector Allocation last Quarter']">
                 <x-defer-data-loading use-alpine="true" on-init="getSectiorAllocationData" class="h-80"
                     @ready="$nextTick(() => {
                             renderOverTimeSectorAllocation(result.overTimeSectorAllocation);
@@ -119,7 +119,7 @@
         </div>
 
         <div class="order-5 col-span-12 xl:col-span-6 p-6 bg-white rounded">
-            <h3 class="mb-4 text-sm font-semibold text-blue">13F Activity</h3>
+            <h3 class="mb-4 text-sm font-semibold text-blue">NPORT-P Activity</h3>
 
             <x-defer-data-loading use-alpine="true" on-init="getSummary" class="h-60">
                 <div class="grid grid-cols-2 gap-4 md:grid-cols-5 xl:grid-cols-2 2xl:grid-cols-4">

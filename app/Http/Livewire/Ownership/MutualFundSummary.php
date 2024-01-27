@@ -175,7 +175,7 @@ class MutualFundSummary extends Component
     {
         $topBuys = DB::connection('pgsql-xbrl')
             ->table('mutual_fund_holdings')
-            ->select('change_in_balance', 'symbol', 'name')
+            ->select('change_in_balance', 'name')
             ->where($this->fundPrimaryKey())
             ->where('period_of_report', $this->quarter)
             ->orderByDesc('change_in_balance')
@@ -183,7 +183,8 @@ class MutualFundSummary extends Component
             ->limit(10)
             ->get()
             ->map(function ($item) {
-                $item->name = Str::title($item->name);
+                $item->key = Str::random(10);
+                $item->name = $item->name;
                 return $item;
             });
 
@@ -197,14 +198,15 @@ class MutualFundSummary extends Component
 
         $topSells = DB::connection('pgsql-xbrl')
             ->table('mutual_fund_holdings')
-            ->select('change_in_balance', 'symbol', 'name')
+            ->select('change_in_balance', 'name')
             ->where($this->fundPrimaryKey())
             ->where('period_of_report', $this->quarter)
             ->orderBy('change_in_balance')
             ->limit(10)
             ->get()
             ->map(function ($item) {
-                $item->name = Str::title($item->name);
+                $item->key = Str::random(10);
+                $item->name = $item->name;
                 return $item;
             });
 
