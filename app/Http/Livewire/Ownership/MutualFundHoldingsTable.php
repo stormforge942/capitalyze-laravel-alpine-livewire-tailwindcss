@@ -2,11 +2,12 @@
 
 namespace App\Http\Livewire\Ownership;
 
+use Illuminate\Support\Js;
 use App\Powergrid\BaseTable;
 use App\Models\MutualFundsPage;
+use App\Services\OwnershipHistoryService;
 use PowerComponents\LivewirePowerGrid\Column;
 use Illuminate\Contracts\Database\Query\Builder;
-use Illuminate\Support\Js;
 use PowerComponents\LivewirePowerGrid\PowerGrid;
 use PowerComponents\LivewirePowerGrid\PowerGridEloquent;
 
@@ -60,7 +61,7 @@ class MutualFundHoldingsTable extends BaseTable
     public function columns(): array
     {
         return [
-            Column::make('Company', 'name', 'name')
+            Column::make('Company', 'name_formatted', 'name')
                 ->sortable()
                 ->searchable(),
 
@@ -100,7 +101,13 @@ class MutualFundHoldingsTable extends BaseTable
     {
         return PowerGrid::eloquent()
             ->addColumn('name')
+            ->addColumn('name_formatted', function ($fund) {
+                if (!$fund->symbol) {
+                    return $fund->name;
+                }
 
+                return '<a href=" ' . route('company.ownership', ['ticker' => $fund->symbol, 'start' => OwnershipHistoryService::getCompany(), 'tab' => 'mutual-funds']) . ' " class="text-blue">' . $fund->symbol . (!empty($fund->name) ? ' <span class="text-xs font-light">(' . $fund->name . ')<span>' : '') . '</button>';
+            })
             ->addColumn('balance')
             ->addColumn(
                 'balance_formatted',
