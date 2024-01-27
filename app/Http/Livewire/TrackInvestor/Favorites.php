@@ -31,7 +31,13 @@ class Favorites extends Component
 
     public function render()
     {
-        $investors = TrackInvestorFavorite::where('user_id', Auth::id())->get();
+        $investors = TrackInvestorFavorite::where('user_id', Auth::id())
+            ->when($this->search, function ($query) {
+                $term = '%' . $this->search . '%';
+
+                return $query->where('name', 'ilike', $term);
+            })
+            ->get();
 
         $funds = $investors->where('type', TrackInvestorFavorite::TYPE_FUND)
             ->pluck('identifier')
@@ -63,10 +69,6 @@ class Favorites extends Component
                 $join->on('fs.investor_name', '=', 'latest_dates.investor_name');
                 $join->on('fs.cik', '=', 'latest_dates.cik');
                 $join->on('fs.date', '=', 'latest_dates.max_date');
-            })
-            ->when($this->search, function ($q) {
-                return $q->where(DB::raw('fs.investor_name'), 'ilike', "%$this->search%")
-                    ->orWhere(DB::raw('fs.cik'), 'like', "%$this->search%");
             })
             ->where(function ($q) use ($funds) {
                 foreach ($funds as $fund) {
@@ -107,16 +109,10 @@ class Favorites extends Component
                 $join->on('hs.class_name', '=', 'latest_dates.class_name');
                 $join->on('hs.date', '=', 'latest_dates.max_date');
             })
-            ->when($this->search, function ($q) {
-                return $q->where(DB::raw('hs.registrant_name'), 'ilike', "%$this->search%")
-                    ->orWhere(DB::raw('hs.fund_symbol'), strtoupper($this->search));
-            })
             ->where(function ($q) use ($funds) {
                 foreach ($funds as $fund) {
                     $q->orWhere(
-                        fn ($q) => $q->where('hs.registrant_name', $fund['registrant_name'])
-                            ->where('hs.cik', $fund['cik'])
-                            ->where('hs.fund_symbol', $fund['fund_symbol'])
+                        fn ($q) => $q->where('hs.cik', $fund['cik'])
                             ->where('hs.series_id', $fund['series_id'])
                             ->where('hs.class_id', $fund['class_id'])
                             ->where('hs.class_name', $fund['class_name'])

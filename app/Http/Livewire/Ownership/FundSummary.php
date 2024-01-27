@@ -69,7 +69,7 @@ class FundSummary extends Component
         return $summary;
     }
 
-    public function getSectiorAllocationData()
+    public function getSectorAllocationData()
     {
         $investments = DB::connection('pgsql-xbrl')
             ->table('industry_summary')

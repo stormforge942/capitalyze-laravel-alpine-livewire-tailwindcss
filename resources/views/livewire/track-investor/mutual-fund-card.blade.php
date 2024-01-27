@@ -10,8 +10,8 @@
         ?>
 
         <button class="h-6 w-6 rounded {{ $class }} transition disabled:pointer-events-none shrink-0"
-            wire:click="toggle(@js($fund))"
-            wire:loading.class="opacity-90 animate-pulse" wire:loading.attr="disabled">
+            wire:click="toggle(@js($fund))" wire:loading.class="opacity-90 animate-pulse"
+            wire:loading.attr="disabled">
             <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"
                 fill="{{ $fund['isFavorite'] ? '#ffff' : 'none' }}">
                 <path
@@ -23,16 +23,28 @@
 
     <div class="mt-4 grid grid-cols-2 gap-x-6 md:gap-x-8 gap-y-4">
         <div>
+            <label class="font-normal text-sm text-dark-light2">CIK</label>
+            <div class="font-semibold text-base break-all">{{ $fund['cik'] }}</div>
+        </div>
+        <div>
+            <label class="font-normal text-sm text-dark-light2">Series ID</label>
+            <div class="font-semibold text-base break-all">{{ $fund['series_id'] }}</div>
+        </div>
+        <div>
+            <label class="font-normal text-sm text-dark-light2">Class ID</label>
+            <div class="font-semibold text-base break-all">{{ $fund['class_id'] }}</div>
+        </div>
+        <div>
+            <label class="font-normal text-sm text-dark-light2">Class Name</label>
+            <div class="font-semibold text-base break-all">{{ $fund['class_name'] }}</div>
+        </div>
+        <div>
             <label class="font-normal text-sm text-dark-light2">Market Value</label>
             <div class="font-semibold text-base break-all">{{ niceNumber($fund['total_value']) }}</div>
         </div>
         <div>
             <label class="font-normal text-sm text-dark-light2">Holdings</label>
             <div class="font-semibold text-base break-all">{{ $fund['portfolio_size'] }}</div>
-        </div>
-        <div>
-            <label class="font-normal text-sm text-dark-light2">CIK</label>
-            <div class="font-semibold text-base break-all">{{ $fund['cik'] ?? '--' }}</div>
         </div>
         <div>
             <label class="font-normal text-sm text-dark-light2">Turnover</label>

@@ -44,6 +44,7 @@ class MutualFundHoldingsTable extends BaseTable
                 'cik' => $this->fund['cik'],
                 'series_id' => $this->fund['series_id'],
                 'class_id' => $this->fund['class_id'],
+                'class_name' => $this->fund['class_name'],
             ])
             ->when($this->periodRange, function ($query) {
                 return $query->whereBetween('period_of_report', $this->periodRange);

@@ -56,3 +56,8 @@
 .vanilla-calendar-years__year {
     @apply whitespace-nowrap;
 }
+
+[data-calendar-theme=light] .vanilla-calendar-day__btn_disabled {
+    color: #cbd5e1 !important;
+    border-color: #cbd5e1 !important;
+}

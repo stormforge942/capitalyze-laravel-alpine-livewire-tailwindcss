@@ -75,7 +75,7 @@ class MutualFundSummary extends Component
         return $summary;
     }
 
-    public function getSectiorAllocationData()
+    public function getSectorAllocationData()
     {
         $investments = DB::connection('pgsql-xbrl')
             ->table('mutual_fund_industry_summary')
@@ -239,6 +239,7 @@ class MutualFundSummary extends Component
             'cik' => $this->fund['cik'],
             'series_id' => $this->fund['series_id'],
             'class_id' => $this->fund['class_id'],
+            'class_name' => $this->fund['class_name'],
         ];
     }
 }

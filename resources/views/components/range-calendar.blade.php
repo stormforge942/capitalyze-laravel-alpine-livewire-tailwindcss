@@ -29,6 +29,9 @@
                 selection: { day: 'multiple-ranged', },
                 selected: {
                     dates: (this.value[0] && this.value[1]) ? [`${this.value[0]}:${this.value[1]}`] : null
+                },
+                range: {
+                    max: new Date().toISOString().slice(0, 10),
                 }
             },
             actions: {

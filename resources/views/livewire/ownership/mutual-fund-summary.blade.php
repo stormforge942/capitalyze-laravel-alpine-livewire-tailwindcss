@@ -77,7 +77,7 @@
 
         <div class="order-4 col-span-12 xl:col-span-6 p-6 bg-white rounded">
             <x-tabs :tabs="['NPORT-P Sector Allocation Overtime', 'NPORT-P Sector Allocation last Quarter']">
-                <x-defer-data-loading use-alpine="true" on-init="getSectiorAllocationData" class="h-80"
+                <x-defer-data-loading use-alpine="true" on-init="getSectorAllocationData" class="h-80"
                     @ready="$nextTick(() => {
                             renderOverTimeSectorAllocation(result.overTimeSectorAllocation);
                                 renderLastQuarterSectorAllocation(result.lastQuarterSectorAllocation);

@@ -23,7 +23,7 @@ class MutualFundCard extends Component
 
         if (!$entry) {
             TrackInvestorFavorite::create([
-                'investor_name' => $fund['registrant_name'],
+                'name' => $fund['registrant_name'],
                 'user_id' => Auth::id(),
                 'type' => TrackInvestorFavorite::TYPE_MUTUAL_FUND,
                 'identifier' => $fund['id'],
@@ -51,6 +51,7 @@ class MutualFundCard extends Component
                     'fund_symbol' => $this->fund['fund_symbol'],
                     'series_id' => $this->fund['series_id'],
                     'class_id' => $this->fund['class_id'],
+                    'class_name' => $this->fund['class_name'],
                     'tab' => 'holdings'
                 ]
             )

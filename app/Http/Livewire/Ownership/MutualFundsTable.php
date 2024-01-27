@@ -101,7 +101,7 @@ class MutualFundsTable extends BaseTable
             ->addColumn('class_id')
             ->addColumn('registrant_name')
             ->addColumn('registrant_name_formated', function (MutualFundsPage $fund) {
-                $url = route('company.mutual-fund', [$fund->cik, $fund->fund_symbol, $fund->series_id, $fund->class_id]);
+                $url = route('company.mutual-fund', [$fund->cik, $fund->fund_symbol, $fund->series_id, $fund->class_id, $fund->class_name]);
 
                 $symbol = $fund->fund_symbol ? "<span class=\"text-sm font-semibold\">({$fund->fund_symbol})</span>" : '';
 

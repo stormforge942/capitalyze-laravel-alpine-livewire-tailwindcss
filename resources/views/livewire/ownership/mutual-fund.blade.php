@@ -23,6 +23,10 @@
                     Class ID:
                     <span class="font-semibold text-blue">{{ $fund->class_id }}</span>
                 </div>
+                <div class="border rounded border-blue border-opacity-50 px-1.5 py-0.5">
+                    Class Name:
+                    <span class="font-semibold text-blue">{{ $fund->class_name }}</span>
+                </div>
             </div>
         </div>
 
@@ -48,7 +52,7 @@
             new Chart(canvas, {
                 type: 'line',
                 data: {
-                    labels: data.map(item => item.quarter),
+                    labels: data.map(item => item.date),
                     datasets: [{
                         data: data.map(item => item.total),
                         borderColor: "#0E5FD9",
@@ -131,7 +135,13 @@
                             },
                             border: {
                                 display: false
-                            }
+                            },
+                            type: 'timeseries',
+                            time: {
+                                displayFormats: {
+                                    quarter: 'MMM YYYY'
+                                }
+                            },
                         }
                     }
                 }
