@@ -33,7 +33,7 @@
                         @foreach ($items as $item)
                             <li>
                                 <a href="{{ $item['url'] ?? '#' }}"
-                                    class="w-full flex items-center justify-between p-2 text-dark-light @if ($item['active'] ?? false) bg-green-light font-medium @else hover:bg-[#828c851a] @endif rounded group">
+                                    class="w-full flex items-center justify-between p-2 @if ($item['active'] ?? false) bg-green-light text-dark font-semibold @else text-dark-light2 hover:bg-[#828c851a] @endif rounded group">
                                     {{ $item['title'] }}
                                 </a>
                             </li>
@@ -47,7 +47,7 @@
             @foreach ($items as $item)
                 <li class="2xl:pl-4">
                     <a href="{{ $item['url'] ?? '#' }}"
-                        class="whitespace-nowrap w-full flex items-center justify-between px-4 2xl:pl-6 py-2 text-dark-light @if ($item['active'] ?? false) bg-green-light font-medium @else hover:bg-[#828c851a] @endif rounded group">
+                        class="whitespace-nowrap w-full flex items-center justify-between px-4 2xl:pl-6 py-2 @if ($item['active'] ?? false) bg-green-light text-dark font-semibold @else text-dark-light2 hover:bg-[#828c851a] @endif rounded group">
                         {{ $item['title'] }}
                     </a>
                 </li>
