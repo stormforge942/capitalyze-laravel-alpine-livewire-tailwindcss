@@ -41,32 +41,32 @@
             <x-tabs :tabs="['Top Buys', 'Top Sells']">
                 <x-defer-data-loading use-alpine="true" on-init="getTopBuySells" class="h-80">
                     <div class="space-y-4" :class="active == 0 ? 'block' : 'hidden'" :data-active="active">
-                        <template x-for="item in result.topBuys" :key="`${item.name_of_issuer}-${item.width}`">
+                        <template x-for="item in result.topBuys" :key="`${item.name}-${item.width}`">
                             <div class="grid items-center grid-cols-12 gap-4">
                                 <div class="cursor-pointer col-span-8 xl:col-span-9 px-2 py-1.5 bg-[#F0F6FF] rounded-[40px]"
-                                    :title="item.change_in_shares">
+                                    :title="item.change_in_balance">
                                     <div class="h-2 rounded-[40px] bg-blue" :style="`width: ${item.width}%`">
                                     </div>
                                 </div>
                                 <span
                                     class="col-span-4 xl:col-span-3 text-dark-light2 overflow-hidden text-ellipsis whitespace-nowrap"
-                                    x-text="item.name_of_issuer" :title="item.name_of_issuer">
+                                    x-text="item.name" :title="item.name">
                                 </span>
                             </div>
                         </template>
                     </div>
 
                     <div class="space-y-4" :class="active == 1 ? 'block' : 'hidden'">
-                        <template x-for="item in result.topSells" :key="`${item.name_of_issuer}-${item.width}`">
+                        <template x-for="item in result.topSells" :key="`${item.name}-${item.width}`">
                             <div class="grid items-center grid-cols-12 gap-4 ">
                                 <div class="cursor-pointer col-span-8 xl:col-span-9 px-2 py-1.5 bg-[#F0F6FF] rounded-[40px]"
-                                    :title="item.change_in_shares">
+                                    :title="item.change_in_balance">
                                     <div class="h-2 rounded-[40px] bg-blue" :style="`width: ${item.width}%`">
                                     </div>
                                 </div>
                                 <span
                                     class="col-span-4 xl:col-span-3 text-dark-light2 overflow-hidden text-ellipsis whitespace-nowrap"
-                                    x-text="item.name_of_issuer" :title="item.name_of_issuer">
+                                    x-text="item.name" :title="item.name">
                                 </span>
                             </div>
                         </template>

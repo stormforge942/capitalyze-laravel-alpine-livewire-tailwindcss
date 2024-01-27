@@ -213,11 +213,13 @@
                     }]
                 },
                 options: {
+                    maintainAspectRatio: false,
                     responsive: true,
-                    aspectRatio: 2,
+                    aspectRatio: 1,
                     plugins: {
                         legend: {
-                            display: false,
+                            display: true,
+                            position: 'bottom',
                         },
                     },
                 }

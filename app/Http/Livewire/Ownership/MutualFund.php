@@ -11,6 +11,7 @@ class MutualFund extends Component
     public $fund;
 
     public $tabs = [
+        MutualFundSummary::class,
         MutualFundHoldings::class,
     ];
 
