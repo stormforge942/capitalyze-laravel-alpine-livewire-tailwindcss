@@ -33,7 +33,7 @@
                             </span>
                         </div>
                         <div class="w-full flex flex-row bg-[#EDEDED] justify-between">
-                            <template x-for="(date, idx) in formattedTableDates" :key="idx">
+                            <template x-for="date in formattedTableDates" :key="date">
                                 <div class="w-[150px] flex items-center justify-end text-base font-bold last:pr-8">
                                     <span class="py-2" x-text="formattedTableDate(date)"></span>
                                 </div>
@@ -118,7 +118,7 @@
                                         </a>
                                     </div>
                                     <div class="w-full flex flex-row justify-between ">
-                                        <template x-for="(date, idx) in formattedTableDates" :key="idx">
+                                        <template x-for="date in formattedTableDates" :key="date">
                                             <div class="w-[150px] flex items-center justify-end text-base last:pr-8"
                                                 x-data="{
                                                     get formattedValue() {
@@ -171,7 +171,7 @@
         function loadChildren(componentInstance, nestingLevel) {
             const nestedTable = this.$refs.nestedTable;
             const template = `
-                <template x-for="(row, index) in row.children">
+                <template x-for="(row, index) in row.children" :key="index">
                     <div class="flex flex-col flex-col-border-less" x-data="{
                             showChildren: true,
                             get isRowSelectedForChart() {
@@ -218,7 +218,7 @@
                                 </button>
                             </div>
                             <div class="w-full flex flex-row justify-between ">
-                                <template x-for="(date, idx) in formattedTableDates" :key="idx">
+                                <template x-for="date in formattedTableDates" :key="date">
                                     <div class="w-[150px] flex items-center justify-end text-base last:pr-8"
                                         x-data="{
                                             get formattedValue() {
