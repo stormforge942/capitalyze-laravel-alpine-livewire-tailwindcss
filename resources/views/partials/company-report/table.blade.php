@@ -135,8 +135,8 @@
                                             get formattedValue() {
                                                 const title = row.title.toLowerCase();
                                                 const isPercent = title.includes('%') ||
-                                                            title.includes('yoy') ||
-                                                            title.includes('per');
+                                                            title.includes(' yoy') ||
+                                                            title.includes(' per');
 
                                                 return formatTableValue(row.values[date]?.value, isPercent)
                                             },

@@ -1,17 +1,6 @@
 <div class="flex flex-col" :class="[rowContext.isBold ? 'font-bold' : '', classes]" x-data="{
     isNewSection: false,
-    get rowContext() {
-        let splitted = row.title.split('|');
-
-        if (splitted.length === 1) return { title: splitted[0] };
-
-        return {
-            title: splitted[0],
-            isBold: splitted[1] === 'true',
-            hasBorder: splitted[2] === 'true',
-            section: parseInt(splitted[3]) || this.lastSection,
-        };
-    },
+    rowContext: null,
     get isRowSelectedForChart() {
         return this.selectedChartRows.find(item => item.id === row.id) ? true : false;
     },
@@ -29,6 +18,8 @@
         return classes;
     },
     init() {
+        this.setRowContext()
+        
         if (
             index > 0 &&
             (this.rowContext.section !== this.lastSection)
@@ -38,8 +29,30 @@
 
         this.lastSection = this.rowContext.section;
     },
+    setRowContext() {
+        let splitted = row.title.split('|');
+
+        const title = splitted[0];
+
+        const isPercent = title.includes('%') ||
+            title.toLowerCase().includes(' yoy') ||
+            title.toLowerCase().includes(' per');
+
+        if (splitted.length === 1) {
+            this.rowContext = { title, isPercent }
+            return;
+        };
+
+        this.rowContext = {
+            title,
+            isBold: splitted[1] === 'true',
+            hasBorder: splitted[2] === 'true',
+            section: parseInt(splitted[3]) || this.lastSection,
+            isPercent,
+        };
+    },
     toggleRowForChart() {
-        if(row.empty) return;
+        if (row.empty) return;
 
         if (this.isRowSelectedForChart) {
             this.selectedChartRows = this.selectedChartRows.filter(item => item.id !== row.id);
@@ -78,12 +91,7 @@
             <template x-for="date in formattedTableDates" :key="date">
                 <div class="w-[150px] flex items-center justify-end text-base last:pr-8" x-data="{
                     get formattedValue() {
-                        const title = row.title.toLowerCase();
-                        const isPercent = title.includes('%') ||
-                            rowContext.title.includes('yoy') ||
-                            rowContext.title.includes('per');
-                
-                        return formatTableValue(row.values[date]?.value, isPercent)
+                        return formatTableValue(row.values[date]?.value, rowContext.isPercent)
                     },
                 }">
 
