@@ -84,10 +84,16 @@ class CompanyNavbar extends Component
                 'name' => $this->company->ticker . ' Research',
                 'items' => $allLinks->where(fn ($link) => in_array($link['name'], $companyResearchLinks))
                     ->map(function (Navbar $nav) {
+                        $active = request()->routeIs($nav->route_name);
+
+                        if ($nav->name === 'Ownership') {
+                            $active = $active || request()->routeIs('company.fund', 'company.mutual-fund');
+                        }
+
                         return [
                             'title' => $nav->name,
                             'url' => route($nav->route_name, ['ticker' => $this->company->ticker]),
-                            'active' => request()->routeIs($nav->route_name)
+                            'active' => $active
                         ];
                     })
                     ->sort($this->sortFunction($companyResearchLinks))
