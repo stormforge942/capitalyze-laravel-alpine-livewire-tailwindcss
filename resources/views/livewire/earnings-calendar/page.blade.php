@@ -103,7 +103,7 @@
 
                     <div class="mt-4 grid grid-cols-12 gap-2 mb-2">
                         <div
-                            class="col-span-12 sm:col-span-4 bg-white flex items-center p-4 gap-x-4 border border-[#D4DDD7] rounded">
+                            class="col-span-12 sm:col-span-4 bg-white flex items-center p-4 gap-x-4 border border-[#D4DDD7] rounded-lg">
                             <svg class="h-6 w-6 shrink-0" viewBox="0 0 24 24" fill="none"
                                 xmlns="http://www.w3.org/2000/svg">
                                 <path
@@ -117,7 +117,7 @@
                         </div>
 
                         <div
-                            class="col-span-12 sm:col-span-8 px-4 py-3 bg-white flex flex-wrap items-center gap-4 border border-[#D4DDD7] rounded">
+                            class="col-span-12 sm:col-span-8 px-4 py-3 bg-white flex flex-wrap items-center gap-4 border border-[#D4DDD7] rounded-lg">
                             <div class="items-center gap-2 text-sm inline-flex" wire:ignore>
                                 <span>Exchange</span>
                                 <x-select name="exchange" :options="$exchanges" placeholder="Exchange"
