@@ -26,6 +26,7 @@
                         footnote: $wire.entangle('disclosureFootnote'),
                     },
                     selectedChartRows: [],
+                    showEmptyRows: false,
                     get formattedChartData() {
                         return {
                             labels: this.formattedTableDates,

@@ -353,6 +353,7 @@ class Page extends Component
             'segmentation' => false,
             'values' => $this->generateEmptyCellsRow(),
             'children' => [],
+            'empty' => false,
         ];
 
         foreach ($data as $key => $value) {
@@ -364,7 +365,7 @@ class Page extends Component
                     }
                 }
             } else {
-                if (in_array($key, ['#segmentation'])) {
+                if ($key === '#segmentation') {
                     foreach ($value as $sKey => $sValue) {
                         $keyn = array_keys($value[$sKey])[0];
                         $valuen = $sValue[$keyn];
@@ -379,6 +380,7 @@ class Page extends Component
         }
 
         $row['seg_start'] = count($row['children']) && collect($row['children'])->some(fn ($child) => $child['segmentation']);
+        $row['empty'] = collect($row['values'])->every(fn ($cell) => $cell['empty']);
 
         $row['segmentation'] = $isSegmentation && count($row['children']) === 0;
         $row['id'] = Str::uuid() . '-' . Str::uuid(); // just for the charts
@@ -392,19 +394,20 @@ class Page extends Component
         $response['date'] = $key;
         $response['ticker'] = $this->company['ticker'];
 
-        foreach ($data as $key => $value) {
-            if (in_array('|', str_split($value))) {
+        foreach ($data as $value) {
+            if (str_contains($value, '|')) {
                 $array = explode('|', $value);
-
-                $response['value'] = $array[0];
+                $response['value'] = $array[0] ?: null;
                 $response['hash'] = $array[1];
 
                 if (array_key_exists(2, $array)) {
                     $response['secondHash'] = $array[2];
                 }
-            } else {
-                $response[$key] = $value;
             }
+        }
+
+        if (is_null($response['value'])) {
+            $response['empty'] = true;
         }
 
         return $response;

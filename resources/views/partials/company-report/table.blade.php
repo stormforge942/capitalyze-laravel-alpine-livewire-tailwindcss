@@ -10,13 +10,34 @@
         </div>
     </div>
 
-    <div class="flex justify-end items-baseline">
-        <span class="currency-font">Currency: &nbsp;</span>
-        <select wire:model="currency" id="currency-select" class="inline-flex font-bold !pr-8 bg-transparent">
-            <option value="USD">USD</option>
-            <option value="CAD">CAD</option>
-            <option value="EUR">EUR</option>
-        </select>
+    <div class="flex justify-end items-center gap-x-5">
+        <button class="bg-gray-200 rounded-lg hover:bg-gray-300 transition p-2"
+            @click.prevent="showEmptyRows = !showEmptyRows">
+            <svg class="h-4 w-4" data-slot="icon" fill="none" stroke-width="2" stroke="currentColor"
+                viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg" aria-hidden="true" x-show="showEmptyRows"
+                x-cloak>
+                <path stroke-linecap="round" stroke-linejoin="round"
+                    d="M2.036 12.322a1.012 1.012 0 0 1 0-.639C3.423 7.51 7.36 4.5 12 4.5c4.638 0 8.573 3.007 9.963 7.178.07.207.07.431 0 .639C20.577 16.49 16.64 19.5 12 19.5c-4.638 0-8.573-3.007-9.963-7.178Z">
+                </path>
+                <path stroke-linecap="round" stroke-linejoin="round" d="M15 12a3 3 0 1 1-6 0 3 3 0 0 1 6 0Z"></path>
+            </svg>
+            <svg class="h-4 w-4" data-slot="icon" fill="none" stroke-width="2" stroke="currentColor"
+                viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg" aria-hidden="true" x-show="!showEmptyRows"
+                x-cloak>
+                <path stroke-linecap="round" stroke-linejoin="round"
+                    d="M3.98 8.223A10.477 10.477 0 0 0 1.934 12C3.226 16.338 7.244 19.5 12 19.5c.993 0 1.953-.138 2.863-.395M6.228 6.228A10.451 10.451 0 0 1 12 4.5c4.756 0 8.773 3.162 10.065 7.498a10.522 10.522 0 0 1-4.293 5.774M6.228 6.228 3 3m3.228 3.228 3.65 3.65m7.894 7.894L21 21m-3.228-3.228-3.65-3.65m0 0a3 3 0 1 0-4.243-4.243m4.242 4.242L9.88 9.88">
+                </path>
+            </svg>
+        </button>
+
+        <div class="flex items-center">
+            <span class="currency-font">Currency: &nbsp;</span>
+            <select wire:model="currency" id="currency-select" class="inline-flex font-bold !pr-8 bg-transparent">
+                <option value="USD">USD</option>
+                <option value="CAD">CAD</option>
+                <option value="EUR">EUR</option>
+            </select>
+        </div>
     </div>
 </div>
 
@@ -42,117 +63,7 @@
                     </div>
                     <div class="divide-y divide-[#D4DDD7] text-base" x-data="{ lastSection: null, nestingLevel: 0, loadChildren }">
                         <template x-for="(row, index) in rows" :key="`${index}-${row.title}`">
-                            <div class="flex flex-col" :class="[rowContext.isBold ? 'font-bold' : '', classes]"
-                                x-data="{
-                                    isNewSection: false,
-                                    get rowContext() {
-                                        let splitted = row.title.split('|');
-                                
-                                        if (splitted.length === 1) return { title: splitted[0] };
-                                
-                                        return {
-                                            title: splitted[0],
-                                            isBold: splitted[1] === 'true',
-                                            hasBorder: splitted[2] === 'true',
-                                            section: parseInt(splitted[3]) || this.lastSection,
-                                        };
-                                    },
-                                    get isRowSelectedForChart() {
-                                        return this.selectedChartRows.find(item => item.id === row.id) ? true : false;
-                                    },
-                                    get classes() {
-                                        let classes = '';
-                                
-                                        if (!this.rowContext.hasBorder) {
-                                            classes += 'flex-col-border-less ';
-                                        }
-                                
-                                        if (this.isNewSection) {
-                                            classes += 'mt-4 ';
-                                        }
-                                
-                                        return classes;
-                                    },
-                                    init() {
-                                        if (
-                                            index > 0 &&
-                                            (this.rowContext.section !== this.lastSection)
-                                        ) {
-                                            this.isNewSection = true;
-                                        }
-                                
-                                        this.lastSection = this.rowContext.section;
-                                    },
-                                    toggleRowForChart() {
-                                        if (this.isRowSelectedForChart) {
-                                            this.selectedChartRows = this.selectedChartRows.filter(item => item.id !== row.id);
-                                        } else {
-                                            let values = {};
-                                
-                                            for (const [key, value] of Object.entries(row.values)) {
-                                                values[key] = value.value;
-                                            }
-                                
-                                            this.selectedChartRows.push({
-                                                id: row.id,
-                                                title: this.rowContext.title,
-                                                values,
-                                                color: '#7C8286',
-                                                type: 'line',
-                                            });
-                                        }
-                                    },
-                                }" x-init="loadChildren(this, nestingLevel + 1)">
-                                <div class="flex w-full flex-row"
-                                    :class="[isRowSelectedForChart ? 'bg-[#52D3A2]/20' : (row.segmentation ?
-                                        'bg-[#52C6FF]/10' : 'bg-white')]">
-                                    <div class="flex justify-end items-center ml-2">
-                                        <input x-show="isRowSelectedForChart" type="checkbox" class="custom-checkbox"
-                                            :checked="isRowSelectedForChart" @change="toggleRowForChart">
-                                    </div>
-                                    <div class="cursor-default py-2  w-[250px] truncate flex flex-row items-center"
-                                        :class="isRowSelectedForChart ? 'ml-2' : 'ml-6'" style="">
-                                        <a href="#" @click.prevent="toggleRowForChart" x-text="rowContext.title"
-                                            class="whitespace-nowrap truncate text-base"
-                                            :class="rowContext.isBold ? 'font-bold' : ''">
-                                        </a>
-                                    </div>
-                                    <div class="w-full flex flex-row justify-between ">
-                                        <template x-for="date in formattedTableDates" :key="date">
-                                            <div class="w-[150px] flex items-center justify-end text-base last:pr-8"
-                                                x-data="{
-                                                    get formattedValue() {
-                                                        const isPercent = rowContext.title.includes('%') ||
-                                                            rowContext.title.includes('yoy') ||
-                                                            rowContext.title.includes('per');
-                                                
-                                                        return formatTableValue(row.values[date]?.value, isPercent)
-                                                    },
-                                                }">
-
-                                                <template x-if="formattedValue.isLink">
-                                                    <button class="flex items-center underline">
-                                                        Link
-                                                    </button>
-                                                </template>
-
-                                                <template x-if="!formattedValue.isLink">
-                                                    <div>
-                                                        <x-review-number-button x-data="{ amount: row.values[date]?.value || 0, date }">
-                                                            <span class="hover:underline cursor-pointer"
-                                                                :class="formattedValue.isNegative ? 'text-red' : ''"
-                                                                x-text="formattedValue.result"
-                                                                @click="$wire.emit('rightSlide', row.values[date])">
-                                                            </span>
-                                                        </x-review-number-button>
-                                                    </div>
-                                                </template>
-                                            </div>
-                                        </template>
-                                    </div>
-                                </div>
-                                <div x-ref="nestedTable"></div>
-                            </div>
+                            @include('partials.company-report._table')
                         </template>
                     </div>
                 </div>
@@ -178,7 +89,7 @@
                                 return this.selectedChartRows.find(item => item.id === row.id) ? true : false;
                             },
                             toggleRowForChart() {
-                                if(row.seg_start) {
+                                if(row.seg_start || row.empty) {
                                     return;
                                 }
 
@@ -201,7 +112,7 @@
                                 }
                             },
                         }" x-init="loadChildren(this, ${nestingLevel + 1})">
-                        <div class="flex w-full flex-row" :class="[isRowSelectedForChart ? 'bg-[#52D3A2]/20' : (row.segmentation ? 'bg-[#52C6FF]/10' : 'bg-white')]" >
+                        <div class="flex w-full flex-row" :class="[isRowSelectedForChart ? 'bg-[#52D3A2]/20' : (row.segmentation ? 'bg-[#52C6FF]/10' : 'bg-white'), row.empty && !row.seg_start ? 'empty-row' + (!showEmptyRows ? ' hidden' : '') : '']" >
                             <div class="flex justify-end items-center ml-2">
                                 <input x-show="isRowSelectedForChart" type="checkbox" class="custom-checkbox"
                                     :checked="isRowSelectedForChart" @change="toggleRowForChart">
@@ -209,7 +120,7 @@
                             <div class="cursor-default py-2 w-[250px] truncate flex flex-row items-center gap-1"
                                 :class="isRowSelectedForChart ? 'ml-2' : 'ml-6'" :style="{ paddingLeft: ${nestingLevel} + 'rem' }">
                                 <a href="#" @click.prevent="toggleRowForChart"
-                                    x-text="row.title" class="whitespace-nowrap truncate text-base cursor-pointer">
+                                    x-text="row.title" class="whitespace-nowrap truncate text-base">
                                 </a>
                                 <button class="shrink-0" x-show="row.seg_start" :class="showChildren ? '' : '-rotate-90'" x-cloak @click="showChildren = !showChildren">
                                     <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 16 16" fill="none">
@@ -231,7 +142,7 @@
                                             },
                                         }"
                                     >
-                                        <template x-if="formattedValue.isLink">
+                                        <template x-if="!row.empty && !row.seg_start && formattedValue.isLink">
                                             <button type="button" class="flex gap-0.5 items-center underline" @click="Livewire.emit('modal.open', 'company-report.value-html-modal', { value: formattedValue.result, ticker: $wire.company.ticker })">
                                                 <span>Show</span>
                                                 <svg data-slot="icon" class="h-2.5 w-2.5" fill="none" stroke-width="2.5" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
@@ -240,7 +151,7 @@
                                             </button>
                                         </template>
 
-                                        <template x-if="!formattedValue.isLink">
+                                        <template x-if="!row.empty && !row.seg_start && !formattedValue.isLink">
                                             <div>
                                                 <x-review-number-button x-data="{ amount: row.values[date]?.value || 0, date }">
                                                     <span class="hover:underline cursor-pointer"
