@@ -14,7 +14,7 @@ class MutualFundSummary extends Component
 
     public $fund;
     public $cik = '';
-    public $quarter = '';
+    public $latestDate = '';
 
     public static function title(): string
     {
@@ -24,7 +24,7 @@ class MutualFundSummary extends Component
     public function mount(array $data)
     {
         $this->fund = $data['fund'];
-        $this->quarter = $this->getLatestQuarter();
+        $this->latestDate = $this->getLatestDate();
     }
 
     public function render()
@@ -38,7 +38,7 @@ class MutualFundSummary extends Component
             ->table('mutual_fund_holdings_summary')
             ->select('cik', 'series_id', 'class_id',  'registrant_name', 'portfolio_size', 'added_securities', 'removed_securities', 'total_value', 'previous_value', 'change_in_total_value', 'change_in_total_value_percentage', 'turnover', 'turnover_alt_sell', 'turnover_alt_buy', 'average_holding_period', 'average_holding_period_top10', 'average_holding_period_top20')
             ->where($this->fundPrimaryKey())
-            ->where('date', $this->quarter)
+            ->where('date', $this->latestDate)
             ->first() ?? [];
 
         $percentageFields = [
@@ -132,7 +132,7 @@ class MutualFundSummary extends Component
             ->table('mutual_fund_holdings')
             ->select('weight', 'symbol', 'name')
             ->where($this->fundPrimaryKey())
-            ->where('period_of_report', $this->quarter)
+            ->where('period_of_report', $this->latestDate)
             ->orderByDesc('weight')
             ->limit(7)
             ->get()
@@ -177,7 +177,7 @@ class MutualFundSummary extends Component
             ->table('mutual_fund_holdings')
             ->select('change_in_balance', 'name')
             ->where($this->fundPrimaryKey())
-            ->where('period_of_report', $this->quarter)
+            ->where('period_of_report', $this->latestDate)
             ->orderByDesc('change_in_balance')
             ->where('change_in_balance', '>', 0)
             ->limit(10)
@@ -200,7 +200,7 @@ class MutualFundSummary extends Component
             ->table('mutual_fund_holdings')
             ->select('change_in_balance', 'name')
             ->where($this->fundPrimaryKey())
-            ->where('period_of_report', $this->quarter)
+            ->where('period_of_report', $this->latestDate)
             ->orderBy('change_in_balance')
             ->limit(10)
             ->get()
@@ -224,7 +224,7 @@ class MutualFundSummary extends Component
         ];
     }
 
-    private function getLatestQuarter(): string
+    private function getLatestDate(): string
     {
         return DB::connection('pgsql-xbrl')
             ->table('mutual_fund_holdings_summary')
