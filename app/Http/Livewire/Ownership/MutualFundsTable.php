@@ -107,7 +107,7 @@ class MutualFundsTable extends BaseTable
 
                 return <<<HTML
                 <a class="text-blue hover:underline" href="{$url}">{$fund->registrant_name} {$symbol}</a><br>
-                <p class="text-sm text-gray-light">Series ID: {$fund->series_id} <br> Class: {$fund->class_name} ({$fund->class_id})</p>
+                <p class="text-sm text-gray-light2">Series ID: {$fund->series_id} <br> Class: {$fund->class_name} ({$fund->class_id})</p>
                 HTML;
             })
 
