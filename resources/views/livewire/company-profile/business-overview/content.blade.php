@@ -107,7 +107,7 @@
         </div>
 
         @if (count($sidebarLinks))
-            <div class="max-w-[304px] w-full">
+            <div class="max-w-[300px] w-full">
                 <x-card class="sticky top-2">
                     <div class="space-y-2 text-blue">
                         @foreach ($sidebarLinks as $item)
