@@ -116,7 +116,7 @@
                     <form class="w-[20rem]" @submit.prevent="updateValue">
                         <div class="px-6 pt-6">
                             <div class="flex justify-between">
-                                <span class="font-medium">Transaction Value (in thousands)</span>
+                                <span class="font-medium text-base">Transaction Value (in thousands)</span>
 
                                 <button @click="dropdown.hide()">
                                     <svg width="24" height="24" viewBox="0 0 24 24" fill="none"
@@ -145,7 +145,7 @@
 
                         <div class="p-6">
                             <button type="submit"
-                                class="w-full px-4 py-3 font-medium bg-green-dark hover:bg-opacity-80 rounded disabled:pointer-events-none disabled:bg-[#D1D3D5] disabled:text-white text-base">
+                                class="w-full px-4 py-3 font-medium bg-green-dark hover:bg-opacity-80 rounded disabled:pointer-events-none disabled:bg-[#D1D3D5] disabled:text-gray-medium2 text-base">
                                 Show Result
                             </button>
                         </div>
@@ -204,7 +204,7 @@
 
                     <div class="w-[20rem] sm:w-[26rem]">
                         <div class="flex justify-between gap-2 px-6 pt-6">
-                            <span class="font-medium">Months</span>
+                            <span class="font-medium text-base">Months</span>
 
                             <button @click="dropdown.hide()">
                                 <svg width="24" height="24" viewBox="0 0 24 24" fill="none"
@@ -238,7 +238,7 @@
 
                         <div class="p-6">
                             <button type="button"
-                                class="w-full px-4 py-3 font-medium bg-green-dark hover:bg-opacity-80 rounded disabled:pointer-events-none disabled:bg-[#D1D3D5] disabled:text-white text-base"
+                                class="w-full px-4 py-3 font-medium bg-green-dark hover:bg-opacity-80 rounded disabled:pointer-events-none disabled:bg-[#D1D3D5] disabled:text-gray-medium2 text-base"
                                 @click="value = tmpValue; showDropdown = false;" :disabled="value === tmpValue">
                                 Show Result
                             </button>
@@ -298,7 +298,7 @@
 
                     <div class="w-[20rem] sm:w-[26rem]">
                         <div class="flex justify-between gap-2 px-6 pt-6">
-                            <span class="font-medium">Percentage</span>
+                            <span class="font-medium text-base">Percentage</span>
 
                             <button @click="dropdown.hide()">
                                 <svg width="24" height="24" viewBox="0 0 24 24" fill="none"
@@ -332,7 +332,7 @@
 
                         <div class="p-6">
                             <button type="button"
-                                class="w-full px-4 py-3 font-medium bg-green-dark hover:bg-opacity-80 rounded disabled:pointer-events-none disabled:bg-[#D1D3D5] disabled:text-white text-base"
+                                class="w-full px-4 py-3 font-medium bg-green-dark hover:bg-opacity-80 rounded disabled:pointer-events-none disabled:bg-[#D1D3D5] disabled:text-gray-medium2 text-base"
                                 @click="value = tmpValue; showDropdown = false;" :disabled="value === tmpValue">
                                 Show Result
                             </button>

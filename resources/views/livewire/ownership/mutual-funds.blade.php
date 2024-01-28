@@ -72,7 +72,7 @@
 
                         <div class="w-[20rem] sm:w-[26rem]">
                             <div class="flex justify-between gap-2 px-6 pt-6">
-                                <span class="font-medium">Period</span>
+                                <span class="font-medium text-base">Period</span>
 
                                 <div class="flex items-center gap-x-1">
                                     <button class="text-danger hover:underline text-sm"
@@ -96,7 +96,7 @@
 
                             <div class="p-6">
                                 <button type="button"
-                                    class="w-full px-4 py-3 font-medium bg-green-dark hover:bg-opacity-80 rounded disabled:pointer-events-none disabled:bg-[#D1D3D5] disabled:text-white text-base"
+                                    class="w-full px-4 py-3 font-medium bg-green-dark hover:bg-opacity-80 rounded disabled:pointer-events-none disabled:bg-[#D1D3D5] disabled:text-gray-medium2 text-base"
                                     @click="selectValue()" :disabled="isDisabled">
                                     Show Result
                                 </button>
