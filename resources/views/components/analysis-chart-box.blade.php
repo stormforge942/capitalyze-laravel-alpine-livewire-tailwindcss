@@ -73,12 +73,14 @@
 
         <div x-data="{
             showLabel: $wire.entangle('chartConfig.showLabel', true),
-            type: @if (isset($chartConfig['type'])) $wire.entangle('chartConfig.type', true) @else '{{ $defaultType }}' @endif,
+            reverse: $wire.entangle('dateOrder', false),
+            type: $wire.chartConfig?.type ? $wire.entangle('chartConfig.type', true) : '{{ $defaultType }}',
             data: @js($chart['data'] ?? []),
             init() {
                 this.renderChart();
         
                 this.$watch('type', () => this.renderChart())
+                this.$watch('reverse', () => this.renderChart())
                 this.$watch('showLabel', () => {
                     const chart = window.analysisCharts['{{ $title }}']
         
@@ -94,6 +96,7 @@
                 window.analysisCharts['{{ $title }}'] = window.analysisPage.{{ $function }}(this.$refs.canvas, this.data, {
                     type: this.type,
                     showLabel: this.showLabel,
+                    reverse: this.reverse === 'ltl',
                 })
             },
         }" wire:key="{{ $chart['key'] }}">

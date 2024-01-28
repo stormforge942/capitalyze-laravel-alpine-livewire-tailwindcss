@@ -38,7 +38,7 @@ const dataLabelConfig = (formatter = null) => ({
     },
 })
 
-const scales = (percentage = false, xOffset = true) => ({
+const scales = (percentage = false, xOffset = true, reverseX) => ({
     y: {
         stacked: true,
         display: true,
@@ -53,6 +53,7 @@ const scales = (percentage = false, xOffset = true) => ({
             display: true,
         },
         align: "center",
+        reverse: reverseX,
     },
 })
 
@@ -65,7 +66,7 @@ function renderBasicChart(canvas, datasets, config) {
             })
         })
 
-        return percentageBarChart(canvas, datasets, config.showLabel)
+        return percentageBarChart(canvas, datasets, config)
     }
 
     datasets.forEach((dataset) => {
@@ -75,7 +76,7 @@ function renderBasicChart(canvas, datasets, config) {
         })
     })
 
-    return basicBarChart(canvas, datasets, config.showLabel)
+    return basicBarChart(canvas, datasets, config)
 }
 
 function renderSourcesAndUsesChart(canvas, datasets, config) {
@@ -87,7 +88,7 @@ function renderSourcesAndUsesChart(canvas, datasets, config) {
             })
         })
 
-        return percentageBarChart(canvas, datasets, config.showLabel)
+        return percentageBarChart(canvas, datasets, config)
     }
 
     datasets.forEach((dataset) => {
@@ -97,7 +98,7 @@ function renderSourcesAndUsesChart(canvas, datasets, config) {
         })
     })
 
-    return basicBarChart(canvas, datasets, config.showLabel, true)
+    return basicBarChart(canvas, datasets, config)
 }
 
 function renderRevenueByEmployeeChart(canvas, datasets, config) {
@@ -128,7 +129,7 @@ function renderRevenueByEmployeeChart(canvas, datasets, config) {
                 },
             },
             scales: {
-                ...scales(),
+                ...scales(false, true, config.reverse),
                 y1: {
                     ticks: {
                         callback: (val) => val + "%",
@@ -194,7 +195,7 @@ function renderCostStructureChart(canvas, datasets, config) {
                 },
             },
             scales: {
-                ...scales(config.type === "percentage"),
+                ...scales(config.type === "percentage", true, config.reverse),
                 y1: {
                     display: true,
                     ticks: {
@@ -280,7 +281,7 @@ function renderFcfConversionChart(canvas, data, config) {
                 },
             },
             scales: {
-                ...scales(true),
+                ...scales(true, true, config.reverse),
                 y1: {
                     display: true,
                     ticks: {
@@ -331,7 +332,7 @@ function renderCapitalStructureChart(canvas, datasets, config) {
                 },
             },
             scales: {
-                ...scales(false, false),
+                ...scales(false, false, config.reverse),
                 y1: {
                     ticks: {
                         callback: (val) => val + "%",
@@ -358,12 +359,7 @@ window.analysisPage = {
     renderSourcesAndUsesChart,
 }
 
-function basicBarChart(
-    canvas,
-    datasets,
-    showLabel = false,
-    lastIsAverage = false
-) {
+function basicBarChart(canvas, datasets, config) {
     const ctx = canvas.getContext("2d")
 
     return new Chart(ctx, {
@@ -385,8 +381,8 @@ function basicBarChart(
             },
             plugins: {
                 tooltip: tooltipConfig,
-                legend: legendConfig(showLabel),
-                ...(!lastIsAverage
+                legend: legendConfig(config.showLabel),
+                ...(!config.lastIsAverage
                     ? {}
                     : {
                           annotation: {
@@ -403,12 +399,12 @@ function basicBarChart(
                           },
                       }),
             },
-            scales: scales(),
+            scales: scales(false, true, config.reverse),
         },
     })
 }
 
-function percentageBarChart(canvas, datasets, showLabel = false) {
+function percentageBarChart(canvas, datasets, config = {}) {
     const ctx = canvas.getContext("2d")
 
     return new Chart(ctx, {
@@ -430,10 +426,10 @@ function percentageBarChart(canvas, datasets, showLabel = false) {
             },
             plugins: {
                 tooltip: tooltipConfig,
-                legend: legendConfig(showLabel),
+                legend: legendConfig(config.showLabel),
                 datalabels: dataLabelConfig(),
             },
-            scales: scales(true),
+            scales: scales(true, true, config.reverse),
         },
     })
 }
