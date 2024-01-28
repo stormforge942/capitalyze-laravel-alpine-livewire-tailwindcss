@@ -68,6 +68,9 @@
                             })
                         }
                     },
+                    get isReversed() {
+                        return this.filters.order === 'Latest on the Left';
+                    },
                     get formattedTableDates() {
                         let dates = [...this.tableDates];
                 
@@ -77,7 +80,7 @@
                             return year >= this.selectedDateRange[0] && year <= this.selectedDateRange[1];
                         })
                 
-                        if (this.filters.order === 'Latest on the Left') {
+                        if (this.isReversed) {
                             dates = dates.slice().reverse();
                         }
                 
@@ -97,6 +100,8 @@
                 
                             window.history.replaceState({}, '', url);
                         }, { deep: true })
+
+                        this.$watch('filters.order', this.renderChart.bind(this), { deep: true })
                 
                         this.$watch('disclosureTab', (val) => window.updateQueryParam('disclosureTab', val))
                 
@@ -163,7 +168,7 @@
                             return;
                         }
                 
-                        this.chart = window.renderCompanyReportChart(this.formattedChartData);
+                        this.chart = window.renderCompanyReportChart(this.formattedChartData, this.isReversed);
                     },
                 }" wire:key="{{ \Str::uuid() }}">
                     @if ($activeTab === 'disclosure' && count($disclosureTabs))
@@ -442,7 +447,7 @@
             slideOpen = false;
         });
 
-        function renderCompanyReportChart(data) {
+        function renderCompanyReportChart(data, reversed) {
             const ctx = document.getElementById("chart-company-report")?.getContext("2d");
 
             if(!ctx) return;
@@ -520,6 +525,7 @@
                                 source: 'data',
                             },
                             align: 'center',
+                            reverse: reversed,
                         },
                         y: {
                             display: true,
