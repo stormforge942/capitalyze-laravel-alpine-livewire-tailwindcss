@@ -25,14 +25,8 @@
         return options
     },
     get pillText() {
-        if (this.multiple) {
-            const values = this.value.map(value => this.options[value].label || this.options[value] || null).filter(value => value !== null)
-
-            if (this.value.length === 0) {
-                return this.placeholder
-            }
-
-            return values.join(', ')
+        if (this.multiple || this.value === '') {
+            return this.placeholder
         }
 
         return this.options[this.value] || this.placeholder
