@@ -13,8 +13,8 @@ const tooltipConfig = {
     },
 }
 
-const legendConfig = (show) => ({
-    display: show,
+const legendConfig = () => ({
+    display: true,
     position: "bottom",
     align: "start",
     labels: {
@@ -23,15 +23,13 @@ const legendConfig = (show) => ({
     },
 })
 
-const dataLabelConfig = (formatter = null) => ({
-    display: (ctx) => ctx.dataset?.type !== "line",
+const dataLabelConfig = (config) => ({
+    display: (ctx) => config.showLabel && ctx.dataset?.type !== "line",
     anchor: "center",
     align: "center",
-    formatter:
-        formatter ||
-        ((v) => {
-            return Number(v.y).toFixed(2 ?? 0) + "%"
-        }),
+    formatter: (v) => {
+        return Number(v.y).toFixed(2 ?? 0) + "%"
+    },
     font: {
         weight: 500,
         size: 12,
@@ -123,7 +121,7 @@ function renderRevenueByEmployeeChart(canvas, datasets, config) {
             },
             plugins: {
                 tooltip: tooltipConfig,
-                legend: legendConfig(config.showLabel),
+                legend: legendConfig(),
                 pointLine: {
                     color: "#C22929",
                 },
@@ -182,14 +180,17 @@ function renderCostStructureChart(canvas, datasets, config) {
             },
             plugins: {
                 tooltip: tooltipConfig,
-                legend: legendConfig(config.showLabel),
-                datalabels: dataLabelConfig((v) => {
-                    if (config.type === "percentage") {
-                        return Number(v.y).toFixed(2 ?? 0) + "%"
-                    }
+                legend: legendConfig(),
+                datalabels: {
+                    ...dataLabelConfig(config),
+                    formatter: (v) => {
+                        if (config.type === "percentage") {
+                            return Number(v.y).toFixed(2 ?? 0) + "%"
+                        }
 
-                    return formatCmpctNumber(v.y)
-                }),
+                        return formatCmpctNumber(v.y)
+                    },
+                },
                 pointLine: {
                     color: "#ccc",
                 },
@@ -265,9 +266,9 @@ function renderFcfConversionChart(canvas, data, config) {
                     },
                 },
                 tooltip: tooltipConfig,
-                legend: legendConfig(config.showLabel),
+                legend: legendConfig(),
                 datalabels: {
-                    ...dataLabelConfig(),
+                    ...dataLabelConfig(config),
                     formatter: (v, ctx) => {
                         if (ctx.dataset.label === "Free Cashflow $") {
                             return "$" + formatCmpctNumber(v.y)
@@ -326,7 +327,7 @@ function renderCapitalStructureChart(canvas, datasets, config) {
             },
             plugins: {
                 tooltip: tooltipConfig,
-                legend: legendConfig(config.showLabel),
+                legend: legendConfig(),
                 pointLine: {
                     color: "#121A0F",
                 },
@@ -381,7 +382,7 @@ function basicBarChart(canvas, datasets, config) {
             },
             plugins: {
                 tooltip: tooltipConfig,
-                legend: legendConfig(config.showLabel),
+                legend: legendConfig(),
                 ...(!config.lastIsAverage
                     ? {}
                     : {
@@ -426,8 +427,8 @@ function percentageBarChart(canvas, datasets, config = {}) {
             },
             plugins: {
                 tooltip: tooltipConfig,
-                legend: legendConfig(config.showLabel),
-                datalabels: dataLabelConfig(),
+                legend: legendConfig(),
+                datalabels: dataLabelConfig(config),
             },
             scales: scales(true, true, config.reverse),
         },

@@ -19,6 +19,7 @@ class AnalysisChartBox extends Component
         public bool $enclosed = false,
         public string $defaultType = 'values',
         public bool $hasPercentageMix = true,
+        public bool $toggle = true,
     ) {
         //
     }

@@ -13,7 +13,7 @@
     <div class="mt-6 relative">
         @if (count($dates))
             <x-analysis-chart-box title="Revenue By Employee" :company="$company" :chart="$chart" :hasPercentageMix="false"
-                function="renderRevenueByEmployeeChart"></x-analysis-chart-box>
+                :toggle="false" function="renderRevenueByEmployeeChart"></x-analysis-chart-box>
 
             <div class="mt-6 overflow-auto">
                 <table class="w-full rounded-lg overflow-hidden text-right whitespace-nowrap">

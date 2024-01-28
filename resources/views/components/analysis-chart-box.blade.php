@@ -80,13 +80,10 @@
                 this.renderChart();
         
                 this.$watch('type', () => this.renderChart())
-                this.$watch('reverse', () => this.renderChart())
-                this.$watch('showLabel', () => {
-                    const chart = window.analysisCharts['{{ $title }}']
         
-                    chart.options.plugins.legend.display = this.showLabel
-                    chart.update()
-                })
+                this.$watch('reverse', () => this.renderChart())
+        
+                this.$watch('showLabel', () => this.renderChart())
             },
             renderChart() {
                 if (!window.analysisCharts) window.analysisCharts = {};
@@ -122,14 +119,16 @@
                             <span>Percentage Mix</span>
                         </label>
                     @endif
-                    <label class="relative inline-flex items-center cursor-pointer flex-shrink-0">
-                        <input type="checkbox" value="yes" class="sr-only peer" :checked="showLabel"
-                            @change="showLabel = $event.target.checked">
-                        <div
-                            class="w-6 h-2.5 bg-gray-200 peer-focus:outline-none peer-focus:ring-0 rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:-start-[4px] after:bg-white after:rounded-full after:h-4 after:w-4 after:shadow-md after:transition-all peer-checked:bg-dark-light2 peer-checked:after:bg-dark">
-                        </div>
-                        <span class="ms-3 text-sm font-medium text-gray-900">Show Labels</span>
-                    </label>
+                    @if ($toggle)
+                        <label class="relative inline-flex items-center cursor-pointer flex-shrink-0">
+                            <input type="checkbox" value="yes" class="sr-only peer" :checked="showLabel"
+                                @change="showLabel = $event.target.checked">
+                            <div
+                                class="w-6 h-2.5 bg-gray-200 peer-focus:outline-none peer-focus:ring-0 rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:-start-[4px] after:bg-white after:rounded-full after:h-4 after:w-4 after:shadow-md after:transition-all peer-checked:bg-dark-light2 peer-checked:after:bg-dark">
+                            </div>
+                            <span class="ms-3 text-sm font-medium text-gray-900">Show Labels</span>
+                        </label>
+                    @endif
                 </form>
             </div>
 
