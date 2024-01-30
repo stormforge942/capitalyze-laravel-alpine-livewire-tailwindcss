@@ -20,23 +20,7 @@ trait HasFilters
 
     public function bootHasFilters()
     {
-        $this->chartColors = [
-            "#464E49",
-            "#9A46CD",
-            "#52D3A2",
-            "#3561E7",
-            "#E38E48",
-            "#39a80f",
-            "#cb6c2d",
-            "#8a2aa7",
-            "#c47f2b",
-            "#1634a3",
-            "#80914c",
-            "#4b0e84",
-            "#070cc6",
-            "#d16882",
-            "#cb14d2",
-        ];
+        $this->chartColors = config('capitalyze.chartColors');
     }
 
     public function isReverseOrder(): bool

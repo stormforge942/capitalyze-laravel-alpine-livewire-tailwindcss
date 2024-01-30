@@ -83,4 +83,21 @@ return [
             'description' => 'Disposition pursuant to a tender of shares in a change of control transaction'
         ],
     ],
+    'chartColors' => [
+        "#464E49",
+        "#9A46CD",
+        "#52D3A2",
+        "#3561E7",
+        "#E38E48",
+        "#39a80f",
+        "#cb6c2d",
+        "#8a2aa7",
+        "#c47f2b",
+        "#1634a3",
+        "#F8BC20",
+        "#9FB0EE",
+        "#070cc6",
+        "#d16882",
+        "#C22929",
+    ]
 ];

@@ -77,52 +77,92 @@ class MutualFundSummary extends Component
 
     public function getSectorAllocationData()
     {
-        $investments = DB::connection('pgsql-xbrl')
+        $investments = [];
+
+        DB::connection('pgsql-xbrl')
             ->table('mutual_fund_industry_summary')
             ->where($this->fundPrimaryKey())
-            ->groupBy('date')
-            ->select(DB::raw('SUM(weight) as weight'), 'date')
+            ->select('industry_title', 'weight', 'date')
             ->orderBy('date')
             ->get()
-            ->map(function ($item) {
+            ->map(function ($item) use (&$investments) {
                 $date = Carbon::parse($item->date);
-                return [
-                    'date' => $item->date,
-                    'quarter' => "Q{$date->quarter}-{$date->year}",
-                    'weight' => number_format($item->weight, 2),
+                $key = "Q{$date->quarter}-{$date->year}";
+
+                if (!isset($investments[$key])) {
+                    $investments[$key] = [];
+                }
+
+                $investments[$key][] = [
+                    'label' => Str::title($item->industry_title),
+                    'y' => floatval($item->weight),
+                    'x' => $key,
                 ];
             });
 
-        $lastQuarterSectorAllocation = collect([]);
-        if ($investments->count()) {
-            $latestDate = $investments->last()['date'];
+        $last = end($investments) ?? [];
+        $last = collect($last)->where('label', '!=', 'Other')->sortBy('weight')->take(15);
+        $weight = $last->sum('weight');
+        if ($weight < 100) {
+            $last[] = [
+                'label' => 'Other',
+                'y' => 100 - $weight,
+            ];
+        }
+        $last = $last->values()->toArray();
 
-            $lastQuarterSectorAllocation = DB::connection('pgsql-xbrl')
-                ->table('mutual_fund_industry_summary')
-                ->where($this->fundPrimaryKey())
-                ->where('date', $latestDate)
-                ->select('industry_title', 'weight')
-                ->orderBy('weight', 'desc')
-                ->limit(15)
-                ->get()
-                ->map(function ($item) {
-                    return [
-                        'name' => Str::title($item->industry_title),
-                        'weight' => number_format($item->weight, 2),
-                        'conversionRate' => number_format($item->weight, 2),
-                    ];
-                });
+        $data = [];
+
+        foreach ($investments as $key => $value) {
+            $top10 = collect($value)->where('label', '!=', 'Other')->sortByDesc('y')->take(10);
+            $data = array_merge($data, $top10->values()->toArray());
+
+            $weight = $top10->sum('y');
+
+            if ($weight < 100) {
+                $data[] = [
+                    'label' => 'Other',
+                    'y' => 100 - $weight,
+                    'x' => $key,
+                ];
+            }
+        }
+
+        $data = collect($data)->groupBy('label')->toArray();
+
+        $datasetOverTime = [];
+        $colors = config('capitalyze.chartColors');
+
+        foreach (array_keys($data) as $idx => $label) {
+            $_data = $data[$label];
+
+            $datasetOverTime[] = [
+                'label' => $label,
+                'data' => array_map(
+                    fn ($item) => tap($item, function (&$item) {
+                        unset($item['label']);
+                    }),
+                    $_data
+                ),
+                'backgroundColor' => $colors[$idx] ?? random_color(),
+            ];
+        }
+
+        $datasetLastQuarter = [
+            'data' => [],
+            'labels' => [],
+            'backgroundColors' => [],
+        ];
+
+        foreach ($last as $idx => $item) {
+            $datasetLastQuarter['labels'][] = $item['label'];
+            $datasetLastQuarter['data'][] = $item['y'];
+            $datasetLastQuarter['backgroundColors'][] = $colors[$idx] ?? random_color();
         }
 
         return [
-            'overTimeSectorAllocation' => $investments->toArray(),
-            'lastQuarterSectorAllocation' => $lastQuarterSectorAllocation?->toArray(),
-            'conversionRate' => $lastQuarterSectorAllocation->count()
-                ? number_format($lastQuarterSectorAllocation->sum('conversionRate') / $lastQuarterSectorAllocation->count(), 2)
-                : 0,
-            'sectorAllocationChangePercentage' => $investments->count() < 2
-                ? 0
-                : number_format($investments->last()['weight'] - $investments->first()['weight']),
+            'overTimeSectorAllocation' => $datasetOverTime,
+            'lastQuarterSectorAllocation' => $datasetLastQuarter,
         ];
     }
 
