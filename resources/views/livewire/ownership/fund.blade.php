@@ -136,38 +136,44 @@
             new Chart(canvas, {
                 type: 'bar',
                 data: {
-                    labels: data.map(item => item.quarter),
-                    datasets: [{
-                        data: data.map(item => item.weight),
-                        backgroundColor: '#FFD599',
-                    }]
+                    datasets: data
                 },
                 options: {
                     responsive: true,
-                    aspectRatio: 2.7,
+                    aspectRatio: 1.7,
                     maintainAspectRatio: true,
                     plugins: {
                         legend: {
-                            display: false,
+                            display: true,
+                            position: "bottom",
+                            align: "start",
+                            labels: {
+                                boxWidth: 12,
+                                boxHeight: 12,
+                                font: {
+                                    size: 12,
+                                },
+                            },
                         },
                     },
                     scales: {
                         y: {
+                            stacked: true,
                             beginAtZero: true,
-                            grid: {
+                            border: {
                                 display: false
                             },
                             ticks: {
                                 callback: function(value) {
                                     return value + '%';
                                 },
-                                display: false
                             },
                             border: {
                                 display: false
                             }
                         },
                         x: {
+                            stacked: true,
                             grid: {
                                 display: false
                             },
@@ -189,37 +195,27 @@
             new Chart(canvas, {
                 type: 'doughnut',
                 data: {
-                    labels: data.map(item => item.name),
+                    labels: data.labels,
                     datasets: [{
-                        data: data.map(item => item.weight),
-                        backgroundColors: [
-                            'rgb(168,236,29)',
-                            'rgb(3,23,49)',
-                            'rgb(223,223,212)',
-                            'rgb(179,74,15)',
-                            'rgb(35,7,82)',
-                            'rgb(74,38,144)',
-                            'rgb(19,253,206)',
-                            'rgb(44,137,109)',
-                            'rgb(89,79,129)',
-                            'rgb(42,142,221)',
-                            'rgb(164,130,131)',
-                            'rgb(152,245,1)',
-                            'rgb(224,30,164)',
-                            'rgb(105,49,128)',
-                            'rgb(127,22,217)',
-                            'rgb(179,178,237)',
-                        ],
+                        data: data.data,
+                        backgroundColors: data.backgroundColor,
                     }]
                 },
                 options: {
-                    maintainAspectRatio: false,
                     responsive: true,
                     aspectRatio: 1,
                     plugins: {
                         legend: {
                             display: true,
-                            position: 'bottom',
+                            position: "bottom",
+                            align: "start",
+                            labels: {
+                                boxWidth: 12,
+                                boxHeight: 12,
+                                font: {
+                                    size: 12,
+                                },
+                            },
                         },
                     },
                 }

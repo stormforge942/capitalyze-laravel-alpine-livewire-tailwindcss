@@ -56,7 +56,7 @@
                                 </div>
                             </template>
                         </div>
-    
+
                         <div class="space-y-4" :class="active == 1 ? 'block' : 'hidden'">
                             <template x-for="item in result.topSells" :key="item.key">
                                 <div class="grid items-center grid-cols-12 gap-4 ">
@@ -81,9 +81,9 @@
             <x-tabs :tabs="['NPORT-P Sector Allocation Overtime', 'NPORT-P Sector Allocation last Quarter']">
                 <x-defer-data-loading use-alpine="true" on-init="getSectorAllocationData" class="h-80"
                     @ready="$nextTick(() => {
-                            renderOverTimeSectorAllocation(result.overTimeSectorAllocation);
-                                renderLastQuarterSectorAllocation(result.lastQuarterSectorAllocation);
-                        })">
+                        renderOverTimeSectorAllocation(result.overTimeSectorAllocation);
+                        renderLastQuarterSectorAllocation(result.lastQuarterSectorAllocation);
+                    })">
                     <div :class="active == 0 ? 'block' : 'hidden'">
                         <canvas id="overTimeSectorAllocation"></canvas>
                     </div>
