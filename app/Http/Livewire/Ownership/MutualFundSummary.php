@@ -29,7 +29,9 @@ class MutualFundSummary extends Component
 
     public function render()
     {
-        return view('livewire.ownership.mutual-fund-summary');
+        return view('livewire.ownership.mutual-fund-summary', [
+            'summary' => $this->getSummary(),
+        ]);
     }
 
     public function getSummary()

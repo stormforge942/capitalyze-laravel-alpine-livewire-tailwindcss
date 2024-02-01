@@ -37,44 +37,42 @@
             </x-defer-data-loading>
         </div>
 
-        <div class="order-3 col-span-12 md:col-span-6 md:order-2 xl:order-3">
-            <div class="p-6 bg-white rounded">
-                <x-tabs :tabs="['Top Buys', 'Top Sells']">
-                    <x-defer-data-loading use-alpine="true" on-init="getTopBuySells" class="h-80">
-                        <div class="space-y-4" :class="active == 0 ? 'block' : 'hidden'" :data-active="active">
-                            <template x-for="item in result.topBuys" :key="item.key">
-                                <div class="grid items-center grid-cols-12 gap-4">
-                                    <div class="cursor-pointer col-span-8 xl:col-span-9 px-2 py-1.5 bg-[#F0F6FF] rounded-[40px]"
-                                        :title="item.change_in_balance">
-                                        <div class="h-2 rounded-[40px] bg-blue" :style="`width: ${item.width}%`">
-                                        </div>
+        <div class="order-3 col-span-12 md:col-span-6 md:order-2 xl:order-3 p-6 bg-white rounded">
+            <x-tabs :tabs="['Top Buys', 'Top Sells']">
+                <x-defer-data-loading use-alpine="true" on-init="getTopBuySells" class="h-80">
+                    <div class="space-y-4" :class="active == 0 ? 'block' : 'hidden'" :data-active="active">
+                        <template x-for="item in result.topBuys" :key="item.key">
+                            <div class="grid items-center grid-cols-12 gap-4">
+                                <div class="cursor-pointer col-span-8 xl:col-span-9 px-2 py-1.5 bg-[#F0F6FF] rounded-[40px]"
+                                    :title="item.change_in_balance">
+                                    <div class="h-2 rounded-[40px] bg-blue" :style="`width: ${item.width}%`">
                                     </div>
-                                    <span
-                                        class="col-span-4 xl:col-span-3 text-dark-light2 overflow-hidden text-ellipsis whitespace-nowrap"
-                                        x-text="item.name" :title="item.name">
-                                    </span>
                                 </div>
-                            </template>
-                        </div>
+                                <span
+                                    class="col-span-4 xl:col-span-3 text-dark-light2 overflow-hidden text-ellipsis whitespace-nowrap"
+                                    x-text="item.name" :title="item.name">
+                                </span>
+                            </div>
+                        </template>
+                    </div>
 
-                        <div class="space-y-4" :class="active == 1 ? 'block' : 'hidden'">
-                            <template x-for="item in result.topSells" :key="item.key">
-                                <div class="grid items-center grid-cols-12 gap-4 ">
-                                    <div class="cursor-pointer col-span-8 xl:col-span-9 px-2 py-1.5 bg-[#F0F6FF] rounded-[40px]"
-                                        :title="item.change_in_balance">
-                                        <div class="h-2 rounded-[40px] bg-blue" :style="`width: ${item.width}%`">
-                                        </div>
+                    <div class="space-y-4" :class="active == 1 ? 'block' : 'hidden'">
+                        <template x-for="item in result.topSells" :key="item.key">
+                            <div class="grid items-center grid-cols-12 gap-4 ">
+                                <div class="cursor-pointer col-span-8 xl:col-span-9 px-2 py-1.5 bg-[#F0F6FF] rounded-[40px]"
+                                    :title="item.change_in_balance">
+                                    <div class="h-2 rounded-[40px] bg-blue" :style="`width: ${item.width}%`">
                                     </div>
-                                    <span
-                                        class="col-span-4 xl:col-span-3 text-dark-light2 overflow-hidden text-ellipsis whitespace-nowrap"
-                                        x-text="item.name" :title="item.name">
-                                    </span>
                                 </div>
-                            </template>
-                        </div>
-                    </x-defer-data-loading>
-                </x-tabs>
-            </div>
+                                <span
+                                    class="col-span-4 xl:col-span-3 text-dark-light2 overflow-hidden text-ellipsis whitespace-nowrap"
+                                    x-text="item.name" :title="item.name">
+                                </span>
+                            </div>
+                        </template>
+                    </div>
+                </x-defer-data-loading>
+            </x-tabs>
         </div>
 
         <div class="order-4 col-span-12 xl:col-span-6 p-6 bg-white rounded">
@@ -97,28 +95,27 @@
             </x-tabs>
         </div>
 
-        <div class="order-5 col-span-12 xl:col-span-6 p-6 bg-white rounded">
-            <h3 class="mb-4 text-sm font-semibold text-blue">NPORT-P Activity</h3>
+        <div class="order-5 col-span-12">
+            <div class="p-6 bg-white rounded xl:inline-block">
+                <h3 class="mb-4 text-sm font-semibold text-blue">NPORT-P Activity</h3>
 
-            <x-defer-data-loading use-alpine="true" on-init="getSummary" class="h-60">
-                <div class="grid grid-cols-2 gap-4 md:grid-cols-5 xl:grid-cols-2 2xl:grid-cols-4">
-                    <template x-for="item in result" :key="item.title">
+                <div class="grid grid-cols-2 gap-4 lg:grid-cols-4">
+                    @foreach ($summary as $item)
                         <div>
-                            <p class="text-sm text-dark-light2" x-text="item.title"></p>
+                            <p class="text-sm text-dark-light2 whitespace-nowrap">{{ $item['title'] }}</p>
 
                             <p class="font-semibold">
-                                <template x-if="item.type === 'link'">
-                                    <a :href="item.value" class="underline text-blue" target="_blank"
-                                        x-text="item.value"></a>
-                                </template>
-                                <template x-if="item.type === 'text'">
-                                    <span x-text="item.value"></span>
-                                </template>
+                                @if ($item['type'] === 'link')
+                                    <a href="{{ $item['value'] }}" class="underline text-blue"
+                                        target="_blank">{{ $item['value'] }}</a>
+                                @else
+                                    <span>{{ $item['value'] }}</span>
+                                @endif
                             </p>
                         </div>
-                    </template>
+                    @endforeach
                 </div>
-            </x-defer-data-loading>
+            </div>
         </div>
     </div>
 </div>
