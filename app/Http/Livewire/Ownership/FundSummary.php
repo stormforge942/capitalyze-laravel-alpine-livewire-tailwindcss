@@ -29,7 +29,9 @@ class FundSummary extends Component
 
     public function render()
     {
-        return view('livewire.ownership.fund-summary');
+        return view('livewire.ownership.fund-summary', [
+            'summary' => $this->getSummary(),
+        ]);
     }
 
     public function getSummary()
@@ -60,7 +62,7 @@ class FundSummary extends Component
             }
 
             $summary[$key] = [
-                'title' => str_replace('_', ' ', Str::title($key)),
+                'title' => str_replace('Percentage', '%', str_replace('_', ' ', Str::title($key))),
                 'value' => $value ?? 'N/A',
                 'type' => $type
             ];

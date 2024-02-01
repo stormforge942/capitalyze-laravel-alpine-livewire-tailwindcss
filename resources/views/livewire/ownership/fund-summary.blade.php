@@ -95,28 +95,28 @@
             </x-tabs>
         </div>
 
-        <div class="order-5 col-span-12 xl:col-span-6 p-6 bg-white rounded">
-            <h3 class="mb-4 text-sm font-semibold text-blue">13F Activity</h3>
+        <div class="order-5 col-span-12">
+            <div class="p-6 bg-white rounded xl:inline-block">
+                <h3 class="mb-4 text-sm font-semibold text-blue">13F Activity</h3>
 
-            <x-defer-data-loading use-alpine="true" on-init="getSummary" class="h-60">
-                <div class="grid grid-cols-2 gap-4 md:grid-cols-5 xl:grid-cols-2 2xl:grid-cols-4">
-                    <template x-for="item in result" :key="item.title">
+                <div class="grid grid-cols-2 gap-4 lg:grid-cols-4">
+                    @foreach ($summary as $item)
                         <div>
-                            <p class="text-sm text-dark-light2" x-text="item.title"></p>
+                            <p class="text-sm text-dark-light2 whitespace-nowrap">{{ $item['title'] }}</p>
 
                             <p class="font-semibold">
-                                <template x-if="item.type === 'link'">
-                                    <a :href="item.value" class="underline text-blue" target="_blank"
-                                        x-text="item.value"></a>
-                                </template>
-                                <template x-if="item.type === 'text'">
-                                    <span x-text="item.value"></span>
-                                </template>
+                                @if ($item['type'] === 'link')
+                                    <a href="{{ $item['value'] }}" class="underline text-blue"
+                                        target="_blank">{{ $item['value'] }}</a>
+                                @else
+                                    <span>{{ $item['value'] }}</span>
+                                @endif
                             </p>
                         </div>
-                    </template>
+                    @endforeach
                 </div>
-            </x-defer-data-loading>
+            </div>
+
         </div>
     </div>
 </div>
