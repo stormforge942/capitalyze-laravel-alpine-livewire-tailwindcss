@@ -64,12 +64,7 @@ class Discover extends Component
             ->orderBy('total_value', 'desc')
             ->paginate($this->perPage)
             ->through(function ($item) use ($favorites) {
-                $item->id = json_encode([
-                    'investor_name' => $item->investor_name,
-                    'cik' => $item->cik,
-                ]);
-
-                $item->isFavorite = in_array($item->id, $favorites);
+                $item->isFavorite = in_array($item->cik, $favorites);
                 return (array) $item;
             });
 

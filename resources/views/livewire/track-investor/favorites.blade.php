@@ -27,7 +27,7 @@
                 <div
                     class="grid gap-4 grid-cols-1 md:grid-cols-2 lg:grid-cols-[repeat(auto-fill,minmax(17.19rem,1fr))]">
                     @foreach ($funds as $fund)
-                        <livewire:track-investor.fund-card :fund="$fund" :wire:key="$fund['id']"
+                        <livewire:track-investor.fund-card :fund="$fund" :wire:key="$fund['cik']"
                             :hide-if-not-favorite="true" />
                     @endforeach
                 </div>

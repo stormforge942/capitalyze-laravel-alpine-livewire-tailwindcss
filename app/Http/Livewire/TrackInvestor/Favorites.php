@@ -41,8 +41,6 @@ class Favorites extends Component
 
         $funds = $investors->where('type', TrackInvestorFavorite::TYPE_FUND)
             ->pluck('identifier')
-            ->map(fn ($item) => json_decode($item, true))
-            ->filter()
             ->toArray();
 
         $mutualFunds = $investors->where('type', TrackInvestorFavorite::TYPE_MUTUAL_FUND)
@@ -70,21 +68,13 @@ class Favorites extends Component
                 $join->on('fs.cik', '=', 'latest_dates.cik');
                 $join->on('fs.date', '=', 'latest_dates.max_date');
             })
-            ->where(function ($q) use ($funds) {
-                foreach ($funds as $fund) {
-                    $q->orWhere(fn ($q) => $q->where('fs.investor_name', $fund['investor_name'])
-                        ->where('fs.cik', $fund['cik']));
-                }
-
-                return $q;
-            })
+            ->whereIn('fs.cik', $funds)
             ->get()
+            // sort the collection by the order of the $funds array
+            ->sortBy(function ($item) use ($funds) {
+                return array_search($item->cik, $funds);
+            })
             ->map(function ($item) {
-                $item->id = json_encode([
-                    'investor_name' => $item->investor_name,
-                    'cik' => $item->cik,
-                ]);
-
                 $item->type = 'fund';
                 $item->isFavorite = true;
 
@@ -98,17 +88,9 @@ class Favorites extends Component
 
         return DB::connection('pgsql-xbrl')
             ->table('mutual_fund_holdings_summary')
-            ->select('hs.registrant_name', 'hs.cik', 'hs.fund_symbol', 'hs.series_id', 'hs.class_id', 'hs.class_name', 'hs.total_value', 'hs.portfolio_size', 'hs.change_in_total_value', 'hs.date')
+            ->select('registrant_name', 'cik', 'fund_symbol', 'series_id', 'class_id', 'class_name', 'total_value', 'portfolio_size', 'change_in_total_value', 'date')
             ->from('mutual_fund_holdings_summary as hs')
-            ->join(DB::raw('(SELECT registrant_name, cik, fund_symbol, series_id, class_id, class_name, MAX(date) AS max_date FROM mutual_fund_holdings_summary GROUP BY registrant_name, cik, fund_symbol, series_id, class_id, class_name) as latest_dates'), function ($join) {
-                $join->on('hs.registrant_name', '=', 'latest_dates.registrant_name');
-                $join->on('hs.cik', '=', 'latest_dates.cik');
-                $join->on('hs.fund_symbol', '=', 'latest_dates.fund_symbol');
-                $join->on('hs.series_id', '=', 'latest_dates.series_id');
-                $join->on('hs.class_id', '=', 'latest_dates.class_id');
-                $join->on('hs.class_name', '=', 'latest_dates.class_name');
-                $join->on('hs.date', '=', 'latest_dates.max_date');
-            })
+            ->where('is_latest', true)
             ->where(function ($q) use ($funds) {
                 foreach ($funds as $fund) {
                     $q->orWhere(
@@ -122,9 +104,16 @@ class Favorites extends Component
                 return $q;
             })
             ->get()
+            ->sortBy(function ($item) use ($funds) {
+                return collect($funds)->search(function ($fund) use ($item) {
+                    return $fund['cik'] === $item->cik
+                        && $fund['series_id'] === $item->series_id
+                        && $fund['class_id'] === $item->class_id
+                        && $fund['class_name'] === $item->class_name;
+                });
+            })
             ->map(function ($item) {
                 $item->id = json_encode([
-                    'registrant_name' => $item->registrant_name,
                     'cik' => $item->cik,
                     'fund_symbol' => $item->fund_symbol,
                     'series_id' => $item->series_id,

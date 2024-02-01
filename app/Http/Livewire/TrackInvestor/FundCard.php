@@ -14,7 +14,7 @@ class FundCard extends Component
     public function toggle(array $fund)
     {
         $entry = TrackInvestorFavorite::query()
-            ->where('identifier', $fund['id'])
+            ->where('identifier', $fund['cik'])
             ->where('type', TrackInvestorFavorite::TYPE_FUND)
             ->where('user_id', Auth::id())
             ->first();
@@ -26,7 +26,7 @@ class FundCard extends Component
                 'name' => $fund['investor_name'],
                 'user_id' => Auth::id(),
                 'type' => TrackInvestorFavorite::TYPE_FUND,
-                'identifier' => $fund['id'],
+                'identifier' => $fund['cik'],
             ]);
         } else {
             $entry->delete();
