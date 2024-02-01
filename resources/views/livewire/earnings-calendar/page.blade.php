@@ -70,6 +70,44 @@
                             this.sort.direction = 'asc';
                         }
                     },
+                    columns() {
+                        return [{
+                                name: 'Ticker',
+                                key: 'symbol',
+                                sortable: true,
+                            },
+                            {
+                                name: 'Company',
+                                key: 'company_name',
+                                sortable: true,
+                            },
+                            {
+                                name: 'Origin',
+                                key: 'origin',
+                                sortable: true,
+                            },
+                            {
+                                name: 'Exchange',
+                                key: 'exchange',
+                                sortable: false,
+                            },
+                            {
+                                name: 'Time',
+                                key: 'time',
+                                sortable: true,
+                            },
+                            {
+                                name: 'Reported Time',
+                                key: 'pub_time',
+                                sortable: true,
+                            },
+                            {
+                                name: 'URL',
+                                key: 'url',
+                                sortable: false,
+                            },
+                        ]
+                    },
                     @if($key === 'custom')
                     customDateRange: @js($customDateRange),
                     loadCustomData() {
@@ -119,84 +157,29 @@
                         <table class="table power-grid-table w-full bg-white rounded-md overflow-clip">
                             <thead class="font-sm font-semibold capitalize bg-[#EDEDED] rounded-t-md">
                                 <tr>
-                                    <th class="pl-6 py-2 text-dark whitespace-nowrap"
-                                        style="width: max-content; cursor:pointer;">
-                                        <div class="flex items-center gap-1" @click.prevent="sortBy('symbol')">
-                                            <span>Ticker</span>
-                                            <span>
-                                                <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16"
-                                                    viewBox="0 0 16 16" fill="none">
-                                                    <path d="M12 6L8 2L4 6H12ZM12 10L8 14L4 10H12Z" fill="#464E49">
-                                                    </path>
-                                                </svg>
+                                    <template x-for="column in columns()" :key="column.key">
+                                        <th class="pl-6 py-2 text-dark whitespace-nowrap"
+                                            :style="`width: max-content;${column.sortable ? 'cursor:pointer;' : ''}`">
+                                            <div class="flex items-center gap-1" @click.prevent="sortBy(column.key)">
+                                                <span x-text="column.name"></span>
 
-                                            </span>
-                                        </div>
-                                    </th>
-                                    <th class="pl-6 py-2 text-dark whitespace-nowrap"
-                                        style="width: max-content; cursor:pointer;">
-                                        <div class="flex items-center gap-1" @click.prevent="sortBy('company_name')">
-                                            <span>Company</span>
-                                            <span>
-                                                <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16"
-                                                    viewBox="0 0 16 16" fill="none">
-                                                    <path d="M12 6L8 2L4 6H12ZM12 10L8 14L4 10H12Z" fill="#464E49">
-                                                    </path>
-                                                </svg>
-                                            </span>
-                                        </div>
-                                    </th>
-                                    <th class="pl-6 py-2 text-dark whitespace-nowrap"
-                                        style="width: max-content; cursor:pointer;">
-                                        <div class="flex items-center gap-1" @click.prevent="sortBy('origin')">
-                                            <span>Origin</span>
-                                            <span>
-                                                <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16"
-                                                    viewBox="0 0 16 16" fill="none">
-                                                    <path d="M12 6L8 2L4 6H12ZM12 10L8 14L4 10H12Z" fill="#464E49">
-                                                    </path>
-                                                </svg>
-                                            </span>
-                                        </div>
-                                    </th>
-                                    <th class="pl-6 py-2 text-dark whitespace-nowrap" style="width: max-content;">
-                                        <div class="flex items-center gap-1">
-                                            <span>Exchange</span>
-                                        </div>
-                                    </th>
-                                    <th class="pl-6 py-2 text-dark whitespace-nowrap"
-                                        style="width: max-content; cursor:pointer;">
-                                        <div class="flex items-center justify-end gap-1"
-                                            @click.prevent="sortBy('time')">
-                                            <span>Time</span>
-                                            <span>
-                                                <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16"
-                                                    viewBox="0 0 16 16" fill="none">
-                                                    <path d="M12 6L8 2L4 6H12ZM12 10L8 14L4 10H12Z" fill="#464E49">
-                                                    </path>
-                                                </svg>
-                                            </span>
-                                        </div>
-                                    </th>
-                                    <th class="pl-6 py-2 text-dark whitespace-nowrap"
-                                        style="width: max-content; cursor:pointer;">
-                                        <div class="flex items-center justify-end gap-1"
-                                            @click.prevent="sortBy('pub_time')">
-                                            <span>Reported Time</span>
-                                            <span>
-                                                <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16"
-                                                    viewBox="0 0 16 16" fill="none">
-                                                    <path d="M12 6L8 2L4 6H12ZM12 10L8 14L4 10H12Z" fill="#464E49">
-                                                    </path>
-                                                </svg>
-                                            </span>
-                                        </div>
-                                    </th>
-                                    <th class="pl-6 py-2 text-dark whitespace-nowrap" style="width: max-content;">
-                                        <div class="flex items-center gap-1">
-                                            <span>URL</span>
-                                        </div>
-                                    </th>
+                                                <template x-if="column.sortable && sort.column !== column.key">
+                                                    <span>
+                                                        <svg xmlns="http://www.w3.org/2000/svg" width="16"
+                                                            height="16" viewBox="0 0 16 16" fill="none">
+                                                            <path d="M12 6L8 2L4 6H12ZM12 10L8 14L4 10H12Z"
+                                                                fill="#464E49">
+                                                            </path>
+                                                        </svg>
+                                                    </span>
+                                                </template>
+
+                                                <template x-if="column.sortable && sort.column === column.key">
+                                                    <span x-html="sort.direction === 'asc' ? '&#8595;' : '&#8593;'"></span>
+                                                </template>
+                                            </div>
+                                        </th>
+                                    </template>
                                 </tr>
                             </thead>
                             <tbody class="divide-y-2">
