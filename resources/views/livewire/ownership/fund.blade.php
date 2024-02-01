@@ -203,7 +203,7 @@
                 },
                 options: {
                     responsive: true,
-                    aspectRatio: 1,
+                    aspectRatio: 1.5,
                     plugins: {
                         legend: {
                             display: true,
