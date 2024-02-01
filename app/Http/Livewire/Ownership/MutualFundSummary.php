@@ -96,41 +96,43 @@ class MutualFundSummary extends Component
                 }
 
                 $investments[$key][] = [
-                    'label' => Str::title($item->industry_title),
-                    'y' => floatval($item->weight),
-                    'x' => $key,
+                    'industry' => Str::title($item->industry_title),
+                    'weight' => floatval($item->weight),
+                    'quarter' => $key,
                 ];
             });
 
-        $last = end($investments) ?? [];
-        $last = collect($last)->where('label', '!=', 'Other')->sortBy('weight')->take(15);
+        $last = collect(end($investments) ?? [])
+            ->where('industry', '!=', 'Other')
+            ->sortByDesc('weight')
+            ->take(25);
+
         $weight = $last->sum('weight');
         if ($weight < 100) {
             $last[] = [
-                'label' => 'Other',
-                'y' => 100 - $weight,
+                'industry' => 'Other',
+                'weight' => 100 - $weight,
             ];
         }
         $last = $last->values()->toArray();
 
         $data = [];
-
         foreach ($investments as $key => $value) {
-            $top10 = collect($value)->where('label', '!=', 'Other')->sortByDesc('y')->take(10);
+            $top10 = collect($value)->where('industry', '!=', 'Other')->sortByDesc('weight')->take(10);
             $data = array_merge($data, $top10->values()->toArray());
 
-            $weight = $top10->sum('y');
+            $weight = $top10->sum('weight');
 
             if ($weight < 100) {
                 $data[] = [
-                    'label' => 'Other',
-                    'y' => 100 - $weight,
-                    'x' => $key,
+                    'industry' => 'Other',
+                    'weight' => 100 - $weight,
+                    'quarter' => $key,
                 ];
             }
         }
 
-        $data = collect($data)->groupBy('label')->toArray();
+        $data = collect($data)->groupBy('industry')->toArray();
 
         $datasetOverTime = [];
         $colors = config('capitalyze.chartColors');
@@ -141,9 +143,10 @@ class MutualFundSummary extends Component
             $datasetOverTime[] = [
                 'label' => $label,
                 'data' => array_map(
-                    fn ($item) => tap($item, function (&$item) {
-                        unset($item['label']);
-                    }),
+                    fn ($item) => [
+                        'x' => $item['quarter'],
+                        'y' => $item['weight'],
+                    ],
                     $_data
                 ),
                 'backgroundColor' => $colors[$idx] ?? random_color(),
@@ -157,8 +160,8 @@ class MutualFundSummary extends Component
         ];
 
         foreach ($last as $idx => $item) {
-            $datasetLastQuarter['labels'][] = $item['label'];
-            $datasetLastQuarter['data'][] = $item['y'];
+            $datasetLastQuarter['labels'][] = $item['industry'];
+            $datasetLastQuarter['data'][] = $item['weight'];
             $datasetLastQuarter['backgroundColors'][] = $colors[$idx] ?? random_color();
         }
 
