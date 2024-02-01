@@ -49,19 +49,23 @@
 ::-webkit-scrollbar {
     display: none;
     /*height: 5px;*/
-    /*width: 5px;*/
+    width: 10px;
+}
+
+.show-scrollbar::-webkit-scrollbar {
+    display: inline-block;
 }
 
 /* Track */
 ::-webkit-scrollbar-track {
-    background: #888;
-    border-radius: 5px;
+    background: #ccc;
+    /* border-radius: 5px; */
 }
 
 /* Handle */
 ::-webkit-scrollbar-thumb {
-    background: #000;
-    border-radius: 5px;
+    background: #121A0F;
+    border-radius: 2px;
 }
 
 /* ownership breadcrumb border */

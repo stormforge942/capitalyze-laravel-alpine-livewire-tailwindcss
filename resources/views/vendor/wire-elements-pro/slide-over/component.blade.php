@@ -32,7 +32,7 @@
                  class="wep-slide-over-container-inner-wrap">
 
                 @foreach($components as $id => $component)
-                    <div x-show.immediate="activeComponent === '{{ $id }}'" x-ref="{{ $id }}" wire:key="{{ $id }}" class="wep-slide-over-container-inner-content">
+                    <div x-show.immediate="activeComponent === '{{ $id }}'" x-ref="{{ $id }}" wire:key="{{ $id }}" class="wep-slide-over-container-inner-content show-scrollbar">
                         @livewire($component['name'], $component['parameters'], key($id))
                     </div>
                 @endforeach
