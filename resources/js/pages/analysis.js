@@ -102,6 +102,12 @@ function renderSourcesAndUsesChart(canvas, datasets, config) {
 function renderRevenueByEmployeeChart(canvas, datasets, config) {
     const ctx = canvas.getContext("2d")
 
+    datasets.forEach((dataset) => {
+        if(dataset.type !== "line") {
+            dataset.maxBarThickness = 150
+        }
+    })
+
     return new Chart(ctx, {
         plugins: [chartJsPlugins.pointLine],
         type: "bar",
@@ -156,6 +162,11 @@ function renderCostStructureChart(canvas, datasets, config) {
             value.y =
                 (config.type === "percentage" ? value.percent : value.value) ||
                 0
+
+            if(dataset.type !== "line") {
+                dataset.maxBarThickness = 150
+            }
+
             return value
         })
     })
@@ -214,6 +225,12 @@ function renderCostStructureChart(canvas, datasets, config) {
 
 function renderFcfConversionChart(canvas, data, config) {
     const ctx = canvas.getContext("2d")
+
+    data.datasets.forEach((dataset) => {
+        if(dataset.type !== "line") {
+            dataset.maxBarThickness = 150
+        }
+    })
 
     return new Chart(ctx, {
         plugins: [window.ChartDataLabels, chartJsPlugins.pointLine],
@@ -359,6 +376,12 @@ window.analysisPage = {
 function basicBarChart(canvas, datasets, config) {
     const ctx = canvas.getContext("2d")
 
+    datasets.forEach((dataset) => {
+        if(dataset.type !== "line") {
+            dataset.maxBarThickness = 150
+        }
+    })
+
     return new Chart(ctx, {
         plugins: [],
         type: "bar",
@@ -402,6 +425,12 @@ function basicBarChart(canvas, datasets, config) {
 
 function percentageBarChart(canvas, datasets, config = {}) {
     const ctx = canvas.getContext("2d")
+
+    datasets.forEach((dataset) => {
+        if(dataset.type !== "line") {
+            dataset.maxBarThickness = 150
+        }
+    })
 
     return new Chart(ctx, {
         plugins: [window.ChartDataLabels],

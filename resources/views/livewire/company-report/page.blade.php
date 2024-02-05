@@ -64,6 +64,7 @@
                                     pointHoverBorderColor: '#fff',
                                     pointHoverBorderWidth: 4,
                                     pointHoverBackgroundColor: row.color,
+                                    maxBarThickness: 150,
                                 }
                             })
                         }
