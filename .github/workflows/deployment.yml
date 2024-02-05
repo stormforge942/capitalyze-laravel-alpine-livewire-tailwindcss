@@ -15,6 +15,8 @@ jobs:
         php-version: 8.2
         tools: composer:v2
         coverage: none
+    - name: Add HTTP basic auth credentials
+      run: echo '${{ secrets.COMPOSER_AUTH_JSON }}' > $GITHUB_WORKSPACE/auth.json
     - name: Require Vapor CLI
       run: composer global require laravel/vapor-cli
     - name: Install Project Dependencies
