@@ -3,7 +3,7 @@ concurrency: vapor
 on:
   push:
     branches:
-      - main
+      - development
 jobs:
   build:
     runs-on: ubuntu-latest
