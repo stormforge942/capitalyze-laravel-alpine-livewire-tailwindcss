@@ -303,8 +303,8 @@
                                         {{ $company['name'] }} ({{ $company['ticker'] }})
                                     </div>
 
-                                    <div class="mt-10">
-                                        <canvas id="chart-company-report" class="chart-company-report"></canvas>
+                                    <div class="mt-10 h-[300px] sm:h-[500px]">
+                                        <canvas id="chart-company-report"></canvas>
                                     </div>
                                     <div class="mt-8 flex flex-wrap justify-start items-end gap-3">
                                         <template x-for="item in selectedChartRows" :key="item.id"
@@ -465,12 +465,11 @@
 
             return new Chart(ctx, {
                 plugins: [chartJsPlugins.pointLine],
-                maintainAspectRatio: false,
-                aspectRatio: 3,
-                responsive: true,
                 type: 'line',
                 data,
                 options: {
+                    maintainAspectRatio: false,
+                    responsive: true,
                     interaction: {
                         intersect: false,
                         mode: 'nearest',

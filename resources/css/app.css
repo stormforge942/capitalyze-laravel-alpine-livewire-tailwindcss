@@ -529,13 +529,6 @@ a {
     height: 16px;
 }
 
-.chart-company-report {
-    max-height: 400px !important;
-    display: block !important;
-    height: 400px !important;
-    width: 100% !important;
-}
-
 .custom-text-xs .text-xs {
     font-size: 0.75rem;
 }

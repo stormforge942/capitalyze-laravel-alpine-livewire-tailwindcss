@@ -1,6 +1,7 @@
 <div x-data="{ hide: false }">
     <div class="flex justify-end" x-show="hide" x-cloak @click="hide = false">
-        <button class="bg-green-light flex items-center text-sm font-medium gap-3 pl-10 p-2" style="border-radius: 0 8px 2px 2px;">
+        <button class="bg-green-light flex items-center text-sm font-medium gap-3 pl-10 p-2"
+            style="border-radius: 0 8px 2px 2px;">
             <span>Show Chart</span>
             <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 16 16" fill="none">
                 <path
@@ -85,7 +86,7 @@
                     this.$watch('dateRange', value => {
                         this.showDropdown = false
                     })
-
+            
                     this.$watch('currentChartPeriod', value => {
                         this.showDropdown = false
                     })
@@ -115,11 +116,11 @@
             </div>
         </div>
 
-        <div class="place-items-center h-96" wire:loading.grid>
+        <div class="mt-3 place-items-center h-[300px] sm:h-[500px]" wire:loading.grid>
             <span class="mx-auto simple-loader text-blue"></span>
         </div>
 
-        <div class="mt-3" wire:loading.remove>
+        <div class="mt-3 h-[300px] sm:h-[500px]" wire:loading.remove>
             <canvas id="product-profile-chart"></canvas>
         </div>
     </div>
@@ -186,9 +187,6 @@
                         }
                     }
                 }],
-                maintainAspectRatio: false,
-                aspectRatio: 3,
-                responsive: true,
                 type: 'bar',
                 data: {
                     datasets: [{
@@ -217,6 +215,8 @@
                     ]
                 },
                 options: {
+                    maintainAspectRatio: false,
+                    responsive: true,
                     interaction: {
                         intersect: false,
                         mode: 'index',
