@@ -37,6 +37,10 @@
         {
         "type": "composer",
         "url": "https://wire-elements-pro.composer.sh"
+        },
+        {
+            "type": "git",
+            "url": "git@github.com:Capitalyze-Inc/capitalyze-web.git"
         }
     ],
     "autoload": {
