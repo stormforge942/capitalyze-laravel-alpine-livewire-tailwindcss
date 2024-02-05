@@ -104,14 +104,13 @@ function renderRevenueByEmployeeChart(canvas, datasets, config) {
 
     return new Chart(ctx, {
         plugins: [chartJsPlugins.pointLine],
-        maintainAspectRatio: false,
-        aspectRatio: 3,
-        responsive: true,
         type: "bar",
         data: {
             datasets,
         },
         options: {
+            maintainAspectRatio: false,
+            responsive: true,    
             interaction: {
                 intersect: false,
                 mode: "index",
@@ -163,14 +162,13 @@ function renderCostStructureChart(canvas, datasets, config) {
 
     return new Chart(ctx, {
         plugins: [window.ChartDataLabels, chartJsPlugins.pointLine],
-        maintainAspectRatio: false,
-        aspectRatio: 3,
-        responsive: true,
         type: "bar",
         data: {
             datasets,
         },
         options: {
+            maintainAspectRatio: false,
+            responsive: true,    
             interaction: {
                 intersect: false,
                 mode: "index",
@@ -219,14 +217,13 @@ function renderFcfConversionChart(canvas, data, config) {
 
     return new Chart(ctx, {
         plugins: [window.ChartDataLabels, chartJsPlugins.pointLine],
-        maintainAspectRatio: false,
-        aspectRatio: 3,
-        responsive: true,
         type: "bar",
         data: {
             datasets: data.datasets,
         },
         options: {
+            maintainAspectRatio: false,
+            responsive: true,    
             interaction: {
                 intersect: false,
                 mode: "index",
@@ -305,14 +302,13 @@ function renderCapitalStructureChart(canvas, datasets, config) {
 
     return new Chart(ctx, {
         plugins: [chartJsPlugins.pointLine],
-        maintainAspectRatio: false,
-        aspectRatio: 3,
-        responsive: true,
         type: "line",
         data: {
             datasets,
         },
         options: {
+            maintainAspectRatio: false,
+            responsive: true,    
             interaction: {
                 intersect: false,
                 mode: "index",
@@ -365,14 +361,13 @@ function basicBarChart(canvas, datasets, config) {
 
     return new Chart(ctx, {
         plugins: [],
-        maintainAspectRatio: false,
-        aspectRatio: 3,
-        responsive: true,
         type: "bar",
         data: {
             datasets,
         },
         options: {
+            maintainAspectRatio: false,
+            responsive: true,    
             interaction: {
                 intersect: false,
                 mode: "index",
@@ -410,14 +405,13 @@ function percentageBarChart(canvas, datasets, config = {}) {
 
     return new Chart(ctx, {
         plugins: [window.ChartDataLabels],
-        maintainAspectRatio: false,
-        aspectRatio: 3,
-        responsive: true,
         type: "bar",
         data: {
             datasets,
         },
         options: {
+            maintainAspectRatio: false,
+            responsive: true,    
             interaction: {
                 intersect: false,
                 mode: "index",
