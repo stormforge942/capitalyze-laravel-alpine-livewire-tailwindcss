@@ -230,7 +230,7 @@ class CompanyOverview extends Component
                 ],
                 [
                     'key' => 'IPO date',
-                    'value' => data_get($profile, 'ipo_data'),
+                    'value' => data_get($profile, 'ipo_date'),
                     'icon' => <<<'ICON'
                             <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 16 16" fill="none">
                                 <path
