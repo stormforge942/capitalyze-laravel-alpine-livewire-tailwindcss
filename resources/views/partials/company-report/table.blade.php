@@ -157,7 +157,7 @@
                                                     <span class="hover:underline cursor-pointer"
                                                     :class="formattedValue.isNegative ? 'text-red' : ''"
                                                     x-text="formattedValue.result"
-                                                    @click="$wire.emit('rightSlide', row.values[date])">
+                                                    @click="Livewire.emit('slide-over.open', 'slides.right-slide', {data: row.values[date]})">
                                                     </span>
                                                 </x-review-number-button>
                                             </div>

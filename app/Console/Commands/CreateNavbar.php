@@ -37,6 +37,8 @@ class CreateNavbar extends Command
             'company.analysis' => 'Analysis',
             'company.filings-summary' => 'Filings',
             'company.ownership' => 'Ownership',
+            'builder.chart' => 'Chart',
+            'builder.table' => 'Table',
         ];
 
         return $map[$input] ?? implode(' ', array_map('ucfirst', explode('.', str_replace('-', '.', $input))));

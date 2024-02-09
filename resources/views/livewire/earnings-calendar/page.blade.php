@@ -58,11 +58,11 @@
                     },
                     sortBy(column) {
                         if (this.sort.column === column) {
-                            if (this.sort.direction === 'desc') {
+                            {{-- if (this.sort.direction === 'desc') {
                                 this.sort.column = '';
                                 this.sort.direction = 'asc';
                                 return;
-                            }
+                            } --}}
                 
                             this.sort.direction = this.sort.direction === 'asc' ? 'desc' : 'asc';
                         } else {
@@ -95,11 +95,13 @@
                                 name: 'Time',
                                 key: 'time',
                                 sortable: true,
+                                right: true,
                             },
                             {
                                 name: 'Reported Time',
                                 key: 'pub_time',
                                 sortable: true,
+                                right: true,
                             },
                             {
                                 name: 'URL',
@@ -159,24 +161,26 @@
                                 <tr>
                                     <template x-for="column in columns()" :key="column.key">
                                         <th class="pl-6 py-2 text-dark whitespace-nowrap"
-                                            :style="`width: max-content;${column.sortable ? 'cursor:pointer;' : ''}`">
-                                            <div class="flex items-center gap-1" @click.prevent="sortBy(column.key)">
-                                                <span x-text="column.name"></span>
-
-                                                <template x-if="column.sortable && sort.column !== column.key">
-                                                    <span>
-                                                        <svg xmlns="http://www.w3.org/2000/svg" width="16"
-                                                            height="16" viewBox="0 0 16 16" fill="none">
-                                                            <path d="M12 6L8 2L4 6H12ZM12 10L8 14L4 10H12Z"
-                                                                fill="#464E49">
-                                                            </path>
-                                                        </svg>
-                                                    </span>
-                                                </template>
-
-                                                <template x-if="column.sortable && sort.column === column.key">
-                                                    <span x-html="sort.direction === 'asc' ? '&#8595;' : '&#8593;'"></span>
-                                                </template>
+                                            :style="`width: max-content;`">
+                                            <div class="flex" :class="column.right ? 'justify-end' : ''">
+                                                <div class="inline-flex items-center gap-1" :class="column.sortable ? 'cursor-pointer' : ''" @click.prevent="sortBy(column.key)">
+                                                    <span x-text="column.name"></span>
+    
+                                                    <template x-if="column.sortable && sort.column !== column.key">
+                                                        <span>
+                                                            <svg xmlns="http://www.w3.org/2000/svg" width="16"
+                                                                height="16" viewBox="0 0 16 16" fill="none">
+                                                                <path d="M12 6L8 2L4 6H12ZM12 10L8 14L4 10H12Z"
+                                                                    fill="#464E49">
+                                                                </path>
+                                                            </svg>
+                                                        </span>
+                                                    </template>
+    
+                                                    <template x-if="column.sortable && sort.column === column.key">
+                                                        <span x-html="sort.direction === 'asc' ? '&#8595;' : '&#8593;'"></span>
+                                                    </template>
+                                                </div>
                                             </div>
                                         </th>
                                     </template>

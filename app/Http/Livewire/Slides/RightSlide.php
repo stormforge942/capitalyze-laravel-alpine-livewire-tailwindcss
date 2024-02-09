@@ -3,40 +3,30 @@
 namespace App\Http\Livewire\Slides;
 
 use Illuminate\Support\Facades\DB;
-use Livewire\Component;
+use WireElements\Pro\Components\SlideOver\SlideOver;
 
-class RightSlide extends Component
+class RightSlide extends SlideOver
 {
     public $hash;
     public $secondHash;
-    public $data;
-    public $result;
+    public $data = null;
+    public $result = null;
     public $value;
     public $ticker;
-    public $json;
     public $title = "Report Info";
     public $period = "";
     public $loaded = false;
-    public $open = false;
 
-    protected $listeners = ['rightSlide', 'loadData', 'closeSlide'];
-
-    public function closeSlide(){
-        $this->open = false;
-    }
-
-    public function rightSlide($data){
-        $this->open = true;
-        $this->loaded = false;
-        $this->emitSelf('loadData', $data);
-    }
-    
-    public function loadData($data){
+    public function mount($data)
+    {
         $this->ticker = $data['ticker'];
         $this->value = $data['value'];
         $this->hash = $data['hash'];
         $this->secondHash = $data['secondHash'] ?? null;
+    }
 
+    public function loadData()
+    {
         if ($this->secondHash) {
             $result = DB::connection('pgsql-xbrl')
                 ->table('public.tikr_text_block_content')
@@ -66,21 +56,33 @@ class RightSlide extends Component
                     ->where('ticker', '=', $this->ticker)
                     ->whereIn('fact_hash', $factHashes)
                     ->value('content');
-
-                $this->loaded = true;
             } else {
-                $this->data = ['No Data Available'];
-                $this->loaded = true;
+                $this->data = null;
             }
-        }
-    }
 
-    public function mount()
-    {
+            $this->loaded = true;
+        }
     }
 
     public function render()
     {
         return view('livewire.slides.right-slide');
+    }
+
+    public static function behavior(): array
+    {
+        return [
+            'close-on-escape' => true,
+            'close-on-backdrop-click' => true,
+            'trap-focus' => true,
+            'remove-state-on-close' => false,
+        ];
+    }
+
+    public static function attributes(): array
+    {
+        return [
+            'size' => 'xl',
+        ];
     }
 }

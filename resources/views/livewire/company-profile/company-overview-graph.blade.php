@@ -116,11 +116,11 @@
             </div>
         </div>
 
-        <div class="mt-3 place-items-center h-[300px] sm:h-[300px]" wire:loading.grid>
+        <div class="mt-3 place-items-center h-[300px]" wire:loading.grid>
             <span class="mx-auto simple-loader text-blue"></span>
         </div>
 
-        <div class="mt-3 h-[300px] sm:h-[300px]" wire:loading.remove>
+        <div class="mt-3 h-[300px]" wire:loading.remove>
             <canvas id="product-profile-chart"></canvas>
         </div>
     </div>

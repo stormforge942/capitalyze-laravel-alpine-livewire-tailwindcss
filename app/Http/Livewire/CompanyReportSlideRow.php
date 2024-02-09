@@ -13,8 +13,6 @@ class CompanyReportSlideRow extends Component
     public $isRight = false;
     public $formulaValues;
 
-    protected $listeners = ['getTicker'];
-
     public function mount($data, $isRight = false, $formulaValues = [])
     {
         $this->data = $data;
@@ -23,17 +21,13 @@ class CompanyReportSlideRow extends Component
         $this->generateRows();
     }
 
-    public function viewDetails($value){
-        $this->emit('leftSlide', $value);
-    }
-
-    public function getTicker($ticker) {
-        $this->ticker = $ticker;
-    }
-
     public function generateAttribute($value)
     {
-        return '{"hash":"' . $value['hash'] . '","ticker":"' . 'AAPL' . '","value":"$' . $value['value'] . '"}';
+        return [
+            'hash' => $value['hash'],
+            'ticker' => $this->ticker,
+            'value' => $value['value']
+        ];
     }
     public function generateRows()
     {

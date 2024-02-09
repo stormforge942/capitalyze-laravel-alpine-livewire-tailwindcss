@@ -1,5 +1,4 @@
 <div class="w-full">
-    <livewire:slides.right-slide />
     <livewire:slides.left-slide />
 
     <div id="main-report-div" class="py-0 bg-gray-100">
@@ -304,7 +303,7 @@
                                         {{ $company['name'] }} ({{ $company['ticker'] }})
                                     </div>
 
-                                    <div class="mt-10 h-[300px] sm:h-[500px]">
+                                    <div class="mt-10 h-[300px] sm:h-[400px]">
                                         <canvas id="chart-company-report"></canvas>
                                     </div>
                                     <div class="mt-8 flex flex-wrap justify-start items-end gap-3">
@@ -436,12 +435,11 @@
         let chart = null;
 
         document.getElementById('main-report-div')?.addEventListener('click', function() {
-            let leftSlideOpen = document.getElementById('leftSlideOpen').value
-            let rightSlideOpen = document.getElementById('rightSlideOpen').value
+            // let leftSlideOpen = document.getElementById('leftSlideOpen').value
 
-            if (leftSlideOpen || rightSlideOpen) {
-                Livewire.emit('closeSlide')
-            }
+            // if (leftSlideOpen) {
+            //     Livewire.emit('closeSlide')
+            // }
         })
 
         Livewire.on('slide-over.close', () => {

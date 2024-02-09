@@ -25,6 +25,7 @@ use App\Http\Controllers\HkexController;
 use App\Http\Controllers\HomeController;
 use App\Http\Livewire\EconomicsCalendar;
 use App\Http\Controllers\AdminController;
+use App\Http\Controllers\BuilderController;
 use App\Http\Controllers\JapanController;
 use App\Http\Livewire\CompanyFilingsPage;
 use App\Http\Livewire\CompanyIdentifiers;
@@ -108,6 +109,9 @@ Route::middleware(['auth', 'approved', 'verified', 'checkPagePermission'])
         // if company is supplied in url, it will show history of fund for that company otherwise it will show history of fund for all companies
         Route::get('/fund/{fund}/{company?}', [CompanyController::class, 'fund'])->name('company.fund');
         Route::get('/mutual-fund/{cik}/{fund_symbol}/{series_id}/{class_id}/{class_name}{company?}', [CompanyController::class, 'mutualFund'])->name('company.mutual-fund');
+
+        Route::get('builder/chart', [BuilderController::class, 'chart'])->name('builder.chart');
+        Route::get('builder/table', [BuilderController::class, 'table'])->name('builder.table');
 
         Route::get('/legacy/mutual-fund/{cik}/{fund_symbol}/{series_id}/{class_id}/', [MutualFundController::class, 'holdings'])->name('mutual-fund.holdings');
         Route::get('/legacy/mutual-fund/{cik}/{fund_symbol}/{series_id}/{class_id}/returns', [MutualFundController::class, 'returns'])->name('mutual-fund.returns');

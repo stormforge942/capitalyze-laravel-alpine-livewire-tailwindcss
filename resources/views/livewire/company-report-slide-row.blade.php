@@ -29,7 +29,7 @@
                         @if(in_array($value['value'], $formulaValues))
                             style="background-color: yellow;"
                         @endif
-                        data-value="{{$this->generateAttribute($value)}}" wire:click="" class="open-slide cursor-pointer hover:underline {{$res < 0 ? 'text-red' : 'text-black'}}">{{$res}}</span>
+                        @click.prevent="Livewire.emit('left-slide.open', @js($this->generateAttribute($value)))" class="open-slide cursor-pointer hover:underline {{$res < 0 ? 'text-red' : 'text-black'}}">{{$res}}</span>
                     </div>
                 @endforeach
             </div>

@@ -19,24 +19,35 @@ class LeftSlide extends Component
     public $loaded = false;
     public $open = false;
 
-    protected $listeners = ['leftSlide', 'loadData', 'closeSlide'];
+    protected $listeners = [
+        'left-slide.open' => 'open',
+        'loadData',
+        'closeSlide'
+    ];
 
-    public function closeSlide(){
+    public function closeSlide()
+    {
         $this->open = false;
     }
 
-    public function leftSlide($data){
-        $this->open = true;
-        $this->loaded = false;
-        $this->emitSelf('loadData', $data);
-    }
-
-    public function loadData($data){
+    public function open($data)
+    {
         $this->ticker = $data['ticker'] ?? '';
         $this->value = $data['value'];
         $this->hash = $data['hash'];
         $this->secondHash = $data['secondHash'] ?? null;
 
+        $this->open = true;
+        $this->loaded = false;
+    }
+
+    public function key()
+    {
+        return $this->ticker . $this->hash . $this->secondHash . $this->value . ($this->loaded ? 'loaded' : 'not-loaded');
+    }
+
+    public function loadData()
+    {
         if ($this->secondHash) {
             $result = DB::connection('pgsql-xbrl')
                 ->table('public.tikr_text_block_content')
@@ -66,18 +77,14 @@ class LeftSlide extends Component
                     ->where('ticker', '=', $this->ticker)
                     ->whereIn('fact_hash', $factHashes)
                     ->value('content');
-
-                $this->loaded = true;
             } else {
-                $this->data = ['No Data Available'];
-                $this->loaded = true;
+                $this->data = null;
             }
+
+            $this->loaded = true;
         }
     }
 
-    public function mount()
-    {
-    }
     public function render()
     {
         return view('livewire.slides.left-slide');

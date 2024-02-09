@@ -4,12 +4,13 @@ namespace App\Http\Livewire;
 
 use App\Models\Navbar;
 use Livewire\Component;
+use Illuminate\Support\Str;
 use Illuminate\Http\Request;
-use Illuminate\Support\Facades\Auth;
-use Illuminate\Contracts\View\Factory as ViewFactory;
 use Illuminate\Contracts\View\View;
-use Illuminate\Contracts\Foundation\Application;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Http\RedirectResponse;
+use Illuminate\Contracts\Foundation\Application;
+use Illuminate\Contracts\View\Factory as ViewFactory;
 
 class CompanyNavbar extends Component
 {
@@ -52,7 +53,8 @@ class CompanyNavbar extends Component
                 return [
                     'title' => $nav->name,
                     'url' => route($nav->route_name, ['ticker' => $this->company->ticker]),
-                    'active' => request()->routeIs($nav->route_name)
+                    'active' => request()->routeIs($nav->route_name),
+                    'route_name' => $nav->route_name,
                 ];
             });
 
@@ -70,6 +72,12 @@ class CompanyNavbar extends Component
             'Filings',
             'Ownership',
         ];
+
+        // dd($links);
+
+        // dd($links->where(fn ($link) => Str::startsWith('builder.', $link['route_name']))
+        // ->values()
+        // ->all());
 
         return [
             'main' => [
@@ -100,6 +108,13 @@ class CompanyNavbar extends Component
                     ->values()
                     ->all(),
                 'collapsed' => false
+            ],
+            'builder' => [
+                'name' => 'Builder',
+                'items' => $links->where(fn ($link) => Str::startsWith('builder.', $link['route_name']))
+                    ->values()
+                    ->all(),
+                'collapsed' => true
             ],
             'more' => [
                 'name' => 'More',

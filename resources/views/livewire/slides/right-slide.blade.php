@@ -1,26 +1,8 @@
-<div
-@if(!$open)
-style="display: none;"
-@endif
-class="fixed overflow-x-hidden h-full shadow w-full modal_parent bg-white z-40 p-8 max-w-xl right-0 top-0 transition ease-in-out show-scrollbar">
-<input type="hidden" id="rightSlideOpen" value="{{$open}}">
-    <div class="flex items-center justify-between">
-        <div class="text-lg shrink-0 font-semibold">{!! $title !!}</div>
-        <div class="ml-3 flex h-7 items-center">
-            <button type="button" wire:click="$set('open', false)"
-                class="rounded-md bg-white text-gray-400 hover:text-gray-500">
-                <span class="sr-only">Close panel</span>
-                <svg class="h-6 w-6" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24"
-                    stroke="currentColor" aria-hidden="true">
-                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12">
-                    </path>
-                </svg>
-            </button>
-        </div>
+<x-wire-elements-pro::tailwind.slide-over>
+    <x-slot name="title">{!! $title !!}</x-slot>
 
-    </div>
-    <div wire:loading class="w-full h-full">
-        <div wire:ignore class="flex w-full  items-center justify-center h-full" role="status">
+    @if (!$loaded)
+        <div class="grid place-content-center h-full" role="status" wire:init="loadData">
             <svg aria-hidden="true" class="w-12 h-12 mr-2 text-gray-200 animate-spin dark:text-gray-600 fill-blue-600"
                 viewBox="0 0 100 101" fill="none" xmlns="http://www.w3.org/2000/svg">
                 <path
@@ -32,98 +14,74 @@ class="fixed overflow-x-hidden h-full shadow w-full modal_parent bg-white z-40 p
             </svg>
             <span class="sr-only">Loading...</span>
         </div>
-    </div>
-    @if($loaded)
-    <div>
-        @if($result && array_key_exists('Mapping result', $result))
-    <h3 class="text-[21px] font-bold mb-2">{{$result['message']}}</h3>
-    <p>{{$result['Mapping result']}}</p>
+    @else
+        <div>
+            @if ($result && array_key_exists('Mapping result', $result))
+                <h3 class="text-[21px] font-bold mb-2">{{ $result['message'] }}</h3>
+                <p>{{ $result['Mapping result'] }}</p>
+            @endif
+            @if ($result && array_key_exists('formula', $result))
+                <h1 class="text-[21px] font-bold mb-2">{{ $result['formula']['metric'] }}</h1>
+                <div class="block px-4 py-2">
+                    <span class="w-[100px] inline-block font-bold">Expression</span>
+                    <span>{{ $result['formula']['expression'] }}</span>
+                </div>
+                <div class="block px-4 py-2">
+                    <span class="w-[100px] inline-block font-bold">Simplified</span>
+                    <span>{{ $result['formula']['canonized'] }}</span>
+                </div>
+                <div class="block px-4 py-2">
+                    <span class="w-[100px] inline-block font-bold">Resolved</span>
+                    <span
+                        class="{{ str_contains($this->result['formula']['resolved'], '229234000000') ||
+                        str_contains($this->result['formula']['resolved'], '21563900000')
+                            ? 'text-yellow-500'
+                            : 'text-black' }}">
+                        @php
+
+                            $splitedFormula = explode(' ', $result['formula']['resolved']);
+                            $finalFormula = '';
+                            $formulaValues = [];
+                            foreach ($splitedFormula as $str) {
+                                if (is_numeric($str)) {
+                                    $formulaValues[] = $str;
+                                    if ($str < 0) {
+                                        $str = "<span class='text-red'>(" . number_format(abs($str)) . ')</span>';
+                                    } else {
+                                        $str = number_format($str);
+                                    }
+                                    $formulaValues[] = $str;
+                                    $finalFormula .= ' ' . $str;
+                                } else {
+                                    $finalFormula .= ' ' . $str;
+                                }
+                            }
+
+                        @endphp
+                        {!! $finalFormula !!}
+                    </span>
+                </div>
+                <div class="block px-4 py-2">
+                    <span class="w-[100px] inline-block font-bold">Result</span>
+                    <span>{{ $result['formula']['result'] }}</span>
+                </div>
+            @endif
+
+            @if ($result && array_key_exists('body', $result))
+                <livewire:company-report-slide-row :isRight="true" wire:key="{{ now() }}" :data="$result['body']"
+                    :formulaValues="$formulaValues" :ticker="$ticker" />
+            @endif
+
+            @if (is_string($data))
+                {!! $data !!}
+            @endif
+
+            @if (!$data && !$result)
+                No data found
+            @endif
+        </div>
+        <script>
+            window.reportTextHighlighter.highlight(@json($value), 'table tbody tr td')
+        </script>
     @endif
-    @if($result && array_key_exists('formula', $result))
-    <h1 class="text-[21px] font-bold mb-2">{{$result['formula']['metric']}}</h1>
-    <div class="block px-4 py-2">
-        <span class="w-[100px] inline-block font-bold">Expression</span>
-        <span>{{$result['formula']['expression']}}</span>
-    </div>
-    <div class="block px-4 py-2">
-        <span class="w-[100px] inline-block font-bold">Simplified</span>
-        <span>{{$result['formula']['canonized']}}</span>
-    </div>
-    <div class="block px-4 py-2">
-        <span class="w-[100px] inline-block font-bold">Resolved</span>
-        <span
-            class="{{str_contains($this->result['formula']['resolved'], '229234000000')
-                || str_contains($this->result['formula']['resolved'], '21563900000') ? 'text-yellow-500' : 'text-black'}}">
-            @php
-
-            $splitedFormula = explode(' ', $result['formula']['resolved']);
-            $finalFormula = "";
-            $formulaValues = [];
-            foreach($splitedFormula as $str){
-                if(is_numeric($str)){
-                    $formulaValues[] = $str;
-                    if($str < 0){
-                        $str = "<span class='text-red'>(".number_format(abs($str)).")</span>";
-                    }
-                    else {
-                        $str = number_format($str);
-                    }
-                    $formulaValues[] = $str;
-                    $finalFormula .= " " . $str;
-                }
-                else {
-                    $finalFormula .= " " . $str;
-                }
-            }
-
-            @endphp
-            {!!$finalFormula!!}
-        </span>
-    </div>
-    <div class="block px-4 py-2">
-        <span class="w-[100px] inline-block font-bold">Result</span>
-        <span>{{$result['formula']['result']}}</span>
-    </div>
-    @endif
-
-    @if($result && array_key_exists('body', $result))
-    <livewire:company-report-slide-row :isRight="true" wire:key="{{now()}}" :data="$result['body']" :formulaValues="$formulaValues" />
-    @endif
-
-    @if(is_array($data))
-    @foreach($data as $table)
-    {!! $table !!}
-    @endforeach
-    @endif
-    @if(is_string($data))
-    {!! $data !!}
-    @endif
-    </div>
-    <script>
-        window.reportTextHighlighter.highlight(@json($value), 'table tbody tr td')
-    </script>
-    <script>
-        document.body.addEventListener('click', function (event) {
-            let element = event.target;
-
-            if (element.classList.contains('open-slide')) {
-                var value = element.dataset.value;
-                try{
-                    value = JSON.parse(value);
-                    // window.livewire.emit('slide-over.open', 'company-report-slide', value, {force: true});
-                    window.livewire.emit('leftSlide', value);
-                }
-                catch(ex){
-
-                }
-            }
-        });
-    </script>
-    @endif
-    <style>
-        body {
-            overflow: {{$open ? 'hidden' : 'auto'}};
-        }
-    </style>
-
-</div>
+</x-wire-elements-pro::tailwind.slide-over>

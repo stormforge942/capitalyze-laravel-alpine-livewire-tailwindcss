@@ -34,16 +34,16 @@
                 return;
             }
 
-            entries.forEach(entry => {
+            for (let entry of entries) {
                 if (entry.isIntersecting) {
                     this.activeTab = '#' + entry.target.getAttribute('id')
-                    return;
-                };
-            })
+                    break
+                }
+            }
         }
 
         let observer = new IntersectionObserver(callback, {
-            threshold: [0.5]
+            threshold: 1
         });
 
         links.forEach((link) => {

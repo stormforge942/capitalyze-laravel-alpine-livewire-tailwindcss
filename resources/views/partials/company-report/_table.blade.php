@@ -19,7 +19,7 @@
     },
     init() {
         this.setRowContext()
-        
+
         if (
             index > 0 &&
             (this.rowContext.section !== this.lastSection)
@@ -113,7 +113,7 @@
                             <x-review-number-button x-data="{ amount: row.values[date]?.value || 0, date }">
                                 <span class="hover:underline cursor-pointer"
                                     :class="formattedValue.isNegative ? 'text-red' : ''" x-text="formattedValue.result"
-                                    @click="$wire.emit('rightSlide', row.values[date])">
+                                    @click="Livewire.emit('slide-over.open', 'slides.right-slide', {data: row.values[date]})">
                                 </span>
                             </x-review-number-button>
                         </div>
