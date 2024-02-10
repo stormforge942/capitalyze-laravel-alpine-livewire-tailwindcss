@@ -7,6 +7,8 @@ use Illuminate\Database\Eloquent\Model;
 
 class Navbar extends Model
 {
+    public const PRIMARY_NAV = ['company.', 'lse.', 'tsx.', 'fund.', 'mutual-fund.', 'etf.', 'shanghai.', 'japan.', 'hkex.', 'otc.', 'frankfurt.', 'euronext.', 'shenzhen.', 'economics-release', 'create.', 'builder.'];
+
     /**
      * The primary key associated with the table.
      *
@@ -62,9 +64,9 @@ class Navbar extends Model
         return $navItems->where(function ($nav) {
             return !Str::startsWith(
                 $nav->route_name,
-                ['company.', 'lse.', 'tsx.', 'fund.', 'mutual-fund.', 'etf.', 'shanghai.', 'japan.', 'hkex.', 'otc.', 'frankfurt.', 'euronext.', 'shenzhen.', 'economics-release', 'create.']
+                static::PRIMARY_NAV
             );
         })
-        ->values();
+            ->values();
     }
 }

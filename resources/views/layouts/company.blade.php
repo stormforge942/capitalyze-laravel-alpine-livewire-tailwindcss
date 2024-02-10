@@ -94,6 +94,10 @@
             <livewire:comapany-filings-summary :company="$company" :tinker="$ticker" :period="$period" />
         @elseif($tab == 'analysis')
             <livewire:company-analysis.page :company="$company" :ticker="$ticker" :period="$period" />
+        @elseif($tab === 'builder-chart')
+            <livewire:builder.chart />
+        @elseif($tab === 'builder-table')
+            <livewire:builder.table />
         @endif
     </main>
 

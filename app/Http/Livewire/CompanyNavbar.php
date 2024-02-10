@@ -11,6 +11,7 @@ use Illuminate\Support\Facades\Auth;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Contracts\Foundation\Application;
 use Illuminate\Contracts\View\Factory as ViewFactory;
+use Illuminate\Support\Arr;
 
 class CompanyNavbar extends Component
 {
@@ -54,7 +55,6 @@ class CompanyNavbar extends Component
                     'title' => $nav->name,
                     'url' => route($nav->route_name, ['ticker' => $this->company->ticker]),
                     'active' => request()->routeIs($nav->route_name),
-                    'route_name' => $nav->route_name,
                 ];
             });
 
@@ -73,11 +73,10 @@ class CompanyNavbar extends Component
             'Ownership',
         ];
 
-        // dd($links);
-
-        // dd($links->where(fn ($link) => Str::startsWith('builder.', $link['route_name']))
-        // ->values()
-        // ->all());
+        $builderLinks = [
+            'Chart',
+            'Table',
+        ];
 
         return [
             'main' => [
@@ -94,10 +93,6 @@ class CompanyNavbar extends Component
                     ->map(function (Navbar $nav) {
                         $active = request()->routeIs($nav->route_name);
 
-                        if ($nav->name === 'Ownership') {
-                            $active = $active || request()->routeIs('company.fund', 'company.mutual-fund');
-                        }
-
                         return [
                             'title' => $nav->name,
                             'url' => route($nav->route_name, ['ticker' => $this->company->ticker]),
@@ -111,7 +106,15 @@ class CompanyNavbar extends Component
             ],
             'builder' => [
                 'name' => 'Builder',
-                'items' => $links->where(fn ($link) => Str::startsWith('builder.', $link['route_name']))
+                'items' => $allLinks->where(fn ($link) => in_array($link['name'], $builderLinks))
+                    ->map(function (Navbar $nav) {
+                        return [
+                            'title' => $nav->name,
+                            'url' => route($nav->route_name, ['ticker' => $this->company->ticker]),
+                            'active' => request()->routeIs($nav->route_name)
+                        ];
+                    })
+                    ->sort($this->sortFunction($builderLinks))
                     ->values()
                     ->all(),
                 'collapsed' => true
@@ -119,7 +122,7 @@ class CompanyNavbar extends Component
             'more' => [
                 'name' => 'More',
                 'items' => $links->where(
-                    fn ($link) => !in_array($link['title'], array_merge($mainLinks, $companyResearchLinks))
+                    fn ($link) => !in_array($link['title'], array_merge($mainLinks, $companyResearchLinks, $builderLinks))
                 )
                     ->values()
                     ->all(),
