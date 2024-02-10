@@ -10,10 +10,11 @@ class Breadcrumb extends Component
     public $company;
     public $url;
 
-    public function mount() {
+    public function mount()
+    {
         $this->url = request()->url();
     }
-    
+
     public function render()
     {
         return view('livewire.ownership.breadcrumb', [
@@ -27,6 +28,10 @@ class Breadcrumb extends Component
         OwnershipHistoryService::remove($tab['url']);
 
         if ($tab['active'] ?? false) {
+            if (count(OwnershipHistoryService::get())) {
+                return redirect(OwnershipHistoryService::get()[0]['url']);
+            }
+
             return redirect(route('company.ownership', ['ticker' => OwnershipHistoryService::getCompany()]));
         }
 
