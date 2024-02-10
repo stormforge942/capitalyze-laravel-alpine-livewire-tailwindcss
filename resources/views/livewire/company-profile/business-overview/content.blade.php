@@ -27,32 +27,45 @@
         }, 1000)
     },
     init() {
-        const links = [...$refs.contentArea.querySelectorAll('.anchor')].map((el) => '#' + el.getAttribute('id'))
+        const els = $refs.contentArea.querySelectorAll('.anchor')
 
-        let callback = (entries, observer) => {
-            if (window.innerWidth <= 1024 || this.scrolling) {
-                return;
+        const runScollSpy = Alpine.debounce(() => {
+            if(document.innerWidth < 1024 || this.scrolling) return
+
+            {{-- if document is scrolled to very bottom --}}
+            if(document.documentElement.scrollHeight - document.documentElement.scrollTop === document.documentElement.clientHeight) {
+                this.activeTab = '#' + els[els.length - 1].getAttribute('id')
+                return
             }
 
-            for (let entry of entries) {
-                if (entry.isIntersecting) {
-                    this.activeTab = '#' + entry.target.getAttribute('id')
-                    break
+            let topMost = {
+                el: null,
+                top: Infinity,
+            }
+
+            els.forEach((el) => {
+                const bounds = el.getBoundingClientRect()
+
+                if (bounds.top < topMost.top && bounds.top > 0) {
+                    topMost = {
+                        el,
+                        top: bounds.top
+                    }
                 }
+            })
+
+            if (topMost.el) {
+                this.activeTab = '#' + topMost.el.getAttribute('id')
+            } else {
+                this.activeTab = this.activeTab || '#' + els[0].getAttribute('id')
             }
-        }
+        }, 50)
 
-        let observer = new IntersectionObserver(callback, {
-            threshold: 1
-        });
-
-        links.forEach((link) => {
-            const element = $refs.contentArea.querySelector(link)
-
-            if (element) {
-                observer.observe(element)
-            }
+        this.$nextTick(() => {
+            runScollSpy()
         })
+
+        window.addEventListener('scroll', runScollSpy)
     },
 }">
     <x-card class="block lg:hidden max-w-[612px] w-full">
