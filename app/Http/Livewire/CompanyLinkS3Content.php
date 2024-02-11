@@ -7,8 +7,8 @@ use WireElements\Pro\Components\Modal\Modal;
 
 class CompanyLinkS3Content extends Modal
 {
-    public string $s3Link;
-    public string $content;
+    public ?string $s3Link = null;
+    public string $content = '';
     public bool $loaded = false;
 
     public function mount(array $row)
@@ -30,7 +30,7 @@ class CompanyLinkS3Content extends Modal
 
     public function loadData()
     {
-        $this->content = file_get_contents($this->s3Link) ?? '';
+        $this->content = $this->s3Link ? (file_get_contents($this->s3Link) ?? '') : '';
         $this->loaded = true;
     }
 
