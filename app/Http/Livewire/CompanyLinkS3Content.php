@@ -31,6 +31,8 @@ class CompanyLinkS3Content extends Modal
     public function loadData()
     {
         $this->content = $this->s3Link ? (file_get_contents($this->s3Link) ?? '') : '';
+        $this->content = mb_convert_encoding($this->content, 'UTF-8', 'UTF-8');
+
         $this->loaded = true;
     }
 

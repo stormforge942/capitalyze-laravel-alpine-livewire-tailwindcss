@@ -37,7 +37,7 @@
         <div @click="openFilingPop=true" class="flex justify-between items-center">
             <div><img src="{{asset('/svg/filter-list.svg')}}"/></div>
             <div class="flex justify-between items-center">
-                <h4 class="text-sm ml-2 text-[#121A0F] font-[400]">Table Optios</h4>
+                <h4 class="text-sm ml-2 text-[#121A0F] font-[400]">Table Options</h4>
                 @if($checkedCount)
                     <span class="bg-[#2C71F0] px-3 ml-2 py-0 rounded-full text-[0.625rem] font-[600] text-white">{{$checkedCount}}</span>
                 @endif
@@ -152,7 +152,7 @@
                 </thead>
                 <tbody class="bg-white divide-y divide-gray-200 dark:divide-gray-700 dark:bg-gray-900">   
                     <template x-for="(val, key) in filteredItems" :key="key">
-                        <tr  class="hover:bg-gray-50 cursor-pointer" @click.prevent="$wire.emit('passDataInViewPopModel',[JSON.stringify(val), JSON.stringify(filtered)]); open=true">
+                        <tr  class="hover:bg-gray-50 cursor-pointer" @click.prevent="Livewire.emit('modal.open', 'company-link-s3-content', { row: val })">
                             <td class="px-4 py-3 text-base  font-[400] text-[#121A0F] whitespace-nowrap" x-text="val.form_type"></td>
                             <td class="px-4 py-3 text-base  font-[400] text-[#121A0F] whitespace-nowrap"><p class="truncate w-96" x-text="val.description"></p></td>
                             <td class="px-4 py-3 text-base  font-[400] text-[#121A0F] whitespace-nowrap" x-text="val.filing_date"></td>
@@ -162,9 +162,6 @@
                 </tbody>
             </table>
         </div>
-    </div>
-    <div x-show="open" class="fixed  inset-0 z-50 flex items-center justify-center w-96" style="background-color: rgba(0,0,0,.5); width: 100%" >
-        <livewire:filings-summary.view-pop-up-model :company="$company"/>
     </div>
     <div class="fixed z-50 top-0 left-0 flex items-center justify-center w-full h-full" style="background-color: rgba(0,0,0,.5);" x-show="openFilingPop"  >
         <livewire:all-filings.filings-pop-up :selectChecked="$selectChecked"/>
