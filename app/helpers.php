@@ -43,7 +43,7 @@ function niceNumber($n)
 
 function getFilingsSummaryTab()
 {
-    return $data = [
+    return [
         [
             'name' => 'Financials',
             'value' => 'financials',
