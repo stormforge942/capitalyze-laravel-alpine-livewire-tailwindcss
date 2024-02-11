@@ -8,7 +8,6 @@ use Livewire\Component;
 class CompanySearch extends Component
 {
     public $search = '';
-    public $showDropdown = false;
     public $companies = [];
 
     protected $queryString = [
