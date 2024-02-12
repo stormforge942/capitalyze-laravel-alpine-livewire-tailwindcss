@@ -90,11 +90,17 @@ document.addEventListener("alpine:init", () => {
 
 window.printChart = function (canvas) {
     let win = window.open()
-    win.document.write(`<br><img src="${canvas.toDataURL()}" style="object-fit: contain; width: 100%;"/>`)
+    win.document.write(
+        `<br><img src="${canvas.toDataURL()}" style="object-fit: contain; width: 100%;"/>`
+    )
     setTimeout(() => {
         win.print()
         win.close()
     })
+}
+
+window.fullScreen = function (el) {
+    el.requestFullscreen()
 }
 
 Alpine.start()

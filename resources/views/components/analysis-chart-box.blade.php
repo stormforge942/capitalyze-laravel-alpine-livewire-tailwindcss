@@ -4,7 +4,7 @@
         window.printChart(this.$el.querySelector('canvas'))
     }
 }" @download-chart="Livewire.emit('modal.open', 'upgrade-account-modal')"
-    @print-chart="printChart">
+    @print-chart="printChart" @full-screen="fullScreen($el.querySelector('canvas').parentElement)">
     <div class="flex justify-end" x-show="hide" x-cloak @click="hide = false">
         <button class="bg-green-light flex items-center text-sm font-medium gap-3 pl-10 p-2"
             style="border-radius: 0 8px 2px 2px;">
