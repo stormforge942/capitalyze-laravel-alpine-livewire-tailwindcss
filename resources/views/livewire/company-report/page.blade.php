@@ -86,7 +86,7 @@
                 
                         return dates
                     },
-                    init() {                
+                    init() {
                         this.$watch('filters', (newVal) => {
                             const url = new URL(window.location.href);
                 
@@ -100,7 +100,7 @@
                 
                             window.history.replaceState({}, '', url);
                         }, { deep: true })
-
+                
                         this.$watch('filters.order', this.renderChart.bind(this), { deep: true })
                 
                         this.$watch('disclosureTab', (val) => window.updateQueryParam('disclosureTab', val))
@@ -136,16 +136,16 @@
                 
                         value = Number(value);
                 
-                        if(!isPercent){
+                        if (!isPercent) {
                             let divideBy = {
                                 Thousands: 1000,
                                 Millions: 1000000,
                                 Billions: 1000000000,
                             } [this.filters.unitType] || 1
-                    
+                
                             value = value / divideBy;
                         }
-                        
+                
                         const result = Number(Math.abs(value)).toLocaleString('en-US', {
                             style: 'decimal',
                             maximumFractionDigits: this.filters.decimalPlaces,
@@ -219,25 +219,20 @@
                         </div>
                     @else
                         <div class="mt-6 mb-8">
-                            <x-range-slider :min="$rangeDates[0]" :max="$rangeDates[count($rangeDates) - 1]" :value="$selectedDateRange" @range-updated="selectedDateRange = $event.detail">
+                            <x-range-slider :min="$rangeDates[0]" :max="$rangeDates[count($rangeDates) - 1]" :value="$selectedDateRange"
+                                @range-updated="selectedDateRange = $event.detail">
                             </x-range-slider>
                         </div>
 
                         <template x-if="selectedChartRows.length">
-                            <div class="mt-7" x-data="{ showGraph: true }">
-                                <div class="flex justify-end">
-                                    <button class="show-hide-chart-btn" @click="showGraph = true" x-show="!showGraph">
-                                        Show Chart
-                                        <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16"
-                                            viewBox="0 0 16 16" fill="none">
-                                            <path
-                                                d="M10.3083 6.19514L7.72167 8.78378L5.135 6.19514C5.01045 6.07021 4.84135 6 4.665 6C4.48865 6 4.31955 6.07021 4.195 6.19514C3.935 6.45534 3.935 6.87566 4.195 7.13585L7.255 10.1982C7.515 10.4584 7.935 10.4584 8.195 10.1982L11.255 7.13585C11.515 6.87566 11.515 6.45534 11.255 6.19514C10.995 5.94161 10.5683 5.93494 10.3083 6.19514Z"
-                                                fill="#121A0F"></path>
-                                        </svg>
-                                    </button>
-                                </div>
-
-                                <div class="bg-white rounded-lg p-10 relative" x-show="showGraph">
+                            <div class="mt-7" x-data="{
+                                printChart() {
+                                    window.printChart(this.$el.querySelector('canvas'))
+                                }
+                            }"
+                                @download-chart="Livewire.emit('modal.open', 'upgrade-account-modal')"
+                                @print-chart="printChart">
+                                <div class="bg-white rounded-lg p-10 relative">
                                     <div class="absolute top-2 right-2 xl:top-3 xl:right-5">
                                         <x-dropdown placement="bottom-start" :shadow="true">
                                             <x-slot name="trigger">
@@ -254,48 +249,7 @@
                                                 </svg>
                                             </x-slot>
 
-                                            <div class="py-4 text-sm+ w-52">
-                                                <div class="[&>*]:px-4 [&>*]:w-full [&>*]:p-2 [&>*]:text-left">
-                                                    <button class="hover:bg-gray-100"
-                                                        @click="showGraph = !showGraph; dropdown.hide();"
-                                                        x-text="showGraph ? 'Show Chart' : 'Hide Chart'"></button>
-                                                    <button class="hover:bg-gray-100">View in Full Screen</button>
-                                                    <button class="hover:bg-gray-100">Print Chart</button>
-                                                </div>
-                                                <hr class="my-4">
-                                                <div class="[&>*]:px-4 [&>*]:w-full [&>*]:p-2">
-                                                    <button class="hover:bg-gray-100 flex items-center gap-x-2">
-                                                        <svg width="16" height="16" viewBox="0 0 16 16"
-                                                            fill="none" xmlns="http://www.w3.org/2000/svg">
-                                                            <path
-                                                                d="M8.66927 6.66667H12.0026L8.0026 10.6667L4.0026 6.66667H7.33594V2H8.66927V6.66667ZM2.66927 12.6667H13.3359V8H14.6693V13.3333C14.6693 13.7015 14.3708 14 14.0026 14H2.0026C1.63442 14 1.33594 13.7015 1.33594 13.3333V8H2.66927V12.6667Z"
-                                                                fill="#121A0F" />
-                                                        </svg>
-
-                                                        <span>Download as PDF</span>
-                                                    </button>
-                                                    <button class="hover:bg-gray-100 flex items-center gap-x-2">
-                                                        <svg width="16" height="16" viewBox="0 0 16 16"
-                                                            fill="none" xmlns="http://www.w3.org/2000/svg">
-                                                            <path
-                                                                d="M8.66927 6.66667H12.0026L8.0026 10.6667L4.0026 6.66667H7.33594V2H8.66927V6.66667ZM2.66927 12.6667H13.3359V8H14.6693V13.3333C14.6693 13.7015 14.3708 14 14.0026 14H2.0026C1.63442 14 1.33594 13.7015 1.33594 13.3333V8H2.66927V12.6667Z"
-                                                                fill="#121A0F" />
-                                                        </svg>
-
-                                                        <span>Download as JPEG</span>
-                                                    </button>
-                                                    <button class="hover:bg-gray-100 flex items-center gap-x-2">
-                                                        <svg width="16" height="16" viewBox="0 0 16 16"
-                                                            fill="none" xmlns="http://www.w3.org/2000/svg">
-                                                            <path
-                                                                d="M8.66927 6.66667H12.0026L8.0026 10.6667L4.0026 6.66667H7.33594V2H8.66927V6.66667ZM2.66927 12.6667H13.3359V8H14.6693V13.3333C14.6693 13.7015 14.3708 14 14.0026 14H2.0026C1.63442 14 1.33594 13.7015 1.33594 13.3333V8H2.66927V12.6667Z"
-                                                                fill="#121A0F" />
-                                                        </svg>
-
-                                                        <span>Download as PNG</span>
-                                                    </button>
-                                                </div>
-                                            </div>
+                                            <x-chart-options :toggleFeature="false"></x-chart-options>
                                         </x-dropdown>
                                     </div>
 
@@ -345,8 +299,7 @@
                                                                 </template>
 
                                                                 <svg xmlns="http://www.w3.org/2000/svg" width="16"
-                                                                    height="16" viewBox="0 0 16 16"
-                                                                    fill="none">
+                                                                    height="16" viewBox="0 0 16 16" fill="none">
                                                                     <path
                                                                         d="M10.3083 6.19514L7.72167 8.78378L5.135 6.19514C5.01045 6.07021 4.84135 6 4.665 6C4.48865 6 4.31955 6.07021 4.195 6.19514C3.935 6.45534 3.935 6.87566 4.195 7.13585L7.255 10.1982C7.515 10.4584 7.935 10.4584 8.195 10.1982L11.255 7.13585C11.515 6.87566 11.515 6.45534 11.255 6.19514C10.995 5.94161 10.5683 5.93494 10.3083 6.19514Z"
                                                                         fill="#464E49" />
@@ -434,22 +387,10 @@
     <script>
         let chart = null;
 
-        document.getElementById('main-report-div')?.addEventListener('click', function() {
-            // let leftSlideOpen = document.getElementById('leftSlideOpen').value
-
-            // if (leftSlideOpen) {
-            //     Livewire.emit('closeSlide')
-            // }
-        })
-
-        Livewire.on('slide-over.close', () => {
-            slideOpen = false;
-        });
-
         function renderCompanyReportChart(data, reversed) {
             const ctx = document.getElementById("chart-company-report")?.getContext("2d");
 
-            if(!ctx) return;
+            if (!ctx) return;
 
             data.datasets.sort((a, b) => {
                 // If 'type' is 'line', prioritize it over 'bar'
