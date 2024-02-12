@@ -7,34 +7,30 @@ use Livewire\Component;
 
 class CompanySearch extends Component
 {
-    public $search = '';
-    public $companies = [];
-
-    protected $queryString = [
-        'search' => ['except' => '']
-    ];
-
     public function render()
     {
-        $this->getCompanies();
-
         return view('livewire.builder.company-search', [
-            'companies' => $this->getCompanies($this->search),
+            'companies' => $this->getCompanies(initial: true),
         ]);
     }
 
-    public function getCompanies()
+    public function getCompanies(?string $search = null, array $selectedCompanies = [], bool $initial = false)
     {
-        $term = "%$this->search%";
+        if (!$initial) {
+            $this->skipRender();
+        }
 
-        $this->companies = Company::query()
+        $term = "%$search%";
+
+        return Company::query()
             ->when(
-                $this->search,
+                $search,
                 fn ($q) => $q->where('name', 'ilike', $term)
                     ->orWhere('ticker', 'ilike', $term)
             )
-            ->orderBy('name')
-            ->limit(10)
-            ->pluck('name', 'cik');
+            ->whereNotIn('ticker', $selectedCompanies)
+            ->limit(6)
+            ->get()
+            ->toArray();
     }
 }
