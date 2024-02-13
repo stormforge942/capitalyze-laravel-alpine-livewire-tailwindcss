@@ -6,7 +6,7 @@ import "./../../vendor/power-components/livewire-powergrid/dist/powergrid.css"
 import Alpine from "alpinejs"
 import focus from "@alpinejs/focus"
 import Swal from "sweetalert2"
-import VanillaCalendar from '@uvarov.frontend/vanilla-calendar';
+import VanillaCalendar from "@uvarov.frontend/vanilla-calendar"
 
 import rangeSlider from "range-slider-input"
 import "range-slider-input/dist/style.css"
@@ -22,7 +22,7 @@ import "./css-tables"
 import "./report-text-highlighter"
 import "./chartjs-plugins"
 import "./pages/ownership"
-import './pages/analysis'
+import "./pages/analysis"
 
 Alpine.plugin(focus)
 
@@ -87,5 +87,20 @@ document.addEventListener("alpine:init", () => {
         }
     })
 })
+
+window.printChart = function (canvas) {
+    let win = window.open()
+    win.document.write(
+        `<br><img src="${canvas.toDataURL()}" style="object-fit: contain; width: 100%;"/>`
+    )
+    setTimeout(() => {
+        win.print()
+        win.close()
+    })
+}
+
+window.fullScreen = function (el) {
+    el.requestFullscreen()
+}
 
 Alpine.start()
