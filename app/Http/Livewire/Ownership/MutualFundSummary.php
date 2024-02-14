@@ -237,7 +237,10 @@ class MutualFundSummary extends Component
         $min = $topBuys->min('change_in_balance');
 
         $topBuys = $topBuys->map(function ($item) use ($max, $min) {
-            $item->width = ((($item->change_in_balance - $min) / ($max - $min)) * 80) + 10;
+            $diff = $max - $min;
+
+            $item->width = $diff == 0 ? 0 : ((($item->change_in_balance - $min) / $diff) * 80) + 10;
+
             return $item;
         });
 
@@ -259,7 +262,10 @@ class MutualFundSummary extends Component
         $min = $topSells->min('change_in_balance');
 
         $topSells = $topSells->map(function ($item) use ($max, $min) {
-            $item->width = 90 - (($item->change_in_balance - $min) / ($max - $min)) * 80;
+            $diff = $max - $min;
+
+            $item->width = $diff == 0 ? 0 : ((($item->change_in_balance - $min) / $diff) * 80) + 10;
+
             return $item;
         });
 

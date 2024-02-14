@@ -25,6 +25,15 @@
             } else {
                 this.tabsCount = 0;
             }
+
+            // place active tab just before the more tab
+            if(this.tabsCount && this.tabs.slice(this.tabsCount, this.tabs.length).find(tab => tab.active)) {
+                const activeTabIndex = this.tabs.findIndex(tab => tab.active);
+                const tmp = this.tabs[this.tabsCount - 1];
+                this.tabs[this.tabsCount - 1] = this.tabs[activeTabIndex];                
+                this.tabs.splice(activeTabIndex, 1);
+                this.tabs.splice(this.tabsCount, 0, tmp);
+            }
         },
         removeTab(tab) {
             this.tabs = this.tabs.filter(t => t.url !== tab.url);
