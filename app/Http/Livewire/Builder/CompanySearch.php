@@ -7,6 +7,8 @@ use Livewire\Component;
 
 class CompanySearch extends Component
 {
+    public $search = '';
+    
     public function render()
     {
         return view('livewire.builder.company-search', [
@@ -14,17 +16,17 @@ class CompanySearch extends Component
         ]);
     }
 
-    public function getCompanies(?string $search = null, array $selectedCompanies = [], bool $initial = false)
+    public function getCompanies(array $selectedCompanies = [], bool $initial = false)
     {
         if (!$initial) {
             $this->skipRender();
         }
 
-        $term = "%$search%";
+        $term = "%$this->search%";
 
         return Company::query()
             ->when(
-                $search,
+                $this->search,
                 fn ($q) => $q->where('name', 'ilike', $term)
                     ->orWhere('ticker', 'ilike', $term)
             )

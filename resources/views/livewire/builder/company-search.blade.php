@@ -1,13 +1,12 @@
 <div class="bg-white p-6 rounded-lg border-[0.5px] border-[#D4DDD7]" x-data="{
-    search: '',
+    search: $wire.entangle('search', true),
     companies: @js($companies),
     selectedCompanies: [],
     loading: false,
     init() {
-        this.$watch('search', (value) => {
+        this.$watch('search', () => {
             this.loading = true
-            console.log(value)
-            this.$wire.getCompanies(value, this.selectedCompanies)
+            this.$wire.getCompanies(this.selectedCompanies.map(item => item.ticker))
                 .then((response) => {
                     this.companies = response
                 })
@@ -15,7 +14,14 @@
                     this.loading = false
                 })
         })
-    }
+    },
+    toggleCompany(company) {
+        if (this.selectedCompanies.find(item => item.ticker === company.ticker)) {
+            this.selectedCompanies = this.selectedCompanies.filter(item => item.ticker !== company.ticker)
+        }
+
+        this.selectedCompanies.push(company)
+    },
 }">
     <label class="font-medium">Search for Companies</label><br>
     <div wire:ignore>
@@ -40,11 +46,12 @@
                     </button>
                 </div>
 
-                <div class="p-4 py-2">
+                <div class="p-4 py-2" :class="loading ? 'pointer-events-none' : ''">
                     <template x-for="company in companies" :key="company.ticker">
-                        <label class="p-4 flex items-center gap-x-4">
-                            <input type="checkbox" name="company" :value="company.ticker"
-                                class="custom-checkbox border-dark focus:ring-0" x-model="selectedCompanies">
+                        <label class="p-4 flex items-center gap-x-4 hover:bg-green-light cursor-pointer rounded">
+                            <input type="checkbox" name="company" class="custom-checkbox border-dark focus:ring-0"
+                                :checked="selectedCompanies.find(item => item.ticker === company.ticker)"
+                                @change="toggleCompany(company)">
                             <span x-text="`${company.name} (${company.ticker})`"></span>
                         </label>
                     </template>
@@ -53,15 +60,19 @@
                         <p class="text-gray-medium2 text-center py-5">No result found</p>
                     </template>
                 </div>
+
+                <div class="cus-loader" x-cloak x-show="loading">
+                    <div class="cus-loaderBar !bg-green-dark"></div>
+                </div>        
             </div>
         </x-dropdown>
 
-        <div class="mt-6 flex flex-wrap gap-x-3">
-            <template x-for="company in selectedCompanies" :key="company">
-                <span class="bg-green-light rounded-full px-3 py-1 text-sm font-semibold flex items-center gap-x-2">
-                    <span x-text="company"></span>
+        <div class="mt-6 flex flex-wrap gap-3 text-sm font-semibold" x-show="selectedCompanies.length" x-cloak>
+            <template x-for="company in selectedCompanies" :key="company.ticker">
+                <span class="bg-green-light rounded-full p-2 flex items-center gap-x-2">
+                    <span x-text="`${company.name} (${company.ticker})`"></span>
                     <button type="button"
-                        @click="selectedCompanies = selectedCompanies.filter(item => item !== company)">
+                        @click="selectedCompanies = selectedCompanies.filter(item => item.ticker !== company.ticker)">
                         <svg width="16" height="16" viewBox="0 0 16 16" fill="none"
                             xmlns="http://www.w3.org/2000/svg">
                             <path
