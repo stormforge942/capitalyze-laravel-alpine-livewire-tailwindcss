@@ -32,6 +32,9 @@
                     <li class="mr-8">
                         <a class="nav-link {{ last(request()->segments()) == 'groups' ? 'font-bold' : '' }}" href="{{ route('admin.groups-management') }}">Groups Management</a>
                     </li>
+                    <li class="mr-8">
+                        <a class="nav-link {{ last(request()->segments()) == 'feedbacks' ? 'font-bold' : '' }}" href="{{ route('admin.feedbacks-management') }}">Feedbacks Management</a>
+                    </li>
                 </ul>
             </div>
 
@@ -46,6 +49,10 @@
 
                 @if ($tab == 'groups-management')
                     <livewire:admin-groups-management />
+                @endif
+
+                @if ($tab == 'feedbacks-management')
+                    <livewire:admin.feedbacks-management />
                 @endif
             </div>
         </main>

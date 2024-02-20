@@ -64,7 +64,7 @@
 
 /* Handle */
 ::-webkit-scrollbar-thumb {
-    background: #121A0F;
+    background: #121a0f;
     border-radius: 2px;
 }
 
@@ -820,7 +820,7 @@ div#range-slider-company-analysis-geography {
     position: relative;
     background-image: none;
 
-    @apply focus:ring-0 focus:outline-none
+    @apply focus:ring-0 focus:outline-none;
 }
 
 .custom-radio:checked {
@@ -895,3 +895,6 @@ div#range-slider-company-analysis-geography {
     @apply px-5;
 }
 /* company navigation end */
+
+/* rate experience modal */
+/* end rate experience modal */
