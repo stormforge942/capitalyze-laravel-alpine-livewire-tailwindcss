@@ -10,7 +10,7 @@
         </div>
 
         <div>
-            
+            <livewire:builder.chart-metrics-search />
         </div>
     </div>
 </div>
