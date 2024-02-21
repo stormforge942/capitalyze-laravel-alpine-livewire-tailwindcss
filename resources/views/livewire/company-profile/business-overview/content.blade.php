@@ -30,10 +30,12 @@
         const els = $refs.contentArea.querySelectorAll('.anchor')
 
         const runScollSpy = Alpine.debounce(() => {
-            if(document.innerWidth < 1024 || this.scrolling) return
+            if (document.innerWidth < 1024 || this.scrolling) return
 
             {{-- if document is scrolled to very bottom --}}
-            if(document.documentElement.scrollHeight - document.documentElement.scrollTop === document.documentElement.clientHeight) {
+            if (document.documentElement.scrollHeight - document.documentElement.scrollTop === document.documentElement.clientHeight) {
+                if (!els.length || !els[els.length - 1]) return;
+
                 this.activeTab = '#' + els[els.length - 1].getAttribute('id')
                 return
             }
@@ -56,7 +58,7 @@
 
             if (topMost.el) {
                 this.activeTab = '#' + topMost.el.getAttribute('id')
-            } else {
+            } else if (els[0]) {
                 this.activeTab = this.activeTab || '#' + els[0].getAttribute('id')
             }
         }, 50)

@@ -110,6 +110,7 @@ class CreateNavbar extends Command
                 'admin.users',
                 'admin.permission-management',
                 'admin.groups-management',
+                'admin.feedbacks-management',
                 'waiting-for-approval',
             ]);
 

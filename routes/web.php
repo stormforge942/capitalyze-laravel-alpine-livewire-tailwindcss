@@ -157,6 +157,7 @@ Route::middleware(['auth', 'verified', 'ensureUserIsApproved'])->group(function 
     Route::get('/admin/users', [AdminController::class, 'index'])->name('admin.users');
     Route::get('/admin/permission', [AdminController::class, 'permission'])->name('admin.permission-management');
     Route::get('/admin/groups', [AdminController::class, 'groups'])->name('admin.groups-management');
+    Route::get('/admin/feedbacks', [AdminController::class, 'feedbacks'])->name('admin.feedbacks-management');
 });
 
 Route::middleware(['auth', 'custom.email.verification'])->group(function () {

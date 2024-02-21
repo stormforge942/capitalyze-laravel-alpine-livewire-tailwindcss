@@ -10,7 +10,7 @@
     <div class="mt-6 flex items-center justify-between">
         <div>
             <h1 class="text-xl font-bold">{{ $fund->registrant_name }}</h1>
-            <div class="flex items-center gap-2 mt-2 text-xs">
+            <div class="flex flex-wrap items-center gap-2 mt-2 text-xs">
                 <div class="border rounded border-blue border-opacity-50 px-1.5 py-0.5">
                     CIK:
                     <span class="font-semibold text-blue">{{ $fund->cik }}</span>
