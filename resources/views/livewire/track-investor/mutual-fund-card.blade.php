@@ -23,6 +23,10 @@
 
     <div class="mt-4 grid grid-cols-2 gap-x-6 md:gap-x-8 gap-y-4">
         <div>
+            <label class="font-normal text-sm text-dark-light2">Symbol</label>
+            <div class="font-semibold text-base break-all">{{ $fund['fund_symbol'] }}</div>
+        </div>
+        <div>
             <label class="font-normal text-sm text-dark-light2">CIK</label>
             <div class="font-semibold text-base break-all">{{ $fund['cik'] }}</div>
         </div>
