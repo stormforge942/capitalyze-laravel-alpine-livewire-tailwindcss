@@ -299,13 +299,13 @@
                     <span>Neutral</span>
                 </button>
                 <button class="experience-btn rounded-lg px-6 py-2 flex flex-col items-center gap-1"
-                    :class="experience === 'excellent' ? 'bg-[#85ED734D]/30' : 'hover:bg-gray-100'"
-                    @click="experience = 'excellent'">
+                    :class="experience === 'good' ? 'bg-[#85ED734D]/30' : 'hover:bg-gray-100'"
+                    @click="experience = 'good'">
                     <svg width="40" height="40" viewBox="0 0 40 40" fill="none"
                         xmlns="http://www.w3.org/2000/svg">
                         <path
                             d="M20 5C11.7289 5 5 11.7289 5 20C5 28.271 11.7289 35 20 35C28.271 35 35 28.271 35 20C35 11.7289 28.271 5 20 5Z"
-                            :fill="experience === 'excellent' ? '#85ED734D' : 'white'" />
+                            :fill="experience === 'good' ? '#85ED734D' : 'white'" />
                         <path fill-rule="evenodd" clip-rule="evenodd"
                             d="M20 5.50049C11.9919 5.50049 5.5 11.9924 5.5 20.0005C5.5 28.0086 11.9919 34.5005 20 34.5005C28.0081 34.5005 34.5 28.0086 34.5 20.0005C34.5 11.9924 28.0081 5.50049 20 5.50049ZM4.5 20.0005C4.5 11.4401 11.4396 4.50049 20 4.50049C28.5604 4.50049 35.5 11.4401 35.5 20.0005C35.5 28.5609 28.5604 35.5005 20 35.5005C11.4396 35.5005 4.5 28.5609 4.5 20.0005Z"
                             fill="#121A0F" />
