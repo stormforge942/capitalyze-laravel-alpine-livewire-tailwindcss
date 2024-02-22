@@ -1,12 +1,14 @@
 <div class="bg-white p-6 rounded-lg border-[0.5px] border-[#D4DDD7]" x-data="{
     search: $wire.entangle('search', true),
     companies: @js($companies),
-    selectedCompanies: [],
+    value: [],
+    tmpValue: [],
     loading: false,
+    showDropdown: false,
     init() {
         this.$watch('search', () => {
             this.loading = true
-            this.$wire.getCompanies(this.selectedCompanies.map(item => item.ticker))
+            this.$wire.getCompanies(this.tmpValue.map(item => item.ticker))
                 .then((response) => {
                     this.companies = response
                 })
@@ -14,22 +16,31 @@
                     this.loading = false
                 })
         })
+
+        this.$watch('showDropdown', value => {
+            this.tmpValue = [...this.value]
+        })
     },
     toggleCompany(company) {
-        if (this.selectedCompanies.find(item => item.ticker === company.ticker)) {
-            this.selectedCompanies = this.selectedCompanies.filter(item => item.ticker !== company.ticker)
+        if (this.tmpValue.find(item => item.ticker === company.ticker)) {
+            this.tmpValue = this.tmpValue.filter(item => item.ticker !== company.ticker)
+            return;
         }
 
-        this.selectedCompanies.push(company)
+        this.tmpValue.push(company)
     },
+    get hasValueChanged() {
+        return this.value.map(item => item.ticker).join('-') !== this.tmpValue.map(item => item.ticker).join('-')
+    }
 }">
-    <label class="font-medium">Search for Companies</label><br>
+    <label class="font-medium" style="line-height: 32px;">Search for Companies</label><br>
     <div wire:ignore>
-        <x-dropdown placement="bottom-start" :fullWidthTrigger="true">
+        <x-dropdown x-model="showDropdown" placement="bottom-start" :fullWidthTrigger="true">
             <x-slot name="trigger">
                 <input type="search"
                     class="text-basde mt-4 p-4 block w-full border border-[#D4DDD7] rounded-lg placeholder:text-gray-medium2 focus:ring-0 focus:border-green-dark"
-                    placeholder="Company" x-model.debounce.500ms="search">
+                    placeholder="Company" x-model.debounce.500ms="search"
+                    @click="if(showDropdown) { $event.stopPropagation(); }">
             </x-slot>
 
             <div class="w-[20rem] sm:w-[26rem]">
@@ -50,8 +61,8 @@
                     <template x-for="company in companies" :key="company.ticker">
                         <label class="p-4 flex items-center gap-x-4 hover:bg-green-light cursor-pointer rounded">
                             <input type="checkbox" name="company" class="custom-checkbox border-dark focus:ring-0"
-                                :checked="selectedCompanies.find(item => item.ticker === company.ticker)"
-                                @change="toggleCompany(company)">
+                                :checked="tmpValue.find(item => item.ticker === company.ticker)"
+                                @change="toggleCompany(company)" :key="tmpValue.length">
                             <span x-text="`${company.name} (${company.ticker})`"></span>
                         </label>
                     </template>
@@ -61,18 +72,30 @@
                     </template>
                 </div>
 
+                <div class="p-6 border-t flex items-center gap-x-4">
+                    <button type="button"
+                        class="w-full px-4 py-3 font-medium bg-green-dark hover:bg-opacity-80 rounded disabled:pointer-events-none disabled:bg-[#D1D3D5] disabled:text-white text-base"
+                        @click="tmpValue = [...value];" :disabled="!hasValueChanged">
+                        Reset
+                    </button>
+                    <button type="button"
+                        class="w-full px-4 py-3 font-medium bg-green-dark hover:bg-opacity-80 rounded disabled:pointer-events-none disabled:bg-[#D1D3D5] disabled:text-white text-base"
+                        @click="value = [...tmpValue]; showDropdown = false;" :disabled="!hasValueChanged">
+                        Show Result
+                    </button>
+                </div>
+
                 <div class="cus-loader" x-cloak x-show="loading">
                     <div class="cus-loaderBar !bg-green-dark"></div>
-                </div>        
+                </div>
             </div>
         </x-dropdown>
 
-        <div class="mt-6 flex flex-wrap gap-3 text-sm font-semibold" x-show="selectedCompanies.length" x-cloak>
-            <template x-for="company in selectedCompanies" :key="company.ticker">
+        <div class="mt-6 flex flex-wrap gap-3 text-sm font-semibold" x-show="value.length" x-cloak>
+            <template x-for="company in value" :key="company.ticker">
                 <span class="bg-green-light rounded-full p-2 flex items-center gap-x-2">
                     <span x-text="`${company.name} (${company.ticker})`"></span>
-                    <button type="button"
-                        @click="selectedCompanies = selectedCompanies.filter(item => item.ticker !== company.ticker)">
+                    <button type="button" @click="value = value.filter(item => item.ticker !== company.ticker)">
                         <svg width="16" height="16" viewBox="0 0 16 16" fill="none"
                             xmlns="http://www.w3.org/2000/svg">
                             <path

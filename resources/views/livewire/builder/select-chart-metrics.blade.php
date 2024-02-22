@@ -1,26 +1,62 @@
 <div class="bg-white p-6 rounded-lg border-[0.5px] border-[#D4DDD7]" x-data="{
     search: '',
-    companies: [],
-    selectedCompanies: [],
-    loading: false,
+    options: @json($options),
+    value: [],
+    tmpValue: [],
+    showDropdown: false,
+    activeOption: [0],
+    width: '320px',
     init() {
+        const _options = @json($options)
+
         this.$watch('search', () => {
-            this.loading = true
-            this.$wire.getCompanies(this.selectedCompanies.map(item => item.ticker))
-                .then((response) => {
-                    this.companies = response
-                })
-                .finally(() => {
-                    this.loading = false
-                })
+            if(!this.search.length) {
+                this.companies = _options
+                return
+            }
+
+            let tmp = [];
+            let search = this.search.toLowerCase()
+
+            _options.forEach(option => {
+                if(option.title.toLowerCase().includes(search)) {
+                    tmp.push(option)
+                }
+
+                if(!option.has_children) {
+                    
+                }
+            })
+
+            foreach(let option in _options) {
+                if(option.title.toLowerCase().includes(search)) {
+                    tmp.push(option)
+                    continue;
+                }
+
+                if(option.has_children) {
+                    
+                }
+            }
+        })
+
+        this.$watch('showDropdown', value => {
+            this.tmpValue = [...this.value]
+        })
+
+        this.$nextTick(() => {
+            this.width = document.getElementById('select-chart-metrics-input').offsetWidth + 'px'
+            window.addEventListener('resize', () => {
+                this.width = document.getElementById('select-chart-metrics-input').offsetWidth + 'px'
+            })
         })
     },
-    toggleCompany(company) {
-        if (this.selectedCompanies.find(item => item.ticker === company.ticker)) {
-            this.selectedCompanies = this.selectedCompanies.filter(item => item.ticker !== company.ticker)
+    toggleValue(company) {
+        if (this.tmpValue.find(item => item.ticker === company.ticker)) {
+            this.tmpValue = this.tmpValue.filter(item => item.ticker !== company.ticker)
         }
 
-        this.selectedCompanies.push(company)
+        this.tmpValue.push(company)
     },
 }">
     <label class="font-medium flex items-center gap-x-4">
@@ -36,16 +72,17 @@
         </div>
     </label>
     <div wire:ignore>
-        <x-dropdown placement="bottom-start" :fullWidthTrigger="true">
+        <x-dropdown x-model="showDropdown" placement="bottom-start" :fullWidthTrigger="true">
             <x-slot name="trigger">
                 <input type="search"
                     class="text-basde mt-4 p-4 block w-full border border-[#D4DDD7] rounded-lg placeholder:text-gray-medium2 focus:ring-0 focus:border-green-dark"
-                    placeholder="Company" x-model.debounce.500ms="search">
+                    id="select-chart-metrics-input" placeholder="Company" x-model.debounce.500ms="search"
+                    @click="if(showDropdown) { $event.stopPropagation(); }">
             </x-slot>
 
-            <div class="w-[20rem] sm:w-[26rem]">
+            <div :style="`width: ${width}`">
                 <div class="flex justify-between gap-2 px-6 pt-6">
-                    <span class="font-medium text-base">Select Company</span>
+                    <span class="font-medium text-base">Metrics</span>
 
                     <button @click="dropdown.hide()">
                         <svg width="24" height="24" viewBox="0 0 24 24" fill="none"
@@ -56,34 +93,14 @@
                         </svg>
                     </button>
                 </div>
-
-                <div class="p-4 py-2" :class="loading ? 'pointer-events-none' : ''">
-                    <template x-for="company in companies" :key="company.ticker">
-                        <label class="p-4 flex items-center gap-x-4 hover:bg-green-light cursor-pointer rounded">
-                            <input type="checkbox" name="company" class="custom-checkbox border-dark focus:ring-0"
-                                :checked="selectedCompanies.find(item => item.ticker === company.ticker)"
-                                @change="toggleCompany(company)">
-                            <span x-text="`${company.name} (${company.ticker})`"></span>
-                        </label>
-                    </template>
-
-                    <template x-if="!companies.length">
-                        <p class="text-gray-medium2 text-center py-5">No result found</p>
-                    </template>
-                </div>
-
-                <div class="cus-loader" x-cloak x-show="loading">
-                    <div class="cus-loaderBar !bg-green-dark"></div>
-                </div>
             </div>
         </x-dropdown>
 
-        <div class="mt-6 flex flex-wrap gap-3 text-sm font-semibold" x-show="selectedCompanies.length" x-cloak>
-            <template x-for="company in selectedCompanies" :key="company.ticker">
+        <div class="mt-6 flex flex-wrap gap-3 text-sm font-semibold" x-show="value.length" x-cloak>
+            <template x-for="company in value" :key="company.ticker">
                 <span class="bg-green-light rounded-full p-2 flex items-center gap-x-2">
                     <span x-text="`${company.name} (${company.ticker})`"></span>
-                    <button type="button"
-                        @click="selectedCompanies = selectedCompanies.filter(item => item.ticker !== company.ticker)">
+                    <button type="button" @click="value = value.filter(item => item.ticker !== company.ticker)">
                         <svg width="16" height="16" viewBox="0 0 16 16" fill="none"
                             xmlns="http://www.w3.org/2000/svg">
                             <path

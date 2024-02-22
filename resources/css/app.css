@@ -49,7 +49,7 @@
 ::-webkit-scrollbar {
     display: none;
     /*height: 5px;*/
-    width: 10px;
+    width: 8px;
 }
 
 .show-scrollbar::-webkit-scrollbar {
@@ -58,14 +58,14 @@
 
 /* Track */
 ::-webkit-scrollbar-track {
-    background: #ccc;
-    /* border-radius: 5px; */
+    background: #D4DDD7;
+    border-radius: 8px;
 }
 
 /* Handle */
 ::-webkit-scrollbar-thumb {
-    background: #121a0f;
-    border-radius: 2px;
+    background: #464E49;
+    border-radius: 8px;
 }
 
 /* ownership breadcrumb border */

@@ -4,13 +4,13 @@
         <p class="mt-2 text-dark-light2">Build custom charts to visualize financial data across companies</p>
     </div>
 
-    <div class="grid grid-cols-2 gap-x-6">
+    <div class="grid grid-cols-1 xl:grid-cols-2 gap-6">
         <div>
-            <livewire:builder.company-search />
+            <livewire:builder.select-company />
         </div>
 
         <div>
-            <livewire:builder.chart-metrics-search />
+            <livewire:builder.select-chart-metrics />
         </div>
     </div>
 </div>

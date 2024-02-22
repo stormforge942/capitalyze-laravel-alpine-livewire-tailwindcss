@@ -107,7 +107,7 @@ table.data-alt tr:nth-child(odd):hover > td:first-child {
 
 .wep-modal-content,
 .wep-slide-over-container-inner-wrap {
-    @apply motion-reduce:transition-none py-2.5;
+    @apply motion-reduce:transition-none;
 }
 
 .wep-modal-backdrop,
