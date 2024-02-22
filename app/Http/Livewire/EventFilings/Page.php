@@ -14,7 +14,6 @@ class Page extends Component
                 'description' => 'Initial registration of new securities (e.g. IPOs)',
                 'match' => [
                     'in' => ['S-1'],
-                    'patterns' => ['S-1/%'],
                 ]
             ],
             [
@@ -22,7 +21,6 @@ class Page extends Component
                 'description' => 'Initial registration of new securities for REITs',
                 'match' => [
                     'in' => ['S-11'],
-                    'patterns' => ['S-11/%'],
                 ]
             ],
             [
@@ -30,7 +28,6 @@ class Page extends Component
                 'description' => 'Initial registration of securities for a spinoff',
                 'match' => [
                     'in' => ['10-12B'],
-                    'patterns' => ['10-12B/%'],
                 ]
             ],
             [
@@ -38,7 +35,6 @@ class Page extends Component
                 'description' => 'Initial registration of a new class of securities',
                 'match' => [
                     'in' => ['10-12G'],
-                    'patterns' => ['10-12G/%'],
                 ]
             ],
             [
@@ -46,7 +42,6 @@ class Page extends Component
                 'description' => 'Initial registration of new securities for foreign issuer',
                 'match' => [
                     'in' => ['F-1'],
-                    'patterns' => ['F-1/%'],
                 ]
             ],
             [
@@ -54,7 +49,6 @@ class Page extends Component
                 'description' => 'Initial registration of new securities for Canadian issuer',
                 'match' => [
                     'in' => ['F-10'],
-                    'patterns' => ['F-10/%'],
                 ]
             ],
         ],
@@ -64,7 +58,6 @@ class Page extends Component
                 'description' => 'Shelf registration',
                 'match' => [
                     'in' => ['S-3'],
-                    'patterns' => ['S-3/%'],
                 ]
             ],
             [
@@ -72,7 +65,6 @@ class Page extends Component
                 'description' => 'Registration of securities for employees',
                 'match' => [
                     'in' => ['S-8'],
-                    'patterns' => ['S-8/%'],
                 ]
             ],
         ],
@@ -82,7 +74,6 @@ class Page extends Component
                 'description' => '≥5% ownership disclosure by active investor',
                 'match' => [
                     'in' => ['SC 13D'],
-                    'patterns' => ['SC 13D/%'],
                 ]
             ],
             [
@@ -90,7 +81,6 @@ class Page extends Component
                 'description' => 'Proxy materials by non-management',
                 'match' => [
                     'in' => ['DFAN14A'],
-                    'patterns' => ['DFAN14A/%'],
                 ]
             ],
             [
@@ -98,7 +88,6 @@ class Page extends Component
                 'description' => 'Preliminary proxy in contested situation',
                 'match' => [
                     'in' => ['PREC14A'],
-                    'patterns' => ['PREC14A/%'],
                 ]
             ],
             [
@@ -106,7 +95,6 @@ class Page extends Component
                 'description' => 'Revised preliminary proxy by non-management',
                 'match' => [
                     'in' => ['PRRRN14A'],
-                    'patterns' => ['PRRRN14A/%'],
                 ]
             ],
             [
@@ -114,7 +102,6 @@ class Page extends Component
                 'description' => 'Proxy in contested situation',
                 'match' => [
                     'in' => ['DEFC14A'],
-                    'patterns' => ['DEFC14A/%'],
                 ]
             ],
             [
@@ -122,7 +109,6 @@ class Page extends Component
                 'description' => 'DEFC14A, DEFN14A, DFRN14A, PREN14A and PREC14C',
                 'match' => [
                     'in' => ['DEFC14A', 'DEFN14A', 'DFRN14A', 'PREC14C'],
-                    'patterns' => ['DEFC14A/%', 'DEFN14A/%', 'DFRN14A/%', 'PREC14C/%'],
                 ]
             ]
         ],
@@ -132,7 +118,6 @@ class Page extends Component
                 'description' => 'Late annual filings notification',
                 'match' => [
                     'in' => ['NT 10-K'],
-                    'patterns' => ['NT 10-K/%'],
                 ]
             ],
             [
@@ -140,7 +125,6 @@ class Page extends Component
                 'description' => 'Late quarterly filing notification',
                 'match' => [
                     'in' => ['NT 10-Q'],
-                    'patterns' => ['NT 10-Q/%'],
                 ]
             ]
         ]
