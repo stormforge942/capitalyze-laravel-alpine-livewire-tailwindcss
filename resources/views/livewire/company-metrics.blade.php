@@ -376,8 +376,8 @@
                                         </li>
                                         <li class="mr-2">
                                             <label class="flex items-center pl-3">
-                                                <input wire:model="period" @if($period === 'fiscal-quaterly') checked @endif value="fiscal-quaterly" id="date-fiscal-quaterly" type="radio"  name="date-range" class="w-5 h-5 ">
-                                                <span class="w-full py-3 ml-2 ">Fiscal Quaterly</span>
+                                                <input wire:model="period" @if($period === 'fiscal-quarterly') checked @endif value="fiscal-quarterly" id="date-fiscal-quarterly" type="radio"  name="date-range" class="w-5 h-5 ">
+                                                <span class="w-full py-3 ml-2 ">Fiscal Quarterly</span>
                                             </label>
                                         </li>
                                         <li class="mr-2">
@@ -407,7 +407,7 @@
                                         <li class="mr-2">
                                             <label class="flex items-center pl-3">
                                                 <input wire:model="period" @if($period === 'quarterly') checked @endif value="quarterly" id="date-quarterly" type="radio"  name="date-range" class="w-5 h-5 ">
-                                                <span class="w-full py-3 ml-2 ">Calendar Quaterly</span>
+                                                <span class="w-full py-3 ml-2 ">Calendar Quarterly</span>
                                             </label>
                                         </li>
                                         <li class="mr-2">
