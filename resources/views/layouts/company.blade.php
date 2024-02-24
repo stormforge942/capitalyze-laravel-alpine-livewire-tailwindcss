@@ -44,57 +44,59 @@
     <livewire:company-navbar :company="$company" />
 
     <main class="px-4 pb-10 transition-all md:px-6 lg:pl-8 lg:ml-56 overflow-x-clip" id="main-container">
-        @if ($tab == 'track-investor')
-            <livewire:track-investor.page />
-        @elseif($tab == 'event-filings')
-            <livewire:event-filings.page />
-        @elseif($tab == 'insider-transactions')
-            <livewire:insider-transactions.page />
-        @elseif($tab == 'earnings-calendar')
-            <livewire:earnings-calendar.page />
-        @elseif ($tab == 'geographical')
-            <livewire:company-geographical :company="$company" :ticker="$ticker" :period="$period" />
-        @elseif($tab == 'products')
-            <livewire:company-products :company="$company" :ticker="$ticker" :period="$period" />
-        @elseif($tab == 'profile')
-            <livewire:company-profile.page :company="$company" :period="$period" />
-        @elseif($tab == 'splits')
-            <livewire:company-splits :company="$company" :ticker="$ticker" :period="$period" />
-        @elseif($tab == 'metrics')
-            <livewire:company-metrics :company="$company" :ticker="$ticker" :period="$period" />
-        @elseif($tab == 'chart')
-            <livewire:company-chart :company="$company" :ticker="$ticker" :period="$period" />
-        @elseif($tab == 'executiveCompensation')
-            <livewire:company-executive-compensation :company="$company" :ticker="$ticker" :period="$period" />
-        @elseif($tab == 'report')
-            <livewire:company-report.page :company="$company" :ticker="$ticker" />
-        @elseif($tab == 'shareholders')
-            <livewire:company-shareholders :company="$company" :ticker="$ticker" :period="$period" />
-        @elseif($tab == 'summary')
-            <livewire:company-summary :company="$company" :ticker="$ticker" :period="$period" />
-        @elseif($tab == 'filings')
-            <livewire:company-filings :company="$company" :ticker="$ticker" :period="$period" />
-        @elseif($tab == 'insider')
-            <livewire:company-insider :company="$company" :ticker="$ticker" :period="$period" />
-        @elseif($tab == 'restatement')
-            <livewire:company-restatement :company="$company" :ticker="$ticker" :period="$period" />
-        @elseif($tab == 'employee')
-            <livewire:company-employee-count :company="$company" :ticker="$ticker" :period="$period" />
-        @elseif($tab == 'failToDeliver')
-            <livewire:company-fail-to-deliver :company="$company" :ticker="$ticker" :period="$period" />
-        @elseif($tab == 'ownership')
-            <livewire:ownership.page :company="$currentCompany" />
-        @elseif($tab == 'fund')
-            <livewire:ownership.fund :company="$currentCompany" :fund="$fund" />
-        @elseif($tab == 'mutual-fund')
-            <livewire:ownership.mutual-fund :company="$currentCompany" :fund="$fund" />
-        @elseif($tab == 'etf-filings')
-            <livewire:etf.filings />
-        @elseif($tab === 'filings-summary')
-            <livewire:comapany-filings-summary :company="$company" :tinker="$ticker" :period="$period" />
-        @elseif($tab == 'analysis')
-            <livewire:company-analysis.page :company="$company" :ticker="$ticker" :period="$period" />
-        @endif
+        <div class="mx-auto" style="max-width: 1500px;">
+            @if ($tab == 'track-investor')
+                <livewire:track-investor.page />
+            @elseif($tab == 'event-filings')
+                <livewire:event-filings.page />
+            @elseif($tab == 'insider-transactions')
+                <livewire:insider-transactions.page />
+            @elseif($tab == 'earnings-calendar')
+                <livewire:earnings-calendar.page />
+            @elseif ($tab == 'geographical')
+                <livewire:company-geographical :company="$company" :ticker="$ticker" :period="$period" />
+            @elseif($tab == 'products')
+                <livewire:company-products :company="$company" :ticker="$ticker" :period="$period" />
+            @elseif($tab == 'profile')
+                <livewire:company-profile.page :company="$company" :period="$period" />
+            @elseif($tab == 'splits')
+                <livewire:company-splits :company="$company" :ticker="$ticker" :period="$period" />
+            @elseif($tab == 'metrics')
+                <livewire:company-metrics :company="$company" :ticker="$ticker" :period="$period" />
+            @elseif($tab == 'chart')
+                <livewire:company-chart :company="$company" :ticker="$ticker" :period="$period" />
+            @elseif($tab == 'executiveCompensation')
+                <livewire:company-executive-compensation :company="$company" :ticker="$ticker" :period="$period" />
+            @elseif($tab == 'report')
+                <livewire:company-report.page :company="$company" :ticker="$ticker" />
+            @elseif($tab == 'shareholders')
+                <livewire:company-shareholders :company="$company" :ticker="$ticker" :period="$period" />
+            @elseif($tab == 'summary')
+                <livewire:company-summary :company="$company" :ticker="$ticker" :period="$period" />
+            @elseif($tab == 'filings')
+                <livewire:company-filings :company="$company" :ticker="$ticker" :period="$period" />
+            @elseif($tab == 'insider')
+                <livewire:company-insider :company="$company" :ticker="$ticker" :period="$period" />
+            @elseif($tab == 'restatement')
+                <livewire:company-restatement :company="$company" :ticker="$ticker" :period="$period" />
+            @elseif($tab == 'employee')
+                <livewire:company-employee-count :company="$company" :ticker="$ticker" :period="$period" />
+            @elseif($tab == 'failToDeliver')
+                <livewire:company-fail-to-deliver :company="$company" :ticker="$ticker" :period="$period" />
+            @elseif($tab == 'ownership')
+                <livewire:ownership.page :company="$currentCompany" />
+            @elseif($tab == 'fund')
+                <livewire:ownership.fund :company="$currentCompany" :fund="$fund" />
+            @elseif($tab == 'mutual-fund')
+                <livewire:ownership.mutual-fund :company="$currentCompany" :fund="$fund" />
+            @elseif($tab == 'etf-filings')
+                <livewire:etf.filings />
+            @elseif($tab === 'filings-summary')
+                <livewire:comapany-filings-summary :company="$company" :tinker="$ticker" :period="$period" />
+            @elseif($tab == 'analysis')
+                <livewire:company-analysis.page :company="$company" :ticker="$ticker" :period="$period" />
+            @endif
+        </div>
     </main>
 
     <div id="modals-area">
