@@ -11,7 +11,7 @@ use PowerComponents\LivewirePowerGrid\PowerGridColumns;
 class Table extends BaseTable
 {
     public string $sortField = 'transaction_date';
-    public string $sortDirection = 'asc';
+    public string $sortDirection = 'desc';
     public array $filters = [];
 
     protected function getListeners(): array
@@ -66,6 +66,9 @@ class Table extends BaseTable
                 'transaction_code',
                 'amount_of_securities',
                 'price_per_security',
+                'ownership_percentage',
+                'market_cap',
+                'transaction_date',
                 'securities_owned_following_transaction',
                 DB::raw('amount_of_securities * price_per_security as value'),
             ]);
@@ -87,10 +90,14 @@ class Table extends BaseTable
                 ->headerAttribute('[&>div]:justify-end')->bodyAttribute('text-right'),
             Column::make('Owned', 'formatted_owned', 'securities_owned_following_transaction')->sortable()
                 ->headerAttribute('[&>div]:justify-end')->bodyAttribute('text-right'),
-            Column::make('△Owned%', 'blank')
+            Column::make('△Owned%', 'formatted_ownership_percent', 'ownership_percentage')->sortable()
+                ->headerAttribute('[&>div]:justify-end')
+                ->bodyAttribute('text-right'),
+            Column::make('Market Cap', 'market_cap_formatted', 'market_cap')->sortable()
                 ->headerAttribute('[&>div]:justify-end')->bodyAttribute('text-right'),
-            Column::make('Market Cap', 'blank')
-                ->headerAttribute('[&>div]:justify-end')->bodyAttribute('text-right'),
+            Column::make('Transaction Date', 'transaction_date', 'transaction_date')->sortable()
+                ->headerAttribute('[&>div]:justify-end')
+                ->bodyAttribute('text-right'),
         ];
     }
 
@@ -99,7 +106,7 @@ class Table extends BaseTable
         return PowerGrid::columns()
             ->addColumn('symbol')
             ->addColumn('registrant_name')
-            ->addColumn('ticker', function($row) {
+            ->addColumn('ticker', function ($row) {
                 $url = route('company.profile', $row->symbol);
                 return "<a class=\"text-blue hover:underline\" href=\"{$url}\">{$row->symbol}</a>";
             })
@@ -110,7 +117,7 @@ class Table extends BaseTable
             ->addColumn('price_per_security')
             ->addColumn('value')
             ->addColumn('securities_owned_following_transaction')
-            ->addColumn('blank', fn () => '-')
+            ->addColumn('transaction_date')
             ->addColumn(
                 'formatted_transaction_code',
                 function ($row) {
@@ -124,6 +131,14 @@ class Table extends BaseTable
             ->addColumn('formatted_quantity', fn ($row) => is_null($row->amount_of_securities) ? '-' : number_format($row->amount_of_securities))
             ->addColumn('formatted_price', fn ($row) => is_null($row->price_per_security) ? '-' : number_format($row->price_per_security, 2))
             ->addColumn('formatted_value', fn ($row) => is_null($row->value) ? '-' : number_format($row->value))
-            ->addColumn('formatted_owned', fn ($row) => is_null($row->securities_owned_following_transaction) ? '-' : number_format($row->securities_owned_following_transaction));
+            ->addColumn('formatted_owned', fn ($row) => is_null($row->securities_owned_following_transaction) ? '-' : number_format($row->securities_owned_following_transaction))
+            ->addColumn(
+                'formatted_ownership_percent',
+                fn ($row) => is_null($row->ownership_percentage) ? '-' : round($row->ownership_percentage, 3) . '%'
+            )
+            ->addColumn(
+                'market_cap_formatted',
+                fn ($row) => is_null($row->market_cap) ? '-' : number_format($row->market_cap)
+            );
     }
 }

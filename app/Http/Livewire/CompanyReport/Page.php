@@ -97,7 +97,7 @@ class Page extends Component
             ],
             'periodTypes' => [
                 'Fiscal Annual',
-                'Fiscal Quaterly',
+                'Fiscal Quarterly',
                 'Fiscal Semi-Annual',
                 'YTD',
                 'LTM',

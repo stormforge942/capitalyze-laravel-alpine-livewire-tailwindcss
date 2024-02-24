@@ -166,3 +166,15 @@ function calculateYoyChange(array $values, array $dates): array
 
     return $change;
 }
+
+function formatNiceNumber($number) {
+    $number = (float) $number;
+
+    $suffix = ['', 'k', 'M', 'B', 'T'];
+
+    $suffixIndex = floor(log10(abs($number)) / 3);
+
+    $formattedNumber = number_format($number / pow(1000, $suffixIndex), 1) . $suffix[$suffixIndex];
+
+    return $formattedNumber;
+}

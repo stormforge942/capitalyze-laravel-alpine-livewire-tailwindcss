@@ -51,15 +51,11 @@ class Discover extends Component
 
         $funds = DB::connection('pgsql-xbrl')
             ->table('filings_summary')
-            ->select('fs.investor_name', 'fs.cik', 'fs.total_value', 'fs.portfolio_size', 'fs.change_in_total_value', 'latest_dates.max_date')
-            ->from('filings_summary as fs')
-            ->join(DB::raw('(SELECT investor_name, MAX(date) AS max_date FROM filings_summary GROUP BY investor_name) as latest_dates'), function ($join) {
-                $join->on('fs.investor_name', '=', 'latest_dates.investor_name');
-                $join->on('fs.date', '=', 'latest_dates.max_date');
-            })
+            ->select('investor_name', 'cik', 'total_value', 'portfolio_size', 'change_in_total_value')
+            ->where('is_latest', true)
             ->when($this->search, function ($q) {
-                return $q->where(DB::raw('fs.investor_name'), 'ilike', "%$this->search%")
-                    ->orWhere(DB::raw('fs.cik'), $this->search);
+                return $q->where(DB::raw('investor_name'), 'ilike', "%$this->search%")
+                    ->orWhere(DB::raw('cik'), $this->search);
             })
             ->orderBy('total_value', 'desc')
             ->paginate($this->perPage)

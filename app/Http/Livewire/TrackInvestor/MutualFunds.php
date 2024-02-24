@@ -42,7 +42,7 @@ class MutualFunds extends Component
         // to get the values of max date we need join the table with itself
         $funds = DB::connection('pgsql-xbrl')
             ->table('mutual_fund_holdings_summary')
-            ->select('registrant_name', 'cik', 'fund_symbol', 'series_id', 'class_id', 'class_name', 'total_value', 'portfolio_size', 'change_in_total_value', 'date')
+            ->select('registrant_name', 'fund_symbol', 'cik', 'fund_symbol', 'series_id', 'class_id', 'class_name', 'total_value', 'portfolio_size', 'change_in_total_value', 'date')
             ->from('mutual_fund_holdings_summary as hs')
             ->where('is_latest', true)
             ->when($this->search, function ($q) {
