@@ -19,8 +19,14 @@
         this.activeTab = tab
     },
     setActive(tab) {
-        this.scrolling = true
-        window.smoothScroll(tab.replace('#', ''))
+        this.scrolling = true;
+        [...document.querySelectorAll(tab)].forEach((el) => {
+            el.scrollIntoView({
+                block: 'start',
+                behavior: 'smooth',
+                inline: 'start'
+            })
+        })
         this.activeTab = tab
         setTimeout(() => {
             this.scrolling = false
