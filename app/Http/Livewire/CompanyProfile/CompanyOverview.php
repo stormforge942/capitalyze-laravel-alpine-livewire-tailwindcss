@@ -301,23 +301,23 @@ class CompanyOverview extends Component
                 ],
                 [
                     'key' => 'One Year Beta',
-                    'value' => data_get($profile, 'one_year_beta'),
+                    'value' => round(data_get($profile, 'one_year_beta'), 3),
                 ],
                 [
                     'key' => 'Three Year Beta',
-                    'value' => data_get($profile, 'three_year_beta'),
+                    'value' => round(data_get($profile, 'three_year_beta'), 3),
                 ],
                 [
                     'key' => 'Five Year Beta',
-                    'value' => data_get($profile, 'five_year_beta'),
+                    'value' => round(data_get($profile, 'five_year_beta'), 3),
                 ],
                 [
                     'key' => 'Seven Year Beta',
-                    'value' => data_get($profile, 'seven_year_beta'),
+                    'value' => round(data_get($profile, 'seven_year_beta'), 3),
                 ],
                 [
                     'key' => 'Ten Year Beta',
-                    'value' => data_get($profile, 'ten_year_beta'),
+                    'value' => round(data_get($profile, 'ten_year_beta'), 3),
                 ],
                 [
                     'key' => '52 Week Range',
@@ -325,7 +325,7 @@ class CompanyOverview extends Component
                 ],
                 [
                     'key' => 'Is Active',
-                    'value' => data_get($profile, 'five_year_beta'),
+                    'value' => data_get($profile, 'is_active') ? 'Yes' : 'No',
                 ],
                 [
                     'key' => 'Asset Type',
@@ -349,15 +349,15 @@ class CompanyOverview extends Component
                 ],
                 [
                     'key' => 'Is Fund',
-                    'value' => data_get($profile, 'is_fund'),
+                    'value' => data_get($profile, 'is_fund') ? 'Yes' : 'No',
                 ],
                 [
                     'key' => 'ETF',
-                    'value' => data_get($profile, 'is_etf'),
+                    'value' => data_get($profile, 'is_etf') ? 'Yes' : 'No',
                 ],
                 [
                     'key' => 'ADR',
-                    'value' => data_get($profile, 'is_adr'),
+                    'value' => data_get($profile, 'is_adr') ? 'Yes' : 'No',
                 ],
             ],
             'fiftytwo_week_range_high' => $high,
@@ -365,6 +365,8 @@ class CompanyOverview extends Component
             'symbol' => data_get($profile, 'symbol'),
             'description' => data_get($profile, 'description'),
             'registrant_name' => data_get($profile, 'registrant_name'),
+            'average_3month_volume' => data_get($profile, 'average_3month_volume'),
+            'beta' => round(data_get($profile, 'one_year_beta'), 3),
         ];
     }
 

@@ -14,11 +14,11 @@
                 ],
                 [
                     'key' => 'Avg. 3mths Vol.',
-                    'value' => '31.54MM',
+                    'value' => is_numeric($profile['average_3month_volume']) ? formatNiceNumber($profile['average_3month_volume']) : '-',
                 ],
                 [
                     'key' => 'Beta',
-                    'value' => '1.06',
+                    'value' => $profile['beta'],
                 ],
                 [
                     'key' => 'Short Interest',
