@@ -53,7 +53,7 @@
                 </div>
             </div>
     
-            <button type="button" class="bg-dark text-green-dark font-medium text-sm flex items-center gap-x-2 px-4 py-2 rounded" onclick="Livewire.emit('modal.open', 'rate-experience')">
+            <button type="button" class="h-[50px] lg:h-auto bg-dark text-green-dark font-medium text-sm flex items-center gap-x-2 px-4 py-2 rounded" onclick="Livewire.emit('modal.open', 'rate-experience')">
                 <span class="hidden sm:inline">Submit Feedback</span>
                 <svg width="16" height="16" viewBox="0 0 16 16" fill="none" xmlns="http://www.w3.org/2000/svg">
                     <path
