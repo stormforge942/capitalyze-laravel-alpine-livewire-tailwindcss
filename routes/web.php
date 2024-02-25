@@ -53,104 +53,111 @@ Route::get('/', HomeController::class)->name('home');
 
 Route::middleware(['auth', 'approved', 'verified', 'checkPagePermission'])
     ->group(function () {
-        Route::get('/track-investor', TrackInvestorController::class)->name('track-investor');
-        Route::get('/event-filings', EventFilingsController::class)->name('event-filings');
-        Route::get('/insider-transactions', InsiderTransactionsController::class)->name('insider-transactions');
-        Route::get('/calendar/earnings', EarningsCalendarController::class)->name('earnings-calendar');
 
-        Route::get('/calendar/economics', EconomicsCalendar::class)->name('economics-calendar');
-        Route::get('/calendar/economics/{release_id}/', EconomicRelease::class)->name('economics-release');
-        Route::get('/calendar/economics/{release_id}/{series_id}/', EconomicReleaseSeries::class)->name('economics-release-series');
-        Route::get('/company-filings', CompanyFilingsPage::class)->name('company-filings');
-        Route::get('/fund-filings', FundFilingsPage::class)->name('fund-filings');
-        Route::get('/mutual-fund-filings', MutualFundFilingsPage::class)->name('mutual-fund-filings');
-        Route::get('/etf-filings', [EtfController::class, 'filings'])->name('etf-filings');
-        Route::get('/identifiers', CompanyIdentifiers::class)->name('company-identifiers');
-        Route::get('/delistings', Delistings::class)->name('delistings');
-        Route::get('/euronext', Euronexts::class)->name('euronexts');
-        Route::get('/lse', Lses::class)->name('lses');
-        Route::get('/tsx', Tsxs::class)->name('tsxs');
-        Route::get('/shanghai', Shanghais::class)->name('shanghais');
-        Route::get('/japan', Japans::class)->name('japans');
-        Route::get('/hkex', Hkexs::class)->name('hkexs');
-        Route::get('/otc', Otcs::class)->name('otcs');
-        Route::get('/frankfurt', Frankfurts::class)->name('frankfurts');
-        Route::get('/shenzhen', Shenzhens::class)->name('shenzhens');
-        Route::get('/review', ReviewPage::class)->name('review');
-        Route::get('/press-release', PressRelease::class)->name('press.release');
+        Route::middleware(['cacheable1day'])->group(function () {
+            Route::get('/track-investor', TrackInvestorController::class)->name('track-investor');
+            Route::get('/event-filings', EventFilingsController::class)->name('event-filings');
+            Route::get('/insider-transactions', InsiderTransactionsController::class)->name('insider-transactions');
+            Route::get('/calendar/earnings', EarningsCalendarController::class)->name('earnings-calendar');
+        });
+        
+        Route::middleware(['cacheable12hours'])->group(function () {
+            Route::get('/calendar/economics', EconomicsCalendar::class)->name('economics-calendar');
+            Route::get('/calendar/economics/{release_id}/', EconomicRelease::class)->name('economics-release');
+            Route::get('/calendar/economics/{release_id}/{series_id}/', EconomicReleaseSeries::class)->name('economics-release-series');
+            Route::get('/company-filings', CompanyFilingsPage::class)->name('company-filings');
+            Route::get('/fund-filings', FundFilingsPage::class)->name('fund-filings');
+            Route::get('/mutual-fund-filings', MutualFundFilingsPage::class)->name('mutual-fund-filings');
+            Route::get('/etf-filings', [EtfController::class, 'filings'])->name('etf-filings');
+            Route::get('/identifiers', CompanyIdentifiers::class)->name('company-identifiers');
+            Route::get('/delistings', Delistings::class)->name('delistings');
+            Route::get('/euronext', Euronexts::class)->name('euronexts');
+            Route::get('/lse', Lses::class)->name('lses');
+            Route::get('/tsx', Tsxs::class)->name('tsxs');
+            Route::get('/shanghai', Shanghais::class)->name('shanghais');
+            Route::get('/japan', Japans::class)->name('japans');
+            Route::get('/hkex', Hkexs::class)->name('hkexs');
+            Route::get('/otc', Otcs::class)->name('otcs');
+            Route::get('/frankfurt', Frankfurts::class)->name('frankfurts');
+            Route::get('/shenzhen', Shenzhens::class)->name('shenzhens');
+            Route::get('/review', ReviewPage::class)->name('review');
+            Route::get('/press-release', PressRelease::class)->name('press.release');
+        });
 
-        Route::get('/company/{ticker}', [CompanyController::class, 'profile'])->name('company.profile');
-        Route::get('/company/{ticker}/products', [CompanyController::class, 'product'])->name('company.profiles');
-        Route::get('/company/{ticker}/filings-summary', [CompanyController::class, 'filingsSummary'])->name('company.filings-summary');
-        Route::get('/company/{ticker}/executive-compensation', [CompanyController::class, 'executiveCompensation'])->name('company.executive.compensation');
-        Route::get('/company/{ticker}/chart', [CompanyController::class, 'chart'])->name('company.chart');
-        Route::get('/company/{ticker}/splits', [CompanyController::class, 'splits'])->name('company.splits');
-        Route::get('/company/{ticker}/geographic', [CompanyController::class, 'geographic'])->name('company.geographic');
-        Route::get('/company/{ticker}/metrics', [CompanyController::class, 'metrics'])->name('company.metrics');
-        Route::get('/company/{ticker}/report', [CompanyController::class, 'report'])->name('company.report');
-        Route::get('/company/{ticker}/shareholders', [CompanyController::class, 'shareholders'])->name('company.shareholders');
-        Route::get('/company/{ticker}/summary', [CompanyController::class, 'summary'])->name('company.summary');
-        Route::get('/company/{ticker}/filings', [CompanyController::class, 'filings'])->name('company.filings');
-        Route::get('/company/{ticker}/insider', [CompanyController::class, 'insider'])->name('company.insider');
-        Route::get('/company/{ticker}/restatement', [CompanyController::class, 'restatement'])->name('company.restatement');
-        Route::get('/company/{ticker}/employee', [CompanyController::class, 'employee'])->name('company.employee');
-        Route::get('/company/{ticker}/fail-to-deliver', [CompanyController::class, 'failToDeliver'])->name('company.fail.to.deliver');
-        Route::get('/company/{ticker}/analysis', [CompanyController::class, 'analysis'])->name('company.analysis');
+        Route::middleware(['cacheable6hours'])->group(function () {
+            Route::get('/company/{ticker}', [CompanyController::class, 'profile'])->name('company.profile');
+            Route::get('/company/{ticker}/products', [CompanyController::class, 'product'])->name('company.profiles');
+            Route::get('/company/{ticker}/filings-summary', [CompanyController::class, 'filingsSummary'])->name('company.filings-summary');
+            Route::get('/company/{ticker}/executive-compensation', [CompanyController::class, 'executiveCompensation'])->name('company.executive.compensation');
+            Route::get('/company/{ticker}/chart', [CompanyController::class, 'chart'])->name('company.chart');
+            Route::get('/company/{ticker}/splits', [CompanyController::class, 'splits'])->name('company.splits');
+            Route::get('/company/{ticker}/geographic', [CompanyController::class, 'geographic'])->name('company.geographic');
+            Route::get('/company/{ticker}/metrics', [CompanyController::class, 'metrics'])->name('company.metrics');
+            Route::get('/company/{ticker}/report', [CompanyController::class, 'report'])->name('company.report');
+            Route::get('/company/{ticker}/shareholders', [CompanyController::class, 'shareholders'])->name('company.shareholders');
+            Route::get('/company/{ticker}/summary', [CompanyController::class, 'summary'])->name('company.summary');
+            Route::get('/company/{ticker}/filings', [CompanyController::class, 'filings'])->name('company.filings');
+            Route::get('/company/{ticker}/insider', [CompanyController::class, 'insider'])->name('company.insider');
+            Route::get('/company/{ticker}/restatement', [CompanyController::class, 'restatement'])->name('company.restatement');
+            Route::get('/company/{ticker}/employee', [CompanyController::class, 'employee'])->name('company.employee');
+            Route::get('/company/{ticker}/fail-to-deliver', [CompanyController::class, 'failToDeliver'])->name('company.fail.to.deliver');
+            Route::get('/company/{ticker}/analysis', [CompanyController::class, 'analysis'])->name('company.analysis');
 
-        Route::get('/company/{ticker}/ownership/{start?}', [CompanyController::class, 'ownership'])->name('company.ownership');
+            Route::get('/company/{ticker}/ownership/{start?}', [CompanyController::class, 'ownership'])->name('company.ownership');
 
-        Route::get('/legacy/fund/{cik}/', [FundController::class, 'summary'])->name('fund.summary');
-        Route::get('/fund/{cik}/holdings', [FundController::class, 'holdings'])->name('fund.holdings');
-        Route::get('/fund/{cik}/metrics', [FundController::class, 'metrics'])->name('fund.metrics');
-        Route::get('/fund/{ticker}/filings', [FundController::class, 'filings'])->name('fund.filings');
-        Route::get('/fund/{ticker}/insider', [FundController::class, 'insider'])->name('fund.insider');
-        Route::get('/fund/{ticker}/restatement', [FundController::class, 'restatement'])->name('fund.restatement');
+            Route::get('/legacy/fund/{cik}/', [FundController::class, 'summary'])->name('fund.summary');
+            Route::get('/fund/{cik}/holdings', [FundController::class, 'holdings'])->name('fund.holdings');
+            Route::get('/fund/{cik}/metrics', [FundController::class, 'metrics'])->name('fund.metrics');
+            Route::get('/fund/{ticker}/filings', [FundController::class, 'filings'])->name('fund.filings');
+            Route::get('/fund/{ticker}/insider', [FundController::class, 'insider'])->name('fund.insider');
+            Route::get('/fund/{ticker}/restatement', [FundController::class, 'restatement'])->name('fund.restatement');
 
-        // if company is supplied in url, it will show history of fund for that company otherwise it will show history of fund for all companies
-        Route::get('/fund/{fund}/{company?}', [CompanyController::class, 'fund'])->name('company.fund');
-        Route::get('/mutual-fund/{cik}/{fund_symbol}/{series_id}/{class_id}/{class_name}{company?}', [CompanyController::class, 'mutualFund'])->name('company.mutual-fund');
+            // if company is supplied in url, it will show history of fund for that company otherwise it will show history of fund for all companies
+            Route::get('/fund/{fund}/{company?}', [CompanyController::class, 'fund'])->name('company.fund');
+            Route::get('/mutual-fund/{cik}/{fund_symbol}/{series_id}/{class_id}/{class_name}{company?}', [CompanyController::class, 'mutualFund'])->name('company.mutual-fund');
 
-        Route::get('builder/chart', [BuilderController::class, 'chart'])->name('builder.chart');
-        Route::get('builder/table', [BuilderController::class, 'table'])->name('builder.table');
+            Route::get('builder/chart', [BuilderController::class, 'chart'])->name('builder.chart');
+            Route::get('builder/table', [BuilderController::class, 'table'])->name('builder.table');
 
-        Route::get('/legacy/mutual-fund/{cik}/{fund_symbol}/{series_id}/{class_id}/', [MutualFundController::class, 'holdings'])->name('mutual-fund.holdings');
-        Route::get('/legacy/mutual-fund/{cik}/{fund_symbol}/{series_id}/{class_id}/returns', [MutualFundController::class, 'returns'])->name('mutual-fund.returns');
+            Route::get('/legacy/mutual-fund/{cik}/{fund_symbol}/{series_id}/{class_id}/', [MutualFundController::class, 'holdings'])->name('mutual-fund.holdings');
+            Route::get('/legacy/mutual-fund/{cik}/{fund_symbol}/{series_id}/{class_id}/returns', [MutualFundController::class, 'returns'])->name('mutual-fund.returns');
 
-        Route::get('/etf/{cik}/{etf_symbol}', [EtfController::class, 'holdings'])->name('etf.holdings');
+            Route::get('/etf/{cik}/{etf_symbol}', [EtfController::class, 'holdings'])->name('etf.holdings');
 
-        Route::get('/euronext/{ticker}/', [EuronextController::class, 'metrics'])->name('euronext.metrics');
-        Route::get('/euronext/{ticker}/profile', [EuronextController::class, 'profile'])->name('euronext.profile');
-        Route::get('/euronext/{ticker}/filings', [EuronextController::class, 'filings'])->name('euronext.filings');
+            Route::get('/euronext/{ticker}/', [EuronextController::class, 'metrics'])->name('euronext.metrics');
+            Route::get('/euronext/{ticker}/profile', [EuronextController::class, 'profile'])->name('euronext.profile');
+            Route::get('/euronext/{ticker}/filings', [EuronextController::class, 'filings'])->name('euronext.filings');
 
-        Route::get('/lse/{ticker}/', [LseController::class, 'metrics'])->name('lse.metrics');
-        Route::get('/lse/{ticker}/profile', [LseController::class, 'profile'])->name('lse.profile');
-        Route::get('/lse/{ticker}/filings', [LseController::class, 'filings'])->name('lse.filings');
+            Route::get('/lse/{ticker}/', [LseController::class, 'metrics'])->name('lse.metrics');
+            Route::get('/lse/{ticker}/profile', [LseController::class, 'profile'])->name('lse.profile');
+            Route::get('/lse/{ticker}/filings', [LseController::class, 'filings'])->name('lse.filings');
 
-        Route::get('/tsx/{ticker}/', [TsxController::class, 'metrics'])->name('tsx.metrics');
-        Route::get('/tsx/{ticker}/profile', [TsxController::class, 'profile'])->name('tsx.profile');
-        Route::get('/tsx/{ticker}/filings', [TsxController::class, 'filings'])->name('tsx.filings');
+            Route::get('/tsx/{ticker}/', [TsxController::class, 'metrics'])->name('tsx.metrics');
+            Route::get('/tsx/{ticker}/profile', [TsxController::class, 'profile'])->name('tsx.profile');
+            Route::get('/tsx/{ticker}/filings', [TsxController::class, 'filings'])->name('tsx.filings');
 
-        Route::get('/shanghai/{ticker}/', [ShanghaiController::class, 'metrics'])->name('shanghai.metrics');
-        Route::get('/shanghai/{ticker}/profile', [ShanghaiController::class, 'profile'])->name('shanghai.profile');
-        Route::get('/shanghai/{ticker}/filings', [ShanghaiController::class, 'filings'])->name('shanghai.filings');
+            Route::get('/shanghai/{ticker}/', [ShanghaiController::class, 'metrics'])->name('shanghai.metrics');
+            Route::get('/shanghai/{ticker}/profile', [ShanghaiController::class, 'profile'])->name('shanghai.profile');
+            Route::get('/shanghai/{ticker}/filings', [ShanghaiController::class, 'filings'])->name('shanghai.filings');
 
-        Route::get('/japan/{ticker}/', [JapanController::class, 'metrics'])->name('japan.metrics');
-        Route::get('/japan/{ticker}/profile', [JapanController::class, 'profile'])->name('japan.profile');
-        Route::get('/japan/{ticker}/filings', [JapanController::class, 'filings'])->name('japan.filings');
+            Route::get('/japan/{ticker}/', [JapanController::class, 'metrics'])->name('japan.metrics');
+            Route::get('/japan/{ticker}/profile', [JapanController::class, 'profile'])->name('japan.profile');
+            Route::get('/japan/{ticker}/filings', [JapanController::class, 'filings'])->name('japan.filings');
 
-        Route::get('/hkex/{ticker}/', [HkexController::class, 'metrics'])->name('hkex.metrics');
-        Route::get('/hkex/{ticker}/profile', [HkexController::class, 'profile'])->name('hkex.profile');
-        Route::get('/hkex/{ticker}/filings', [HkexController::class, 'filings'])->name('hkex.filings');
+            Route::get('/hkex/{ticker}/', [HkexController::class, 'metrics'])->name('hkex.metrics');
+            Route::get('/hkex/{ticker}/profile', [HkexController::class, 'profile'])->name('hkex.profile');
+            Route::get('/hkex/{ticker}/filings', [HkexController::class, 'filings'])->name('hkex.filings');
 
-        Route::get('/otc/{ticker}/', [OtcController::class, 'metrics'])->name('otc.metrics');
-        Route::get('/otc/{ticker}/profile', [OtcController::class, 'profile'])->name('otc.profile');
-        Route::get('/otc/{ticker}/filings', [OtcController::class, 'filings'])->name('otc.filings');
+            Route::get('/otc/{ticker}/', [OtcController::class, 'metrics'])->name('otc.metrics');
+            Route::get('/otc/{ticker}/profile', [OtcController::class, 'profile'])->name('otc.profile');
+            Route::get('/otc/{ticker}/filings', [OtcController::class, 'filings'])->name('otc.filings');
 
-        Route::get('/frankfurt/{ticker}/', [FrankfurtController::class, 'metrics'])->name('frankfurt.metrics');
-        Route::get('/frankfurt/{ticker}/profile', [FrankfurtController::class, 'profile'])->name('frankfurt.profile');
-        Route::get('/frankfurt/{ticker}/filings', [FrankfurtController::class, 'filings'])->name('frankfurt.filings');
+            Route::get('/frankfurt/{ticker}/', [FrankfurtController::class, 'metrics'])->name('frankfurt.metrics');
+            Route::get('/frankfurt/{ticker}/profile', [FrankfurtController::class, 'profile'])->name('frankfurt.profile');
+            Route::get('/frankfurt/{ticker}/filings', [FrankfurtController::class, 'filings'])->name('frankfurt.filings');
 
-        Route::get('/shenzhen/{ticker}/', [ShenzhenController::class, 'metrics'])->name('shenzhen.metrics');
+            Route::get('/shenzhen/{ticker}/', [ShenzhenController::class, 'metrics'])->name('shenzhen.metrics');
+        });
     });
 
 Route::middleware(['auth', 'verified', 'ensureUserIsApproved'])->group(function () {

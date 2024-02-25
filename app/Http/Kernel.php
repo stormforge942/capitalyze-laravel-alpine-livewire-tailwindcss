@@ -44,6 +44,18 @@ class Kernel extends HttpKernel
             'throttle:api',
             \Illuminate\Routing\Middleware\SubstituteBindings::class,
         ],
+
+        'cacheable1day' => [
+            'cache.response:1440',
+        ],
+
+        'cacheable12hours' => [
+            'cache.response:720',
+        ],
+
+        'cacheable6hours' => [
+            'cache.response:360',
+        ],
     ];
 
     /**
@@ -70,5 +82,6 @@ class Kernel extends HttpKernel
         'ensureUserIsAdmin' => \App\Http\Middleware\EnsureUserIsAdmin::class,
         'custom.email.verification' => \App\Http\Middleware\CustomEmailVerificationPrompt::class,
         'checkPagePermission' => \App\Http\Middleware\CheckPagePermission::class,
+        'cache.response' => \App\Http\Middleware\CacheResponse::class,
     ];
 }

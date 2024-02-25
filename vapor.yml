@@ -2,6 +2,7 @@ id: 50591
 name: Capitalyze
 environments:
     production:
+        cache: capitalyze-cache
         timeout: 30
         cli-timeout: 600
         domain: capitalyze.com
@@ -15,6 +16,7 @@ environments:
             - 'npm ci && npm run build && rm -rf node_modules'
         deploy:
             - 'php artisan migrate --force'
+            - 'php artisan cache:clear' 
     
     staging:
         memory: 1024
@@ -26,3 +28,4 @@ environments:
             - 'npm ci && npm run build && rm -rf node_modules'
         deploy:
             - 'php artisan migrate --force'
+            - 'php artisan cache:clear' 
