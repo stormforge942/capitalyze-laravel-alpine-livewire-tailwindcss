@@ -11,7 +11,6 @@ environments:
         cli-memory: 4096
         runtime: 'php-8.2:al2'
         warm: 10
-        gateway-version: 2
         build:
             - 'COMPOSER_MIRROR_PATH_REPOS=1 composer install --no-dev'
             - 'php artisan event:cache'
