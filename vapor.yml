@@ -7,10 +7,11 @@ environments:
         cli-timeout: 600
         domain: capitalyze.com
         database: xbrl-front
-        memory: 2048
-        cli-memory: 1024
+        memory: 4096
+        cli-memory: 4096
         runtime: 'php-8.2:al2'
-        warm: 5
+        warm: 10
+        gateway-version: 2
         build:
             - 'COMPOSER_MIRROR_PATH_REPOS=1 composer install --no-dev'
             - 'php artisan event:cache'
