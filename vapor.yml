@@ -2,7 +2,7 @@ id: 50591
 name: Capitalyze
 environments:
     production:
-        cache: capitalyze-cache
+        cache: capitalyze-cache-serverless
         timeout: 30
         cli-timeout: 600
         domain: capitalyze.com
