@@ -47,6 +47,11 @@ use App\Http\Controllers\ShenzhenController;
 use App\Http\Controllers\TrackInvestorController;
 use Laravel\Fortify\Http\Controllers\AuthenticatedSessionController;
 
+
+Route::get('/test-cache', function () {
+    return "test";
+});
+
 Route::get('/permission-denied', PermissionDenied::class)->name('permission-denied');
 
 Route::get('/', HomeController::class)->name('home');
@@ -60,7 +65,7 @@ Route::middleware(['auth', 'approved', 'verified', 'checkPagePermission'])
             Route::get('/insider-transactions', InsiderTransactionsController::class)->name('insider-transactions');
             Route::get('/calendar/earnings', EarningsCalendarController::class)->name('earnings-calendar');
         });
-        
+
         Route::middleware(['cacheable12hours'])->group(function () {
             Route::get('/calendar/economics', EconomicsCalendar::class)->name('economics-calendar');
             Route::get('/calendar/economics/{release_id}/', EconomicRelease::class)->name('economics-release');
