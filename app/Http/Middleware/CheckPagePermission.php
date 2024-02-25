@@ -11,10 +11,11 @@ class CheckPagePermission
     {
         $routeName = $request->route()->getName();
 
-        if (Auth::user()->hasNavbar($routeName)) {
-            return $next($request);
-        }
+        /** @var \App\Models\User */
+        $user = Auth::user();
 
-        return redirect()->route('permission-denied');
+        abort_unless($user?->hasNavbar($routeName), 403, 'You do not have permission to access this page.');
+
+        return $next($request);
     }
 }
