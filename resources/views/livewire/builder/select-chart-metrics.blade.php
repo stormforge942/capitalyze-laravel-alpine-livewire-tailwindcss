@@ -1,43 +1,65 @@
 <div class="bg-white p-6 rounded-lg border-[0.5px] border-[#D4DDD7]" x-data="{
     search: '',
-    options: @json($options),
+    options: @js($options),
     value: [],
     tmpValue: [],
     showDropdown: false,
     activeOption: [0],
     width: '320px',
     init() {
-        const _options = @json($options)
+        const _options = @js($options)
 
         this.$watch('search', () => {
-            if(!this.search.length) {
-                this.companies = _options
+            if (!this.search.length) {
+                this.value = _options
                 return
             }
 
-            let tmp = [];
-            let search = this.search.toLowerCase()
+            const term = this.search.toLowerCase()
+            let tmp = []
 
             _options.forEach(option => {
-                if(option.title.toLowerCase().includes(search)) {
-                    tmp.push(option)
+                if (!option.title.toLowerCase().includes(term)) {
+                    return;
                 }
 
-                if(!option.has_children) {
-                    
+                let group = {
+                    title: option.title,
+                    has_children: option.has_children || false,
+                    items: []
+                };
+
+                if (!option.has_children) {
+                    group.items = option.items.filter(item => item.toLowerCase().includes(term))
+
+                    if (!group.items.length) {
+                        group.items = option.items
+                    }
+
+                    tmp.push(group)
+
+                    return
                 }
+
+                Object.items(option.items).forEach(([key, value]) => {
+                    if (key.toLowerCase().includes(term)) {
+                        let tmp = value.filter(item => item.toLowerCase().includes(term))
+
+
+                        if(!tmp.length) {
+                            tmp = value
+                        }
+
+                        group.items[key] = tmp
+
+                        tmp.push(group)
+                    }
+                })
             })
 
-            foreach(let option in _options) {
-                if(option.title.toLowerCase().includes(search)) {
-                    tmp.push(option)
-                    continue;
-                }
+            this.value = tmp
 
-                if(option.has_children) {
-                    
-                }
-            }
+            console.log(this.value)
         })
 
         this.$watch('showDropdown', value => {
@@ -97,18 +119,14 @@
         </x-dropdown>
 
         <div class="mt-6 flex flex-wrap gap-3 text-sm font-semibold" x-show="value.length" x-cloak>
-            <template x-for="company in value" :key="company.ticker">
-                <span class="bg-green-light rounded-full p-2 flex items-center gap-x-2">
-                    <span x-text="`${company.name} (${company.ticker})`"></span>
-                    <button type="button" @click="value = value.filter(item => item.ticker !== company.ticker)">
-                        <svg width="16" height="16" viewBox="0 0 16 16" fill="none"
-                            xmlns="http://www.w3.org/2000/svg">
-                            <path
-                                d="M7.99479 14.6693C4.31289 14.6693 1.32812 11.6845 1.32812 8.0026C1.32812 4.3207 4.31289 1.33594 7.99479 1.33594C11.6767 1.33594 14.6615 4.3207 14.6615 8.0026C14.6615 11.6845 11.6767 14.6693 7.99479 14.6693ZM7.99479 7.0598L6.10917 5.17418L5.16636 6.11698L7.05199 8.0026L5.16636 9.8882L6.10917 10.831L7.99479 8.9454L9.88039 10.831L10.8232 9.8882L8.93759 8.0026L10.8232 6.11698L9.88039 5.17418L7.99479 7.0598Z"
-                                fill="#C22929" />
-                        </svg>
-                    </button>
-                </span>
+            <template x-for="(option, idx) in value" :key="idx">
+                <div>
+                    
+                </div>
+            </template>
+
+            <template x-for="(option, idx)">
+
             </template>
         </div>
     </div>
