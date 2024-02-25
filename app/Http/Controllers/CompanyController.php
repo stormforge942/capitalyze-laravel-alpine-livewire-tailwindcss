@@ -113,7 +113,7 @@ class CompanyController extends BaseController
 
     public function report(Request $request, $ticker)
     {
-        $company = Company::where('ticker', $ticker)->get()->first();
+        $company = Company::where('ticker', $ticker)->get()->firstOrFail();
 
         return view('layouts.company', [
             'company' => $company,
