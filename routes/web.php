@@ -50,7 +50,7 @@ use Laravel\Fortify\Http\Controllers\AuthenticatedSessionController;
 
 Route::get('/test-cache', function () {
     return "test";
-});
+})->middleware('cache.response:120');
 
 Route::get('/permission-denied', PermissionDenied::class)->name('permission-denied');
 
