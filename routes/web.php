@@ -48,10 +48,6 @@ use App\Http\Controllers\TrackInvestorController;
 use Laravel\Fortify\Http\Controllers\AuthenticatedSessionController;
 
 
-Route::get('/test-cache', function () {
-    return "test";
-})->middleware('cache.response:120');
-
 Route::get('/permission-denied', PermissionDenied::class)->name('permission-denied');
 
 Route::get('/', HomeController::class)->name('home');
@@ -59,14 +55,14 @@ Route::get('/', HomeController::class)->name('home');
 Route::middleware(['auth', 'approved', 'verified', 'checkPagePermission'])
     ->group(function () {
 
-        Route::middleware(['cacheable1day'])->group(function () {
+        // Route::middleware(['cacheable1day'])->group(function () {
             Route::get('/track-investor', TrackInvestorController::class)->name('track-investor');
             Route::get('/event-filings', EventFilingsController::class)->name('event-filings');
             Route::get('/insider-transactions', InsiderTransactionsController::class)->name('insider-transactions');
             Route::get('/calendar/earnings', EarningsCalendarController::class)->name('earnings-calendar');
-        });
+        // });
 
-        Route::middleware(['cacheable12hours'])->group(function () {
+        // Route::middleware(['cacheable12hours'])->group(function () {
             Route::get('/calendar/economics', EconomicsCalendar::class)->name('economics-calendar');
             Route::get('/calendar/economics/{release_id}/', EconomicRelease::class)->name('economics-release');
             Route::get('/calendar/economics/{release_id}/{series_id}/', EconomicReleaseSeries::class)->name('economics-release-series');
@@ -87,9 +83,9 @@ Route::middleware(['auth', 'approved', 'verified', 'checkPagePermission'])
             Route::get('/shenzhen', Shenzhens::class)->name('shenzhens');
             Route::get('/review', ReviewPage::class)->name('review');
             Route::get('/press-release', PressRelease::class)->name('press.release');
-        });
+        // });
 
-        Route::middleware(['cacheable6hours'])->group(function () {
+        // Route::middleware(['cacheable6hours'])->group(function () {
             Route::get('/company/{ticker}', [CompanyController::class, 'profile'])->name('company.profile');
             Route::get('/company/{ticker}/products', [CompanyController::class, 'product'])->name('company.profiles');
             Route::get('/company/{ticker}/filings-summary', [CompanyController::class, 'filingsSummary'])->name('company.filings-summary');
@@ -162,7 +158,7 @@ Route::middleware(['auth', 'approved', 'verified', 'checkPagePermission'])
             Route::get('/frankfurt/{ticker}/filings', [FrankfurtController::class, 'filings'])->name('frankfurt.filings');
 
             Route::get('/shenzhen/{ticker}/', [ShenzhenController::class, 'metrics'])->name('shenzhen.metrics');
-        });
+        // });
     });
 
 Route::middleware(['auth', 'verified', 'ensureUserIsApproved'])->group(function () {

@@ -2,15 +2,13 @@ id: 50591
 name: Capitalyze
 environments:
     production:
-        cache: capitalyze-cache-serverless
         timeout: 30
         cli-timeout: 600
         domain: capitalyze.com
         database: xbrl-front
-        memory: 4096
-        cli-memory: 4096
+        memory: 1024
+        cli-memory: 512
         runtime: 'php-8.2:al2'
-        warm: 10
         build:
             - 'COMPOSER_MIRROR_PATH_REPOS=1 composer install --no-dev'
             - 'php artisan event:cache'
