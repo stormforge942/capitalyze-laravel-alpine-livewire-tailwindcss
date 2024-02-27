@@ -167,7 +167,8 @@ function calculateYoyChange(array $values, array $dates): array
     return $change;
 }
 
-function formatNiceNumber($number) {
+function formatNiceNumber($number)
+{
     $number = (float) $number;
 
     $suffix = ['', 'k', 'M', 'B', 'T'];
@@ -177,4 +178,40 @@ function formatNiceNumber($number) {
     $formattedNumber = number_format($number / pow(1000, $suffixIndex), 1) . $suffix[$suffixIndex];
 
     return $formattedNumber;
+}
+
+function format_overview_numbers($value)
+{
+    if (is_null($value)) return '-';
+
+    if (!is_numeric($value)) return $value;
+
+    $val = floatval($value);
+
+    // present the number in best possible way, like K, M, B
+
+    $format = '';
+
+    if ($val >= 1000 && $val < 1000000) {
+        $format = 'K';
+    } else if ($val >= 1000000) {
+        $format = 'M';
+    }
+
+    $divisor = match ($format) {
+        'K' => 1000,
+        'M' => 1000000,
+        default => 1,
+    };
+
+    $val = number_format($val / $divisor, 2);
+
+    // remove trailing zeros
+    $val = preg_replace('/\.?0+$/', '', $val);
+    // remove trailing dot
+    $val = rtrim($val, '.');
+
+    $val = $val . $format;
+
+    return $value < 0 ? "<span class=\"text-red\">({$val})</span>" : $val;
 }
