@@ -43,7 +43,7 @@ class MutualFunds extends Component
         $funds = DB::connection('pgsql-xbrl')
             ->table('mutual_fund_holdings_summary')
             ->select('registrant_name', 'fund_symbol', 'cik', 'fund_symbol', 'series_id', 'class_id', 'class_name', 'total_value', 'portfolio_size', 'change_in_total_value', 'date')
-            ->from('mutual_fund_holdings_summary as hs')
+            ->from('mutual_fund_holdings_summary')
             ->where('is_latest', true)
             ->when($this->search, function ($q) {
                 return $q->where(DB::raw('registrant_name'), 'ilike', "%$this->search%")

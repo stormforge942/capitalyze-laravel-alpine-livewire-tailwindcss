@@ -416,7 +416,7 @@
                 copyMainTableWidth(mainCells, targetCells) {
                     mainCells.forEach((cell, index) => {
                         {{-- subtract the padding size from each cell --}}
-                        targetCells[index].style.minWidth = (cell.offsetWidth - {{ 16 / count($table['dates']) }}) + 'px';
+                        targetCells[index].style.minWidth = (cell.offsetWidth - {{ count($table['dates']) ? 16 / count($table['dates']) : 0 }}) + 'px';
                     });
                 }
         }" style="min-width: max-content">
