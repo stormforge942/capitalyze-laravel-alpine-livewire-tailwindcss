@@ -11,21 +11,22 @@
             </li>
         </ul>
         <div class="mt-4 flex items-center justify-between">
-            <form method="POST" action="{{ route('verification.send') }}">
-                @csrf
+            @if (!$isVerified)
+                <form method="POST" action="{{ route('verification.send') }}">
+                    @csrf
 
-                <div>
-                    <x-jet-button type="submit">
-                        {{ __('Resend Verification Email') }}
-                    </x-jet-button>
-                </div>
-            </form>
+                    <div>
+                        <x-jet-button type="submit">
+                            {{ __('Resend Verification Email') }}
+                        </x-jet-button>
+                    </div>
+                </form>
+            @else
+                <span></span>
+            @endif
 
             <div>
-                <a
-                    href="{{ route('profile.show') }}"
-                    class="underline text-sm text-gray-600 hover:text-gray-900"
-                >
+                <a href="{{ route('profile.show') }}" class="underline text-sm text-gray-600 hover:text-gray-900">
                     {{ __('Edit Profile') }}</a>
 
                 <form method="POST" action="{{ route('logout') }}" class="inline">

@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Exceptions\CompanyNotFoundException;
 use App\Models\Fund;
 use App\Models\Company;
 use App\Models\MutualFunds;
@@ -13,7 +14,7 @@ class CompanyController extends BaseController
 {
     public function geographic(Request $request, $ticker)
     {
-        $company = Company::where('ticker', $ticker)->get()->first();
+        $company = $this->findOrFailCompany($ticker);
 
         return view('layouts.company', [
             'company' => $company,
@@ -25,7 +26,7 @@ class CompanyController extends BaseController
 
     public function executiveCompensation(Request $request, $ticker)
     {
-        $company = Company::where('ticker', $ticker)->get()->first();
+        $company = $this->findOrFailCompany($ticker);
 
         return view('layouts.company', [
             'company' => $company,
@@ -37,7 +38,7 @@ class CompanyController extends BaseController
 
     public function failToDeliver(Request $request, $ticker)
     {
-        $company = Company::where('ticker', $ticker)->get()->first();
+        $company = $this->findOrFailCompany($ticker);
 
         return view('layouts.company', [
             'company' => $company,
@@ -49,7 +50,7 @@ class CompanyController extends BaseController
 
     public function product(Request $request, $ticker)
     {
-        $company = Company::where('ticker', $ticker)->get()->first();
+        $company = $this->findOrFailCompany($ticker);
 
         return view('layouts.company', [
             'company' => $company,
@@ -61,11 +62,7 @@ class CompanyController extends BaseController
 
     public function profile(Request $request, $ticker)
     {
-        $company = Company::where('ticker', $ticker)->get()->first();
-
-        if (!$company) {
-            return response()->view('errors.ticker-not-found', ['ticker' => $ticker], 404);
-        }
+        $company = $this->findOrFailCompany($ticker);
 
         return view('layouts.company', [
             'company' => $company,
@@ -77,7 +74,7 @@ class CompanyController extends BaseController
 
     public function splits(Request $request, $ticker)
     {
-        $company = Company::where('ticker', $ticker)->get()->first();
+        $company = $this->findOrFailCompany($ticker);
 
         return view('layouts.company', [
             'company' => $company,
@@ -89,7 +86,7 @@ class CompanyController extends BaseController
 
     public function metrics(Request $request, $ticker)
     {
-        $company = Company::where('ticker', $ticker)->get()->first();
+        $company = $this->findOrFailCompany($ticker);
 
         return view('layouts.company', [
             'company' => $company,
@@ -101,7 +98,7 @@ class CompanyController extends BaseController
 
     public function chart(Request $request, $ticker)
     {
-        $company = Company::where('ticker', $ticker)->get()->first();
+        $company = $this->findOrFailCompany($ticker);
 
         return view('layouts.company', [
             'company' => $company,
@@ -113,7 +110,7 @@ class CompanyController extends BaseController
 
     public function report(Request $request, $ticker)
     {
-        $company = Company::where('ticker', $ticker)->get()->firstOrFail();
+        $company = $this->findOrFailCompany($ticker);
 
         return view('layouts.company', [
             'company' => $company,
@@ -125,7 +122,7 @@ class CompanyController extends BaseController
 
     public function shareholders(Request $request, $ticker)
     {
-        $company = Company::where('ticker', $ticker)->get()->first();
+        $company = $this->findOrFailCompany($ticker);
 
         return view('layouts.company', [
             'company' => $company,
@@ -137,7 +134,7 @@ class CompanyController extends BaseController
 
     public function summary(Request $request, $ticker)
     {
-        $company = Company::where('ticker', $ticker)->get()->first();
+        $company = $this->findOrFailCompany($ticker);
 
         return view('layouts.company', [
             'company' => $company,
@@ -149,7 +146,7 @@ class CompanyController extends BaseController
 
     public function filings(Request $request, $ticker)
     {
-        $company = Company::where('ticker', $ticker)->get()->first();
+        $company = $this->findOrFailCompany($ticker);
 
         return view('layouts.company', [
             'company' => $company,
@@ -161,7 +158,7 @@ class CompanyController extends BaseController
 
     public function insider(Request $request, $ticker)
     {
-        $company = Company::where('ticker', $ticker)->get()->first();
+        $company = $this->findOrFailCompany($ticker);
 
         return view('layouts.company', [
             'company' => $company,
@@ -173,7 +170,7 @@ class CompanyController extends BaseController
 
     public function restatement(Request $request, $ticker)
     {
-        $company = Company::where('ticker', $ticker)->get()->first();
+        $company = $this->findOrFailCompany($ticker);
 
         return view('layouts.company', [
             'company' => $company,
@@ -185,7 +182,7 @@ class CompanyController extends BaseController
 
     public function employee(Request $request, $ticker)
     {
-        $company = Company::where('ticker', $ticker)->get()->first();
+        $company = $this->findOrFailCompany($ticker);
 
         return view('layouts.company', [
             'company' => $company,
@@ -197,7 +194,7 @@ class CompanyController extends BaseController
 
     public function filingsSummary(Request $request, $ticker)
     {
-        $company = Company::where('ticker', $ticker)->get()->first();
+        $company = $this->findOrFailCompany($ticker);
         return view('layouts.company', [
             'company' => $company,
             'ticker' => $ticker,
@@ -278,9 +275,7 @@ class CompanyController extends BaseController
 
     public function analysis(Request $request, string $ticker)
     {
-        $company = Company::query()
-            ->where('ticker', $ticker)
-            ->firstOrFail();
+        $company = $this->findOrFailCompany($ticker);
 
         return view('layouts.company', [
             'company' => $company,
@@ -288,5 +283,18 @@ class CompanyController extends BaseController
             'period' => $request->query('period', 'annual'),
             'tab' => 'analysis',
         ]);
+    }
+
+    private function findOrFailCompany(string $ticker)
+    {
+        $company = Company::query()
+            ->where('ticker', $ticker)
+            ->first();
+
+        if (!$company) {
+            throw new CompanyNotFoundException($ticker);
+        }
+
+        return $company;
     }
 }
