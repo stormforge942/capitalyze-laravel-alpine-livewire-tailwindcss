@@ -109,7 +109,7 @@ function renderRevenueByEmployeeChart(canvas, datasets, config) {
     })
 
     return new Chart(ctx, {
-        plugins: [chartJsPlugins.pointLine],
+        plugins: [chartJsPlugins.pointLine, window.ChartDataLabels],
         type: "bar",
         data: {
             datasets,
@@ -129,6 +129,10 @@ function renderRevenueByEmployeeChart(canvas, datasets, config) {
                 legend: legendConfig(),
                 pointLine: {
                     color: "#C22929",
+                },
+                datalabels: {
+                    ...dataLabelConfig(config),
+                    formatter: (v) => formatCmpctNumber(v.y),
                 },
             },
             scales: {
@@ -383,7 +387,7 @@ function basicBarChart(canvas, datasets, config) {
     })
 
     return new Chart(ctx, {
-        plugins: [],
+        plugins: [window.ChartDataLabels],
         type: "bar",
         data: {
             datasets,
@@ -400,6 +404,10 @@ function basicBarChart(canvas, datasets, config) {
             },
             plugins: {
                 tooltip: tooltipConfig,
+                datalabels: {
+                    ...dataLabelConfig(config),
+                    formatter: (v) => formatCmpctNumber(v.y),
+                },
                 legend: legendConfig(),
                 ...(!config.lastIsAverage
                     ? {}
