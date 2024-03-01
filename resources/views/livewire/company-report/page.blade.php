@@ -1,3 +1,8 @@
+@push('scripts')
+    <script src="https://cdn.jsdelivr.net/npm/chartjs-plugin-datalabels@2.0.0/dist/chartjs-plugin-datalabels.min.js">
+    </script>
+@endpush
+
 <div class="w-full">
     <livewire:slides.left-slide />
 
@@ -14,6 +19,7 @@
                     tableDates: $wire.tableDates,
                     selectedDateRange: $wire.entangle('selectedDateRange', true),
                     chart: null,
+                    showLabel: true,
                     disclosureTab: $wire.entangle('disclosureTab'),
                     filters: {
                         view: $wire.entangle('view'),
@@ -106,6 +112,8 @@
                         this.$watch('disclosureTab', (val) => window.updateQueryParam('disclosureTab', val))
                 
                         this.$watch('selectedChartRows', this.renderChart.bind(this), { deep: true })
+                        
+                        this.$watch('showLabel', this.renderChart.bind(this))
                 
                         this.$watch('selectedDateRange', (val) => {
                             window.updateQueryParam('selectedDateRange', val.join(','))
@@ -168,7 +176,7 @@
                             return;
                         }
                 
-                        this.chart = window.renderCompanyReportChart(this.formattedChartData, this.isReversed);
+                        this.chart = window.renderCompanyReportChart(this.formattedChartData, this.isReversed, this.showLabel);
                     },
                 }" wire:key="{{ \Str::uuid() }}">
                     @if ($activeTab === 'disclosure' && count($disclosureTabs))
@@ -254,8 +262,19 @@
                                         </x-dropdown>
                                     </div>
 
-                                    <div class="text-xl text-blue font-bold">
-                                        {{ $company['name'] }} ({{ $company['ticker'] }})
+                                    <div class="flex items-center justify-between">
+                                        <div class="text-xl text-blue font-bold">
+                                            {{ $company['name'] }} ({{ $company['ticker'] }})
+                                        </div>
+
+                                        <label class="relative inline-flex items-center cursor-pointer flex-shrink-0">
+                                            <input type="checkbox" value="yes" class="sr-only peer"
+                                                :checked="showLabel" @change="showLabel = $event.target.checked">
+                                            <div
+                                                class="w-6 h-2.5 bg-gray-200 peer-focus:outline-none peer-focus:ring-0 rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:-start-[4px] after:bg-white after:rounded-full after:h-4 after:w-4 after:shadow-md after:transition-all peer-checked:bg-dark-light2 peer-checked:after:bg-dark">
+                                            </div>
+                                            <span class="ms-3 text-sm font-medium text-gray-900">Show Labels</span>
+                                        </label>
                                     </div>
 
                                     <div class="mt-10 h-[300px] sm:h-[400px]">
@@ -388,7 +407,7 @@
     <script>
         let chart = null;
 
-        function renderCompanyReportChart(data, reversed) {
+        function renderCompanyReportChart(data, reversed, showLabel) {
             const ctx = document.getElementById("chart-company-report")?.getContext("2d");
 
             if (!ctx) return;
@@ -405,7 +424,7 @@
             })
 
             return new Chart(ctx, {
-                plugins: [chartJsPlugins.pointLine],
+                plugins: [chartJsPlugins.pointLine, window.ChartDataLabels],
                 type: 'line',
                 data,
                 options: {
@@ -448,6 +467,17 @@
                                     return context.dataset.label + '|' + context.formattedValue
                                 }
                             },
+                        },
+                        datalabels: {
+                            display: (ctx) => showLabel && ctx.dataset?.type !== "line",
+                            anchor: "center",
+                            align: "center",
+                            formatter: (v) => formatCmpctNumber(v.y),
+                            font: {
+                                weight: 500,
+                                size: 12,
+                            },
+                            color: (ctx) => ctx.dataset?.type !== "line" ? '#fff' : '#000',
                         }
                     },
                     scales: {
