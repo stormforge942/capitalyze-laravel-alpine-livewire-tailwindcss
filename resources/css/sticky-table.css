@@ -1,0 +1,28 @@
+.sticky-table-container {
+    overflow: auto;
+    width: 100%;
+}
+
+.sticky-row tr th {
+    position: sticky;
+    position: -webkit-sticky;
+    top: 0;
+    z-index: 20;
+}
+
+.sticky-table tr th:first-child {
+    z-index: 100 !important;
+}
+
+.sticky-column tr td:first-child {
+    background-color: white;
+}
+
+.sticky-column tr td:first-child,
+.sticky-column tr th:first-child {
+    position: sticky;
+    position: -webkit-sticky;
+    left: 0;
+    z-index: 10;
+    padding-right: 4px;
+}

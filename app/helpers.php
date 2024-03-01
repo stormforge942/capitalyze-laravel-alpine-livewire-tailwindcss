@@ -215,3 +215,14 @@ function format_overview_numbers($value)
 
     return $value < 0 ? "<span class=\"text-red\">({$val})</span>" : $val;
 }
+
+function sticky_table_class($value): string
+{
+    $classes = [
+        'Top Row' => ['sticky-row'],
+        'First Column' => ['sticky-column'],
+        'Top Row & First Column' => ['sticky-row', 'sticky-column']
+    ];
+
+    return 'sticky-table ' . implode(' ', $classes[$value] ?? []);
+}

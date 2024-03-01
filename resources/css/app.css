@@ -15,6 +15,7 @@
 @import "../../node_modules/@uvarov.frontend/vanilla-calendar/build/vanilla-calendar.min.css";
 @import "../../node_modules/@uvarov.frontend/vanilla-calendar/build/themes/light.min.css";
 @import "calendar.css";
+@import "sticky-table.css";
 
 @tailwind base;
 @tailwind components;

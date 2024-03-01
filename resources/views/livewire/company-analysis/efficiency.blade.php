@@ -33,7 +33,7 @@
         'cost-structure' => 'company-analysis.efficiency.cost-structure',
         'fcf-conversion' => 'company-analysis.efficiency.fcf-conversion',
     ] as $key => $value)
-        <div x-show="activeSubTab == '{{ $key }}'" x-cloak>
+        <div class="subtab-container" x-show="activeSubTab == '{{ $key }}'" x-cloak>
             @livewire($value, ['company' => $company, 'statements' => $statements])
         </div>
     @endforeach

@@ -15,16 +15,16 @@
             <x-analysis-chart-box title="Revenue By Geography" :company="$company" :chart="$chart"
                 function="renderBasicChart"></x-analysis-chart-box>
 
-            <div class="mt-6 overflow-auto">
-                <table class="w-full rounded-lg overflow-hidden text-right whitespace-nowrap">
-                    <thead class="font-sm font-semibold capitalize bg-[#EDEDED] text-dark">
+            <div class="mt-6 rounded-lg sticky-table-container">
+                <table class="w-full text-right whitespace-nowrap {{ sticky_table_class($freezePane) }}">
+                    <thead class="font-sm font-semibold capitalize text-dark">
                         <tr class="font-bold text-base">
-                            <th class="pl-8 py-2 text-left">
+                            <th class="pl-8 py-2 text-left bg-[#EDEDED]">
                                 {{ $company['name'] }} ({{ $company['ticker'] }})
                             </th>
 
                             @foreach ($selectedDates as $date)
-                                <th class="pl-6 py-2 last:pr-8">
+                                <th class="pl-6 py-2 last:pr-8 bg-[#EDEDED]">
                                     {{ $period === 'annual' ? explode('-', $date)[0] : $date }}
                                 </th>
                             @endforeach
@@ -79,12 +79,7 @@
                             </tr>
                         </tbody>
 
-                        {{-- spacer --}}
-                        <tbody>
-                            <tr>
-                                <td class="py-2 bg-transparent"></td>
-                            </tr>
-                        </tbody>
+                        <x-table-spacer></x-table-spacer>
                     @endforeach
 
                     <tbody class="bg-white">

@@ -266,12 +266,7 @@
                 </tr>
             </tbody>
 
-            {{-- spacer --}}
-            <tbody>
-                <tr>
-                    <td class="py-2 bg-transparent"></td>
-                </tr>
-            </tbody>
+            <x-table-spacer></x-table-spacer>
 
             <tbody class="bg-white">
                 <tr class="font-bold">
@@ -318,12 +313,7 @@
                 </tr>
             </tbody>
 
-            {{-- spacer --}}
-            <tbody>
-                <tr>
-                    <td class="py-2 bg-transparent"></td>
-                </tr>
-            </tbody>
+            <x-table-spacer></x-table-spacer>
 
             <tbody class="bg-white">
                 <tr class="font-bold">
