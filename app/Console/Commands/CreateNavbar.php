@@ -4,8 +4,6 @@ namespace App\Console\Commands;
 
 use App\Models\Navbar;
 use Illuminate\Console\Command;
-use Illuminate\Support\Facades\DB;
-use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Route;
 
 class CreateNavbar extends Command
@@ -28,7 +26,7 @@ class CreateNavbar extends Command
     {
         $map = [
             'track-investor' => 'Track Investor',
-            'event-filings' => 'Event Filings',
+            'event-filings' => 'Events Tracker',
             'insider-transactions' => 'Insider Transactions',
             'earnings-calendar' => 'Earnings Calendar',
             'economics-calendar' => 'Economics Calendar',

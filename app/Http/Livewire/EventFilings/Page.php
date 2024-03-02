@@ -52,12 +52,19 @@ class Page extends Component
                 ]
             ],
         ],
-        'Additional Securities Registrations' => [
+        'Additional Registrations' => [
             [
                 'title' => 'S-3',
                 'description' => 'Shelf registration',
                 'match' => [
                     'in' => ['S-3'],
+                ]
+            ],
+            [
+                'title' => 'S-4',
+                'description' => 'Registration of securities for M&A',
+                'match' => [
+                    'in' => ['S-4'],
                 ]
             ],
             [
@@ -68,7 +75,7 @@ class Page extends Component
                 ]
             ],
         ],
-        'Activism and Proxy Fights' => [
+        'Activism and Proxy' => [
             [
                 'title' => 'SC 13D',
                 'description' => '≥5% ownership disclosure by active investor',
@@ -105,14 +112,14 @@ class Page extends Component
                 ]
             ],
             [
-                'title' => 'Other proxy fights',
-                'description' => 'DEFC14A, DEFN14A, DFRN14A, PREN14A and PREC14C',
+                'title' => 'Other Proxies',
+                'description' => 'DEFC14A, DEFN14A, DFRN14A, PREN14A and more',
                 'match' => [
-                    'in' => ['DEFC14A', 'DEFN14A', 'DFRN14A', 'PREC14C'],
+                    'in' => ['DEFC14A', 'DEFN14A', 'DFRN14A', 'PREN14A', 'PREM14A', 'DEFA14A', 'PRER14A', 'DEFR14A'],
                 ]
             ]
         ],
-        'Late Filings' => [
+        'Restatements' => [
             [
                 'title' => 'NT 10-K',
                 'description' => 'Late annual filings notification',
@@ -125,6 +132,36 @@ class Page extends Component
                 'description' => 'Late quarterly filing notification',
                 'match' => [
                     'in' => ['NT 10-Q'],
+                ]
+            ],
+            [
+                'title' => 'Correspondence',
+                'description' => 'CORRESP, DOSLTR, DRSLTR, UPLOAD',
+                'match' => [
+                    'in' => ['CORRESP', 'DOSLTR', 'DRSLTR', 'UPLOAD'],
+                ]
+            ],
+        ],
+        'Tender Offer' => [
+            [
+                'title' => 'SC 13E3',
+                'description' => 'Going private transaction',
+                'match' => [
+                    'in' => ['SC 13E3'],
+                ]
+            ],
+            [
+                'title' => 'SC 14F1',
+                'description' => 'Change in board majority',
+                'match' => [
+                    'in' => ['SC 14F1'],
+                ]
+            ],
+            [
+                'title' => 'Tender Offer Filings',
+                'description' => 'SC TO-I, SC TO-T, SC 14D9, and more',
+                'match' => [
+                    'in' => ['SC TO-I', 'SC TO-T', 'SC 14D9'],
                 ]
             ]
         ]

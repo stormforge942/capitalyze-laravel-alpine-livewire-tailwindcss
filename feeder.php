@@ -2,6 +2,9 @@
 
 /**
  * Usage php feeder.php --drop={true|false} --tables={table1,table2,table3}
+ * 
+ *  @param bool drop - drop the database before creating it
+ *  @param string tables - comma separated list of tables to replicate
  */
 
 require __DIR__ . '/vendor/autoload.php';
