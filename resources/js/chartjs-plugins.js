@@ -89,7 +89,7 @@ const chartJsPlugins = {
             })
 
             const tableBody = document.createElement("tbody")
-            bodyLines.forEach((body) => {
+            bodyLines.reverse().forEach((body) => {
                 let [label, value] = body[0].split("|")
 
                 // format number if possible

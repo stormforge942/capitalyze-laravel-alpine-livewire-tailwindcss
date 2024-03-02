@@ -1,3 +1,8 @@
+@push('scripts')
+    <script src="https://cdn.jsdelivr.net/npm/chartjs-plugin-datalabels@2.0.0/dist/chartjs-plugin-datalabels.min.js">
+    </script>
+@endpush
+
 <div class="w-full">
     <livewire:slides.left-slide />
 
@@ -14,6 +19,7 @@
                     tableDates: $wire.tableDates,
                     selectedDateRange: $wire.entangle('selectedDateRange', true),
                     chart: null,
+                    showLabel: true,
                     disclosureTab: $wire.entangle('disclosureTab'),
                     filters: {
                         view: $wire.entangle('view'),
@@ -25,6 +31,7 @@
                         footnote: $wire.entangle('disclosureFootnote'),
                     },
                     selectedChartRows: [],
+                    hideSegments: [],
                     showEmptyRows: false,
                     get formattedChartData() {
                         return {
@@ -86,6 +93,15 @@
                 
                         return dates
                     },
+                    get tableClasses() {
+                        const classes = {
+                            'Top Row': ['sticky-row'],
+                            'First Column': ['sticky-column'],
+                            'Top Row & First Column': ['sticky-row', 'sticky-column']
+                        };
+                
+                        return 'sticky-table ' + (classes[this.filters.freezePane] || []).join(' ');
+                    },
                     init() {
                         this.$watch('filters', (newVal) => {
                             const url = new URL(window.location.href);
@@ -107,10 +123,12 @@
                 
                         this.$watch('selectedChartRows', this.renderChart.bind(this), { deep: true })
                 
+                        this.$watch('showLabel', this.renderChart.bind(this))
+                
                         this.$watch('selectedDateRange', (val) => {
                             window.updateQueryParam('selectedDateRange', val.join(','))
                 
-                            Alpine.debounce(this.renderChart.bind(this), 300)()
+                            Alpine.debounce(this.renderChart.bind(this), 100)()
                         }, { deep: true })
                     },
                     formattedTableDate(date) {
@@ -168,8 +186,102 @@
                             return;
                         }
                 
-                        this.chart = window.renderCompanyReportChart(this.formattedChartData, this.isReversed);
+                        this.chart = window.renderCompanyReportChart(this.formattedChartData, this.isReversed, this.showLabel);
                     },
+                    toggleSegment(id) {
+                        if (this.hideSegments.includes(id)) {
+                            this.hideSegments = this.hideSegments.filter(item => item !== id);
+                        } else {
+                            this.hideSegments.push(id);
+                        }
+                    },
+                    toggleRowForChart(row) {
+                        if (row.empty) return;
+                
+                        if (this.selectedChartRows.find(item => item.id === row.id) ? true : false) {
+                            this.selectedChartRows = this.selectedChartRows.filter(item => item.id !== row.id);
+                        } else {
+                            let values = {};
+                
+                            for (const [key, value] of Object.entries(row.values)) {
+                                values[key] = value.value;
+                            }
+                
+                            this.selectedChartRows.push({
+                                id: row.id,
+                                title: row.title,
+                                values,
+                                color: '#7C8286',
+                                type: 'line',
+                            });
+                        }
+                    },
+                    get rowGroups() {
+                        let rows = [];
+                
+                        const addRow = (row, section = 0, depth = 0, parent = null) => {
+                            const splitted = row.title.split('|');
+                            const title = splitted[0];
+                
+                            const isPercent = title.includes('%') ||
+                                title.toLowerCase().includes(' yoy') ||
+                                title.toLowerCase().includes(' per');
+                
+                            let _row = {
+                                ...row,
+                                values: {},
+                                children: [],
+                                title: splitted.length > 1 ? title : row.title,
+                                section,
+                                depth,
+                                parent,
+                            };
+                
+                            if (splitted.length > 1) {
+                                _row['isBold'] = splitted[1] === 'true'
+                                _row['hasBorder'] = splitted[2] === 'true'
+                                _row['section'] = parseInt(splitted[3])
+                            };
+                
+                            Object.entries(row.values).forEach(([key, value]) => {
+                                _row.values[key] = {
+                                    ...value,
+                                    ...this.formatTableValue(value.value, isPercent)
+                                };
+                            });
+                
+                            rows.push(_row);
+                
+                            row.children.forEach(child => {
+                                addRow(child, section, depth + 1, _row.id);
+                            });
+                        }
+                
+                        this.rows.forEach(row => {
+                            addRow(row);
+                        });
+                
+                        {{-- now group by sections --}}
+                        let sections = []
+                        let nonSectionRows = []
+                
+                        rows.forEach(row => {
+                            if (row.section) {
+                                if (!sections[row.section]) {
+                                    sections[row.section] = []
+                                }
+                
+                                sections[row.section].push(row)
+                                return;
+                            }
+                
+                            nonSectionRows.push(row)
+                        })
+                
+                        sections.push(nonSectionRows)
+                
+                        return Object.values(sections)
+                    }
                 }" wire:key="{{ \Str::uuid() }}">
                     @if ($activeTab === 'disclosure' && count($disclosureTabs))
                         <div class="mb-6 flex lg:hidden flex-wrap items-center gap-x-2 gap-y-4 text-sm">
@@ -254,8 +366,19 @@
                                         </x-dropdown>
                                     </div>
 
-                                    <div class="text-xl text-blue font-bold">
-                                        {{ $company['name'] }} ({{ $company['ticker'] }})
+                                    <div class="flex items-center justify-between">
+                                        <div class="text-xl text-blue font-bold">
+                                            {{ $company['name'] }} ({{ $company['ticker'] }})
+                                        </div>
+
+                                        <label class="relative inline-flex items-center cursor-pointer flex-shrink-0">
+                                            <input type="checkbox" value="yes" class="sr-only peer"
+                                                :checked="showLabel" @change="showLabel = $event.target.checked">
+                                            <div
+                                                class="w-6 h-2.5 bg-gray-200 peer-focus:outline-none peer-focus:ring-0 rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:-start-[4px] after:bg-white after:rounded-full after:h-4 after:w-4 after:shadow-md after:transition-all peer-checked:bg-dark-light2 peer-checked:after:bg-dark">
+                                            </div>
+                                            <span class="ms-3 text-sm font-medium text-gray-900">Show Labels</span>
+                                        </label>
                                     </div>
 
                                     <div class="mt-10 h-[300px] sm:h-[400px]">
@@ -388,7 +511,7 @@
     <script>
         let chart = null;
 
-        function renderCompanyReportChart(data, reversed) {
+        function renderCompanyReportChart(data, reversed, showLabel) {
             const ctx = document.getElementById("chart-company-report")?.getContext("2d");
 
             if (!ctx) return;
@@ -405,7 +528,7 @@
             })
 
             return new Chart(ctx, {
-                plugins: [chartJsPlugins.pointLine],
+                plugins: [chartJsPlugins.pointLine, window.ChartDataLabels],
                 type: 'line',
                 data,
                 options: {
@@ -448,6 +571,17 @@
                                     return context.dataset.label + '|' + context.formattedValue
                                 }
                             },
+                        },
+                        datalabels: {
+                            display: (ctx) => showLabel && ctx.dataset?.type !== "line",
+                            anchor: "center",
+                            align: "center",
+                            formatter: (v) => formatCmpctNumber(v.y),
+                            font: {
+                                weight: 500,
+                                size: 12,
+                            },
+                            color: (ctx) => ctx.dataset?.type !== "line" ? '#fff' : '#000',
                         }
                     },
                     scales: {

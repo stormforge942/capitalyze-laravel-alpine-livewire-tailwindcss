@@ -50,7 +50,7 @@
                 {!! $data !!}
         @endif
         <script>
-            window.reportTextHighlighter.highlight(@json($value), 'table tbody tr td')
+            window.reportTextHighlighter.highlight(@json($value), 'wep-slide-over table tbody tr td')
         </script>
     @endif
 

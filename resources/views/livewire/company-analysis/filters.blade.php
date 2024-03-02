@@ -17,6 +17,25 @@
     decimalPlaces: $wire.entangle('decimalPlaces'),
     order: $wire.entangle('dateOrder'),
     freezePane: $wire.entangle('freezePane', true),
+    init() {
+        this.$watch('freezePane', (val) => this.onFreezePaneChange(val));
+    },
+    onFreezePaneChange(value) {
+        const classes = {
+            'Top Row': ['sticky-row'],
+            'First Column': ['sticky-column'],
+            'Top Row & First Column': ['sticky-row', 'sticky-column']
+        }
+
+        const table = this.$el?.closest('.subtab-container').querySelector('.sticky-table');
+
+        if (!table) return;
+
+        table.classList.remove('sticky-column');
+        table.classList.remove('sticky-row');
+
+        table.classList.add(...(classes[value] || ''));
+    }
 }" wire:ignore>
     <x-filter-box>
         <div class="flex items-center gap-x-1">

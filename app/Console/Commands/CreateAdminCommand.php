@@ -32,7 +32,7 @@ class CreateAdminCommand extends Command
         $email = $this->argument('email');
         $password = $this->argument('password');
 
-        CreateAdminJob::dispatch([
+        CreateAdminJob::dispatchSync([
             'name' => $name,
             'email' => $email,
             'password' => $password,

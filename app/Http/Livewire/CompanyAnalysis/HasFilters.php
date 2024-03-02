@@ -10,7 +10,7 @@ trait HasFilters
     public string $unit = 'Thousands';
     public int $decimalPlaces = 2;
     public string $dateOrder = 'ltr';
-    public string $freezePane = '';
+    public string $freezePane = 'Top Row & First Column';
 
     public $dates = [];
     public $selectedDates = [];

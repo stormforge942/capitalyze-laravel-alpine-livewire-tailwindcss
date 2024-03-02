@@ -96,7 +96,7 @@ class FundSummary extends Component
                 ];
             });
 
-        $last = end($investments) ?? [];
+        $last = end($investments) ?: [];
         $last = collect($last)->where('industry', '!=', 'Other')->sortByDesc('weight')->take(25);
         $weight = $last->sum('weight');
         if ($weight < 100) {

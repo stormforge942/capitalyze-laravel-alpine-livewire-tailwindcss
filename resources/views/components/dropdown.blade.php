@@ -21,7 +21,7 @@
         {{ $trigger ?? '' }}
     </button>
 
-    <div class="z-10 hidden dropdown-body" x-ref="body">
+    <div class="z-[1000] hidden dropdown-body" x-ref="body">
         @if ($body ?? false)
             {{ $body }}
         @else

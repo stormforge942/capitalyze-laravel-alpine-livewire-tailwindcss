@@ -15,6 +15,7 @@
 @import "../../node_modules/@uvarov.frontend/vanilla-calendar/build/vanilla-calendar.min.css";
 @import "../../node_modules/@uvarov.frontend/vanilla-calendar/build/themes/light.min.css";
 @import "calendar.css";
+@import "sticky-table.css";
 
 @tailwind base;
 @tailwind components;
@@ -899,3 +900,9 @@ div#range-slider-company-analysis-geography {
 
 /* rate experience modal */
 /* end rate experience modal */
+
+.report-tbody::after {
+    line-height: 16px;
+    content: "\200C";
+    display: block;
+}

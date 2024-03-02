@@ -16,13 +16,7 @@ class EnsureUserIsAdmin
      */
     public function handle(Request $request, Closure $next)
     {
-        if(auth()->user() == null) {
-            return redirect('login');
-        }
-        if (! auth()->user()->is_admin) {
-            // Redirect to a specific route...
-            return redirect('home');
-        }
+        abort_unless(auth()->user()->is_admin, 404);
     
         return $next($request);
     }

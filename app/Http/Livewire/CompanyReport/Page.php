@@ -393,6 +393,7 @@ class Page extends Component
         $response['empty'] = false;
         $response['date'] = $key;
         $response['ticker'] = $this->company['ticker'];
+        $response['value'] = null;
 
         foreach ($data as $value) {
             if (str_contains($value, '|')) {
