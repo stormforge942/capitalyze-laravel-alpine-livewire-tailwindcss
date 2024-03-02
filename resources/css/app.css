@@ -899,3 +899,9 @@ div#range-slider-company-analysis-geography {
 
 /* rate experience modal */
 /* end rate experience modal */
+
+.report-tbody::after {
+    line-height: 16px;
+    content: "\200C";
+    display: block;
+}

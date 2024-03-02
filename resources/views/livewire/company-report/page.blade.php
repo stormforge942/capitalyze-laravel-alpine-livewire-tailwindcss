@@ -31,6 +31,7 @@
                         footnote: $wire.entangle('disclosureFootnote'),
                     },
                     selectedChartRows: [],
+                    hideSegments: [],
                     showEmptyRows: false,
                     get formattedChartData() {
                         return {
@@ -92,6 +93,15 @@
                 
                         return dates
                     },
+                    get tableClasses() {
+                        const classes = {
+                            'Top Row': ['sticky-row'],
+                            'First Column': ['sticky-column'],
+                            'Top Row & First Column': ['sticky-row', 'sticky-column']
+                        };
+                
+                        return 'sticky-table ' + (classes[this.filters.freezePane] || []).join(' ');
+                    },
                     init() {
                         this.$watch('filters', (newVal) => {
                             const url = new URL(window.location.href);
@@ -112,13 +122,13 @@
                         this.$watch('disclosureTab', (val) => window.updateQueryParam('disclosureTab', val))
                 
                         this.$watch('selectedChartRows', this.renderChart.bind(this), { deep: true })
-                        
+                
                         this.$watch('showLabel', this.renderChart.bind(this))
                 
                         this.$watch('selectedDateRange', (val) => {
                             window.updateQueryParam('selectedDateRange', val.join(','))
                 
-                            Alpine.debounce(this.renderChart.bind(this), 300)()
+                            Alpine.debounce(this.renderChart.bind(this), 100)()
                         }, { deep: true })
                     },
                     formattedTableDate(date) {
@@ -178,6 +188,100 @@
                 
                         this.chart = window.renderCompanyReportChart(this.formattedChartData, this.isReversed, this.showLabel);
                     },
+                    toggleSegment(id) {
+                        if (this.hideSegments.includes(id)) {
+                            this.hideSegments = this.hideSegments.filter(item => item !== id);
+                        } else {
+                            this.hideSegments.push(id);
+                        }
+                    },
+                    toggleRowForChart(row) {
+                        if (row.empty) return;
+                
+                        if (this.selectedChartRows.find(item => item.id === row.id) ? true : false) {
+                            this.selectedChartRows = this.selectedChartRows.filter(item => item.id !== row.id);
+                        } else {
+                            let values = {};
+                
+                            for (const [key, value] of Object.entries(row.values)) {
+                                values[key] = value.value;
+                            }
+                
+                            this.selectedChartRows.push({
+                                id: row.id,
+                                title: row.title,
+                                values,
+                                color: '#7C8286',
+                                type: 'line',
+                            });
+                        }
+                    },
+                    get rowGroups() {
+                        let rows = [];
+                
+                        const addRow = (row, section = 0, depth = 0, parent = null) => {
+                            const splitted = row.title.split('|');
+                            const title = splitted[0];
+                
+                            const isPercent = title.includes('%') ||
+                                title.toLowerCase().includes(' yoy') ||
+                                title.toLowerCase().includes(' per');
+                
+                            let _row = {
+                                ...row,
+                                values: {},
+                                children: [],
+                                title: splitted.length > 1 ? title : row.title,
+                                section,
+                                depth,
+                                parent,
+                            };
+                
+                            if (splitted.length > 1) {
+                                _row['isBold'] = splitted[1] === 'true'
+                                _row['hasBorder'] = splitted[2] === 'true'
+                                _row['section'] = parseInt(splitted[3])
+                            };
+                
+                            Object.entries(row.values).forEach(([key, value]) => {
+                                _row.values[key] = {
+                                    ...value,
+                                    ...this.formatTableValue(value.value, isPercent)
+                                };
+                            });
+                
+                            rows.push(_row);
+                
+                            row.children.forEach(child => {
+                                addRow(child, section, depth + 1, _row.id);
+                            });
+                        }
+                
+                        this.rows.forEach(row => {
+                            addRow(row);
+                        });
+                
+                        {{-- now group by sections --}}
+                        let sections = []
+                        let nonSectionRows = []
+                
+                        rows.forEach(row => {
+                            if (row.section) {
+                                if (!sections[row.section]) {
+                                    sections[row.section] = []
+                                }
+                
+                                sections[row.section].push(row)
+                                return;
+                            }
+                
+                            nonSectionRows.push(row)
+                        })
+                
+                        sections.push(nonSectionRows)
+                
+                        return Object.values(sections)
+                    }
                 }" wire:key="{{ \Str::uuid() }}">
                     @if ($activeTab === 'disclosure' && count($disclosureTabs))
                         <div class="mb-6 flex lg:hidden flex-wrap items-center gap-x-2 gap-y-4 text-sm">

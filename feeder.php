@@ -76,6 +76,7 @@ $tables = [
     'symbol_summary',
     'tikr_text_block_content',
     'tsx_statements',
+    'info_idx_tb',
 ];
 
 $replica = makeDatabase($args['drop']);
@@ -197,6 +198,8 @@ function fillData($xbrl, $replica, $tables, $symbols)
             $end = now()->addWeek()->endOfWeek()->toDateString();
 
             $stmt = $xbrl->query("SELECT * FROM $table where date between '$start' and '$end'");
+        } else if (in_array($table, ['info_idx_tb', 'tikr_text_block_content', 'as_reported_sec_text_block_content'])) {
+            $stmt = $xbrl->query("SELECT * FROM $table where ticker in ($stringSymbols) limit 1000");
         }
 
         if (!$stmt) continue;
