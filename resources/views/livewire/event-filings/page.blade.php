@@ -1,6 +1,6 @@
 <div>
     <div>
-        <h1 class="text-xl font-bold">Event Filings</h1>
+        <h1 class="text-xl font-bold">Events Tracker</h1>
         <p class="mt-2 text-dark-light2">Recent filings of all companies.</p>
     </div>
 

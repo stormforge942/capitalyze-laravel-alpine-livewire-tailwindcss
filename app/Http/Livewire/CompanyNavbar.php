@@ -60,7 +60,7 @@ class CompanyNavbar extends Component
 
         $mainLinks = [
             'Track Investor',
-            'Event Filings',
+            'Events Tracker',
             'Insider Transactions',
             'Earnings Calendar',
         ];
