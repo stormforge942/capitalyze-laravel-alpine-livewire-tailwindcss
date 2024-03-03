@@ -923,8 +923,6 @@ div#range-slider-company-analysis-geography {
     display: block;
 }
 
-.left-scrollbar::-webkit-scrollbar {
-    position: absolute;
-    left: 0;
- }
- 
+.chart-builder-page .years-range-wrapper {
+    width: 100%;
+}

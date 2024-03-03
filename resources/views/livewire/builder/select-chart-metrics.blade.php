@@ -53,13 +53,28 @@
     get selectedOptions() {
         let labels = {};
 
-        foreach(this.options as option) {
-            foreach(option.items as key => value) {
-                if(option.has_children) {
-                    labels[key] = value;
-                }
+        this.options.forEach(option => {
+            let items = option.items || {};
+
+            if (option.has_children) {
+                items = {}
+
+                Object.keys(option.items).forEach(key => {
+                    items = {
+                        ...items,
+                        ...option.items[key]
+                    }
+                })
             }
-        }
+
+            Object.keys(items).forEach(key => {
+                if (this.value.includes(key)) {
+                    labels[key] = items[key]
+                }
+            })
+        })
+
+        return labels;
     }
 }">
     <label class="font-medium flex items-center gap-x-4">
@@ -160,10 +175,11 @@
                         </div>
                         <div class="mt-2 space-y-2 overflow-y-auto show-scrollbar" style="max-height: 310px;">
                             <template x-for="(option, value) in subOptions" :key="value">
-                                <label class="p-4 flex items-center gap-x-4 cursor-pointer hover:bg-gray-100 rounded-lg">
+                                <label
+                                    class="p-4 flex items-center gap-x-4 cursor-pointer hover:bg-gray-100 rounded-lg">
                                     <input type="checkbox" name="metrics" :value="value" x-model="tmpValue"
                                         class="custom-checkbox border-dark focus:ring-0" />
-    
+
                                     <span x-text="option"></span>
                                 </label>
                             </template>
@@ -185,5 +201,46 @@
                 </div>
             </div>
         </x-dropdown>
+
+        <div class="mt-6 flex flex-wrap gap-3 text-sm font-semibold" x-show="value.length" x-cloak>
+            <template x-for="(title, key) in selectedOptions" :key="key">
+                <span class="bg-green-light rounded-full p-2 flex items-center gap-x-2.5">
+                    <span x-text="title"></span>
+
+                    <button class="transition-all text-blue hover:bg-dark hover:text-green-dark p-0.5 rounded-sm">
+                        <svg width="16" height="16" viewBox="0 0 16 16" fill="currentColor"
+                            xmlns="http://www.w3.org/2000/svg">
+                            <path
+                                d="M2.83333 2C3.10948 2 3.33333 2.22386 3.33333 2.5V12.6667H13.5C13.7761 12.6667 14 12.8905 14 13.1667V13.5C14 13.7761 13.7761 14 13.5 14H2V2.5C2 2.22386 2.22386 2 2.5 2H2.83333ZM12.9393 4.31314C13.1346 4.11786 13.4512 4.11785 13.6464 4.31312L14.3536 5.02022C14.5488 5.21548 14.5488 5.53207 14.3536 5.72733L10.6667 9.4142L8.66667 7.414L6.394 9.68687C6.19874 9.88215 5.88214 9.88216 5.68687 9.68688L4.97977 8.97975C4.78451 8.78449 4.78452 8.46791 4.97978 8.27265L8.66667 4.58579L10.6667 6.586L12.9393 4.31314Z" />
+                        </svg>
+                    </button>
+
+                    <button class="transition-all text-blue hover:bg-dark hover:text-green-dark p-0.5 rounded-sm">
+                        <svg width="16" height="16" viewBox="0 0 16 16" fill="currentColor"
+                            xmlns="http://www.w3.org/2000/svg">
+                            <path
+                                d="M1.33594 9.66667C1.33594 9.11438 1.78365 8.66667 2.33594 8.66667H4.33594C4.88822 8.66667 5.33594 9.11438 5.33594 9.66667V13C5.33594 13.5523 4.88822 14 4.33594 14H2.33594C1.78365 14 1.33594 13.5523 1.33594 13V9.66667ZM6.0026 3C6.0026 2.44772 6.45032 2 7.0026 2H9.0026C9.55489 2 10.0026 2.44772 10.0026 3V13C10.0026 13.5523 9.55489 14 9.0026 14H7.0026C6.45032 14 6.0026 13.5523 6.0026 13V3ZM10.6693 6.33333C10.6693 5.78105 11.117 5.33333 11.6693 5.33333H13.6693C14.2216 5.33333 14.6693 5.78105 14.6693 6.33333V13C14.6693 13.5523 14.2216 14 13.6693 14H11.6693C11.117 14 10.6693 13.5523 10.6693 13V6.33333Z" />
+                        </svg>
+                    </button>
+
+                    <button class="transition-all text-blue hover:bg-dark hover:text-green-dark p-0.5 rounded-sm">
+                        <svg width="16" height="16" viewBox="0 0 16 16" fill="currentColor"
+                            xmlns="http://www.w3.org/2000/svg">
+                            <path
+                                d="M8.0015 2C11.5962 2 14.5869 4.58651 15.2139 8C14.5869 11.4135 11.5962 14 8.0015 14C4.40672 14 1.41607 11.4135 0.789062 8C1.41607 4.58651 4.40672 2 8.0015 2ZM8.0015 12.6667C10.8252 12.6667 13.2415 10.7013 13.8531 8C13.2415 5.29869 10.8252 3.33333 8.0015 3.33333C5.1777 3.33333 2.76145 5.29869 2.14982 8C2.76145 10.7013 5.1777 12.6667 8.0015 12.6667ZM8.0015 11C6.34462 11 5.00148 9.65687 5.00148 8C5.00148 6.34315 6.34462 5 8.0015 5C9.6583 5 11.0015 6.34315 11.0015 8C11.0015 9.65687 9.6583 11 8.0015 11ZM8.0015 9.66667C8.92197 9.66667 9.66817 8.92047 9.66817 8C9.66817 7.07953 8.92197 6.33333 8.0015 6.33333C7.08104 6.33333 6.33481 7.07953 6.33481 8C6.33481 8.92047 7.08104 9.66667 8.0015 9.66667Z" />
+                        </svg>
+                    </button>
+
+                    <button class="transition-all hover:opacity-80" type="button" @click="value = value.filter(item => item !== key)">
+                        <svg width="16" height="16" viewBox="0 0 16 16" fill="none"
+                            xmlns="http://www.w3.org/2000/svg">
+                            <path
+                                d="M7.99479 14.6693C4.31289 14.6693 1.32812 11.6845 1.32812 8.0026C1.32812 4.3207 4.31289 1.33594 7.99479 1.33594C11.6767 1.33594 14.6615 4.3207 14.6615 8.0026C14.6615 11.6845 11.6767 14.6693 7.99479 14.6693ZM7.99479 7.0598L6.10917 5.17418L5.16636 6.11698L7.05199 8.0026L5.16636 9.8882L6.10917 10.831L7.99479 8.9454L9.88039 10.831L10.8232 9.8882L8.93759 8.0026L10.8232 6.11698L9.88039 5.17418L7.99479 7.0598Z"
+                                fill="#C22929" />
+                        </svg>
+                    </button>
+                </span>
+            </template>
+        </div>
     </div>
 </div>

@@ -1,4 +1,4 @@
-<div>
+<div class="chart-builder-page">
     <div>
         <h1 class="text-xl font-bold">Chart</h1>
         <p class="mt-2 text-dark-light2">Build custom charts to visualize financial data across companies</p>

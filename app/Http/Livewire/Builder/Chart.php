@@ -14,6 +14,7 @@ class Chart extends Component
 
     public function mount()
     {
+        dd($this->getData());
         $tabs = CompanyChartComparison::query()
             ->where('user_id', Auth::id())
             ->orderBy('created_at', 'asc')
@@ -82,12 +83,12 @@ class Chart extends Component
         $companies = ['AAPL', 'MSFT'];
 
         $metrics = [
-            'income||revenue||tr',
-            'income||income||toi',
-            'income||expenses||toe',
-            'balance||cae',
-            'balance||tr',
-            'balance||tca',
+            'income||Total Revenue',
+            'income||Total Operating Income',
+            'income||Total Operating Expenses',
+            'balance||Cash & Equivalents',
+            'balance||Total Receivable',
+            'balance||Total Current Assets',
         ];
 
         $data = $this->getKeyData($companies, $metrics, 'annual');
@@ -124,27 +125,36 @@ class Chart extends Component
             }
         }
 
+        $columns = array_unique($columns);
+
         $data = InfoTikrPresentation::query()
             ->whereIn('ticker', $companies)
             ->where("period", $period)
-            ->select($columns)
+            ->select(['ticker', ...$columns])
             ->get()
-            ->map(function ($item) use ($keys, $columns) {
-                foreach (['income_statement', 'balance_sheet'] as $key) {
-                    if ($item->$key) {
-                        $json = json_decode($item->$key, true);
+            ->map(function ($item) use ($columns, $keys) {
+                foreach ($columns as $key) {
+                    if ($item->{$key}) {
+                        $json = json_decode($item->{$key}, true);
 
                         $new = [];
 
-                        foreach ($json as $_key => $value) {
+                        foreach ($json as $_key => $_value) {
+
                             $_key = explode('|', $_key)[0];
+
+                            $value = [];
+
+                            foreach ($_value as $date => $v) {
+                                $val = explode('|', $v[0])[0];
+                                $value[$date] = $val ? round((float) $val, 3) : null;
+                            }
+
                             $new[$_key] = $value;
                         }
 
-                        $item->$key = $new;
+                        $item->{$key} = $new;
                     }
-
-                    return $item;
                 }
 
                 return $item;
