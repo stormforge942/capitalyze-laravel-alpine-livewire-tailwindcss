@@ -22,19 +22,32 @@ class SelectChartMetrics extends Component
                     ]
                 ],
                 [
-                    'title' => 'Balance Sheet',
+                    'title' => 'Income Statement',
                     'has_children' => true,
                     'items' => [
-                        'Assets' => [
-                            'Cash and Equivalents',
-                            'Short Term Investments',
-                            'Trading Assets Securities, Total',
-                            'Total Cash and Short Term Investments',
-                            'Accounts Receivable, Total',
-                            'Other Receiveable',
+                        'Revenue' => [
+                            'Total Revenue',
+                            'Cost of Goods Sold',
+                            'Total Gross Profit',
+                        ],
+                        'Income' => [
+                            'Total Operating Income',
+                            'Interest & Investment Income',
+                            'Other Non Operating Income (Expenses)',
+                            'Earnings From Continuing Operations',
+                            'Net Income to Company',
+                            'Net Income to Common',
+                            'Earnings Before Taxes (EBT)',
+                        ],
+                        'Expenses' => [
+                            'SG&A Expenses',
+                            'R&D Expenses',
+                            'Total Operating Expenses',
+                            'Interest Expense',
+                            'Income Tax Expense',
                         ],
                     ]
-                ]
+                ],
             ]
         ]);
     }
