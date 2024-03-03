@@ -12,13 +12,27 @@ class SelectChartMetrics extends Component
             'options' => [
                 [
                     'title' => 'Popular Selections',
+                    'has_children' => false,
                     'items' => [
-                        'Revenue',
-                        'Other Revenues',
-                        'Financial Div. Revenues',
-                        'Gain (Loss) on Sale of Asset',
-                        'Gain (Loss) on Sale of Investment (Total)',
-                        'Interest and Investment Income',
+                        'income||revenue||tr' => 'Total Revenue',
+                        'income||income||toi' => 'Total Operating Income',
+                        'income||expenses||toe' => 'Total Operating Expenses',
+                    ]
+                ],
+                [
+                    'title' => 'Balance Sheet',
+                    'has_children' => false,
+                    'items' => [
+                        'balance||cae' => 'Cash & Equivalents',
+                        'balance||stl' => 'Short Term Investments',
+                        'balance||tcasti' => 'Total Cash And Short Term Investments',
+                        'balance||ar' => 'Accounts Receivable',
+                        'balance||or' => 'Other Receivable',
+                        'balance||tr' => 'Total Receivable',
+                        'balance||inv' => 'Inventory',
+                        'balance||dfac' => 'Deferred Tax Assets Current',
+                        'balance||oa' => 'Other Current Assets',
+                        'balance||tca' => 'Total Current Assets',
                     ]
                 ],
                 [
@@ -26,25 +40,25 @@ class SelectChartMetrics extends Component
                     'has_children' => true,
                     'items' => [
                         'Revenue' => [
-                            'Total Revenue',
-                            'Cost of Goods Sold',
-                            'Total Gross Profit',
+                            'income||revenue||tr' => 'Total Revenue',
+                            'income||revenue||cogs' => 'Cost of Goods Sold',
+                            'income||revenue||tgp' => 'Total Gross Profit',
                         ],
                         'Income' => [
-                            'Total Operating Income',
-                            'Interest & Investment Income',
-                            'Other Non Operating Income (Expenses)',
-                            'Earnings From Continuing Operations',
-                            'Net Income to Company',
-                            'Net Income to Common',
-                            'Earnings Before Taxes (EBT)',
+                            'income||income||toi' => 'Total Operating Income',
+                            'income||income||iii' => 'Interest & Investment Income',
+                            'income||income||onoi' => 'Other Non Operating Income (Expenses)',
+                            'income||income||efco' => 'Earnings From Continuing Operations',
+                            'income||income||nitcy' => 'Net Income to Company',
+                            'income||income||nitcn' => 'Net Income to Common',
+                            'income||income||ebt' => 'Earnings Before Taxes (EBT)',
                         ],
                         'Expenses' => [
-                            'SG&A Expenses',
-                            'R&D Expenses',
-                            'Total Operating Expenses',
-                            'Interest Expense',
-                            'Income Tax Expense',
+                            'income||expenses||sga' => 'SG&A Expenses',
+                            'income||expenses||rd' => 'R&D Expenses',
+                            'income||expenses||toe' => 'Total Operating Expenses',
+                            'income||expenses||ie' => 'Interest Expense',
+                            'income||expenses||ite' => 'Income Tax Expense',
                         ],
                     ]
                 ],

@@ -194,7 +194,7 @@
                     </div>
                 </x-slot>
 
-                <div class="w-[20rem] sm:w-[26rem] p-4 overflow-y-scroll" style="max-height: 424px;">
+                <div class="w-[20rem] sm:w-[26rem] p-4 overflow-y-auto" style="max-height: 424px;">
                     @foreach ($areas as $group => $labels)
                         <div>
                             <span style="color: #7C8286">{{ $group }}</span>
@@ -236,7 +236,7 @@
                     </div>
                 </x-slot>
 
-                <div class="w-[20rem] sm:w-[26rem] p-4 overflow-y-scroll" style="max-height: 354px;">
+                <div class="w-[20rem] sm:w-[26rem] p-4 overflow-y-auto" style="max-height: 354px;">
                     <div class="mt-2 space-y-2">
                         @foreach ($feedbackTypes as $label => $description)
                             <label class="p-4 flex items-center gap-x-4 hover:bg-green-light cursor-pointer rounded">

@@ -922,3 +922,9 @@ div#range-slider-company-analysis-geography {
     content: "\200C";
     display: block;
 }
+
+.left-scrollbar::-webkit-scrollbar {
+    position: absolute;
+    left: 0;
+ }
+ 

@@ -1,68 +1,13 @@
 <div class="bg-white p-6 rounded-lg border-[0.5px] border-[#D4DDD7]" x-data="{
     search: '',
     options: @js($options),
-    value: @js($options),
+    value: [],
     tmpValue: [],
     showDropdown: false,
     activeOption: null,
     width: '320px',
     init() {
-        const _options = @js($options)
-
-        this.activeOption = [_options.find(option => !option.has_children)?.title]
-
-        this.$watch('search', () => {
-            if (!this.search.length) {
-                this.value = _options
-                return
-            }
-
-            const term = this.search.toLowerCase()
-            let tmp = []
-
-            _options.forEach(option => {
-                if (!option.title.toLowerCase().includes(term)) {
-                    return;
-                }
-
-                let group = {
-                    title: option.title,
-                    has_children: option.has_children || false,
-                    items: []
-                };
-
-                if (!option.has_children) {
-                    group.items = option.items.filter(item => item.toLowerCase().includes(term))
-
-                    if (!group.items.length) {
-                        group.items = option.items
-                    }
-
-                    tmp.push(group)
-
-                    return
-                }
-
-                Object.items(option.items).forEach(([key, value]) => {
-                    if (key.toLowerCase().includes(term)) {
-                        let tmp = value.filter(item => item.toLowerCase().includes(term))
-
-
-                        if (!tmp.length) {
-                            tmp = value
-                        }
-
-                        group.items[key] = tmp
-
-                        tmp.push(group)
-                    }
-                })
-            })
-
-            this.value = tmp
-
-            console.log(this.value)
-        })
+        this.activeOption = ['Popular Selections']
 
         this.$watch('showDropdown', value => {
             this.tmpValue = [...this.value]
@@ -75,12 +20,19 @@
             })
         })
     },
+    get filteredOptions() {
+        if (!this.search.length) {
+            return this.options
+        }
+
+        return this.options;
+    },
     get subOptions() {
         if (!this.activeOption) {
             return []
         }
 
-        const item = this.value.find(option => option.title === this.activeOption[0]) || {}
+        const item = this.options.find(option => option.title === this.activeOption[0]) || {}
 
         if (!item.has_children) {
             return item?.items
@@ -88,19 +40,26 @@
 
         return item?.items[this.activeOption[1]] || [];
     },
-    toggleValue(company) {
-        if (this.tmpValue.find(item => item.ticker === company.ticker)) {
-            this.tmpValue = this.tmpValue.filter(item => item.ticker !== company.ticker)
-        }
-
-        this.tmpValue.push(company)
-    },
     isActive(title) {
         if (Array.isArray(title)) {
             return this.activeOption && this.activeOption[0] === title[0] && this.activeOption[1] === title[1]
         }
 
         return this.activeOption && this.activeOption[0] === title
+    },
+    get hasValueChanged() {
+        return this.value.map(item => item).join('-') !== this.tmpValue.sort().map(item => item).join('-')
+    },
+    get selectedOptions() {
+        let labels = {};
+
+        foreach(this.options as option) {
+            foreach(option.items as key => value) {
+                if(option.has_children) {
+                    labels[key] = value;
+                }
+            }
+        }
     }
 }">
     <label class="font-medium flex items-center gap-x-4">
@@ -138,16 +97,17 @@
                     </button>
                 </div>
 
-                <div class="mt-2 px-6 grid grid-cols-2 gap-4">
-                    <div class="space-y-2">
-                        <template x-for="(option, idx) in value" :key="idx">
+                <div class="relative mt-2 px-6 grid grid-cols-2 gap-4" style="min-height: 350px;">
+                    <div class="space-y-2 overflow-y-auto show-scrollbar left-scrollbar" style="max-height: 340px;">
+                        <template x-for="(option, idx) in filteredOptions" :key="idx">
                             <div x-data="{
                                 showChildren: activeOption && activeOption[0] === option.title,
                             }">
                                 <button class="text-left w-full p-4 flex items-center justify-between gap-x-4 rounded"
-                                    :class="isActive(option.title) && !option.has_children ? 'bg-green-light' : 'hover:bg-green-light'"
+                                    :class="isActive(option.title) && !option.has_children ? 'bg-green-light' :
+                                        'hover:bg-green-light'"
                                     style="letter-spacing: -0.5%"
-                                    @click="showChildren = !showChildren; activeOption = [option.title]">
+                                    @click="showChildren = !showChildren; if(!option.has_children) { activeOption = [option.title] }">
                                     <span :class="option.has_children ? 'font-semibold' : ''"
                                         x-text="option.title"></span>
 
@@ -175,10 +135,12 @@
                                         <template x-for="title in Object.keys(option.items)" :key="title">
                                             <button
                                                 class="text-left w-full mt-2 px-4 py-2 flex items-center justify-between gap-x-4 rounded"
-                                                :class="isActive([option.title, title]) ? 'bg-green-light' : 'hover:bg-green-light'"
-                                                style="letter-spacing: -0.5%" @click="activeOption = [option.title, title]">
+                                                :class="isActive([option.title, title]) ? 'bg-green-light' :
+                                                    'hover:bg-green-light'"
+                                                style="letter-spacing: -0.5%"
+                                                @click="activeOption = [option.title, title]">
                                                 <span x-text="title"></span>
-    
+
                                                 <svg width="24" height="24" viewBox="0 0 16 16" fill="none"
                                                     xmlns="http://www.w3.org/2000/svg">
                                                     <path
@@ -193,29 +155,31 @@
                         </template>
                     </div>
 
-                    <div class="space-y-2">
-                        <div class="">
-
+                    <div>
+                        <div class="font-semibold" x-text="!activeOption ? '' : activeOption[activeOption.length - 1]">
                         </div>
-                        <template x-for="option in subOptions" :key="option">
-                            <label class="p-4 flex items-center gap-x-4 cursor-pointer hover:bg-gray-100 rounded-lg">
-                                <input type="checkbox" class="custom-checkbox border-dark focus:ring-0" />
-
-                                <span x-text="option"></span>
-                            </label>
-                        </template>
+                        <div class="mt-2 space-y-2 overflow-y-auto show-scrollbar" style="max-height: 310px;">
+                            <template x-for="(option, value) in subOptions" :key="value">
+                                <label class="p-4 flex items-center gap-x-4 cursor-pointer hover:bg-gray-100 rounded-lg">
+                                    <input type="checkbox" name="metrics" :value="value" x-model="tmpValue"
+                                        class="custom-checkbox border-dark focus:ring-0" />
+    
+                                    <span x-text="option"></span>
+                                </label>
+                            </template>
+                        </div>
                     </div>
                 </div>
 
                 <div class="mt-2 p-6 border-t flex items-center gap-x-4">
                     <button type="button"
                         class="w-full px-4 py-3 font-medium bg-green-dark hover:bg-opacity-80 rounded disabled:pointer-events-none disabled:bg-[#D1D3D5] disabled:text-white text-base"
-                        @click="tmpValue = [...value];">
+                        @click="tmpValue = [...value];" :disabled="!hasValueChanged">
                         Reset
                     </button>
                     <button type="button"
                         class="w-full px-4 py-3 font-medium bg-green-dark hover:bg-opacity-80 rounded disabled:pointer-events-none disabled:bg-[#D1D3D5] disabled:text-white text-base"
-                        @click="value = [...tmpValue]; showDropdown = false;">
+                        @click="value = [...tmpValue].sort(); showDropdown = false;" :disabled="!hasValueChanged">
                         Show Result
                     </button>
                 </div>
