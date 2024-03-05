@@ -1,16 +1,51 @@
-version: "3.7"
+version: '3'
+
 services:
+  app:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    image: laravel-app
+    container_name: laravel-app
+    restart: unless-stopped
+    tty: true
+    environment:
+      SERVICE_NAME: app
+      SERVICE_TAGS: dev
+    working_dir: /var/www
+    volumes:
+      - ./:/var/www
+    networks:
+      - app-network
+    depends_on:
+      - database
+    entrypoint: ["/usr/local/bin/entrypoint.sh"]
+
+  webserver:
+    image: nginx:alpine
+    container_name: nginx-webserver
+    restart: unless-stopped
+    tty: true
+    ports:
+      - "8000:80"
+    volumes:
+      - ./:/var/www
+      - ./docker/nginx/conf.d/:/etc/nginx/conf.d/
+    networks:
+      - app-network
+
   database:
     image: postgres:14
     environment:
       POSTGRES_USER: admin
       POSTGRES_PASSWORD: admin
-      POSTGRES_DB: xbrl
-    # Update the port if needed.
     ports:
-      - 5432:5432
+      - "5432:5432"
     volumes:
-      - xbrl-database:/var/lib/postgresql/data
+      - postgres-data:/var/lib/postgresql/data
+      - ./init-db:/docker-entrypoint-initdb.d
+    networks:
+      - app-network
 
   cache:
     image: redis:6.2-alpine
@@ -20,6 +55,13 @@ services:
     command: redis-server --save 20 1 --loglevel warning
     volumes: 
       - cache:/data
+    networks:
+      - app-network
+
 volumes:
-  xbrl-database:
+  postgres-data:
   cache:
+
+networks:
+  app-network:
+    driver: bridge
