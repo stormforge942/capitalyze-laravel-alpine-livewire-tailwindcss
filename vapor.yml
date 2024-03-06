@@ -5,7 +5,6 @@ environments:
         gateway-version: 2
         octane: true
         octane-database-session-persist: true
-        octane-database-session-ttl: 10
         warm: 10
         timeout: 30
         cli-timeout: 600
