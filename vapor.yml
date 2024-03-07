@@ -2,6 +2,8 @@ id: 50591
 name: Capitalyze
 environments:
     production:
+        # runtime: 'php-8.2:al2'
+        runtime: docker-arm
         gateway-version: 2
         octane: true
         octane-database-session-persist: true
@@ -13,7 +15,6 @@ environments:
         cache: xbrl-cache
         memory: 2048
         cli-memory: 512
-        runtime: 'php-8.2:al2'
         build:
             - 'COMPOSER_MIRROR_PATH_REPOS=1 composer install --no-dev'
             - 'php artisan event:cache'

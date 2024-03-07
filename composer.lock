@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "aad6351d2a2ef5c92486f2227a9d4e21",
+    "content-hash": "4b1051979f23a631f4ff691afe84f992",
     "packages": [
         {
             "name": "aws/aws-crt-php",
@@ -4682,6 +4682,71 @@
                 }
             ],
             "time": "2023-11-13T09:31:12+00:00"
+        },
+        {
+            "name": "open-southeners/laravel-vapor-response-compression",
+            "version": "2.1.0",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/open-southeners/laravel-vapor-response-compression.git",
+                "reference": "0ebd6a1df5b62f5639484e34e6a841868217066e"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/open-southeners/laravel-vapor-response-compression/zipball/0ebd6a1df5b62f5639484e34e6a841868217066e",
+                "reference": "0ebd6a1df5b62f5639484e34e6a841868217066e",
+                "shasum": ""
+            },
+            "require": {
+                "ext-zlib": "^7.2 || ^8.0",
+                "php": "^7.2 || ^8.0"
+            },
+            "require-dev": {
+                "larastan/larastan": "^2.0",
+                "orchestra/testbench": "^8.0",
+                "phpstan/phpstan": "^1.0",
+                "phpunit/phpunit": "^10.0"
+            },
+            "type": "library",
+            "extra": {
+                "laravel": {
+                    "providers": [
+                        "OpenSoutheners\\LaravelVaporResponseCompression\\ServiceProvider"
+                    ]
+                }
+            },
+            "autoload": {
+                "psr-4": {
+                    "OpenSoutheners\\LaravelVaporResponseCompression\\": "src"
+                }
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "MIT"
+            ],
+            "authors": [
+                {
+                    "name": "Ruben Robles",
+                    "email": "me@d8vjork.com",
+                    "homepage": "https://d8vjork.com"
+                }
+            ],
+            "description": "Add server-side response compression with a range of different algorithms (Gzip, brotli, deflate...)",
+            "keywords": [
+                "brotli-compression",
+                "deflate-compression",
+                "gzip-compression",
+                "laravel",
+                "laravel-vapor",
+                "open-southeners",
+                "response-compression",
+                "vapor"
+            ],
+            "support": {
+                "issues": "https://github.com/open-southeners/laravel-vapor-response-compression/issues",
+                "source": "https://github.com/open-southeners/laravel-vapor-response-compression/tree/2.1.0"
+            },
+            "time": "2024-02-14T17:22:02+00:00"
         },
         {
             "name": "openspout/openspout",
