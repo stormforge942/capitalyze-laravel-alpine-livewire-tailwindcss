@@ -16,7 +16,7 @@ return [
     'enable' => env('RESPONSE_COMPRESSION_ENABLE', true),
 
     // @see https://docs.aws.amazon.com/apigateway/latest/developerguide/limits.html#http-api-quotas
-    'threshold' => 10000,
+    'threshold' => 100,
 
     'level' => [
 
