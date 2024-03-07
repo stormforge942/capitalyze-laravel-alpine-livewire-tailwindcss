@@ -50,6 +50,9 @@ use App\Http\Controllers\InsiderTransactionsController;
 use App\Http\Controllers\ResetPasswordSuccessfulController;
 use Laravel\Fortify\Http\Controllers\AuthenticatedSessionController;
 
+Route::get('/test-speed', function () {
+    return "hello World";
+});
 
 Route::get('/permission-denied', PermissionDenied::class)->name('permission-denied');
 
