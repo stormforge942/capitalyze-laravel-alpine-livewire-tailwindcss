@@ -2,10 +2,11 @@
 
 namespace App\Http\Livewire\Builder;
 
-use App\Models\CompanyChartComparison;
 use Livewire\Component;
+use Illuminate\Support\Str;
 use App\Models\InfoTikrPresentation;
 use Illuminate\Support\Facades\Auth;
+use App\Models\CompanyChartComparison;
 
 class Chart extends Component
 {
@@ -14,7 +15,6 @@ class Chart extends Component
 
     public function mount()
     {
-        dd($this->getData());
         $tabs = CompanyChartComparison::query()
             ->where('user_id', Auth::id())
             ->orderBy('created_at', 'asc')
@@ -35,8 +35,9 @@ class Chart extends Component
 
     public function render()
     {
-
-        return view('livewire.builder.chart');
+        return view('livewire.builder.chart', [
+            'data' => $this->getData(),
+        ]);
     }
 
     public function deleteTab($id)
@@ -83,84 +84,73 @@ class Chart extends Component
         $companies = ['AAPL', 'MSFT'];
 
         $metrics = [
-            'income||Total Revenue',
-            'income||Total Operating Income',
-            'income||Total Operating Expenses',
-            'balance||Cash & Equivalents',
-            'balance||Total Receivable',
-            'balance||Total Current Assets',
+            'income_statement||Total Revenue',
+            'income_statement||Total Operating Income',
+            'income_statement||Total Operating Expenses',
+            'balance_sheet||Cash & Equivalents',
+            'balance_sheet||Total Receivable',
+            'balance_sheet||Total Current Assets',
         ];
 
-        $data = $this->getKeyData($companies, $metrics, 'annual');
+        $data = array_reduce($companies, function ($c, $i) {
+            $c[$i] = [];
+            return $c;
+        }, []);
 
-        dd($data);
+        $this->fillStandarisedData($data, $metrics, 'annual');
 
-        foreach ($companies as $company) {
-            $storage = [];
-
-
-            $data[$company] = array_reduce(
-                $selected,
-                function ($carry, $item) use ($companies, &$storage) {
-                    $this->getKeyData($companies, $item, $storage, 'annual');
-                    $carry[] = $storage;
-                    return $carry;
-                },
-                []
-            );
-        }
+        return $data;
     }
 
-    private function getKeyData(array $companies, array $metrics, string $period = 'annual')
+    private function fillStandarisedData(array &$data, array $metrics, string $period)
     {
-        $keys = array_map(fn ($metric) => explode('||', $metric), $metrics);
-
-        $columns = [];
-
-        foreach ($keys as $key) {
-            if ($key[0] === 'income') {
-                $columns[] = "income_statement";
-            } else if ($key[0] === 'balance') {
-                $columns[] = "balance_sheet";
+        $standardKeys = [];
+        foreach ($metrics as $metric) {
+            if (!Str::startsWith($metric, ['income_statement||', 'balance_sheet||'])) {
+                continue;
             }
+
+            [$column, $key] = explode('||', $metric, 2);
+
+            if (!isset($standardKeys[$column])) {
+                $standardKeys[$column] = [];
+            }
+
+            $standardKeys[$column][] = $key;
         }
 
-        $columns = array_unique($columns);
+        if (empty($standardKeys)) {
+            return $data;
+        }
 
-        $data = InfoTikrPresentation::query()
-            ->whereIn('ticker', $companies)
+        $standardData = InfoTikrPresentation::query()
+            ->whereIn('ticker', array_keys($data))
             ->where("period", $period)
-            ->select(['ticker', ...$columns])
-            ->get()
-            ->map(function ($item) use ($columns, $keys) {
-                foreach ($columns as $key) {
-                    if ($item->{$key}) {
-                        $json = json_decode($item->{$key}, true);
+            ->select(['ticker', ...array_keys($standardKeys)])
+            ->get();
 
-                        $new = [];
+        foreach ($standardData as $item) {
+            foreach ($standardKeys as $column => $keys) {
+                $json = json_decode($item->{$column}, true);
 
-                        foreach ($json as $_key => $_value) {
+                foreach ($json as $key => $_value) {
+                    $key = explode('|', $key)[0];
 
-                            $_key = explode('|', $_key)[0];
-
-                            $value = [];
-
-                            foreach ($_value as $date => $v) {
-                                $val = explode('|', $v[0])[0];
-                                $value[$date] = $val ? round((float) $val, 3) : null;
-                            }
-
-                            $new[$_key] = $value;
-                        }
-
-                        $item->{$key} = $new;
+                    if (!in_array($key, $keys)) {
+                        continue;
                     }
-                }
 
-                return $item;
-            })
-            ->keyBy('ticker')
-            ->toArray();
+                    $value = [];
+
+                    foreach ($_value as $date => $v) {
+                        $val = explode('|', $v[0])[0];
+                        $value[$date] = $val ? round((float) $val, 3) : null;
+                    }
+
+                    $data[$item->ticker][$column . '||' . $key] = $value;
+                }
+            }
+        }
 
         return $data;
     }

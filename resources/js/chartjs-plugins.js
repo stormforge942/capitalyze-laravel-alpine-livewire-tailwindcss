@@ -90,7 +90,7 @@ const chartJsPlugins = {
 
             const tableBody = document.createElement("tbody")
             bodyLines.reverse().forEach((body) => {
-                let [label, value] = body[0].split("|")
+                let [label, value] = body[0].split(tooltip.options.delimiter || '|')
 
                 // format number if possible
                 if(!Number.isNaN(Number(value))) {
