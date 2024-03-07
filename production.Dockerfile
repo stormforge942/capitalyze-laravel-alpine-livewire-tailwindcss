@@ -1,11 +1,5 @@
-# FROM laravelphp/vapor:php82-arm
+FROM laravelphp/vapor:php81
 
-# RUN apk add --no-cache brotli
-
-# COPY . /var/task
-
-FROM laravelphp/vapor:php82
-
-RUN apk add --no-cache brotli
+RUN apk --update add brotli
 
 COPY . /var/task
