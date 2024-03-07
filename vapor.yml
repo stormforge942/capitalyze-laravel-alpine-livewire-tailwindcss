@@ -3,7 +3,7 @@ name: Capitalyze
 environments:
     production:
         # runtime: 'php-8.2:al2'
-        runtime: docker-arm
+        runtime: docker
         gateway-version: 2
         octane: true
         octane-database-session-persist: true
