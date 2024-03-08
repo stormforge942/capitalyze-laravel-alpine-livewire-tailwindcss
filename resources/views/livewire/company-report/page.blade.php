@@ -220,6 +220,10 @@
                         let rows = [];
                 
                         const addRow = (row, section = 0, depth = 0, parent = null) => {
+                            if ((row.empty && !this.showEmptyRows && !row.seg_start) || (this.hideSegments.includes(parent))) {
+                                return;
+                            }
+                
                             const splitted = row.title.split('|');
                             const title = splitted[0];
                 
