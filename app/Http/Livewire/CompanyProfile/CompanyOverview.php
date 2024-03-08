@@ -94,9 +94,9 @@ class CompanyOverview extends Component
                 $data['products'][$product]['yoy_change'][$date] = $lastVal
                     ? (($value / $lastVal) - 1) * 100
                     : 0;
-            }
 
-            $lastVal = $value;
+                $lastVal = $value;
+            }
         }
 
         $lastEbitda = 0;
@@ -145,6 +145,7 @@ class CompanyOverview extends Component
                 : 0;
             $lastDiluteEps = $dilutedEPS;
         }
+
         return $data;
     }
 
