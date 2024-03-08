@@ -205,7 +205,8 @@ class CompanyController extends BaseController
 
     public function ownership(Request $request, string $ticker)
     {
-        OwnershipHistoryService::setCompany($request->route('start', $ticker));
+        // OwnershipHistoryService::setCompany($request->route('start', $ticker));
+        OwnershipHistoryService::setCompany($ticker, false);
 
         $company = Company::query()
             ->where('ticker', OwnershipHistoryService::getCompany())
