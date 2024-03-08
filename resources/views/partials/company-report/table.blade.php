@@ -43,7 +43,7 @@
 
 <div class="mt-6 relative">
     <div class="rounded-lg sticky-table-container">
-        <table class="max-w-[max-content] mx-auto text-right whitespace-nowrap" :class="tableClasses">
+        <table class="max-w-[max-content] mx-auto text-right whitespace-nowrap company-report-table" :class="tableClasses">
             <thead>
                 <tr class="capitalize text-dark bg-[#EDEDED] text-base font-bold">
                     <th class="pl-6 py-2 bg-[#EDEDED] text-left">
@@ -83,7 +83,7 @@
                             }
                         }"
                             :class="[
-                                row.hasBorder ? 'border-[#D4DDD7] border-t' : '',
+                                (row.hasBorder && index !== 0) ? 'border-[#D4DDD7] border-t' : '',
                                 (row.empty && !showEmptyRows && !row.seg_start) || (hideSegments.includes(row.parent)) ?
                                 'hidden' : '',
                                 row.isBold ? 'font-bold' : '',

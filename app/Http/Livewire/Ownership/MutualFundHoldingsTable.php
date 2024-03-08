@@ -16,7 +16,7 @@ class MutualFundHoldingsTable extends BaseTable
     public $fund;
     public $periodRange = null;
     public string $search = '';
-    public string $sortField = 'period_of_report';
+    public string $sortField = 'weight';
     public string $sortDirection = 'desc';
 
     protected function getListeners(): array

@@ -9,7 +9,7 @@ $tabs = [
         'content' => 'livewire.company-profile.business-overview.risk-factors-section',
     ],
     [
-        'title' => "Managenent's Discussion and Analysis",
+        'title' => "Management's Discussion and Analysis",
         'content' => 'livewire.company-profile.business-overview.managment-discussion-section',
     ],
     [

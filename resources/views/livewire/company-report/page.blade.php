@@ -166,7 +166,7 @@
                 
                         const result = Number(Math.abs(value)).toLocaleString('en-US', {
                             style: 'decimal',
-                            maximumFractionDigits: this.filters.decimalPlaces,
+                            minimumFractionDigits: this.filters.decimalPlaces,
                         });
                 
                         const isNegative = value < 0;

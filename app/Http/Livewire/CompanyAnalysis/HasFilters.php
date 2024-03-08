@@ -7,7 +7,7 @@ use Carbon\Carbon;
 trait HasFilters
 {
     public string $period = 'annual';
-    public string $unit = 'Thousands';
+    public string $unit = 'Millions';
     public int $decimalPlaces = 2;
     public string $dateOrder = 'ltr';
     public string $freezePane = 'Top Row & First Column';

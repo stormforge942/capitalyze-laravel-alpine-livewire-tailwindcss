@@ -14,9 +14,13 @@
 @endphp
 <th class="{{ $theme->table->thClass . ' ' . $column->headerClass }}" wire:key="{{ md5($column->field) }}"
     @if ($column->sortable) x-data xx-multisort-shift-click="{{ $this->id }}" @endif
-    style="{{ $column->hidden === true ? 'display:none' : '' }}; width: max-content; @if ($column->sortable) @endif {{ $theme->table->thStyle . ' ' . $column->headerStyle }}">
+    style="{{ $column->hidden === true ? 'display:none' : '' }}; width: max-content; @if ($column->sortable)  @endif {{ $theme->table->thStyle . ' ' . $column->headerStyle }}">
     <div class="flex">
-        <div @class(['inline-flex items-center gap-1', $theme->cols->divClass, $column->sortable ? 'cursor-pointer' : '']) style="{{ $theme->cols->divStyle }}"
+        <div @class([
+            'inline-flex items-center gap-1',
+            $theme->cols->divClass,
+            $column->sortable ? 'cursor-pointer' : '',
+        ]) style="{{ $theme->cols->divStyle }}"
             @if ($column->sortable) wire:click="sortBy('{{ $field }}')" @endif>
             <span>{{ $column->title }}</span>
             @if ($column->sortable)
@@ -37,9 +41,9 @@
                                 <path d="M12 6L8 2L4 6H12ZM12 10L8 14L4 10H12Z" fill="#464E49" />
                             </svg>
                         @elseif ($sortDirection == 'desc')
-                            &#8593;
-                        @else
                             &#8595;
+                        @else
+                            &#8593;
                         @endif
                     @endif
                 </span>

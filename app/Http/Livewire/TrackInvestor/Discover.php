@@ -22,7 +22,7 @@ class Discover extends Component
 
     public static function title(): string
     {
-        return 'Funds';
+        return '13F Filers';
     }
 
     public static function key(): string

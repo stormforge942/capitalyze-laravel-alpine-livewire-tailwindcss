@@ -14,7 +14,7 @@ class FundHoldingsTable extends BaseTable
 {
     public $quarter = null;
     public string $cik = '';
-    public string $sortField = 'ownership';
+    public string $sortField = 'weight';
     public string $sortDirection = 'desc';
     public string $search = '';
 
