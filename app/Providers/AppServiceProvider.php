@@ -22,6 +22,7 @@ use Illuminate\Support\ServiceProvider;
 use Illuminate\Auth\Notifications\VerifyEmail;
 use Illuminate\Auth\Notifications\ResetPassword;
 use Illuminate\Notifications\Messages\MailMessage;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Blade;
 use WireElements\Pro\Components\Spotlight\Spotlight;
 use WireElements\Pro\Components\Spotlight\SpotlightQuery;
@@ -36,7 +37,7 @@ class AppServiceProvider extends ServiceProvider
      */
     public function register()
     {
-        $this->registerSpotlight();
+        Spotlight::setup($this->registerSpotlight(...));
     }
 
     /**
@@ -238,15 +239,6 @@ class AppServiceProvider extends ServiceProvider
 
     private function logDbQueries()
     {
-        // if (App::environment('production')) {
-        //     DB::listen(function ($query) {
-        //         Log::stack(['papertrail'])->debug(
-        //             "Query: {$query->sql}, Bindings: " . json_encode($query->bindings) . ", Time: {$query->time}"
-        //         );
-        //     });
-        // }
-        // log DB request local to termninal for debugging purposes
-
         if (App::environment('local') && env('DB_LOG', true)) {
             DB::listen(function ($query) {
                 // Get the full stack trace
