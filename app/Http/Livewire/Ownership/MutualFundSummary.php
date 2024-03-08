@@ -102,7 +102,7 @@ class MutualFundSummary extends Component
                 ];
             });
 
-        $last = collect(end($investments) ?? [])
+        $last = collect(end($investments) ?: [])
             ->where('industry', '!=', 'Other')
             ->sortByDesc('weight')
             ->take(25);
