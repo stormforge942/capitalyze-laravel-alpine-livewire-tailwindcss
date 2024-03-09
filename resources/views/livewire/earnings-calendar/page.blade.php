@@ -163,7 +163,7 @@
                                         <th class="pl-6 py-2 text-dark whitespace-nowrap"
                                             :style="`width: max-content;`">
                                             <div class="flex" :class="column.right ? 'justify-end' : ''">
-                                                <div class="inline-flex items-center gap-1" :class="column.sortable ? 'cursor-pointer' : ''" @click.prevent="sortBy(column.key)">
+                                                <div class="inline-flex items-center gap-1" :class="column.sortable ? 'cursor-pointer' : ''" @click.prevent="column.sortable ? sortBy(column.key) : null">
                                                     <span x-text="column.name"></span>
     
                                                     <template x-if="column.sortable && sort.column !== column.key">
@@ -178,7 +178,7 @@
                                                     </template>
     
                                                     <template x-if="column.sortable && sort.column === column.key">
-                                                        <span x-html="sort.direction === 'asc' ? '&#8595;' : '&#8593;'"></span>
+                                                        <span x-html="sort.direction === 'asc' ? '&#8593;' : '&#8595;'"></span>
                                                     </template>
                                                 </div>
                                             </div>

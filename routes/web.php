@@ -50,13 +50,16 @@ use App\Http\Controllers\InsiderTransactionsController;
 use App\Http\Controllers\ResetPasswordSuccessfulController;
 use Laravel\Fortify\Http\Controllers\AuthenticatedSessionController;
 
+Route::get('/test-speed', function () {
+    return "hello World";
+});
 
 Route::get('/permission-denied', PermissionDenied::class)->name('permission-denied');
 
 Route::get('/', HomeController::class)->name('home');
 
 Route::group(['middleware' => ['auth', 'approved', 'verified', CheckPagePermission::class]], function () {
-    Route::get('/track-investor', TrackInvestorController::class)->name('track-investor');
+    Route::get('/track-investors', TrackInvestorController::class)->name('track-investors');
     Route::get('/event-filings', EventFilingsController::class)->name('event-filings');
     Route::get('/insider-transactions', InsiderTransactionsController::class)->name('insider-transactions');
     Route::get('/calendar/earnings', EarningsCalendarController::class)->name('earnings-calendar');

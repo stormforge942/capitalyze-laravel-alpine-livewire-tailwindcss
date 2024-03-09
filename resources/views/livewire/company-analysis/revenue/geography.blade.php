@@ -35,14 +35,14 @@
                         <tbody class="bg-white">
                             <tr class="font-bold border-b border-[#D4DDD7]">
                                 <td
-                                    class="pl-8 pt-4 pb-4 text-left @if (!$loop->first) rounded-tl-lg @endif">
+                                    class="pl-8 py-2 text-left @if (!$loop->first) rounded-tl-lg @endif">
                                     {{ $region }}
                                 </td>
                                 @foreach ($selectedDates as $date)
                                     <?php $value = $result['timeline'][$date]; ?>
 
                                     <td
-                                        class="pl-6 pt-4 pb-4 last:pr-8 @if (!$loop->first) last:rounded-tr-lg @endif">
+                                        class="pl-6 py-2 last:pr-8 @if (!$loop->first) last:rounded-tr-lg @endif">
                                         <x-review-number-button x-data="{ amount: '{{ $value['value'] }}', date: '{{ $date }}' }">
                                             {!! redIfNegative($value, fn($val) => number_format($val)) !!}
                                         </x-review-number-button>
@@ -50,11 +50,11 @@
                                 @endforeach
                             </tr>
                             <tr>
-                                <td class="pl-8 pt-4 pb-2 text-left">
+                                <td class="pl-8 pt-2 pb-1 text-left">
                                     <span class="pl-4">% Change YoY</span>
                                 </td>
                                 @foreach ($selectedDates as $date)
-                                    <td class="pl-6 pt-4 pb-2 last:pr-8">
+                                    <td class="pl-6 pt-2 pb-1 last:pr-8">
                                         <?php $value = $result['yoy_change'][$date]; ?>
 
                                         <x-review-number-button x-data="{ amount: '{{ $value['value'] }}', date: '{{ $date }}' }">
@@ -64,11 +64,11 @@
                                 @endforeach
                             </tr>
                             <tr>
-                                <td class="pl-8 pt-2 pb-4 text-left rounded-bl-lg">
+                                <td class="pl-8 pt-1 pb-2 text-left rounded-bl-lg">
                                     <span class="pl-4">% of Total</span>
                                 </td>
                                 @foreach ($selectedDates as $date)
-                                    <td class="pl-6 pt-2 pb-4 last:pr-8 last:rounded-br-lg">
+                                    <td class="pl-6 pt-1 pb-2 last:pr-8 last:rounded-br-lg">
                                         <?php $value = $result['total_percent'][$date]; ?>
 
                                         <x-review-number-button x-data="{ amount: '{{ $value['value'] }}', date: '{{ $date }}' }">
@@ -84,14 +84,14 @@
 
                     <tbody class="bg-white">
                         <tr class="font-bold border-b border-[#D4DDD7]">
-                            <td class="pl-8 pt-4 pb-4 text-left rounded-tl-lg">
+                            <td class="pl-8 py-2 text-left rounded-tl-lg">
                                 Total Revenues
                             </td>
 
                             @foreach ($selectedDates as $date)
                                 <?php $value = $data['total']['timeline'][$date]; ?>
 
-                                <td class="pl-6 pt-2 pb-4 last:pr-8 last:rounded-tr-lg">
+                                <td class="pl-6 py-2 last:pr-8 last:rounded-tr-lg">
                                     <x-review-number-button x-data="{ amount: '{{ $value['value'] }}', date: '{{ $date }}' }">
                                         {!! redIfNegative($value, fn($val) => number_format($val)) !!}
                                     </x-review-number-button>
@@ -99,7 +99,7 @@
                             @endforeach
                         </tr>
                         <tr>
-                            <td class="pl-8 pt-4 pb-4 text-left">
+                            <td class="pl-8 pt-2 pb-2 text-left">
                                 <span class="pl-4">% Change YoY</span>
                             </td>
                             @foreach ($selectedDates as $date)

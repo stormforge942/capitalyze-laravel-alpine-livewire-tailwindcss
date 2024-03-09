@@ -18,3 +18,8 @@ yarn-error.log
 /.vscode
 .vapor/
 .env.staging
+rr
+.rr.yaml
+
+.clj-kondo
+.lsp

@@ -166,7 +166,7 @@
                 
                         const result = Number(Math.abs(value)).toLocaleString('en-US', {
                             style: 'decimal',
-                            maximumFractionDigits: this.filters.decimalPlaces,
+                            minimumFractionDigits: this.filters.decimalPlaces,
                         });
                 
                         const isNegative = value < 0;
@@ -220,6 +220,10 @@
                         let rows = [];
                 
                         const addRow = (row, section = 0, depth = 0, parent = null) => {
+                            if ((row.empty && !this.showEmptyRows && !row.seg_start) || (this.hideSegments.includes(parent))) {
+                                return;
+                            }
+                
                             const splitted = row.title.split('|');
                             const title = splitted[0];
                 

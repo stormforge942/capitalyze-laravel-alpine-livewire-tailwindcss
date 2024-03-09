@@ -56,8 +56,8 @@ class CompanyOverviewGraph extends Component
 
     public function load()
     {
+        $this->percentage = 0;
         $this->chartData = [
-            'label' => [],
             'dataset1' => [],
             'dataset2' => [],
         ];
@@ -77,50 +77,14 @@ class CompanyOverviewGraph extends Component
             ->get();
 
         if (!$result->count()) {
-            $this->chartData = [];
             $this->resetChart();
             return;
         }
 
-        $adj_close_avg = round($result->first()->adj_close_avg);
-        $max = round($result->first()->max_adj_close);
-        $min = round($result->first()->min_adj_close);
-        $volume_avg = round($result->first()->volume_avg);
-
-        foreach ($result as $row) {
-            unset($row->adj_close_avg, $row->max_adj_close, $row->min_adj_close, $row->volume_avg);
-        }
-
-        $divider = 1;
-
-        if (count($result) > 1) {
+        if ($result->count() > 1) {
             $first = $result->first()->adj_close;
             $last = $result->last()->adj_close;
-            $this->percentage
-                = $last ? round((($last - $first) / $last) * 100, 2) : 0;
-        }
-
-        if (!$volume_avg || !$adj_close_avg) {
-            $this->resetChart();
-            return;
-        }
-
-        while (strlen((string)$volume_avg) >= strlen((string)$adj_close_avg)) {
-            $volume_avg /= 5;
-            $volume_avg = round($volume_avg);
-            $divider *= 5;
-        }
-
-        while (round($volume_avg) * 10 >= round($adj_close_avg)) {
-            $volume_avg /= 2;
-            $volume_avg = round($volume_avg);
-            $divider *= 2;
-        }
-
-        while (round($volume_avg) * 10 <= round($adj_close_avg)) {
-            $volume_avg *= 2;
-            $volume_avg = round($volume_avg);
-            $divider /= 2;
+            $this->percentage = $last ? round((($last - $first) / $last) * 100, 2) : 0;
         }
 
         if ($this->currentChartPeriod == '5yr') {
@@ -135,12 +99,9 @@ class CompanyOverviewGraph extends Component
             });
         }
 
-        $y_axes_min = $min * 0.95;
-
-        $result->each(function ($item) use ($divider, $y_axes_min, $volume_avg) {
-            $quote = $item;
-            if ($this->currentChartPeriod == '5yr' || $this->currentChartPeriod == 'max') {
-                $quote = $quote[0];
+        $result->each(function ($quote) {
+            if (in_array($this->currentChartPeriod, ['5yr', 'max'])) {
+                $quote = $quote->first();
             }
 
             $this->chartData['dataset1'][] = [
@@ -150,15 +111,12 @@ class CompanyOverviewGraph extends Component
 
             $this->chartData['dataset2'][] = [
                 'x' => Carbon::parse($quote->date)->format('Y-m-d'),
-                'y' => (($quote->volume / $divider) * 3) / $volume_avg + $y_axes_min,
+                'y' => $quote->volume,
                 'source' => number_format($quote->volume)
             ];
         });
 
         [$this->chartData['quantity'], $this->chartData['unit']] = $this->calculateDateDifference($this->getPeriod());
-        $this->chartData['divider'] = $divider;
-        $this->chartData['y_axes_max'] = $this->countYPaddingValue($max);
-        $this->chartData['y_axes_min'] = $y_axes_min;
 
         $this->resetChart();
     }

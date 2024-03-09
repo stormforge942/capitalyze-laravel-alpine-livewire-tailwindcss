@@ -54,7 +54,7 @@ class Page extends Component
         $this->activeTab = $request->query('tab', 'income-statement');
         $this->view = $request->query('view', 'Standardised');
         $this->period = $request->query('period', 'Fiscal Annual');
-        $this->unitType = $request->query('unitType', 'Thousands');
+        $this->unitType = $request->query('unitType', 'Millions');
         $this->decimalPlaces = intval($request->query('decimalPlaces', 2));
         $this->order = $request->query('order', 'Latest on the Right');
         $this->freezePane = $request->query('freezePane', 'Top Row & First Column');

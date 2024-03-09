@@ -20,6 +20,16 @@ class MutualFunds extends Component
     public $perPage = 20;
     public $search = "";
 
+    public static function title(): string
+    {
+        return 'N-PORT Filers';
+    }
+
+    public static function key(): string
+    {
+        return 'mutual-funds';
+    }
+
     public function loadMore()
     {
         $this->perPage += 20;

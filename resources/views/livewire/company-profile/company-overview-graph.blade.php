@@ -126,13 +126,19 @@
 
         function initChart() {
             if (chart) chart.destroy();
-            let data = @this.chartData;
-            let canvas = document.getElementById("product-profile-chart");
+
+            const canvas = document.getElementById("product-profile-chart");
             if (!canvas) return;
-            let ctx = canvas.getContext("2d");
-            let gradientBg = ctx.createLinearGradient(0, 0, 0, canvas.height * 2.5)
+
+            let data = @this.chartData;
+
+            const ctx = canvas.getContext("2d");
+            const gradientBg = ctx.createLinearGradient(0, 0, 0, canvas.height * 2.5)
             gradientBg.addColorStop(0.8, 'rgba(19,176,91,0.18)')
             gradientBg.addColorStop(1, 'rgba(19,176,91,0.05)')
+
+            const minPrice = Math.min(...data.dataset1.map(i => i.y))
+            
             chart = new Chart(ctx, {
                 plugins: [{
                     afterDraw: chart => {
@@ -163,6 +169,7 @@
                             borderWidth: Number.MAX_VALUE,
                             borderRadius: 2,
                             fill: true,
+                            yAxisID: 'y1',
                         },
                         {
                             data: data.dataset1,
@@ -226,13 +233,12 @@
                     },
                     scales: {
                         y: {
-                            max: data.y_axes_max,
-                            min: data.y_axes_min,
+                            min: minPrice - 0.05 * minPrice,
                         },
                         x: {
                             offset: false,
                             grid: {
-                                display: false
+                                display: false,
                             },
                             type: 'timeseries',
                             time: {
@@ -245,15 +251,19 @@
                             },
                             align: 'center',
                         },
+                        y1: {
+                            display: false,
+                            position: "right",
+                            type: "linear",
+                            beginAtZero: true,
+                            max: Math.max(...data.dataset2.map(i => i.y)) * 7
+                        }
                     }
                 }
             });
         }
 
-
         document.addEventListener('DOMContentLoaded', initChart);
-
-        window.addEventListener("resize", initChart);
 
         Livewire.on("companyChartReset", initChart);
     </script>

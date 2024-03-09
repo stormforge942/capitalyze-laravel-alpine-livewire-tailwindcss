@@ -25,7 +25,7 @@ class CreateNavbar extends Command
     public function titleCase($input)
     {
         $map = [
-            'track-investor' => 'Track Investor',
+            'track-investors' => 'Track Investors',
             'event-filings' => 'Events Tracker',
             'insider-transactions' => 'Insider Transactions',
             'earnings-calendar' => 'Earnings Calendar',
@@ -128,6 +128,16 @@ class CreateNavbar extends Command
                 'name' => $this->titleCase("Reviewer Access"),
                 'is_moddable' => true,
                 'is_route' => false,
+            ]);
+
+        Navbar::query()->where('route_name', 'track-investor')->delete();
+        Navbar::query()
+            ->updateOrCreate([
+                'route_name' => 'track-investors',
+            ], [
+                'name' => $this->titleCase("track-investors"),
+                'is_moddable' => true,
+                'is_route' => true,
             ]);
 
         $this->info('Navbar imported successfully!');

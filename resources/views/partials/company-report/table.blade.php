@@ -43,8 +43,7 @@
 
 <div class="mt-6 relative">
     <div class="rounded-lg sticky-table-container">
-        <table
-            class="max-w-[max-content] mx-auto text-right whitespace-nowrap" :class="tableClasses">
+        <table class="max-w-[max-content] mx-auto text-right whitespace-nowrap company-report-table" :class="tableClasses">
             <thead>
                 <tr class="capitalize text-dark bg-[#EDEDED] text-base font-bold">
                     <th class="pl-6 py-2 bg-[#EDEDED] text-left">
@@ -62,17 +61,42 @@
                             get isRowSelectedForChart() {
                                 return this.selectedChartRows.find(item => item.id === row.id) ? true : false;
                             },
+                            get isLast() {
+                                return rows.length - 1 === this.index;
+                            },
+                            get paddings() {
+                                const beforeRow = this.rows[this.index - 1];
+                                const afterRow = this.rows[this.index + 1];
+                        
+                                let top = 'pt-1';
+                                let bottom = 'pb-1';
+                        
+                                if (this.index === 0 || this.row?.hasBorder) {
+                                    top = 'pt-2';
+                                }
+                        
+                                if (this.index === this.rows.length - 1 || afterRow?.hasBorder) {
+                                    bottom = 'pb-2';
+                                }
+                        
+                                return top + ' ' + bottom;
+                            }
                         }"
                             :class="[
-                                row.hasBorder ? 'border-[#D4DDD7] border-t' : '',
+                                (row.hasBorder && index !== 0) ? 'border-[#D4DDD7] border-t' : '',
                                 (row.empty && !showEmptyRows && !row.seg_start) || (hideSegments.includes(row.parent)) ?
                                 'hidden' : '',
                                 row.isBold ? 'font-bold' : '',
                                 isRowSelectedForChart ? 'bg-[#d5ebe3]' : (row.segmentation ? 'bg-[#e4eff3]' :
-                                    'bg-white')
+                                    'bg-white'),
                             ]">
-                            <td class="pl-6 py-2 text-left"
-                                :class="[isRowSelectedForChart ? '!bg-[#d5ebe3]' : (row.segmentation ? '!bg-[#e4eff3]' : '')]">
+                            <td class="pl-6 text-left"
+                                :class="[
+                                    isRowSelectedForChart ? '!bg-[#d5ebe3]' : (row.segmentation ? '!bg-[#e4eff3]' : ''),
+                                    index === 0 ? 'rounded-tl-lg' : '',
+                                    isLast ? 'rounded-bl-lg' : '',
+                                    paddings
+                                ]">
                                 <div class="flex items-center gap-x-2">
                                     <input x-show="isRowSelectedForChart" type="checkbox" class="custom-checkbox -ml-4"
                                         :checked="isRowSelectedForChart" @change="toggleRowForChart(row)">
@@ -97,7 +121,12 @@
                                 </div>
                             </td>
                             <template x-for="date in formattedTableDates" :key="date">
-                                <td class="py-2 pl-2 last:pr-6">
+                                <td class="pl-2 last:pr-6"
+                                    :class="[
+                                        isLast ? 'last:rounded-br-lg' : '',
+                                        index === 0 ? 'last:rounded-tr-lg' : '',
+                                        paddings
+                                    ]">
                                     <span class="hover:underline cursor-pointer"
                                         :class="row.values[date]?.isNegative ? 'text-red' : ''"
                                         x-text="row.values[date]?.result"
