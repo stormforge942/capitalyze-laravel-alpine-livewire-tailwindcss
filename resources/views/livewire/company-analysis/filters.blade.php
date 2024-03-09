@@ -3,7 +3,7 @@
         'annual' => 'Annual',
         'quarterly' => 'Quarterly',
     ];
-    $unitTypes = ['None', 'Thousands', 'Millions', 'Billions'];
+    $unitTypes = ['As Stated', 'Thousands', 'Millions', 'Billions'];
     $orderTypes = [
         'ltr' => 'Latest on the Right',
         'ltl' => 'Latest on the Left',
