@@ -137,6 +137,8 @@
             gradientBg.addColorStop(0.8, 'rgba(19,176,91,0.18)')
             gradientBg.addColorStop(1, 'rgba(19,176,91,0.05)')
 
+            const minPrice = Math.min(...data.dataset1.map(i => i.y))
+            
             chart = new Chart(ctx, {
                 plugins: [{
                     afterDraw: chart => {
@@ -231,8 +233,7 @@
                     },
                     scales: {
                         y: {
-                            beginAtZero: false,
-                            // min: data.min,
+                            min: minPrice - 0.05 * minPrice,
                         },
                         x: {
                             offset: false,
@@ -254,8 +255,8 @@
                             display: false,
                             position: "right",
                             type: "linear",
-                            max: data.max,
-                            beginAtZero: false,
+                            beginAtZero: true,
+                            max: Math.max(...data.dataset2.map(i => i.y)) * 7
                         }
                     }
                 }

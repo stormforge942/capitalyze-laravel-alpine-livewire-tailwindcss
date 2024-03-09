@@ -87,18 +87,21 @@ class CompanyOverviewGraph extends Component
             $this->percentage = $last ? round((($last - $first) / $last) * 100, 2) : 0;
         }
 
-        $maxPrice = 0;
-        $volume = ['min' => INF, 'max' => 0];
-        foreach ($result as $item) {
-            $maxPrice = $maxPrice < $item->adj_close ? $item->adj_close : $maxPrice;
-            $volume['min'] = $volume['min'] > $item->volume ? $item->volume : $volume['min'];
-            $volume['max'] = $volume['max'] < $item->volume ? $item->volume : $volume['max'];
+        if ($this->currentChartPeriod == '5yr') {
+            $result = $result->groupBy(function ($item) {
+                return Carbon::parse($item->date)->format('Y-W');
+            });
         }
 
-        $result->each(function ($item) use ($maxPrice, $volume) {
-            $quote = $item;
-            if ($this->currentChartPeriod == '5yr' || $this->currentChartPeriod == 'max') {
-                $quote = $quote[0];
+        if ($this->currentChartPeriod == 'max') {
+            $result = $result->groupBy(function ($item) {
+                return Carbon::parse($item->date)->format('Y-m');
+            });
+        }
+
+        $result->each(function ($quote) {
+            if (in_array($this->currentChartPeriod, ['5yr', 'max'])) {
+                $quote = $quote->first();
             }
 
             $this->chartData['dataset1'][] = [
@@ -106,19 +109,13 @@ class CompanyOverviewGraph extends Component
                 'y' => number_format($quote->adj_close, 4),
             ];
 
-            $min = 0;
-            $max = 0.2 * $maxPrice;
-
-            $volume = ($quote->volume - $volume['min']) / ($volume['max'] - $volume['min']) * ($max - $min) + $min;
-
             $this->chartData['dataset2'][] = [
                 'x' => Carbon::parse($quote->date)->format('Y-m-d'),
-                'y' => $volume,
+                'y' => $quote->volume,
                 'source' => number_format($quote->volume)
             ];
         });
 
-        $this->chartData['max'] = $maxPrice;
         [$this->chartData['quantity'], $this->chartData['unit']] = $this->calculateDateDifference($this->getPeriod());
 
         $this->resetChart();
