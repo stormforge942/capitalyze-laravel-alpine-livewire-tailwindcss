@@ -25,6 +25,11 @@ class MutualFunds extends Component
         return 'N-PORT Filers';
     }
 
+    public static function key(): string
+    {
+        return 'mutual-funds';
+    }
+
     public function loadMore()
     {
         $this->perPage += 20;

@@ -2,7 +2,7 @@
     class="{{ $hideIfNotFavorite && !$fund['isFavorite'] ? 'hidden' : '' }} bg-white rounded border-[0.5px] border-[#D4DDD7] px-4 py-6 overflow-hidden">
     <div class="flex items-center justify-between gap-2">
         <a href="{{ $url }}">
-            <h4 class="text-blue font-semibold uppercase">{{ $fund['registrant_name'] }}</h4>
+            <h4 class="text-blue font-semibold capitalize">{{ strtolower($fund['registrant_name']) }}</h4>
         </a>
 
         <?php

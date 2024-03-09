@@ -59,7 +59,7 @@ class CompanyNavbar extends Component
             });
 
         $mainLinks = [
-            'Track Investor',
+            'Track Investors',
             'Events Tracker',
             'Insider Transactions',
             'Earnings Calendar',
