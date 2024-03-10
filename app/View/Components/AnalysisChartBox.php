@@ -16,6 +16,8 @@ class AnalysisChartBox extends Component
         public string $title,
         public array $chart,
         public string $function,
+        public string $unit = 'Millions',
+        public int $decimalPlaces = 2,
         public bool $enclosed = false,
         public string $defaultType = 'values',
         public bool $hasPercentageMix = true,

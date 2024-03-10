@@ -59,6 +59,10 @@
                     type: this.type,
                     showLabel: this.showLabel,
                     reverse: this.reverse === 'ltl',
+                    number: {
+                        unit: '{{ $unit }}',
+                        decimalPlaces: {{ $decimalPlaces }},
+                    }
                 })
             },
         }" wire:key="{{ $chart['key'] }}">

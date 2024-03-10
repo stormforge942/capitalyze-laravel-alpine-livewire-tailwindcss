@@ -27,11 +27,12 @@
 
                 <div class="mt-6" x-show="subSubTab === 'sources'" x-cloak>
                     <x-analysis-chart-box title="Sources of Cash" :company="$company" :chart="$chart['sources']" :enclosed="true"
-                        function="renderSourcesAndUsesChart"></x-analysis-chart-box>
+                        :unit="$unit" :decimal-places="$decimalPlaces" function="renderSourcesAndUsesChart"></x-analysis-chart-box>
                 </div>
 
                 <div class="mt-6" x-show="subSubTab === 'uses'" x-cloak>
                     <x-analysis-chart-box title="Uses of Cash" :company="$company" :chart="$chart['uses']" :enclosed="true"
+                        :unit="$unit" :decimal-places="$decimalPlaces"
                         function="renderSourcesAndUsesChart"></x-analysis-chart-box>
                 </div>
             </div>

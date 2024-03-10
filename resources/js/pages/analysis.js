@@ -1,6 +1,9 @@
-import chartJsPlugins, { formatCmpctNumber } from "../chartjs-plugins"
+import chartJsPlugins, {
+    formatCmpctNumber,
+    formatNumber,
+} from "../chartjs-plugins"
 
-const tooltipConfig = {
+const tooltipConfig = (config) => ({
     bodyFont: {
         size: 15,
     },
@@ -9,9 +12,20 @@ const tooltipConfig = {
     position: "nearest",
     callbacks: {
         title: (context) => context[0].label,
-        label: (context) => `${context.dataset.label}|${context.raw.y}`,
+        label: (context) => {
+            let y = context.raw.y
+
+            if (
+                config.type !== "percentage" &&
+                context?.dataset?.dataType !== "percentage"
+            ) {
+                y = String(formatNumber(y, config.number))
+            }
+
+            return `${context.dataset.label}|${y}`
+        },
     },
-}
+})
 
 const legendConfig = () => ({
     display: true,
@@ -103,7 +117,7 @@ function renderRevenueByEmployeeChart(canvas, datasets, config) {
     const ctx = canvas.getContext("2d")
 
     datasets.forEach((dataset) => {
-        if(dataset.type !== "line") {
+        if (dataset.type !== "line") {
             dataset.maxBarThickness = 150
         }
     })
@@ -116,7 +130,7 @@ function renderRevenueByEmployeeChart(canvas, datasets, config) {
         },
         options: {
             maintainAspectRatio: false,
-            responsive: true,    
+            responsive: true,
             interaction: {
                 intersect: false,
                 mode: "index",
@@ -125,14 +139,14 @@ function renderRevenueByEmployeeChart(canvas, datasets, config) {
                 display: false,
             },
             plugins: {
-                tooltip: tooltipConfig,
+                tooltip: tooltipConfig(config),
                 legend: legendConfig(),
                 pointLine: {
                     color: "#C22929",
                 },
                 datalabels: {
                     ...dataLabelConfig(config),
-                    formatter: (v) => formatCmpctNumber(v.y),
+                    formatter: (v) => formatNumber(v.y, config.number),
                 },
             },
             scales: {
@@ -167,7 +181,7 @@ function renderCostStructureChart(canvas, datasets, config) {
                 (config.type === "percentage" ? value.percent : value.value) ||
                 0
 
-            if(dataset.type !== "line") {
+            if (dataset.type !== "line") {
                 dataset.maxBarThickness = 150
             }
 
@@ -183,7 +197,7 @@ function renderCostStructureChart(canvas, datasets, config) {
         },
         options: {
             maintainAspectRatio: false,
-            responsive: true,    
+            responsive: true,
             interaction: {
                 intersect: false,
                 mode: "index",
@@ -192,16 +206,16 @@ function renderCostStructureChart(canvas, datasets, config) {
                 display: false,
             },
             plugins: {
-                tooltip: tooltipConfig,
+                tooltip: tooltipConfig(config),
                 legend: legendConfig(),
                 datalabels: {
                     ...dataLabelConfig(config),
                     formatter: (v) => {
                         if (config.type === "percentage") {
-                            return Number(v.y).toFixed(2 ?? 0) + "%"
+                            return Number(v.y).toFixed(2) + "%"
                         }
 
-                        return formatCmpctNumber(v.y)
+                        return formatNumber(v.y, config.number)
                     },
                 },
                 pointLine: {
@@ -231,7 +245,7 @@ function renderFcfConversionChart(canvas, data, config) {
     const ctx = canvas.getContext("2d")
 
     data.datasets.forEach((dataset) => {
-        if(dataset.type !== "line") {
+        if (dataset.type !== "line") {
             dataset.maxBarThickness = 150
         }
     })
@@ -244,7 +258,7 @@ function renderFcfConversionChart(canvas, data, config) {
         },
         options: {
             maintainAspectRatio: false,
-            responsive: true,    
+            responsive: true,
             interaction: {
                 intersect: false,
                 mode: "index",
@@ -283,18 +297,9 @@ function renderFcfConversionChart(canvas, data, config) {
                         },
                     },
                 },
-                tooltip: tooltipConfig,
+                tooltip: tooltipConfig(config),
                 legend: legendConfig(),
-                datalabels: {
-                    ...dataLabelConfig(config),
-                    formatter: (v, ctx) => {
-                        if (ctx.dataset.label === "Free Cashflow $") {
-                            return "$" + formatCmpctNumber(v.y)
-                        }
-
-                        return Number(v.y).toFixed(2 ?? 0) + "%"
-                    },
-                },
+                datalabels: dataLabelConfig(config),
                 pointLine: {
                     color: "#ffff",
                 },
@@ -329,7 +334,7 @@ function renderCapitalStructureChart(canvas, datasets, config) {
         },
         options: {
             maintainAspectRatio: false,
-            responsive: true,    
+            responsive: true,
             interaction: {
                 intersect: false,
                 mode: "index",
@@ -343,7 +348,7 @@ function renderCapitalStructureChart(canvas, datasets, config) {
                 },
             },
             plugins: {
-                tooltip: tooltipConfig,
+                tooltip: tooltipConfig(config),
                 legend: legendConfig(),
                 pointLine: {
                     color: "#121A0F",
@@ -381,7 +386,7 @@ function basicBarChart(canvas, datasets, config) {
     const ctx = canvas.getContext("2d")
 
     datasets.forEach((dataset) => {
-        if(dataset.type !== "line") {
+        if (dataset.type !== "line") {
             dataset.maxBarThickness = 150
         }
     })
@@ -394,7 +399,7 @@ function basicBarChart(canvas, datasets, config) {
         },
         options: {
             maintainAspectRatio: false,
-            responsive: true,    
+            responsive: true,
             interaction: {
                 intersect: false,
                 mode: "index",
@@ -403,10 +408,10 @@ function basicBarChart(canvas, datasets, config) {
                 display: false,
             },
             plugins: {
-                tooltip: tooltipConfig,
+                tooltip: tooltipConfig(config),
                 datalabels: {
                     ...dataLabelConfig(config),
-                    formatter: (v) => formatCmpctNumber(v.y),
+                    formatter: (v) => formatNumber(v.y, config.number),
                 },
                 legend: legendConfig(),
                 ...(!config.lastIsAverage
@@ -435,7 +440,7 @@ function percentageBarChart(canvas, datasets, config = {}) {
     const ctx = canvas.getContext("2d")
 
     datasets.forEach((dataset) => {
-        if(dataset.type !== "line") {
+        if (dataset.type !== "line") {
             dataset.maxBarThickness = 150
         }
     })
@@ -448,7 +453,7 @@ function percentageBarChart(canvas, datasets, config = {}) {
         },
         options: {
             maintainAspectRatio: false,
-            responsive: true,    
+            responsive: true,
             interaction: {
                 intersect: false,
                 mode: "index",
@@ -457,7 +462,7 @@ function percentageBarChart(canvas, datasets, config = {}) {
                 display: false,
             },
             plugins: {
-                tooltip: tooltipConfig,
+                tooltip: tooltipConfig(config),
                 legend: legendConfig(),
                 datalabels: dataLabelConfig(config),
             },

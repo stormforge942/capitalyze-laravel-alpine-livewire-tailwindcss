@@ -97,7 +97,7 @@ trait HasFilters
 
     private function makeChartKey(): string
     {
-        return $this->period . '-' . json_encode($this->selectedDateRange);
+        return $this->period . '-' . json_encode($this->selectedDateRange) . '-' . $this->unit . '-' . $this->decimalPlaces;
     }
 
     private function rangeSliderKey(): string

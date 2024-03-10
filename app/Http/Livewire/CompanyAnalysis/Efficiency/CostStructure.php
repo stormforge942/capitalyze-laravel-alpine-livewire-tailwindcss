@@ -70,6 +70,7 @@ class CostStructure extends Component
                 "type" => "line",
                 'yAxisID' => 'y1',
                 'pointRadius' => 0,
+                'dataType' => 'percentage',
             ];
         }
 

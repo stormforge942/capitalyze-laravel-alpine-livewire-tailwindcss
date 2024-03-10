@@ -4,7 +4,7 @@ const chartJsPlugins = {
         afterDraw: (chart, _, options) => {
             if (chart.tooltip?._active?.length) {
                 let x = chart.tooltip._active[0].element.x
-                // find max y 
+                // find max y
                 let y = chart.tooltip._active
                     .filter(
                         (el) => el.element.constructor.name === "PointElement"
@@ -93,8 +93,13 @@ const chartJsPlugins = {
                 let [label, value] = body[0].split("|")
 
                 // format number if possible
-                if(!Number.isNaN(Number(value))) {
-                    value = Intl.NumberFormat("en-US").format(value)
+                if (!Number.isNaN(Number(value))) {
+                    const afterDot = (value.split(".")[1] || "").length
+
+                    value = Intl.NumberFormat("en-US", {
+                        minimumFractionDigits: afterDot,
+                        maximumFractionDigits: afterDot,
+                    }).format(value)
                 }
 
                 //label
@@ -176,6 +181,22 @@ export function formatCmpctNumber(number, options = {}) {
 
     const usformatter = Intl.NumberFormat("en-US", options)
     return usformatter.format(number)
+}
+
+export function formatNumber(number, options) {
+    if (isNaN(Number(number))) return number
+
+    const divideBy =
+        {
+            Thousands: 1000,
+            Millions: 1000000,
+            Billions: 1000000000,
+        }[options.unit] || 1
+
+    return Intl.NumberFormat("en-US", {
+        minimumFractionDigits: options.decimalPlaces,
+        maximumFractionDigits: options.decimalPlaces,
+    }).format(number / divideBy)
 }
 
 export function hex2rgb(hex, alpha = 1) {
