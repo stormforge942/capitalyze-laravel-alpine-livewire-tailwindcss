@@ -15,6 +15,7 @@ class MutualFundHoldingsTable extends BaseTable
 {
     public $fund;
     public $periodRange = null;
+    public bool $redirectToOverview = false;
     public string $search = '';
     public string $sortField = 'weight';
     public string $sortDirection = 'desc';
@@ -107,7 +108,21 @@ class MutualFundHoldingsTable extends BaseTable
                     return $fund->name;
                 }
 
-                return '<a href=" ' . route('company.ownership', ['ticker' => $fund->symbol, 'start' => OwnershipHistoryService::getCompany(), 'tab' => 'mutual-funds']) . ' " class="text-blue">' . $fund->symbol . (!empty($fund->name) ? ' <span class="text-xs font-light">(' . $fund->name . ')<span>' : '') . '</button>';
+                if ($this->redirectToOverview) {
+                    $href = route('company.profile', $fund->symbol);
+                } else {
+                    if ($fund->symbol === OwnershipHistoryService::getCompany()) {
+                        $attrs = ['ticker' => $fund->symbol];
+                    } else {
+                        $attrs = ['ticker' => $fund->symbol, 'start' => OwnershipHistoryService::getCompany(), 'tab' => 'mutual-funds'];
+                    }
+
+                    $href = route(
+                        'company.ownership',
+                        $attrs
+                    );
+                }
+                return '<a href=" ' . $href . ' " class="text-blue">' . $fund->symbol . (!empty($fund->name) ? ' <span class="text-xs font-light">(' . $fund->name . ')<span>' : '') . '</button>';
             })
             ->addColumn('balance')
             ->addColumn(

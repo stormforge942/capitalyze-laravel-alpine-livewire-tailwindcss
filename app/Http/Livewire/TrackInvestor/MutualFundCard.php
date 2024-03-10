@@ -52,7 +52,8 @@ class MutualFundCard extends Component
                     'series_id' => $this->fund['series_id'],
                     'class_id' => $this->fund['class_id'],
                     'class_name' => $this->fund['class_name'],
-                    'tab' => 'holdings'
+                    'tab' => 'holdings',
+                    'from' => 'track-investors',
                 ]
             )
         ]);

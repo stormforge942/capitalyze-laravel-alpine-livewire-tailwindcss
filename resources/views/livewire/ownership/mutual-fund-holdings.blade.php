@@ -108,5 +108,5 @@
         </div>
     </div>
 
-    <livewire:ownership.mutual-fund-holdings-table :fund="$fund" />
+    <livewire:ownership.mutual-fund-holdings-table :fund="$fund" :redirectToOverview="$redirectToOverview" />
 </div>
