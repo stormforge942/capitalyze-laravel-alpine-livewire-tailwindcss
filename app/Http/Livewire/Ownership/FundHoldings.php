@@ -15,6 +15,7 @@ class FundHoldings extends Component
     public $quarters;
     public $quarter = null;
     public string $search = '';
+    public $redirectToOverview = false;
 
     public static function title(): string
     {
@@ -24,6 +25,7 @@ class FundHoldings extends Component
     public function mount(array $data = [])
     {
         $this->cik = $data['fund']['cik'];
+        $this->redirectToOverview = request()->get('from') === 'track-investors';
 
         $this->quarters = $this->quarters();
         if (!array_key_exists($this->quarter, $this->quarters)) {

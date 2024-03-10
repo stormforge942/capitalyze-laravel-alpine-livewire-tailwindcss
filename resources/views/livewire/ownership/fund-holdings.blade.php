@@ -25,5 +25,5 @@
         </div>
     </div>
 
-    <livewire:ownership.fund-holdings-table :cik="$cik" :quarter="$quarter" />
+    <livewire:ownership.fund-holdings-table :cik="$cik" :quarter="$quarter" :redirectToOverview="$redirectToOverview" />
 </div>
