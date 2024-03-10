@@ -63,19 +63,19 @@ class Page extends Component
         $cacheKey = 'earnings_data_' . $start . '_' . $end;
         $cacheDuration = 3600;
 
-        $data = Cache::remember($cacheKey, 3600, function () use ($start, $end) {
+        return Cache::remember($cacheKey, 3600, function () use ($start, $end) {
 
             $newEarnings = DB::connection('pgsql-xbrl')
-                ->table('new_earnings')
-                ->select('symbol', 'date', 'exchange', 'time', 'title', 'url', 'company_name', 'acceptance_time')
-                ->whereBetween('date', [$start, $end])
-                ->get()
-                ->map(function ($item) {
-                    $item->origin = '8-K';
-                    $item->pub_time = $item->acceptance_time;
-                    unset($item->acceptance_time);
-                    return $item;
-                });
+            ->table('new_earnings')
+            ->select('symbol', 'date', 'exchange', 'time', 'title', 'url', 'company_name', 'acceptance_time')
+            ->whereBetween('date', [$start, $end])
+            ->get()
+            ->map(function ($item) {
+                $item->origin = '8-K';
+                $item->pub_time = $item->acceptance_time;
+                unset($item->acceptance_time);
+                return $item;
+            });
 
             $earningsCalendar = DB::connection('pgsql-xbrl')
                 ->table('earnings_calendar')
@@ -87,16 +87,13 @@ class Page extends Component
                     return $item;
                 });
 
-            return $newEarnings
+            return array_values($newEarnings
                 ->merge($earningsCalendar)
                 ->sortBy(function ($item) {
                     return Carbon::parse($item->date . ' ' . $item->time)->timestamp;
                 })
-                ->values() 
-                ->toArray();
+                ->toArray());
         });
-
-        return $data;
     }
 
     public function render()

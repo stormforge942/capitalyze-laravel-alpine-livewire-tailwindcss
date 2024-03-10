@@ -34,26 +34,19 @@ class Table extends BaseTable
 
     public function datasource()
     {
-        $cacheKey = 'event_filings_datasource_' . md5(serialize($this->config) . $this->search);
-        $cacheDuration = 3600; 
-    
-        // TODO: Review PowerGrid's automatic caching behavior and its impact on Redis cache entries. Currently, PowerGrid caches the latest datasource response indefinitely, which can lead to duplicate cache entries (one for the latest search and one for the specific cache key). Consider monitoring the cache usage closely and evaluate the necessity of disabling PowerGrid's 'cached_data' feature (set 'cached_data' => false in config/livewire-powergrid.php) to prevent redundant caching.
-        $result = Cache::remember($cacheKey, $cacheDuration, function () {
-            $query = DB::connection('pgsql-xbrl')
-                ->table('company_links')
-                ->when(isset($this->config['in']), function ($query) {
-                    $in = [];
-                    foreach ($this->config['in'] as $item) {
-                        $in[] = $item;
-                        $in[] = $item . '/A';
-                    }
-                    $query->whereIn('form_type', $in);
-                })
-                ->when($this->search, fn ($q) => $q->where('registrant_name', 'ilike', "%{$this->search}%"));
-            return $query->get();
-        });
-    
-        return $result;
+        return DB::connection('pgsql-xbrl')
+            ->table('company_links')
+            ->when(isset($this->config['in']), function ($query) {
+                $in = [];
+
+                foreach($this->config['in'] as $item) {
+                    $in[] = $item;
+                    $in[] = $item . '/A';
+                }
+
+                $query->whereIn('form_type', $in);
+            })
+            ->when($this->search, fn ($q) => $q->where('registrant_name', 'ilike', "%{$this->search}%"));
     }
 
     public function columns(): array
