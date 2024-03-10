@@ -132,9 +132,11 @@
                         }, { deep: true })
                     },
                     formattedTableDate(date) {
+                        const includeMonth = !['Calendar Annual', 'Fiscal Annual'].includes(this.filters.period);
+
                         return new Date(date).toLocaleString('en-US', {
-                            month: 'short',
                             year: 'numeric',
+                            month: includeMonth ? 'short' : undefined,
                         })
                     },
                     isYearInRange(year) {
