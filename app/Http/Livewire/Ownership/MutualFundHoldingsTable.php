@@ -63,6 +63,8 @@ class MutualFundHoldingsTable extends BaseTable
     public function columns(): array
     {
         return [
+            Column::make('', 'history'),
+
             Column::make('Company', 'name_formatted', 'name')
                 ->sortable()
                 ->searchable(),
@@ -94,8 +96,6 @@ class MutualFundHoldingsTable extends BaseTable
             Column::make('Date reported', 'period_of_report', 'period_of_report')
                 ->sortable()
                 ->headerAttribute('[&>div]:justify-end')->bodyAttribute('text-right'),
-
-            Column::make('', 'history'),
         ];
     }
 
