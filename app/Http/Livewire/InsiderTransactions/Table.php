@@ -7,6 +7,7 @@ use Illuminate\Support\Facades\DB;
 use PowerComponents\LivewirePowerGrid\Column;
 use PowerComponents\LivewirePowerGrid\PowerGrid;
 use PowerComponents\LivewirePowerGrid\PowerGridColumns;
+use Illuminate\Support\Facades\Cache; 
 
 class Table extends BaseTable
 {
@@ -29,49 +30,57 @@ class Table extends BaseTable
 
     public function datasource()
     {
-        return DB::connection('pgsql-xbrl')
-            ->table('insider_transactions')
-            ->when(data_get($this->filters, 'search'), function ($query) {
-                $value = $this->filters['search'];
-                $term = '%' . $this->filters['search'] . '%';
-
-                return $query->where(
-                    fn ($q) => $q->where('symbol', $value)
-                        ->orWhere('registrant_name', 'ilike', $term)
-                        ->orWhere('reporting_person', 'ilike', $term)
-                );
-            })
-            ->when(data_get($this->filters, 'transaction_codes'), function ($query) {
-                return $query->whereIn('transaction_code', $this->filters['transaction_codes']);
-            })
-            ->when(data_get($this->filters, 'relationships'), function ($query) {
-                return $query->whereIn('relationship_of_reporting_person', $this->filters['relationships']);
-            })
-            ->when(data_get($this->filters, 'transaction_value'), function ($query) {
-                $min = intval(data_get($this->filters, 'transaction_value.min')) * 1000;
-                $max = intval(data_get($this->filters, 'transaction_value.max')) * 1000;
-
-                return $query->whereBetween(DB::raw('amount_of_securities * price_per_security'), [$min, $max]);
-            })
-            ->when(data_get($this->filters, 'months'), function ($query) {
-                $from = now()->subMonths($this->filters['months'])->startOfMonth()->toDateString();
-
-                return $query->where('transaction_date', '>=', $from);
-            })
-            ->select([
-                'symbol',
-                'registrant_name',
-                'reporting_person',
-                'relationship_of_reporting_person',
-                'transaction_code',
-                'amount_of_securities',
-                'price_per_security',
-                'ownership_percentage',
-                'market_cap',
-                'transaction_date',
-                'securities_owned_following_transaction',
-                DB::raw('amount_of_securities * price_per_security as value'),
-            ]);
+        $cacheKey = 'insider_transactions.' . md5(json_encode($this->filters));
+    
+        $cacheDuration = 3600;
+    
+        return Cache::remember($cacheKey, $cacheDuration, function () {
+            $results = DB::connection('pgsql-xbrl')
+                ->table('insider_transactions')
+                ->when(data_get($this->filters, 'search'), function ($query) {
+                    $value = $this->filters['search'];
+                    $term = '%' . $this->filters['search'] . '%';
+    
+                    return $query->where(function ($q) use ($value, $term) {
+                        $q->where('symbol', $value)
+                          ->orWhere('registrant_name', 'ilike', $term)
+                          ->orWhere('reporting_person', 'ilike', $term);
+                    });
+                })
+                ->when(data_get($this->filters, 'transaction_codes'), function ($query) {
+                    return $query->whereIn('transaction_code', $this->filters['transaction_codes']);
+                })
+                ->when(data_get($this->filters, 'relationships'), function ($query) {
+                    return $query->whereIn('relationship_of_reporting_person', $this->filters['relationships']);
+                })
+                ->when(data_get($this->filters, 'transaction_value'), function ($query) {
+                    $min = intval(data_get($this->filters, 'transaction_value.min')) * 1000;
+                    $max = intval(data_get($this->filters, 'transaction_value.max')) * 1000;
+    
+                    return $query->whereBetween(DB::raw('amount_of_securities * price_per_security'), [$min, $max]);
+                })
+                ->when(data_get($this->filters, 'months'), function ($query) {
+                    $from = now()->subMonths($this->filters['months'])->startOfMonth()->toDateString();
+    
+                    return $query->where('transaction_date', '>=', $from);
+                })
+                ->select([
+                    'symbol',
+                    'registrant_name',
+                    'reporting_person',
+                    'relationship_of_reporting_person',
+                    'transaction_code',
+                    'amount_of_securities',
+                    'price_per_security',
+                    'ownership_percentage',
+                    'market_cap',
+                    'transaction_date',
+                    'securities_owned_following_transaction',
+                    DB::raw('amount_of_securities * price_per_security as value'),
+                ])
+                ->get()->toArray(); // Ensure the results are in a simple array format    
+            return $results;
+        });
     }
 
     public function columns(): array

@@ -35,7 +35,7 @@ class Table extends BaseTable
     public function datasource()
     {
         $cacheKey = 'event_filings_datasource_' . md5(serialize($this->config) . $this->search);
-        $cacheDuration = 60; 
+        $cacheDuration = 3600; 
     
         // TODO: Review PowerGrid's automatic caching behavior and its impact on Redis cache entries. Currently, PowerGrid caches the latest datasource response indefinitely, which can lead to duplicate cache entries (one for the latest search and one for the specific cache key). Consider monitoring the cache usage closely and evaluate the necessity of disabling PowerGrid's 'cached_data' feature (set 'cached_data' => false in config/livewire-powergrid.php) to prevent redundant caching.
         $result = Cache::remember($cacheKey, $cacheDuration, function () {
