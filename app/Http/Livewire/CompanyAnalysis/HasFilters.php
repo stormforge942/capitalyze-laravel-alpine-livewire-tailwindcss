@@ -41,15 +41,12 @@ trait HasFilters
 
         $formatted = number_format($value, $this->decimalPlaces);
 
-        // remove trailing zeros
-        $formatted = preg_replace('/\.?0+$/', '', $formatted);
-
         return $formatted;
     }
 
     private function formatPercentageValue($value): string
     {
-        return round($value, $this->decimalPlaces) . '%';
+        return number_format($value, $this->decimalPlaces) . '%';
     }
 
     private function selectDates($dates)
