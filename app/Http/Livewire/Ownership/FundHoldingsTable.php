@@ -13,6 +13,7 @@ use PowerComponents\LivewirePowerGrid\PowerGridEloquent;
 class FundHoldingsTable extends BaseTable
 {
     public $quarter = null;
+    public bool $redirectToOverview = false;
     public string $cik = '';
     public string $sortField = 'weight';
     public string $sortDirection = 'desc';
@@ -54,7 +55,22 @@ class FundHoldingsTable extends BaseTable
         return PowerGrid::eloquent()
             ->addColumn('symbol')
             ->addColumn('name', function (CompanyFilings $companyFilings) {
-                return '<a href=" ' . route('company.ownership', ['ticker' => $companyFilings->symbol, 'start' => OwnershipHistoryService::getCompany()]) . ' " class="text-blue">' . $companyFilings->symbol . (!empty($companyFilings->name_of_issuer) ? ' <span class="text-xs font-light">(' . $companyFilings->name_of_issuer . ')<span>' : '') . '</button>';
+                if ($this->redirectToOverview) {
+                    $href = route('company.profile', $companyFilings->symbol);
+                } else {
+                    if ($companyFilings->symbol === OwnershipHistoryService::getCompany()) {
+                        $attrs = ['ticker' => $companyFilings->symbol];
+                    } else {
+                        $attrs = ['ticker' => $companyFilings->symbol, 'start' => OwnershipHistoryService::getCompany()];
+                    }
+
+                    $href = route(
+                        'company.ownership',
+                        $attrs
+                    );
+                }
+
+                return '<a href=" ' . $href . ' " class="text-blue">' . $companyFilings->symbol . (!empty($companyFilings->name_of_issuer) ? ' <span class="text-xs font-light">(' . $companyFilings->name_of_issuer . ')<span>' : '') . '</button>';
             })
             ->addColumn('ssh_prnamt', function (CompanyFilings $companyFilings) {
                 return number_format($companyFilings->ssh_prnamt);

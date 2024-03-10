@@ -228,7 +228,8 @@ class FundSummary extends Component
         $min = $topBuys->min('change_in_shares');
 
         $topBuys = $topBuys->map(function ($item) use ($max, $min) {
-            $item->width = ((($item->change_in_shares - $min) / ($max - $min)) * 80) + 10;
+            $diff = $max - $min;
+            $item->width = ($diff ? (($item->change_in_shares - $min) / ($diff)) : 0 * 80) + 10;
             return $item;
         });
 
@@ -249,7 +250,8 @@ class FundSummary extends Component
         $min = $topSells->min('change_in_shares');
 
         $topSells = $topSells->map(function ($item) use ($max, $min) {
-            $item->width = 90 - (($item->change_in_shares - $min) / ($max - $min)) * 80;
+            $diff = $max - $min;
+            $item->width = ($diff ? (($item->change_in_shares - $min) / ($diff)) : 0 * 80) + 10;
             return $item;
         });
 
