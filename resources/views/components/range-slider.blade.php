@@ -1,9 +1,11 @@
 <div class="years-range-wrapper" x-data="{
     value: @json($value),
     show: false,
+    min: {{ $min }},
+    max: {{ $max }},
     init() {
         if (!this.value) {
-            this.value = [{{ $min }}, {{ $max }}];
+            this.value = [this.min, this.max];
         }
 
         this.$nextTick(() => {
@@ -17,8 +19,8 @@
 
         if (!el) return;
 
-        let rangeMin = {{ $min }};
-        let rangeMax = {{ $max }};
+        let rangeMin = this.min;
+        let rangeMax = this.max;
 
         const alpineThis = this;
 
@@ -31,7 +33,7 @@
             step: 1,
             min: rangeMin,
             max: rangeMax,
-            value: @json($value),
+            value: [...this.value],
             rangeSlideDisabled: true,
             onInput: (value) => {
                 this.value = value;
