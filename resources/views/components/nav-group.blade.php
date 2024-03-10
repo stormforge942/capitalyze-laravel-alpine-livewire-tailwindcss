@@ -43,7 +43,7 @@
             </div>
         </x-dropdown>
 
-        <ul class="mt-4 space-y-2" x-show="collapsed ? false : (expanded ? true : false)">
+        <ul class="mt-2.5 space-y-2" x-show="collapsed ? false : (expanded ? true : false)">
             @foreach ($items as $item)
                 <li class="2xl:pl-4">
                     <a href="{{ $item['url'] ?? '#' }}"
