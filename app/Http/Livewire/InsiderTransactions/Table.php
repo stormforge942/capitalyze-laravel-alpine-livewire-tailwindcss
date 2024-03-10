@@ -34,7 +34,7 @@ class Table extends BaseTable
     
         $cacheDuration = 3600;
     
-        return Cache::remember($cacheKey, $cacheDuration, function () {
+        // return Cache::remember($cacheKey, $cacheDuration, function () {
             $results = DB::connection('pgsql-xbrl')
                 ->table('insider_transactions')
                 ->when(data_get($this->filters, 'search'), function ($query) {
@@ -80,7 +80,7 @@ class Table extends BaseTable
                 ])
                 ->get()->toArray(); // Ensure the results are in a simple array format    
             return $results;
-        });
+        // });
     }
 
     public function columns(): array
