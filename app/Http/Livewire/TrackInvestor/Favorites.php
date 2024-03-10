@@ -61,14 +61,9 @@ class Favorites extends Component
 
         return DB::connection('pgsql-xbrl')
             ->table('filings_summary')
-            ->select('fs.investor_name', 'fs.total_value', 'fs.cik', 'fs.portfolio_size', 'fs.change_in_total_value', 'latest_dates.max_date')
-            ->from('filings_summary as fs')
-            ->join(DB::raw('(SELECT investor_name, cik, MAX(date) AS max_date FROM filings_summary GROUP BY investor_name, cik) as latest_dates'), function ($join) {
-                $join->on('fs.investor_name', '=', 'latest_dates.investor_name');
-                $join->on('fs.cik', '=', 'latest_dates.cik');
-                $join->on('fs.date', '=', 'latest_dates.max_date');
-            })
-            ->whereIn('fs.cik', $funds)
+            ->select('investor_name', 'cik', 'total_value', 'portfolio_size', 'change_in_total_value')
+            ->where('is_latest', true)
+            ->whereIn('cik', $funds)
             ->get()
             // sort the collection by the order of the $funds array
             ->sortBy(function ($item) use ($funds) {
