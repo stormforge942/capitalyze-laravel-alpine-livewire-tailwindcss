@@ -43,14 +43,14 @@
 
 <div class="mt-6 relative">
     <div class="rounded-lg sticky-table-container">
-        <table class="max-w-[max-content] mx-auto text-right whitespace-nowrap company-report-table" :class="tableClasses">
+        <table class="round-lg max-w-[max-content] mx-auto text-right whitespace-nowrap company-report-table" :class="tableClasses">
             <thead>
                 <tr class="capitalize text-dark bg-[#EDEDED] text-base font-bold">
-                    <th class="pl-6 py-2 bg-[#EDEDED] text-left">
+                    <th class="pl-8 py-2 bg-[#EDEDED] text-left">
                         {{ $company['name'] }} ({{ $company['ticker'] }})
                     </th>
                     <template x-for="date in formattedTableDates" :key="date">
-                        <th class="py-2 last:pr-6" x-text="formattedTableDate(date)" style="min-width: 150px"></th>
+                        <th class="pl-6 py-2 last:pr-8" x-text="formattedTableDate(date)"></th>
                     </template>
                 </tr>
             </thead>
@@ -121,7 +121,7 @@
                                 </div>
                             </td>
                             <template x-for="date in formattedTableDates" :key="date">
-                                <td class="pl-2 last:pr-6"
+                                <td class="pl-6 last:pr-8"
                                     :class="[
                                         isLast ? 'last:rounded-br-lg' : '',
                                         index === 0 ? 'last:rounded-tr-lg' : '',
