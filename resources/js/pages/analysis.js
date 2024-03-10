@@ -16,8 +16,9 @@ const tooltipConfig = (config) => ({
             let y = context.raw.y
 
             if (
-                config.type !== "percentage" &&
-                context?.dataset?.dataType !== "percentage"
+                (config.type !== "percentage" &&
+                    context?.dataset?.dataType !== "percentage") ||
+                context?.dataset?.dataType === "value"
             ) {
                 y = String(formatNumber(y, config.number))
             }

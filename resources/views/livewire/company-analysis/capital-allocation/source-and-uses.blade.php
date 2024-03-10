@@ -38,7 +38,7 @@
             </div>
 
             <div class="mt-6 overflow-auto relative">
-                <div class="mt-6 rounded-lg sticky-table-container" x-show="subSubTab === 'sources'" x-cloak>
+                <div class="rounded-lg sticky-table-container" x-show="subSubTab === 'sources'" x-cloak>
                     <table class="w-full text-right whitespace-nowrap {{ sticky_table_class($freezePane) }}">
                         <thead class="font-sm font-semibold capitalize text-dark">
                             <tr class="font-bold text-base">
@@ -204,7 +204,7 @@
                     </table>
                 </div>
 
-                <div class="mt-6 rounded-lg sticky-table-container" x-show="subSubTab === 'uses'" x-cloak>
+                <div class="rounded-lg sticky-table-container" x-show="subSubTab === 'uses'" x-cloak>
                     <table class="w-full text-right whitespace-nowrap {{ sticky_table_class($freezePane) }}">
                         <thead class="font-sm font-semibold capitalize text-dark">
                             <tr class="font-bold text-base">
@@ -229,7 +229,7 @@
                                     <?php $value = $data['uses']['acquisition']['timeline'][$date]; ?>
 
                                     <td
-                                        class="pl-6 pt-4 last:pr-8 @if (!$loop->first) last:rounded-tr-lg @endif">
+                                        class="pl-6 pt-2 pb-1 last:pr-8 @if (!$loop->first) last:rounded-tr-lg @endif">
                                         <x-review-number-button x-data="{ amount: '{{ $value['value'] }}', date: '{{ $date }}' }">
                                             {!! redIfNegative($value) !!}
                                         </x-review-number-button>

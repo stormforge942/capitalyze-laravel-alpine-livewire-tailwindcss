@@ -39,7 +39,7 @@
             </div>
 
             <div class="mt-6 overflow-auto">
-                <div class="mt-6 rounded-lg sticky-table-container" x-show="subSubTab === 'book-value'" x-cloak>
+                <div class="rounded-lg sticky-table-container" x-show="subSubTab === 'book-value'" x-cloak>
                     <table class="w-full text-right whitespace-nowrap {{ sticky_table_class($freezePane) }}">
                         <thead class="font-sm font-semibold capitalize text-dark">
                             <tr class="font-bold text-base">
@@ -247,7 +247,7 @@
                     </table>
                 </div>
 
-                <div class="mt-6 rounded-lg sticky-table-container" x-show="subSubTab === 'market-value'" x-cloak>
+                <div class="rounded-lg sticky-table-container" x-show="subSubTab === 'market-value'" x-cloak>
                     <table class="w-full text-right whitespace-nowrap {{ sticky_table_class($freezePane) }}">
                         <thead class="font-sm font-semibold capitalize text-dark">
                             <tr class="font-bold text-base">

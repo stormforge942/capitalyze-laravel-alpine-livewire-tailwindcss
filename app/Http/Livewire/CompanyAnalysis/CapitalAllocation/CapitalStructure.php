@@ -71,6 +71,7 @@ class CapitalStructure extends Component
             "backgroundColor" => '#121A0F',
             'yAxisID' => 'y1',
             'pointRadius' => 0,
+            'dataType' => 'percentage',
         ];
 
         $datasets[] = [

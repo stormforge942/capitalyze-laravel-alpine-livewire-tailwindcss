@@ -1,12 +1,12 @@
 .download-buttons-wrapper {
-    color: #121A0F;
+    color: #121a0f;
     text-align: center;
     font-size: 13px;
     font-style: normal;
     font-weight: 500;
     line-height: 16px;
     text-transform: capitalize;
-    background: #EAEAEA;
+    background: #eaeaea;
     height: 4em;
     border-radius: 0.7em;
 }
@@ -34,15 +34,16 @@
     margin-right: 0.3em;
 }
 
-
 div.range-slider {
     height: 4px;
-    background: #D4DDD7;
+    background: #d4ddd7;
     max-width: 100%;
 }
-.range-slider input[type=range] {display: none;}
+.range-slider input[type="range"] {
+    display: none;
+}
 div.range-slider .range-slider__range {
-    background: #464E49;
+    background: #464e49;
 }
 .range-slider div.range-slider__thumb {
     width: 47px;
@@ -50,11 +51,11 @@ div.range-slider .range-slider__range {
     border-radius: 8px;
 }
 .range-slider div.range-slider__thumb[data-lower] {
-    background: #464E49;
+    background: #464e49;
     color: white;
 }
 .range-slider div.range-slider__thumb[data-upper] {
-    background: #464E49;
+    background: #464e49;
     color: white;
 }
 
@@ -73,11 +74,11 @@ div.range-slider .range-slider__range {
 
 .years-range-wrapper {
     position: relative;
-    width: 80%;
+    @apply w-full md:w-[80%];
 }
 
 .currency-font {
-    color: #121A0F;
+    color: #121a0f;
     font-size: 14px;
     font-style: normal;
     font-weight: 400;
