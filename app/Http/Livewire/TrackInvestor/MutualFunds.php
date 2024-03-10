@@ -7,6 +7,7 @@ use Livewire\Component;
 use Illuminate\Support\Facades\DB;
 use App\Models\TrackInvestorFavorite;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Cache;
 
 class MutualFunds extends Component
 {
@@ -43,41 +44,38 @@ class MutualFunds extends Component
 
     public function render()
     {
-        $favorites = TrackInvestorFavorite::query()
-            ->where('user_id', Auth::id())
-            ->where('type', TrackInvestorFavorite::TYPE_MUTUAL_FUND)
-            ->pluck('identifier')
-            ->toArray();
-
-        // to get the values of max date we need join the table with itself
-        $funds = DB::connection('pgsql-xbrl')
-            ->table('mutual_fund_holdings_summary')
-            ->select('registrant_name', 'fund_symbol', 'cik', 'fund_symbol', 'series_id', 'class_id', 'class_name', 'total_value', 'portfolio_size', 'change_in_total_value', 'date')
-            ->from('mutual_fund_holdings_summary')
-            ->where('is_latest', true)
-            ->when($this->search, function ($q) {
-                return $q->where(DB::raw('registrant_name'), 'ilike', "%$this->search%")
-                    ->orWhere(DB::raw('fund_symbol'), strtoupper($this->search));
-            })
-            ->orderBy('total_value', 'desc')
-            ->paginate($this->perPage)
-            ->through(function ($item) use ($favorites) {
-                $item->id = json_encode([
-                    'registrant_name' => $item->registrant_name,
-                    'cik' => $item->cik,
-                    'fund_symbol' => $item->fund_symbol,
-                    'series_id' => $item->series_id,
-                    'class_id' => $item->class_id,
-                    'class_name' => $item->class_name,
-                ]);
-
-                $item->isFavorite = in_array($item->id, $favorites);
-
-                return (array) $item;
-            });
-
+        $cacheKey = 'mutual_funds_' . md5($this->search . '_perPage_' . $this->perPage);
+    
+        $funds = Cache::remember($cacheKey, 360, function () {
+            return DB::connection('pgsql-xbrl')
+                ->table('mutual_fund_holdings_summary')
+                ->select('registrant_name', 'fund_symbol', 'cik', 'series_id', 'class_id', 'class_name', 'total_value', 'portfolio_size', 'change_in_total_value', 'date')
+                ->where('is_latest', true)
+                ->when($this->search, function ($query) {
+                    return $query->where(DB::raw('registrant_name'), 'ilike', "%{$this->search}%")
+                                 ->orWhere(DB::raw('fund_symbol'), 'ilike', "%{$this->search}%");
+                })
+                ->orderBy('total_value', 'desc')
+                ->paginate($this->perPage);
+        });
+    
+        $favorites = TrackInvestorFavorite::where('user_id', Auth::id())
+                                           ->where('type', TrackInvestorFavorite::TYPE_MUTUAL_FUND)
+                                           ->pluck('identifier')
+                                           ->toArray();
+    
+        $transformedFunds = $funds->getCollection()->map(function ($fund) use ($favorites) {
+            $fundArray = (array)$fund;
+            $fundArray['isFavorite'] = in_array($fundArray['cik'], $favorites);
+            return $fundArray;
+        });
+    
+        $funds->setCollection(collect($transformedFunds));
+    
         return view('livewire.track-investor.mutual-funds', [
             'funds' => $funds,
         ]);
     }
+    
+    
 }

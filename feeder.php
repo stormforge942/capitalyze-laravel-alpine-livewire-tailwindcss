@@ -184,10 +184,9 @@ function fillData($xbrl, $replica, $tables, $symbols)
             $ciks = array_map(fn ($cik) => "'$cik'", $ciks);
             $ciks = implode(',', $ciks);
 
-
-            if ($table === 'filings_summary') {
+            if ($table === 'filings_summary' && $ciks != '') {
                 $stmt = $xbrl->query("SELECT * FROM $table WHERE is_latest=true and cik in ($ciks)");
-            } else {
+            } else if ($ciks != '') {
                 $stmt = $xbrl->query("SELECT * FROM $table WHERE cik in ($ciks) order by date desc limit 5000");
             }
         } else if ($table === 'mutual_fund_holdings_summary') {
@@ -209,6 +208,7 @@ function fillData($xbrl, $replica, $tables, $symbols)
 
         $data = $stmt->fetchAll(PDO::FETCH_ASSOC);
 
+        if (count($data) === 0) continue;
         $columns = array_keys($data[0]);
         $columns = implode(', ', $columns);
 
