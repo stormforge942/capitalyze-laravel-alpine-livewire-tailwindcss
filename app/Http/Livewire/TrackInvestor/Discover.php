@@ -7,6 +7,7 @@ use Livewire\Component;
 use Illuminate\Support\Facades\DB;
 use App\Models\TrackInvestorFavorite;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Cache;
 
 class Discover extends Component
 {
@@ -42,30 +43,39 @@ class Discover extends Component
     }
 
     public function render()
-    {
-        $favorites = TrackInvestorFavorite::query()
-            ->where('user_id', Auth::id())
-            ->where('type', TrackInvestorFavorite::TYPE_FUND)
-            ->pluck('identifier')
-            ->toArray();
+{
+    $cacheKey = 'funds_' . md5($this->search . '_perPage_' . $this->perPage);
 
-        $funds = DB::connection('pgsql-xbrl')
+    $funds = Cache::remember($cacheKey, 360, function () {
+        return DB::connection('pgsql-xbrl')
             ->table('filings_summary')
             ->select('investor_name', 'cik', 'total_value', 'portfolio_size', 'change_in_total_value')
             ->where('is_latest', true)
-            ->when($this->search, function ($q) {
-                return $q->where(DB::raw('investor_name'), 'ilike', "%$this->search%")
-                    ->orWhere(DB::raw('cik'), $this->search);
+            ->when($this->search, function ($query) {
+                return $query->where(DB::raw('investor_name'), 'ilike', "%{$this->search}%")
+                             ->orWhere(DB::raw('cik'), $this->search);
             })
             ->orderBy('total_value', 'desc')
-            ->paginate($this->perPage)
-            ->through(function ($item) use ($favorites) {
-                $item->isFavorite = in_array($item->cik, $favorites);
-                return (array) $item;
-            });
+            ->paginate($this->perPage);
+    });
 
-        return view('livewire.track-investor.discover', [
-            'funds' => $funds,
-        ]);
-    }
+    $favorites = TrackInvestorFavorite::where('user_id', Auth::id())
+                                      ->where('type', TrackInvestorFavorite::TYPE_FUND)
+                                      ->pluck('identifier')
+                                      ->toArray();
+
+    $transformedFunds = $funds->getCollection()->map(function ($fund) use ($favorites) {
+        $fundArray = (array)$fund;
+        $fundArray['isFavorite'] = in_array($fundArray['cik'], $favorites); 
+        return $fundArray;
+    });
+
+    $funds->setCollection(collect($transformedFunds));
+
+    return view('livewire.track-investor.discover', [
+        'funds' => $funds,
+    ]);
+}
+
+
 }
