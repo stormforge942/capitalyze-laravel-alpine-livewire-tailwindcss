@@ -45,11 +45,15 @@
     isInRange(item) {
         return item >= this.value[0] && item <= this.value[1];
     },
+
+    get items() {
+        return Array.from({ length: this.max - this.min + 1 }, (_, i) => i + this.min);
+    }
 }" {{ $attributes }} :class="!show ? 'invisible' : ''">
     <div class="dots-wrapper">
-        @foreach (range($min, $max) as $item)
-            <span :class="isInRange({{ $item }}) ? 'active-dots' : 'inactive-dots'"></span>
-        @endforeach
+        <template x-for="item in items" :key="item">
+            <span :class="isInRange(item) ? 'active-dots' : 'inactive-dots'"></span>
+        </template>
     </div>
     <div class="range-slider" wire:ignore></div>
 </div>

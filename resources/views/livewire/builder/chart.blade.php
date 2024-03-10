@@ -66,12 +66,13 @@
         </div>
 
         <div>
-            <livewire:builder.select-chart-metrics :options="$metrics" />
+            <livewire:builder.select-chart-metrics :options="$metrics" :metrics-map="$flattenedMetrics" />
         </div>
     </div>
 
     <div x-data="{
         _raw: {},
+        metricsMap: {},
         data: {},
         dates: [],
         period: 'annual',
@@ -80,12 +81,18 @@
         dateRange: [2018, (new Date()).getFullYear()],
         init() {
             this._raw = @js($data);
+            this.metricsMap = @js($flattenedMetrics);
     
             this.data = this._raw.data[this.period];
             this.dates = this.filterSelectedDates(this._raw.dates[this.period]);
     
             this.$watch('period', (value) => {
                 this.data = this._raw.data[value];
+                this.dates = this.filterSelectedDates(this._raw.dates[this.period]);
+                this.$dispatch('update-chart');
+            })
+    
+            this.$watch('dateRange', (value) => {
                 this.dates = this.filterSelectedDates(this._raw.dates[this.period]);
             })
         },
@@ -104,12 +111,21 @@
 
             <div class="flex-1 -translate-y-[50%]">
                 <x-range-slider :min="2005" :max="(int) date('Y')" :value="[2018, (int) date('Y')]" x-init="() => {
+                    const dates = _raw.dates[period];
+                
                     min = parseInt(dates[0].split('-')[0]);
                     max = parseInt(dates[dates.length - 1].split('-')[0]);
                 
-                    value = [min, max];
+                    $nextTick(() => {
+                        value = [
+                            Math.max(max - 5, min),
+                            max
+                        ]
+                
+                        initSlider();
+                    })
                 }"
-                    x-model="dateRange"></x-range-slider>
+                    @range-updated="dateRange = $event.detail; $dispatch('update-chart')"></x-range-slider>
             </div>
 
             <div class="flex items-center gap-x-1">
@@ -200,26 +216,36 @@
             <div class="mt-6 space-y-6">
                 <template x-for="(metrics, company) in data">
                     <div x-data="{
+                        chart: null,
                         init() {
+                            this.initChart();
+                        },
+                        initChart() {
                             const canvas = this.$el.querySelector('canvas');
                     
                             let datasets = [];
                     
                             Object.keys(metrics).forEach((key) => {
                                 const data = metrics[key];
+                                const metric = this.metricsMap[key];
                     
                                 datasets.push({
-                                    label: key,
+                                    label: metric.title,
                                     data: this.dates.map((date) => {
                                         return {
                                             x: date,
                                             y: data[date] || null
                                         }
                                     }).filter((item) => item.y !== null),
+                                    type: metric.type || 'bar'
                                 })
                             });
-                                        
-                            new Chart(canvas, {
+                    
+                            if (this.chart) {
+                                this.chart.destroy();
+                            }
+                    
+                            this.chart = new Chart(canvas, {
                                 type: 'bar',
                                 data: {
                                     datasets,
@@ -244,12 +270,15 @@
                                                 display: false
                                             },
                                             beginAtZero: false,
+                                            ticks: {
+                                                callback: window.formatCmpctNumber
+                                            }
                                         }
                                     }
                                 }
                             })
                         }
-                    }">
+                    }" @update-chart.window="$nextTick(() => initChart())">
                         <p class="font-bold text-blue text-md" x-text="company"></p>
 
                         <div class="mt-4">
@@ -258,6 +287,36 @@
                     </div>
                 </template>
             </div>
+        </div>
+
+        <div class="mt-6 rounded-lg sticky-table-container">
+            <table
+                class="round-lg max-w-[max-content] mx-auto text-right whitespace-nowrap sticky-table sticky-column">
+                <thead>
+                    <tr class="capitalize text-dark bg-[#EDEDED] text-base font-bold">
+                        <th class="pl-8 py-2 bg-[#EDEDED] text-left">
+                            Metric
+                        </th>
+                        <template x-for="date in dates" :key="date">
+                            <th class="pl-6 py-2 last:pr-8" x-text="date"></th>
+                        </template>
+                    </tr>
+                </thead>
+                <template x-for="(metrics, company) in data" :key="company">
+                    <tbody class="report-tbody">
+                        <template x-for="(timeline, metric) in metrics" :key="metric">
+                            <tr class="border-b last:border-b-0">
+                                <td class="pl-6 text-left py-2">
+                                    <span x-text="`${company} - ${metricsMap[metric].title}`"></span>
+                                </td>
+                                <template x-for="date in dates" :key="date">
+                                    <td class="pl-6 last:pr-8 py-2 bg-white" x-text="timeline[date] || '-'"></td>
+                                </template>
+                            </tr>
+                        </template>
+                    </tbody>
+                </template>
+            </table>
         </div>
     </div>
 

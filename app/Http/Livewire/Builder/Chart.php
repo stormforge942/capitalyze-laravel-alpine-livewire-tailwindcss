@@ -39,127 +39,132 @@ class Chart extends Component
 
     public function render()
     {
-        return view('livewire.builder.chart', [
-            'data' => $this->getData(),
-            'metrics' => [
-                [
-                    'title' => 'Popular Selections',
-                    'has_children' => false,
-                    'items' => [
-                        'income_statement||Total Revenue' => [
+        $metrics = [
+            [
+                'title' => 'Popular Selections',
+                'has_children' => false,
+                'items' => [
+                    'income_statement||Total Revenues' => [
+                        'title' => 'Total Revenues',
+                    ],
+                    'income_statement||Total Operating Income' => [
+                        'title' => 'Total Operating Income',
+                    ],
+                    'income_statement||Total Operating Expenses' => [
+                        'title' => 'Total Operating Expenses',
+                    ],
+                    'balance_sheet||Cash And Equivalents' => [
+                        'title' => 'Cash & Equivalents',
+                    ],
+                    'balance_sheet||Total Receivables' => [
+                        'title' => 'Total Receivables',
+                    ],
+                    'balance_sheet||Total Current Assets' => [
+                        'title' => 'Total Current Assets',
+                    ],
+                ]
+            ],
+            [
+                'title' => 'Balance Sheet',
+                'has_children' => false,
+                'items' => [
+                    'balance_sheet||Cash And Equivalents' => [
+                        'title' => 'Cash & Equivalents',
+                        'type' => 'line',
+                    ],
+                    'balance_sheet||Short Term Investments' => [
+                        'title' => 'Short Term Investments',
+                    ],
+                    'balance_sheet||Total Cash And Short Term Investments' => [
+                        'title' => 'Total Cash And Short Term Investments',
+                    ],
+                    'balance_sheet||Accounts Receivable' => [
+                        'title' => 'Accounts Receivable',
+                    ],
+                    'balance_sheet||Other Receivable' => [
+                        'title' => 'Other Receivable',
+                    ],
+                    'balance_sheet||Total Receivables' => [
+                        'title' => 'Total Receivables',
+                        'type' => 'line',
+                    ],
+                    'balance_sheet||Inventory' => [
+                        'title' => 'Inventory',
+                    ],
+                    'balance_sheet||Deferred Tax Assets Current' => [
+                        'title' => 'Deferred Tax Assets Current',
+                    ],
+                    'balance_sheet||Other Current Assets' => [
+                        'title' => 'Other Current Assets',
+                    ],
+                    'balance_sheet||Total Current Assets' => [
+                        'title' => 'Total Current Assets',
+                    ],
+                ]
+            ],
+            [
+                'title' => 'Income Statement',
+                'has_children' => true,
+                'items' => [
+                    'Revenue' => [
+                        'income_statement||Total Revenues' => [
                             'title' => 'Total Revenue',
                         ],
+                        'income_statement||Cost of Goods Sold' => [
+                            'title' => 'Cost of Goods Sold',
+                        ],
+                        'income_statement||Total Gross Profit' => [
+                            'title' => 'Total Gross Profit',
+                        ],
+                    ],
+                    'Income' => [
                         'income_statement||Total Operating Income' => [
                             'title' => 'Total Operating Income',
+                        ],
+                        'income_statement||Interest & Investment Income' => [
+                            'title' => 'Interest & Investment Income',
+                        ],
+                        'income_statement||Other Non Operating Income (Expenses)' => [
+                            'title' => 'Other Non Operating Income (Expenses)',
+                        ],
+                        'income_statement||Earnings From Continuing Operations' => [
+                            'title' => 'Earnings From Continuing Operations',
+                        ],
+                        'income_statement||Net Income to Company' => [
+                            'title' => 'Net Income to Company',
+                        ],
+                        'income_statement||Net Income to Common' => [
+                            'title' => 'Net Income to Common',
+                        ],
+                        'income_statement||Earnings Before Taxes (EBT)' => [
+                            'title' => 'Earnings Before Taxes (EBT)',
+                        ],
+                    ],
+                    'Expenses' => [
+                        'income_statement||SG&A Expenses' => [
+                            'title' => 'SG&A Expenses',
+                        ],
+                        'income_statement||R&D Expenses' => [
+                            'title' => 'R&D Expenses',
                         ],
                         'income_statement||Total Operating Expenses' => [
                             'title' => 'Total Operating Expenses',
                         ],
-                        'balance_sheet||Cash & Equivalents' => [
-                            'title' => 'Cash & Equivalents',
+                        'income_statement||Interest Expense' => [
+                            'title' => 'Interest Expense',
                         ],
-                        'balance_sheet||Total Receivable' => [
-                            'title' => 'Total Receivable',
+                        'income_statement||Income Tax Expense' => [
+                            'title' => 'Income Tax Expense',
                         ],
-                        'balance_sheet||Total Current Assets' => [
-                            'title' => 'Total Current Assets',
-                        ],
-                    ]
-                ],
-                [
-                    'title' => 'Balance Sheet',
-                    'has_children' => false,
-                    'items' => [
-                        'balance_sheet||Cash & Equivalents' => [
-                            'title' => 'Cash & Equivalents',
-                        ],
-                        'balance_sheet||Short Term Investments' => [
-                            'title' => 'Short Term Investments',
-                        ],
-                        'balance_sheet||Total Cash And Short Term Investments' => [
-                            'title' => 'Total Cash And Short Term Investments',
-                        ],
-                        'balance_sheet||Accounts Receivable' => [
-                            'title' => 'Accounts Receivable',
-                        ],
-                        'balance_sheet||Other Receivable' => [
-                            'title' => 'Other Receivable',
-                        ],
-                        'balance_sheet||Total Receivable' => [
-                            'title' => 'Total Receivable',
-                        ],
-                        'balance_sheet||Inventory' => [
-                            'title' => 'Inventory',
-                        ],
-                        'balance_sheet||Deferred Tax Assets Current' => [
-                            'title' => 'Deferred Tax Assets Current',
-                        ],
-                        'balance_sheet||Other Current Assets' => [
-                            'title' => 'Other Current Assets',
-                        ],
-                        'balance_sheet||Total Current Assets' => [
-                            'title' => 'Total Current Assets',
-                        ],
-                    ]
-                ],
-                [
-                    'title' => 'Income Statement',
-                    'has_children' => true,
-                    'items' => [
-                        'Revenue' => [
-                            'income_statement||Total Revenue' => [
-                                'title' => 'Total Revenue',
-                            ],
-                            'income_statement||Cost of Goods Sold' => [
-                                'title' => 'Cost of Goods Sold',
-                            ],
-                            'income_statement||Total Gross Profit' => [
-                                'title' => 'Total Gross Profit',
-                            ],
-                        ],
-                        'Income' => [
-                            'income_statement||Total Operating Income' => [
-                                'title' => 'Total Operating Income',
-                            ],
-                            'income_statement||Interest & Investment Income' => [
-                                'title' => 'Interest & Investment Income',
-                            ],
-                            'income_statement||Other Non Operating Income (Expenses)' => [
-                                'title' => 'Other Non Operating Income (Expenses)',
-                            ],
-                            'income_statement||Earnings From Continuing Operations' => [
-                                'title' => 'Earnings From Continuing Operations',
-                            ],
-                            'income_statement||Net Income to Company' => [
-                                'title' => 'Net Income to Company',
-                            ],
-                            'income_statement||Net Income to Common' => [
-                                'title' => 'Net Income to Common',
-                            ],
-                            'income_statement||Earnings Before Taxes (EBT)' => [
-                                'title' => 'Earnings Before Taxes (EBT)',
-                            ],
-                        ],
-                        'Expenses' => [
-                            'income_statement||SG&A Expenses' => [
-                                'title' => 'SG&A Expenses',
-                            ],
-                            'income_statement||R&D Expenses' => [
-                                'title' => 'R&D Expenses',
-                            ],
-                            'income_statement||Total Operating Expenses' => [
-                                'title' => 'Total Operating Expenses',
-                            ],
-                            'income_statement||Interest Expense' => [
-                                'title' => 'Interest Expense',
-                            ],
-                            'income_statement||Income Tax Expense' => [
-                                'title' => 'Income Tax Expense',
-                            ],
-                        ],
-                    ]
-                ],
-            ]
+                    ],
+                ]
+            ],
+        ];
+
+        return view('livewire.builder.chart', [
+            'data' => $this->getData(),
+            'metrics' => $metrics,
+            'flattenedMetrics' => $this->flattenMetrics($metrics),
         ]);
     }
 
@@ -207,11 +212,11 @@ class Chart extends Component
         $companies = ['AAPL', 'MSFT'];
 
         $metrics = [
-            'income_statement||Total Revenue',
+            'income_statement||Total Revenues',
             'income_statement||Total Operating Income',
             'income_statement||Total Operating Expenses',
-            'balance_sheet||Cash & Equivalents',
-            'balance_sheet||Total Receivable',
+            'balance_sheet||Cash And Equivalents',
+            'balance_sheet||Total Receivables',
             'balance_sheet||Total Current Assets',
         ];
 
@@ -309,5 +314,26 @@ class Chart extends Component
         }
 
         return $dates;
+    }
+
+    private function flattenMetrics($metrics)
+    {
+        $flattened = [];
+
+        foreach ($metrics as $metric) {
+            if ($metric['has_children']) {
+                $items = $metric['items'];
+            } else {
+                $items = [
+                    'Dummy' => $metric['items']
+                ];
+            }
+
+            foreach ($items as $item) {
+                $flattened = array_merge($flattened, $item);
+            }
+        }
+
+        return $flattened;
     }
 }
