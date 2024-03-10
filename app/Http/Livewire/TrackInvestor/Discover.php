@@ -46,7 +46,9 @@ class Discover extends Component
 {
     $cacheKey = 'funds_' . md5($this->search . '_perPage_' . $this->perPage);
 
-    $funds = Cache::remember($cacheKey, 360, function () {
+    $cacheDuration = 60;
+
+    $funds = Cache::remember($cacheKey, $cacheDuration, function () {
         return DB::connection('pgsql-xbrl')
             ->table('filings_summary')
             ->select('investor_name', 'cik', 'total_value', 'portfolio_size', 'change_in_total_value')
