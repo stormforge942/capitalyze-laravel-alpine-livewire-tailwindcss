@@ -58,9 +58,15 @@ class FundHoldingsTable extends BaseTable
                 if ($this->redirectToOverview) {
                     $href = route('company.profile', $companyFilings->symbol);
                 } else {
+                    if ($companyFilings->symbol === OwnershipHistoryService::getCompany()) {
+                        $attrs = ['ticker' => $companyFilings->symbol];
+                    } else {
+                        $attrs = ['ticker' => $companyFilings->symbol, 'start' => OwnershipHistoryService::getCompany()];
+                    }
+
                     $href = route(
                         'company.ownership',
-                        ['ticker' => $companyFilings->symbol, 'start' => OwnershipHistoryService::getCompany()]
+                        $attrs
                     );
                 }
 
