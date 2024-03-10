@@ -116,6 +116,8 @@ class FundHoldingsTable extends BaseTable
     public function columns(): array
     {
         return [
+            Column::make('', 'history'),
+
             Column::add()
                 ->title('Company')
                 ->field('name', 'symbol')
@@ -153,8 +155,6 @@ class FundHoldingsTable extends BaseTable
             Column::make('Source Date', 'report_calendar_or_quarter')
                 ->sortable()
                 ->headerAttribute('[&>div]:justify-end')->bodyAttribute('text-right'),
-
-            Column::make('', 'history'),
         ];
     }
 }

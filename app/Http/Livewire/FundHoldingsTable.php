@@ -179,7 +179,7 @@ final class FundHoldingsTable extends PowerGridComponent
             Column::make('Put or Call', 'put_call')
                 ->sortable(),
 
-            Column::make('Shares Held or Principal Amt', 'ssh_prnamt')
+            Column::make('Shares Held', 'ssh_prnamt')
                 ->sortable(),
 
             Column::make('Market Value', 'value')

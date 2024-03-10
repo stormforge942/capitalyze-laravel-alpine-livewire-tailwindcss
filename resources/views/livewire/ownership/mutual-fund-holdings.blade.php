@@ -97,7 +97,7 @@
                             <div class="p-6">
                                 <button type="button"
                                     class="w-full px-4 py-3 font-medium bg-green-dark hover:bg-opacity-80 rounded disabled:pointer-events-none disabled:bg-[#D1D3D5] disabled:text-gray-medium2 text-base"
-                                    @click="selectValue()" :disabled="isDisabled">
+                                    @click="selectValue" :disabled="isDisabled">
                                     Show Result
                                 </button>
                             </div>
@@ -108,5 +108,5 @@
         </div>
     </div>
 
-    <livewire:ownership.mutual-fund-holdings-table :fund="$fund" />
+    <livewire:ownership.mutual-fund-holdings-table :fund="$fund" :redirectToOverview="$redirectToOverview" />
 </div>

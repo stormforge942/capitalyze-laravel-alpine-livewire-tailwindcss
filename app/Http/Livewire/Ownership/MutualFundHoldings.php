@@ -14,6 +14,7 @@ class MutualFundHoldings extends Component
         'periodRange' => null,
         'search' => ''
     ];
+    public $redirectToOverview = false;
 
     public static function title(): string
     {
@@ -23,6 +24,7 @@ class MutualFundHoldings extends Component
     public function mount(array $data = [])
     {
         $this->fund = $data['fund'];
+        $this->redirectToOverview = request()->get('from') === 'track-investors';
     }
 
     public function render()

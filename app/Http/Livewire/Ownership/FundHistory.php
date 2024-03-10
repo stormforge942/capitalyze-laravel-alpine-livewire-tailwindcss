@@ -73,9 +73,9 @@ class FundHistory extends Modal
                     'label' => 'Common Stock Equivalent Held',
                     'data' => $data->pluck('ssh_prnamt')->toArray(),
                     'backgroundColor' => '#52D3A2',
-                    'hoverBackgroundColor' => '#13B05B',
                     'borderColor' => '#52D3A2',
                     'borderRadius' => 4,
+                    'maxBarThickness' => 150,
                 ],
             ]
         ];
