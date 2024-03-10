@@ -69,6 +69,7 @@ class FcfConversion extends Component
             "yAxisID" => "y1",
             "datalabels" => ['color' => '#fff'],
             'pointRadius' => 0,
+            'dataType' => 'value',
         ];
 
         $idx = 0;

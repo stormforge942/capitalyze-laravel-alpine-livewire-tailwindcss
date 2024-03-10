@@ -41,15 +41,12 @@ trait HasFilters
 
         $formatted = number_format($value, $this->decimalPlaces);
 
-        // remove trailing zeros
-        $formatted = preg_replace('/\.?0+$/', '', $formatted);
-
         return $formatted;
     }
 
     private function formatPercentageValue($value): string
     {
-        return round($value, $this->decimalPlaces) . '%';
+        return number_format($value, $this->decimalPlaces) . '%';
     }
 
     private function selectDates($dates)
@@ -100,7 +97,7 @@ trait HasFilters
 
     private function makeChartKey(): string
     {
-        return $this->period . '-' . json_encode($this->selectedDateRange);
+        return $this->period . '-' . json_encode($this->selectedDateRange) . '-' . $this->unit . '-' . $this->decimalPlaces;
     }
 
     private function rangeSliderKey(): string

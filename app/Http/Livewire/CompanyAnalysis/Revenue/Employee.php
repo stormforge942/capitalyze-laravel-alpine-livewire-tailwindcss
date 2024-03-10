@@ -87,6 +87,7 @@ class Employee extends Component
                 "borderColor" => '#C22929',
                 'type' => 'line',
                 'pointRadius' => 0,
+                'dataType' => 'percentage',
             ],
             [
                 'label' => 'Revenue / Employee',

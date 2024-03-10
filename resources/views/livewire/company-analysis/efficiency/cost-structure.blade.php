@@ -12,8 +12,8 @@
 
     <div class="mt-6 relative">
         @if (count($dates))
-            <x-analysis-chart-box title="Cost Structure" :company="$company" :chart="$chart"
-                function="renderCostStructureChart"></x-analysis-chart-box>
+            <x-analysis-chart-box title="Cost Structure" :company="$company" :chart="$chart" :unit="$unit"
+                :decimal-places="$decimalPlaces" function="renderCostStructureChart"></x-analysis-chart-box>
 
             <div class="mt-6 rounded-lg sticky-table-container">
                 <table class="w-full text-right whitespace-nowrap {{ sticky_table_class($freezePane) }}">
@@ -34,8 +34,7 @@
                     @foreach ($data['segments'] as $result)
                         <tbody class="bg-white">
                             <tr class="font-bold border-b border-[#D4DDD7]">
-                                <td
-                                    class="pl-8 py-2 text-left @if (!$loop->first) rounded-tl-lg @endif">
+                                <td class="pl-8 py-2 text-left @if (!$loop->first) rounded-tl-lg @endif">
                                     {{ $result['title'] }}
                                 </td>
                                 @foreach ($selectedDates as $date)

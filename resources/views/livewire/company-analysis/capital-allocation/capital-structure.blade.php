@@ -27,19 +27,19 @@
 
                 <div class="mt-6" x-show="subSubTab === 'book-value'" x-cloak>
                     <x-analysis-chart-box title="Capital Structure (Book Value)" :enclosed="true" :company="$company"
-                        :hasPercentageMix="false" :chart="$chart['book']" :toggle="false"
+                        :unit="$unit" :decimal-places="$decimalPlaces" :hasPercentageMix="false" :chart="$chart['book']" :toggle="false"
                         function="renderCapitalStructureChart"></x-analysis-chart-box>
                 </div>
 
                 <div class="mt-6" x-show="subSubTab === 'market-value'" x-cloak>
                     <x-analysis-chart-box title="Capital Structure (Market Value)" :enclosed="true" :company="$company"
-                        :hasPercentageMix="false" :chart="$chart['market']" :toggle="false"
+                        :unit="$unit" :decimal-places="$decimalPlaces" :hasPercentageMix="false" :chart="$chart['market']" :toggle="false"
                         function="renderCapitalStructureChart"></x-analysis-chart-box>
                 </div>
             </div>
 
             <div class="mt-6 overflow-auto">
-                <div class="mt-6 rounded-lg sticky-table-container" x-show="subSubTab === 'book-value'" x-cloak>
+                <div class="rounded-lg sticky-table-container" x-show="subSubTab === 'book-value'" x-cloak>
                     <table class="w-full text-right whitespace-nowrap {{ sticky_table_class($freezePane) }}">
                         <thead class="font-sm font-semibold capitalize text-dark">
                             <tr class="font-bold text-base">
@@ -247,7 +247,7 @@
                     </table>
                 </div>
 
-                <div class="mt-6 rounded-lg sticky-table-container" x-show="subSubTab === 'market-value'" x-cloak>
+                <div class="rounded-lg sticky-table-container" x-show="subSubTab === 'market-value'" x-cloak>
                     <table class="w-full text-right whitespace-nowrap {{ sticky_table_class($freezePane) }}">
                         <thead class="font-sm font-semibold capitalize text-dark">
                             <tr class="font-bold text-base">
