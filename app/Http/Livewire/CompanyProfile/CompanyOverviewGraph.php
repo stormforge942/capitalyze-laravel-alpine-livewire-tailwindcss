@@ -6,6 +6,7 @@ use App\Models\Company;
 use Carbon\Carbon;
 use Illuminate\Support\Facades\DB;
 use Livewire\Component;
+use Illuminate\Support\Facades\Cache;
 
 class CompanyOverviewGraph extends Component
 {
@@ -40,7 +41,16 @@ class CompanyOverviewGraph extends Component
 
     public function mount($ticker)
     {
-        $this->name = Company::find($ticker)->name;
+
+        $cacheKey = 'company_name_' . $ticker;
+
+        $cacheDuration = 3600;
+
+        $companyName = Cache::remember($cacheKey, $cacheDuration, function () use ($ticker) {
+            return Company::find($ticker)?->name;
+        });
+
+        $this->name = $companyName;
         $this->ticker = $ticker;
         $this->load();
     }
@@ -64,17 +74,27 @@ class CompanyOverviewGraph extends Component
 
         $period = $this->getPeriod();
 
-        $result = DB::connection('pgsql-xbrl')
-            ->table('eod_prices')
-            ->select('date', 'adj_close', 'volume')
-            ->selectRaw('AVG(adj_close) OVER () as adj_close_avg')
-            ->selectRaw('MAX(adj_close) OVER () as max_adj_close')
-            ->selectRaw('MIN(adj_close) OVER () as min_adj_close')
-            ->selectRaw('AVG(volume) OVER () as volume_avg')
-            ->where('symbol', strtolower($this->ticker))
-            ->whereBetween('date', $period)
-            ->orderBy('date')
-            ->get();
+        $formattedPeriod = array_map(function ($date) {
+            return $date->format('Y-m-d');
+        }, $period);
+
+        $cacheKey = 'eod_prices_stats_' . strtolower($this->ticker) . '_' . implode('_', $formattedPeriod);
+
+        $cacheDuration = 3600;
+
+        $result = Cache::remember($cacheKey, $cacheDuration, function () use ($period) {
+            return DB::connection('pgsql-xbrl')
+                ->table('eod_prices')
+                ->select('date', 'adj_close', 'volume')
+                ->selectRaw('AVG(adj_close) OVER () as adj_close_avg')
+                ->selectRaw('MAX(adj_close) OVER () as max_adj_close')
+                ->selectRaw('MIN(adj_close) OVER () as min_adj_close')
+                ->selectRaw('AVG(volume) OVER () as volume_avg')
+                ->where('symbol', strtolower($this->ticker))
+                ->whereBetween('date', $period)
+                ->orderBy('date')
+                ->get();
+        });
 
         if (!$result->count()) {
             $this->resetChart();

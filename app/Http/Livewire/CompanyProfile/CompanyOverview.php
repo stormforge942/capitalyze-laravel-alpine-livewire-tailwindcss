@@ -6,6 +6,7 @@ use Livewire\Component;
 use App\Http\Livewire\AsTab;
 use Illuminate\Support\Facades\DB;
 use App\Models\InfoTikrPresentation;
+use Illuminate\Support\Facades\Cache;
 
 class CompanyOverview extends Component
 {
@@ -373,13 +374,22 @@ class CompanyOverview extends Component
 
     private function getProducts()
     {
-        $source = ($this->period == 'annual') ? 'arps' : 'qrps';
-        $json = DB::connection('pgsql-xbrl')
-            ->table('as_reported_sec_segmentation_api')
-            ->where('ticker', '=', $this->profile['symbol'])
-            ->where('endpoint', '=', $source)
-            ->value('api_return_open_ai');
+        $cacheKey = 'as_reported_sec_segmentation_api_' . $this->profile['symbol'] . '_' . $this->period;
 
+        $cacheDuration = 3600; 
+
+        $json = Cache::remember($cacheKey, $cacheDuration, function () {
+            
+            $source = ($this->period == 'annual') ? 'arps' : 'qrps';
+        
+            return DB::connection('pgsql-xbrl')
+                ->table('as_reported_sec_segmentation_api')
+                ->where('ticker', '=', $this->profile['symbol'])
+                ->where('endpoint', '=', $source)
+                ->value('api_return_open_ai');
+        });
+
+    
         $data = json_decode($json, true);
         $this->products = [];
 
@@ -406,15 +416,21 @@ class CompanyOverview extends Component
     {
         $ticker = $this->profile['symbol'];
 
-        $rawData = json_decode(
-            InfoTikrPresentation::where('ticker', $ticker)
-                ->where('period', 'annual')
-                ->orderByDesc('id')
-                ->select(['income_statement'])
-                ->first()
-                ?->income_statement ?? "{}",
-            true
-        );
+        $cacheKey = 'info_tikr_presentation_' . $ticker . '_annual';
+
+        $cacheDuration = 3600;
+
+        $rawData = Cache::remember($cacheKey, $cacheDuration, function () use ($ticker) {
+            return json_decode(
+                InfoTikrPresentation::where('ticker', $ticker)
+                    ->where('period', 'annual')
+                    ->orderByDesc('id')
+                    ->select(['income_statement'])
+                    ->first()
+                    ?->income_statement ?? "{}",
+                true
+            );
+        });
 
         $data = [];
 

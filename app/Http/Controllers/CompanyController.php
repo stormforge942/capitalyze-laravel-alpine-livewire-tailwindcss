@@ -9,6 +9,7 @@ use App\Models\MutualFunds;
 use Illuminate\Http\Request;
 use App\Services\OwnershipHistoryService;
 use Illuminate\Routing\Controller as BaseController;
+use Illuminate\Support\Facades\Cache;
 
 class CompanyController extends BaseController
 {
@@ -288,9 +289,15 @@ class CompanyController extends BaseController
 
     private function findOrFailCompany(string $ticker)
     {
-        $company = Company::query()
-            ->where('ticker', $ticker)
-            ->first();
+        $cacheKey = 'company_' . $ticker;
+
+        $cacheDuration = 3600; 
+
+        $company = Cache::remember($cacheKey, $cacheDuration, function () use ($ticker) {
+            return Company::query()
+                ->where('ticker', $ticker)
+                ->first();
+        });
 
         if (!$company) {
             throw new CompanyNotFoundException($ticker);
