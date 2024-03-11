@@ -6,6 +6,7 @@ use Closure;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Gate;
+use Illuminate\Support\Facades\Cache;
 
 class RegisterGates
 {
@@ -18,12 +19,19 @@ class RegisterGates
      */
     public function handle(Request $request, Closure $next)
     {
-        $groupsThatCanReviewData = DB::table('navbar_group_shows')
-            ->join('navbars', 'navbar_group_shows.navbar_id', '=', 'navbars.id')
-            ->where('navbars.route_name', '=', 'create.company.segment.report')
-            ->where('navbar_group_shows.show', '=', true)
-            ->pluck('group_id')
-            ->toArray();
+
+        $cacheKey = 'groupsThatCanReviewData';
+
+        $cacheDuration = 3600;
+
+         $groupsThatCanReviewData = Cache::remember($cacheKey, 60 * 60, function () {
+            return DB::table('navbar_group_shows')
+                ->join('navbars', 'navbar_group_shows.navbar_id', '=', 'navbars.id')
+                ->where('navbars.route_name', '=', 'create.company.segment.report')
+                ->where('navbar_group_shows.show', '=', true)
+                ->pluck('group_id')
+                ->toArray();
+        });
 
         Gate::define('review-data', fn ($user) => in_array($user->group_id, $groupsThatCanReviewData));
 

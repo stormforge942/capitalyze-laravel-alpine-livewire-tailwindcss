@@ -14,7 +14,7 @@ class Page extends Component
     {
         $companyProfileCacheKey = 'company_profile_' . $this->company->ticker;
 
-        $cacheDuration = 360;
+        $cacheDuration = 3600;
 
         $companyProfile = Cache::remember($companyProfileCacheKey, $cacheDuration, function () {
             return \App\Models\CompanyProfile::query()
