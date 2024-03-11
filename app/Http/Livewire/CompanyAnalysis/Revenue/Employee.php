@@ -6,6 +6,7 @@ use Livewire\Component;
 use Illuminate\Support\Facades\DB;
 use App\Models\InfoTikrPresentation;
 use App\Http\Livewire\CompanyAnalysis\HasFilters;
+use Illuminate\Support\Facades\Cache;
 
 class Employee extends Component
 {
@@ -161,15 +162,21 @@ class Employee extends Component
     {
         $period = ($this->period == 'quarterly') ? 'quarter' : 'annual';
 
-        $stmt = rescue(fn () => json_decode(
-            InfoTikrPresentation::where('ticker', $this->company['ticker'])
-                ->where('period', $period)
-                ->orderByDesc('id')
-                ->select(['income_statement'])
-                ->first()
-                ?->income_statement ?? "{}",
-            true
-        ), [], false);
+        $cacheKey = 'info_tikr_presentation_' . $this->company['ticker'] . '_' . $period . '_income_statement';
+
+        $cacheDuration = 3600;
+
+        $stmt = Cache::remember($cacheKey, $cacheDuration, function () use ($period) {
+            return rescue(fn () => json_decode(
+                InfoTikrPresentation::where('ticker', $this->company['ticker'])
+                    ->where('period', $period)
+                    ->orderByDesc('id')
+                    ->select(['income_statement'])
+                    ->first()
+                    ?->income_statement ?? "{}",
+                true
+            ), [], false);
+        });
 
         $revenues = [];
 
@@ -182,13 +189,21 @@ class Employee extends Component
             }
         }
 
-        return [
-            'revenues' => $revenues,
-            'employee_count' => DB::connection('pgsql-xbrl')
+        $employeeCountCacheKey = 'employee_count_' . $this->company['ticker'];
+
+        $cacheDuration = 3600;
+
+        $employeeCount = Cache::remember($employeeCountCacheKey, $cacheDuration, function () {
+            return DB::connection('pgsql-xbrl')
                 ->table('employee_count')
                 ->where('symbol', $this->company['ticker'])
                 ->pluck("count", "period_of_report")
-                ->toArray()
+                ->toArray();
+        });
+
+        return [
+            'revenues' => $revenues,
+            'employee_count' => $employeeCount
         ];
     }
 

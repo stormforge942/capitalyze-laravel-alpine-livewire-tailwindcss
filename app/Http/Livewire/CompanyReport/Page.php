@@ -9,6 +9,7 @@ use Illuminate\Http\Request;
 use App\Models\InfoPresentation;
 use App\Models\InfoTikrPresentation;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Cache;
 
 class Page extends Component
 {
@@ -211,12 +212,20 @@ class Page extends Component
                 return null;
             }
 
-            return InfoTikrPresentation::query()
-                ->where('ticker', $this->company['ticker'])
-                ->where("period", $period)
-                ->select($column)
-                ->first()
-                ?->{$column};
+            $cacheKey = 'infotikr_presentation_' . $this->company['ticker'] . '_' . $period . '_' . $column;
+
+            $cacheDuration = 3600;
+
+            $columnValue = Cache::remember($cacheKey, $cacheDuration, function () use ($period, $column) {
+                return InfoTikrPresentation::query()
+                            ->where('ticker', $this->company['ticker'])
+                            ->where("period", $period)
+                            ->select($column)
+                            ->first()
+                            ?->{$column}; 
+            });
+
+            return $columnValue;
         }
 
         $title = [
