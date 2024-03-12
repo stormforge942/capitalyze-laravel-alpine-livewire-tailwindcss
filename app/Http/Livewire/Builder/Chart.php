@@ -215,9 +215,9 @@ class Chart extends Component
             'income_statement||Total Revenues',
             'income_statement||Total Operating Income',
             'income_statement||Total Operating Expenses',
-            'balance_sheet||Cash And Equivalents',
-            'balance_sheet||Total Receivables',
-            'balance_sheet||Total Current Assets',
+            // 'balance_sheet||Cash And Equivalents',
+            // 'balance_sheet||Total Receivables',
+            // 'balance_sheet||Total Current Assets',
         ];
 
         $data = array_reduce($this->availablePeriods, function ($c, $i) use ($companies) {
