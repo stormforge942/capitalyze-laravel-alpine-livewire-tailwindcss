@@ -127,11 +127,13 @@
                                         index === 0 ? 'last:rounded-tr-lg' : '',
                                         paddings
                                     ]">
-                                    <span class="hover:underline cursor-pointer"
-                                        :class="row.values[date]?.isNegative ? 'text-red' : ''"
-                                        x-text="row.values[date]?.result"
-                                        @click="Livewire.emit('slide-over.open', 'slides.right-slide', {data: row.values[date]})">
-                                    </span>
+                                    <x-review-number-button x-data="{ amount: row.values[date]?.value, date, }">
+                                        <div class="hover:underline cursor-pointer"
+                                            :class="row.values[date]?.isNegative ? 'text-red' : ''"
+                                            x-text="row.values[date]?.result"
+                                            @click="Livewire.emit('slide-over.open', 'slides.right-slide', {data: row.values[date]})">
+                                        </div>
+                                    </x-review-number-button>
                                 </td>
                             </template>
                         </tr>
