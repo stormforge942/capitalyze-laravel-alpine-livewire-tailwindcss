@@ -12,31 +12,20 @@ trait HasNavbar
     public function hasNavbar($routeName): bool
     {
 
-           $cacheKey = 'hasNavbar.' . $routeName . '.' . $this->group_id;
+            $navbar = Navbar::where('route_name', $routeName)->first();
 
-           $cacheDuration = 3600;
+            if (!$navbar?->is_moddable) {
+                return true;
+            }
 
-           return Cache::remember($cacheKey, $cacheDuration, function () use ($routeName) {
-               $navbar = Navbar::where('route_name', $routeName)->first();
-   
-               if (!$navbar?->is_moddable) {
-                   return true;
-               }
-   
-               return $navbar->navbarGroupShows()
-                   ->where('group_id', $this->group_id)
-                   ->where('show', true)
-                   ->exists();
-           });
+            return $navbar->navbarGroupShows()
+                ->where('group_id', $this->group_id)
+                ->where('show', true)
+                ->exists();
     }
-    
+
     public function navbars($moddable = true): Collection
     {
-        $cacheKey = 'navbars.' . $moddable . '.' . $this->group_id;
-
-        $cacheDuration = 3600;
-
-        return Cache::remember($cacheKey, $cacheDuration, function () use ($moddable) {
             return NavbarGroupShows::query()
                 ->with(['navbar' => fn ($q) => $q->where('is_moddable', $moddable)])
                 ->when(
@@ -46,6 +35,5 @@ trait HasNavbar
                 ->map(fn ($item) => $item->navbar)
                 ->filter()
                 ->unique('id');
-        });
     }
 }
