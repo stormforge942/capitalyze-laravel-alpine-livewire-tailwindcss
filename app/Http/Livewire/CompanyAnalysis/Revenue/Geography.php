@@ -206,9 +206,9 @@ class Geography extends Component
                 : 0;
 
             $lastTotal = $total;
-
+            
             foreach ($data['regions'] as $region => $_) {
-                $data['regions'][$region]['total_percent'][$date] = ($data['regions'][$region]['timeline'][$date] / $total) * 100;
+                $data['regions'][$region]['total_percent'][$date] = $total != 0 ? ($data['regions'][$region]['timeline'][$date] / $total) * 100 : 0;
             }
         }
 

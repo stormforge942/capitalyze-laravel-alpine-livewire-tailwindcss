@@ -91,6 +91,7 @@ replicateSchema($xbrl, $replica, $selectedTables, $args['drop']);
 $symbols = [
     'AAPL',
     'MSFT',
+    'VMI'
 ];
 
 fillData($xbrl, $replica, $selectedTables, $symbols);
