@@ -7,6 +7,7 @@ use Illuminate\Support\Str;
 use App\Http\Livewire\AsTab;
 use Illuminate\Support\Carbon;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Cache;
 
 class FundSummary extends Component
 {
@@ -36,12 +37,20 @@ class FundSummary extends Component
 
     public function getSummary()
     {
-        $summary = (array) DB::connection('pgsql-xbrl')
-            ->table('filings_summary')
-            ->select('cik', 'investor_name', 'portfolio_size', 'added_securities', 'removed_securities', 'total_value', 'last_value', 'change_in_total_value', 'change_in_total_value_percentage', 'turnover', 'turnover_alt_sell', 'turnover_alt_buy', 'average_holding_period', 'average_holding_period_top10', 'average_holding_period_top20', 'url')
-            ->where('cik', '=', $this->cik)
-            ->where('date', '=', $this->quarter)
-            ->first() ?? [];
+        $cacheKey = "filings_summary_{$this->cik}_{$this->quarter}";
+
+        $cacheDuration = 3600;
+
+        $summary = Cache::remember($cacheKey, $cacheDuration, function () {
+            return (array) DB::connection('pgsql-xbrl')
+                ->table('filings_summary')
+                ->select('cik', 'investor_name', 'portfolio_size', 'added_securities', 'removed_securities', 'total_value', 'last_value', 'change_in_total_value', 'change_in_total_value_percentage', 'turnover', 'turnover_alt_sell', 'turnover_alt_buy', 'average_holding_period', 'average_holding_period_top10', 'average_holding_period_top20', 'url')
+                ->where('cik', '=', $this->cik)
+                ->where('date', '=', $this->quarter)
+                ->first() ?? [];
+
+        });
+
 
         $percentageFields = [
             'change_in_total_value_percentage',
@@ -73,29 +82,38 @@ class FundSummary extends Component
 
     public function getSectorAllocationData()
     {
-        $investments = [];
 
-        DB::connection('pgsql-xbrl')
-            ->table('industry_summary')
-            ->where('cik', '=', $this->cik)
-            ->select('industry_title', 'weight', 'date')
-            ->orderBy('date')
-            ->get()
-            ->map(function ($item) use (&$investments) {
+        $cacheKey = "industry_summary_{$this->cik}";
+        $cacheDuration = 3600;
+        
+        $investments = Cache::remember($cacheKey, $cacheDuration, function () {
+            $investments = [];
+            $data = DB::connection('pgsql-xbrl')
+                    ->table('industry_summary')
+                    ->where('cik', '=', $this->cik)
+                    ->select('industry_title', 'weight', 'date')
+                    ->orderBy('date')
+                    ->get();
+                
+            $data->map(function ($item) use (&$investments) {
                 $date = Carbon::parse($item->date);
                 $key = "Q{$date->quarter}-{$date->year}";
-
+        
                 if (!isset($investments[$key])) {
                     $investments[$key] = [];
                 }
-
+        
                 $investments[$key][] = [
                     'industry' => Str::title($item->industry_title),
                     'weight' => floatval($item->weight),
                     'quarter' => $key,
                 ];
             });
-
+        
+            return $investments;
+        });
+            
+       
         $last = end($investments) ?: [];
         $last = collect($last)->where('industry', '!=', 'Other')->sortByDesc('weight')->take(25);
         $weight = $last->sum('weight');
@@ -165,31 +183,41 @@ class FundSummary extends Component
 
     public function getHoldingSummary()
     {
-        return DB::connection('pgsql-xbrl')
-            ->table('filings')
-            ->select('weight', 'symbol', 'name_of_issuer')
-            ->where('cik', '=', $this->cik)
-            ->where('report_calendar_or_quarter', '=', $this->quarter)
-            ->orderByDesc('weight')
-            ->limit(7)
-            ->get()
-            ->map(function ($item) {
-                return [
-                    'name' => Str::title($item->name_of_issuer) . ($item->symbol ? " ({$item->symbol})" : ''),
-                    'weight' => number_format($item->weight, 2),
-                ];
-            })
-            ->toArray();
+        $cacheKey = 'filings_weight_' . $this->cik . '_' . $this->quarter;
+        $cacheDuration = 3600;
+        
+        $filings = Cache::remember($cacheKey, $cacheDuration, function () {
+            return DB::connection('pgsql-xbrl')
+                ->table('filings')
+                ->select('weight', 'symbol', 'name_of_issuer')
+                ->where('cik', '=', $this->cik)
+                ->where('report_calendar_or_quarter', '=', $this->quarter)
+                ->orderByDesc('weight')
+                ->limit(7)
+                ->get()
+                ->map(function ($item) {
+                    return [
+                        'name' => Str::title($item->name_of_issuer) . ($item->symbol ? " ({$item->symbol})" : ''),
+                        'weight' => number_format($item->weight, 2),
+                    ];
+                })
+                ->toArray();
+        });
     }
 
     public function getOverTimeMarketValue()
     {
-        $totalValues = DB::connection('pgsql-xbrl')
-            ->table('filings_summary')
-            ->where('cik', '=', $this->cik)
-            ->select('date', 'total_value')
-            ->orderBy('total_value')
-            ->get();
+        $cacheKey = 'filings_summary_values_' . $this->cik;
+        $cacheDuration = 3600;
+        
+        $totalValues = Cache::remember($cacheKey, $cacheDuration, function () {
+            return DB::connection('pgsql-xbrl')
+                ->table('filings_summary')
+                ->where('cik', '=', $this->cik)
+                ->select('date', 'total_value')
+                ->orderBy('total_value')
+                ->get();
+        });
 
         $chartData = [];
 
@@ -210,19 +238,24 @@ class FundSummary extends Component
 
     public function getTopBuySells()
     {
-        $topBuys = DB::connection('pgsql-xbrl')
-            ->table('filings')
-            ->select('change_in_shares', 'change_in_value', 'symbol', 'name_of_issuer')
-            ->where('cik', '=', $this->cik)
-            ->where('report_calendar_or_quarter', '=', $this->quarter)
-            ->orderByDesc('change_in_shares')
-            ->where('change_in_shares', '>', 0)
-            ->limit(10)
-            ->get()
-            ->map(function ($item) {
-                $item->name_of_issuer = Str::title($item->name_of_issuer);
-                return $item;
-            });
+        $cacheKey = 'top_buys_' . $this->cik . '_' . $this->quarter;
+        $cacheDuration = 3600;
+
+        $topBuys = Cache::remember($cacheKey, $cacheDuration, function () {
+            return DB::connection('pgsql-xbrl')
+                ->table('filings')
+                ->select('change_in_shares', 'change_in_value', 'symbol', 'name_of_issuer')
+                ->where('cik', '=', $this->cik)
+                ->where('report_calendar_or_quarter', '=', $this->quarter)
+                ->orderByDesc('change_in_shares')
+                ->where('change_in_shares', '>', 0)
+                ->limit(10)
+                ->get()
+                ->map(function ($item) {
+                    $item->name_of_issuer = Str::title($item->name_of_issuer);
+                    return $item;
+                });
+        });
 
         $max = $topBuys->max('change_in_shares');
         $min = $topBuys->min('change_in_shares');
@@ -233,18 +266,23 @@ class FundSummary extends Component
             return $item;
         });
 
-        $topSells = DB::connection('pgsql-xbrl')
-            ->table('filings')
-            ->select('change_in_shares', 'change_in_value', 'symbol', 'name_of_issuer')
-            ->where('cik', '=', $this->cik)
-            ->where('report_calendar_or_quarter', '=', $this->quarter)
-            ->orderBy('change_in_shares')
-            ->limit(10)
-            ->get()
-            ->map(function ($item) {
-                $item->name_of_issuer = Str::title($item->name_of_issuer);
-                return $item;
-            });
+        $cacheKey = 'top_sells_' . $this->cik . '_' . $this->quarter;
+        $cacheDuration = 3600;
+        
+        $topSells = Cache::remember($cacheKey, $cacheDuration, function () {
+            return DB::connection('pgsql-xbrl')
+                ->table('filings')
+                ->select('change_in_shares', 'change_in_value', 'symbol', 'name_of_issuer')
+                ->where('cik', '=', $this->cik)
+                ->where('report_calendar_or_quarter', '=', $this->quarter)
+                ->orderBy('change_in_shares') 
+                ->limit(10)
+                ->get()
+                ->map(function ($item) {
+                    $item->name_of_issuer = Str::title($item->name_of_issuer); 
+                    return $item;
+                });
+        });
 
         $max = $topSells->max('change_in_shares');
         $min = $topSells->min('change_in_shares');
@@ -263,10 +301,17 @@ class FundSummary extends Component
 
     private function getLatestQuarter()
     {
-        $latestFiling = Carbon::parse(DB::connection('pgsql-xbrl')
-            ->table('filings_summary')
-            ->where('cik', '=', $this->cik)
-            ->max('date'));
+
+        $cacheKey = 'latest_filing_date_' . $this->cik;
+        $cacheDuration = 3600;
+
+        $latestFiling = Cache::remember($cacheKey, $cacheDuration, function () {
+            $date = DB::connection('pgsql-xbrl')
+                ->table('filings_summary')
+                ->where('cik', '=', $this->cik)
+                ->max('date');
+            return $date ? Carbon::parse($date) : null;
+        });
 
         if (!$latestFiling) {
             throw new \Exception('No filings found for this fund');

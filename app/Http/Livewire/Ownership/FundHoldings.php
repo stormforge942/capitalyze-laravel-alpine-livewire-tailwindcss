@@ -6,6 +6,7 @@ use Livewire\Component;
 use App\Http\Livewire\AsTab;
 use App\Models\CompanyFilings;
 use Illuminate\Support\Carbon;
+use Illuminate\Support\Facades\Cache;
 
 class FundHoldings extends Component
 {
@@ -51,8 +52,21 @@ class FundHoldings extends Component
     private function quarters()
     {
         $quarters = [];
-        $oldestFiling = CompanyFilings::where('cik', $this->cik)->min('report_calendar_or_quarter');
-        $newestFiling = CompanyFilings::where('cik', $this->cik)->max('report_calendar_or_quarter');
+        $cacheKey = 'oldest_filing_' . $this->cik;
+        $cacheDuration = 3600;
+        
+        $oldestFiling = Cache::remember($cacheKey, $cacheDuration, function () {
+            return CompanyFilings::where('cik', $this->cik)->min('report_calendar_or_quarter');
+        });        
+        
+        
+        $cacheKey = 'newest_filing_' . $this->cik;
+        $cacheDuration = 3600;
+        
+        $newestFiling = Cache::remember($cacheKey, $cacheDuration, function () {
+            return CompanyFilings::where('cik', $this->cik)->max('report_calendar_or_quarter');
+        });
+        
         $startYear = Carbon::parse($oldestFiling)->year;
         $startQuarter = Carbon::parse($oldestFiling)->quarter;
         $endYear = Carbon::parse($newestFiling)->year;
