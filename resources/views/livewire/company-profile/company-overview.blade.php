@@ -192,7 +192,27 @@
 
     {{-- @todo: extract all the value logic to component itself --}}
     <div class="overflow-auto order-5">
-        <table class="w-full rounded-lg overflow-hidden text-right whitespace-nowrap" id="main-table">
+        <div class="flex items-center justify-between gap-x-3">
+            <div class="warning-wrapper">
+                <div class="warning-text text-sm">
+                    <svg viewBox="0 0 16 16" fill="none" xmlns="http://www.w3.org/2000/svg">
+                        <path
+                            d="M7.99967 14.6663C4.31777 14.6663 1.33301 11.6815 1.33301 7.99967C1.33301 4.31777 4.31777 1.33301 7.99967 1.33301C11.6815 1.33301 14.6663 4.31777 14.6663 7.99967C14.6663 11.6815 11.6815 14.6663 7.99967 14.6663ZM7.99967 13.333C10.9452 13.333 13.333 10.9452 13.333 7.99967C13.333 5.05415 10.9452 2.66634 7.99967 2.66634C5.05415 2.66634 2.66634 5.05415 2.66634 7.99967C2.66634 10.9452 5.05415 13.333 7.99967 13.333ZM7.33301 9.99967H8.66634V11.333H7.33301V9.99967ZM7.33301 4.66634H8.66634V8.66634H7.33301V4.66634Z"
+                            fill="#DA680B" />
+                    </svg>
+                    {{ $profile['symbol'] }} Key Metrics (millions)
+                </div>
+            </div>
+
+            <div class="flex items-center">
+                <span class="currency-font">Currency: &nbsp;</span>
+                <select class="inline-flex font-bold !pr-8 bg-transparent">
+                    <option value="USD">USD</option>
+                </select>
+            </div>
+
+        </div>
+        <table class="mt-3 w-full rounded-lg overflow-hidden text-right whitespace-nowrap" id="main-table">
             <thead class="font-sm font-semibold capitalize bg-[#EDEDED] text-dark">
                 <tr class="font-bold text-base">
                     <th class="pl-8 py-2 text-left">{{ $profile['registrant_name'] }}

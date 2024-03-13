@@ -188,30 +188,14 @@ function format_overview_numbers($value)
 
     $val = floatval($value);
 
-    // present the number in best possible way, like K, M, B
-
-    $format = '';
-
-    if ($val >= 1000 && $val < 1000000) {
-        $format = 'K';
-    } else if ($val >= 1000000) {
-        $format = 'M';
-    }
-
-    $divisor = match ($format) {
-        'K' => 1000,
-        'M' => 1000000,
-        default => 1,
-    };
-
-    $val = number_format($val / $divisor, 2);
+    $val = number_format($val / 1000000, 2);
 
     // remove trailing zeros
     $val = preg_replace('/\.?0+$/', '', $val);
     // remove trailing dot
     $val = rtrim($val, '.');
 
-    $val = $val . $format;
+    $val = $val;
 
     return $value < 0 ? "<span class=\"text-red\">({$val})</span>" : $val;
 }

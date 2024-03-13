@@ -8,7 +8,7 @@ use Livewire\Component;
 class Page extends Component
 {
     protected $data = [
-        'New Securities Registrations' => [
+        'New Securities' => [
             [
                 'title' => 'S-1',
                 'description' => 'Initial registration of new securities (e.g. IPOs)',
@@ -52,7 +52,7 @@ class Page extends Component
                 ]
             ],
         ],
-        'Additional Registrations' => [
+        'Other Registrations' => [
             [
                 'title' => 'S-3',
                 'description' => 'Shelf registration',

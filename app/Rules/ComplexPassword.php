@@ -28,7 +28,7 @@ class ComplexPassword implements Rule
         }
 
         // must contain at least one symbol
-        if (!preg_match('/[\'^£$%&*()}{@#~?><>,|=_+¬-]/', $value)) {
+        if (!preg_match('/[\'^£$%&*()}{@#!~?><>,|=_+¬-]/', $value)) {
             $this->message = 'Password must contain at least one symbol.';
             return false;
         }

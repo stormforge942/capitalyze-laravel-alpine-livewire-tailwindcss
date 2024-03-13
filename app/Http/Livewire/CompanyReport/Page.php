@@ -53,7 +53,7 @@ class Page extends Component
     {
         // set properties from query string 
         $this->activeTab = $request->query('tab', 'income-statement');
-        $this->view = $request->query('view', 'Standardised');
+        $this->view = $request->query('view', 'Standardized');
         $this->period = $request->query('period', 'Fiscal Annual');
         $this->unitType = $request->query('unitType', 'Millions');
         $this->decimalPlaces = intval($request->query('decimalPlaces', 2));
@@ -92,7 +92,7 @@ class Page extends Component
             'viewTypes' => [
                 'As reported',
                 'Adjusted',
-                'Standardised',
+                'Standardized',
                 'Per Share',
                 'Common size',
             ],
@@ -200,7 +200,7 @@ class Page extends Component
                 ?->info;
         }
 
-        if ($this->view === 'Standardised') {
+        if ($this->view === 'Standardized') {
             $column = [
                 'balance-sheet' => 'balance_sheet',
                 'income-statement' => 'income_statement',
@@ -319,7 +319,7 @@ class Page extends Component
 
     private function generateRows($data)
     {
-        if ($this->view !== 'Standardised') {
+        if ($this->view !== 'Standardized') {
             if (
                 isset($data['Income Statement']) &&
                 is_array($data['Income Statement']) &&

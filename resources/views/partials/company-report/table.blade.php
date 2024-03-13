@@ -34,8 +34,6 @@
             <span class="currency-font">Currency: &nbsp;</span>
             <select wire:model="currency" id="currency-select" class="inline-flex font-bold !pr-8 bg-transparent">
                 <option value="USD">USD</option>
-                <option value="CAD">CAD</option>
-                <option value="EUR">EUR</option>
             </select>
         </div>
     </div>
@@ -43,7 +41,8 @@
 
 <div class="mt-6 relative">
     <div class="rounded-lg sticky-table-container">
-        <table class="round-lg max-w-[max-content] mx-auto text-right whitespace-nowrap company-report-table" :class="tableClasses">
+        <table class="round-lg max-w-[max-content] mx-auto text-right whitespace-nowrap company-report-table"
+            :class="tableClasses">
             <thead>
                 <tr class="capitalize text-dark bg-[#EDEDED] text-base font-bold">
                     <th class="pl-8 py-2 bg-[#EDEDED] text-left">
