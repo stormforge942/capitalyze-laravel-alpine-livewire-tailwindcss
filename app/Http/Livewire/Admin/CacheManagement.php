@@ -54,47 +54,52 @@ class CacheManagement extends Component
     {
         $decodedPrefix = html_entity_decode($prefix);
         $decodedPrefix = trim($decodedPrefix, "'");
-
+    
         $pattern = $decodedPrefix . '*';
         $redis = Redis::connection();
-        
-        // Only call select if not using Redis Cluster
-        if (env('REDIS_CLUSTER', false) !== true) {
-            $redis->select(1);
-        }
-
-        $keys = $redis->keys($pattern);
-        foreach ($keys as $key) {
-            $redis->del($key);
-        }
-
+    
+        // Use SCAN instead of KEYS to iterate through keys in a non-blocking way
+        $cursor = 0;
+        do {
+            $result = $redis->scan($cursor, ['MATCH' => $pattern, 'COUNT' => 100]);
+            if ($result) {
+                list($cursor, $keys) = $result;
+                foreach ($keys as $key) {
+                    $redis->del($key);
+                }
+            }
+        } while ($cursor);
+    
         $formattedPattern = ucwords(trim(str_replace('_', ' ', trim(trim($decodedPrefix, '_'))), " \t\n\r\0\x0B"));
         session()->flash('message', "Cache cleared successfully for {$formattedPattern}");
     }
 
     public function clearAllCache()
     {
-        $redis = Redis::connection();
+    $redis = Redis::connection();
 
-        // Only call select if not using Redis Cluster
-        if (env('REDIS_CLUSTER', false) !== true) {
-            $redis->select(1);
-        }
+    foreach ($this->results as $result) {
+        $prefix = $result['assignmentPrefix'];
+        $decodedPrefix = html_entity_decode($prefix);
+        $decodedPrefix = trim($decodedPrefix, "'");
+        $pattern = $decodedPrefix . '*';
 
-        foreach ($this->results as $result) {
-            $prefix = $result['assignmentPrefix'];
-            $decodedPrefix = html_entity_decode($prefix);
-            $decodedPrefix = trim($decodedPrefix, "'");
-            $pattern = $decodedPrefix . '*';
-
-            $keys = $redis->keys($pattern);
-            foreach ($keys as $key) {
-                $redis->del($key);
+        // Use SCAN in a loop for each prefix pattern
+        $cursor = 0;
+        do {
+            $result = $redis->scan($cursor, ['MATCH' => $pattern, 'COUNT' => 100]);
+            if ($result) {
+                list($cursor, $keys) = $result;
+                foreach ($keys as $key) {
+                    $redis->del($key);
+                }
             }
-        }
-
-        session()->flash('message', 'All caches cleared successfully.');
+        } while ($cursor);
     }
+
+    session()->flash('message', 'All caches cleared successfully.');
+}
+
 
     
     
