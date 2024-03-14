@@ -56,31 +56,42 @@ class CacheManagement extends Component
         $decodedPrefix = trim($decodedPrefix, "'");
 
         $pattern = $decodedPrefix . '*';
-        $keys = Redis::connection()->select(1); 
-        $keys = Redis::keys($pattern);
-        foreach ($keys as $key) {
-            Redis::del($key);
+        $redis = Redis::connection();
+        
+        // Check if the Redis connection is not a cluster before calling select()
+        if (!$redis instanceof \RedisCluster) {
+            $redis->select(1);
         }
-    
+
+        $keys = $redis->keys($pattern);
+        foreach ($keys as $key) {
+            $redis->del($key);
+        }
+
         $formattedPattern = ucwords(trim(str_replace('_', ' ', trim(trim($decodedPrefix, '_'))), " \t\n\r\0\x0B"));
         session()->flash('message', "Cache cleared successfully for {$formattedPattern}");
-        
     }
     
     
     public function clearAllCache()
     {
+        $redis = Redis::connection();
+        
+        // Check if the Redis connection is not a cluster before calling select()
+        if (!$redis instanceof \RedisCluster) {
+            $redis->select(1);
+        }
+    
         foreach ($this->results as $result) {
             $prefix = $result['assignmentPrefix'];
-
+    
             $decodedPrefix = html_entity_decode($prefix);
             $decodedPrefix = trim($decodedPrefix, "'");
-            // Your logic to clear cache by prefix here
+    
             $pattern = $decodedPrefix . '*';
-            $keys = Redis::connection()->select(1); 
-            $keys = Redis::keys($pattern);
+            $keys = $redis->keys($pattern);
             foreach ($keys as $key) {
-                Redis::del($key);
+                $redis->del($key);
             }
         }
     
