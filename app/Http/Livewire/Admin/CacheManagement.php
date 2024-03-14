@@ -58,8 +58,8 @@ class CacheManagement extends Component
         $pattern = $decodedPrefix . '*';
         $redis = Redis::connection();
         
-        // Check if the Redis connection is not a cluster before calling select()
-        if (!$redis instanceof \RedisCluster) {
+        // Only call select if not using Redis Cluster
+        if (env('REDIS_CLUSTER', false) !== true) {
             $redis->select(1);
         }
 
@@ -71,32 +71,31 @@ class CacheManagement extends Component
         $formattedPattern = ucwords(trim(str_replace('_', ' ', trim(trim($decodedPrefix, '_'))), " \t\n\r\0\x0B"));
         session()->flash('message', "Cache cleared successfully for {$formattedPattern}");
     }
-    
-    
+
     public function clearAllCache()
     {
         $redis = Redis::connection();
-        
-        // Check if the Redis connection is not a cluster before calling select()
-        if (!$redis instanceof \RedisCluster) {
+
+        // Only call select if not using Redis Cluster
+        if (env('REDIS_CLUSTER', false) !== true) {
             $redis->select(1);
         }
-    
+
         foreach ($this->results as $result) {
             $prefix = $result['assignmentPrefix'];
-    
             $decodedPrefix = html_entity_decode($prefix);
             $decodedPrefix = trim($decodedPrefix, "'");
-    
             $pattern = $decodedPrefix . '*';
+
             $keys = $redis->keys($pattern);
             foreach ($keys as $key) {
                 $redis->del($key);
             }
         }
-    
+
         session()->flash('message', 'All caches cleared successfully.');
     }
+
     
     
 
