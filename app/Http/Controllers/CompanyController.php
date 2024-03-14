@@ -208,21 +208,21 @@ class CompanyController extends BaseController
     {
         OwnershipHistoryService::setCompany($request->route('start', $ticker));
 
-        $companyCacheKey = 'company_data_' . $ticker;
+        $cacheKey = 'company_data_' . $ticker;
 
         $cacheDuration = 3600; 
 
-        $company = Cache::remember($companyCacheKey, $cacheDuration, function () use ($ticker) {
+        $company = Cache::remember($cacheKey, $cacheDuration, function () use ($ticker) {
             return Company::query()
                 ->where('ticker', $ticker)
                 // ->where('ticker', OwnershipHistoryService::getCompany())
                 ->firstOrFail();
         });
 
-        $currentCompanyCacheKey = "current_company_data_{$ticker}";
+        $cacheKey = 'current_company_data_' . $ticker;
 
         $currentCompany = $ticker === $company->ticker ? $company :
-        Cache::remember($currentCompanyCacheKey, $cacheDuration, function () use ($ticker) {
+        Cache::remember($cacheKey, $cacheDuration, function () use ($ticker) {
             return Company::query()
                 ->where('ticker', $ticker)
                 ->firstOrFail();

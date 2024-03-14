@@ -35,6 +35,9 @@
                     <li class="mr-8">
                         <a class="nav-link {{ last(request()->segments()) == 'feedbacks' ? 'font-bold' : '' }}" href="{{ route('admin.feedbacks-management') }}">Feedbacks Management</a>
                     </li>
+                    <li class="mr-8">
+                        <a class="nav-link {{ last(request()->segments()) == 'feedbacks' ? 'font-bold' : '' }}" href="{{ route('admin.cache-management') }}">Cache Management</a>
+                    </li>
                 </ul>
             </div>
 
@@ -53,6 +56,10 @@
 
                 @if ($tab == 'feedbacks-management')
                     <livewire:admin.feedbacks-management />
+                @endif
+
+                @if ($tab == 'cache-management')
+                    <livewire:admin.cache-management />
                 @endif
             </div>
         </main>

@@ -166,6 +166,7 @@ Route::group(['middleware' => ['auth', 'verified', EnsureUserIsAdmin::class]], f
     Route::get('/admin/permission', [AdminController::class, 'permission'])->name('admin.permission-management');
     Route::get('/admin/groups', [AdminController::class, 'groups'])->name('admin.groups-management');
     Route::get('/admin/feedbacks', [AdminController::class, 'feedbacks'])->name('admin.feedbacks-management');
+    Route::get('/admin/cache', [AdminController::class, 'cache'])->name('admin.cache-management');
 });
 
 Route::view('/waiting-for-approval', 'waiting-for-approval')

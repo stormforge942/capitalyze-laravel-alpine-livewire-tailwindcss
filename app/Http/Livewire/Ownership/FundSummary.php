@@ -37,7 +37,7 @@ class FundSummary extends Component
 
     public function getSummary()
     {
-        $cacheKey = "filings_summary_{$this->cik}_{$this->quarter}";
+        $cacheKey ='filings_summary_' . $this->cik . '_' . $this->quarter;
 
         $cacheDuration = 3600;
 
@@ -83,7 +83,7 @@ class FundSummary extends Component
     public function getSectorAllocationData()
     {
 
-        $cacheKey = "industry_summary_{$this->cik}";
+        $cacheKey = 'industry_summary_' . $this->cik;
         $cacheDuration = 3600;
         
         $investments = Cache::remember($cacheKey, $cacheDuration, function () {

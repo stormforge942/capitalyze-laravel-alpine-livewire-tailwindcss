@@ -12,11 +12,11 @@ class Page extends Component
 
     public function render()
     {
-        $companyProfileCacheKey = 'company_profile_' . $this->company->ticker;
+        $cacheKey = 'company_profile_' . $this->company->ticker;
 
         $cacheDuration = 3600;
 
-        $companyProfile = Cache::remember($companyProfileCacheKey, $cacheDuration, function () {
+        $companyProfile = Cache::remember($cacheKey, $cacheDuration, function () {
             return \App\Models\CompanyProfile::query()
                 ->where('symbol', $this->company->ticker)
                 ->firstOrFail()
