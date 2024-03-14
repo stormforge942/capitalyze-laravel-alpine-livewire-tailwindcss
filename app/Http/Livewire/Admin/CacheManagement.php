@@ -65,6 +65,7 @@ class CacheManagement extends Component
             if ($result) {
                 list($cursor, $keys) = $result;
                 foreach ($keys as $key) {
+                    \dd($key);
                     $redis->del($key);
                 }
             }
@@ -78,24 +79,7 @@ class CacheManagement extends Component
     {
     $redis = Redis::connection();
 
-    foreach ($this->results as $result) {
-        $prefix = $result['assignmentPrefix'];
-        $decodedPrefix = html_entity_decode($prefix);
-        $decodedPrefix = trim($decodedPrefix, "'");
-        $pattern = $decodedPrefix . '*';
-
-        // Use SCAN in a loop for each prefix pattern
-        $cursor = 0;
-        do {
-            $result = $redis->scan($cursor, ['MATCH' => $pattern, 'COUNT' => 100]);
-            if ($result) {
-                list($cursor, $keys) = $result;
-                foreach ($keys as $key) {
-                    $redis->del($key);
-                }
-            }
-        } while ($cursor);
-    }
+    $redis->flushAll();
 
     session()->flash('message', 'All caches cleared successfully.');
 }
