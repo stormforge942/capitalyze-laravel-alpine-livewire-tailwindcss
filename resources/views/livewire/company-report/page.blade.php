@@ -15,8 +15,9 @@
             <x-primary-tabs :tabs="$tabs" :active="$activeTab" @tab-changed="$wire.activeTab = $event.detail.key"
                 min-width="160px">
                 <div x-data="{
-                    rows: $wire.rows,
-                    tableDates: $wire.tableDates,
+                    rowGroups: [],
+                    tableDates: @js($tableDates),
+                    formattedTableDates: [],
                     selectedDateRange: $wire.entangle('selectedDateRange', true),
                     chart: null,
                     showLabel: true,
@@ -32,7 +33,7 @@
                     },
                     selectedChartRows: [],
                     hideSegments: [],
-                    showEmptyRows: false,
+                    showAllRows: false,
                     get formattedChartData() {
                         return {
                             labels: this.formattedTableDates,
@@ -78,21 +79,6 @@
                     get isReversed() {
                         return this.filters.order === 'Latest on the Left';
                     },
-                    get formattedTableDates() {
-                        let dates = [...this.tableDates];
-                
-                        dates = dates.filter((date) => {
-                            const year = parseInt(date.split('-')[0]);
-                
-                            return year >= this.selectedDateRange[0] && year <= this.selectedDateRange[1];
-                        })
-                
-                        if (this.isReversed) {
-                            dates = dates.slice().reverse();
-                        }
-                
-                        return dates
-                    },
                     get tableClasses() {
                         const classes = {
                             'Top Row': ['sticky-row'],
@@ -103,7 +89,16 @@
                         return 'sticky-table ' + (classes[this.filters.freezePane] || []).join(' ');
                     },
                     init() {
-                        this.$watch('filters', (newVal) => {
+                        const rows = @js($rows);
+                
+                        this.updateFormattedTableDates(this.tableDates);
+                        this.updateRowGroups(rows);
+                
+                        this.$watch('showAllRows', this.updateRowGroups.bind(this, rows))
+                        this.$watch('filters.unitType', this.updateRowGroups.bind(this, rows))
+                        this.$watch('filters.decimalPlaces', this.updateRowGroups.bind(this, rows))
+                
+                        this.$watch('filters', (newVal, oldVal) => {
                             const url = new URL(window.location.href);
                 
                             url.searchParams.set('view', newVal.view);
@@ -117,7 +112,10 @@
                             window.history.replaceState({}, '', url);
                         }, { deep: true })
                 
-                        this.$watch('filters.order', this.renderChart.bind(this), { deep: true })
+                        this.$watch('filters.order', () => {
+                            this.renderChart()
+                            this.updateFormattedTableDates(this.tableDates);
+                        })
                 
                         this.$watch('disclosureTab', (val) => window.updateQueryParam('disclosureTab', val))
                 
@@ -129,7 +127,26 @@
                             window.updateQueryParam('selectedDateRange', val.join(','))
                 
                             Alpine.debounce(this.renderChart.bind(this), 100)()
+                
+                            this.updateFormattedTableDates(this.tableDates);
+                
+                            this.updateRowGroups(rows);
                         }, { deep: true })
+                    },
+                    updateFormattedTableDates(_dates) {
+                        let dates = [..._dates];
+                
+                        dates = dates.filter((date) => {
+                            const year = parseInt(date.split('-')[0]);
+                
+                            return year >= this.selectedDateRange[0] && year <= this.selectedDateRange[1];
+                        })
+                
+                        if (this.isReversed) {
+                            dates = dates.slice().reverse();
+                        }
+                
+                        this.formattedTableDates = dates;
                     },
                     formattedTableDate(date) {
                         const includeMonth = !['Calendar Annual', 'Fiscal Annual'].includes(this.filters.period);
@@ -200,7 +217,7 @@
                         }
                     },
                     toggleRowForChart(row) {
-                        if (row.empty) return;
+                        if (row.empty || row.seg_start) return;
                 
                         if (this.selectedChartRows.find(item => item.id === row.id) ? true : false) {
                             this.selectedChartRows = this.selectedChartRows.filter(item => item.id !== row.id);
@@ -220,14 +237,21 @@
                             });
                         }
                     },
-                    get rowGroups() {
+                    updateRowGroups(rows_) {
                         let rows = [];
                 
                         const addRow = (row, section = 0, depth = 0, parent = null) => {
                             if (
-                                (row.empty && !this.showEmptyRows && !row.seg_start) || 
-                                this.hideSegments.includes(parent) || 
-                                (row.mismatchedSegmentation && !this.showEmptyRows)
+                                this.hideSegments.includes(parent) ||
+                                (!this.showAllRows && (row.mismatchedSegmentation || (row.empty && !row.children.length)))
+                            ) {
+                                return;
+                            }
+                
+                            if (
+                                !this.showAllRows &&
+                                !row.children.length &&
+                                !Object.entries(row.values).find(([key, value]) => !value.empty && this.formattedTableDates.includes(key))
                             ) {
                                 return;
                             }
@@ -241,7 +265,7 @@
                             let _row = {
                                 ...row,
                                 values: {},
-                                children: [],
+                                children: null,
                                 title: splitted.length > 1 ? title : row.title,
                                 section,
                                 depth,
@@ -268,7 +292,7 @@
                             });
                         }
                 
-                        this.rows.forEach(row => {
+                        rows_.forEach(row => {
                             addRow(row);
                         });
                 
@@ -291,7 +315,20 @@
                 
                         sections.push(nonSectionRows)
                 
-                        return Object.values(sections)
+                        let tmp = Object.values(sections)
+                
+                        {{-- clean the empty seg_start which has no children after filtering --}}
+                        tmp.forEach((section, index) => {
+                            let segments = section.map(row => row.segmentation ? row.parent : null).filter(Boolean)
+                
+                            section.forEach((row, index) => {
+                                if (row.seg_start && !segments.includes(row.id)) {
+                                    section.splice(index, 1)
+                                }
+                            })
+                        })
+                
+                        this.rowGroups = tmp;
                     }
                 }" wire:key="{{ \Str::uuid() }}">
                     @if ($activeTab === 'disclosure' && count($disclosureTabs))

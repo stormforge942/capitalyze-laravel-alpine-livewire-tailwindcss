@@ -23,9 +23,9 @@ class Page extends Component
 
     public $activeTab;
     public $company;
-    public $rows = [];
+    protected $rows = [];
+    protected $tableDates = [];
     public $currency = 'USD';
-    public $tableDates = [];
     public $rangeDates = [];
     public $selectedDateRange;
     public $noData = false;
@@ -54,7 +54,7 @@ class Page extends Component
     {
         // set properties from query string 
         $this->activeTab = $request->query('tab', 'income-statement');
-        $this->view = $request->query('view', 'As Reported');
+        $this->view = $request->query('view', 'As reported');
         $this->period = $request->query('period', 'Fiscal Annual');
         $this->unitType = $request->query('unitType', 'Millions');
         $this->decimalPlaces = intval($request->query('decimalPlaces', 2));
@@ -89,6 +89,8 @@ class Page extends Component
     {
         return view('livewire.company-report.page', [
             'tabs' => $this->tabs,
+            'rows' => $this->rows,
+            'tableDates' => $this->tableDates,
             'reverse' => $this->order === 'Latest on the Left',
             'viewTypes' => [
                 'As reported',
@@ -393,7 +395,7 @@ class Page extends Component
             'values' => $this->generateEmptyCellsRow(),
             'children' => [],
             'empty' => false,
-            'mismatchedSegmentation' => $mismatchedSegmentation,
+            'mismatchedSegmentation' => in_array($this->activeTab, ['income-statement', 'disclosure']) ? $mismatchedSegmentation : false,
         ];
 
         foreach ($data as $key => $value) {
@@ -421,9 +423,8 @@ class Page extends Component
 
         $row['seg_start'] = count($row['children']) && collect($row['children'])->some(fn ($child) => $child['segmentation']);
 
-        $row['empty'] =  !count($row['children']) && collect($row['values'])->every(fn ($cell) => $cell['empty']);
-
         $row['segmentation'] = $isSegmentation && count($row['children']) === 0;
+
         $row['id'] = Str::uuid() . '-' . Str::uuid(); // just for the charts
 
         return $row;
@@ -431,27 +432,27 @@ class Page extends Component
 
     private function parseCell($data, $key): array
     {
-        $response = [];
-        $response['empty'] = false;
-        $response['date'] = $key;
-        $response['ticker'] = $this->company['ticker'];
-        $response['value'] = null;
+        $response = [
+            'empty' => false,
+            'date' => $key,
+            'ticker' => $this->company['ticker'],
+            'value' => null,
+            'hash' => null,
+            'is_percent' => false,
+            'secondHash' => null,
+        ];
 
         $value = $data[0] ?? '';
-        $isPercent = ($data[1] ?? '') === '%';
 
         if (str_contains($value, '|')) {
             $array = explode('|', $value);
             $response['value'] = $array[0] ?: null;
             $response['hash'] = $array[1];
-            $response['is_percent'] = $isPercent;
-
-            if (array_key_exists(2, $array)) {
-                $response['secondHash'] = $array[2];
-            }
+            $response['is_percent'] = ($data[1] ?? '') === '%';
+            $response['secondHash'] = $array[2] ?? null;
         }
 
-        if (is_null($response['value'])) {
+        if (is_null($response['value']) || $response['value'] === '') {
             $response['empty'] = true;
         }
 
