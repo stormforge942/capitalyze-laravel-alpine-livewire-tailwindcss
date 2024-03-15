@@ -29,6 +29,7 @@ class Page extends Component
     public $rangeDates = [];
     public $selectedDateRange;
     public $noData = false;
+    public $statement = null;
 
     public $disclosureTabs = [];
     public $disclosureTab = '';
@@ -53,7 +54,7 @@ class Page extends Component
     {
         // set properties from query string 
         $this->activeTab = $request->query('tab', 'income-statement');
-        $this->view = $request->query('view', 'Standardized');
+        $this->view = $request->query('view', 'As Reported');
         $this->period = $request->query('period', 'Fiscal Annual');
         $this->unitType = $request->query('unitType', 'Millions');
         $this->decimalPlaces = intval($request->query('decimalPlaces', 2));
@@ -124,6 +125,8 @@ class Page extends Component
 
     public function setupTabData()
     {
+        $this->statement = null;
+
         $this->noData = false;
 
         $data = rescue(fn () => json_decode($this->getData(), true), null, false);
@@ -144,90 +147,47 @@ class Page extends Component
             : ['qrf5drs', 'quarter'];
 
         if ($this->activeTab === 'disclosure') {
-            $response = InfoPresentation::query()
-                ->where([
-                    'ticker' => $this->company['ticker'],
-                    'acronym' => $acronym,
-                ])
-                // we already have dedicated tabs for these
-                ->whereNotIn('title',  [
-                    'Income Statement',
-                    'Balance Sheet Statement',
-                    'Cash Flow Statement',
-                ])
-                // trim because title has extra space at the end
-                ->get([DB::raw('TRIM(title) as title'), 'statement_group']);
-
-            $this->disclosureTabs = [];
-
-            foreach ($response as $item) {
-                if ($item->statement_group === 'Financial Statements [Financial Statements]') {
-                    $this->disclosureTabs[$item->title] = $item->title;
-                } else {
-                    $this->disclosureFootnotes[] = $item->title;
-                }
-            }
-
-            if (!$response->count()) {
-                return null;
-            }
-
-            if (count($this->disclosureFootnotes)) {
-                $this->disclosureTabs['footnotes'] = "Footnotes";
-
-                if (!$this->disclosureFootnote || !in_array($this->disclosureFootnote, $this->disclosureFootnotes)) {
-                    $this->disclosureFootnote = $this->disclosureFootnotes[0];
-                }
-            }
-
-            if (!$this->disclosureTab || !in_array($this->disclosureTab, array_keys($this->disclosureTabs))) {
-                $this->disclosureTab = array_key_first($this->disclosureTabs);
-            }
-
-            $statement = $this->disclosureTab === 'footnotes'
-                ? $this->disclosureFootnote
-                : $this->disclosureTab;
-
-            return InfoPresentation::query()
-                ->where([
-                    'ticker' => $this->company['ticker'],
-                    'acronym' => $acronym,
-                ])
-                // trim because title has extra space at the end
-                ->where(DB::raw('TRIM(title)'), $statement)
-                ->select('info')
-                ->first()
-                ?->info;
+            return $this->disclosureData($acronym);
         }
 
         if ($this->view === 'Standardized') {
-            $column = [
-                'balance-sheet' => 'balance_sheet',
-                'income-statement' => 'income_statement',
-                'cash-flow' => 'cash_flow',
-                'ratios' => 'ratios',
-            ][$this->activeTab] ?? null;
-
-            if (!$column) {
-                return null;
-            }
-
-            $cacheKey = 'infotikr_presentation_' . $this->company['ticker'] . '_' . $period . '_' . $column;
-
-            $cacheDuration = 3600;
-
-            $columnValue = Cache::remember($cacheKey, $cacheDuration, function () use ($period, $column) {
-                return InfoTikrPresentation::query()
-                    ->where('ticker', $this->company['ticker'])
-                    ->where("period", $period)
-                    ->select($column)
-                    ->first()
-                    ?->{$column};
-            });
-
-            return $columnValue;
+            return $this->standarisedData($period);
         }
 
+        return $this->asReportedData($acronym);
+    }
+
+    private function standarisedData($period)
+    {
+        $column = [
+            'balance-sheet' => 'balance_sheet',
+            'income-statement' => 'income_statement',
+            'cash-flow' => 'cash_flow',
+            'ratios' => 'ratios',
+        ][$this->activeTab] ?? null;
+
+        if (!$column) {
+            return null;
+        }
+
+        $cacheKey = 'infotikr_presentation_' . $this->company['ticker'] . '_' . $period . '_' . $column;
+
+        $cacheDuration = 3600;
+
+        $columnValue = Cache::remember($cacheKey, $cacheDuration, function () use ($period, $column) {
+            return InfoTikrPresentation::query()
+                ->where('ticker', $this->company['ticker'])
+                ->where("period", $period)
+                ->select($column)
+                ->first()
+                ?->{$column};
+        });
+
+        return $columnValue;
+    }
+
+    private function asReportedData($acronym)
+    {
         $title = [
             'income-statement' => 'Income Statement',
             'balance-sheet' => 'Balance Sheet Statement',
@@ -238,16 +198,86 @@ class Page extends Component
             return null;
         }
 
-        return InfoPresentation::query()
+        $tmp = InfoPresentation::query()
             ->where([
                 'ticker' => $this->company['ticker'],
                 'acronym' => $acronym,
                 'title' => $title,
-                'statement_group' => 'Financial Statements [Financial Statements]'
+                'statement_group' => 'Financial Statements [Financial Statements]',
             ])
-            ->select('info')
-            ->first()
-            ?->info;
+            ->select('info', 'statement')
+            ->first();
+
+        if (!$tmp) {
+            return null;
+        }
+
+        $this->statement = trim(explode('[', $tmp->statement)[0]);
+
+        return $tmp->info;
+    }
+
+    private function disclosureData($acronym)
+    {
+        $response = InfoPresentation::query()
+            ->where([
+                'ticker' => $this->company['ticker'],
+                'acronym' => $acronym,
+            ])
+            // we already have dedicated tabs for these
+            ->whereNotIn('title',  [
+                'Income Statement',
+                'Balance Sheet Statement',
+                'Cash Flow Statement',
+            ])
+            // trim because title has extra space at the end
+            ->get([DB::raw('TRIM(title) as title'), 'statement_group', 'statement']);
+
+        $this->disclosureTabs = [];
+
+        if (!$response->count()) {
+            return null;
+        }
+
+        foreach ($response as $item) {
+            if ($item->statement_group === 'Financial Statements [Financial Statements]') {
+                $this->disclosureTabs[$item->title] = $item->title;
+            } else {
+                $this->disclosureFootnotes[] = $item->title;
+            }
+        }
+
+        if (count($this->disclosureFootnotes)) {
+            $this->disclosureTabs['footnotes'] = "Footnotes";
+
+            if (!$this->disclosureFootnote || !in_array($this->disclosureFootnote, $this->disclosureFootnotes)) {
+                $this->disclosureFootnote = $this->disclosureFootnotes[0];
+            }
+        }
+
+        if (!$this->disclosureTab || !in_array($this->disclosureTab, array_keys($this->disclosureTabs))) {
+            $this->disclosureTab = array_key_first($this->disclosureTabs);
+        }
+
+        $statement = $this->disclosureTab === 'footnotes'
+            ? $this->disclosureFootnote
+            : $this->disclosureTab;
+
+        $tmp = InfoPresentation::query()
+            ->where([
+                'ticker' => $this->company['ticker'],
+                'acronym' => $acronym,
+            ])
+            // trim because title has extra space at the end
+            ->where(DB::raw('TRIM(title)'), $statement)
+            ->select('info', 'statement')
+            ->first();
+
+        if (!$tmp) return null;
+
+        $this->statement = trim(explode('[', $tmp->statement)[0]);
+
+        return $tmp->info;
     }
 
     private function extractDates($array, $dates = [])
@@ -354,7 +384,7 @@ class Page extends Component
         $this->rows = $rows;
     }
 
-    private function generateRow($data, $title, $isSegmentation = false): array
+    private function generateRow($data, $title, $isSegmentation = false, $mismatchedSegmentation = false): array
     {
         $row = [
             'title' => $title,
@@ -363,6 +393,7 @@ class Page extends Component
             'values' => $this->generateEmptyCellsRow(),
             'children' => [],
             'empty' => false,
+            'mismatchedSegmentation' => $mismatchedSegmentation,
         ];
 
         foreach ($data as $key => $value) {
@@ -380,7 +411,7 @@ class Page extends Component
                         $valuen = $sValue[$keyn];
                         $keynn = array_keys($valuen)[0];
                         $valuenn = $valuen[$keynn];
-                        $row['children'][] = $this->generateRow($valuenn, $keynn, true);
+                        $row['children'][] = $this->generateRow($valuenn, $keynn, true, $sKey !== $this->statement);
                     }
                 } else {
                     $row['children'][] = $this->generateRow($value, $key, $isSegmentation);
@@ -389,10 +420,12 @@ class Page extends Component
         }
 
         $row['seg_start'] = count($row['children']) && collect($row['children'])->some(fn ($child) => $child['segmentation']);
-        $row['empty'] = !count($row['children']) && collect($row['values'])->every(fn ($cell) => $cell['empty']);
+
+        $row['empty'] =  !count($row['children']) && collect($row['values'])->every(fn ($cell) => $cell['empty']);
 
         $row['segmentation'] = $isSegmentation && count($row['children']) === 0;
         $row['id'] = Str::uuid() . '-' . Str::uuid(); // just for the charts
+
         return $row;
     }
 

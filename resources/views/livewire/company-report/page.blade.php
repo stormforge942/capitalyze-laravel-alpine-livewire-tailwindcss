@@ -133,7 +133,7 @@
                     },
                     formattedTableDate(date) {
                         const includeMonth = !['Calendar Annual', 'Fiscal Annual'].includes(this.filters.period);
-
+                
                         return new Date(date).toLocaleString('en-US', {
                             year: 'numeric',
                             month: includeMonth ? 'short' : undefined,
@@ -144,7 +144,7 @@
                     },
                     formatTableValue(value, isPercent) {
                         value = value == null ? '' : value;
-                        
+                
                         if (value === '' || value === '-' || isNaN(Number(value))) {
                             const isLink = value.startsWith('@@@');
                 
@@ -224,7 +224,11 @@
                         let rows = [];
                 
                         const addRow = (row, section = 0, depth = 0, parent = null) => {
-                            if ((row.empty && !this.showEmptyRows && !row.seg_start) || (this.hideSegments.includes(parent))) {
+                            if (
+                                (row.empty && !this.showEmptyRows && !row.seg_start) || 
+                                this.hideSegments.includes(parent) || 
+                                (row.mismatchedSegmentation && !this.showEmptyRows)
+                            ) {
                                 return;
                             }
                 
@@ -249,14 +253,14 @@
                                 _row['hasBorder'] = splitted[2] === 'true'
                                 _row['section'] = parseInt(splitted[3])
                             };
-                                            
+                
                             Object.entries(row.values).forEach(([key, value]) => {
                                 _row.values[key] = {
                                     ...value,
                                     ...this.formatTableValue(value.value, value.is_percent)
                                 };
                             });
-                                            
+                
                             rows.push(_row);
                 
                             row.children.forEach(child => {

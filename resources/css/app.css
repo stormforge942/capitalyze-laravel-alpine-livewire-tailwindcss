@@ -250,6 +250,7 @@ a {
     background: #4285f4;
     width: 0;
     animation: borealisBar 2s linear infinite;
+    z-index: 1000;
 }
 
 @keyframes borealisBar {
