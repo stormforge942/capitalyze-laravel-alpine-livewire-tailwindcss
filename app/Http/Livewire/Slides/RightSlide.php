@@ -55,7 +55,8 @@ class RightSlide extends SlideOver
                     ->table('public.as_reported_sec_text_block_content')
                     ->where('ticker', '=', $this->ticker)
                     ->whereIn('fact_hash', $factHashes)
-                    ->value('content');
+                    ->pluck('content')
+                    ->implode('<br>');
             } else {
                 $this->data = null;
             }
