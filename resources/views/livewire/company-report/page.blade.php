@@ -188,6 +188,7 @@
                         const result = Number(Math.abs(value)).toLocaleString('en-US', {
                             style: 'decimal',
                             minimumFractionDigits: this.filters.decimalPlaces,
+                            maximumFractionDigits: this.filters.decimalPlaces,
                         });
                 
                         const isNegative = value < 0;
