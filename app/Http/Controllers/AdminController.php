@@ -39,4 +39,11 @@ class AdminController extends Controller
             'tab' => 'feedbacks-management'
         ]);
     }
+
+    public function cache()
+    {
+        return view('layouts.admin', [
+            'tab' => 'cache-management'
+        ]);
+    }
 }

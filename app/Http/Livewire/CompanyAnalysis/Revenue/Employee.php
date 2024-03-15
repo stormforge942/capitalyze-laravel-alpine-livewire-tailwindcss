@@ -189,11 +189,11 @@ class Employee extends Component
             }
         }
 
-        $employeeCountCacheKey = 'employee_count_' . $this->company['ticker'];
+        $cacheKey = 'employee_count_' . $this->company['ticker'];
 
         $cacheDuration = 3600;
 
-        $employeeCount = Cache::remember($employeeCountCacheKey, $cacheDuration, function () {
+        $employeeCount = Cache::remember($cacheKey, $cacheDuration, function () {
             return DB::connection('pgsql-xbrl')
                 ->table('employee_count')
                 ->where('symbol', $this->company['ticker'])

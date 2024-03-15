@@ -208,21 +208,21 @@ class CompanyController extends BaseController
     {
         OwnershipHistoryService::setCompany($request->route('start', $ticker));
 
-        $companyCacheKey = 'company_data_' . $ticker;
+        $cacheKey = 'company_data_' . $ticker;
 
         $cacheDuration = 3600; 
 
-        $company = Cache::remember($companyCacheKey, $cacheDuration, function () use ($ticker) {
+        $company = Cache::remember($cacheKey, $cacheDuration, function () use ($ticker) {
             return Company::query()
                 ->where('ticker', $ticker)
                 // ->where('ticker', OwnershipHistoryService::getCompany())
                 ->firstOrFail();
         });
 
-        $currentCompanyCacheKey = "current_company_data_{$ticker}";
+        $cacheKey = 'current_company_data_' . $ticker;
 
         $currentCompany = $ticker === $company->ticker ? $company :
-        Cache::remember($currentCompanyCacheKey, $cacheDuration, function () use ($ticker) {
+        Cache::remember($cacheKey, $cacheDuration, function () use ($ticker) {
             return Company::query()
                 ->where('ticker', $ticker)
                 ->firstOrFail();
@@ -238,20 +238,40 @@ class CompanyController extends BaseController
 
     public function fund(string $fund, ?string $company = null)
     {
-        $fund = Fund::where('cik', $fund)->firstOrFail();
 
-        $currentCompany = $company
-            ? Company::query()
-            ->where('ticker', $company)
-            ->first()
-            : null;
+        $cacheKey = 'fund_by_cik_' . $fund;
 
-        $intialCompany = Company::query()
-            ->where('ticker', OwnershipHistoryService::getCompany())
-            ->firstOrFail();
+        $cacheDuration = 3600;
+
+        $fund = Cache::remember($cacheKey, $cacheDuration, function () use ($fund) {
+            return Fund::where('cik', $fund)->firstOrFail();
+        });
+
+        $currentCompany = null;
+
+        if ($company) {
+            $cacheKey = 'company_by_ticker_' . $company;
+            $cacheDuration = 3600;
+        
+            $currentCompany = Cache::remember($cacheKey, $cacheDuration, function () use ($company) {
+                return Company::query()
+                    ->where('ticker', $company)
+                    ->first();
+            });
+        }
+
+        $companyTicker = OwnershipHistoryService::getCompany();
+
+        $cacheKey = 'initial_company_' . $companyTicker;
+
+        $initialCompany = Cache::remember($cacheKey, $cacheDuration, function () use ($companyTicker) {
+            return Company::query()
+                ->where('ticker', $companyTicker)
+                ->firstOrFail();
+        });
 
         return view('layouts.company', [
-            'company' => $intialCompany,
+            'company' => $initialCompany,
             'currentCompany' => $currentCompany,
             'tab' => 'fund',
             'fund' => $fund,
