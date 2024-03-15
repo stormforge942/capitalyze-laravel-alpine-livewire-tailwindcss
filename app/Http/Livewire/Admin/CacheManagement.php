@@ -65,7 +65,6 @@ class CacheManagement extends Component
             if ($result) {
                 list($cursor, $keys) = $result;
                 foreach ($keys as $key) {
-                    \dd($key);
                     $redis->del($key);
                 }
             }

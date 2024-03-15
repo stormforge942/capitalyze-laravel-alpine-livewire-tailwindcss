@@ -73,12 +73,6 @@ class CompanyNavbar extends Component
             'Ownership',
         ];
 
-        // dd($links);
-
-        // dd($links->where(fn ($link) => Str::startsWith('builder.', $link['route_name']))
-        // ->values()
-        // ->all());
-
         return [
             'main' => [
                 'name' => 'Idea Generation',

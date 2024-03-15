@@ -104,3 +104,19 @@ window.fullScreen = function (el) {
 }
 
 Alpine.start()
+
+function updateUserSettings(settings) {
+    fetch("/settings", {
+        method: "POST",
+        headers: {
+            "Content-Type": "application/json",
+            Accept: "application/json",
+        },
+        body: JSON.stringify({
+            _token: document.querySelector('meta[name="csrf-token"]').content,
+            ...settings,
+        }),
+    })
+}
+
+window.updateUserSettings = updateUserSettings

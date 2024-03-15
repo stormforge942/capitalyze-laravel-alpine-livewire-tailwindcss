@@ -96,7 +96,13 @@
                 
                         this.$watch('showAllRows', this.updateRowGroups.bind(this, rows))
                         this.$watch('filters.unitType', this.updateRowGroups.bind(this, rows))
-                        this.$watch('filters.decimalPlaces', this.updateRowGroups.bind(this, rows))
+                        this.$watch('filters.decimalPlaces', () => {
+                            this.updateRowGroups(rows)
+                
+                            window.updateUserSettings({
+                                decimalPlaces: this.filters.decimalPlaces
+                            })
+                        })
                 
                         this.$watch('filters', (newVal, oldVal) => {
                             const url = new URL(window.location.href);

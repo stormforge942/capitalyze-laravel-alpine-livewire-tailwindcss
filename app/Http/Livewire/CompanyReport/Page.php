@@ -8,6 +8,7 @@ use Illuminate\Support\Str;
 use Illuminate\Http\Request;
 use App\Models\InfoPresentation;
 use App\Models\InfoTikrPresentation;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Cache;
 
@@ -57,7 +58,7 @@ class Page extends Component
         $this->view = $request->query('view', 'As reported');
         $this->period = $request->query('period', 'Fiscal Annual');
         $this->unitType = $request->query('unitType', 'Millions');
-        $this->decimalPlaces = intval($request->query('decimalPlaces', 2));
+        $this->decimalPlaces = intval($request->query('decimalPlaces', data_get(Auth::user(), 'settings.decimalPlaces', 1)));
         $this->order = $request->query('order', 'Latest on the Right');
         $this->freezePane = $request->query('freezePane', 'Top Row & First Column');
         $this->disclosureTab = $request->query('disclosureTab', '');

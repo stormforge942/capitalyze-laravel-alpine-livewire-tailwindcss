@@ -48,6 +48,7 @@ use App\Http\Controllers\EarningsCalendarController;
 use App\Http\Middleware\CustomEmailVerificationPrompt;
 use App\Http\Controllers\InsiderTransactionsController;
 use App\Http\Controllers\ResetPasswordSuccessfulController;
+use App\Http\Controllers\UpdateSettingsController;
 use Laravel\Fortify\Http\Controllers\AuthenticatedSessionController;
 
 Route::get('/test-speed', function () {
@@ -159,6 +160,8 @@ Route::group(['middleware' => ['auth', 'approved', 'verified', CheckPagePermissi
     Route::get('/frankfurt/{ticker}/filings', [FrankfurtController::class, 'filings'])->name('frankfurt.filings');
 
     Route::get('/shenzhen/{ticker}/', [ShenzhenController::class, 'metrics'])->name('shenzhen.metrics');
+
+    Route::post('settings', UpdateSettingsController::class)->name('settings.update');
 });
 
 Route::group(['middleware' => ['auth', 'verified', EnsureUserIsAdmin::class]], function () {
