@@ -218,11 +218,11 @@ class Page extends Component
 
             $columnValue = Cache::remember($cacheKey, $cacheDuration, function () use ($period, $column) {
                 return InfoTikrPresentation::query()
-                            ->where('ticker', $this->company['ticker'])
-                            ->where("period", $period)
-                            ->select($column)
-                            ->first()
-                            ?->{$column}; 
+                    ->where('ticker', $this->company['ticker'])
+                    ->where("period", $period)
+                    ->select($column)
+                    ->first()
+                    ?->{$column};
             });
 
             return $columnValue;
@@ -299,7 +299,7 @@ class Page extends Component
         $end = $this->selectedDateRange[1];
 
         if (!$start || !$end) {
-            $idx = count($this->rangeDates) - 6;
+            $idx = count($this->rangeDates) - 8;
             $start = $this->rangeDates[$idx < 0 ? 0 : $idx];
 
             $idx = count($this->rangeDates) - 1;
@@ -404,15 +404,17 @@ class Page extends Component
         $response['ticker'] = $this->company['ticker'];
         $response['value'] = null;
 
-        foreach ($data as $value) {
-            if (str_contains($value, '|')) {
-                $array = explode('|', $value);
-                $response['value'] = $array[0] ?: null;
-                $response['hash'] = $array[1];
+        $value = $data[0] ?? '';
+        $isPercent = ($data[1] ?? '') === '%';
 
-                if (array_key_exists(2, $array)) {
-                    $response['secondHash'] = $array[2];
-                }
+        if (str_contains($value, '|')) {
+            $array = explode('|', $value);
+            $response['value'] = $array[0] ?: null;
+            $response['hash'] = $array[1];
+            $response['is_percent'] = $isPercent;
+
+            if (array_key_exists(2, $array)) {
+                $response['secondHash'] = $array[2];
             }
         }
 

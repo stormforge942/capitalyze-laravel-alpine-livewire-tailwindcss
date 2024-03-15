@@ -2,6 +2,7 @@
     dropdown: null,
     open: false,
     init() {
+        console.log(this.$refs.body)
         this.dropdown = new Dropdown($refs.body, $refs.trigger, {
             placement: '{{ $placement }}',
             onShow: () => this.open = true,
@@ -25,7 +26,8 @@
         @if ($body ?? false)
             {{ $body }}
         @else
-            <div class="bg-white rounded-lg border border-[#E8EBF2]" @if ($shadow) style="box-shadow: 0px 4px 8px 0px rgba(0, 0, 8, 0.08);" @endif>
+            <div class="bg-white rounded-lg border border-[#E8EBF2]"
+                @if ($shadow) style="box-shadow: 0px 4px 8px 0px rgba(0, 0, 8, 0.08);" @endif>
                 {{ $slot }}
             </div>
         @endif

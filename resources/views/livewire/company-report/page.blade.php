@@ -143,6 +143,8 @@
                         return year >= this.selectedDateRange[0] && year <= this.selectedDateRange[1];
                     },
                     formatTableValue(value, isPercent) {
+                        value = value == null ? '' : value;
+                        
                         if (value === '' || value === '-' || isNaN(Number(value))) {
                             const isLink = value.startsWith('@@@');
                 
@@ -229,9 +231,8 @@
                             const splitted = row.title.split('|');
                             const title = splitted[0];
                 
-                            const isPercent = title.includes('%') ||
-                                title.toLowerCase().includes(' yoy') ||
-                                title.toLowerCase().includes(' per');
+                            {{-- the title is percentage value is has standonlone words such as %, yoy, per --}}
+                            const isPercent = /\b%\b|\byoy\b|\bper\b/.test(title.toLowerCase());
                 
                             let _row = {
                                 ...row,
@@ -248,14 +249,14 @@
                                 _row['hasBorder'] = splitted[2] === 'true'
                                 _row['section'] = parseInt(splitted[3])
                             };
-                
+                                            
                             Object.entries(row.values).forEach(([key, value]) => {
                                 _row.values[key] = {
                                     ...value,
-                                    ...this.formatTableValue(value.value, isPercent)
+                                    ...this.formatTableValue(value.value, value.is_percent)
                                 };
                             });
-                
+                                            
                             rows.push(_row);
                 
                             row.children.forEach(child => {
