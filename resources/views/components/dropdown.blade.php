@@ -2,7 +2,6 @@
     dropdown: null,
     open: false,
     init() {
-        console.log(this.$refs.body)
         this.dropdown = new Dropdown($refs.body, $refs.trigger, {
             placement: '{{ $placement }}',
             onShow: () => this.open = true,
