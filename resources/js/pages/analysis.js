@@ -40,7 +40,7 @@ const legendConfig = () => ({
 
 const dataLabelConfig = (config) => ({
     display: (ctx) => {
-        return config.showLabel && ctx.dataset?.type !== "line" ? 'auto' : false
+        return config.showLabel && ctx.dataset?.type !== "line" ? "auto" : false
     },
     anchor: "center",
     align: "center",
@@ -132,6 +132,9 @@ function renderRevenueByEmployeeChart(canvas, datasets, config) {
             datasets,
         },
         options: {
+            animation: {
+                duration: 0,
+            },
             maintainAspectRatio: false,
             responsive: true,
             interaction: {
@@ -199,6 +202,9 @@ function renderCostStructureChart(canvas, datasets, config) {
             datasets,
         },
         options: {
+            animation: {
+                duration: 0,
+            },
             maintainAspectRatio: false,
             responsive: true,
             interaction: {
@@ -264,6 +270,9 @@ function renderFcfConversionChart(canvas, data, config) {
             datasets: data.datasets,
         },
         options: {
+            animation: {
+                duration: 0,
+            },
             maintainAspectRatio: false,
             responsive: true,
             interaction: {
@@ -343,6 +352,9 @@ function renderCapitalStructureChart(canvas, datasets, config) {
             datasets,
         },
         options: {
+            animation: {
+                duration: 0,
+            },
             maintainAspectRatio: false,
             responsive: true,
             interaction: {
@@ -408,6 +420,9 @@ function basicBarChart(canvas, datasets, config) {
             datasets,
         },
         options: {
+            animation: {
+                duration: 0,
+            },
             maintainAspectRatio: false,
             responsive: true,
             interaction: {
@@ -462,6 +477,9 @@ function percentageBarChart(canvas, datasets, config = {}) {
             datasets,
         },
         options: {
+            animation: {
+                duration: 0,
+            },
             maintainAspectRatio: false,
             responsive: true,
             interaction: {

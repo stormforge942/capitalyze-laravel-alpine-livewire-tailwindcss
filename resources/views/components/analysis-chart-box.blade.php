@@ -74,7 +74,7 @@
                     </p>
                 </div>
 
-                <form class="flex items-center gap-8 text-sm text-gray-medium2 mr-10">
+                <form class="flex items-center gap-8 text-sm text-gray-medium2 mr-10" x-cloak>
                     @if ($hasPercentageMix)
                         <label class="cursor-pointer flex items-center gap-1">
                             <input type="radio" value="values" class="custom-radio !h-4 !w-4 focus:ring-0"
