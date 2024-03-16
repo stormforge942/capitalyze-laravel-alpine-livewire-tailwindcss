@@ -109,7 +109,7 @@ class Page extends Component
                 'Calendar Annual',
             ],
             'unitTypes' => [
-                'None',
+                'As Stated',
                 'Thousands',
                 'Millions',
                 'Billions',

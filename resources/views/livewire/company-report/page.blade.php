@@ -72,6 +72,7 @@
                                     pointHoverBorderWidth: 4,
                                     pointHoverBackgroundColor: row.color,
                                     maxBarThickness: 150,
+                                    isPercent: row.isPercent,
                                 }
                             })
                         }
@@ -95,9 +96,14 @@
                         this.updateRowGroups(rows);
                 
                         this.$watch('showAllRows', this.updateRowGroups.bind(this, rows))
-                        this.$watch('filters.unitType', this.updateRowGroups.bind(this, rows))
+                        this.$watch('filters.unitType', () => {
+                            this.updateRowGroups(rows);
+                            this.renderChart();
+                        })
                         this.$watch('filters.decimalPlaces', () => {
                             this.updateRowGroups(rows)
+                
+                            this.renderChart();
                 
                             window.updateUserSettings({
                                 decimalPlaces: this.filters.decimalPlaces
@@ -214,7 +220,13 @@
                             return;
                         }
                 
-                        this.chart = window.renderCompanyReportChart(this.formattedChartData, this.isReversed, this.showLabel);
+                        this.chart = window.renderCompanyReportChart(
+                            this.formattedChartData,
+                            this.isReversed,
+                            this.showLabel, {
+                                unit: this.filters.unitType,
+                                decimalPlaces: this.filters.decimalPlaces,
+                            });
                     },
                     toggleSegment(id) {
                         if (this.hideSegments.includes(id)) {
@@ -241,6 +253,7 @@
                                 values,
                                 color: '#7C8286',
                                 type: 'line',
+                                isPercent: row.isPercent,
                             });
                         }
                     },
@@ -277,6 +290,7 @@
                                 section,
                                 depth,
                                 parent,
+                                isPercent: false,
                             };
                 
                             if (splitted.length > 1) {
@@ -286,6 +300,8 @@
                             };
                 
                             Object.entries(row.values).forEach(([key, value]) => {
+                                _row.isPercent = value.is_percent;
+                
                                 _row.values[key] = {
                                     ...value,
                                     ...this.formatTableValue(value.value, value.is_percent)
@@ -566,7 +582,7 @@
     <script>
         let chart = null;
 
-        function renderCompanyReportChart(data, reversed, showLabel) {
+        function renderCompanyReportChart(data, reversed, showLabel, config) {
             const ctx = document.getElementById("chart-company-report")?.getContext("2d");
 
             if (!ctx) return;
@@ -623,7 +639,17 @@
                                     })
                                 },
                                 label: function(context) {
-                                    return context.dataset.label + '|' + context.formattedValue
+                                    let y = context.raw.y
+
+                                    if (context.dataset.isPercent) {
+                                        y = window.formatNumber(y, {
+                                            decimalPlaces: config.decimalPlaces,
+                                        })
+                                    } else {
+                                        y = window.formatNumber(y, config);
+                                    }
+
+                                    return context.dataset.label + '|' + y
                                 }
                             },
                         },

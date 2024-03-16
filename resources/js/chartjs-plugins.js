@@ -186,12 +186,13 @@ export function formatCmpctNumber(number, options = {}) {
 export function formatNumber(number, options) {
     if (isNaN(Number(number))) return number
 
-    const divideBy =
-        {
-            Thousands: 1000,
-            Millions: 1000000,
-            Billions: 1000000000,
-        }[options.unit] || 1
+    const divideBy = options.unit
+        ? {
+              Thousands: 1000,
+              Millions: 1000000,
+              Billions: 1000000000,
+          }[options.unit] || 1
+        : 1
 
     return Intl.NumberFormat("en-US", {
         minimumFractionDigits: options.decimalPlaces,
@@ -206,6 +207,7 @@ export function hex2rgb(hex, alpha = 1) {
 
 window.chartJsPlugins = chartJsPlugins
 window.formatCmpctNumber = formatCmpctNumber
+window.formatNumber = formatNumber
 window.hex2rgb = hex2rgb
 
 function getOrCreateTooltip(chart) {

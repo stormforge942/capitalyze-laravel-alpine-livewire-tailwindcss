@@ -53,7 +53,7 @@
                     </template>
                 </tr>
             </thead>
-            <template x-for="rows in rowGroups">
+            <template x-for="(rows, groupIdx) in rowGroups">
                 <tbody class="report-tbody">
                     <template x-for="(row, index) in rows" :key="`${index}-${row.title}`">
                         <tr x-data="{
@@ -92,7 +92,7 @@
                             <td class="pl-6 text-left"
                                 :class="[
                                     isRowSelectedForChart ? '!bg-[#d5ebe3]' : (row.segmentation ? '!bg-[#e4eff3]' : ''),
-                                    index === 0 ? 'rounded-tl-lg' : '',
+                                    index === 0 && groupIdx != 0 ? 'rounded-tl-lg' : '',
                                     isLast ? 'rounded-bl-lg' : '',
                                     paddings
                                 ]">
@@ -123,7 +123,7 @@
                                 <td class="pl-6 last:pr-8"
                                     :class="[
                                         isLast ? 'last:rounded-br-lg' : '',
-                                        index === 0 ? 'last:rounded-tr-lg' : '',
+                                        index === 0 && groupIdx != 0 ? 'last:rounded-tr-lg' : '',
                                         paddings
                                     ]">
                                     <x-review-number-button x-data="{ amount: row.values[date]?.value, date, }">
