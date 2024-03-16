@@ -389,8 +389,10 @@ class Page extends Component
 
     private function generateRow($data, $title, $isSegmentation = false, $mismatchedSegmentation = false): array
     {
+        $tmp = preg_replace('/[^a-zA-Z]/', '', $title);
+
         $row = [
-            'title' => $title,
+            'title' => ctype_upper($tmp) ? ucwords(strtolower($title)) : $title,
             'seg_start' => false,
             'segmentation' => false,
             'values' => $this->generateEmptyCellsRow(),
@@ -436,6 +438,10 @@ class Page extends Component
         $row['segmentation'] = $isSegmentation && count($row['children']) === 0;
 
         $row['id'] = Str::uuid() . '-' . Str::uuid(); // just for the charts
+
+        if (count($row['children'])) {
+            $row['title'] = rtrim($row['title'], ':');
+        }
 
         return $row;
     }
