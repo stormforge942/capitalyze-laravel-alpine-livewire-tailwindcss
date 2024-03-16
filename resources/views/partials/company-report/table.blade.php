@@ -45,11 +45,11 @@
             :class="tableClasses">
             <thead>
                 <tr class="capitalize text-dark bg-[#EDEDED] text-base font-bold">
-                    <th class="pl-8 py-2 bg-[#EDEDED] text-left">
+                    <th class="pl-6 py-2 bg-[#EDEDED] text-left">
                         {{ $company['name'] }} ({{ $company['ticker'] }})
                     </th>
                     <template x-for="date in formattedTableDates" :key="date">
-                        <th class="pl-6 py-2 last:pr-8" x-text="formattedTableDate(date)"></th>
+                        <th class="pl-6 py-2 last:pr-6" x-text="formattedTableDate(date)"></th>
                     </template>
                 </tr>
             </thead>
@@ -120,7 +120,7 @@
                                 </div>
                             </td>
                             <template x-for="date in formattedTableDates" :key="date">
-                                <td class="pl-6 last:pr-8"
+                                <td class="pl-6 last:pr-6"
                                     :class="[
                                         isLast ? 'last:rounded-br-lg' : '',
                                         index === 0 && groupIdx != 0 ? 'last:rounded-tr-lg' : '',
