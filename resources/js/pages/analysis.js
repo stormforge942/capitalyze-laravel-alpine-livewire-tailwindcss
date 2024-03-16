@@ -292,7 +292,9 @@ function renderFcfConversionChart(canvas, data, config) {
                                 backgroundColor: "rgba(0,0,0,1)",
                                 position: "end",
                                 xAdjust: 10,
-                                content: data.avgFcf.toFixed(2) + "%",
+                                content:
+                                    data.avgFcf.toFixed(config.number.decimalPlaces) +
+                                    "%",
                                 color: "#fff",
                             },
                         },

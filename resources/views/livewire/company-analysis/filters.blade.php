@@ -19,6 +19,12 @@
     freezePane: $wire.entangle('freezePane', true),
     init() {
         this.$watch('freezePane', (val) => this.onFreezePaneChange(val));
+
+        this.$watch('decimalPlaces', (val) => {
+            window.updateUserSettings({
+                decimalPlaces: this.decimalPlaces
+            })
+        });
     },
     onFreezePaneChange(value) {
         const classes = {
