@@ -64,7 +64,7 @@ class Product extends Component
                 'data' => array_map(fn ($date) => [
                     'x' => $this->formatDateForChart($date),
                     'value' => $values['timeline'][$date],
-                    'percent' => round($values['total_percent'][$date], 2),
+                    'percent' => round($values['total_percent'][$date], $this->decimalPlaces),
                 ], $this->selectedDates),
                 "borderRadius" => 2,
                 "fill" => true,

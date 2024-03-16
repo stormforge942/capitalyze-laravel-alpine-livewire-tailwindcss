@@ -39,11 +39,13 @@ const legendConfig = () => ({
 })
 
 const dataLabelConfig = (config) => ({
-    display: (ctx) => config.showLabel && ctx.dataset?.type !== "line",
+    display: (ctx) => {
+        return config.showLabel && ctx.dataset?.type !== "line" ? 'auto' : false
+    },
     anchor: "center",
     align: "center",
     formatter: (v) => {
-        return Number(v.y).toFixed(2 ?? 0) + "%"
+        return Number(v.y).toFixed(config.number.decimalPlaces) + "%"
     },
     font: {
         weight: 500,
@@ -213,7 +215,11 @@ function renderCostStructureChart(canvas, datasets, config) {
                     ...dataLabelConfig(config),
                     formatter: (v) => {
                         if (config.type === "percentage") {
-                            return Number(v.y).toFixed(2) + "%"
+                            return (
+                                Number(v.y).toFixed(
+                                    config.number.decimalPlaces
+                                ) + "%"
+                            )
                         }
 
                         return formatNumber(v.y, config.number)
@@ -293,8 +299,9 @@ function renderFcfConversionChart(canvas, data, config) {
                                 position: "end",
                                 xAdjust: 10,
                                 content:
-                                    data.avgFcf.toFixed(config.number.decimalPlaces) +
-                                    "%",
+                                    data.avgFcf.toFixed(
+                                        config.number.decimalPlaces
+                                    ) + "%",
                                 color: "#fff",
                             },
                         },

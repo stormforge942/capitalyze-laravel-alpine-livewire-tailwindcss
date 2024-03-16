@@ -80,7 +80,7 @@ class Employee extends Component
                 'label' => '% Change YoY',
                 'data' => array_map(fn ($date) => [
                     'x' => $this->formatDateForChart($date),
-                    'y' => round($data['rev_by_emp']['yoy_change'][$date], 2),
+                    'y' => round($data['rev_by_emp']['yoy_change'][$date], $this->decimalPlaces),
                 ], $this->selectedDates),
                 "fill" => false,
                 "yAxisID" => 'y1',

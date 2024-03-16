@@ -80,7 +80,7 @@ class FcfConversion extends Component
                 'label' => $label,
                 'data' => array_map(fn ($date) => [
                     'x' => $this->formatDateForChart($date),
-                    'y' => round(abs($values['ebitda_percentage'][$date] ?? 0), 2),
+                    'y' => round(abs($values['ebitda_percentage'][$date] ?? 0), $this->decimalPlaces),
                 ], $this->selectedDates),
                 "borderRadius" => 2,
                 "fill" => true,

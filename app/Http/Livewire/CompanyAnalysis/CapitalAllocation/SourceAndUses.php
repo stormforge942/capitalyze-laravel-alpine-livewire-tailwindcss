@@ -80,7 +80,7 @@ class SourceAndUses extends Component
                 'data' => array_map(fn ($date) => [
                     'x' => $this->formatDateForChart($date),
                     'value' => $value['timeline'][$date],
-                    'percent' => round($value['total_percent'][$date], 2),
+                    'percent' => round($value['total_percent'][$date], $this->decimalPlaces),
                 ], $this->selectedDates),
                 'backgroundColor' => $this->chartColors[$idx] ?? random_color(),
                 'borderRadius' => 2,
@@ -104,8 +104,8 @@ class SourceAndUses extends Component
                 $average['percent'] += $data['percent'];
             }
 
-            $average['value'] = round($average['value'] / count($dataset['data']), 2);
-            $average['percent'] = round($average['percent'] / count($dataset['data']), 2);
+            $average['value'] = round($average['value'] / count($dataset['data']), $this->decimalPlaces);
+            $average['percent'] = round($average['percent'] / count($dataset['data']), $this->decimalPlaces);
 
             $datasets[$idx]['data'][] = $average;
         }
