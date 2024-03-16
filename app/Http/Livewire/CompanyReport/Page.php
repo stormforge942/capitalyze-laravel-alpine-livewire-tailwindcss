@@ -423,6 +423,7 @@ class Page extends Component
         }
 
         $row['seg_start'] = count($row['children']) && collect($row['children'])->some(fn ($child) => $child['segmentation']);
+        $row['empty'] = collect($row['values'])->every(fn ($cell) => $cell['empty']);
 
         $row['segmentation'] = $isSegmentation && count($row['children']) === 0;
 

@@ -263,6 +263,7 @@
                         const addRow = (row, section = 0, depth = 0, parent = null) => {
                             if (
                                 this.hideSegments.includes(parent) ||
+                                this.hideSegments.includes(row.id) ||
                                 (!this.showAllRows && (row.mismatchedSegmentation || (row.empty && !row.children.length)))
                             ) {
                                 return;
