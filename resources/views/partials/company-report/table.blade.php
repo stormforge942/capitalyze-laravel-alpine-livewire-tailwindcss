@@ -98,7 +98,7 @@
                                         :checked="isRowSelectedForChart" style="margin-left: -18px; margin-right: 2px;"
                                         @change="toggleRowForChart(row)">
 
-                                    <p class="max-w-[200px] overflow-ellipsis overflow-hidden"
+                                    <p class="max-w-[200px] truncate overflow-ellipsis overflow-hidden"
                                         :style="`padding-left: ${row.depth * 8}px`"
                                         :class="!row.empty && !row.seg_start ? 'cursor-pointer' : ''" x-text="row.title"
                                         @click="toggleRowForChart(row)"></p>

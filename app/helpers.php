@@ -210,3 +210,8 @@ function sticky_table_class($value): string
 
     return 'sticky-table ' . implode(' ', $classes[$value] ?? []);
 }
+
+function user_decimal_places($default = 1)
+{
+    return data_get(auth()->user(), 'settings.decimalPlaces', $default);
+}

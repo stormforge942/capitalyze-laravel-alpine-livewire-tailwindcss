@@ -212,8 +212,8 @@
             </div>
 
         </div>
-        <table class="mt-3 w-full rounded-lg overflow-hidden text-right whitespace-nowrap" id="main-table">
-            <thead class="font-sm font-semibold capitalize bg-[#EDEDED] text-dark">
+        <table class="mt-3 w-full rounded-lg overflow-hidden text-right whitespace-nowrap text-base" id="main-table">
+            <thead class="font-semibold capitalize bg-[#EDEDED] text-dark">
                 <tr class="font-bold text-base">
                     <th class="pl-8 py-2 text-left">{{ $profile['registrant_name'] }}
                         ({{ $profile['symbol'] }})</th>
@@ -430,7 +430,7 @@
                     });
                 }
         }" style="min-width: max-content">
-            <table class="w-full rounded-lg overflow-hidden text-left whitespace-nowrap"
+            <table class="w-full rounded-lg overflow-hidden text-left whitespace-nowrap text-base"
                 style="background: rgba(82, 198, 255, 0.10)">
                 <thead>
                     <tr>
@@ -440,7 +440,7 @@
                                 <?php $value = $table['adj_diluted_eps']['timeline'][$date]; ?>
 
                                 <x-review-number-button x-data="{ amount: '{{ $value }}', date: '{{ $date }}' }">
-                                    {!! redIfNegative($value, fn($val) => round($val, 2)) !!}
+                                    {!! redIfNegative($value, fn($val) => number_format($val, 2)) !!}
                                 </x-review-number-button>
                             </th>
                         @endforeach
@@ -450,10 +450,10 @@
                 <tbody>
                     <tr>
                         <td class="pl-6 py-2">
-                            <span class="pl-4 whitespace-nowrap">% Change YoY</span>
+                            <span class="pl-4 whitespace-nowrap font-bold">% Change YoY</span>
                         </td>
                         @foreach ($table['dates'] as $date)
-                            <td class="pl-6 py-2 last:pr-8 text-right">
+                            <td class="pl-6 py-2 last:pr-8 text-right font-bold">
                                 <?php $value = $table['adj_diluted_eps']['yoy_change'][$date]; ?>
 
                                 <x-review-number-button x-data="{ amount: '{{ $value }}', date: '{{ $date }}' }">

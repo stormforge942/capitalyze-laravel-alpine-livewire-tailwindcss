@@ -332,7 +332,7 @@ class Page extends Component
         $end = $this->selectedDateRange[1];
 
         if (!$start || !$end) {
-            $idx = count($this->rangeDates) - 8;
+            $idx = count($this->rangeDates) - 6;
             $start = $this->rangeDates[$idx < 0 ? 0 : $idx];
 
             $idx = count($this->rangeDates) - 1;
@@ -450,7 +450,7 @@ class Page extends Component
             $array = explode('|', $value);
             $response['value'] = $array[0] ?: null;
             $response['hash'] = $array[1];
-            $response['is_percent'] = ($data[1] ?? '') === '%';
+            $response['is_percent'] = in_array($data[1] ?? '', ['%', 'USD/Shares']);
             $response['secondHash'] = $array[2] ?? null;
         }
 
