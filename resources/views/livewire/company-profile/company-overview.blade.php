@@ -430,39 +430,34 @@
                     });
                 }
         }" style="min-width: max-content">
-            <table class="w-full rounded-lg overflow-hidden text-left whitespace-nowrap text-base"
+            <table class="w-full rounded-lg overflow-hidden text-left whitespace-nowrap text-base font-bold"
                 style="background: rgba(82, 198, 255, 0.10)">
-                <thead>
-                    <tr>
-                        <th class="pl-6 pt-2 font-bold whitespace-nowrap text-dark">Adj. Diluted EPS</th>
-                        @foreach ($table['dates'] as $date)
-                            <th class="pl-6 last:pr-8 pt-2 font-bold whitespace-nowrap text-dark text-right">
-                                <?php $value = $table['adj_diluted_eps']['timeline'][$date]; ?>
+                <tr>
+                    <td class="pl-6 pt-2 whitespace-nowrap text-dark">Adj. Diluted EPS</td>
+                    @foreach ($table['dates'] as $date)
+                        <td class="pl-6 last:pr-8 pt-2 whitespace-nowrap text-dark text-right">
+                            <?php $value = $table['adj_diluted_eps']['timeline'][$date]; ?>
 
-                                <x-review-number-button x-data="{ amount: '{{ $value }}', date: '{{ $date }}' }">
-                                    {!! redIfNegative($value, fn($val) => number_format($val, 2)) !!}
-                                </x-review-number-button>
-                            </th>
-                        @endforeach
-                    </tr>
-                </thead>
+                            <x-review-number-button x-data="{ amount: '{{ $value }}', date: '{{ $date }}' }">
+                                {!! redIfNegative($value, fn($val) => number_format($val, 2)) !!}
+                            </x-review-number-button>
+                        </th>
+                    @endforeach
+                </tr>
+                <tr>
+                    <td class="pl-6 py-2">
+                        <span class="pl-4 whitespace-nowrap font-bold">% Change YoY</span>
+                    </td>
+                    @foreach ($table['dates'] as $date)
+                        <td class="pl-6 py-2 last:pr-8 text-right">
+                            <?php $value = $table['adj_diluted_eps']['yoy_change'][$date]; ?>
 
-                <tbody>
-                    <tr>
-                        <td class="pl-6 py-2">
-                            <span class="pl-4 whitespace-nowrap font-bold">% Change YoY</span>
+                            <x-review-number-button x-data="{ amount: '{{ $value }}', date: '{{ $date }}' }">
+                                {!! redIfNegative($value, fn($val) => round($val, 2)) !!}%
+                            </x-review-number-button>
                         </td>
-                        @foreach ($table['dates'] as $date)
-                            <td class="pl-6 py-2 last:pr-8 text-right font-bold">
-                                <?php $value = $table['adj_diluted_eps']['yoy_change'][$date]; ?>
-
-                                <x-review-number-button x-data="{ amount: '{{ $value }}', date: '{{ $date }}' }">
-                                    {!! redIfNegative($value, fn($val) => round($val, 2)) !!}%
-                                </x-review-number-button>
-                            </td>
-                        @endforeach
-                    </tr>
-                </tbody>
+                    @endforeach
+                </tr>
             </table>
         </div>
     </div>
