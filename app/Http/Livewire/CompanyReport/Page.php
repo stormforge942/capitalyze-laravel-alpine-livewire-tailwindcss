@@ -417,7 +417,15 @@ class Page extends Component
                         $row['children'][] = $this->generateRow($valuenn, $keynn, true, $sKey !== $this->statement);
                     }
                 } else {
-                    $row['children'][] = $this->generateRow($value, $key, $isSegmentation);
+                    $children = $this->generateRow($value, $key, $isSegmentation);
+
+                    if (
+                        count($children['children']) ||
+                        $children['title'] !== $row['title'] ||
+                        collect($children['values'])->some(fn ($cell, $date) => $cell['value'] !== $row['values'][$date]['value'])
+                    ) {
+                        $row['children'][] = $children;
+                    }
                 }
             }
         }
