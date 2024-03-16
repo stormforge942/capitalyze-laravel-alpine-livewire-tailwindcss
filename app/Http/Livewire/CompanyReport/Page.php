@@ -396,7 +396,7 @@ class Page extends Component
             'values' => $this->generateEmptyCellsRow(),
             'children' => [],
             'empty' => false,
-            'mismatchedSegmentation' => in_array($this->activeTab, ['income-statement', 'disclosure']) ? $mismatchedSegmentation : false,
+            'mismatchedSegmentation' => $mismatchedSegmentation,
         ];
 
         foreach ($data as $key => $value) {
