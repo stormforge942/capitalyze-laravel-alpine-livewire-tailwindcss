@@ -276,36 +276,20 @@
                             ) {
                                 return;
                             }
-                
-                            const splitted = row.title.split('|');
-                            const title = splitted[0];
-                
-                            {{-- the title is percentage value is has standonlone words such as %, yoy, per --}}
-                            const isPercent = /\b%\b|\byoy\b|\bper\b/.test(title.toLowerCase());
-                
+                                                
                             let _row = {
                                 ...row,
                                 values: {},
                                 children: null,
-                                title: splitted.length > 1 ? title : row.title,
                                 section,
                                 depth,
                                 parent,
-                                isPercent: false,
                             };
                 
-                            if (splitted.length > 1) {
-                                _row['isBold'] = splitted[1] === 'true'
-                                _row['hasBorder'] = splitted[2] === 'true'
-                                _row['section'] = parseInt(splitted[3])
-                            };
-                
-                            Object.entries(row.values).forEach(([key, value]) => {
-                                _row.isPercent = value.is_percent;
-                
+                            Object.entries(row.values).forEach(([key, value]) => {                
                                 _row.values[key] = {
                                     ...value,
-                                    ...this.formatTableValue(value.value, value.is_percent)
+                                    ...this.formatTableValue(value.value, row.isPercent)
                                 };
                             });
                 
@@ -351,6 +335,8 @@
                                 }
                             })
                         })
+
+                        console.log(tmp)
                 
                         this.rowGroups = tmp;
                     }

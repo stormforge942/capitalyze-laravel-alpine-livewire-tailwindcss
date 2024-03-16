@@ -389,22 +389,26 @@ class Page extends Component
 
     private function generateRow($data, $title, $isSegmentation = false, $mismatchedSegmentation = false): array
     {
-        $tmp = preg_replace('/[^a-zA-Z]/', '', $title);
 
         $row = [
-            'title' => ctype_upper($tmp) ? ucwords(strtolower($title)) : $title,
             'seg_start' => false,
             'segmentation' => false,
             'values' => $this->generateEmptyCellsRow(),
             'children' => [],
             'empty' => false,
             'mismatchedSegmentation' => $mismatchedSegmentation,
+            ...$this->parseTitle($title),
+            'isPercent' => false,
         ];
 
         foreach ($data as $key => $value) {
             if (strtotime($key)) {
                 foreach ($this->tableDates as $tableDate) {
                     if (substr($tableDate, 0, 7) == substr($key, 0, 7)) {
+                        if (in_array($value[1] ?? '', ['%', 'USD/Shares'])) {
+                            $row['isPercent'] = true;
+                        }
+
                         $row['values'][$tableDate] = $this->parseCell($value, $key);
                         break;
                     }
@@ -439,11 +443,29 @@ class Page extends Component
 
         $row['id'] = Str::uuid() . '-' . Str::uuid(); // just for the charts
 
-        if (count($row['children'])) {
-            $row['title'] = rtrim($row['title'], ':');
+        if ($row['empty'] && !$row['seg_start'] && count($row['children'])) {
+            $row['isBold'] = true;
         }
 
         return $row;
+    }
+
+    private function parseTitle($title_)
+    {
+        $splitted = explode('|', $title_);
+
+        $title = rtrim($splitted[0], ':');
+
+        $title = ctype_upper(preg_replace('/[^a-zA-Z]/', '', $title))
+            ? ucwords(strtolower($title))
+            : $title;
+
+        return [
+            'title' => $title,
+            'isBold' => ($splitted[1] ?? '') == 'true' || ($this->view !== 'Standardized' && Str::contains(strtolower($title), 'total')),
+            'hasBorder' => ($splitted[2] ?? '') == 'true',
+            'section' => isset($splitted[3]) ? intval($splitted[3]) : null,
+        ];
     }
 
     private function parseCell($data, $key): array
@@ -454,7 +476,6 @@ class Page extends Component
             'ticker' => $this->company['ticker'],
             'value' => null,
             'hash' => null,
-            'is_percent' => false,
             'secondHash' => null,
         ];
 
@@ -464,7 +485,6 @@ class Page extends Component
             $array = explode('|', $value);
             $response['value'] = $array[0] ?: null;
             $response['hash'] = $array[1];
-            $response['is_percent'] = in_array($data[1] ?? '', ['%', 'USD/Shares']);
             $response['secondHash'] = $array[2] ?? null;
         }
 
