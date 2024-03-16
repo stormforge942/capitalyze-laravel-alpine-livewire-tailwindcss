@@ -102,7 +102,6 @@ class CreateNavbar extends Command
                 'ignition.executeSolution',
                 'ignition.updateConfig',
                 'home',
-                'permission-denied',
                 'waitlist.join',
                 'dashboard',
                 'admin.users',

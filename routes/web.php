@@ -55,8 +55,6 @@ Route::get('/test-speed', function () {
     return "hello World";
 });
 
-Route::get('/permission-denied', PermissionDenied::class)->name('permission-denied');
-
 Route::get('/', HomeController::class)->name('home');
 
 Route::group(['middleware' => ['auth', 'approved', 'verified', CheckPagePermission::class]], function () {
