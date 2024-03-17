@@ -28,16 +28,6 @@ const tooltipConfig = (config) => ({
     },
 })
 
-const legendConfig = () => ({
-    display: true,
-    position: "bottom",
-    align: "start",
-    labels: {
-        boxWidth: 12,
-        boxHeight: 12,
-    },
-})
-
 const dataLabelConfig = (config) => ({
     display: (c) => {
         if (config.showLabel === false) return false
@@ -133,7 +123,11 @@ function renderRevenueByEmployeeChart(canvas, datasets, config) {
     })
 
     return new Chart(ctx, {
-        plugins: [chartJsPlugins.pointLine, window.ChartDataLabels],
+        plugins: [
+            chartJsPlugins.pointLine,
+            window.ChartDataLabels,
+            chartJsPlugins.htmlLegend,
+        ],
         type: "bar",
         data: {
             datasets,
@@ -154,7 +148,7 @@ function renderRevenueByEmployeeChart(canvas, datasets, config) {
             },
             plugins: {
                 tooltip: tooltipConfig(config),
-                legend: legendConfig(),
+                legend: { display: false },
                 pointLine: {
                     color: "#C22929",
                 },
@@ -214,7 +208,11 @@ function renderCostStructureChart(canvas, datasets, config) {
     })
 
     return new Chart(ctx, {
-        plugins: [window.ChartDataLabels, chartJsPlugins.pointLine],
+        plugins: [
+            window.ChartDataLabels,
+            chartJsPlugins.pointLine,
+            chartJsPlugins.htmlLegend,
+        ],
         type: "bar",
         data: {
             datasets,
@@ -235,7 +233,7 @@ function renderCostStructureChart(canvas, datasets, config) {
             },
             plugins: {
                 tooltip: tooltipConfig(config),
-                legend: legendConfig(),
+                legend: { display: false },
                 datalabels: {
                     ...dataLabelConfig(config),
                     formatter: (v, ctx) => {
@@ -252,6 +250,9 @@ function renderCostStructureChart(canvas, datasets, config) {
 
                         return formatNumber(v.y, config.number)
                     },
+                },
+                htmlLegend: {
+                    container: config.legendsContainer,
                 },
                 pointLine: {
                     color: "#ccc",
@@ -286,7 +287,11 @@ function renderFcfConversionChart(canvas, data, config) {
     })
 
     return new Chart(ctx, {
-        plugins: [window.ChartDataLabels, chartJsPlugins.pointLine],
+        plugins: [
+            window.ChartDataLabels,
+            chartJsPlugins.pointLine,
+            chartJsPlugins.htmlLegend,
+        ],
         type: "bar",
         data: {
             datasets: data.datasets,
@@ -340,7 +345,7 @@ function renderFcfConversionChart(canvas, data, config) {
                     },
                 },
                 tooltip: tooltipConfig(config),
-                legend: legendConfig(),
+                legend: { display: false },
                 datalabels: {
                     ...dataLabelConfig(config),
                     formatter: (v, ctx) => {
@@ -377,7 +382,11 @@ function renderCapitalStructureChart(canvas, datasets, config) {
     const ctx = canvas.getContext("2d")
 
     return new Chart(ctx, {
-        plugins: [chartJsPlugins.pointLine, window.ChartDataLabels],
+        plugins: [
+            chartJsPlugins.pointLine,
+            window.ChartDataLabels,
+            chartJsPlugins.htmlLegend,
+        ],
         type: "line",
         data: {
             datasets,
@@ -403,7 +412,7 @@ function renderCapitalStructureChart(canvas, datasets, config) {
             },
             plugins: {
                 tooltip: tooltipConfig(config),
-                legend: legendConfig(),
+                legend: { display: false },
                 pointLine: {
                     color: "#121A0F",
                 },
@@ -486,7 +495,7 @@ function basicBarChart(canvas, datasets, config) {
                     ...dataLabelConfig(config),
                     formatter: (v) => formatNumber(v.y, config.number),
                 },
-                legend: legendConfig(),
+                legend: { display: false },
                 ...(!config.lastIsAverage
                     ? {}
                     : {
@@ -540,7 +549,7 @@ function percentageBarChart(canvas, datasets, config = {}) {
             },
             plugins: {
                 tooltip: tooltipConfig(config),
-                legend: legendConfig(),
+                legend: { display: false },
                 datalabels: dataLabelConfig(config),
             },
             scales: scales(true, true, config.reverse),

@@ -37,7 +37,7 @@
     </div>
 </div>
 
-<div class="mt-6 relative">
+<div class="mt-4 relative">
     <div class="rounded-lg sticky-table-container">
         <table class="rounded-lg overflow-clip max-w-[max-content] mx-auto text-right"
             :class="tableClasses">

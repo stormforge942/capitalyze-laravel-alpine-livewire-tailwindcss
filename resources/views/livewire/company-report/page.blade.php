@@ -387,14 +387,14 @@
                             </div>
                         </div>
                     @else
-                        <div class="mt-6 mb-8">
+                        <div class="mt-6">
                             <x-range-slider :min="$rangeDates[0]" :max="$rangeDates[count($rangeDates) - 1]" :value="$selectedDateRange"
                                 @range-updated="selectedDateRange = $event.detail">
                             </x-range-slider>
                         </div>
 
                         <template x-if="selectedChartRows.length">
-                            <div class="mt-7" x-data="{
+                            <div class="mt-6" x-data="{
                                 printChart() {
                                     window.printChart(this.$el.querySelector('canvas'))
                                 }
