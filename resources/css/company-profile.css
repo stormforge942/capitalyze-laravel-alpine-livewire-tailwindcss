@@ -9,18 +9,6 @@
     font-size: 0.875rem;
 }
 
-.text-color-red {
-    color: #e25252;
-    font-weight: 500;
-    font-size: 0.875rem;
-}
-
-.page-titles .text-color-red {
-    color: #e25252;
-    font-weight: 500;
-    font-size: 0.875rem;
-}
-
 .page-titles {
     font-size: inherit;
     vertical-align: middle;

@@ -39,8 +39,7 @@
 
 <div class="mt-4 relative">
     <div class="rounded-lg sticky-table-container">
-        <table class="rounded-lg overflow-clip max-w-[max-content] mx-auto text-right"
-            :class="tableClasses">
+        <table class="rounded-lg overflow-clip max-w-[max-content] mx-auto text-right" :class="tableClasses">
             <thead>
                 <tr class="capitalize text-dark bg-[#EDEDED] text-base font-bold">
                     <th class="pl-6 py-2 bg-[#EDEDED] text-left">
@@ -101,7 +100,7 @@
                                     <p class="max-w-[200px] truncate overflow-ellipsis overflow-hidden"
                                         :style="`padding-left: ${row.depth * 8}px`"
                                         :class="!row.empty && !row.seg_start ? 'cursor-pointer' : ''" x-text="row.title"
-                                        @click="toggleRowForChart(row)"></p>
+                                        :data-tooltip-content="row.title" @click.prevent="toggleRowForChart(row)"></p>
 
                                     <template x-if="row.seg_start">
                                         <button class="ml-1 shrink-0 transition-all"

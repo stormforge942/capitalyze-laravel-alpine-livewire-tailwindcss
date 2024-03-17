@@ -1,7 +1,5 @@
-import chartJsPlugins, {
-    formatCmpctNumber,
-    formatNumber,
-} from "../chartjs-plugins"
+import chartJsPlugins from "../chartjs-plugins"
+import { formatCmpctNumber, formatNumber } from "../utils"
 
 const tooltipConfig = (config) => ({
     bodyFont: {
