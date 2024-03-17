@@ -5,33 +5,35 @@ namespace App\Traits;
 use App\Models\Navbar;
 use App\Models\NavbarGroupShows;
 use Illuminate\Support\Collection;
+use Illuminate\Support\Facades\Cache;
 
 trait HasNavbar
 {
     public function hasNavbar($routeName): bool
     {
-        $navbar = Navbar::where('route_name', $routeName)->first();
 
-        if (!$navbar?->is_moddable) {
-            return true;
-        }
+            $navbar = Navbar::where('route_name', $routeName)->first();
 
-        return $navbar->navbarGroupShows()
-            ->where('group_id', $this->group_id)
-            ->where('show', true)
-            ->exists();
+            if (!$navbar?->is_moddable) {
+                return true;
+            }
+
+            return $navbar->navbarGroupShows()
+                ->where('group_id', $this->group_id)
+                ->where('show', true)
+                ->exists();
     }
 
     public function navbars($moddable = true): Collection
     {
-        return NavbarGroupShows::query()
-            ->with(['navbar' => fn ($q) => $q->where('is_moddable', $moddable)])
-            ->when(
-                fn ($q) => $q->where('group_id', $this->group_id)->where('show', true)
-            )
-            ->get()
-            ->map(fn ($item) => $item->navbar)
-            ->filter()
-            ->unique('id');
+            return NavbarGroupShows::query()
+                ->with(['navbar' => fn ($q) => $q->where('is_moddable', $moddable)])
+                ->when(
+                    fn ($q) => $q->where('group_id', $this->group_id)->where('show', true)
+                )
+                ->get()
+                ->map(fn ($item) => $item->navbar)
+                ->filter()
+                ->unique('id');
     }
 }

@@ -18,7 +18,7 @@
                 window.updateQueryParam('subtab', value);
                 this.changeTable();
             });
-
+    
             this.$watch('search', (value) => {
                 this.changeTable();
             });
@@ -37,7 +37,7 @@
         $tabs = array_combine($tabs, $tabs);
         ?>
 
-        <x-primary-tabs :tabs="$tabs" :active="$activeTab"
+        <x-primary-tabs :tabs="$tabs" :active="$activeTab" min-width="160px"
             @tab-changed="tabActive = $event.detail.key; activeSubTab = subTabs[0].title;">
             <div>
                 <div class="overflow-x-auto flex border-b border-[#D4DDD7]">
@@ -45,8 +45,12 @@
                         <a href="#" class="inline-block w-[12rem] py-2.5 px-4 text-center border-b-2"
                             :class="activeSubTab === subtab.title ? 'border-green-dark' : 'border-transparent'"
                             @click.prevent="activeSubTab = subtab.title">
-                            <p class="font-medium" :class="activeSubTab === subtab.title ? 'text-dark' : 'text-gray-medium2'" x-text="subtab.title"></p>
-                            <p class="mt-1 text-sm leading-4" :class="activeSubTab === subtab.title ? 'text-dark-light2' : 'text-gray-medium2'" x-text="subtab.description"></p>
+                            <p class="font-medium"
+                                :class="activeSubTab === subtab.title ? 'text-dark' : 'text-gray-medium2'"
+                                x-text="subtab.title"></p>
+                            <p class="mt-1 text-sm leading-4"
+                                :class="activeSubTab === subtab.title ? 'text-dark-light2' : 'text-gray-medium2'"
+                                x-text="subtab.description"></p>
                         </a>
                     </template>
                 </div>

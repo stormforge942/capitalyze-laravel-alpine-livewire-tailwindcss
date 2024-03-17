@@ -21,11 +21,7 @@
 @tailwind components;
 @tailwind utilities;
 
-.no-dash-break {
-    word-break: keep-all;
-}
 /* active inner tab */
-
 .innertab-active ::after {
     content: " ";
     width: 100%;
@@ -165,45 +161,6 @@ a {
     /* font-weight: 600; */
     border-radius: 4px;
 }
-.custom__border_gray {
-    border: 1px solid rgba(232, 235, 242, 1);
-}
-.dropdown-scroll-wrapper {
-    height: 30rem;
-    width: 26rem;
-    position: absolute !important;
-    left: 0px !important;
-    top: 40px !important;
-    transform: translate(10px, 10px) !important;
-}
-.dropdown-scroll-wrapper input[type="radio"]:checked {
-    background-image: url(/public/img/radio-image.png) !important;
-    background-color: transparent !important;
-    background-size: 30px 30px !important;
-}
-.dropdown-scroll-wrapper input[type="radio"]:checked:focus,
-.dropdown-scroll-wrapper input[type="radio"]:focus {
-    outline: none !important;
-
-    box-shadow: none !important;
-}
-.dropdown-scroll-wrapper input[type="radio"] {
-    height: 23px !important;
-    width: 23px !important;
-}
-.flowbite_btn.active {
-    background-color: #e2e2e2 !important;
-}
-.flowbite_btn svg {
-    transition: all 0.2s ease-in-out;
-}
-.flowbite_btn.down svg {
-    transform: rotate(-180deg);
-}
-.dropdown-scroll-wrapper .h_23 {
-    max-height: 23rem;
-    height: 100%;
-}
 .dropdown-scroll label {
     font-size: 14px;
     font-weight: 400 !important;
@@ -236,10 +193,6 @@ a {
     height: 3px;
 }
 
-.table-container {
-    position: relative;
-}
-
 .cus-loader .cus-loaderBar {
     position: absolute;
     border-radius: 10px;
@@ -251,6 +204,7 @@ a {
     width: 0;
     animation: borealisBar 2s linear infinite;
     transform: translateY(100%);
+    z-index: 1000;
 }
 
 @keyframes borealisBar {
@@ -303,78 +257,8 @@ a {
     margin-top: -30px;
     visibility: hidden;
 }
-.graph-wrapper [type="radio"]:checked,
-.graph-wrapper [type="radio"]:not(:checked) {
-    position: absolute;
-    left: -9999px;
-}
-.graph-wrapper [type="radio"]:checked + label {
-    position: relative;
-    padding-left: 25px;
-    cursor: pointer;
-    line-height: 16px;
-    display: inline-block;
-    color: #000;
-    font-size: 12px;
-}
-.graph-wrapper [type="radio"]:not(:checked) + label {
-    position: relative;
-    padding-left: 25px;
-    cursor: pointer;
-    line-height: 16px;
-    display: inline-block;
-    color: #828c85;
-    font-size: 12px;
-}
-.graph-wrapper [type="radio"]:not(:checked) + label:before {
-    content: "";
-    position: absolute;
-    left: 0;
-    top: 0;
-    width: 16px;
-    height: 16px;
-    border: 2px solid #828c85;
-    border-radius: 100%;
-    background: #fff;
-}
-.graph-wrapper [type="radio"]:checked + label:before {
-    content: "";
-    position: absolute;
-    left: 0;
-    top: 0;
-    width: 16px;
-    height: 16px;
-    border: 2px solid #000;
-    border-radius: 100%;
-    background: #fff;
-}
 .flex-col-border-less {
     border: none !important;
-}
-.graph-wrapper [type="radio"]:checked + label:after,
-.graph-wrapper [type="radio"]:not(:checked) + label:after {
-    content: "";
-    width: 6px;
-    height: 6px;
-    background: #000;
-    color: #000;
-    position: absolute;
-    top: 5px;
-    left: 5px;
-    border-radius: 100%;
-    border: 2px solid #000;
-    -webkit-transition: all 0.2s ease;
-    transition: all 0.2s ease;
-}
-.graph-wrapper [type="radio"]:not(:checked) + label:after {
-    opacity: 0;
-    -webkit-transform: scale(0);
-    transform: scale(0);
-}
-.graph-wrapper [type="radio"]:checked + label:after {
-    opacity: 1;
-    -webkit-transform: scale(1);
-    transform: scale(1);
 }
 .absolute-top-70 {
     position: absolute;
@@ -446,42 +330,6 @@ a {
     margin-top: 0 !important;
     border-radius: 4px;
 }
-.custom-drop-down-button {
-    width: 24px;
-    height: 24px;
-    border: 2px solid #121a0f;
-    color: #121a0f;
-    position: relative;
-    outline: none;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    border-radius: 6px;
-    transition: all 0.43s ease-in-out;
-}
-.custom-drop-down-button-lg {
-    min-width: 94px;
-    padding: 8px;
-    border-radius: 4px !important;
-    font-size: 11px;
-    line-height: 16px;
-    font-weight: 400;
-    border: 1.34px solid #ece9f1;
-    height: 32px;
-    display: flex;
-    align-items: center;
-    justify-content: space-around;
-}
-.custom-drop-down-button:focus svg {
-    transition: display 0.43s ease-in-out;
-}
-.custom-drop-down-button svg {
-    transition: display 0.43s ease-in-out;
-}
-.main-graph-wrapper {
-    position: relative;
-}
-
 .custom-dropdown-absolute-wrapper {
     position: absolute;
     z-index: 55;
@@ -492,45 +340,6 @@ a {
 .main-graph-rev .custom-dropdown-absolute-wrapper {
     top: 20px;
 }
-.graph-wrapper-rev {
-    padding-right: 100px;
-}
-.custom-drop-down {
-    width: 208px;
-    border-radius: 8px;
-    border: 1px solid #e9f5f1;
-    box-shadow: 0px 4px 8px 0px #00000814;
-    padding: 16px 0px;
-    top: 25px;
-}
-.custom-drop-down .links-wrapper {
-    padding: 0px 16px;
-    display: flex;
-    flex-direction: column;
-    gap: 8px;
-}
-.custom-drop-down .menu_link {
-    color: #121a0f;
-    font-size: 13px;
-    line-height: 16px;
-    font-weight: 400;
-    padding: 8px;
-    border-radius: 4px;
-
-    display: flex;
-    align-items: center;
-    gap: 10px;
-}
-.custom-drop-down hr {
-    border-bottom: 1px solid #e9f5f1 !important;
-    height: 1px;
-    background: #e9f5f1 !important;
-}
-.custom-drop-down .menu_link svg {
-    width: 16px;
-    height: 16px;
-}
-
 .custom-text-xs .text-xs {
     font-size: 0.75rem;
 }
@@ -543,172 +352,14 @@ a {
     align-items: center;
     gap: 4px;
 }
-.revenue-tab {
-    display: flex;
-    width: 100%;
-    align-items: center;
-    border-radius: 2px;
-    border-bottom: 1px solid #e4e4e4;
-
-    background: #f2f2f2;
-    margin-bottom: 22px;
-    height: 40px;
-}
-.revenue-tab li {
-    cursor: pointer;
-    min-width: 267px;
-    color: #828c85 !important;
-    text-align: center;
-    height: 40px;
-    font-size: 14px;
-    font-style: normal;
-    border-bottom: 1.67px solid transparent;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    font-weight: 400;
-    line-height: normal;
-}
-.revenue-tab li.active {
-    border-bottom: 1.67px solid #13b05b;
-    color: #121a0f !important;
-    font-weight: 600;
-}
-#rbprange-slider-company-analysis {
-    max-width: 100% !important;
-}
-#rbgrange-slider-company-analysis {
-    max-width: 100% !important;
-}
-#rberange-slider-company-analysis {
-    max-width: 100% !important;
-}
-div#range-slider-company-analysis-geography {
-    max-width: 100% !important;
-}
 .graph-header-flex {
     justify-content: space-between;
-}
-.custom_checkbox {
-    display: flex;
-    align-items: center;
-    gap: 6px;
 }
 .custom_radio_wrapper {
     gap: 24px;
     align-items: center;
 }
-.custom_checkbox span {
-    color: #828c85;
 
-    font-family: Inter;
-    font-size: 12px !important;
-    font-style: normal;
-    font-weight: 400;
-    line-height: normal;
-}
-.graph-wrapper .graph-header .revenue-title {
-    color: #121a0f;
-    font-feature-settings: "clig" off, "liga" off;
-    font-family: Inter;
-    font-size: 16px;
-    font-style: normal;
-    font-weight: 700;
-    line-height: 24px; /* 150% */
-    margin-bottom: 6px;
-}
-
-.graph-wrapper .graph-header .revenue-subtitle {
-    color: #3561e7;
-
-    font-family: Inter;
-    font-size: 14px !important;
-    font-style: normal;
-    font-weight: 600;
-    line-height: normal;
-}
-.row-border-custom div:nth-child(4) .cell:first-child {
-    border-bottom-left-radius: 4px;
-}
-.row-border-custom div:nth-child(4) .cell:last-child {
-    border-bottom-right-radius: 4px;
-}
-.row-border-custom div:nth-child(6) .cell:first-child {
-    border-top-left-radius: 4px;
-}
-.row-border-custom div:nth-child(6) .cell:last-child {
-    border-top-right-radius: 4px;
-}
-.row-border-custom div:nth-child(8) .cell:first-child {
-    border-bottom-left-radius: 4px;
-}
-.row-border-custom div:nth-child(8) .cell:last-child {
-    border-bottom-right-radius: 4px;
-}
-.row-border-custom div:nth-child(10) .cell:first-child {
-    border-top-left-radius: 4px;
-}
-.row-border-custom div:nth-child(10) .cell:last-child {
-    border-top-right-radius: 4px;
-}
-.row-border-custom div:nth-child(12) .cell:first-child {
-    border-bottom-left-radius: 4px;
-}
-.row-border-custom div:nth-child(12) .cell:last-child {
-    border-bottom-right-radius: 4px;
-}
-.row-border-custom div:nth-child(14) .cell:first-child {
-    border-top-left-radius: 4px;
-}
-.ml_4 {
-    margin-left: 21px !important;
-}
-.row-border-custom div:nth-child(14) .cell:last-child {
-    border-top-right-radius: 4px;
-}
-.row-border-custom div:nth-child(15) .cell:first-child {
-    border-bottom-left-radius: 4px;
-}
-.row-border-custom div:nth-child(15) .cell:last-child {
-    border-bottom-right-radius: 4px;
-}
-.row-border-custom div:nth-child(17) .cell:first-child {
-    border-top-left-radius: 4px;
-}
-.row-border-custom div:nth-child(17) .cell:last-child {
-    border-top-right-radius: 4px;
-}
-.row-border-custom div:nth-child(19) .cell:first-child {
-    border-bottom-left-radius: 4px;
-}
-.row-border-custom div:nth-child(19) .cell:last-child {
-    border-bottom-right-radius: 4px;
-}
-.row-border-custom div:nth-child(23) .cell:last-child {
-    border-bottom-right-radius: 4px !important;
-}
-.row-border-custom div:nth-child(23) .cell:first-child {
-    border-bottom-left-radius: 4px !important;
-}
-.bg-gray-custom {
-    background-color: #929292;
-}
-.min-64 {
-    min-width: 16rem;
-    width: 16rem;
-}
-.company-price {
-    font-size: 1.25rem;
-    font-weight: 700;
-}
-@media (min-width: 576px) {
-    .mobile-show {
-        display: none;
-    }
-    .desktop-show {
-        display: flex;
-    }
-}
 @media (max-width: 576px) {
     .title__header .title {
         font-size: 20px !important;
@@ -718,12 +369,6 @@ div#range-slider-company-analysis-geography {
     }
     .tab {
         min-width: 10rem;
-    }
-    .mobile-show {
-        display: block;
-    }
-    .desktop-show {
-        display: none;
     }
     .nav-top-list li a {
         font-size: 12px;
@@ -799,9 +444,6 @@ div#range-slider-company-analysis-geography {
     }
     .graph-header {
         justify-content: space-between;
-    }
-    .graph-header .custom-drop-down {
-        top: 32px;
     }
     .hide-mobile {
         display: none;

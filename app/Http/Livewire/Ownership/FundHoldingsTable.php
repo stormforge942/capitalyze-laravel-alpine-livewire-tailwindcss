@@ -124,7 +124,7 @@ class FundHoldingsTable extends BaseTable
                 ->searchable()
                 ->sortable(),
 
-            Column::make('Shares Held or Principal Amt', 'ssh_prnamt')
+            Column::make('Shares Held', 'ssh_prnamt')
                 ->sortable()
                 ->headerAttribute('[&>div]:justify-end')->bodyAttribute('text-right'),
 

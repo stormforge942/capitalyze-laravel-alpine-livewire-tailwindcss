@@ -276,7 +276,6 @@
                                         stroke-linejoin="round" />
                                 </svg>
                             @endif
-
                             <span>{{ $group['name'] }}</span>
                         </div>
                         <ul class="mt-6 space-y-8 text-md pl-6">

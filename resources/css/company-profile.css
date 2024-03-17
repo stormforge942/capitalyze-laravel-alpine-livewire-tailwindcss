@@ -9,18 +9,6 @@
     font-size: 0.875rem;
 }
 
-.text-color-red {
-    color: #e25252;
-    font-weight: 500;
-    font-size: 0.875rem;
-}
-
-.page-titles .text-color-red {
-    color: #e25252;
-    font-weight: 500;
-    font-size: 0.875rem;
-}
-
 .page-titles {
     font-size: inherit;
     vertical-align: middle;
@@ -106,25 +94,6 @@
     font-size: 1.17em;
     color: #121A0F;
 }
-
-.title-spoiler {
-    color: #121A0F;
-    font-size: 0.85em;
-    font-weight: 600;
-}
-
-.graph-wrapper-box {
-    margin-top: 24px;
-}
-
-.graph-wrapper {
-    background: white;
-    font-size: 0.5em;
-    border-radius: 0.666em;
-    padding: 24px;
-    width: 100%;
-}
-
 .graph-header {
     display: flex;
 

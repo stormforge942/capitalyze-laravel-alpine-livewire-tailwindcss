@@ -1,4 +1,5 @@
-import chartJsPlugins, { formatCmpctNumber } from "../chartjs-plugins"
+import chartJsPlugins from "../chartjs-plugins"
+import { formatCmpctNumber } from "../utils"
 
 export function updateQueryParam(key, value) {
     const url = new URL(window.location.href)
@@ -8,7 +9,7 @@ export function updateQueryParam(key, value) {
     } else {
         url.searchParams.delete(key)
     }
-    
+
     window.history.replaceState({}, "", url)
 }
 

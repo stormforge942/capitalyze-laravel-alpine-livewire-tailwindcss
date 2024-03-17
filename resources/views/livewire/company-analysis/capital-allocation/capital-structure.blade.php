@@ -27,13 +27,13 @@
 
                 <div class="mt-6" x-show="subSubTab === 'book-value'" x-cloak>
                     <x-analysis-chart-box title="Capital Structure (Book Value)" :enclosed="true" :company="$company"
-                        :unit="$unit" :decimal-places="$decimalPlaces" :hasPercentageMix="false" :chart="$chart['book']" :toggle="false"
+                        :unit="$unit" :decimal-places="$decimalPlaces" :hasPercentageMix="false" :chart="$chart['book']"
                         function="renderCapitalStructureChart"></x-analysis-chart-box>
                 </div>
 
                 <div class="mt-6" x-show="subSubTab === 'market-value'" x-cloak>
                     <x-analysis-chart-box title="Capital Structure (Market Value)" :enclosed="true" :company="$company"
-                        :unit="$unit" :decimal-places="$decimalPlaces" :hasPercentageMix="false" :chart="$chart['market']" :toggle="false"
+                        :unit="$unit" :decimal-places="$decimalPlaces" :hasPercentageMix="false" :chart="$chart['market']"
                         function="renderCapitalStructureChart"></x-analysis-chart-box>
                 </div>
             </div>

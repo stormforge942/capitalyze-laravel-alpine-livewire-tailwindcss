@@ -5,6 +5,7 @@ namespace App\Http\Livewire\CompanyAnalysis\Revenue;
 use App\Http\Livewire\CompanyAnalysis\HasFilters;
 use Livewire\Component;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Cache;
 
 class Geography extends Component
 {
@@ -65,7 +66,7 @@ class Geography extends Component
                 'data' => array_map(fn ($date) => [
                     'x' => $this->formatDateForChart($date),
                     'value' => $values['timeline'][$date],
-                    'percent' => round($values['total_percent'][$date], 2),
+                    'percent' => round($values['total_percent'][$date], $this->decimalPlaces),
                 ], $this->selectedDates),
                 "borderRadius" => 2,
                 "fill" => true,
@@ -114,11 +115,18 @@ class Geography extends Component
     {
         $source = ($this->period == 'annual') ? 'args' : 'qrgs';
 
-        $data = rescue(fn () => json_decode(DB::connection('pgsql-xbrl')
-            ->table('as_reported_sec_segmentation_api')
-            ->where('ticker', '=', $this->company['ticker'])
-            ->where('endpoint', '=', $source)
-            ->value('api_return_open_ai'), true), [], false);
+        $cacheKey = 'sec_segmentation_api_' . $this->company['ticker'] . '_' . $source;
+
+        $cacheDuration = 3600;
+
+        $data = Cache::remember($cacheKey, $cacheDuration, function () use ($source) {
+            return rescue(fn () => json_decode(
+                DB::connection('pgsql-xbrl')
+                    ->table('as_reported_sec_segmentation_api')
+                    ->where('ticker', '=', $this->company['ticker'])
+                    ->where('endpoint', '=', $source)
+                    ->value('api_return_open_ai'), true), [], false);
+        });
 
         $regions = [];
 
@@ -198,9 +206,9 @@ class Geography extends Component
                 : 0;
 
             $lastTotal = $total;
-
+            
             foreach ($data['regions'] as $region => $_) {
-                $data['regions'][$region]['total_percent'][$date] = ($data['regions'][$region]['timeline'][$date] / $total) * 100;
+                $data['regions'][$region]['total_percent'][$date] = $total != 0 ? ($data['regions'][$region]['timeline'][$date] / $total) * 100 : 0;
             }
         }
 

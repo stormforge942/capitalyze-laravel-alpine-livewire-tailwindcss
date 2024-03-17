@@ -5,6 +5,7 @@ namespace App\Http\Livewire\CompanyAnalysis\Revenue;
 use App\Http\Livewire\CompanyAnalysis\HasFilters;
 use Livewire\Component;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Cache;
 
 class Product extends Component
 {
@@ -63,7 +64,7 @@ class Product extends Component
                 'data' => array_map(fn ($date) => [
                     'x' => $this->formatDateForChart($date),
                     'value' => $values['timeline'][$date],
-                    'percent' => round($values['total_percent'][$date], 2),
+                    'percent' => round($values['total_percent'][$date], $this->decimalPlaces),
                 ], $this->selectedDates),
                 "borderRadius" => 2,
                 "fill" => true,
@@ -169,11 +170,18 @@ class Product extends Component
     {
         $source = ($this->period == 'annual') ? 'arps' : 'qrps';
 
-        $data = rescue(fn () => json_decode(DB::connection('pgsql-xbrl')
-            ->table('as_reported_sec_segmentation_api')
-            ->where('ticker', '=', $this->company['ticker'])
-            ->where('endpoint', '=', $source)
-            ->value('api_return_open_ai'), true), [], false);
+        $cacheKey = 'sec_segmentation_' . $this->company['ticker'] . '_' . $source;
+
+        $cacheDuration = 3600;
+
+        $data = Cache::remember($cacheKey, $cacheDuration, function () use ($source) {
+            return rescue(fn () => json_decode(
+                DB::connection('pgsql-xbrl')
+                    ->table('as_reported_sec_segmentation_api')
+                    ->where('ticker', '=', $this->company['ticker'])
+                    ->where('endpoint', '=', $source)
+                    ->value('api_return_open_ai'), true), [], false);
+        });
 
         $products = [];
 

@@ -46,7 +46,9 @@ class MutualFunds extends Component
     {
         $cacheKey = 'mutual_funds_' . md5($this->search . '_perPage_' . $this->perPage);
     
-        $funds = Cache::remember($cacheKey, 360, function () {
+        $cacheDuration = 3600;
+
+        $funds = Cache::remember($cacheKey, $cacheDuration, function () {
             return DB::connection('pgsql-xbrl')
                 ->table('mutual_fund_holdings_summary')
                 ->select('registrant_name', 'fund_symbol', 'cik', 'series_id', 'class_id', 'class_name', 'total_value', 'portfolio_size', 'change_in_total_value', 'date')

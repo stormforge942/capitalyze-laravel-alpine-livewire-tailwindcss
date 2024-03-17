@@ -13,7 +13,7 @@
         </div>
 
         <div class="col-span-12 lg:col-span-8 px-4 py-3 bg-white border border-[#D4DDD7] rounded-lg">
-            <div class="items-center gap-2 text-sm inline-flex" wire:ignore>
+            {{-- <div class="items-center gap-2 text-sm inline-flex" wire:ignore>
                 <span class="hidden sm:inline">Period</span>
 
                 <div x-data="{
@@ -104,9 +104,14 @@
                         </div>
                     </x-dropdown>
                 </div>
+            </div> --}}
+
+            <div class="items-center gap-2 text-sm inline-flex" x-data="{ quarter: @entangle('filters.quarter') }" wire:ignore>
+                <span>Quarter to view</span>
+                <x-select name="quarter" :options="$quarters" placeholder="Select a quarter" x-model="quarter"></x-select>
             </div>
         </div>
     </div>
 
-    <livewire:ownership.mutual-fund-holdings-table :fund="$fund" :redirectToOverview="$redirectToOverview" />
+    <livewire:ownership.mutual-fund-holdings-table :fund="$fund" :quarter="$this->filters['quarter']" :redirectToOverview="$redirectToOverview" />
 </div>

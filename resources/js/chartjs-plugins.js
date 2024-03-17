@@ -24,7 +24,7 @@ const chartJsPlugins = {
                 ctx.moveTo(x, yAxis.bottom)
                 ctx.lineTo(x, y)
                 ctx.lineWidth = 1
-                ctx.strokeStyle = options.color || "#000"
+                ctx.strokeStyle = options.color || "#121A0F"
                 ctx.setLineDash([5, 5])
                 ctx.stroke()
                 ctx.restore()
@@ -167,46 +167,84 @@ const chartJsPlugins = {
         tooltipEl.style.font = tooltip.options.bodyFont.string
         tooltipEl.style.padding = 8 + "px " + 19 + "px"
     },
+    htmlLegend: {
+        id: "htmlLegend",
+        afterUpdate(chart, _, options) {
+            if (!options.container) return
+
+            const ul = options.container
+
+            ul.style.display = "flex"
+            ul.style.alignItems = "center"
+            ul.style.flexWrap = "wrap"
+            ul.style.columnGap = "16px"
+            ul.style.rowGap = "4px"
+            ul.style.fontSize = "12px"
+
+            // Remove old legend items
+            while (ul.firstChild) {
+                ul.firstChild.remove()
+            }
+
+            // Reuse the built-in legendItems generator
+            const items =
+                chart.options.plugins.legend.labels.generateLabels(chart)
+
+            items.forEach((item) => {
+                const li = document.createElement("div")
+                li.style.alignItems = "center"
+                li.style.cursor = "pointer"
+                li.style.display = "inline-flex"
+                li.style.flexDirection = "row"
+
+                li.onclick = () => {
+                    const { type } = chart.config
+                    if (type === "pie" || type === "doughnut") {
+                        // Pie and doughnut charts only have a single dataset and visibility is per item
+                        chart.toggleDataVisibility(item.index)
+                    } else {
+                        chart.setDatasetVisibility(
+                            item.datasetIndex,
+                            !chart.isDatasetVisible(item.datasetIndex)
+                        )
+                    }
+                    chart.update()
+                }
+
+                // Color box
+                const boxSpan = document.createElement("span")
+                boxSpan.style.background = item.fillStyle
+                boxSpan.style.borderColor = item.strokeStyle
+                boxSpan.style.borderWidth = item.lineWidth + "px"
+                boxSpan.style.borderRadius = "1px"
+                boxSpan.style.display = "inline-block"
+                boxSpan.style.flexShrink = 0
+                boxSpan.style.height = "16px"
+                boxSpan.style.marginRight = "8px"
+                boxSpan.style.width = "16px"
+
+                // Text
+                const textContainer = document.createElement("p")
+                textContainer.style.color = item.fontColor
+                textContainer.style.margin = 0
+                textContainer.style.padding = 0
+                textContainer.style.textDecoration = item.hidden
+                    ? "line-through"
+                    : ""
+
+                const text = document.createTextNode(item.text)
+                textContainer.appendChild(text)
+
+                li.appendChild(boxSpan)
+                li.appendChild(textContainer)
+                ul.appendChild(li)
+            })
+        },
+    },
 }
-export default chartJsPlugins
-
-export function formatCmpctNumber(number, options = {}) {
-    if (isNaN(Number(number))) return number
-
-    options = {
-        notation: "compact",
-        compactDisplay: "short",
-        ...options,
-    }
-
-    const usformatter = Intl.NumberFormat("en-US", options)
-    return usformatter.format(number)
-}
-
-export function formatNumber(number, options) {
-    if (isNaN(Number(number))) return number
-
-    const divideBy =
-        {
-            Thousands: 1000,
-            Millions: 1000000,
-            Billions: 1000000000,
-        }[options.unit] || 1
-
-    return Intl.NumberFormat("en-US", {
-        minimumFractionDigits: options.decimalPlaces,
-        maximumFractionDigits: options.decimalPlaces,
-    }).format(number / divideBy)
-}
-
-export function hex2rgb(hex, alpha = 1) {
-    const [r, g, b] = hex.match(/\w\w/g).map((x) => parseInt(x, 16))
-    return `rgba(${r},${g},${b},${alpha})`
-}
-
 window.chartJsPlugins = chartJsPlugins
-window.formatCmpctNumber = formatCmpctNumber
-window.hex2rgb = hex2rgb
+
+export default chartJsPlugins
 
 function getOrCreateTooltip(chart) {
     let tooltipEl = chart.canvas.parentNode.querySelector("div")

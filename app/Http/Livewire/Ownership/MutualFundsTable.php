@@ -13,6 +13,7 @@ class MutualFundsTable extends BaseTable
 {
     public string $ticker = '';
     public $periodRange = null;
+    public $quarter = null;
     public string $search = '';
     public string $sortField = 'period_of_report';
     public string $sortDirection = 'desc';
@@ -30,6 +31,7 @@ class MutualFundsTable extends BaseTable
     public function setFilters($filters)
     {
         $this->periodRange = $filters['periodRange'];
+        $this->quarter = $filters['quarter'];
         $this->search = $filters['search'];
         $this->resetPage();
     }
@@ -40,6 +42,9 @@ class MutualFundsTable extends BaseTable
             ->where('symbol', '=', $this->ticker)
             ->when($this->periodRange, function ($query) {
                 return $query->whereBetween('period_of_report', $this->periodRange);
+            })
+            ->when($this->quarter, function ($query) {
+                return $query->whereBetween('period_of_report', explode('|', $this->quarter));
             })
             ->when($this->search, function ($query) {
                 $term = '%' . $this->search . '%';

@@ -13,8 +13,7 @@
     <div class="mt-6 relative">
         @if (count($dates))
             <x-analysis-chart-box title="Revenue By Employee" :company="$company" :chart="$chart" :hasPercentageMix="false"
-                :unit="$unit" :decimal-places="$decimalPlaces" :toggle="false"
-                function="renderRevenueByEmployeeChart"></x-analysis-chart-box>
+                :unit="$unit" :decimal-places="$decimalPlaces" function="renderRevenueByEmployeeChart"></x-analysis-chart-box>
 
             <div class="mt-6 rounded-lg sticky-table-container">
                 <table class="w-full text-right whitespace-nowrap {{ sticky_table_class($freezePane) }}">

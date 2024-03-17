@@ -15,8 +15,9 @@
             <x-primary-tabs :tabs="$tabs" :active="$activeTab" @tab-changed="$wire.activeTab = $event.detail.key"
                 min-width="160px">
                 <div x-data="{
-                    rows: $wire.rows,
-                    tableDates: $wire.tableDates,
+                    rowGroups: [],
+                    tableDates: @js($tableDates),
+                    formattedTableDates: [],
                     selectedDateRange: $wire.entangle('selectedDateRange', true),
                     chart: null,
                     showLabel: true,
@@ -32,7 +33,7 @@
                     },
                     selectedChartRows: [],
                     hideSegments: [],
-                    showEmptyRows: false,
+                    showAllRows: false,
                     get formattedChartData() {
                         return {
                             labels: this.formattedTableDates,
@@ -71,27 +72,13 @@
                                     pointHoverBorderWidth: 4,
                                     pointHoverBackgroundColor: row.color,
                                     maxBarThickness: 150,
+                                    isPercent: row.isPercent,
                                 }
                             })
                         }
                     },
                     get isReversed() {
                         return this.filters.order === 'Latest on the Left';
-                    },
-                    get formattedTableDates() {
-                        let dates = [...this.tableDates];
-                
-                        dates = dates.filter((date) => {
-                            const year = parseInt(date.split('-')[0]);
-                
-                            return year >= this.selectedDateRange[0] && year <= this.selectedDateRange[1];
-                        })
-                
-                        if (this.isReversed) {
-                            dates = dates.slice().reverse();
-                        }
-                
-                        return dates
                     },
                     get tableClasses() {
                         const classes = {
@@ -103,7 +90,27 @@
                         return 'sticky-table ' + (classes[this.filters.freezePane] || []).join(' ');
                     },
                     init() {
-                        this.$watch('filters', (newVal) => {
+                        const rows = @js($rows);
+                
+                        this.updateFormattedTableDates(this.tableDates);
+                        this.updateRowGroups(rows);
+                
+                        this.$watch('showAllRows', this.updateRowGroups.bind(this, rows))
+                        this.$watch('filters.unitType', () => {
+                            this.updateRowGroups(rows);
+                            this.renderChart();
+                        })
+                        this.$watch('filters.decimalPlaces', () => {
+                            this.updateRowGroups(rows)
+                
+                            this.renderChart();
+                
+                            window.updateUserSettings({
+                                decimalPlaces: this.filters.decimalPlaces
+                            })
+                        })
+                
+                        this.$watch('filters', (newVal, oldVal) => {
                             const url = new URL(window.location.href);
                 
                             url.searchParams.set('view', newVal.view);
@@ -117,7 +124,10 @@
                             window.history.replaceState({}, '', url);
                         }, { deep: true })
                 
-                        this.$watch('filters.order', this.renderChart.bind(this), { deep: true })
+                        this.$watch('filters.order', () => {
+                            this.renderChart()
+                            this.updateFormattedTableDates(this.tableDates);
+                        })
                 
                         this.$watch('disclosureTab', (val) => window.updateQueryParam('disclosureTab', val))
                 
@@ -129,11 +139,30 @@
                             window.updateQueryParam('selectedDateRange', val.join(','))
                 
                             Alpine.debounce(this.renderChart.bind(this), 100)()
+                
+                            this.updateFormattedTableDates(this.tableDates);
+                
+                            this.updateRowGroups(rows);
                         }, { deep: true })
+                    },
+                    updateFormattedTableDates(_dates) {
+                        let dates = [..._dates];
+                
+                        dates = dates.filter((date) => {
+                            const year = parseInt(date.split('-')[0]);
+                
+                            return year >= this.selectedDateRange[0] && year <= this.selectedDateRange[1];
+                        })
+                
+                        if (this.isReversed) {
+                            dates = dates.slice().reverse();
+                        }
+                
+                        this.formattedTableDates = dates;
                     },
                     formattedTableDate(date) {
                         const includeMonth = !['Calendar Annual', 'Fiscal Annual'].includes(this.filters.period);
-
+                
                         return new Date(date).toLocaleString('en-US', {
                             year: 'numeric',
                             month: includeMonth ? 'short' : undefined,
@@ -143,6 +172,8 @@
                         return year >= this.selectedDateRange[0] && year <= this.selectedDateRange[1];
                     },
                     formatTableValue(value, isPercent) {
+                        value = value == null ? '' : value;
+                
                         if (value === '' || value === '-' || isNaN(Number(value))) {
                             const isLink = value.startsWith('@@@');
                 
@@ -169,6 +200,7 @@
                         const result = Number(Math.abs(value)).toLocaleString('en-US', {
                             style: 'decimal',
                             minimumFractionDigits: this.filters.decimalPlaces,
+                            maximumFractionDigits: this.filters.decimalPlaces,
                         });
                 
                         const isNegative = value < 0;
@@ -188,7 +220,13 @@
                             return;
                         }
                 
-                        this.chart = window.renderCompanyReportChart(this.formattedChartData, this.isReversed, this.showLabel);
+                        this.chart = window.renderCompanyReportChart(
+                            this.formattedChartData,
+                            this.isReversed,
+                            this.showLabel, {
+                                unit: this.filters.unitType,
+                                decimalPlaces: this.filters.decimalPlaces,
+                            });
                     },
                     toggleSegment(id) {
                         if (this.hideSegments.includes(id)) {
@@ -198,7 +236,7 @@
                         }
                     },
                     toggleRowForChart(row) {
-                        if (row.empty) return;
+                        if (row.empty || row.seg_start) return;
                 
                         if (this.selectedChartRows.find(item => item.id === row.id) ? true : false) {
                             this.selectedChartRows = this.selectedChartRows.filter(item => item.id !== row.id);
@@ -215,44 +253,44 @@
                                 values,
                                 color: '#7C8286',
                                 type: 'line',
+                                isPercent: row.isPercent,
                             });
                         }
                     },
-                    get rowGroups() {
+                    updateRowGroups(rows_) {
                         let rows = [];
                 
                         const addRow = (row, section = 0, depth = 0, parent = null) => {
-                            if ((row.empty && !this.showEmptyRows && !row.seg_start) || (this.hideSegments.includes(parent))) {
+                            if (
+                                this.hideSegments.includes(parent) ||
+                                this.hideSegments.includes(row.id) ||
+                                (!this.showAllRows && (row.mismatchedSegmentation || (row.empty && !row.children.length)))
+                            ) {
                                 return;
                             }
                 
-                            const splitted = row.title.split('|');
-                            const title = splitted[0];
-                
-                            const isPercent = title.includes('%') ||
-                                title.toLowerCase().includes(' yoy') ||
-                                title.toLowerCase().includes(' per');
+                            if (
+                                !this.showAllRows &&
+                                !row.children.length &&
+                                !Object.entries(row.values).find(([key, value]) => !value.empty && this.formattedTableDates.includes(key))
+                            ) {
+                                return;
+                            }
                 
                             let _row = {
                                 ...row,
                                 values: {},
-                                children: [],
-                                title: splitted.length > 1 ? title : row.title,
                                 section,
                                 depth,
                                 parent,
                             };
                 
-                            if (splitted.length > 1) {
-                                _row['isBold'] = splitted[1] === 'true'
-                                _row['hasBorder'] = splitted[2] === 'true'
-                                _row['section'] = parseInt(splitted[3])
-                            };
+                            delete _row.children;
                 
                             Object.entries(row.values).forEach(([key, value]) => {
                                 _row.values[key] = {
                                     ...value,
-                                    ...this.formatTableValue(value.value, isPercent)
+                                    ...this.formatTableValue(value.value, row.isPercent)
                                 };
                             });
                 
@@ -263,7 +301,7 @@
                             });
                         }
                 
-                        this.rows.forEach(row => {
+                        rows_.forEach(row => {
                             addRow(row);
                         });
                 
@@ -286,7 +324,20 @@
                 
                         sections.push(nonSectionRows)
                 
-                        return Object.values(sections)
+                        let tmp = Object.values(sections)
+                
+                        {{-- clean the empty seg_start which has no children after filtering --}}
+                        tmp.forEach((section, index) => {
+                            let segments = section.map(row => row.segmentation ? row.parent : null).filter(Boolean)
+                
+                            section.forEach((row, index) => {
+                                if (row.seg_start && !segments.includes(row.id)) {
+                                    section.splice(index, 1)
+                                }
+                            })
+                        })
+                
+                        this.rowGroups = tmp;
                     }
                 }" wire:key="{{ \Str::uuid() }}">
                     @if ($activeTab === 'disclosure' && count($disclosureTabs))
@@ -336,14 +387,14 @@
                             </div>
                         </div>
                     @else
-                        <div class="mt-6 mb-8">
+                        <div class="mt-6">
                             <x-range-slider :min="$rangeDates[0]" :max="$rangeDates[count($rangeDates) - 1]" :value="$selectedDateRange"
                                 @range-updated="selectedDateRange = $event.detail">
                             </x-range-slider>
                         </div>
 
                         <template x-if="selectedChartRows.length">
-                            <div class="mt-7" x-data="{
+                            <div class="mt-6" x-data="{
                                 printChart() {
                                     window.printChart(this.$el.querySelector('canvas'))
                                 }
@@ -387,7 +438,7 @@
                                         </label>
                                     </div>
 
-                                    <div class="mt-10 h-[300px] sm:h-[400px]">
+                                    <div class="mt-10 h-[300px] sm:h-[345px]">
                                         <canvas id="chart-company-report"></canvas>
                                     </div>
                                     <div class="mt-8 flex flex-wrap justify-start items-end gap-3">
@@ -517,7 +568,7 @@
     <script>
         let chart = null;
 
-        function renderCompanyReportChart(data, reversed, showLabel) {
+        function renderCompanyReportChart(data, reversed, showLabel, config) {
             const ctx = document.getElementById("chart-company-report")?.getContext("2d");
 
             if (!ctx) return;
@@ -574,20 +625,40 @@
                                     })
                                 },
                                 label: function(context) {
-                                    return context.dataset.label + '|' + context.formattedValue
+                                    let y = context.raw.y
+
+                                    if (context.dataset.isPercent) {
+                                        y = window.formatNumber(y, {
+                                            decimalPlaces: config.decimalPlaces,
+                                        })
+                                    } else {
+                                        y = window.formatNumber(y, config);
+                                    }
+
+                                    return context.dataset.label + '|' + y
                                 }
                             },
                         },
                         datalabels: {
-                            display: (ctx) => showLabel && ctx.dataset?.type !== "line",
+                            display: (ctx) => showLabel ? 'auto' : false,
                             anchor: "center",
                             align: "center",
-                            formatter: (v) => formatCmpctNumber(v.y),
+                            formatter: (v, ctx) => {
+                                let y = v.y
+
+                                if (ctx.dataset.isPercent) {
+                                    return window.formatNumber(y, {
+                                        decimalPlaces: config.decimalPlaces,
+                                    })
+                                }
+
+                                return window.formatNumber(y, config);
+                            },
                             font: {
                                 weight: 500,
                                 size: 12,
                             },
-                            color: (ctx) => ctx.dataset?.type !== "line" ? '#fff' : '#000',
+                            color: (ctx) => ctx.dataset?.type !== "line" ? '#fff' : '#121A0F',
                         }
                     },
                     scales: {

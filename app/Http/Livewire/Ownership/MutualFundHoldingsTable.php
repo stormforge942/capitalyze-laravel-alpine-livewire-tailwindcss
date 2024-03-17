@@ -15,6 +15,7 @@ class MutualFundHoldingsTable extends BaseTable
 {
     public $fund;
     public $periodRange = null;
+    public $quarter = null;
     public bool $redirectToOverview = false;
     public string $search = '';
     public string $sortField = 'weight';
@@ -33,6 +34,7 @@ class MutualFundHoldingsTable extends BaseTable
     public function setFilters($filters)
     {
         $this->periodRange = $filters['periodRange'];
+        $this->quarter = $filters['quarter'];
         $this->search = $filters['search'];
         $this->resetPage();
     }
@@ -49,6 +51,9 @@ class MutualFundHoldingsTable extends BaseTable
             ])
             ->when($this->periodRange, function ($query) {
                 return $query->whereBetween('period_of_report', $this->periodRange);
+            })
+            ->when($this->quarter, function ($query) {
+                return $query->whereBetween('period_of_report', explode('|', $this->quarter));
             })
             ->when($this->search, function ($query) {
                 $term = '%' . $this->search . '%';

@@ -13,7 +13,7 @@
         </div>
 
         <div class="col-span-12 lg:col-span-8 px-4 py-3 bg-white border border-[#D4DDD7] rounded">
-            <div class="items-center gap-2 text-sm inline-flex" wire:ignore>
+            {{-- <div class="items-center gap-2 text-sm inline-flex" wire:ignore>
                 <span class="hidden sm:inline">Period</span>
 
                 <div x-data="{
@@ -104,11 +104,16 @@
                         </div>
                     </x-dropdown>
                 </div>
+            </div> --}}
+
+            <div class="items-center gap-2 text-sm inline-flex" x-data="{ quarter: @entangle('filters.quarter') }" wire:ignore>
+                <span>Quarter to view</span>
+                <x-select name="quarter" :options="$quarters" placeholder="Select a quarter" x-model="quarter"></x-select>
             </div>
         </div>
     </div>
 
-    <livewire:ownership.mutual-funds-table :ticker="$ticker" />
+    <livewire:ownership.mutual-funds-table :ticker="$ticker" :quarter="$this->filters['quarter']" />
 </div>
 {{-- extra div just to fix some bug --}}
 </div>

@@ -62,7 +62,7 @@ class CostStructure extends Component
                 'label' => $labelMap[$segment['title']] . ' as % of Revenue',
                 'data' => array_map(fn ($date) => [
                     'x' => $this->formatDateForChart($date),
-                    'y' => round($segment['revenue_percentage'][$date], 2),
+                    'y' => round($segment['revenue_percentage'][$date], $this->decimalPlaces),
                 ], $this->selectedDates),
                 "fill" => false,
                 "backgroundColor" => $bg,
@@ -83,12 +83,11 @@ class CostStructure extends Component
                 'data' => array_map(fn ($date) => [
                     'x' => $this->formatDateForChart($date),
                     'value' => $segment['timeline'][$date],
-                    'percent' => round($segment['expense_percentage'][$date], 2),
+                    'percent' => round($segment['expense_percentage'][$date], $this->decimalPlaces),
                 ], $this->selectedDates),
                 "borderRadius" => 2,
                 "fill" => true,
                 "backgroundColor" => $bg,
-                "datalabels" => ['color' => '#fff'],
             ];
         }
 
@@ -205,7 +204,7 @@ class CostStructure extends Component
     private function makeData()
     {
         $this->updateSelectedDates();
-        
+
         $data = $this->rawData;
 
         foreach ($data['segments'] as $idx => $segment) {

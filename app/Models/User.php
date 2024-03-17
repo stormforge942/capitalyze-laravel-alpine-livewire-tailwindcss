@@ -34,6 +34,7 @@ class User extends Authenticatable implements MustVerifyEmail
         'is_admin',
         'group_id',
         'likedin_link',
+        'settings',
     ];
 
     /**
@@ -57,6 +58,7 @@ class User extends Authenticatable implements MustVerifyEmail
         'email_verified_at' => 'datetime',
         'is_admin' => 'boolean',
         'is_approved' => 'boolean',
+        'settings' => 'array',
     ];
 
     /**

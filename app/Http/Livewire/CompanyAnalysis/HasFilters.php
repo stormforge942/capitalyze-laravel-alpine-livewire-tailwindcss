@@ -3,12 +3,13 @@
 namespace App\Http\Livewire\CompanyAnalysis;
 
 use Carbon\Carbon;
+use Illuminate\Support\Facades\Auth;
 
 trait HasFilters
 {
     public string $period = 'annual';
     public string $unit = 'Millions';
-    public int $decimalPlaces = 2;
+    public int $decimalPlaces = 1;
     public string $dateOrder = 'ltr';
     public string $freezePane = 'Top Row & First Column';
 
@@ -21,6 +22,8 @@ trait HasFilters
     public function bootHasFilters()
     {
         $this->chartColors = config('capitalyze.chartColors');
+
+        $this->decimalPlaces = data_get(Auth::user(), 'settings.decimalPlaces', 1);
     }
 
     public function isReverseOrder(): bool

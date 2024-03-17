@@ -12,18 +12,16 @@
 
     <div class="flex justify-end items-center gap-x-5">
         <button class="bg-gray-200 rounded-lg hover:bg-gray-300 transition p-2"
-            @click.prevent="showEmptyRows = !showEmptyRows">
+            @click.prevent="showAllRows = !showAllRows">
             <svg class="h-4 w-4" data-slot="icon" fill="none" stroke-width="2" stroke="currentColor"
-                viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg" aria-hidden="true" x-show="showEmptyRows"
-                x-cloak>
+                viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg" aria-hidden="true" x-show="showAllRows" x-cloak>
                 <path stroke-linecap="round" stroke-linejoin="round"
                     d="M2.036 12.322a1.012 1.012 0 0 1 0-.639C3.423 7.51 7.36 4.5 12 4.5c4.638 0 8.573 3.007 9.963 7.178.07.207.07.431 0 .639C20.577 16.49 16.64 19.5 12 19.5c-4.638 0-8.573-3.007-9.963-7.178Z">
                 </path>
                 <path stroke-linecap="round" stroke-linejoin="round" d="M15 12a3 3 0 1 1-6 0 3 3 0 0 1 6 0Z"></path>
             </svg>
             <svg class="h-4 w-4" data-slot="icon" fill="none" stroke-width="2" stroke="currentColor"
-                viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg" aria-hidden="true" x-show="!showEmptyRows"
-                x-cloak>
+                viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg" aria-hidden="true" x-show="!showAllRows" x-cloak>
                 <path stroke-linecap="round" stroke-linejoin="round"
                     d="M3.98 8.223A10.477 10.477 0 0 0 1.934 12C3.226 16.338 7.244 19.5 12 19.5c.993 0 1.953-.138 2.863-.395M6.228 6.228A10.451 10.451 0 0 1 12 4.5c4.756 0 8.773 3.162 10.065 7.498a10.522 10.522 0 0 1-4.293 5.774M6.228 6.228 3 3m3.228 3.228 3.65 3.65m7.894 7.894L21 21m-3.228-3.228-3.65-3.65m0 0a3 3 0 1 0-4.243-4.243m4.242 4.242L9.88 9.88">
                 </path>
@@ -34,27 +32,25 @@
             <span class="currency-font">Currency: &nbsp;</span>
             <select wire:model="currency" id="currency-select" class="inline-flex font-bold !pr-8 bg-transparent">
                 <option value="USD">USD</option>
-                <option value="CAD">CAD</option>
-                <option value="EUR">EUR</option>
             </select>
         </div>
     </div>
 </div>
 
-<div class="mt-6 relative">
+<div class="mt-4 relative">
     <div class="rounded-lg sticky-table-container">
-        <table class="round-lg max-w-[max-content] mx-auto text-right whitespace-nowrap company-report-table" :class="tableClasses">
+        <table class="rounded-lg overflow-clip max-w-[max-content] mx-auto text-right" :class="tableClasses">
             <thead>
                 <tr class="capitalize text-dark bg-[#EDEDED] text-base font-bold">
-                    <th class="pl-8 py-2 bg-[#EDEDED] text-left">
+                    <th class="pl-6 py-2 bg-[#EDEDED] text-left">
                         {{ $company['name'] }} ({{ $company['ticker'] }})
                     </th>
                     <template x-for="date in formattedTableDates" :key="date">
-                        <th class="pl-6 py-2 last:pr-8" x-text="formattedTableDate(date)"></th>
+                        <th class="pl-6 py-2 last:pr-6" x-text="formattedTableDate(date)"></th>
                     </template>
                 </tr>
             </thead>
-            <template x-for="rows in rowGroups">
+            <template x-for="(rows, groupIdx) in rowGroups">
                 <tbody class="report-tbody">
                     <template x-for="(row, index) in rows" :key="`${index}-${row.title}`">
                         <tr x-data="{
@@ -84,8 +80,7 @@
                         }"
                             :class="[
                                 (row.hasBorder && index !== 0) ? 'border-[#D4DDD7] border-t' : '',
-                                (row.empty && !showEmptyRows && !row.seg_start) || (hideSegments.includes(row.parent)) ?
-                                'hidden' : '',
+                                hideSegments.includes(row.parent) ? 'hidden' : '',
                                 row.isBold ? 'font-bold' : '',
                                 isRowSelectedForChart ? 'bg-[#d5ebe3]' : (row.segmentation ? 'bg-[#e4eff3]' :
                                     'bg-white'),
@@ -93,21 +88,22 @@
                             <td class="pl-6 text-left"
                                 :class="[
                                     isRowSelectedForChart ? '!bg-[#d5ebe3]' : (row.segmentation ? '!bg-[#e4eff3]' : ''),
-                                    index === 0 ? 'rounded-tl-lg' : '',
+                                    index === 0 && groupIdx != 0 ? 'rounded-tl-lg' : '',
                                     isLast ? 'rounded-bl-lg' : '',
                                     paddings
                                 ]">
-                                <div class="flex items-center gap-x-2">
-                                    <input x-show="isRowSelectedForChart" type="checkbox" class="custom-checkbox -ml-4"
-                                        :checked="isRowSelectedForChart" @change="toggleRowForChart(row)">
+                                <div class="flex items-center">
+                                    <input x-show="isRowSelectedForChart" type="checkbox" class="custom-checkbox"
+                                        :checked="isRowSelectedForChart" style="margin-left: -18px; margin-right: 2px;"
+                                        @change="toggleRowForChart(row)">
 
-                                    <p class="max-w-[200px] overflow-ellipsis overflow-hidden"
+                                    <p class="max-w-[200px] truncate overflow-ellipsis overflow-hidden"
                                         :style="`padding-left: ${row.depth * 8}px`"
-                                        :class="!row.empty ? 'cursor-pointer' : ''" x-text="row.title"
-                                        @click="toggleRowForChart(row)"></p>
+                                        :class="!row.empty && !row.seg_start ? 'cursor-pointer' : ''" x-text="row.title"
+                                        :data-tooltip-content="row.title" @click.prevent="toggleRowForChart(row)"></p>
 
                                     <template x-if="row.seg_start">
-                                        <button class="shrink-0 transition-all"
+                                        <button class="ml-1 shrink-0 transition-all"
                                             :class="hideSegments.includes(row.id) ? '-rotate-90' : ''"
                                             @click="toggleSegment(row.id)">
                                             <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16"
@@ -121,17 +117,19 @@
                                 </div>
                             </td>
                             <template x-for="date in formattedTableDates" :key="date">
-                                <td class="pl-6 last:pr-8"
+                                <td class="pl-6 last:pr-6"
                                     :class="[
                                         isLast ? 'last:rounded-br-lg' : '',
-                                        index === 0 ? 'last:rounded-tr-lg' : '',
+                                        index === 0 && groupIdx != 0 ? 'last:rounded-tr-lg' : '',
                                         paddings
                                     ]">
-                                    <span class="hover:underline cursor-pointer"
-                                        :class="row.values[date]?.isNegative ? 'text-red' : ''"
-                                        x-text="row.values[date]?.result"
-                                        @click="Livewire.emit('slide-over.open', 'slides.right-slide', {data: row.values[date]})">
-                                    </span>
+                                    <x-review-number-button x-data="{ amount: row.values[date]?.value, date, }">
+                                        <div class="hover:underline cursor-pointer"
+                                            :class="row.values[date]?.isNegative ? 'text-red' : ''"
+                                            x-text="row.values[date]?.result"
+                                            @click="Livewire.emit('slide-over.open', 'slides.right-slide', {data: row.values[date]})">
+                                        </div>
+                                    </x-review-number-button>
                                 </td>
                             </template>
                         </tr>

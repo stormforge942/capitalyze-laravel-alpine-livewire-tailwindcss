@@ -6,6 +6,7 @@ use App\Http\Livewire\AsTab;
 use Livewire\Component;
 use App\Models\CompanyFilings;
 use Illuminate\Support\Carbon;
+use Illuminate\Support\Facades\Cache;
 
 class Shareholders extends Component
 {
@@ -46,7 +47,18 @@ class Shareholders extends Component
     private function quarters(): array
     {
         $quarters = [];
-        $oldestFiling = CompanyFilings::query()->where('symbol', $this->ticker)->min('report_calendar_or_quarter');
+
+        $cacheKey = 'oldest_filing_date_' . $this->ticker;
+
+        $cacheDuration = 3600;
+
+        $oldestFiling = Cache::remember($cacheKey, $cacheDuration, function () {
+            $filingDate = CompanyFilings::query()
+                ->where('symbol', $this->ticker)
+                ->min('report_calendar_or_quarter');
+                return $filingDate ?? '1900-01-01';
+        });
+
         $startYear = Carbon::parse($oldestFiling)->year;
         $startQuarter = Carbon::parse($oldestFiling)->quarter;
         $currentYear = now()->year;

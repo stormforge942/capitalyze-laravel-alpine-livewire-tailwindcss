@@ -1,7 +1,5 @@
-import chartJsPlugins, {
-    formatCmpctNumber,
-    formatNumber,
-} from "../chartjs-plugins"
+import chartJsPlugins from "../chartjs-plugins"
+import { formatCmpctNumber, formatNumber } from "../utils"
 
 const tooltipConfig = (config) => ({
     bodyFont: {
@@ -28,27 +26,26 @@ const tooltipConfig = (config) => ({
     },
 })
 
-const legendConfig = () => ({
-    display: true,
-    position: "bottom",
-    align: "start",
-    labels: {
-        boxWidth: 12,
-        boxHeight: 12,
-    },
-})
-
 const dataLabelConfig = (config) => ({
-    display: (ctx) => config.showLabel && ctx.dataset?.type !== "line",
+    display: (c) => {
+        if (config.showLabel === false) return false
+
+        if (c.dataset.data[c.dataIndex].y === 0) {
+            return false
+        }
+
+        return "auto"
+    },
     anchor: "center",
     align: "center",
     formatter: (v) => {
-        return Number(v.y).toFixed(2 ?? 0) + "%"
+        return Number(v.y).toFixed(config.number.decimalPlaces) + "%"
     },
     font: {
         weight: 500,
         size: 12,
     },
+    color: (ctx) => (ctx.dataset?.type !== "line" ? "#fff" : "#121A0F"),
 })
 
 const scales = (percentage = false, xOffset = true, reverseX) => ({
@@ -124,30 +121,49 @@ function renderRevenueByEmployeeChart(canvas, datasets, config) {
     })
 
     return new Chart(ctx, {
-        plugins: [chartJsPlugins.pointLine, window.ChartDataLabels],
+        plugins: [
+            chartJsPlugins.pointLine,
+            window.ChartDataLabels,
+            chartJsPlugins.htmlLegend,
+        ],
         type: "bar",
         data: {
             datasets,
         },
         options: {
+            animation: {
+                duration: 0,
+            },
             maintainAspectRatio: false,
             responsive: true,
             interaction: {
                 intersect: false,
                 mode: "index",
+                axis: "xy",
             },
             title: {
                 display: false,
             },
             plugins: {
                 tooltip: tooltipConfig(config),
-                legend: legendConfig(),
+                legend: { display: false },
+                htmlLegend: { container: config.legendsContainer },
                 pointLine: {
                     color: "#C22929",
                 },
                 datalabels: {
                     ...dataLabelConfig(config),
-                    formatter: (v) => formatNumber(v.y, config.number),
+                    formatter: (v, ctx) => {
+                        if (ctx.dataset.type === "line") {
+                            return (
+                                Number(v.y).toFixed(
+                                    config.number.decimalPlaces
+                                ) + "%"
+                            )
+                        }
+
+                        return formatNumber(v.y, config.number)
+                    },
                 },
             },
             scales: {
@@ -191,29 +207,45 @@ function renderCostStructureChart(canvas, datasets, config) {
     })
 
     return new Chart(ctx, {
-        plugins: [window.ChartDataLabels, chartJsPlugins.pointLine],
+        plugins: [
+            window.ChartDataLabels,
+            chartJsPlugins.pointLine,
+            chartJsPlugins.htmlLegend,
+        ],
         type: "bar",
         data: {
             datasets,
         },
         options: {
+            animation: {
+                duration: 0,
+            },
             maintainAspectRatio: false,
             responsive: true,
             interaction: {
                 intersect: false,
                 mode: "index",
+                axis: "xy",
             },
             title: {
                 display: false,
             },
             plugins: {
                 tooltip: tooltipConfig(config),
-                legend: legendConfig(),
+                legend: { display: false },
+                htmlLegend: { container: config.legendsContainer },
                 datalabels: {
                     ...dataLabelConfig(config),
-                    formatter: (v) => {
-                        if (config.type === "percentage") {
-                            return Number(v.y).toFixed(2) + "%"
+                    formatter: (v, ctx) => {
+                        if (
+                            config.type === "percentage" ||
+                            ctx.dataset.type === "line"
+                        ) {
+                            return (
+                                Number(v.y).toFixed(
+                                    config.number.decimalPlaces
+                                ) + "%"
+                            )
                         }
 
                         return formatNumber(v.y, config.number)
@@ -252,17 +284,25 @@ function renderFcfConversionChart(canvas, data, config) {
     })
 
     return new Chart(ctx, {
-        plugins: [window.ChartDataLabels, chartJsPlugins.pointLine],
+        plugins: [
+            window.ChartDataLabels,
+            chartJsPlugins.pointLine,
+            chartJsPlugins.htmlLegend,
+        ],
         type: "bar",
         data: {
             datasets: data.datasets,
         },
         options: {
+            animation: {
+                duration: 0,
+            },
             maintainAspectRatio: false,
             responsive: true,
             interaction: {
                 intersect: false,
                 mode: "index",
+                axis: "xy",
             },
             title: {
                 display: false,
@@ -292,15 +332,27 @@ function renderFcfConversionChart(canvas, data, config) {
                                 backgroundColor: "rgba(0,0,0,1)",
                                 position: "end",
                                 xAdjust: 10,
-                                content: data.avgFcf.toFixed(2) + "%",
+                                content:
+                                    data.avgFcf.toFixed(
+                                        config.number.decimalPlaces
+                                    ) + "%",
                                 color: "#fff",
                             },
                         },
                     },
                 },
                 tooltip: tooltipConfig(config),
-                legend: legendConfig(),
-                datalabels: dataLabelConfig(config),
+                legend: { display: false },
+                htmlLegend: { container: config.legendsContainer },
+                datalabels: {
+                    ...dataLabelConfig(config),
+                    formatter: (v, ctx) => {
+                        return ctx.dataset.type === "line"
+                            ? formatNumber(v.y, config.number)
+                            : Number(v.y).toFixed(config.number.decimalPlaces) +
+                                  "%"
+                    },
+                },
                 pointLine: {
                     color: "#ffff",
                 },
@@ -328,17 +380,25 @@ function renderCapitalStructureChart(canvas, datasets, config) {
     const ctx = canvas.getContext("2d")
 
     return new Chart(ctx, {
-        plugins: [chartJsPlugins.pointLine],
+        plugins: [
+            chartJsPlugins.pointLine,
+            window.ChartDataLabels,
+            chartJsPlugins.htmlLegend,
+        ],
         type: "line",
         data: {
             datasets,
         },
         options: {
+            animation: {
+                duration: 0,
+            },
             maintainAspectRatio: false,
             responsive: true,
             interaction: {
                 intersect: false,
                 mode: "index",
+                axis: "xy",
             },
             title: {
                 display: false,
@@ -350,8 +410,24 @@ function renderCapitalStructureChart(canvas, datasets, config) {
             },
             plugins: {
                 tooltip: tooltipConfig(config),
-                legend: legendConfig(),
+                legend: { display: false },
+                htmlLegend: { container: config.legendsContainer },
                 pointLine: {
+                    color: "#121A0F",
+                },
+                datalabels: {
+                    ...dataLabelConfig(config),
+                    formatter: (v, ctx) => {
+                        if (ctx.dataset.label === "Net Debt / Capital") {
+                            return (
+                                Number(v.y).toFixed(
+                                    config.number.decimalPlaces
+                                ) + "%"
+                            )
+                        }
+
+                        return formatNumber(v.y, config.number)
+                    },
                     color: "#121A0F",
                 },
             },
@@ -393,17 +469,21 @@ function basicBarChart(canvas, datasets, config) {
     })
 
     return new Chart(ctx, {
-        plugins: [window.ChartDataLabels],
+        plugins: [window.ChartDataLabels, chartJsPlugins.htmlLegend],
         type: "bar",
         data: {
             datasets,
         },
         options: {
+            animation: {
+                duration: 0,
+            },
             maintainAspectRatio: false,
             responsive: true,
             interaction: {
                 intersect: false,
                 mode: "index",
+                axis: "xy",
             },
             title: {
                 display: false,
@@ -414,7 +494,8 @@ function basicBarChart(canvas, datasets, config) {
                     ...dataLabelConfig(config),
                     formatter: (v) => formatNumber(v.y, config.number),
                 },
-                legend: legendConfig(),
+                legend: { display: false },
+                htmlLegend: { container: config.legendsContainer },
                 ...(!config.lastIsAverage
                     ? {}
                     : {
@@ -447,24 +528,29 @@ function percentageBarChart(canvas, datasets, config = {}) {
     })
 
     return new Chart(ctx, {
-        plugins: [window.ChartDataLabels],
+        plugins: [window.ChartDataLabels, chartJsPlugins.htmlLegend],
         type: "bar",
         data: {
             datasets,
         },
         options: {
+            animation: {
+                duration: 0,
+            },
             maintainAspectRatio: false,
             responsive: true,
             interaction: {
                 intersect: false,
                 mode: "index",
+                axis: "xy",
             },
             title: {
                 display: false,
             },
             plugins: {
                 tooltip: tooltipConfig(config),
-                legend: legendConfig(),
+                legend: { display: false },
+                htmlLegend: { container: config.legendsContainer },
                 datalabels: dataLabelConfig(config),
             },
             scales: scales(true, true, config.reverse),

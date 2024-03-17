@@ -48,13 +48,12 @@ use App\Http\Controllers\EarningsCalendarController;
 use App\Http\Middleware\CustomEmailVerificationPrompt;
 use App\Http\Controllers\InsiderTransactionsController;
 use App\Http\Controllers\ResetPasswordSuccessfulController;
+use App\Http\Controllers\UpdateSettingsController;
 use Laravel\Fortify\Http\Controllers\AuthenticatedSessionController;
 
 Route::get('/test-speed', function () {
     return "hello World";
 });
-
-Route::get('/permission-denied', PermissionDenied::class)->name('permission-denied');
 
 Route::get('/', HomeController::class)->name('home');
 
@@ -159,6 +158,8 @@ Route::group(['middleware' => ['auth', 'approved', 'verified', CheckPagePermissi
     Route::get('/frankfurt/{ticker}/filings', [FrankfurtController::class, 'filings'])->name('frankfurt.filings');
 
     Route::get('/shenzhen/{ticker}/', [ShenzhenController::class, 'metrics'])->name('shenzhen.metrics');
+
+    Route::post('settings', UpdateSettingsController::class)->name('settings.update');
 });
 
 Route::group(['middleware' => ['auth', 'verified', EnsureUserIsAdmin::class]], function () {
@@ -166,6 +167,7 @@ Route::group(['middleware' => ['auth', 'verified', EnsureUserIsAdmin::class]], f
     Route::get('/admin/permission', [AdminController::class, 'permission'])->name('admin.permission-management');
     Route::get('/admin/groups', [AdminController::class, 'groups'])->name('admin.groups-management');
     Route::get('/admin/feedbacks', [AdminController::class, 'feedbacks'])->name('admin.feedbacks-management');
+    Route::get('/admin/cache', [AdminController::class, 'cache'])->name('admin.cache-management');
 });
 
 Route::view('/waiting-for-approval', 'waiting-for-approval')

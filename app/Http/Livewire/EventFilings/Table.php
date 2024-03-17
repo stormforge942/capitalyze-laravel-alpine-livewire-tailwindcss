@@ -7,6 +7,8 @@ use Illuminate\Support\Facades\DB;
 use PowerComponents\LivewirePowerGrid\Column;
 use PowerComponents\LivewirePowerGrid\PowerGrid;
 use PowerComponents\LivewirePowerGrid\PowerGridColumns;
+use Illuminate\Support\Facades\Cache;
+
 
 class Table extends BaseTable
 {

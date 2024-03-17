@@ -18,11 +18,11 @@ window.VanillaCalendar = VanillaCalendar
 
 import "./datepicker.js"
 import "./range-slider"
-import "./css-tables"
 import "./report-text-highlighter"
 import "./chartjs-plugins"
 import "./pages/ownership"
 import "./pages/analysis"
+import { createPopper } from "@popperjs/core"
 
 Alpine.plugin(focus)
 
@@ -57,6 +57,10 @@ document.addEventListener("alpine:init", () => {
         },
     }))
 })
+
+Alpine.start()
+
+// resources/views/partials/input.blade.php
 ;[...document.querySelectorAll(".moving-label-input")].forEach((input) => {
     input.addEventListener("blur", (e) => {
         let el = e.target.nextElementSibling
@@ -88,19 +92,53 @@ document.addEventListener("alpine:init", () => {
     })
 })
 
-window.printChart = function (canvas) {
-    let win = window.open()
-    win.document.write(
-        `<br><img src="${canvas.toDataURL()}" style="object-fit: contain; width: 100%;"/>`
-    )
-    setTimeout(() => {
-        win.print()
-        win.close()
+initGeneralTextTooltip()
+
+function initGeneralTextTooltip() {
+    const tooltip = document.querySelector("#general-text-tooltip")
+    if (!tooltip) return
+
+    const virtualElement = {
+        getBoundingClientRect: generateGetBoundingClientRect(),
+    }
+
+    const instance = createPopper(virtualElement, tooltip)
+
+    const cb = (e) => {
+        if (e.target?.id == "general-text-tooltip") return
+
+        if (e.target?.dataset.tooltipContent) {
+            tooltip.classList.remove("hidden")
+
+            tooltip.children[0].innerHTML = e.target.dataset.tooltipContent
+
+            const elRect = e.target.getBoundingClientRect()
+
+            virtualElement.getBoundingClientRect =
+                generateGetBoundingClientRect(
+                    elRect.x + elRect.width / 2,
+                    elRect.y - elRect.height - 7
+                )
+
+            instance.update()
+        } else {
+            tooltip.classList.add("hidden")
+        }
+    }
+
+    document.addEventListener("mouseover", cb)
+    document.addEventListener("scroll", () => {
+        tooltip.classList.add("hidden")
     })
-}
 
-window.fullScreen = function (el) {
-    el.requestFullscreen()
+    function generateGetBoundingClientRect(x = 0, y = 0) {
+        return () => ({
+            width: 0,
+            height: 0,
+            top: y,
+            right: x,
+            bottom: y,
+            left: x,
+        })
+    }
 }
-
-Alpine.start()

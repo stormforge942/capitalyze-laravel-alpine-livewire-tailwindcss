@@ -5,49 +5,54 @@ function parseText(value, shouldBeNumber = false) {
         .trim()
         .replace(/^\$/, "") // remove dollar sign from start
         .replace(/^¥/, "") // remove yen sign from start
-        .replace(/^\(/, "") // remove ( from start 
+        .replace(/^\(/, "") // remove ( from start
         .replace(/^-/, "") // remove negative number
         .replace(/¥$/, "") // remove yen sign from end
         .replace(/\$$/, "") // remove dollar sign from end
         .replace(/\)$/, "") // remove ) from end
-        .trim();
+        .trim()
 
     if (isNaN(Number(term))) {
         if (shouldBeNumber) {
-            return null;
+            return null
         }
 
-        term = value;
+        term = value
     }
 
-    return term.replace(/0+$/, "");
+    return term.replace(/0+$/, "")
 }
 
 function highlightSelection(value, selector) {
     return setTimeout(() => {
-        const search = parseText(value);
+        const search = parseText(value)
 
-        const values = document.querySelectorAll(selector);
+        const values = document.querySelectorAll(selector)
 
         // regular expression to match the search term with any number of trailing zeros
-        const regex = new RegExp(`^${search}0*$`);
+        const regex = new RegExp(`^${search}0*$`)
 
         for (const value of values) {
             if (value.innerText == search) {
-                value.style.backgroundColor = "yellow";
-                continue;
+                highlightElement(value)
+                continue
             }
 
-            let text = parseText(value.innerText, true);
+            let text = parseText(value.innerText, true)
 
             if (text && (text === search || regex.test())) {
-                value.style.backgroundColor = "yellow";
-                continue;
+                highlightElement(value)
             }
         }
-    }, [100]);
+    }, [100])
+}
+
+function highlightElement(el) {
+    el = el.querySelector("span") || el.querySelector("font") || el
+
+    el.style.backgroundColor = "yellow"
 }
 
 window.reportTextHighlighter = {
     highlight: highlightSelection,
-};
+}

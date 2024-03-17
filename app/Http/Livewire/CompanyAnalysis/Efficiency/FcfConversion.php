@@ -67,7 +67,6 @@ class FcfConversion extends Component
             "backgroundColor" => '#121A0F',
             "type" => 'line',
             "yAxisID" => "y1",
-            "datalabels" => ['color' => '#fff'],
             'pointRadius' => 0,
             'dataType' => 'value',
         ];
@@ -80,12 +79,11 @@ class FcfConversion extends Component
                 'label' => $label,
                 'data' => array_map(fn ($date) => [
                     'x' => $this->formatDateForChart($date),
-                    'y' => round(abs($values['ebitda_percentage'][$date] ?? 0), 2),
+                    'y' => round(abs($values['ebitda_percentage'][$date] ?? 0), $this->decimalPlaces),
                 ], $this->selectedDates),
                 "borderRadius" => 2,
                 "fill" => true,
                 "backgroundColor" => $this->chartColors[$idx] ?? random_color(),
-                "datalabels" => ['color' => '#fff'],
             ];
 
             $idx++;

@@ -91,9 +91,16 @@ replicateSchema($xbrl, $replica, $selectedTables, $args['drop']);
 $symbols = [
     'AAPL',
     'MSFT',
+    'VMI'
 ];
 
-fillData($xbrl, $replica, $selectedTables, $symbols);
+$ciks = [
+    '0001948780',
+    '0001978885',
+    '0001911472'
+];
+
+fillData($xbrl, $replica, $selectedTables, $symbols, $ciks);
 
 function getArgs($argv)
 {
@@ -163,11 +170,13 @@ function replicateSchema($xbrl, $replica, $tables, $drop = false)
     }
 }
 
-function fillData($xbrl, $replica, $tables, $symbols)
+function fillData($xbrl, $replica, $tables, $symbols, $ciks)
 {
     $stringSymbols = "'" . implode("', '", $symbols) . "'";
+    $stringCiks = "'" . implode("', '", $ciks) . "'";
 
     foreach ($tables as $table) {
+        print("Filling $table\n");
         $stmt = null;
         if (in_array($table, ['company_profile', 'eod_prices', 'as_reported_sec_segmentation_api', 'info_tikr_presentations', 'company_presentation', 'info_presentations', 'employee_count', 'company_links', 'insider_transactions'])) {
             $_stringSymbols = $table === 'eod_prices' ? strtolower($stringSymbols) : $stringSymbols;
@@ -176,7 +185,7 @@ function fillData($xbrl, $replica, $tables, $symbols)
 
             $stmt = $xbrl->query("SELECT * FROM $table WHERE $symbolColumn IN ($_stringSymbols)");
         } else if ($table === 'filings') {
-            $stmt = $xbrl->query("SELECT * FROM $table where symbol in ($stringSymbols) order by report_calendar_or_quarter desc limit 1000");
+            $stmt = $xbrl->query("SELECT * FROM $table where cik in ($stringCiks) order by report_calendar_or_quarter desc limit 1000");
         } else if ($table === 'mutual_fund_holdings') {
             $stmt = $xbrl->query("SELECT * FROM $table where symbol in ($stringSymbols) order by period_of_report desc limit 1000");
         } else if ($table === 'filings_summary' || $table === 'industry_summary') {
@@ -186,6 +195,7 @@ function fillData($xbrl, $replica, $tables, $symbols)
 
             if ($table === 'filings_summary' && $ciks != '') {
                 $stmt = $xbrl->query("SELECT * FROM $table WHERE is_latest=true and cik in ($ciks)");
+                print("Filling $table with $ciks\n");
             } else if ($ciks != '') {
                 $stmt = $xbrl->query("SELECT * FROM $table WHERE cik in ($ciks) order by date desc limit 5000");
             }

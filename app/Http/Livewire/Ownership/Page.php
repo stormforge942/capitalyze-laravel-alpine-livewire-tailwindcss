@@ -7,6 +7,7 @@ use Livewire\Component;
 use App\Models\CompanyInsider;
 use App\Services\OwnershipHistoryService;
 use App\Http\Livewire\Ownership\CompanyInsiders;
+use Illuminate\Support\Facades\Cache;
 
 class Page extends Component
 {
@@ -37,11 +38,20 @@ class Page extends Component
 
     public function insiderFormTypes()
     {
-        return CompanyInsider::query()
-            ->where('symbol', $this->company->ticker)
-            ->distinct()
-            ->pluck('form_type')
-            ->toArray();
+
+        $cacheKey = 'insider_form_types_' . $this->company->ticker;
+
+        $cacheDuration = 3600;
+
+        $formTypes = Cache::remember($cacheKey, $cacheDuration, function () {
+            return CompanyInsider::query()
+                ->where('symbol', $this->company->ticker)
+                ->distinct()
+                ->pluck('form_type')
+                ->toArray();
+        });
+    
+        return $formTypes;
     }
 
     public function render()

@@ -85,10 +85,7 @@
 
                                     @if (!$data && !$result)
                                         No data found
-                                    @endif                    
-                                    <script>
-                                        window.reportTextHighlighter.highlight(@json($value), 'wep-slide-over table tbody tr td')
-                                    </script>
+                                    @endif
                                 @endif
                             </div>
                         </div>
@@ -97,4 +94,10 @@
             </div>
         </div>
     </template>
+
+    @if ($loaded)
+        <script>
+            window.reportTextHighlighter.highlight(@json($value), '.wep-slide-over-container table tbody tr td')
+        </script>
+    @endif
 </div>

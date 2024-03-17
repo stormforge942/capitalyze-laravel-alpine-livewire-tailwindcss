@@ -58,6 +58,7 @@
                 window.analysisCharts['{{ $title }}'] = window.analysisPage.{{ $function }}(this.$refs.canvas, this.data, {
                     type: this.type,
                     showLabel: this.showLabel,
+                    legendsContainer: this.$el.querySelector('.chart-legends'),
                     reverse: this.reverse === 'ltl',
                     number: {
                         unit: '{{ $unit }}',
@@ -74,7 +75,7 @@
                     </p>
                 </div>
 
-                <form class="flex items-center gap-8 text-sm text-gray-medium2 mr-10">
+                <form class="flex items-center gap-8 text-sm text-gray-medium2 mr-10" x-cloak>
                     @if ($hasPercentageMix)
                         <label class="cursor-pointer flex items-center gap-1">
                             <input type="radio" value="values" class="custom-radio !h-4 !w-4 focus:ring-0"
@@ -101,8 +102,11 @@
                 </form>
             </div>
 
-            <div class="mt-6 w-full h-[300px] sm:h-[500px]" wire:ignore>
-                <canvas x-ref="canvas"></canvas>
+            <div class="mt-6 w-full" wire:ignore>
+                <div class="h-[300px] sm:h-[345px]">
+                    <canvas x-ref="canvas"></canvas>
+                </div>
+                <ul class="px-6 mt-4 chart-legends"></ul>
             </div>
         </div>
     </div>

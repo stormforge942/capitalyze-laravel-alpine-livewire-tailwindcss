@@ -7,6 +7,7 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Carbon;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Js;
+use Illuminate\Support\Facades\Cache;
 
 class Page extends Component
 {
@@ -59,7 +60,12 @@ class Page extends Component
             $end = $this->dates['next_week_end'];
         }
 
-        $newEarnings = DB::connection('pgsql-xbrl')
+        $cacheKey = 'earnings_data_' . $start . '_' . $end;
+        $cacheDuration = 3600;
+
+        return Cache::remember($cacheKey, 3600, function () use ($start, $end) {
+
+            $newEarnings = DB::connection('pgsql-xbrl')
             ->table('new_earnings')
             ->select('symbol', 'date', 'exchange', 'time', 'title', 'url', 'company_name', 'acceptance_time')
             ->whereBetween('date', [$start, $end])
@@ -71,22 +77,23 @@ class Page extends Component
                 return $item;
             });
 
-        $earningsCalendar = DB::connection('pgsql-xbrl')
-            ->table('earnings_calendar')
-            ->select('symbol', 'date', 'exchange', 'time', 'title', 'url', 'company_name', 'pub_time')
-            ->whereBetween('date', [$start, $end])
-            ->get()
-            ->map(function ($item) {
-                $item->origin = 'Press Release';
-                return $item;
-            });
+            $earningsCalendar = DB::connection('pgsql-xbrl')
+                ->table('earnings_calendar')
+                ->select('symbol', 'date', 'exchange', 'time', 'title', 'url', 'company_name', 'pub_time')
+                ->whereBetween('date', [$start, $end])
+                ->get()
+                ->map(function ($item) {
+                    $item->origin = 'Press Release';
+                    return $item;
+                });
 
-        return array_values($newEarnings
-            ->merge($earningsCalendar)
-            ->sortBy(function ($item) {
-                return Carbon::parse($item->date . ' ' . $item->time)->timestamp;
-            })
-            ->toArray());
+            return array_values($newEarnings
+                ->merge($earningsCalendar)
+                ->sortBy(function ($item) {
+                    return Carbon::parse($item->date . ' ' . $item->time)->timestamp;
+                })
+                ->toArray());
+        });
     }
 
     public function render()

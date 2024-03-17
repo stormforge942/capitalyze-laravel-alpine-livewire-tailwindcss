@@ -1,4 +1,4 @@
-<div class="years-range-wrapper" x-data="{
+<div class="years-range-wrapper -translate-y-[50%]" x-data="{
     value: @json($value),
     show: false,
     min: {{ $min }},
