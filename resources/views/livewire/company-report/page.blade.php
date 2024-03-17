@@ -276,17 +276,18 @@
                             ) {
                                 return;
                             }
-                                                
+                
                             let _row = {
                                 ...row,
                                 values: {},
-                                children: null,
                                 section,
                                 depth,
                                 parent,
                             };
                 
-                            Object.entries(row.values).forEach(([key, value]) => {                
+                            delete _row.children;
+                
+                            Object.entries(row.values).forEach(([key, value]) => {
                                 _row.values[key] = {
                                     ...value,
                                     ...this.formatTableValue(value.value, row.isPercent)
@@ -335,8 +336,6 @@
                                 }
                             })
                         })
-
-                        console.log(tmp)
                 
                         this.rowGroups = tmp;
                     }
@@ -641,15 +640,25 @@
                             },
                         },
                         datalabels: {
-                            display: (ctx) => showLabel && ctx.dataset?.type !== "line",
+                            display: (ctx) => showLabel ? 'auto' : false,
                             anchor: "center",
                             align: "center",
-                            formatter: (v) => formatCmpctNumber(v.y),
+                            formatter: (v, ctx) => {
+                                let y = v.y
+
+                                if (ctx.dataset.isPercent) {
+                                    return window.formatNumber(y, {
+                                        decimalPlaces: config.decimalPlaces,
+                                    })
+                                }
+
+                                return window.formatNumber(y, config);
+                            },
                             font: {
                                 weight: 500,
                                 size: 12,
                             },
-                            color: (ctx) => ctx.dataset?.type !== "line" ? '#fff' : '#000',
+                            color: (ctx) => ctx.dataset?.type !== "line" ? '#fff' : '#121A0F',
                         }
                     },
                     scales: {

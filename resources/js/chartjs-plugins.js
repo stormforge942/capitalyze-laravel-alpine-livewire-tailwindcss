@@ -24,7 +24,7 @@ const chartJsPlugins = {
                 ctx.moveTo(x, yAxis.bottom)
                 ctx.lineTo(x, y)
                 ctx.lineWidth = 1
-                ctx.strokeStyle = options.color || "#000"
+                ctx.strokeStyle = options.color || "#121A0F"
                 ctx.setLineDash([5, 5])
                 ctx.stroke()
                 ctx.restore()

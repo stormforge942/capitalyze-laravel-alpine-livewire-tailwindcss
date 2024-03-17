@@ -37,10 +37,6 @@ class Page extends Component
     public $disclosureFootnotes = [];
     public $disclosureFootnote = '';
 
-    protected $chartColors = [
-        "#000000", "#454545", "#5e5e5e", "#636363", "#7a7a7a", "#878787", "#7a7e94", "#5d6074", "#4d5060", "#3d404c", "#4f5263"
-    ];
-
     protected $tabs = [
         'income-statement' => 'Income Statement',
         'balance-sheet' => 'Balance Sheet',

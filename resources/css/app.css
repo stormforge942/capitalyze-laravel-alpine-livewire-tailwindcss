@@ -314,7 +314,7 @@ a {
     cursor: pointer;
     line-height: 16px;
     display: inline-block;
-    color: #000;
+    color: #121A0F;
     font-size: 12px;
 }
 .graph-wrapper [type="radio"]:not(:checked) + label {
@@ -344,7 +344,7 @@ a {
     top: 0;
     width: 16px;
     height: 16px;
-    border: 2px solid #000;
+    border: 2px solid #121A0F;
     border-radius: 100%;
     background: #fff;
 }
@@ -356,13 +356,13 @@ a {
     content: "";
     width: 6px;
     height: 6px;
-    background: #000;
-    color: #000;
+    background: #121A0F;
+    color: #121A0F;
     position: absolute;
     top: 5px;
     left: 5px;
     border-radius: 100%;
-    border: 2px solid #000;
+    border: 2px solid #121A0F;
     -webkit-transition: all 0.2s ease;
     transition: all 0.2s ease;
 }
@@ -499,7 +499,7 @@ a {
     width: 208px;
     border-radius: 8px;
     border: 1px solid #e9f5f1;
-    box-shadow: 0px 4px 8px 0px #00000814;
+    box-shadow: 0px 4px 8px 0px #121A0F00814;
     padding: 16px 0px;
     top: 25px;
 }
