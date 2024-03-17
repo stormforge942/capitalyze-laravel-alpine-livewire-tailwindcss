@@ -67,7 +67,6 @@ class FcfConversion extends Component
             "backgroundColor" => '#121A0F',
             "type" => 'line',
             "yAxisID" => "y1",
-            "datalabels" => ['color' => '#fff'],
             'pointRadius' => 0,
             'dataType' => 'value',
         ];
@@ -85,7 +84,6 @@ class FcfConversion extends Component
                 "borderRadius" => 2,
                 "fill" => true,
                 "backgroundColor" => $this->chartColors[$idx] ?? random_color(),
-                "datalabels" => ['color' => '#fff'],
             ];
 
             $idx++;

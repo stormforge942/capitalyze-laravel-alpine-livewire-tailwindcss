@@ -88,7 +88,6 @@ class CostStructure extends Component
                 "borderRadius" => 2,
                 "fill" => true,
                 "backgroundColor" => $bg,
-                "datalabels" => ['color' => '#fff'],
             ];
         }
 
@@ -205,7 +204,7 @@ class CostStructure extends Component
     private function makeData()
     {
         $this->updateSelectedDates();
-        
+
         $data = $this->rawData;
 
         foreach ($data['segments'] as $idx => $segment) {

@@ -39,8 +39,8 @@ const legendConfig = () => ({
 })
 
 const dataLabelConfig = (config) => ({
-    display: (ctx) => {
-        return config.showLabel && ctx.dataset?.type !== "line" ? "auto" : false
+    display: () => {
+        return config.showLabel ? "auto" : false
     },
     anchor: "center",
     align: "center",
@@ -51,6 +51,7 @@ const dataLabelConfig = (config) => ({
         weight: 500,
         size: 12,
     },
+    color: (ctx) => (ctx.dataset?.type !== "line" ? "#fff" : "#121A0F"),
 })
 
 const scales = (percentage = false, xOffset = true, reverseX) => ({
@@ -140,6 +141,7 @@ function renderRevenueByEmployeeChart(canvas, datasets, config) {
             interaction: {
                 intersect: false,
                 mode: "index",
+                axis: "xy",
             },
             title: {
                 display: false,
@@ -152,7 +154,13 @@ function renderRevenueByEmployeeChart(canvas, datasets, config) {
                 },
                 datalabels: {
                     ...dataLabelConfig(config),
-                    formatter: (v) => formatNumber(v.y, config.number),
+                    formatter: (v, ctx) => {
+                        if (ctx.dataset.type === "line") {
+                            return Number(v.y).toFixed(config.number.decimalPlaces) + "%"
+                        }
+
+                        return formatNumber(v.y, config.number)
+                    },
                 },
             },
             scales: {
@@ -210,6 +218,7 @@ function renderCostStructureChart(canvas, datasets, config) {
             interaction: {
                 intersect: false,
                 mode: "index",
+                axis: "xy",
             },
             title: {
                 display: false,
@@ -219,8 +228,11 @@ function renderCostStructureChart(canvas, datasets, config) {
                 legend: legendConfig(),
                 datalabels: {
                     ...dataLabelConfig(config),
-                    formatter: (v) => {
-                        if (config.type === "percentage") {
+                    formatter: (v, ctx) => {
+                        if (
+                            config.type === "percentage" ||
+                            ctx.dataset.type === "line"
+                        ) {
                             return (
                                 Number(v.y).toFixed(
                                     config.number.decimalPlaces
@@ -278,6 +290,7 @@ function renderFcfConversionChart(canvas, data, config) {
             interaction: {
                 intersect: false,
                 mode: "index",
+                axis: "xy",
             },
             title: {
                 display: false,
@@ -318,7 +331,15 @@ function renderFcfConversionChart(canvas, data, config) {
                 },
                 tooltip: tooltipConfig(config),
                 legend: legendConfig(),
-                datalabels: dataLabelConfig(config),
+                datalabels: {
+                    ...dataLabelConfig(config),
+                    formatter: (v, ctx) => {
+                        return ctx.dataset.type === "line"
+                            ? formatNumber(v.y, config.number)
+                            : Number(v.y).toFixed(config.number.decimalPlaces) +
+                                  "%"
+                    },
+                },
                 pointLine: {
                     color: "#ffff",
                 },
@@ -346,7 +367,7 @@ function renderCapitalStructureChart(canvas, datasets, config) {
     const ctx = canvas.getContext("2d")
 
     return new Chart(ctx, {
-        plugins: [chartJsPlugins.pointLine],
+        plugins: [chartJsPlugins.pointLine, window.ChartDataLabels],
         type: "line",
         data: {
             datasets,
@@ -360,6 +381,7 @@ function renderCapitalStructureChart(canvas, datasets, config) {
             interaction: {
                 intersect: false,
                 mode: "index",
+                axis: "xy",
             },
             title: {
                 display: false,
@@ -373,6 +395,21 @@ function renderCapitalStructureChart(canvas, datasets, config) {
                 tooltip: tooltipConfig(config),
                 legend: legendConfig(),
                 pointLine: {
+                    color: "#121A0F",
+                },
+                datalabels: {
+                    ...dataLabelConfig(config),
+                    formatter: (v, ctx) => {
+                        if (ctx.dataset.label === "Net Debt / Capital") {
+                            return (
+                                Number(v.y).toFixed(
+                                    config.number.decimalPlaces
+                                ) + "%"
+                            )
+                        }
+
+                        return formatNumber(v.y, config.number)
+                    },
                     color: "#121A0F",
                 },
             },
@@ -428,6 +465,7 @@ function basicBarChart(canvas, datasets, config) {
             interaction: {
                 intersect: false,
                 mode: "index",
+                axis: "xy",
             },
             title: {
                 display: false,
@@ -485,6 +523,7 @@ function percentageBarChart(canvas, datasets, config = {}) {
             interaction: {
                 intersect: false,
                 mode: "index",
+                axis: "xy",
             },
             title: {
                 display: false,
