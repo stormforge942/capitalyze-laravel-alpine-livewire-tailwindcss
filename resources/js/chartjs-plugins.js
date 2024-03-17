@@ -177,7 +177,8 @@ const chartJsPlugins = {
             ul.style.display = "flex"
             ul.style.alignItems = "center"
             ul.style.flexWrap = "wrap"
-            ul.style.gap = "16px"
+            ul.style.columnGap = "16px"
+            ul.style.rowGap = "4px"
             ul.style.fontSize = "12px"
 
             // Remove old legend items

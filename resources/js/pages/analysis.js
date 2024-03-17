@@ -149,6 +149,7 @@ function renderRevenueByEmployeeChart(canvas, datasets, config) {
             plugins: {
                 tooltip: tooltipConfig(config),
                 legend: { display: false },
+                htmlLegend: { container: config.legendsContainer },
                 pointLine: {
                     color: "#C22929",
                 },
@@ -234,6 +235,7 @@ function renderCostStructureChart(canvas, datasets, config) {
             plugins: {
                 tooltip: tooltipConfig(config),
                 legend: { display: false },
+                htmlLegend: { container: config.legendsContainer },
                 datalabels: {
                     ...dataLabelConfig(config),
                     formatter: (v, ctx) => {
@@ -250,9 +252,6 @@ function renderCostStructureChart(canvas, datasets, config) {
 
                         return formatNumber(v.y, config.number)
                     },
-                },
-                htmlLegend: {
-                    container: config.legendsContainer,
                 },
                 pointLine: {
                     color: "#ccc",
@@ -346,6 +345,7 @@ function renderFcfConversionChart(canvas, data, config) {
                 },
                 tooltip: tooltipConfig(config),
                 legend: { display: false },
+                htmlLegend: { container: config.legendsContainer },
                 datalabels: {
                     ...dataLabelConfig(config),
                     formatter: (v, ctx) => {
@@ -413,6 +413,7 @@ function renderCapitalStructureChart(canvas, datasets, config) {
             plugins: {
                 tooltip: tooltipConfig(config),
                 legend: { display: false },
+                htmlLegend: { container: config.legendsContainer },
                 pointLine: {
                     color: "#121A0F",
                 },
@@ -470,7 +471,7 @@ function basicBarChart(canvas, datasets, config) {
     })
 
     return new Chart(ctx, {
-        plugins: [window.ChartDataLabels],
+        plugins: [window.ChartDataLabels, chartJsPlugins.htmlLegend],
         type: "bar",
         data: {
             datasets,
@@ -496,6 +497,7 @@ function basicBarChart(canvas, datasets, config) {
                     formatter: (v) => formatNumber(v.y, config.number),
                 },
                 legend: { display: false },
+                htmlLegend: { container: config.legendsContainer },
                 ...(!config.lastIsAverage
                     ? {}
                     : {
@@ -528,7 +530,7 @@ function percentageBarChart(canvas, datasets, config = {}) {
     })
 
     return new Chart(ctx, {
-        plugins: [window.ChartDataLabels],
+        plugins: [window.ChartDataLabels, chartJsPlugins.htmlLegend],
         type: "bar",
         data: {
             datasets,
@@ -550,6 +552,7 @@ function percentageBarChart(canvas, datasets, config = {}) {
             plugins: {
                 tooltip: tooltipConfig(config),
                 legend: { display: false },
+                htmlLegend: { container: config.legendsContainer },
                 datalabels: dataLabelConfig(config),
             },
             scales: scales(true, true, config.reverse),
