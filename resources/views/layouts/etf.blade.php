@@ -40,7 +40,7 @@
     <x-jet-banner />
 
     @if ($tab === 'filings')
-        <livewire:company-navbar :company="$company" period="annual" />
+        <livewire:company-navbar :company="$company" />
     @else
         <livewire:etf.navbar :etf="$etf" />
 

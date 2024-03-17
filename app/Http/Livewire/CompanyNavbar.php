@@ -8,28 +8,14 @@ use Illuminate\Support\Str;
 use Illuminate\Http\Request;
 use Illuminate\Contracts\View\View;
 use Illuminate\Support\Facades\Auth;
-use Illuminate\Http\RedirectResponse;
 use Illuminate\Contracts\Foundation\Application;
 use Illuminate\Contracts\View\Factory as ViewFactory;
 
 class CompanyNavbar extends Component
 {
     public $company;
-    public $period = "annual";
     public $currentRoute;
     public $groups;
-
-    protected $queryString = [
-        'period' => ['except' => 'annual']
-    ];
-
-    protected $listeners = ['periodChange' => '$refresh'];
-
-    public function changePeriod($period): RedirectResponse
-    {
-        $this->period = $period;
-        return redirect()->route($this->currentRoute, ['ticker' => $this->company->ticker, 'period' => $period]);
-    }
 
     public function render(): ViewFactory|View|Application
     {
@@ -73,7 +59,7 @@ class CompanyNavbar extends Component
             'Ownership',
         ];
 
-        return [
+        $items = [
             'main' => [
                 'name' => 'Idea Generation',
                 'items' => $links->where(fn ($link) => in_array($link['title'], $mainLinks))
@@ -120,6 +106,10 @@ class CompanyNavbar extends Component
                 'collapsed' => true
             ]
         ];
+
+        return array_values(
+            array_filter($items, fn ($item) => count($item['items']) > 0)
+        );
     }
 
     private function sortFunction($order)
