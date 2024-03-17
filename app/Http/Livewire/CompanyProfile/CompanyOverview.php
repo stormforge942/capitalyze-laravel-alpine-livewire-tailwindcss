@@ -111,6 +111,7 @@ class CompanyOverview extends Component
             $data['total_revenue']['yoy_change'][$date] = $lastTotalRevenue
                 ? (($total / $lastTotalRevenue) - 1) * 100
                 : 0;
+            $lastTotalRevenue = $total;
 
             $ebitda = $this->ebitda[$date] ?? 0;
             $data['ebitda']['timeline'][$date] = $ebitda;
