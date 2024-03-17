@@ -39,8 +39,14 @@ const legendConfig = () => ({
 })
 
 const dataLabelConfig = (config) => ({
-    display: () => {
-        return config.showLabel ? "auto" : false
+    display: (c) => {
+        if (config.showLabel === false) return false
+
+        if (c.dataset.data[c.dataIndex].y === 0) {
+            return false
+        }
+
+        return "auto"
     },
     anchor: "center",
     align: "center",
@@ -156,7 +162,11 @@ function renderRevenueByEmployeeChart(canvas, datasets, config) {
                     ...dataLabelConfig(config),
                     formatter: (v, ctx) => {
                         if (ctx.dataset.type === "line") {
-                            return Number(v.y).toFixed(config.number.decimalPlaces) + "%"
+                            return (
+                                Number(v.y).toFixed(
+                                    config.number.decimalPlaces
+                                ) + "%"
+                            )
                         }
 
                         return formatNumber(v.y, config.number)
