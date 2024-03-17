@@ -1,6 +1,6 @@
 <div>
     <div>
-        <livewire:company-navbar :company="$company" :period="$period" />
+        <livewire:company-navbar :company="$company" />
         <!-- Page Content -->
         <div class="p-4 sm:ml-64 pl-0">
                 

@@ -1,6 +1,6 @@
 <div>
     <div>
-    <livewire:company-navbar :company="$company ?? ['ticker' => 'aapl']" :period="$period ?? 'annual'" />
+    <livewire:company-navbar :company="$company ?? ['ticker' => 'aapl']" />
     <!-- Page Content -->
     <main>
         <div class="p-4 sm:ml-64 pl-0">
