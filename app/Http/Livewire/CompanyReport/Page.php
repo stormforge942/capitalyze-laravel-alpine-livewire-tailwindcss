@@ -385,7 +385,6 @@ class Page extends Component
 
     private function generateRow($data, $title, $isSegmentation = false, $mismatchedSegmentation = false): array
     {
-
         $row = [
             'seg_start' => false,
             'segmentation' => false,
@@ -397,12 +396,18 @@ class Page extends Component
             'isPercent' => false,
         ];
 
+        $isUsdPerShares = false;
+
         foreach ($data as $key => $value) {
             if (strtotime($key)) {
                 foreach ($this->tableDates as $tableDate) {
                     if (substr($tableDate, 0, 7) == substr($key, 0, 7)) {
                         if (in_array($value[1] ?? '', ['%', 'USD/Shares'])) {
                             $row['isPercent'] = true;
+
+                            if ($value[1] === 'USD/Shares') {
+                                $isUsdPerShares = true;
+                            }
                         }
 
                         $row['values'][$tableDate] = $this->parseCell($value, $key);
@@ -439,7 +444,7 @@ class Page extends Component
 
         $row['id'] = Str::uuid() . '-' . Str::uuid(); // just for the charts
 
-        if ($row['empty'] && !$row['seg_start'] && count($row['children'])) {
+        if ($isUsdPerShares || $row['empty'] && count($row['children'])) {
             $row['isBold'] = true;
         }
 
