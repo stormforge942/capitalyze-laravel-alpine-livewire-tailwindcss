@@ -101,7 +101,7 @@
                 </form>
             </div>
 
-            <div class="mt-6 w-full h-[300px] sm:h-[500px]" wire:ignore>
+            <div class="mt-6 w-full h-[300px] sm:h-[345px]" wire:ignore>
                 <canvas x-ref="canvas"></canvas>
             </div>
         </div>
