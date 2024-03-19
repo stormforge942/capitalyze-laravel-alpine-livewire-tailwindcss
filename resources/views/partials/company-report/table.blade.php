@@ -97,7 +97,7 @@
                                         :checked="isRowSelectedForChart" style="margin-left: -18px; margin-right: 2px;"
                                         @change="toggleRowForChart(row)">
 
-                                    <p class="max-w-[270px] whitespace-normal"
+                                    <p class="max-w-[250px] whitespace-normal"
                                         :style="`padding-left: ${row.depth * 8}px`"
                                         :class="!row.empty && !row.seg_start ? 'cursor-pointer' : ''" x-text="row.title"
                                         :data-tooltip-content="row.title" @click.prevent="toggleRowForChart(row)"></p>
