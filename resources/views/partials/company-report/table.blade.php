@@ -97,7 +97,7 @@
                                         :checked="isRowSelectedForChart" style="margin-left: -18px; margin-right: 2px;"
                                         @change="toggleRowForChart(row)">
 
-                                    <p class="max-w-[200px] truncate overflow-ellipsis overflow-hidden"
+                                    <p class="max-w-[250px] whitespace-normal"
                                         :style="`padding-left: ${row.depth * 8}px`"
                                         :class="!row.empty && !row.seg_start ? 'cursor-pointer' : ''" x-text="row.title"
                                         :data-tooltip-content="row.title" @click.prevent="toggleRowForChart(row)"></p>
@@ -118,6 +118,7 @@
                             </td>
                             <template x-for="date in formattedTableDates" :key="date">
                                 <td class="pl-6 last:pr-6"
+                                    style="vertical-align: bottom;"
                                     :class="[
                                         isLast ? 'last:rounded-br-lg' : '',
                                         index === 0 && groupIdx != 0 ? 'last:rounded-tr-lg' : '',
