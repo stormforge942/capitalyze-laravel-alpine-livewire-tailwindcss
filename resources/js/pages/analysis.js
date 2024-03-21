@@ -37,7 +37,7 @@ const dataLabelConfig = (config) => ({
         return "auto"
     },
     anchor: "center",
-    align: "center",
+    align: (ctx) => (ctx.dataset?.type !== "line" ? "center" : "end"),
     formatter: (v) => {
         return Number(v.y).toFixed(config.number.decimalPlaces) + "%"
     },
@@ -428,6 +428,7 @@ function renderCapitalStructureChart(canvas, datasets, config) {
 
                         return formatNumber(v.y, config.number)
                     },
+                    align: "end",
                     color: "#121A0F",
                 },
             },

@@ -641,8 +641,13 @@
                         },
                         datalabels: {
                             display: (ctx) => showLabel ? 'auto' : false,
-                            anchor: "center",
-                            align: "center",
+                            align: (ctx) => {
+                                if(ctx.dataset.type === 'line') {
+                                    return 'end';
+                                }
+
+                                return 'center';
+                            },
                             formatter: (v, ctx) => {
                                 let y = v.y
 
