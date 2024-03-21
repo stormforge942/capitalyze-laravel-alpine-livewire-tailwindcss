@@ -44,9 +44,10 @@ class FundHoldingsTable extends BaseTable
             ->when($this->search, function ($query) {
                 $term = '%' . $this->search . '%';
 
-                return $query
-                    ->where('symbol', 'ilike', $term)
-                    ->orWhere('name_of_issuer', 'ilike', $term); // remove this if the query is too slow
+                return $query->where(
+                    fn ($q) => $q->where('symbol', 'ilike', $term)
+                        ->orWhere('name_of_issuer', 'ilike', $term)
+                ); // remove this if the query is too slow
             });
     }
 
