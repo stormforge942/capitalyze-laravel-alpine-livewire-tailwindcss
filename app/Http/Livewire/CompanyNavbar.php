@@ -107,9 +107,7 @@ class CompanyNavbar extends Component
             ]
         ];
 
-        return array_values(
-            array_filter($items, fn ($item) => count($item['items']) > 0)
-        );
+        return array_filter($items, fn ($item) => count($item['items']) > 0);
     }
 
     private function sortFunction($order)
