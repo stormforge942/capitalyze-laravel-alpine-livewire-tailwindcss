@@ -1,5 +1,6 @@
 <div class="py-4 text-sm+ w-52">
     <div class="[&>*]:px-4 [&>*]:w-full [&>*]:p-2 [&>*]:text-left">
+        {{ $top ?? '' }}
         @if($toggleFeature)
         <button class="hover:bg-gray-100" @click="hide = !hide; dropdown.hide();"
             x-text="hide ? 'Show Chart' : 'Hide Chart'"></button>

@@ -401,7 +401,9 @@
                             }"
                                 @download-chart="Livewire.emit('modal.open', 'upgrade-account-modal')"
                                 @print-chart="printChart"
-                                @full-screen="fullScreen($el.querySelector('canvas').parentElement)">
+                                @full-screen="fullScreen($el.querySelector('canvas').parentElement)"
+                                @clear-chart="selectedChartRows = []">
+                                >
                                 <div class="bg-white rounded-lg p-10 relative">
                                     <div class="absolute top-2 right-2 xl:top-3 xl:right-5">
                                         <x-dropdown placement="bottom-start" :shadow="true">
@@ -419,7 +421,20 @@
                                                 </svg>
                                             </x-slot>
 
-                                            <x-chart-options :toggleFeature="false"></x-chart-options>
+                                            <x-chart-options :toggleFeature="false">
+                                                <x-slot name="top">
+                                                    <button class="hover:bg-gray-100 flex items-center gap-x-2"
+                                                        @click="dropdown.hide(); $dispatch('clear-chart')">
+                                                        <svg width="16" height="16" viewBox="0 0 16 16"
+                                                            fill="none" xmlns="http://www.w3.org/2000/svg">
+                                                            <path
+                                                                d="M7.99479 14.6666C4.31289 14.6666 1.32812 11.6818 1.32812 7.99992C1.32812 4.31802 4.31289 1.33325 7.99479 1.33325C11.6767 1.33325 14.6615 4.31802 14.6615 7.99992C14.6615 11.6818 11.6767 14.6666 7.99479 14.6666ZM7.99479 7.05712L6.10917 5.17149L5.16636 6.1143L7.05199 7.99992L5.16636 9.88552L6.10917 10.8283L7.99479 8.94272L9.88039 10.8283L10.8232 9.88552L8.93759 7.99992L10.8232 6.1143L9.88039 5.17149L7.99479 7.05712Z"
+                                                                fill="#C22929" />
+                                                        </svg>
+                                                        <span>Clear Chart</span>
+                                                    </button>
+                                                </x-slot>
+                                            </x-chart-options>
                                         </x-dropdown>
                                     </div>
 
@@ -480,7 +495,8 @@
                                                                 </template>
 
                                                                 <svg xmlns="http://www.w3.org/2000/svg" width="16"
-                                                                    height="16" viewBox="0 0 16 16" fill="none">
+                                                                    height="16" viewBox="0 0 16 16"
+                                                                    fill="none">
                                                                     <path
                                                                         d="M10.3083 6.19514L7.72167 8.78378L5.135 6.19514C5.01045 6.07021 4.84135 6 4.665 6C4.48865 6 4.31955 6.07021 4.195 6.19514C3.935 6.45534 3.935 6.87566 4.195 7.13585L7.255 10.1982C7.515 10.4584 7.935 10.4584 8.195 10.1982L11.255 7.13585C11.515 6.87566 11.515 6.45534 11.255 6.19514C10.995 5.94161 10.5683 5.93494 10.3083 6.19514Z"
                                                                         fill="#464E49" />
@@ -642,7 +658,7 @@
                         datalabels: {
                             display: (ctx) => showLabel ? 'auto' : false,
                             align: (ctx) => {
-                                if(ctx.dataset.type === 'line') {
+                                if (ctx.dataset.type === 'line') {
                                     return 'end';
                                 }
 
