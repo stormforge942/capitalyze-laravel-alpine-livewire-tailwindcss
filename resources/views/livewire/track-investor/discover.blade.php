@@ -1,13 +1,23 @@
 <div>
     <div class="hidden lg:flex items-baseline justify-between">
         <h2 class="text-xl font-semibold">Discover Funds</h2>
-
-        @include('livewire.track-investor.search')
     </div>
 
-    <x-tab-slot id="track-ownership-tabs" tab="discover">
-        @include('livewire.track-investor.search', ['useAlpine' => true, 'event' => 'search:discover'])
-    </x-tab-slot>
+    <div class="mt-6 grid gap-2 grid-cols-12 items-center">
+        <div class="col-span-4">
+            <x-search-filter wire:model.debounce.800ms="search" />
+        </div>
+
+        <div class="col-span-8">
+            <x-filter-box>
+                <x-select-number-range label="Market Value" longLabel="Market Value (in millions)"></x-select-number-range>
+
+                <x-select-number-range label="Turnover" longLabel="Turnover (in millions)"></x-select-number-range>
+                
+                <x-select-number-range label="Number of Holdings"></x-select-number-range>
+            </x-filter-box>
+        </div>
+    </div>
 
     <div class="mt-6">
         <div wire:loading.block wire:target="search, runSearch">
