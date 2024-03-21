@@ -60,7 +60,7 @@ class MutualFundHoldingsTable extends BaseTable
 
                 return $query->where(
                     fn ($q) => $q->where('name', 'ilike', $term)
-                        ->orWhere('symbol', $this->search)
+                        ->orWhere('symbol', strtoupper($this->search)) // symbols are in uppercase
                 );
             });
     }
