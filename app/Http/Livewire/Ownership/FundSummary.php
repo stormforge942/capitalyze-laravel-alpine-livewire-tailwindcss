@@ -203,6 +203,8 @@ class FundSummary extends Component
                 })
                 ->toArray();
         });
+
+        return $filings;
     }
 
     public function getOverTimeMarketValue()
