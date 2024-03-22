@@ -36,7 +36,7 @@ class Table extends BaseTable
                 $term = '%' . $this->filters['search'] . '%';
 
                 return $query->where(
-                    fn ($q) => $q->where('symbol', $value)
+                    fn ($q) => $q->where('symbol', strtoupper($value))
                         ->orWhere('registrant_name', 'ilike', $term)
                         ->orWhere('reporting_person', 'ilike', $term)
                 );

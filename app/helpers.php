@@ -30,19 +30,18 @@ function getSiteNameFromUrl($url, $default = '-')
 
 function niceNumber($n)
 {
-    $mult = $n < 0 ? -1 : 1;
-
-    $n = abs($n);
-
-    // first strip any formatting;
     $n = (0 + str_replace(",", "", $n));
-    // is this a number?
+
     if (!is_numeric($n)) return false;
-    if ($n > 1000000000000) return $mult * round(($n / 1000000000000), 2) . ' T';
-    elseif ($n > 1000000000) return $mult * round(($n / 1000000000), 2) . ' B';
-    elseif ($n > 1000000) return $mult * round(($n / 1000000), 2) . ' M';
-    elseif ($n > 1000) return $mult * round(($n / 1000), 2) . ' K';
-    return $mult * number_format($n);
+
+    if ($n < 0) return '-' . niceNumber(abs($n));
+
+    if ($n > 1000000000000) return round(($n / 1000000000000), 2) . ' T';
+    elseif ($n > 1000000000) return round(($n / 1000000000), 2) . ' B';
+    elseif ($n > 1000000) return round(($n / 1000000), 2) . ' M';
+    elseif ($n > 1000) return round(($n / 1000), 2) . ' K';
+
+    return number_format($n);
 }
 
 function getFilingsSummaryTab()

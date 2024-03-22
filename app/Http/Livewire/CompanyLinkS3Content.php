@@ -10,6 +10,7 @@ class CompanyLinkS3Content extends Modal
     public ?string $s3Link = null;
     public string $content = '';
     public bool $loaded = false;
+    public ?string $imageLink = null;
 
     public function mount(array $row)
     {
