@@ -7,6 +7,7 @@ services:
       dockerfile: Dockerfile.production
     image: capitalyze:latest
     container_name: capitalyze-app
+    platform: "linux/amd64"
     # restart: unless-stopped
     tty: true
     environment:
@@ -18,18 +19,19 @@ services:
     networks:
       - app-network
 
-  webserver:
-    image: nginx:alpine
-    container_name: nginx-webserver
-    # restart: unless-stopped
-    tty: true
-    ports:
-      - "8000:80"
-    volumes:
-      - ./:/var/www
-      - ./docker/nginx/conf.d/:/etc/nginx/conf.d/
-    networks:
-      - app-network
+  # webserver:
+  #   image: nginx:alpine
+  #   container_name: nginx-webserver
+  #   # restart: unless-stopped
+  #   tty: true
+  #   ports:
+  #     - "8000:80"
+  #   volumes:
+  #     - ./:/var/www
+  #     - ./docker/nginx/conf.d/:/etc/nginx/conf.d/
+
+  #   networks:
+  #     - app-network
 
 networks:
   app-network:

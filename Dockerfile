@@ -59,7 +59,7 @@ RUN apt-get update && apt-get install -y \
     zip \
     unzip \
     libpq-dev \
-    postgresql-client \  
+    postgresql-client \
     && docker-php-ext-install pdo pdo_pgsql pgsql pdo_mysql mbstring exif pcntl bcmath gd
 # Clear cache
 RUN apt-get clean && rm -rf /var/lib/apt/lists/*
@@ -82,6 +82,7 @@ RUN chmod +x /usr/local/bin/wait-for-db.sh
 
 # Expose port 9000 and start php-fpm server
 EXPOSE 9000
+EXPOSE 80
 # Set the script as the entrypoint
 ENTRYPOINT ["/usr/local/bin/entrypoint.sh"]
 CMD ["php-fpm"]

@@ -19,3 +19,6 @@ yarn-error.log
 .vapor/
 .env.staging
 auth.json
+
+.clj-kondo
+.lsp

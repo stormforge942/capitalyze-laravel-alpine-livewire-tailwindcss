@@ -14,4 +14,5 @@ echo "test user created"
 
 # Execute the main process
 echo "Starting php-fpm"
-exec php-fpm
+php-fpm -D
+nginx -g 'daemon off;'
