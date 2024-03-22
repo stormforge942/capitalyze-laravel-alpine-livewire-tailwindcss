@@ -73,10 +73,10 @@ class FundHoldingsTable extends BaseTable
 
                 return '<a href=" ' . $href . ' " class="text-blue">' . $companyFilings->symbol . (!empty($companyFilings->name_of_issuer) ? ' <span class="text-xs font-light">(' . $companyFilings->name_of_issuer . ')<span>' : '') . '</button>';
             })
-            ->addColumn('ssh_prnamt', function (CompanyFilings $companyFilings) {
-                return number_format($companyFilings->ssh_prnamt);
+            ->addColumn('ssh_prnamt_formatted', function (CompanyFilings $companyFilings) {
+                return '<button class="hover:underline" onclick="Livewire.emit(`slide-over.open`, `filings-summary-s3-link-content`, {cik: `' . $companyFilings->cik . '`, date:  `' . $companyFilings->report_calendar_or_quarter . '`})">' . number_format($companyFilings->ssh_prnamt) . '</button>';
             })
-            ->addColumn('value', function (CompanyFilings $companyFilings) {
+            ->addColumn('market_value', function (CompanyFilings $companyFilings) {
                 return number_format($companyFilings->value, 0) . ' $';
             })
             ->addColumn('weight', function (CompanyFilings $companyFilings) {
@@ -125,11 +125,11 @@ class FundHoldingsTable extends BaseTable
                 ->searchable()
                 ->sortable(),
 
-            Column::make('Shares Held', 'ssh_prnamt')
+            Column::make('Shares Held', 'ssh_prnamt_formatted', 'ssh_prnamt')
                 ->sortable()
                 ->headerAttribute('[&>div]:justify-end')->bodyAttribute('text-right'),
 
-            Column::make('Market Value', 'value')
+            Column::make('Market Value', 'market_value', 'value')
                 ->sortable()
                 ->headerAttribute('[&>div]:justify-end')->bodyAttribute('text-right'),
 
