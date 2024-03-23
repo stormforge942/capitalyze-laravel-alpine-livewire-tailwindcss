@@ -11,6 +11,7 @@ use Illuminate\Support\Carbon;
 class Chart extends Component
 {
     public array $tabs = [];
+    public array $metricChartType = [];
     public array $selectedCompanies = [];
     public array $selectedMetrics = [];
     public ?array $filters = null;
@@ -123,7 +124,6 @@ class Chart extends Component
                 'items' => [
                     'balance_sheet||Cash And Equivalents' => [
                         'title' => 'Cash & Equivalents',
-                        'type' => 'line',
                     ],
                     'balance_sheet||Short Term Investments' => [
                         'title' => 'Short Term Investments',
@@ -139,7 +139,6 @@ class Chart extends Component
                     ],
                     'balance_sheet||Total Receivables' => [
                         'title' => 'Total Receivables',
-                        'type' => 'line',
                     ],
                     'balance_sheet||Inventory' => [
                         'title' => 'Inventory',
@@ -192,6 +191,16 @@ class Chart extends Component
                         'income_statement||Earnings Before Taxes (EBT)' => [
                             'title' => 'Earnings Before Taxes (EBT)',
                         ],
+                        'income_statement||Dividends per share' => [
+                            'title' => 'Dividends per share',
+                            'type' => 'line',
+                            'yAxis' => 'ratio',
+                        ],
+                        'income_statement||Payout Ratio %' => [
+                            'title' => 'Payout Ratio',
+                            'type' => 'line',
+                            'yAxis' => 'percent',
+                        ],
                     ],
                     'Expenses' => [
                         'income_statement||SG&A Expenses' => [
@@ -214,10 +223,12 @@ class Chart extends Component
             ],
         ];
 
+        $flattened = $this->flattenMetrics($metrics);
+
         return view('livewire.builder.chart', [
-            'data' => $this->getData(),
+            'data' => $this->getData($flattened),
             'metrics' => $metrics,
-            'flattenedMetrics' => $this->flattenMetrics($metrics),
+            'flattenedMetrics' => $flattened,
         ]);
     }
 
@@ -270,7 +281,7 @@ class Chart extends Component
         $this->mount();
     }
 
-    public function getData()
+    public function getData(array $metricsMap)
     {
         $data = array_reduce($this->availablePeriods, function ($c, $i) {
             $c[$i] = array_reduce($this->selectedCompanies, function ($d, $j) {
@@ -327,7 +338,10 @@ class Chart extends Component
                             $value[$date] = $val ? round((float) $val, 3) : null;
                         }
 
-                        $data[$period][$item->ticker][$column . '||' . $key] = $this->normalizeValue($value, $period);
+                        $key = $column . '||' . $key;
+                        $this->metricChartType[$key] = $metricsMap[$key]['type'] ?? 'bar';
+
+                        $data[$period][$item->ticker][$key] = $this->normalizeValue($value, $period);
                     }
                 }
             }

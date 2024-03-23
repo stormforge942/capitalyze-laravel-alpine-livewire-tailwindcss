@@ -7,7 +7,7 @@
     activeOption: null,
     width: '320px',
     init() {
-        this.activeOption = ['Popular Selections']
+        this.activeOption = [this.options[0].title]
 
         this.$watch('showDropdown', value => {
             this.tmpValue = [...this.value]

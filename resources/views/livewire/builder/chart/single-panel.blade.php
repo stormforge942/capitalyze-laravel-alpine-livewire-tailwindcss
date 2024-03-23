@@ -35,9 +35,22 @@
                         }
                     }).filter((item) => item.y !== null),
                     backgroundColor: chartColors[idx++] || window.randomColor(),
+                    backgroundColor: chartColors[idx] || window.randomColor(),
+                    borderColor: chartColors[idx] || window.randomColor(),
+                    type: $wire.metricChartType[metric] || 'bar',
+                    yAxisID: this.metricsMap[metric].yAxis || 'y',
+                    shouldFormat: !this.metricsMap[metric].yAxis,
                 })
             })
         })
+
+        // bring line chart to front
+        datasets = datasets.sort((a, b) => {
+            if (a.type === 'line') {
+                return -1;
+            }
+            return 1;
+        });
 
         const ctx = this.$refs.canvas.getContext('2d')
 
@@ -50,6 +63,13 @@
                 window.ChartDataLabels
             ],
             options: {
+                maintainAspectRatio: false,
+                responsive: true,
+                interaction: {
+                    intersect: false,
+                    mode: 'nearest',
+                    axis: 'xy'
+                },
                 animation: {
                     duration: 0,
                 },
@@ -69,7 +89,7 @@
                         callbacks: {
                             title: (context) => this.formatDate(context[0].raw.x),
                             label: (context) => {
-                                let y = formatValue(context.raw.y)
+                                let y = context.dataset.shouldFormat ? formatValue(context.raw.y) : context.raw.y
 
                                 return `${context.dataset.label}|${y}`
                             },
@@ -88,8 +108,12 @@
                         },
                         anchor: 'end',
                         align: 'top',
-                        formatter: (v) => {
-                            return this.formatValue(v.y)
+                        formatter: (v, ctx) => {
+                            if (ctx.dataset.shouldFormat) {
+                                return this.formatValue(v.y)
+                            }
+
+                            return v.y
                         },
                         clip: false,
                         font: {
@@ -99,8 +123,6 @@
                         color: (ctx) => '#121A0F',
                     }
                 },
-                responsive: true,
-                maintainAspectRatio: false,
                 scales: {
                     x: {
                         grid: {
@@ -120,7 +142,31 @@
                             callback: window.formatCmpctNumber,
                             padding: 10,
                         }
-                    }
+                    },
+                    percent: {
+                        ticks: {
+                            callback: (val) => val.toFixed(this.filters.decimalPlaces) + '%',
+                        },
+                        display: true,
+                        position: 'right',
+                        type: 'linear',
+                        beginAtZero: false,
+                        grid: {
+                            drawOnChartArea: false,
+                        },
+                    },
+                    ratio: {
+                        ticks: {
+                            callback: (val) => val.toFixed(this.filters.decimalPlaces),
+                        },
+                        display: true,
+                        position: 'right',
+                        type: 'linear',
+                        beginAtZero: false,
+                        grid: {
+                            drawOnChartArea: false,
+                        },
+                    },
                 }
             }
         })
