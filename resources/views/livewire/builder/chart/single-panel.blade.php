@@ -46,7 +46,9 @@
             data: {
                 datasets,
             },
-            plugins: [],
+            plugins: [
+                window.ChartDataLabels
+            ],
             options: {
                 elements: {
                     line: {
@@ -62,9 +64,29 @@
                         enabled: false,
                         position: 'nearest',
                         callbacks: {
-                            title: (context) => this.period === 'annual' ? context[0].label.split('-')[0] : context[0].label,
+                            title: (context) => {
+                                if (this.period == 'annual') {
+                                    return context[0].raw.x.split('-')[0]
+                                }
+
+                                let title = new Intl.DateTimeFormat('en-US', {
+                                    month: 'short',
+                                    year: 'numeric'
+                                }).format(new Date(context[0].raw.x))
+
+                                const [month, year] = title.split(' ')
+
+                                const quarter = {
+                                    'Jan': 'Q1',
+                                    'Apr': 'Q2',
+                                    'Jul': 'Q3',
+                                    'Oct': 'Q4',
+                                } [month]
+
+                                return `${quarter} ${year}`
+                            },
                             label: (context) => {
-                                let y = context.raw.y
+                                let y = formatValue(context.raw.y)
 
                                 return `${context.dataset.label}|${y}`
                             },
@@ -73,6 +95,26 @@
                     legend: {
                         display: false,
                     },
+                    datalabels: {
+                        display: (c) => {
+                            if (c.dataset.data[c.dataIndex].y === 0) {
+                                return false
+                            }
+
+                            return 'auto'
+                        },
+                        anchor: 'end',
+                        align: 'top',
+                        formatter: (v) => {
+                            return this.formatValue(v.y)
+                        },
+                        clip: false,
+                        font: {
+                            weight: 500,
+                            size: 12,
+                        },
+                        color: (ctx) => '#121A0F',
+                    }
                 },
                 responsive: true,
                 maintainAspectRatio: false,
@@ -83,7 +125,7 @@
                         },
                         type: 'timeseries',
                         time: {
-                            unit: 'year',
+                            unit: this.period === 'annual' ? 'year' : 'quarter',
                         },
                     },
                     y: {
@@ -92,7 +134,8 @@
                         },
                         beginAtZero: true,
                         ticks: {
-                            callback: window.formatCmpctNumber
+                            callback: window.formatCmpctNumber,
+                            padding: 10,
                         }
                     }
                 }

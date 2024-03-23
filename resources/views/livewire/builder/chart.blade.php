@@ -1,3 +1,8 @@
+@push('scripts')
+    <script src="https://cdn.jsdelivr.net/npm/chartjs-plugin-datalabels@2.0.0/dist/chartjs-plugin-datalabels.min.js">
+    </script>
+@endpush
+
 <div class="chart-builder-page">
     <div>
         <h1 class="text-xl font-bold">Chart</h1>
@@ -88,7 +93,7 @@
     
             this.data = this._raw.data[this.period];
             this.dates = this.filterSelectedDates(this._raw.dates[this.period] || []);
-    
+        
             this.$watch('period', (value) => {
                 this.data = this._raw.data[value];
                 this.dates = this.filterSelectedDates(this._raw.dates[this.period] || []);
@@ -104,47 +109,15 @@
                 const year = parseInt(date.split('-')[0]);
                 return year >= this.dateRange[0] && year <= this.dateRange[1];
             });
+        },
+        formatValue(value) {
+            return window.formatNumber(value, {
+                decimalPlaces: this.decimalPlaces,
+                unit: this.unit
+            });
         }
     }" @companies-changed.window="companies = $event.detail"
         @metrics-changed.window="metrics = $event.detail">
-        <x-filter-box class="mt-6">
-            <div class="flex items-center gap-x-1">
-                <span class="text-sm text-dark-light2">Period Type</span>
-                <x-select placeholder="Period Type" :options="['annual' => 'Annual', 'quarter' => 'Quarterly']" x-model="period"></x-select>
-            </div>
-
-            <div class="flex-1">
-                <x-range-slider :min="2005" :max="(int) date('Y')" :value="[2018, (int) date('Y')]" x-init="() => {
-                    const dates = _raw.dates[period] || null;
-                
-                    if (!dates.length) return;
-                
-                    min = parseInt(dates[0].split('-')[0]);
-                    max = parseInt(dates[dates.length - 1].split('-')[0]);
-                
-                    $nextTick(() => {
-                        value = [
-                            Math.max(max - 5, min),
-                            max
-                        ]
-                
-                        initSlider();
-                    })
-                }"
-                    @range-updated="dateRange = $event.detail; $dispatch('update-chart')"></x-range-slider>
-            </div>
-
-            <div class="flex items-center gap-x-1">
-                <span class="text-sm text-dark-light2">Unit Type</span>
-                <x-select placeholder="Unit Type" :options="['As Stated', 'Thousands', 'Millions', 'Billions']" x-model="unit"></x-select>
-            </div>
-
-            <div class="flex items-center gap-x-1">
-                <span class="text-sm text-dark-light2">Decimal</span>
-                <x-select-decimal-places x-model="decimalPlaces"></x-select-decimal-places>
-            </div>
-        </x-filter-box>
-
         <div class="grid place-items-center py-24" x-show="!metrics.length" x-cloak>
             <svg width="168" height="164" viewBox="0 0 168 164" fill="none" xmlns="http://www.w3.org/2000/svg">
                 <g clip-path="url(#clip0_8757_81677)">
@@ -190,6 +163,27 @@
         </div>
 
         <div x-show="metrics.length" x-cloak>
+            <x-filter-box class="mt-6">
+                <div class="flex items-center gap-x-1">
+                    <span class="text-sm text-dark-light2">Period Type</span>
+                    <x-select placeholder="Period Type" :options="['annual' => 'Annual', 'quarter' => 'Quarterly']" x-model="period"></x-select>
+                </div>
+
+                <div class="flex-1">
+                    @include('livewire.builder.chart.range-slider')
+                </div>
+
+                <div class="flex items-center gap-x-1">
+                    <span class="text-sm text-dark-light2">Unit Type</span>
+                    <x-select placeholder="Unit Type" :options="['As Stated', 'Thousands', 'Millions', 'Billions']" x-model="unit"></x-select>
+                </div>
+
+                <div class="flex items-center gap-x-1">
+                    <span class="text-sm text-dark-light2">Decimal</span>
+                    <x-select-decimal-places x-model="decimalPlaces"></x-select-decimal-places>
+                </div>
+            </x-filter-box>
+
             <div class="mt-6 bg-white p-6 relative rounded-lg" x-data="{
                 subSubTab: 'single-panel',
                 showLabel: true,
@@ -237,7 +231,7 @@
                 <ul class="px-6 mt-4 legend-container"></ul>
             </div>
 
-            <div class="mt-6 rounded-lg sticky-table-container">
+            <div class="mt-6 rounded-lg sticky-table-container" wire:key="tab-{{ $activeTab }}">
                 <table class="round-lg text-right whitespace-nowrap sticky-table sticky-column">
                     <thead>
                         <tr class="capitalize text-dark bg-[#EDEDED] text-base font-bold">
@@ -251,13 +245,14 @@
                     </thead>
                     <template x-for="(metrics, company) in data" :key="company">
                         <tbody class="report-tbody">
-                            <template x-for="(timeline, metric) in metrics" :key="metric">
+                            <template x-for="(timeline, metric) in metrics" :key="company + '-' + metric">
                                 <tr class="border-b last:border-b-0">
                                     <td class="pl-6 text-left py-2">
                                         <span x-text="`${company} - ${metricsMap[metric].title}`"></span>
                                     </td>
                                     <template x-for="date in dates" :key="date">
-                                        <td class="pl-6 last:pr-8 py-2 bg-white" x-text="timeline[date] || '-'"></td>
+                                        <td class="pl-6 last:pr-8 py-2 bg-white"
+                                            x-text="timeline[date] ? formatValue(timeline[date]) : '-'"></td>
                                     </template>
                                 </tr>
                             </template>
