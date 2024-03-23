@@ -35,6 +35,9 @@
     showResult() {
         this.value = [...this.tmpValue]
         this.showDropdown = false
+        this.dispatchValueChanged()
+    },
+    dispatchValueChanged() {
         this.$dispatch('companies-changed', this.value)
     }
 }">
@@ -100,7 +103,7 @@
             <template x-for="company in value">
                 <span class="bg-green-light rounded-full p-2 flex items-center gap-x-2">
                     <span x-text="company"></span>
-                    <button type="button" @click="value = value.filter(item => item !== company.ticker)">
+                    <button type="button" @click="value = value.filter(item => item !== company); dispatchValueChanged()">
                         <svg width="16" height="16" viewBox="0 0 16 16" fill="none"
                             xmlns="http://www.w3.org/2000/svg">
                             <path

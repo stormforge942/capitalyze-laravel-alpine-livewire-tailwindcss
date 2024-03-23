@@ -6,19 +6,12 @@ use Livewire\Component;
 
 class SelectChartMetrics extends Component
 {
-    protected $options = [];
+    public $options = [];
     public $selected = [];
     public $metricsMap = [];
 
-    public function mount($options)
-    {
-        $this->options = $options;
-    }
-
     public function render()
     {
-        return view('livewire.builder.select-chart-metrics', [
-            'options' => $this->options
-        ]);
+        return view('livewire.builder.select-chart-metrics');
     }
 }

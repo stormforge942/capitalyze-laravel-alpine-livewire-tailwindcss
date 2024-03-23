@@ -62,7 +62,7 @@
                         enabled: false,
                         position: 'nearest',
                         callbacks: {
-                            title: (context) => context[0].label,
+                            title: (context) => this.period === 'annual' ? context[0].label.split('-')[0] : context[0].label,
                             label: (context) => {
                                 let y = context.raw.y
 
@@ -82,12 +82,15 @@
                             display: false
                         },
                         type: 'timeseries',
+                        time: {
+                            unit: 'year',
+                        },
                     },
                     y: {
                         grid: {
                             display: false
                         },
-                        beginAtZero: false,
+                        beginAtZero: true,
                         ticks: {
                             callback: window.formatCmpctNumber
                         }

@@ -1,7 +1,7 @@
 <div class="bg-white p-6 rounded-lg border-[0.5px] border-[#D4DDD7]" x-data="{
     search: '',
     options: @js($options),
-    value: [],
+    value: $wire.entangle('selected', true),
     tmpValue: [],
     showDropdown: false,
     activeOption: null,
@@ -50,36 +50,13 @@
     get hasValueChanged() {
         return this.value.map(item => item).join('-') !== this.tmpValue.sort().map(item => item).join('-')
     },
-    get selectedOptions() {
-        let labels = {};
-
-        this.options.forEach(option => {
-            let items = option.items || {};
-
-            if (option.has_children) {
-                items = {}
-
-                Object.keys(option.items).forEach(key => {
-                    items = {
-                        ...items,
-                        ...option.items[key]
-                    }
-                })
-            }
-
-            Object.keys(items).forEach(key => {
-                if (this.value.includes(key)) {
-                    labels[key] = items[key]
-                }
-            })
-        })
-
-        return labels;
-    },
     showResult() {
         this.value = [...this.tmpValue].sort();
         this.showDropdown = false;
 
+        this.dispatchValueChanged()
+    },
+    dispatchValueChanged() {
         this.$dispatch('metrics-changed', this.value)
     }
 }">
@@ -209,9 +186,9 @@
         </x-dropdown>
 
         <div class="mt-6 flex flex-wrap gap-3 text-sm font-semibold" x-show="value.length" x-cloak>
-            <template x-for="(option, key) in selectedOptions" :key="key">
+            <template x-for="item in value" :key="item">
                 <span class="bg-green-light rounded-full p-2 flex items-center gap-x-2.5">
-                    <span x-text="option.title"></span>
+                    <span x-text="$wire.metricsMap[item].title"></span>
 
                     <button class="transition-all text-blue hover:bg-dark hover:text-green-dark p-0.5 rounded-sm">
                         <svg width="16" height="16" viewBox="0 0 16 16" fill="currentColor"
@@ -238,7 +215,7 @@
                     </button>
 
                     <button class="transition-all hover:opacity-80" type="button"
-                        @click="value = value.filter(item => item !== key)">
+                        @click="value = value.filter(i => i !== item); dispatchValueChanged()">
                         <svg width="16" height="16" viewBox="0 0 16 16" fill="none"
                             xmlns="http://www.w3.org/2000/svg">
                             <path

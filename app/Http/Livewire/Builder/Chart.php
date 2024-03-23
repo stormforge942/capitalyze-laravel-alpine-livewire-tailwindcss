@@ -12,13 +12,8 @@ use Illuminate\Support\Carbon;
 class Chart extends Component
 {
     public array $tabs = [];
-    public array $selectedCompanies = [
-        'AAPL',
-        'MSFT',
-    ];
-    public array $selectedMetrics = [
-        'income_statement||Total Revenues'
-    ];
+    public array $selectedCompanies = [];
+    public array $selectedMetrics = [];
     public int $activeTab = 0;
     private $availablePeriods = [
         'quarter',
@@ -37,12 +32,51 @@ class Chart extends Component
                 'name' => 'Untitled Chart',
                 'companies' => [],
                 'metrics' => [],
-                'user_id' => Auth::id()
+                'user_id' => Auth::id(),
             ]));
         }
 
-        $this->activeTab = $tabs->last()->id;
+        if (!$this->activeTab) {
+            $activeTab = session('builder.chart.activeTab', $tabs->last()->id);
+
+            if ($tabs->where('id', $activeTab)->isEmpty()) {
+                $activeTab = $tabs->last()->id;
+            }
+
+            $this->activeTab = $activeTab;
+        }
         $this->tabs = $tabs->toArray();
+
+        $this->activeTabChanged();
+    }
+
+    public function updated($name)
+    {
+        if (in_array($name, ['selectedCompanies', 'selectedMetrics'])) {
+            CompanyChartComparison::query()
+                ->where('id', $this->activeTab)
+                ->update([
+                    'companies' => $this->selectedCompanies,
+                    'metrics' => $this->selectedMetrics,
+                ]);
+        }
+
+        if ($name === 'activeTab') {
+            session(['builder.chart.activeTab' => $this->activeTab]);
+            $this->activeTabChanged();
+        }
+    }
+
+    private function activeTabChanged()
+    {
+        $tab = collect($this->tabs)->firstWhere('id', $this->activeTab);
+
+        if (!$tab) {
+            return;
+        }
+
+        $this->selectedCompanies = $tab['companies'];
+        $this->selectedMetrics = $tab['metrics'];
     }
 
     public function render()
@@ -182,6 +216,10 @@ class Chart extends Component
             ->where('id', $id)
             ->delete();
 
+        if ($this->activeTab == $id) {
+            $this->activeTab = 0;
+        }
+
         $this->mount();
     }
 
@@ -205,12 +243,14 @@ class Chart extends Component
 
     public function addTab()
     {
-        CompanyChartComparison::query()->create([
+        $tab = CompanyChartComparison::query()->create([
             'name' => 'Untitled Chart',
             'companies' => [],
             'metrics' => [],
             'user_id' => Auth::id()
         ]);
+
+        $this->activeTab = $tab->id;
 
         $this->mount();
     }

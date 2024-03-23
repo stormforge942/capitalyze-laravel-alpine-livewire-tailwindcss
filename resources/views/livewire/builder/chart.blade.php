@@ -62,11 +62,12 @@
 
     <div class="mt-6 grid grid-cols-1 xl:grid-cols-2 gap-6">
         <div>
-            <livewire:builder.select-company :selected="$selectedCompanies" />
+            <livewire:builder.select-company :selected="$selectedCompanies" :wire:key="$activeTab" />
         </div>
 
         <div>
-            <livewire:builder.select-chart-metrics :options="$metrics" :metrics-map="$flattenedMetrics" : />
+            <livewire:builder.select-chart-metrics :options="$metrics" :metrics-map="$flattenedMetrics" :selected="$selectedMetrics"
+                :wire:key="$activeTab" />
         </div>
     </div>
 
@@ -86,16 +87,16 @@
             this.metricsMap = @js($flattenedMetrics);
     
             this.data = this._raw.data[this.period];
-            this.dates = this.filterSelectedDates(this._raw.dates[this.period]);
+            this.dates = this.filterSelectedDates(this._raw.dates[this.period] || []);
     
             this.$watch('period', (value) => {
                 this.data = this._raw.data[value];
-                this.dates = this.filterSelectedDates(this._raw.dates[this.period]);
+                this.dates = this.filterSelectedDates(this._raw.dates[this.period] || []);
                 this.$dispatch('update-chart');
             })
     
             this.$watch('dateRange', (value) => {
-                this.dates = this.filterSelectedDates(this._raw.dates[this.period]);
+                this.dates = this.filterSelectedDates(this._raw.dates[this.period] || []);
             })
         },
         filterSelectedDates(dates) {
@@ -104,8 +105,8 @@
                 return year >= this.dateRange[0] && year <= this.dateRange[1];
             });
         }
-    }" @companies-changed.window="this.companies = $event.detail"
-        @metrics-change.window="this.metrics = $event.detail">
+    }" @companies-changed.window="companies = $event.detail"
+        @metrics-changed.window="metrics = $event.detail">
         <x-filter-box class="mt-6">
             <div class="flex items-center gap-x-1">
                 <span class="text-sm text-dark-light2">Period Type</span>
@@ -114,7 +115,9 @@
 
             <div class="flex-1">
                 <x-range-slider :min="2005" :max="(int) date('Y')" :value="[2018, (int) date('Y')]" x-init="() => {
-                    const dates = _raw.dates[period];
+                    const dates = _raw.dates[period] || null;
+                
+                    if (!dates) return;
                 
                     min = parseInt(dates[0].split('-')[0]);
                     max = parseInt(dates[dates.length - 1].split('-')[0]);
@@ -217,7 +220,7 @@
                     </div>
                 </div>
 
-                <div class="mt-6 space-y-6">
+                <div class="mt-6 space-y-6" wire:key="{{ \Str::random(5) }}">
                     <template x-if="subSubTab === 'single-panel'">
                         @include('livewire.builder.chart.single-panel')
                     </template>
