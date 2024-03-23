@@ -276,7 +276,7 @@ class Chart extends Component
             $standardKeys[$column][] = $key;
         }
 
-        if (empty($standardKeys)) {
+        if (empty($standardKeys) || !count($this->selectedCompanies)) {
             return [
                 'data' => $data,
                 'dates' => [],

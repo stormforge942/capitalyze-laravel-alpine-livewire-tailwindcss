@@ -62,12 +62,12 @@
 
     <div class="mt-6 grid grid-cols-1 xl:grid-cols-2 gap-6">
         <div>
-            <livewire:builder.select-company :selected="$selectedCompanies" :wire:key="$activeTab" />
+            <livewire:builder.select-company :selected="$selectedCompanies" :wire:key="'select-company' . $activeTab" />
         </div>
 
         <div>
             <livewire:builder.select-chart-metrics :options="$metrics" :metrics-map="$flattenedMetrics" :selected="$selectedMetrics"
-                :wire:key="$activeTab" />
+                :wire:key="'select-chart-metrics' . $activeTab" />
         </div>
     </div>
 
@@ -117,7 +117,7 @@
                 <x-range-slider :min="2005" :max="(int) date('Y')" :value="[2018, (int) date('Y')]" x-init="() => {
                     const dates = _raw.dates[period] || null;
                 
-                    if (!dates) return;
+                    if (!dates.length) return;
                 
                     min = parseInt(dates[0].split('-')[0]);
                     max = parseInt(dates[dates.length - 1].split('-')[0]);
