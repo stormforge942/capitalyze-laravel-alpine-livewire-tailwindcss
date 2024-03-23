@@ -7,6 +7,7 @@ use Illuminate\Support\Str;
 use App\Models\InfoTikrPresentation;
 use Illuminate\Support\Facades\Auth;
 use App\Models\CompanyChartComparison;
+use Illuminate\Support\Carbon;
 
 class Chart extends Component
 {
@@ -215,9 +216,9 @@ class Chart extends Component
             'income_statement||Total Revenues',
             'income_statement||Total Operating Income',
             'income_statement||Total Operating Expenses',
-            // 'balance_sheet||Cash And Equivalents',
-            // 'balance_sheet||Total Receivables',
-            // 'balance_sheet||Total Current Assets',
+            'balance_sheet||Cash And Equivalents',
+            'balance_sheet||Total Receivables',
+            'balance_sheet||Total Current Assets',
         ];
 
         $data = array_reduce($this->availablePeriods, function ($c, $i) use ($companies) {
@@ -228,22 +229,8 @@ class Chart extends Component
             return $c;
         }, []);
 
-        $this->fillStandarisedData($companies, $data, $metrics);
-
-        return [
-            'data' => $data,
-            'dates' => $this->extractDates($data),
-        ];
-    }
-
-    private function fillStandarisedData($companies, array &$data, array $metrics): void
-    {
         $standardKeys = [];
         foreach ($metrics as $metric) {
-            if (!Str::startsWith($metric, ['income_statement||', 'balance_sheet||'])) {
-                continue;
-            }
-
             [$column, $key] = explode('||', $metric, 2);
 
             if (!isset($standardKeys[$column])) {
@@ -286,11 +273,33 @@ class Chart extends Component
                             $value[$date] = $val ? round((float) $val, 3) : null;
                         }
 
-                        $data[$period][$item->ticker][$column . '||' . $key] = $value;
+                        $data[$period][$item->ticker][$column . '||' . $key] = $this->normalizeValue($value, $period);
                     }
                 }
             }
         }
+
+        return [
+            'data' => $data,
+            'dates' => $this->extractDates($data),
+        ];
+    }
+
+    private function normalizeValue(array $value, string $period): array
+    {
+        $val = [];
+
+        foreach ($value as $date => $v) {
+            if ($period === 'quarter') {
+                $date = Carbon::parse($date)->startOfQuarter();
+            } else {
+                $date = Carbon::parse($date)->startOfYear();
+            }
+
+            $val[$date->toDateString()] = $v;
+        }
+
+        return $val;
     }
 
     private function extractDates(array $data): array

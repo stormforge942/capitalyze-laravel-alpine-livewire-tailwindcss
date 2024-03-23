@@ -62,9 +62,23 @@ export function fullScreen(el) {
     el.requestFullscreen()
 }
 
+export function randomColor() {
+    let color = '#' + Math.floor(Math.random() * 16777215).toString(16).padStart(6, '0');
+    let r = parseInt(color.substr(1, 2), 16);
+    let g = parseInt(color.substr(3, 2), 16);
+    let b = parseInt(color.substr(5, 2), 16);
+    let luminance = (r * 0.299) + (g * 0.587) + (b * 0.114);
+    if (luminance > 150) {
+        return randomColor();
+    }
+
+    return color;
+}
+
 window.updateUserSettings = updateUserSettings
 window.formatCmpctNumber = formatCmpctNumber
 window.formatNumber = formatNumber
 window.hex2rgb = hex2rgb
 window.printChart = printChart
 window.fullScreen = fullScreen
+window.randomColor = randomColor

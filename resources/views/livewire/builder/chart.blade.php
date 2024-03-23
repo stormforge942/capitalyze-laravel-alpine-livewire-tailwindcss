@@ -109,7 +109,7 @@
                 <x-select placeholder="Period Type" :options="['annual' => 'Annual', 'quarter' => 'Quarterly']" x-model="period"></x-select>
             </div>
 
-            <div class="flex-1 -translate-y-[50%]">
+            <div class="flex-1">
                 <x-range-slider :min="2005" :max="(int) date('Y')" :value="[2018, (int) date('Y')]" x-init="() => {
                     const dates = _raw.dates[period];
                 
@@ -226,9 +226,12 @@
             </div>
         </div>
 
+        <div class="mt-4">
+            <ul class="px-6 mt-4 legend-container"></ul>
+        </div>
+
         <div class="mt-6 rounded-lg sticky-table-container">
-            <table
-                class="round-lg max-w-[max-content] mx-auto text-right whitespace-nowrap sticky-table sticky-column">
+            <table class="round-lg text-right whitespace-nowrap sticky-table sticky-column">
                 <thead>
                     <tr class="capitalize text-dark bg-[#EDEDED] text-base font-bold">
                         <th class="pl-8 py-2 bg-[#EDEDED] text-left">
