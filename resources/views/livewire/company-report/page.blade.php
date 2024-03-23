@@ -403,7 +403,6 @@
                                 @print-chart="printChart"
                                 @full-screen="fullScreen($el.querySelector('canvas').parentElement)"
                                 @clear-chart="selectedChartRows = []">
-                                >
                                 <div class="bg-white rounded-lg p-10 relative">
                                     <div class="absolute top-2 right-2 xl:top-3 xl:right-5">
                                         <x-dropdown placement="bottom-start" :shadow="true">
