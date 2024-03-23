@@ -7,6 +7,8 @@ use Livewire\Component;
 class SelectChartMetrics extends Component
 {
     protected $options = [];
+    public $selected = [];
+    public $metricsMap = [];
 
     public function mount($options)
     {

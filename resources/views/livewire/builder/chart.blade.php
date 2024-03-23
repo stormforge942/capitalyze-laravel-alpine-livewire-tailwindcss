@@ -9,6 +9,14 @@
             <div class="flex items-center gap-2" x-data="{
                 value: '{{ $tab['name'] }}',
                 edit: false,
+                save() {
+                    this.edit = false;
+                    if (this.value.trim()) {
+                        $wire.updateTab({{ $tab['id'] }}, this.value)
+                    } else {
+                        this.value = '{{ $tab['name'] }}'
+                    }
+                }
             }">
                 <template x-if="!edit">
                     <a href="#" class=" {{ $tab['id'] === $activeTab ? 'text-blue' : '' }}"
@@ -16,15 +24,7 @@
                 </template>
                 <template x-if="edit">
                     <input type="text" x-model="value" class="h-6 px-2 w-36"
-                        @keyup.escape="edit = false; value = '{{ $tab['name'] }}'"
-                        x-on:blur="() => {
-                            edit = false; 
-                            if(value.trim()) {
-                                $wire.updateTab({{ $tab['id'] }}, value)
-                            } else {
-                                value = '{{ $tab['name'] }}'
-                            }
-                        }"
+                        @keyup.escape="edit = false; value = '{{ $tab['name'] }}'" @keyup.enter="save" x-on:blur="save"
                         x-ref="input">
                 </template>
                 <button @click="edit = true; $nextTick(() => $refs.input?.focus())">
@@ -62,15 +62,17 @@
 
     <div class="mt-6 grid grid-cols-1 xl:grid-cols-2 gap-6">
         <div>
-            <livewire:builder.select-company />
+            <livewire:builder.select-company :selected="$selectedCompanies" />
         </div>
 
         <div>
-            <livewire:builder.select-chart-metrics :options="$metrics" :metrics-map="$flattenedMetrics" />
+            <livewire:builder.select-chart-metrics :options="$metrics" :metrics-map="$flattenedMetrics" : />
         </div>
     </div>
 
     <div x-data="{
+        companies: $wire.entangle('selectedCompanies'),
+        metrics: $wire.entangle('selectedMetrics'),
         _raw: {},
         metricsMap: {},
         data: {},
@@ -102,7 +104,8 @@
                 return year >= this.dateRange[0] && year <= this.dateRange[1];
             });
         }
-    }">
+    }" @companies-changed.window="this.companies = $event.detail"
+        @metrics-change.window="this.metrics = $event.detail">
         <x-filter-box class="mt-6">
             <div class="flex items-center gap-x-1">
                 <span class="text-sm text-dark-light2">Period Type</span>
@@ -139,7 +142,7 @@
             </div>
         </x-filter-box>
 
-        <div class="!hidden grid place-items-center py-24" x-cloak>
+        <div class="grid place-items-center py-24" x-show="!metrics.length" x-cloak>
             <svg width="168" height="164" viewBox="0 0 168 164" fill="none" xmlns="http://www.w3.org/2000/svg">
                 <g clip-path="url(#clip0_8757_81677)">
                     <path
@@ -183,80 +186,82 @@
             <p class="mt-2 text-md">Create financial charts to analyse data</p>
         </div>
 
-        <div class="mt-6 bg-white p-6 relative rounded-lg" x-data="{
-            subSubTab: 'single-panel',
-            showLabel: true,
-            tabs: {
-                'single-panel': 'Single Panel',
-                'multi-security': 'Multi Security',
-                'multi-metric': 'Multi Metric',
-            },
-        }">
-            <div class="flex items-center justify-between">
-                <div
-                    class="flex items-center w-full max-w-[400px] gap-x-1 border border-[#D4DDD7] rounded bg-gray-light font-medium">
-                    <template x-for="(tab, key) in tabs">
-                        <button class="py-2 rounded flex-1 transition"
-                            :class="subSubTab === key ? 'bg-[#DCF6EC] border border-[#52D3A2] -m-[1px]' : ''"
-                            @click="subSubTab = key" x-text="tab"></button>
+        <div x-show="metrics.length" x-cloak>
+            <div class="mt-6 bg-white p-6 relative rounded-lg" x-data="{
+                subSubTab: 'single-panel',
+                showLabel: true,
+                tabs: {
+                    'single-panel': 'Single Panel',
+                    'multi-security': 'Multi Security',
+                    'multi-metric': 'Multi Metric',
+                },
+            }">
+                <div class="flex items-center justify-between">
+                    <div
+                        class="flex items-center w-full max-w-[400px] gap-x-1 border border-[#D4DDD7] rounded bg-gray-light font-medium">
+                        <template x-for="(tab, key) in tabs">
+                            <button class="py-2 rounded flex-1 transition"
+                                :class="subSubTab === key ? 'bg-[#DCF6EC] border border-[#52D3A2] -m-[1px]' : ''"
+                                @click="subSubTab = key" x-text="tab"></button>
+                        </template>
+                    </div>
+                    <div class="flex items-center gap-x-5 justify-between">
+                        <label class="relative inline-flex items-center cursor-pointer flex-shrink-0">
+                            <input type="checkbox" value="yes" class="sr-only peer" :checked="showLabel"
+                                @change="showLabel = $event.target.checked">
+                            <div
+                                class="w-6 h-2.5 bg-gray-200 peer-focus:outline-none peer-focus:ring-0 rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:-start-[4px] after:bg-white after:rounded-full after:h-4 after:w-4 after:shadow-md after:transition-all peer-checked:bg-dark-light2 peer-checked:after:bg-dark">
+                            </div>
+                            <span class="ms-3 text-sm font-medium text-gray-900">Show Labels</span>
+                        </label>
+                    </div>
+                </div>
+
+                <div class="mt-6 space-y-6">
+                    <template x-if="subSubTab === 'single-panel'">
+                        @include('livewire.builder.chart.single-panel')
+                    </template>
+                    <template x-if="subSubTab === 'multi-security'">
+                        @include('livewire.builder.chart.multi-security')
+                    </template>
+                    <template x-if="subSubTab === 'multi-metric'">
+                        @include('livewire.builder.chart.multi-metric')
                     </template>
                 </div>
-                <div class="flex items-center gap-x-5 justify-between">
-                    <label class="relative inline-flex items-center cursor-pointer flex-shrink-0">
-                        <input type="checkbox" value="yes" class="sr-only peer" :checked="showLabel"
-                            @change="showLabel = $event.target.checked">
-                        <div
-                            class="w-6 h-2.5 bg-gray-200 peer-focus:outline-none peer-focus:ring-0 rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:-start-[4px] after:bg-white after:rounded-full after:h-4 after:w-4 after:shadow-md after:transition-all peer-checked:bg-dark-light2 peer-checked:after:bg-dark">
-                        </div>
-                        <span class="ms-3 text-sm font-medium text-gray-900">Show Labels</span>
-                    </label>
-                </div>
             </div>
 
-            <div class="mt-6 space-y-6">
-                <template x-if="subSubTab === 'single-panel'">
-                    @include('livewire.builder.chart.single-panel')
-                </template>
-                <template x-if="subSubTab === 'multi-security'">
-                    @include('livewire.builder.chart.multi-security')
-                </template>
-                <template x-if="subSubTab === 'multi-metric'">
-                    @include('livewire.builder.chart.multi-metric')
-                </template>
+            <div class="mt-4">
+                <ul class="px-6 mt-4 legend-container"></ul>
             </div>
-        </div>
 
-        <div class="mt-4">
-            <ul class="px-6 mt-4 legend-container"></ul>
-        </div>
-
-        <div class="mt-6 rounded-lg sticky-table-container">
-            <table class="round-lg text-right whitespace-nowrap sticky-table sticky-column">
-                <thead>
-                    <tr class="capitalize text-dark bg-[#EDEDED] text-base font-bold">
-                        <th class="pl-8 py-2 bg-[#EDEDED] text-left">
-                            Metric
-                        </th>
-                        <template x-for="date in dates" :key="date">
-                            <th class="pl-6 py-2 last:pr-8" x-text="date"></th>
-                        </template>
-                    </tr>
-                </thead>
-                <template x-for="(metrics, company) in data" :key="company">
-                    <tbody class="report-tbody">
-                        <template x-for="(timeline, metric) in metrics" :key="metric">
-                            <tr class="border-b last:border-b-0">
-                                <td class="pl-6 text-left py-2">
-                                    <span x-text="`${company} - ${metricsMap[metric].title}`"></span>
-                                </td>
-                                <template x-for="date in dates" :key="date">
-                                    <td class="pl-6 last:pr-8 py-2 bg-white" x-text="timeline[date] || '-'"></td>
-                                </template>
-                            </tr>
-                        </template>
-                    </tbody>
-                </template>
-            </table>
+            <div class="mt-6 rounded-lg sticky-table-container">
+                <table class="round-lg text-right whitespace-nowrap sticky-table sticky-column">
+                    <thead>
+                        <tr class="capitalize text-dark bg-[#EDEDED] text-base font-bold">
+                            <th class="pl-8 py-2 bg-[#EDEDED] text-left">
+                                Metric
+                            </th>
+                            <template x-for="date in dates" :key="date">
+                                <th class="pl-6 py-2 last:pr-8" x-text="date"></th>
+                            </template>
+                        </tr>
+                    </thead>
+                    <template x-for="(metrics, company) in data" :key="company">
+                        <tbody class="report-tbody">
+                            <template x-for="(timeline, metric) in metrics" :key="metric">
+                                <tr class="border-b last:border-b-0">
+                                    <td class="pl-6 text-left py-2">
+                                        <span x-text="`${company} - ${metricsMap[metric].title}`"></span>
+                                    </td>
+                                    <template x-for="date in dates" :key="date">
+                                        <td class="pl-6 last:pr-8 py-2 bg-white" x-text="timeline[date] || '-'"></td>
+                                    </template>
+                                </tr>
+                            </template>
+                        </tbody>
+                    </template>
+                </table>
+            </div>
         </div>
     </div>
 

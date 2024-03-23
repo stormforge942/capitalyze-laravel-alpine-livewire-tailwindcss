@@ -1,7 +1,7 @@
 <div class="bg-white p-6 rounded-lg border-[0.5px] border-[#D4DDD7]" x-data="{
     search: $wire.entangle('search', true),
     companies: @js($companies),
-    value: [],
+    value: $wire.entangle('selected', true),
     tmpValue: [],
     loading: false,
     showDropdown: false,
@@ -22,15 +22,20 @@
         })
     },
     toggleCompany(company) {
-        if (this.tmpValue.find(item => item.ticker === company.ticker)) {
-            this.tmpValue = this.tmpValue.filter(item => item.ticker !== company.ticker)
+        if (this.tmpValue.find(item => item === company.ticker)) {
+            this.tmpValue = this.tmpValue.filter(item => item !== company.ticker)
             return;
         }
 
-        this.tmpValue.push(company)
+        this.tmpValue.push(company.ticker)
     },
     get hasValueChanged() {
-        return this.value.map(item => item.ticker).join('-') !== this.tmpValue.map(item => item.ticker).join('-')
+        return this.value.join('-') !== this.tmpValue.join('-')
+    },
+    showResult() {
+        this.value = [...this.tmpValue]
+        this.showDropdown = false
+        this.$dispatch('companies-changed', this.value)
     }
 }">
     <label class="font-medium" style="line-height: 32px;">Search for Companies</label><br>
@@ -61,7 +66,7 @@
                     <template x-for="company in companies" :key="company.ticker">
                         <label class="p-4 flex items-center gap-x-4 hover:bg-green-light cursor-pointer rounded">
                             <input type="checkbox" name="company" class="custom-checkbox border-dark focus:ring-0"
-                                :checked="tmpValue.find(item => item.ticker === company.ticker)"
+                                :checked="tmpValue.find(item => item === company.ticker)"
                                 @change="toggleCompany(company)" :key="tmpValue.length">
                             <span x-text="`${company.name} (${company.ticker})`"></span>
                         </label>
@@ -80,7 +85,7 @@
                     </button>
                     <button type="button"
                         class="w-full px-4 py-3 font-medium bg-green-dark hover:bg-opacity-80 rounded disabled:pointer-events-none disabled:bg-[#D1D3D5] disabled:text-white text-base"
-                        @click="value = [...tmpValue]; showDropdown = false;" :disabled="!hasValueChanged">
+                        @click="showResult" :disabled="!hasValueChanged">
                         Show Result
                     </button>
                 </div>
@@ -92,10 +97,10 @@
         </x-dropdown>
 
         <div class="mt-6 flex flex-wrap gap-3 text-sm font-semibold" x-show="value.length" x-cloak>
-            <template x-for="company in value" :key="company.ticker">
+            <template x-for="company in value">
                 <span class="bg-green-light rounded-full p-2 flex items-center gap-x-2">
-                    <span x-text="`${company.name} (${company.ticker})`"></span>
-                    <button type="button" @click="value = value.filter(item => item.ticker !== company.ticker)">
+                    <span x-text="company"></span>
+                    <button type="button" @click="value = value.filter(item => item !== company.ticker)">
                         <svg width="16" height="16" viewBox="0 0 16 16" fill="none"
                             xmlns="http://www.w3.org/2000/svg">
                             <path

@@ -12,6 +12,13 @@ use Illuminate\Support\Carbon;
 class Chart extends Component
 {
     public array $tabs = [];
+    public array $selectedCompanies = [
+        'AAPL',
+        'MSFT',
+    ];
+    public array $selectedMetrics = [
+        'income_statement||Total Revenues'
+    ];
     public int $activeTab = 0;
     private $availablePeriods = [
         'quarter',
@@ -210,19 +217,8 @@ class Chart extends Component
 
     public function getData()
     {
-        $companies = ['AAPL', 'MSFT'];
-
-        $metrics = [
-            'income_statement||Total Revenues',
-            'income_statement||Total Operating Income',
-            'income_statement||Total Operating Expenses',
-            'balance_sheet||Cash And Equivalents',
-            'balance_sheet||Total Receivables',
-            'balance_sheet||Total Current Assets',
-        ];
-
-        $data = array_reduce($this->availablePeriods, function ($c, $i) use ($companies) {
-            $c[$i] = array_reduce($companies, function ($d, $j) {
+        $data = array_reduce($this->availablePeriods, function ($c, $i) {
+            $c[$i] = array_reduce($this->selectedCompanies, function ($d, $j) {
                 $d[$j] = [];
                 return $d;
             }, []);
@@ -230,7 +226,7 @@ class Chart extends Component
         }, []);
 
         $standardKeys = [];
-        foreach ($metrics as $metric) {
+        foreach ($this->selectedMetrics as $metric) {
             [$column, $key] = explode('||', $metric, 2);
 
             if (!isset($standardKeys[$column])) {
@@ -241,11 +237,14 @@ class Chart extends Component
         }
 
         if (empty($standardKeys)) {
-            return;
+            return [
+                'data' => $data,
+                'dates' => [],
+            ];
         }
 
         $standardData = InfoTikrPresentation::query()
-            ->whereIn('ticker', $companies)
+            ->whereIn('ticker', $this->selectedCompanies)
             ->select(['ticker', 'period', ...array_keys($standardKeys)])
             ->get()
             ->groupBy('period');

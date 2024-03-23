@@ -8,11 +8,12 @@ use Livewire\Component;
 class SelectCompany extends Component
 {
     public $search = '';
+    public $selected = [];
 
     public function render()
     {
         return view('livewire.builder.select-company', [
-            'companies' => $this->getCompanies(initial: true),
+            'companies' => $this->getCompanies($this->selected, initial: true),
         ]);
     }
 

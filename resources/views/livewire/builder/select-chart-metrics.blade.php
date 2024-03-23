@@ -75,6 +75,12 @@
         })
 
         return labels;
+    },
+    showResult() {
+        this.value = [...this.tmpValue].sort();
+        this.showDropdown = false;
+
+        this.$dispatch('metrics-changed', this.value)
     }
 }">
     <label class="font-medium flex items-center gap-x-4">
@@ -180,7 +186,7 @@
                                     <input type="checkbox" name="metrics" :value="value" x-model="tmpValue"
                                         class="custom-checkbox border-dark focus:ring-0" />
 
-                                    <span x-text="option"></span>
+                                    <span x-text="option.title"></span>
                                 </label>
                             </template>
                         </div>
@@ -195,7 +201,7 @@
                     </button>
                     <button type="button"
                         class="w-full px-4 py-3 font-medium bg-green-dark hover:bg-opacity-80 rounded disabled:pointer-events-none disabled:bg-[#D1D3D5] disabled:text-white text-base"
-                        @click="value = [...tmpValue].sort(); showDropdown = false;" :disabled="!hasValueChanged">
+                        @click="showResult" :disabled="!hasValueChanged">
                         Show Result
                     </button>
                 </div>
@@ -203,9 +209,9 @@
         </x-dropdown>
 
         <div class="mt-6 flex flex-wrap gap-3 text-sm font-semibold" x-show="value.length" x-cloak>
-            <template x-for="(title, key) in selectedOptions" :key="key">
+            <template x-for="(option, key) in selectedOptions" :key="key">
                 <span class="bg-green-light rounded-full p-2 flex items-center gap-x-2.5">
-                    <span x-text="title"></span>
+                    <span x-text="option.title"></span>
 
                     <button class="transition-all text-blue hover:bg-dark hover:text-green-dark p-0.5 rounded-sm">
                         <svg width="16" height="16" viewBox="0 0 16 16" fill="currentColor"
@@ -231,7 +237,8 @@
                         </svg>
                     </button>
 
-                    <button class="transition-all hover:opacity-80" type="button" @click="value = value.filter(item => item !== key)">
+                    <button class="transition-all hover:opacity-80" type="button"
+                        @click="value = value.filter(item => item !== key)">
                         <svg width="16" height="16" viewBox="0 0 16 16" fill="none"
                             xmlns="http://www.w3.org/2000/svg">
                             <path
