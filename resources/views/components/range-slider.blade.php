@@ -29,7 +29,7 @@
             500
         );
 
-        rangeSlider(el, {
+        return rangeSlider(el, {
             step: 1,
             min: rangeMin,
             max: rangeMax,

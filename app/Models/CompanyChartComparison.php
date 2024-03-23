@@ -14,15 +14,18 @@ class CompanyChartComparison extends Model
         'name',
         'companies',
         'metrics',
+        'filters',
         'user_id',
     ];
 
     protected $casts = [
         'companies' => 'array',
         'metrics' => 'array',
+        'filters' => 'array',
     ];
 
-    public function user(): BelongsTo {
+    public function user(): BelongsTo
+    {
         return $this->belongsTo(User::class);
     }
 }

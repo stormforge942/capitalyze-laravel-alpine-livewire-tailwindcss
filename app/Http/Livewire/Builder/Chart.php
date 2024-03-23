@@ -13,6 +13,7 @@ class Chart extends Component
     public array $tabs = [];
     public array $selectedCompanies = [];
     public array $selectedMetrics = [];
+    public ?array $filters = null;
     public int $activeTab = 0;
     private $availablePeriods = [
         'quarter',
@@ -31,6 +32,10 @@ class Chart extends Component
                 'name' => 'Untitled Chart',
                 'companies' => [],
                 'metrics' => [],
+                'filters' => [
+                    'unit' => 'Millions',
+                    'period' => 'quarter',
+                ],
                 'user_id' => Auth::id(),
             ]));
         }
@@ -76,6 +81,13 @@ class Chart extends Component
 
         $this->selectedCompanies = $tab['companies'];
         $this->selectedMetrics = $tab['metrics'];
+
+        $this->filters = [
+            "period" => 'annual',
+            "unit" => 'Millions',
+            "decimalPlaces" => 2,
+            "dateRange" => [date('Y') - 2,  date('Y')],
+        ];
     }
 
     public function render()
@@ -246,6 +258,10 @@ class Chart extends Component
             'name' => 'Untitled Chart',
             'companies' => [],
             'metrics' => [],
+            'filters' => [
+                'unit' => 'Millions',
+                'period' => 'quarter',
+            ],
             'user_id' => Auth::id()
         ]);
 

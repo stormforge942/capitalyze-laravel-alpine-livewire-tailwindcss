@@ -50,6 +50,9 @@
                 window.ChartDataLabels
             ],
             options: {
+                animation: {
+                    duration: 0,
+                },
                 elements: {
                     line: {
                         tension: 0.2
@@ -64,27 +67,7 @@
                         enabled: false,
                         position: 'nearest',
                         callbacks: {
-                            title: (context) => {
-                                if (this.period == 'annual') {
-                                    return context[0].raw.x.split('-')[0]
-                                }
-
-                                let title = new Intl.DateTimeFormat('en-US', {
-                                    month: 'short',
-                                    year: 'numeric'
-                                }).format(new Date(context[0].raw.x))
-
-                                const [month, year] = title.split(' ')
-
-                                const quarter = {
-                                    'Jan': 'Q1',
-                                    'Apr': 'Q2',
-                                    'Jul': 'Q3',
-                                    'Oct': 'Q4',
-                                } [month]
-
-                                return `${quarter} ${year}`
-                            },
+                            title: (context) => this.formatDate(context[0].raw.x),
                             label: (context) => {
                                 let y = formatValue(context.raw.y)
 
@@ -125,7 +108,7 @@
                         },
                         type: 'timeseries',
                         time: {
-                            unit: this.period === 'annual' ? 'year' : 'quarter',
+                            unit: this.filters.period === 'annual' ? 'year' : 'quarter',
                         },
                     },
                     y: {

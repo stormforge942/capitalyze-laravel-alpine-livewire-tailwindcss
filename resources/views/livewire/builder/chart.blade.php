@@ -83,41 +83,64 @@
         metricsMap: {},
         data: {},
         dates: [],
-        period: 'annual',
-        unit: 'Millions',
-        decimalPlaces: 2,
-        dateRange: [2018, (new Date()).getFullYear()],
+        filters: $wire.entangle('filters', true),
         init() {
             this._raw = @js($data);
             this.metricsMap = @js($flattenedMetrics);
     
-            this.data = this._raw.data[this.period];
-            this.dates = this.filterSelectedDates(this._raw.dates[this.period] || []);
-        
-            this.$watch('period', (value) => {
+            this.data = this._raw.data[this.filters.period];
+    
+            this.dates = this.filterSelectedDates();
+    
+            this.$watch('filters.period', (value) => {
                 this.data = this._raw.data[value];
-                this.dates = this.filterSelectedDates(this._raw.dates[this.period] || []);
+                this.dates = this.filterSelectedDates();
                 this.$dispatch('update-chart');
             })
     
-            this.$watch('dateRange', (value) => {
-                this.dates = this.filterSelectedDates(this._raw.dates[this.period] || []);
+            this.$watch('filters.dateRange', (value) => {
+                this.dates = this.filterSelectedDates();
+                this.$dispatch('update-chart');
+            })
+    
+            this.$watch('filters.decimalPlaces', (value) => {
+                this.$dispatch('update-chart');
+            })
+    
+            this.$watch('filters.unit', (value) => {
+                this.$dispatch('update-chart');
             })
         },
-        filterSelectedDates(dates) {
+        filterSelectedDates() {
+            const dates = this._raw.dates[this.filters.period] || []
+    
             return dates.filter((date) => {
                 const year = parseInt(date.split('-')[0]);
-                return year >= this.dateRange[0] && year <= this.dateRange[1];
+                return year >= this.filters.dateRange[0] && year <= this.filters.dateRange[1];
             });
         },
         formatValue(value) {
             return window.formatNumber(value, {
-                decimalPlaces: this.decimalPlaces,
-                unit: this.unit
+                decimalPlaces: this.filters.decimalPlaces,
+                unit: this.filters.unit
             });
+        },
+        formatDate(date) {
+            if (this.filters.period === 'annual') {
+                return date.split('-')[0];
+            }
+    
+            const [month, year] = new Intl.DateTimeFormat('en-US', { month: 'short', year: 'numeric' }).format(new Date(date)).split(' ');
+    
+            return {
+                'Jan': 'Q1',
+                'Apr': 'Q2',
+                'Jul': 'Q3',
+                'Oct': 'Q4',
+            } [month] + '-' + year;
         }
     }" @companies-changed.window="companies = $event.detail"
-        @metrics-changed.window="metrics = $event.detail">
+        @metrics-changed.window="metrics = $event.detail" wire:key="{{ \Str::random(5) }}">
         <div class="grid place-items-center py-24" x-show="!metrics.length" x-cloak>
             <svg width="168" height="164" viewBox="0 0 168 164" fill="none" xmlns="http://www.w3.org/2000/svg">
                 <g clip-path="url(#clip0_8757_81677)">
@@ -166,21 +189,22 @@
             <x-filter-box class="mt-6">
                 <div class="flex items-center gap-x-1">
                     <span class="text-sm text-dark-light2">Period Type</span>
-                    <x-select placeholder="Period Type" :options="['annual' => 'Annual', 'quarter' => 'Quarterly']" x-model="period"></x-select>
+                    <x-select placeholder="Period Type" :options="['annual' => 'Annual', 'quarter' => 'Quarterly']" x-model="filters.period"></x-select>
                 </div>
 
                 <div class="flex-1">
-                    @include('livewire.builder.chart.range-slider')
+                    <x-range-slider :min="2002" :max="date('Y')"
+                        @range-updated="filters.dateRange = $event.detail" x-init="value = filters.dateRange"></x-range-slider>
                 </div>
 
                 <div class="flex items-center gap-x-1">
                     <span class="text-sm text-dark-light2">Unit Type</span>
-                    <x-select placeholder="Unit Type" :options="['As Stated', 'Thousands', 'Millions', 'Billions']" x-model="unit"></x-select>
+                    <x-select placeholder="Unit Type" :options="['As Stated', 'Thousands', 'Millions', 'Billions']" x-model="filters.unit"></x-select>
                 </div>
 
                 <div class="flex items-center gap-x-1">
                     <span class="text-sm text-dark-light2">Decimal</span>
-                    <x-select-decimal-places x-model="decimalPlaces"></x-select-decimal-places>
+                    <x-select-decimal-places x-model="filters.decimalPlaces"></x-select-decimal-places>
                 </div>
             </x-filter-box>
 
@@ -214,7 +238,7 @@
                     </div>
                 </div>
 
-                <div class="mt-6 space-y-6" wire:key="{{ \Str::random(5) }}">
+                <div class="mt-6 space-y-6">
                     <template x-if="subSubTab === 'single-panel'">
                         @include('livewire.builder.chart.single-panel')
                     </template>
@@ -231,7 +255,7 @@
                 <ul class="px-6 mt-4 legend-container"></ul>
             </div>
 
-            <div class="mt-6 rounded-lg sticky-table-container" wire:key="tab-{{ $activeTab }}">
+            <div class="mt-6 rounded-lg sticky-table-container">
                 <table class="round-lg text-right whitespace-nowrap sticky-table sticky-column">
                     <thead>
                         <tr class="capitalize text-dark bg-[#EDEDED] text-base font-bold">
@@ -239,7 +263,7 @@
                                 Metric
                             </th>
                             <template x-for="date in dates" :key="date">
-                                <th class="pl-6 py-2 last:pr-8" x-text="date"></th>
+                                <th class="pl-6 py-2 last:pr-8" x-text="formatDate(date)"></th>
                             </template>
                         </tr>
                     </thead>
@@ -252,7 +276,9 @@
                                     </td>
                                     <template x-for="date in dates" :key="date">
                                         <td class="pl-6 last:pr-8 py-2 bg-white"
-                                            x-text="timeline[date] ? formatValue(timeline[date]) : '-'"></td>
+                                            :class="timeline[date] < 0 ? 'text-red' : ''"
+                                            x-text="timeline[date] ? (timeline[date] < 0 ? `(${formatValue(-1 * timeline[date])})` : formatValue(timeline[date])) : '-'">
+                                        </td>
                                     </template>
                                 </tr>
                             </template>
@@ -262,5 +288,4 @@
             </div>
         </div>
     </div>
-
 </div>

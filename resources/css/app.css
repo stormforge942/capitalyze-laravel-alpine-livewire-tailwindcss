@@ -55,13 +55,13 @@
 
 /* Track */
 ::-webkit-scrollbar-track {
-    background: #D4DDD7;
+    background: #d4ddd7;
     border-radius: 8px;
 }
 
 /* Handle */
 ::-webkit-scrollbar-thumb {
-    background: #464E49;
+    background: #464e49;
     border-radius: 8px;
 }
 
@@ -563,6 +563,10 @@ a {
     line-height: 16px;
     content: "\200C";
     display: block;
+}
+
+.report-tbody:last-child::after {
+    content: none;
 }
 
 .chart-builder-page .years-range-wrapper {
