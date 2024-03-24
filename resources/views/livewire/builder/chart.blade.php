@@ -113,7 +113,7 @@
                 return data
             }
         }" wire:key="{{ \Str::random(5) }}"
-            wire:loading.class="pointer-events-none animate-pulse" wire:target="tabChanged">
+            wire:loading.class="pointer-events-none animate-pulse">
             <div class="cus-loader" wire:loading.block>
                 <div class="cus-loaderBar"></div>
             </div>

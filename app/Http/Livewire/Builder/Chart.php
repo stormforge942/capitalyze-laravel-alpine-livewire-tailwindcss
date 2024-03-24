@@ -93,13 +93,13 @@ class Chart extends Component
 
     public function companiesChanged($companies)
     {
-        $this->tab['companies'] = $companies;
+        $this->companies = $companies;
         $this->updateTab();
     }
 
     public function metricsChanged($metrics)
     {
-        $this->tab['metrics'] = $metrics;
+        $this->metrics = $metrics;
         $this->updateTab();
     }
 
@@ -108,6 +108,9 @@ class Chart extends Component
         CompanyChartComparison::query()
             ->where('user_id', auth()->id())
             ->where('id', $this->tab['id'])
-            ->update(Arr::only($this->tab, ['companies', 'metrics']));
+            ->update([
+                'companies' => $this->companies,
+                'metrics' => $this->metrics,
+            ]);
     }
 }
