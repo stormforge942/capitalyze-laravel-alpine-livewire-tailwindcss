@@ -11,7 +11,6 @@ use App\Services\ChartBuilderService;
 class Chart extends Component
 {
     public ?array $tab = null;
-    public array $metricsMap = [];
 
     protected $listeners = [
         'tabChanged' => 'tabChanged',
@@ -21,25 +20,44 @@ class Chart extends Component
 
     public function mount()
     {
-        $this->metricsMap = ChartBuilderService::options(true);
     }
 
     public function render()
     {
-        $data = [];
+        $data = [
+            'data' => [
+                'annual' => [],
+                'quarter' => [],
+            ],
+            'dates' => [
+                'annual' => [],
+                'quarter' => [],
+            ],
+            'dateRange' => [
+                'annual' => [2000, 0 + date('Y')],
+                'quarter' => [2000, 0 + date('Y')],
+            ],
+            'metricAttributes' => [],
+        ];
 
         if ($this->tab) {
-            $data = ChartBuilderService::resolveData($this->tab['companies'], $this->tab['metrics']);
+            $data = ChartBuilderService::resolveData($this->tab['companies'], $this->tab['metrics']) ?? $data;
         }
 
         return view('livewire.builder.chart', [
-            ...$data
+            ...$data,
+            'metricsMap' => ChartBuilderService::options(true),
         ]);
     }
 
     public function tabChanged($tab)
     {
-        $this->tab = $tab;
+        $this->tab = CompanyChartComparison::query()
+            ->where('user_id', auth()->id())
+            ->where('id', $tab['id'])
+            ->select('id', 'companies', 'metrics', 'filters', 'config')
+            ->first()
+            ->toArray();
 
         $this->tab['filters'] = [
             'period' => data_get($this->tab, 'filters.period', 'annual'),

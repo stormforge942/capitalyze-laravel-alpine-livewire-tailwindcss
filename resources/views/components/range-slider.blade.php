@@ -23,7 +23,7 @@
         let rangeMax = this.max;
 
         const alpineThis = this;
-        
+
         const dispatchValue = Alpine.debounce(
             (value) => alpineThis.$dispatch('range-updated', value),
             500
@@ -49,7 +49,8 @@
     get items() {
         return Array.from({ length: this.max - this.min + 1 }, (_, i) => i + this.min);
     }
-}" {{ $attributes }} :class="!show ? 'invisible' : ''">
+}" {{ $attributes }}
+    :class="!show ? 'invisible' : ''">
     <div class="dots-wrapper">
         <template x-for="item in items" :key="item">
             <span :class="isInRange(item) ? 'active-dots' : 'inactive-dots'"></span>

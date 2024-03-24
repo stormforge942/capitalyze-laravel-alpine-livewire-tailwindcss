@@ -187,10 +187,7 @@ class ChartBuilderService
         }
 
         if (empty($standardKeys) || !count($companies)) {
-            return [
-                'data' => $data,
-                'dates' => [],
-            ];
+            return null;
         }
 
         $standardData = InfoTikrPresentation::query()
@@ -237,9 +234,23 @@ class ChartBuilderService
             }
         }
 
+        $dates = self::extractDates($data);
+
+        $dateRange = [
+            'annual' => count($dates['annual']) ? [$dates['annual'][0], $dates['annual'][count($dates['annual']) - 1]] : null,
+            'quarter' => count($dates['quarter']) ? [$dates['quarter'][0], $dates['quarter'][count($dates['quarter']) - 1]] : null,
+        ];
+
+        foreach ($dateRange as $period => $range) {
+            if ($range) {
+                $dateRange[$period] = [intval(explode('-', $range[0])[0]), intval(explode('-', $range[1])[0])];
+            }
+        }
+
         return [
             'data' => $data,
-            'dates' => self::extractDates($data),
+            'dates' => $dates,
+            'dateRange' => $dateRange,
             'metricAttributes' => $metricAttributes,
         ];
     }
