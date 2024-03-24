@@ -72,7 +72,7 @@
 
         <div>
             <livewire:builder.select-chart-metrics :options="$metrics" :metrics-map="$flattenedMetrics" :selected="$selectedMetrics"
-                :wire:key="'select-chart-metrics' . $activeTab" />
+                :metric-chart-type="$metricChartType" :wire:key="\Str::random(5)" />
         </div>
     </div>
 

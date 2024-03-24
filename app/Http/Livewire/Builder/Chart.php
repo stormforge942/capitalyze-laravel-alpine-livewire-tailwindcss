@@ -21,6 +21,10 @@ class Chart extends Component
         'annual'
     ];
 
+    protected $listeners = [
+        'updateMetricChartType' => 'updateMetricChartType',
+    ];
+
     public function mount()
     {
         $tabs = CompanyChartComparison::query()
@@ -281,7 +285,12 @@ class Chart extends Component
         $this->mount();
     }
 
-    public function getData(array $metricsMap)
+    public function updateMetricChartType($data)
+    {
+        $this->metricChartType[$data['metric']] = $data['type'];
+    }
+
+    private function getData(array $metricsMap)
     {
         $data = array_reduce($this->availablePeriods, function ($c, $i) {
             $c[$i] = array_reduce($this->selectedCompanies, function ($d, $j) {
@@ -339,7 +348,10 @@ class Chart extends Component
                         }
 
                         $key = $column . '||' . $key;
-                        $this->metricChartType[$key] = $metricsMap[$key]['type'] ?? 'bar';
+
+                        if (!isset($this->metricChartType[$key])) {
+                            $this->metricChartType[$key] = $metricsMap[$key]['type'] ?? 'bar';
+                        }
 
                         $data[$period][$item->ticker][$key] = $this->normalizeValue($value, $period);
                     }

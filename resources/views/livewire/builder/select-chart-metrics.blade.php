@@ -78,14 +78,14 @@
                 <input type="search"
                     class="text-basde mt-4 p-4 block w-full border border-[#D4DDD7] rounded-lg placeholder:text-gray-medium2 focus:ring-0 focus:border-green-dark"
                     id="select-chart-metrics-input" placeholder="Company" x-model.debounce.500ms="search"
-                    @click="if(showDropdown) { $event.stopPropagation(); }">
+                    @click.prevent="if(showDropdown) { $event.stopPropagation(); }">
             </x-slot>
 
             <div :style="`width: ${width}`">
                 <div class="flex justify-between gap-2 px-6 pt-6">
                     <span class="font-medium text-base">Metrics</span>
 
-                    <button @click="dropdown.hide()">
+                    <button @click.prevent="dropdown.hide()">
                         <svg width="24" height="24" viewBox="0 0 24 24" fill="none"
                             xmlns="http://www.w3.org/2000/svg">
                             <path
@@ -105,7 +105,7 @@
                                     :class="isActive(option.title) && !option.has_children ? 'bg-green-light' :
                                         'hover:bg-green-light'"
                                     style="letter-spacing: -0.5%"
-                                    @click="showChildren = !showChildren; if(!option.has_children) { activeOption = [option.title] }">
+                                    @click.prevent="showChildren = !showChildren; if(!option.has_children) { activeOption = [option.title] }">
                                     <span :class="option.has_children ? 'font-semibold' : ''"
                                         x-text="option.title"></span>
 
@@ -136,7 +136,7 @@
                                                 :class="isActive([option.title, title]) ? 'bg-green-light' :
                                                     'hover:bg-green-light'"
                                                 style="letter-spacing: -0.5%"
-                                                @click="activeOption = [option.title, title]">
+                                                @click.prevent="activeOption = [option.title, title]">
                                                 <span x-text="title"></span>
 
                                                 <svg width="24" height="24" viewBox="0 0 16 16" fill="none"
@@ -173,12 +173,12 @@
                 <div class="mt-2 p-6 border-t flex items-center gap-x-4">
                     <button type="button"
                         class="w-full px-4 py-3 font-medium bg-green-dark hover:bg-opacity-80 rounded disabled:pointer-events-none disabled:bg-[#D1D3D5] disabled:text-white text-base"
-                        @click="tmpValue = [...value];" :disabled="!hasValueChanged">
+                        @click.prevent="tmpValue = [...value];" :disabled="!hasValueChanged">
                         Reset
                     </button>
                     <button type="button"
                         class="w-full px-4 py-3 font-medium bg-green-dark hover:bg-opacity-80 rounded disabled:pointer-events-none disabled:bg-[#D1D3D5] disabled:text-white text-base"
-                        @click="showResult" :disabled="!hasValueChanged">
+                        @click.prevent="showResult" :disabled="!hasValueChanged">
                         Show Result
                     </button>
                 </div>
@@ -190,7 +190,10 @@
                 <span class="bg-green-light rounded-full p-2 flex items-center gap-x-2.5">
                     <span x-text="$wire.metricsMap[item].title"></span>
 
-                    <button class="transition-all text-blue hover:bg-dark hover:text-green-dark p-0.5 rounded-sm">
+                    <button class="transition-all text-blue p-0.5 rounded-sm"
+                        :class="$wire.metricChartType[item] === 'line' ? 'bg-dark text-green-dark' :
+                            'hover:bg-dark hover:text-green-dark'"
+                        @click.prevent="Livewire.emit('updateMetricChartType', { metric: item, type: 'line' })">
                         <svg width="16" height="16" viewBox="0 0 16 16" fill="currentColor"
                             xmlns="http://www.w3.org/2000/svg">
                             <path
@@ -198,7 +201,10 @@
                         </svg>
                     </button>
 
-                    <button class="transition-all text-blue hover:bg-dark hover:text-green-dark p-0.5 rounded-sm">
+                    <button class="transition-all text-blue p-0.5 rounded-sm"
+                        :class="$wire.metricChartType[item] === 'bar' ? 'bg-dark text-green-dark' :
+                            'hover:bg-dark hover:text-green-dark'"
+                        @click.prevent="Livewire.emit('updateMetricChartType', { metric: item, type: 'bar' })">
                         <svg width="16" height="16" viewBox="0 0 16 16" fill="currentColor"
                             xmlns="http://www.w3.org/2000/svg">
                             <path
@@ -206,7 +212,8 @@
                         </svg>
                     </button>
 
-                    <button class="transition-all text-blue hover:bg-dark hover:text-green-dark p-0.5 rounded-sm">
+                    <button class="transition-all text-blue hover:bg-dark hover:text-green-dark p-0.5 rounded-sm"
+                        @click.prevent="$dispatch('hide-metric', item)">
                         <svg width="16" height="16" viewBox="0 0 16 16" fill="currentColor"
                             xmlns="http://www.w3.org/2000/svg">
                             <path
@@ -215,7 +222,7 @@
                     </button>
 
                     <button class="transition-all hover:opacity-80" type="button"
-                        @click="value = value.filter(i => i !== item); dispatchValueChanged()">
+                        @click.prevent="value = value.filter(i => i !== item); dispatchValueChanged()">
                         <svg width="16" height="16" viewBox="0 0 16 16" fill="none"
                             xmlns="http://www.w3.org/2000/svg">
                             <path
