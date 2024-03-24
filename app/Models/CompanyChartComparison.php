@@ -15,6 +15,7 @@ class CompanyChartComparison extends Model
         'companies',
         'metrics',
         'filters',
+        'config',
         'user_id',
     ];
 
@@ -22,6 +23,7 @@ class CompanyChartComparison extends Model
         'companies' => 'array',
         'metrics' => 'array',
         'filters' => 'array',
+        'config' => 'array',
     ];
 
     public function user(): BelongsTo

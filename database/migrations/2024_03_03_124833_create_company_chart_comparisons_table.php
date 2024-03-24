@@ -18,7 +18,8 @@ return new class extends Migration
             $table->string('name');
             $table->json('companies');
             $table->json('metrics');
-            $table->json('filters');
+            $table->json('filters')->nullable();
+            $table->json('config')->nullable();
             $table->foreignId('user_id')->constrained('users');
             $table->timestamps();
         });

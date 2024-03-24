@@ -63,16 +63,44 @@ export function fullScreen(el) {
 }
 
 export function randomColor() {
-    let color = '#' + Math.floor(Math.random() * 16777215).toString(16).padStart(6, '0');
-    let r = parseInt(color.substr(1, 2), 16);
-    let g = parseInt(color.substr(3, 2), 16);
-    let b = parseInt(color.substr(5, 2), 16);
-    let luminance = (r * 0.299) + (g * 0.587) + (b * 0.114);
+    let color =
+        "#" +
+        Math.floor(Math.random() * 16777215)
+            .toString(16)
+            .padStart(6, "0")
+    let r = parseInt(color.substr(1, 2), 16)
+    let g = parseInt(color.substr(3, 2), 16)
+    let b = parseInt(color.substr(5, 2), 16)
+    let luminance = r * 0.299 + g * 0.587 + b * 0.114
     if (luminance > 150) {
-        return randomColor();
+        return randomColor()
     }
 
-    return color;
+    return color
+}
+
+export function http(url, options = {}) {
+    return fetch(url, {
+        headers: {
+            "Content-Type": "application/json",
+            Accept: "application/json",
+            ...options.headers,
+        },
+        method: options.method || "GET",
+        body: options.body
+            ? JSON.stringify({
+                  _token: document.querySelector(`meta[name='csrf-token']`)
+                      .content,
+                  ...options.body,
+              })
+            : undefined,
+    }).then((res) => {
+        if (res.ok) {
+            return res.json()
+        }
+
+        return Promise.reject(res)
+    })
 }
 
 window.updateUserSettings = updateUserSettings
@@ -82,3 +110,4 @@ window.hex2rgb = hex2rgb
 window.printChart = printChart
 window.fullScreen = fullScreen
 window.randomColor = randomColor
+window.http = http
