@@ -2,6 +2,7 @@
 
 namespace App\Http\Livewire\Builder;
 
+use App\Services\ChartBuilderService;
 use Livewire\Component;
 
 class SelectChartMetrics extends Component
@@ -10,6 +11,12 @@ class SelectChartMetrics extends Component
     public $selected = [];
     public $metricsMap = [];
     public $metricAttributes = [];
+
+    public function mount()
+    {
+        $this->options = ChartBuilderService::options();
+        $this->metricsMap = ChartBuilderService::options(true);
+    }
 
     public function render()
     {

@@ -57,7 +57,7 @@
         this.dispatchValueChanged()
     },
     dispatchValueChanged() {
-        this.$dispatch('metrics-changed', this.value)
+        Livewire.emit('metricsChanged', this.value)
     }
 }">
     <label class="font-medium flex items-center gap-x-4">
@@ -77,7 +77,7 @@
             <x-slot name="trigger">
                 <input type="search"
                     class="text-basde mt-4 p-4 block w-full border border-[#D4DDD7] rounded-lg placeholder:text-gray-medium2 focus:ring-0 focus:border-green-dark"
-                    id="select-chart-metrics-input" placeholder="Company" x-model.debounce.500ms="search"
+                    id="select-chart-metrics-input" placeholder="Metrics" x-model.debounce.500ms="search"
                     @click.prevent="if(showDropdown) { $event.stopPropagation(); }">
             </x-slot>
 
@@ -191,7 +191,7 @@
                     <span x-text="$wire.metricsMap[item].title"></span>
 
                     <button class="transition-all text-blue p-0.5 rounded-sm"
-                        :class="$wire.metricAttributes[item].type === 'line' ? 'bg-dark text-green-dark' :
+                        :class="$wire.metricAttributes[item]?.type === 'line' ? 'bg-dark text-green-dark' :
                             'hover:bg-dark hover:text-green-dark'"
                         data-tooltip-content="Line Chart"
                         @click.prevent="Livewire.emit('updateMetricChartType', { metric: item, type: 'line' })">
@@ -203,7 +203,7 @@
                     </button>
 
                     <button class="transition-all text-blue p-0.5 rounded-sm"
-                        :class="$wire.metricAttributes[item].type === 'bar' ? 'bg-dark text-green-dark' :
+                        :class="$wire.metricAttributes[item]?.type === 'bar' ? 'bg-dark text-green-dark' :
                             'hover:bg-dark hover:text-green-dark'"
                         data-tooltip-content="Bar Chart"
                         @click.prevent="Livewire.emit('updateMetricChartType', { metric: item, type: 'bar' })">
@@ -215,7 +215,7 @@
                     </button>
 
                     <button class="transition-all text-blue p-0.5 rounded-sm"
-                        :class="!$wire.metricAttributes[item].show ? 'bg-dark text-green-dark' :
+                        :class="!$wire.metricAttributes[item]?.show ? 'bg-dark text-green-dark' :
                             'hover:bg-dark hover:text-green-dark'"
                         @click.prevent="Livewire.emit('toggleMetricVisibility', item)">
                         <svg width="16" height="16" viewBox="0 0 16 16" fill="currentColor"
