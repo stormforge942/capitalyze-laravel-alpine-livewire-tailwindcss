@@ -65,6 +65,11 @@
             options: {
                 maintainAspectRatio: false,
                 responsive: true,
+                layout: {
+                    padding: {
+                        top: 25,
+                    }
+                },
                 interaction: {
                     intersect: false,
                     mode: 'nearest',
@@ -89,7 +94,7 @@
                         callbacks: {
                             title: (context) => this.formatDate(context[0].raw.x),
                             label: (context) => {
-                                let y = context.dataset.shouldFormat ? formatValue(context.raw.y) : context.raw.y
+                                let y = context.dataset.shouldFormat ? formatValue(context.raw.y) : Number(context.raw.y).toFixed(this.filters.decimalPlaces)
 
                                 return `${context.dataset.label}|${y}`
                             },
@@ -113,7 +118,7 @@
                                 return this.formatValue(v.y)
                             }
 
-                            return v.y
+                            return Number(v.y).toFixed(this.filters.decimalPlaces)
                         },
                         clip: false,
                         font: {
@@ -145,9 +150,9 @@
                     },
                     percent: {
                         ticks: {
-                            callback: (val) => val.toFixed(this.filters.decimalPlaces) + '%',
+                            callback: (val) => val + '%',
                         },
-                        display: true,
+                        display: datasets.some(d => d.yAxisID === 'percent'),
                         position: 'right',
                         type: 'linear',
                         beginAtZero: false,
@@ -156,10 +161,7 @@
                         },
                     },
                     ratio: {
-                        ticks: {
-                            callback: (val) => val.toFixed(this.filters.decimalPlaces),
-                        },
-                        display: true,
+                        display: datasets.some(d => d.yAxisID === 'ratio'),
                         position: 'right',
                         type: 'linear',
                         beginAtZero: false,
