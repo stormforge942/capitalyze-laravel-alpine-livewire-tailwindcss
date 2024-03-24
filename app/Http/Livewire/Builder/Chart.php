@@ -11,7 +11,7 @@ use Illuminate\Support\Carbon;
 class Chart extends Component
 {
     public array $tabs = [];
-    public array $metricChartType = [];
+    public array $metricAttributes = [];
     public array $selectedCompanies = [];
     public array $selectedMetrics = [];
     public ?array $filters = null;
@@ -23,6 +23,7 @@ class Chart extends Component
 
     protected $listeners = [
         'updateMetricChartType' => 'updateMetricChartType',
+        'toggleMetricVisibility' => 'toggleMetricVisibility',
     ];
 
     public function mount()
@@ -87,12 +88,14 @@ class Chart extends Component
         $this->selectedCompanies = $tab['companies'];
         $this->selectedMetrics = $tab['metrics'];
 
-        $this->filters = [
-            "period" => 'annual',
-            "unit" => 'Millions',
-            "decimalPlaces" => 2,
-            "dateRange" => [date('Y') - 2,  date('Y')],
-        ];
+        $this->filters = $tab['filters'];
+    }
+
+    public function updateFilters($filters)
+    {
+        CompanyChartComparison::query()
+            ->where('id', $this->activeTab)
+            ->update(['filters' => $filters]);
     }
 
     public function render()
@@ -287,7 +290,12 @@ class Chart extends Component
 
     public function updateMetricChartType($data)
     {
-        $this->metricChartType[$data['metric']] = $data['type'];
+        $this->metricAttributes[$data['metric']]['type'] = $data['type'];
+    }
+
+    public function toggleMetricVisibility($metric)
+    {
+        $this->metricAttributes[$metric]['show'] = !$this->metricAttributes[$metric]['show'];
     }
 
     private function getData(array $metricsMap)
@@ -349,8 +357,11 @@ class Chart extends Component
 
                         $key = $column . '||' . $key;
 
-                        if (!isset($this->metricChartType[$key])) {
-                            $this->metricChartType[$key] = $metricsMap[$key]['type'] ?? 'bar';
+                        if (!isset($this->metricAttributes[$key])) {
+                            $this->metricAttributes[$key] = [
+                                'type' => $metricsMap[$key]['type'] ?? 'bar',
+                                'show' => true,
+                            ];
                         }
 
                         $data[$period][$item->ticker][$key] = $this->normalizeValue($value, $period);

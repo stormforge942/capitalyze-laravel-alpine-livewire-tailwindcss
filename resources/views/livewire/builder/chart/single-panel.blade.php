@@ -24,6 +24,10 @@
         let idx = 0
         Object.entries(this.data).forEach(([company, metrics]) => {
             Object.entries(metrics).forEach(([metric, timeline]) => {
+                if (!$wire.metricAttributes[metric].show) {
+                    return
+                }
+
                 let label = company + '-' + this.metricsMap[metric].title
 
                 datasets.push({
@@ -37,7 +41,7 @@
                     backgroundColor: chartColors[idx++] || window.randomColor(),
                     backgroundColor: chartColors[idx] || window.randomColor(),
                     borderColor: chartColors[idx] || window.randomColor(),
-                    type: $wire.metricChartType[metric] || 'bar',
+                    type: $wire.metricAttributes[metric].type || 'bar',
                     yAxisID: this.metricsMap[metric].yAxis || 'y',
                     shouldFormat: !this.metricsMap[metric].yAxis,
                 })
@@ -69,11 +73,6 @@
                     padding: {
                         top: 25,
                     }
-                },
-                interaction: {
-                    intersect: false,
-                    mode: 'nearest',
-                    axis: 'xy'
                 },
                 animation: {
                     duration: 0,

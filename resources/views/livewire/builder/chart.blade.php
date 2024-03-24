@@ -72,7 +72,7 @@
 
         <div>
             <livewire:builder.select-chart-metrics :options="$metrics" :metrics-map="$flattenedMetrics" :selected="$selectedMetrics"
-                :metric-chart-type="$metricChartType" :wire:key="\Str::random(5)" />
+                :metric-attributes="$metricAttributes" :wire:key="\Str::random(5)" />
         </div>
     </div>
 
@@ -110,6 +110,10 @@
             this.$watch('filters.unit', (value) => {
                 this.$dispatch('update-chart');
             })
+    
+            this.$watch('filters', (value) => {
+                $wire.updateFilters(value);
+            }, { deep: true })
         },
         filterSelectedDates() {
             const dates = this._raw.dates[this.filters.period] || []
@@ -119,10 +123,10 @@
                 return year >= this.filters.dateRange[0] && year <= this.filters.dateRange[1];
             });
         },
-        formatValue(value) {
+        formatValue(value, applyUnit = true) {
             return window.formatNumber(value, {
                 decimalPlaces: this.filters.decimalPlaces,
-                unit: this.filters.unit
+                unit: applyUnit ? this.filters.unit : 'None'
             });
         },
         formatDate(date) {
@@ -213,8 +217,8 @@
                 showLabel: true,
                 tabs: {
                     'single-panel': 'Single Panel',
-                    'multi-security': 'Multi Security',
-                    'multi-metric': 'Multi Metric',
+                    {{-- 'multi-security': 'Multi Security',
+                    'multi-metric': 'Multi Metric', --}}
                 },
             }">
                 <div class="flex items-center justify-between">
@@ -238,7 +242,7 @@
                     </div>
                 </div>
 
-                <div class="mt-6 space-y-6">
+                <div class="mt-4 space-y-6">
                     <template x-if="subSubTab === 'single-panel'">
                         @include('livewire.builder.chart.single-panel')
                     </template>
@@ -277,7 +281,7 @@
                                     <template x-for="date in dates" :key="date">
                                         <td class="pl-6 last:pr-8 py-2 bg-white"
                                             :class="timeline[date] < 0 ? 'text-red' : ''"
-                                            x-text="timeline[date] ? (timeline[date] < 0 ? `(${formatValue(-1 * timeline[date])})` : formatValue(timeline[date])) : '-'">
+                                            x-text="timeline[date] ? (timeline[date] < 0 ? `(${formatValue(-1 * timeline[date], !metricsMap[metric].yAxis)})` : formatValue(timeline[date], !metricsMap[metric].yAxis)) : '-'">
                                         </td>
                                     </template>
                                 </tr>

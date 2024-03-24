@@ -191,8 +191,9 @@
                     <span x-text="$wire.metricsMap[item].title"></span>
 
                     <button class="transition-all text-blue p-0.5 rounded-sm"
-                        :class="$wire.metricChartType[item] === 'line' ? 'bg-dark text-green-dark' :
+                        :class="$wire.metricAttributes[item].type === 'line' ? 'bg-dark text-green-dark' :
                             'hover:bg-dark hover:text-green-dark'"
+                        data-tooltip-content="Line Chart"
                         @click.prevent="Livewire.emit('updateMetricChartType', { metric: item, type: 'line' })">
                         <svg width="16" height="16" viewBox="0 0 16 16" fill="currentColor"
                             xmlns="http://www.w3.org/2000/svg">
@@ -202,8 +203,9 @@
                     </button>
 
                     <button class="transition-all text-blue p-0.5 rounded-sm"
-                        :class="$wire.metricChartType[item] === 'bar' ? 'bg-dark text-green-dark' :
+                        :class="$wire.metricAttributes[item].type === 'bar' ? 'bg-dark text-green-dark' :
                             'hover:bg-dark hover:text-green-dark'"
+                        data-tooltip-content="Bar Chart"
                         @click.prevent="Livewire.emit('updateMetricChartType', { metric: item, type: 'bar' })">
                         <svg width="16" height="16" viewBox="0 0 16 16" fill="currentColor"
                             xmlns="http://www.w3.org/2000/svg">
@@ -212,8 +214,10 @@
                         </svg>
                     </button>
 
-                    <button class="transition-all text-blue hover:bg-dark hover:text-green-dark p-0.5 rounded-sm"
-                        @click.prevent="$dispatch('hide-metric', item)">
+                    <button class="transition-all text-blue p-0.5 rounded-sm"
+                        :class="!$wire.metricAttributes[item].show ? 'bg-dark text-green-dark' :
+                            'hover:bg-dark hover:text-green-dark'"
+                        @click.prevent="Livewire.emit('toggleMetricVisibility', item)">
                         <svg width="16" height="16" viewBox="0 0 16 16" fill="currentColor"
                             xmlns="http://www.w3.org/2000/svg">
                             <path
