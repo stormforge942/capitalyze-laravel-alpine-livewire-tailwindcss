@@ -11,6 +11,10 @@ use App\Services\ChartBuilderService;
 class Chart extends Component
 {
     public ?array $tab = null;
+    public array $companies = [];
+    public array $metrics = [];
+    public ?array $filters = null;
+    public array $metricAttributes = [];
 
     protected $listeners = [
         'tabChanged' => 'tabChanged',
@@ -37,11 +41,14 @@ class Chart extends Component
                 'annual' => [2000, 0 + date('Y')],
                 'quarter' => [2000, 0 + date('Y')],
             ],
-            'metricAttributes' => [],
         ];
 
         if ($this->tab) {
-            $data = ChartBuilderService::resolveData($this->tab['companies'], $this->tab['metrics']) ?? $data;
+            $data = ChartBuilderService::resolveData(
+                $this->companies,
+                $this->metrics,
+                $this->metricAttributes,
+            ) ?? $data;
         }
 
         return view('livewire.builder.chart', [
@@ -52,23 +59,36 @@ class Chart extends Component
 
     public function tabChanged($tab)
     {
-        $this->tab = CompanyChartComparison::query()
+        $this->tab = $tab;
+
+        $_tab = CompanyChartComparison::query()
             ->where('user_id', auth()->id())
             ->where('id', $tab['id'])
-            ->select('id', 'companies', 'metrics', 'filters', 'config')
-            ->first()
-            ->toArray();
+            ->select('companies', 'metrics', 'filters', 'metric_attributes', 'panel')
+            ->first();
 
-        $this->tab['filters'] = [
-            'period' => data_get($this->tab, 'filters.period', 'annual'),
-            'dateRange' => data_get($this->tab, 'filters.dateRange', []),
-            'unit' => data_get($this->tab, 'filters.unit', 'Millions'),
+        $this->companies = $_tab['companies'];
+        $this->metrics = $_tab['metrics'];
+
+        $this->filters = [
+            'period' => data_get($_tab, 'filters.period', 'annual'),
+            'dateRange' => data_get($_tab, 'filters.dateRange', []),
+            'unit' => data_get($_tab, 'filters.unit', 'Millions'),
             'decimalPlaces' => data_get(
-                $this->tab,
+                $_tab,
                 'filters.decimalPlaces',
                 data_get(Auth::user(), 'settings.decimalPlaces', 1)
             ),
         ];
+
+        if (!count($this->filters['dateRange'])) {
+            $this->filters['dateRange'] = [
+                date('Y') - 2,
+                0 + date('Y'),
+            ];
+        }
+
+        $this->metricAttributes = $_tab['metric_attributes'];
     }
 
     public function companiesChanged($companies)
@@ -88,6 +108,6 @@ class Chart extends Component
         CompanyChartComparison::query()
             ->where('user_id', auth()->id())
             ->where('id', $this->tab['id'])
-            ->update(Arr::only($this->tab, ['companies', 'metrics', 'filters', 'config']));
+            ->update(Arr::only($this->tab, ['companies', 'metrics']));
     }
 }

@@ -4,6 +4,7 @@ namespace App\Services;
 
 use Illuminate\Support\Carbon;
 use App\Models\InfoTikrPresentation;
+use Illuminate\Support\Facades\Cache;
 
 class ChartBuilderService
 {
@@ -162,7 +163,7 @@ class ChartBuilderService
         return $flattenedOptions;
     }
 
-    public static function resolveData($companies, $metrics, $metricAttributes = [])
+    public static function resolveData($companies, $metrics, &$metricAttributes = [])
     {
         $metricsMap = self::options(true);
         $periods = ['annual', 'quarter'];
@@ -190,11 +191,17 @@ class ChartBuilderService
             return null;
         }
 
-        $standardData = InfoTikrPresentation::query()
-            ->whereIn('ticker', $companies)
-            ->select(['ticker', 'period', ...array_keys($standardKeys)])
-            ->get()
-            ->groupBy('period');
+        $cacheKey = 'chart_builder_' . md5(implode(',', $companies) . implode(',', array_keys($standardKeys)));
+
+        $standardData = Cache::remember(
+            $cacheKey,
+            3600,
+            fn () => InfoTikrPresentation::query()
+                ->whereIn('ticker', $companies)
+                ->select(['ticker', 'period', ...array_keys($standardKeys)])
+                ->get()
+                ->groupBy('period')
+        );
 
         foreach ($standardData as $period => $items) {
             if (!in_array($period, $periods)) {
@@ -243,7 +250,10 @@ class ChartBuilderService
 
         foreach ($dateRange as $period => $range) {
             if ($range) {
-                $dateRange[$period] = [intval(explode('-', $range[0])[0]), intval(explode('-', $range[1])[0])];
+                $dateRange[$period] = [
+                    0 + explode('-', $range[0])[0],
+                    0 + explode('-', $range[1])[0],
+                ];
             }
         }
 
@@ -251,7 +261,6 @@ class ChartBuilderService
             'data' => $data,
             'dates' => $dates,
             'dateRange' => $dateRange,
-            'metricAttributes' => $metricAttributes,
         ];
     }
 

@@ -107,10 +107,12 @@ function initGeneralTextTooltip() {
     const cb = (e) => {
         if (e.target?.id == "general-text-tooltip") return
 
-        if (e.target?.dataset.tooltipContent) {
+        const el = e.target.closest("[data-tooltip-content]")
+
+        if (el) {
             tooltip.classList.remove("hidden")
 
-            tooltip.children[0].innerHTML = e.target.dataset.tooltipContent
+            tooltip.children[0].innerHTML = el.dataset.tooltipContent
 
             const elRect = e.target.getBoundingClientRect()
 

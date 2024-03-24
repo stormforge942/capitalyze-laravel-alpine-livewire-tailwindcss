@@ -9,22 +9,19 @@
             return
         }
 
-        let datasets = []
-
         if (this.chart) {
-            try {
-                this.chart.destroy();
-            } catch (e) {
-                console.error(e);
-            }
+            this.chart.destroy();
         }
 
         const chartColors = @js(config('capitalyze.chartColors'))
 
         let idx = 0
+        
+        let datasets = []
+
         Object.entries(this.data).forEach(([company, metrics]) => {
             Object.entries(metrics).forEach(([metric, timeline]) => {
-                if (!$wire.metricAttributes[metric].show) {
+                if (!metricAttributes[metric]?.show) {
                     return
                 }
 
@@ -32,19 +29,20 @@
 
                 datasets.push({
                     label,
-                    data: this.dates.map(date => {
+                    data: this.selectedDates.map(date => {
                         return {
                             x: date,
                             y: timeline[date] || null
                         }
-                    }).filter((item) => item.y !== null),
-                    backgroundColor: chartColors[idx++] || window.randomColor(),
+                    }).filter((item) => item.y != null),
                     backgroundColor: chartColors[idx] || window.randomColor(),
                     borderColor: chartColors[idx] || window.randomColor(),
-                    type: $wire.metricAttributes[metric].type || 'bar',
+                    type: metricAttributes[metric]?.type || 'bar',
                     yAxisID: this.metricsMap[metric].yAxis || 'y',
                     shouldFormat: !this.metricsMap[metric].yAxis,
                 })
+
+                idx++
             })
         })
 
@@ -56,6 +54,8 @@
             return 1;
         });
 
+        datasets = datasets.filter(d => d.data.length)
+
         const ctx = this.$refs.canvas.getContext('2d')
 
         this.chart = new Chart(ctx, {
@@ -64,7 +64,8 @@
                 datasets,
             },
             plugins: [
-                window.ChartDataLabels
+                window.ChartDataLabels,
+                chartJsPlugins.htmlLegend,
             ],
             options: {
                 maintainAspectRatio: false,
@@ -125,6 +126,9 @@
                             size: 12,
                         },
                         color: (ctx) => '#121A0F',
+                    },
+                    htmlLegend: {
+                        container: document.querySelector('.chart-legends'),
                     }
                 },
                 scales: {

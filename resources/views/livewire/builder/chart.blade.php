@@ -1,3 +1,8 @@
+@push('scripts')
+    <script src="https://cdn.jsdelivr.net/npm/chartjs-plugin-datalabels@2.0.0/dist/chartjs-plugin-datalabels.min.js">
+    </script>
+@endpush
+
 <div class="chart-builder-page">
     <div>
         <h1 class="text-xl font-bold">Chart</h1>
@@ -9,11 +14,13 @@
     </div>
 
     @if ($tab)
-        <div x-data="{
-            filters: $wire.entangle('tab.filters', true),
-            dates: @js($dates),
-            data: @js($data),
+        <div class="relative" x-data="{
+            filters: $wire.entangle('filters', true),
+            metricAttributes: $wire.entangle('metricAttributes', true),
+            _dates: @js($dates),
+            _data: @js($data),
             dateRange: @js($dateRange),
+            metricsMap: @js($metricsMap),
             init() {
                 this.$watch('filters', (filters) => {
                     window.http(`/chart-builder/${$wire.tab.id}/update`, {
@@ -24,9 +31,30 @@
         
                 this.$watch('filters.period', () => {
                     this.$dispatch('update-range-slider')
+                    this.$dispatch('update-chart');
+                })
+        
+                this.$watch('filters.dateRange', (value) => {
+                    this.$dispatch('update-chart');
+                })
+        
+                this.$watch('filters.decimalPlaces', (value) => {
+                    this.$dispatch('update-chart');
+                })
+        
+                this.$watch('filters.unit', (value) => {
+                    this.$dispatch('update-chart');
+                })
+        
+                this.$watch('metricAttributes', (metric_attributes) => {
+                    this.$dispatch('update-chart');
+        
+                    window.http(`/chart-builder/${$wire.tab.id}/update`, {
+                        method: 'POST',
+                        body: { metric_attributes }
+                    })
                 })
             },
-            metricsMap: @js($metricsMap),
             formatDate(date) {
                 if (this.filters.period === 'annual') {
                     return date.split('-')[0];
@@ -47,8 +75,14 @@
                     unit: applyUnit ? this.filters.unit : 'None'
                 });
             },
+            get dates() {
+                return this._dates[this.filters.period]
+            },
+            get data() {
+                return this._data[this.filters.period]
+            },
             get selectedDates() {
-                return this.dates[this.filters.period].filter(date => {
+                return this.dates.filter(date => {
                     const year = new Date(date).getFullYear();
         
                     return this.filters.dateRange[0] <= year && year <= this.filters.dateRange[1]
@@ -56,20 +90,46 @@
             },
             get fullDateRange() {
                 return this.dateRange[this.filters.period]
+            },
+            get dataGroupedByMetric() {
+                let data = {}
+        
+                Object.entries(this.data).forEach(([company, value]) => {
+                    for (const [metric, timeline] of Object.entries(value)) {
+                        if (!data[metric]) {
+                            data[metric] = {}
+                        }
+        
+                        data[metric][company] = timeline
+                    }
+                })
+
+                Object.keys(data).forEach(metric => {
+                    if (!this.metricAttributes[metric].show) {
+                        delete data[metric]
+                    }
+                })
+
+                return data
             }
-        }" wire:key="{{ \Str::random(5) }}">
+        }" wire:key="{{ \Str::random(5) }}"
+            wire:loading.class="pointer-events-none animate-pulse" wire:target="tabChanged">
+            <div class="cus-loader" wire:loading.block>
+                <div class="cus-loaderBar"></div>
+            </div>
+
             <div class="mt-6 grid grid-cols-1 xl:grid-cols-2 gap-6">
                 <div>
-                    <livewire:builder.select-company :selected="$tab['companies']" :wire:key="'select-company-' . $tab['id']" />
+                    <livewire:builder.select-company :selected="$companies" :wire:key="'select-company-' . $tab['id']" />
                 </div>
 
                 <div>
-                    <livewire:builder.select-chart-metrics :selected="$tab['metrics']"
+                    <livewire:builder.select-chart-metrics :selected="$metrics"
                         :wire:key="'select-metrics-' . $tab['id']" />
                 </div>
             </div>
 
-            <template x-if="dates[filters.period].length">
+            <template x-if="dates.length">
                 <div>
                     <div class="mt-6">
                         <x-filter-box>
@@ -115,6 +175,55 @@
                         </x-filter-box>
                     </div>
 
+                    <div class="mt-6 bg-white p-6 relative rounded-lg" x-data="{
+                        subSubTab: 'single-panel',
+                        showLabel: true,
+                        tabs: {
+                            'single-panel': 'Single Panel',
+                            'multi-security': 'Multi Security',
+                            'multi-metric': 'Multi Metric',
+                        },
+                    }">
+                        <div class="flex items-center justify-between">
+                            <div
+                                class="flex items-center w-full max-w-[400px] gap-x-1 border border-[#D4DDD7] rounded bg-gray-light font-medium">
+                                <template x-for="(tab, key) in tabs">
+                                    <button class="py-2 rounded flex-1 transition"
+                                        :class="subSubTab === key ? 'bg-[#DCF6EC] border border-[#52D3A2] -m-[1px]' : ''"
+                                        @click="subSubTab = key" x-text="tab"></button>
+                                </template>
+                            </div>
+                            <div class="flex items-center gap-x-5 justify-between">
+                                <label class="relative inline-flex items-center cursor-pointer flex-shrink-0">
+                                    <input type="checkbox" value="yes" class="sr-only peer" :checked="showLabel"
+                                        @change="showLabel = $event.target.checked">
+                                    <div
+                                        class="w-6 h-2.5 bg-gray-200 peer-focus:outline-none peer-focus:ring-0 rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:-start-[4px] after:bg-white after:rounded-full after:h-4 after:w-4 after:shadow-md after:transition-all peer-checked:bg-dark-light2 peer-checked:after:bg-dark">
+                                    </div>
+                                    <span class="ms-3 text-sm font-medium text-gray-900">Show Labels</span>
+                                </label>
+                            </div>
+                        </div>
+
+                        <div class="mt-4 space-y-6">
+                            <template x-if="subSubTab === 'single-panel'">
+                                @include('livewire.builder.chart.single-panel')
+                            </template>
+                            <template x-if="subSubTab === 'multi-security'">
+                                @include('livewire.builder.chart.multi-security')
+                            </template>
+                            <template x-if="subSubTab === 'multi-metric'">
+                                @include('livewire.builder.chart.multi-metric')
+                            </template>
+                        </div>
+                    </div>
+
+                    <div class="mt-4 bg-white p-6 relative rounded-lg">
+                        <h3 class="font-medium">Indicators</h3>
+                        <div class="mt-3 chart-legends !grid grid-cols-2">
+                        </div>
+                    </div>
+
                     <div class="mt-6 rounded-lg sticky-table-container">
                         <table class="round-lg text-right whitespace-nowrap sticky-table sticky-column">
                             <thead>
@@ -127,7 +236,7 @@
                                     </template>
                                 </tr>
                             </thead>
-                            <template x-for="(metrics, company) in data[filters.period]" :key="company">
+                            <template x-for="(metrics, company) in data" :key="company">
                                 <tbody class="report-tbody">
                                     <template x-for="(timeline, metric) in metrics" :key="company + '-' + metric">
                                         <tr class="border-b last:border-b-0">
@@ -149,7 +258,7 @@
                 </div>
             </template>
 
-            <template x-if="!dates[filters.period].length">
+            <template x-if="!dates.length">
                 <div class="grid place-items-center py-24">
                     <svg width="168" height="164" viewBox="0 0 168 164" fill="none"
                         xmlns="http://www.w3.org/2000/svg">

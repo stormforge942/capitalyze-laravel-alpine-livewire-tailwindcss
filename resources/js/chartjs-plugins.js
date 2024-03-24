@@ -182,9 +182,7 @@ const chartJsPlugins = {
             ul.style.fontSize = "12px"
 
             // Remove old legend items
-            while (ul.firstChild) {
-                ul.firstChild.remove()
-            }
+            ul.innerHTML = ""
 
             // Reuse the built-in legendItems generator
             const items =

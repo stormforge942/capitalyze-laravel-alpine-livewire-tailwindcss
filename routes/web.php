@@ -161,9 +161,7 @@ Route::group(['middleware' => ['auth', 'approved', 'verified', CheckPagePermissi
 
     Route::post('settings', UpdateSettingsController::class)->name('settings.update');
 
-    Route::post('chart-builder/{chart}/data', [ChartController::class, 'show'])->name('chart-builder.show');
     Route::post('chart-builder/{chart}/update', [ChartController::class, 'update'])->name('chart-builder.update');
-    Route::post('chart-builder/{chart}/delete', [ChartController::class, 'destory'])->name('chart-builder.delete');
 });
 
 Route::group(['middleware' => ['auth', 'verified', EnsureUserIsAdmin::class]], function () {

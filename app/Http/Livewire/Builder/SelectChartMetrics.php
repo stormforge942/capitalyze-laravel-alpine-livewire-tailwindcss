@@ -10,7 +10,6 @@ class SelectChartMetrics extends Component
     public $options = [];
     public $selected = [];
     public $metricsMap = [];
-    public $metricAttributes = [];
 
     public function mount()
     {

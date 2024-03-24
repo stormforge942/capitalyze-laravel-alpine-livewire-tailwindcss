@@ -19,7 +19,8 @@ return new class extends Migration
             $table->json('companies');
             $table->json('metrics');
             $table->json('filters');
-            $table->json('config');
+            $table->json('metric_attributes');
+            $table->string('panel')->nullable();
             $table->foreignId('user_id')->constrained('users');
             $table->timestamps();
         });
