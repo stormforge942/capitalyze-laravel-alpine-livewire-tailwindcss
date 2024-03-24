@@ -2,13 +2,16 @@
 
 namespace App\Http\Livewire\Builder;
 
-use App\Models\CompanyChartComparison;
-use Illuminate\Support\Arr;
 use Livewire\Component;
+use Illuminate\Support\Arr;
+use Illuminate\Support\Facades\Auth;
+use App\Models\CompanyChartComparison;
+use App\Services\ChartBuilderService;
 
 class Chart extends Component
 {
-    public $tab = [];
+    public ?array $tab = null;
+    public array $metricsMap = [];
 
     protected $listeners = [
         'tabChanged' => 'tabChanged',
@@ -16,14 +19,38 @@ class Chart extends Component
         'metricsChanged' => 'metricsChanged',
     ];
 
+    public function mount()
+    {
+        $this->metricsMap = ChartBuilderService::options(true);
+    }
+
     public function render()
     {
-        return view('livewire.builder.chart');
+        $data = [];
+
+        if ($this->tab) {
+            $data = ChartBuilderService::resolveData($this->tab['companies'], $this->tab['metrics']);
+        }
+
+        return view('livewire.builder.chart', [
+            ...$data
+        ]);
     }
 
     public function tabChanged($tab)
     {
         $this->tab = $tab;
+
+        $this->tab['filters'] = [
+            'period' => data_get($this->tab, 'filters.period', 'annual'),
+            'dateRange' => data_get($this->tab, 'filters.dateRange', []),
+            'unit' => data_get($this->tab, 'filters.unit', 'Millions'),
+            'decimalPlaces' => data_get(
+                $this->tab,
+                'filters.decimalPlaces',
+                data_get(Auth::user(), 'settings.decimalPlaces', 1)
+            ),
+        ];
     }
 
     public function companiesChanged($companies)
