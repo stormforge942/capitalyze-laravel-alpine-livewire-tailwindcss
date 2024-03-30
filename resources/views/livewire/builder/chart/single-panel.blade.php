@@ -16,7 +16,7 @@
         const chartColors = @js(config('capitalyze.chartColors'))
 
         let idx = 0
-        
+
         let datasets = []
 
         Object.entries(this.data).forEach(([company, metrics]) => {
@@ -26,6 +26,7 @@
                 }
 
                 let label = company + '-' + this.metricsMap[metric].title
+                metricsColor[label] = chartColors[idx] || window.randomColor()
 
                 datasets.push({
                     label,
@@ -35,8 +36,8 @@
                             y: timeline[date] || null
                         }
                     }).filter((item) => item.y != null),
-                    backgroundColor: chartColors[idx] || window.randomColor(),
-                    borderColor: chartColors[idx] || window.randomColor(),
+                    backgroundColor: metricsColor[label],
+                    borderColor: metricsColor[label],
                     type: metricAttributes[metric]?.type || 'bar',
                     yAxisID: this.metricsMap[metric].yAxis || 'y',
                     shouldFormat: !this.metricsMap[metric].yAxis,

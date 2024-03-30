@@ -3,7 +3,6 @@
 namespace App\Http\Livewire\Builder;
 
 use Livewire\Component;
-use Illuminate\Support\Arr;
 use Illuminate\Support\Facades\Auth;
 use App\Models\CompanyChartComparison;
 use App\Services\ChartBuilderService;
@@ -15,6 +14,7 @@ class Chart extends Component
     public array $metrics = [];
     public ?array $filters = null;
     public array $metricAttributes = [];
+    public array $metricsColor = [];
 
     protected $listeners = [
         'tabChanged' => 'tabChanged',

@@ -20,6 +20,9 @@
             let datasets = [];
     
             Object.keys(data).forEach((company) => {
+                let label = company + '-' + this.metricsMap[metric].title
+                metricsColor[label] = chartColors[idx] || window.randomColor()
+
                 datasets.push({
                     label: company + ' ' + this.metricsMap[metric].title,
                     data: this.selectedDates.map((date) => {
@@ -28,9 +31,9 @@
                             y: data[company][date] || null
                         }
                     }).filter((item) => item.y != null),
-                    backgroundColor: chartColors[idx] || window.randomColor(),
-                    backgroundColor: chartColors[idx] || window.randomColor(),
-                    borderColor: chartColors[idx] || window.randomColor(),
+                    backgroundColor: metricsColor[label],
+                    backgroundColor: metricsColor[label],
+                    borderColor: metricsColor[label],
                     type: metricAttributes[metric]?.type || 'bar',
                     yAxisID: metricsMap[metric].yAxis || 'y',
                     shouldFormat: !metricsMap[metric].yAxis,

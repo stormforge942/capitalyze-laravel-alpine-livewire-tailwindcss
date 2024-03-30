@@ -17,6 +17,7 @@
         <div class="relative" x-data="{
             filters: $wire.entangle('filters', true),
             metricAttributes: $wire.entangle('metricAttributes', true),
+            metricsColor: $wire.entangle('metricsColor', true),
             _dates: @js($dates),
             _data: @js($data),
             dateRange: @js($dateRange),
