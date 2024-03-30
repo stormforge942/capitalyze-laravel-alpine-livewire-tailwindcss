@@ -103,29 +103,39 @@ function initGeneralTextTooltip() {
     }
 
     const instance = createPopper(virtualElement, tooltip)
+    let lastEl = null
 
     const cb = (e) => {
-        if (e.target?.id == "general-text-tooltip") return
-
-        const el = e.target.closest("[data-tooltip-content]")
-
-        if (el) {
-            tooltip.classList.remove("hidden")
-
-            tooltip.children[0].innerHTML = el.dataset.tooltipContent
-
-            const elRect = e.target.getBoundingClientRect()
-
-            virtualElement.getBoundingClientRect =
-                generateGetBoundingClientRect(
-                    elRect.x + elRect.width / 2,
-                    elRect.y - elRect.height - 7
-                )
-
-            instance.update()
-        } else {
-            tooltip.classList.add("hidden")
+        if (e.target?.id == "general-text-tooltip") {
+            return
         }
+
+        const el = e.target?.closest("[data-tooltip-content]")
+
+        if (!el) {
+            tooltip.classList.add("hidden")
+            lastEl = el
+            return
+        }
+
+        if (lastEl == el) return
+
+        tooltip.classList.remove("hidden")
+
+        tooltip.children[0].innerHTML = el.dataset.tooltipContent
+
+        const elRect = el.getBoundingClientRect()
+
+        const offset = Number(el.dataset.tooltipOffset || 7)
+
+        virtualElement.getBoundingClientRect = generateGetBoundingClientRect(
+            elRect.x + elRect.width / 2,
+            elRect.top - elRect.height - offset
+        )
+
+        instance.update()
+
+        lastEl = el
     }
 
     document.addEventListener("mouseover", cb)

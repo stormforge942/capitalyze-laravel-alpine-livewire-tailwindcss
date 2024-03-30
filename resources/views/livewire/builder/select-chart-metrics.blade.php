@@ -193,7 +193,8 @@
                     <button class="transition-all text-blue p-0.5 rounded-sm"
                         :class="metricAttributes[item]?.type === 'line' ? 'bg-dark text-green-dark' :
                             'hover:bg-dark hover:text-green-dark'"
-                        @click.prevent="metricAttributes[item].type = 'line'">
+                        @click.prevent="metricAttributes[item].type = 'line'" data-tooltip-content="Line Chart"
+                        data-tooltip-offset="15">
                         <svg width="16" height="16" viewBox="0 0 16 16" fill="currentColor"
                             xmlns="http://www.w3.org/2000/svg">
                             <path
@@ -204,7 +205,8 @@
                     <button class="transition-all text-blue p-0.5 rounded-sm"
                         :class="metricAttributes[item]?.type === 'bar' ? 'bg-dark text-green-dark' :
                             'hover:bg-dark hover:text-green-dark'"
-                        @click.prevent="metricAttributes[item].type = 'bar'">
+                        @click.prevent="metricAttributes[item].type = 'bar'" data-tooltip-content="Bar Chart"
+                        data-tooltip-offset="15">
                         <svg width="16" height="16" viewBox="0 0 16 16" fill="currentColor"
                             xmlns="http://www.w3.org/2000/svg">
                             <path
@@ -215,7 +217,8 @@
                     <button class="transition-all text-blue p-0.5 rounded-sm"
                         :class="metricAttributes[item]?.type === 'stacked-bar' ? 'bg-dark text-green-dark' :
                             'hover:bg-dark hover:text-green-dark'"
-                        @click.prevent="metricAttributes[item].type = 'stacked-bar'">
+                        @click.prevent="metricAttributes[item].type = 'stacked-bar'"
+                        data-tooltip-content="Stacked Bar Chart" data-tooltip-offset="15">
                         <svg width="16" height="16" viewBox="0 0 16 16" fill="none"
                             xmlns="http://www.w3.org/2000/svg">
                             <path
@@ -224,8 +227,23 @@
                         </svg>
                     </button>
 
+                    <button class="transition-all text-blue p-0.5 rounded-sm"
+                        :class="metricAttributes[item]?.sAxis ? 'bg-dark text-green-dark' :
+                            'hover:bg-dark hover:text-green-dark'"
+                        @click.prevent="metricAttributes[item].sAxis = !metricAttributes[item]?.sAxis"
+                        data-tooltip-content="Toggle Separate Axis" data-tooltip-offset="15">
+                        <svg width="16" height="16" viewBox="0 0 16 16" fill="none"
+                            xmlns="http://www.w3.org/2000/svg">
+                            <path
+                                d="M5.33917 3.044C5.83314 2.77982 6.36986 2.66732 7.4248 2.66732H8.57C9.62493 2.66732 10.1617 2.77982 10.6556 3.044C11.0751 3.26835 11.3964 3.5896 11.6207 4.00909C11.8849 4.50306 11.9974 5.03978 11.9974 6.09472V9.90658C11.9974 10.9615 11.8849 11.4983 11.6207 11.9922C11.3964 12.4117 11.0751 12.733 10.6556 12.9573C10.1617 13.2214 9.62493 13.334 8.57 13.334H7.4248C6.36986 13.334 5.83314 13.2214 5.33917 12.9573C4.91968 12.733 4.59843 12.4117 4.37408 11.9922C4.1099 11.4983 3.9974 10.9615 3.9974 9.90658V6.09472C3.9974 5.03978 4.1099 4.50306 4.37408 4.00909C4.59843 3.5896 4.91968 3.26835 5.33917 3.044ZM8.57 1.33398H7.4248C6.0822 1.33398 5.36222 1.51964 4.71037 1.86825C4.05852 2.21686 3.54694 2.72844 3.19833 3.38029C2.84972 4.03214 2.66406 4.75212 2.66406 6.09472V9.90658C2.66406 11.2492 2.84972 11.9692 3.19833 12.621C3.54694 13.2729 4.05852 13.7845 4.71037 14.1331C5.36222 14.4817 6.0822 14.6673 7.4248 14.6673H8.57C9.9126 14.6673 10.6326 14.4817 11.2844 14.1331C11.9363 13.7845 12.4479 13.2729 12.7965 12.621C13.1451 11.9692 13.3307 11.2492 13.3307 9.90658V6.09472C13.3307 4.75212 13.1451 4.03214 12.7965 3.38029C12.4479 2.72844 11.9363 2.21686 11.2844 1.86825C10.6326 1.51964 9.9126 1.33398 8.57 1.33398ZM8.66406 4.00065H7.33073V7.33398H8.66406V4.00065ZM5.16927 9.17265L7.99773 12.0011L10.8261 9.17265L9.88333 8.22985L7.99773 10.1155L6.11208 8.22985L5.16927 9.17265Z"
+                                fill="currentColor" />
+                        </svg>
+                    </button>
+
                     <button class="transition-all p-0.5 rounded-sm hover:bg-dark hover:text-green-dark"
-                        @click.prevent="metricAttributes[item].show = !metricAttributes[item].show">
+                        @click.prevent="metricAttributes[item].show = !metricAttributes[item].show"
+                        :data-tooltip-content="metricAttributes[item].show ? 'Show' : 'Hide'"
+                        data-tooltip-offset="15">
                         <svg class="h-4 w-4 text-blue" data-slot="icon" fill="none" stroke-width="2"
                             stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"
                             aria-hidden="true" x-show="metricAttributes[item]?.show">

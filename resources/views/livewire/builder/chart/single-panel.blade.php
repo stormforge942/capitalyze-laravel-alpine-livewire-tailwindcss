@@ -19,6 +19,54 @@
 
         let datasets = []
 
+        const axes = {}
+
+        function addAxis(axis, metric, isExtra = false) {
+            const axisMap = {
+                y: {
+                    grid: {
+                        display: false
+                    },
+                    position: 'right',
+                    beginAtZero: true,
+                    ticks: {
+                        callback: window.formatCmpctNumber,
+                    }
+                },
+                percent: {
+                    ticks: {
+                        callback: (val) => val + '%',
+                    },
+                    display: true,
+                    position: 'right',
+                    type: 'linear',
+                    beginAtZero: true,
+                    grid: {
+                        drawOnChartArea: false,
+                    },
+                },
+                ratio: {
+                    display: true,
+                    position: 'right',
+                    type: 'linear',
+                    beginAtZero: true,
+                    grid: {
+                        drawOnChartArea: false,
+                    },
+                },
+            }
+
+            let value = axisMap[axis]
+
+            if (isExtra) {
+                axis = axis + '-' + metric
+            }
+
+            axes[axis] = value
+
+            return axis
+        }
+
         Object.entries(this.data).forEach(([company, metrics]) => {
             Object.entries(metrics).forEach(([metric, timeline]) => {
                 if (!metricAttributes[metric]?.show) {
@@ -42,7 +90,7 @@
                     backgroundColor: metricsColor.sp[label],
                     borderColor: metricsColor.sp[label],
                     type,
-                    yAxisID: (this.metricsMap[metric].yAxis || 'y'),
+                    yAxisID: addAxis(this.metricsMap[metric].yAxis || 'y', metric, metricAttributes[metric]?.sAxis),
                     shouldFormat: !this.metricsMap[metric].yAxis,
                     ...(isStacked ? { stack: this.metricsMap[metric].yAxis || 'y' } : {}),
                 })
@@ -152,37 +200,7 @@
                             unit: this.filters.period === 'annual' ? 'year' : 'quarter',
                         },
                     },
-                    y: {
-                        grid: {
-                            display: false
-                        },
-                        position: 'right',
-                        beginAtZero: true,
-                        ticks: {
-                            callback: window.formatCmpctNumber,
-                        }
-                    },
-                    percent: {
-                        ticks: {
-                            callback: (val) => val + '%',
-                        },
-                        display: datasets.some(d => d.yAxisID === 'percent'),
-                        position: 'right',
-                        type: 'linear',
-                        beginAtZero: true,
-                        grid: {
-                            drawOnChartArea: false,
-                        },
-                    },
-                    ratio: {
-                        display: datasets.some(d => d.yAxisID === 'ratio'),
-                        position: 'right',
-                        type: 'linear',
-                        beginAtZero: true,
-                        grid: {
-                            drawOnChartArea: false,
-                        },
-                    },
+                    ...axes,
                 }
             }
         })
