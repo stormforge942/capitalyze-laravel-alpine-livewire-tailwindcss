@@ -28,6 +28,9 @@
                 let label = company + '-' + this.metricsMap[metric].title
                 metricsColor.sp[label] = metricsColor.sp[label] || chartColors[idx] || window.randomColor()
 
+                const type = metricAttributes[metric]?.type === 'line' ? 'line' : 'bar';
+                const isStacked = metricAttributes[metric]?.type === 'stacked-bar';
+
                 datasets.push({
                     label,
                     data: this.selectedDates.map(date => {
@@ -38,9 +41,10 @@
                     }).filter((item) => item.y != null),
                     backgroundColor: metricsColor.sp[label],
                     borderColor: metricsColor.sp[label],
-                    type: metricAttributes[metric]?.type || 'bar',
-                    yAxisID: this.metricsMap[metric].yAxis || 'y',
+                    type,
+                    yAxisID: (this.metricsMap[metric].yAxis || 'y'),
                     shouldFormat: !this.metricsMap[metric].yAxis,
+                    ...(isStacked ? { stack: this.metricsMap[metric].yAxis || 'y' } : {}),
                 })
 
                 idx++
@@ -60,7 +64,7 @@
         const ctx = this.$refs.canvas.getContext('2d')
 
         this.chart = new Chart(ctx, {
-            type: 'bar',
+            type: datasets.find(item => item.type === 'bar') ? 'bar' : 'line',
             data: {
                 datasets,
             },
@@ -69,7 +73,7 @@
                 chartJsPlugins.htmlLegend,
             ],
             options: {
-                maintainAspectRatio: false,
+                maintainAspectRatio: true,
                 responsive: true,
                 layout: {
                     padding: {
@@ -116,8 +120,8 @@
 
                             return 'auto'
                         },
-                        anchor: 'end',
-                        align: 'top',
+                        anchor: (ctx) => ctx.dataset.stack ? 'center' : 'end',
+                        align: (ctx) => ctx.dataset.stack ? 'center' : 'end',
                         formatter: (v, ctx) => {
                             if (ctx.dataset.shouldFormat) {
                                 return this.formatValue(v.y)
@@ -130,7 +134,7 @@
                             weight: 500,
                             size: 12,
                         },
-                        color: (ctx) => '#121A0F',
+                        color: (ctx) => ctx.dataset.stack ? '#fff' : '#121A0F',
                     },
                     htmlLegend: {
                         container: document.querySelector('.chart-legends'),
@@ -152,10 +156,10 @@
                         grid: {
                             display: false
                         },
-                        beginAtZero: false,
+                        position: 'right',
+                        beginAtZero: true,
                         ticks: {
                             callback: window.formatCmpctNumber,
-                            padding: 10,
                         }
                     },
                     percent: {
@@ -165,7 +169,7 @@
                         display: datasets.some(d => d.yAxisID === 'percent'),
                         position: 'right',
                         type: 'linear',
-                        beginAtZero: false,
+                        beginAtZero: true,
                         grid: {
                             drawOnChartArea: false,
                         },
@@ -174,7 +178,7 @@
                         display: datasets.some(d => d.yAxisID === 'ratio'),
                         position: 'right',
                         type: 'linear',
-                        beginAtZero: false,
+                        beginAtZero: true,
                         grid: {
                             drawOnChartArea: false,
                         },

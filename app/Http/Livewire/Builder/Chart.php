@@ -16,11 +16,7 @@ class Chart extends Component
     public array $metrics = [];
     public ?array $filters = null;
     public array $metricAttributes = [];
-    public array $metricsColor = [
-        'sp' => [],
-        'ms' => [],
-        'mm' => [],
-    ];
+    public array $metricsColor;
     public bool $showLabel = true;
 
     protected $listeners = [
@@ -31,9 +27,18 @@ class Chart extends Component
 
     public function mount()
     {
+        $this->resetColors();
     }
 
     public function render()
+    {
+        return view('livewire.builder.chart', [
+            ...$this->getData(),
+            'metricsMap' => ChartBuilderService::options(true),
+        ]);
+    }
+
+    private function getData()
     {
         $data = [
             'data' => [
@@ -58,10 +63,7 @@ class Chart extends Component
             ) ?? $data;
         }
 
-        return view('livewire.builder.chart', [
-            ...$data,
-            'metricsMap' => ChartBuilderService::options(true),
-        ]);
+        return $data;
     }
 
     public function tabChanged($tab)
@@ -98,6 +100,15 @@ class Chart extends Component
         }
 
         $this->metricAttributes = $_tab['metric_attributes'];
+    }
+
+    private function resetColors()
+    {
+        $this->metricsColor = [
+            'sp' => ['a' => 'test'],
+            'ms' => ['a' => 'test'],
+            'mm' => ['a' => 'test'],
+        ];
     }
 
     public function companiesChanged($companies)

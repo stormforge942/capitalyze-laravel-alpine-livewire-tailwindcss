@@ -22,9 +22,12 @@
             Object.keys(metrics).forEach((key) => {
                 const data = metrics[key];
                 const metric = this.metricsMap[key];
-
+    
                 const label = company + '-' + metric.title
                 metricsColor.ms[label] = metricsColor.ms[label] || chartColors[idx] || window.randomColor()
+    
+                const type = metricAttributes[key]?.type === 'line' ? 'line' : 'bar';
+                const isStacked = metricAttributes[key]?.type === 'stacked-bar';
     
                 datasets.push({
                     label: metric.title,
@@ -37,9 +40,10 @@
                     backgroundColor: metricsColor.ms[label],
                     backgroundColor: metricsColor.ms[label],
                     borderColor: metricsColor.ms[label],
-                    type: metricAttributes[key]?.type || 'bar',
+                    type,
                     yAxisID: metric.yAxis || 'y',
                     shouldFormat: !metric.yAxis,
+                    ...(isStacked ? { stack: this.metricsMap[key].yAxis || 'y' } : {}),
                 })
     
                 idx++;
@@ -56,7 +60,7 @@
             datasets = datasets.filter(d => d.data.length)
     
             this.chart = new Chart(this.$refs.canvas, {
-                type: 'bar',
+                type: datasets.find(item => item.type === 'bar') ? 'bar' : 'line',
                 data: {
                     datasets,
                 },
@@ -65,7 +69,7 @@
                     chartJsPlugins.htmlLegend,
                 ],
                 options: {
-                    maintainAspectRatio: false,
+                    maintainAspectRatio: true,
                     responsive: true,
                     layout: {
                         padding: {
@@ -108,8 +112,8 @@
     
                                 return 'auto'
                             },
-                            anchor: 'end',
-                            align: 'top',
+                            anchor: (ctx) => ctx.dataset.stack ? 'center' : 'end',
+                            align: (ctx) => ctx.dataset.stack ? 'center' : 'end',
                             formatter: (v, ctx) => {
                                 if (ctx.dataset.shouldFormat) {
                                     return this.formatValue(v.y)
@@ -122,10 +126,12 @@
                                 weight: 500,
                                 size: 12,
                             },
-                            color: (ctx) => '#121A0F',
+                            color: (ctx) => ctx.dataset.stack ? '#fff' : '#121A0F',
                         },
                         htmlLegend: {
                             container: document.querySelector('.chart-legends'),
+                            enableClick: false,
+                            rounded: true,
                         }
                     },
                     scales: {
@@ -142,6 +148,7 @@
                             grid: {
                                 display: false
                             },
+                            position: 'right',
                             display: datasets.some(d => d.yAxisID === 'y'),
                             beginAtZero: true,
                             ticks: {
@@ -156,7 +163,7 @@
                             display: datasets.some(d => d.yAxisID === 'percent'),
                             position: 'right',
                             type: 'linear',
-                            beginAtZero: false,
+                            beginAtZero: true,
                             grid: {
                                 drawOnChartArea: false,
                             },
@@ -165,7 +172,7 @@
                             display: datasets.some(d => d.yAxisID === 'ratio'),
                             position: 'right',
                             type: 'linear',
-                            beginAtZero: false,
+                            beginAtZero: true,
                             grid: {
                                 drawOnChartArea: false,
                             },

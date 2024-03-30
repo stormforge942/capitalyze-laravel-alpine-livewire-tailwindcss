@@ -19,6 +19,7 @@
             metricsMap: @js($metricsMap),
             showChart: false,
             init() {
+                console.log(JSON.stringify(this.metricsColor))
                 this.showChart = this.shouldShowChart()
         
                 this.$watch('filters', (filters) => {
@@ -55,6 +56,10 @@
                         body: { metric_attributes }
                     })
                 })
+        
+                this.$watch('metricsColor', (metricsColor) => {
+                    {{-- console.log(metricsColor) --}}
+                }, { deep: true })
             },
             formatDate(date) {
                 if (this.filters.period === 'annual') {

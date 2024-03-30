@@ -48,10 +48,10 @@
         return this.activeOption && this.activeOption[0] === title
     },
     get hasValueChanged() {
-        return this.value.map(item => item).join('-') !== this.tmpValue.sort().map(item => item).join('-')
+        return this.value.sort().map(item => item).join('-') !== this.tmpValue.sort().map(item => item).join('-')
     },
     showResult() {
-        this.value = [...this.tmpValue].sort();
+        this.value = [...this.tmpValue];
         this.showDropdown = false;
 
         this.dispatchValueChanged()
@@ -209,6 +209,18 @@
                             xmlns="http://www.w3.org/2000/svg">
                             <path
                                 d="M1.33594 9.66667C1.33594 9.11438 1.78365 8.66667 2.33594 8.66667H4.33594C4.88822 8.66667 5.33594 9.11438 5.33594 9.66667V13C5.33594 13.5523 4.88822 14 4.33594 14H2.33594C1.78365 14 1.33594 13.5523 1.33594 13V9.66667ZM6.0026 3C6.0026 2.44772 6.45032 2 7.0026 2H9.0026C9.55489 2 10.0026 2.44772 10.0026 3V13C10.0026 13.5523 9.55489 14 9.0026 14H7.0026C6.45032 14 6.0026 13.5523 6.0026 13V3ZM10.6693 6.33333C10.6693 5.78105 11.117 5.33333 11.6693 5.33333H13.6693C14.2216 5.33333 14.6693 5.78105 14.6693 6.33333V13C14.6693 13.5523 14.2216 14 13.6693 14H11.6693C11.117 14 10.6693 13.5523 10.6693 13V6.33333Z" />
+                        </svg>
+                    </button>
+
+                    <button class="transition-all text-blue p-0.5 rounded-sm"
+                        :class="metricAttributes[item]?.type === 'stacked-bar' ? 'bg-dark text-green-dark' :
+                            'hover:bg-dark hover:text-green-dark'"
+                        @click.prevent="metricAttributes[item].type = 'stacked-bar'">
+                        <svg width="16" height="16" viewBox="0 0 16 16" fill="none"
+                            xmlns="http://www.w3.org/2000/svg">
+                            <path
+                                d="M12.5 2C12.7761 2 13 2.22386 13 2.5V4.16667C13 4.44281 12.7761 4.66667 12.5 4.66667H3.5C3.22386 4.66667 3 4.44281 3 4.16667V2.5C3 2.22386 3.22386 2 3.5 2H12.5ZM12.5 11.3333C12.7761 11.3333 13 11.5572 13 11.8333V13.5C13 13.7761 12.7761 14 12.5 14H3.5C3.22386 14 3 13.7761 3 13.5V11.8333C3 11.5572 3.22386 11.3333 3.5 11.3333H12.5ZM12.5 6.66667C12.7761 6.66667 13 6.89052 13 7.16667V8.83333C13 9.10948 12.7761 9.33333 12.5 9.33333H3.5C3.22386 9.33333 3 9.10948 3 8.83333V7.16667C3 6.89052 3.22386 6.66667 3.5 6.66667H12.5Z"
+                                fill="currentColor" />
                         </svg>
                     </button>
 
