@@ -20,8 +20,12 @@
             let datasets = [];
     
             Object.keys(data).forEach((company) => {
+                if (!metricAttributes[metric]?.show) {
+                    return
+                }
+                
                 let label = company + '-' + this.metricsMap[metric].title
-                metricsColor[label] = chartColors[idx] || window.randomColor()
+                metricsColor[label] = metricsColor[label] || chartColors[idx] || window.randomColor()
 
                 datasets.push({
                     label: company + ' ' + this.metricsMap[metric].title,

@@ -104,13 +104,13 @@
                         data[metric][company] = timeline
                     }
                 })
-
+        
                 Object.keys(data).forEach(metric => {
                     if (!this.metricAttributes[metric].show) {
                         delete data[metric]
                     }
                 })
-
+        
                 return data
             }
         }" wire:key="{{ \Str::random(5) }}"
@@ -177,21 +177,33 @@
                     </div>
 
                     <div class="mt-6 bg-white p-6 relative rounded-lg" x-data="{
-                        subSubTab: 'single-panel',
-                        showLabel: true,
+                        panel: $wire.entangle('panel', true),
+                        showLabel: $wire.entangle('showLabel', true),
                         tabs: {
                             'single-panel': 'Single Panel',
                             'multi-security': 'Multi Security',
                             'multi-metric': 'Multi Metric',
                         },
+                        init() {
+                            this.$watch('showLabel', (showLabel) => {
+                                this.$dispatch('update-chart');
+                            })
+                    
+                            this.$watch('panel', (panel) => {
+                                window.http(`/chart-builder/${$wire.tab.id}/update`, {
+                                    method: 'POST',
+                                    body: { panel }
+                                })
+                            })
+                        }
                     }">
                         <div class="flex items-center justify-between">
                             <div
                                 class="flex items-center w-full max-w-[400px] gap-x-1 border border-[#D4DDD7] rounded bg-gray-light font-medium">
                                 <template x-for="(tab, key) in tabs">
                                     <button class="py-2 rounded flex-1 transition"
-                                        :class="subSubTab === key ? 'bg-[#DCF6EC] border border-[#52D3A2] -m-[1px]' : ''"
-                                        @click="subSubTab = key" x-text="tab"></button>
+                                        :class="panel === key ? 'bg-[#DCF6EC] border border-[#52D3A2] -m-[1px]' : ''"
+                                        @click="panel = key" x-text="tab"></button>
                                 </template>
                             </div>
                             <div class="flex items-center gap-x-5 justify-between">
@@ -207,13 +219,13 @@
                         </div>
 
                         <div class="mt-4 space-y-6">
-                            <template x-if="subSubTab === 'single-panel'">
+                            <template x-if="panel === 'single-panel'">
                                 @include('livewire.builder.chart.single-panel')
                             </template>
-                            <template x-if="subSubTab === 'multi-security'">
+                            <template x-if="panel === 'multi-security'">
                                 @include('livewire.builder.chart.multi-security')
                             </template>
-                            <template x-if="subSubTab === 'multi-metric'">
+                            <template x-if="panel === 'multi-metric'">
                                 @include('livewire.builder.chart.multi-metric')
                             </template>
                         </div>

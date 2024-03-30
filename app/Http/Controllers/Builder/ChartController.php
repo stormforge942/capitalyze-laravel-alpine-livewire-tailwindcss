@@ -21,7 +21,7 @@ class ChartController extends Controller
             'metrics' => ['sometimes', 'required', 'array'],
             'filters' => ['sometimes', 'required', 'array'],
             'metric_attributes' => ['sometimes', 'required', 'array'],
-            'panel' => ['sometimes', 'nullable', 'string'],
+            'panel' => ['sometimes', 'string'],
         ]);
 
         $chart->update(Arr::only($attrs, [

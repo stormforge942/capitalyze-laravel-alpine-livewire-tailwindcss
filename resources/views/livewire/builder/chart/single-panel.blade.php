@@ -26,7 +26,7 @@
                 }
 
                 let label = company + '-' + this.metricsMap[metric].title
-                metricsColor[label] = chartColors[idx] || window.randomColor()
+                metricsColor[label] = metricsColor[label] || chartColors[idx] || window.randomColor()
 
                 datasets.push({
                     label,
@@ -106,6 +106,10 @@
                     },
                     datalabels: {
                         display: (c) => {
+                            if (!this.showLabel) {
+                                return false
+                            }
+
                             if (c.dataset.data[c.dataIndex].y === 0) {
                                 return false
                             }
@@ -130,6 +134,8 @@
                     },
                     htmlLegend: {
                         container: document.querySelector('.chart-legends'),
+                        enableClick: false,
+                        rounded: true,
                     }
                 },
                 scales: {

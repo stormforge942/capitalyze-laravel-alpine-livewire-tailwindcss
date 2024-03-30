@@ -10,11 +10,13 @@ use App\Services\ChartBuilderService;
 class Chart extends Component
 {
     public ?array $tab = null;
+    public string $panel = 'single-panel';
     public array $companies = [];
     public array $metrics = [];
     public ?array $filters = null;
     public array $metricAttributes = [];
     public array $metricsColor = [];
+    public bool $showLabel = true;
 
     protected $listeners = [
         'tabChanged' => 'tabChanged',
@@ -70,6 +72,8 @@ class Chart extends Component
         $this->companies = $_tab['companies'];
         $this->metrics = $_tab['metrics'];
 
+        $this->panel = $_tab['panel'] ?? 'single-panel';
+
         $this->filters = [
             'period' => data_get($_tab, 'filters.period', 'annual'),
             'dateRange' => data_get($_tab, 'filters.dateRange', []),
@@ -100,6 +104,12 @@ class Chart extends Component
     public function metricsChanged($metrics)
     {
         $this->metrics = $metrics;
+        $this->updateTab();
+    }
+
+    public function panelChanged($panel)
+    {
+        $this->panel = $panel;
         $this->updateTab();
     }
 

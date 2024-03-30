@@ -212,14 +212,24 @@
                         </svg>
                     </button>
 
-                    <button class="transition-all text-blue p-0.5 rounded-sm"
-                        :class="!metricAttributes[item]?.show ? 'bg-dark text-green-dark' :
-                            'hover:bg-dark hover:text-green-dark'"
+                    <button class="transition-all p-0.5 rounded-sm hover:bg-dark hover:text-green-dark"
                         @click.prevent="metricAttributes[item].show = !metricAttributes[item].show">
-                        <svg width="16" height="16" viewBox="0 0 16 16" fill="currentColor"
-                            xmlns="http://www.w3.org/2000/svg">
-                            <path
-                                d="M8.0015 2C11.5962 2 14.5869 4.58651 15.2139 8C14.5869 11.4135 11.5962 14 8.0015 14C4.40672 14 1.41607 11.4135 0.789062 8C1.41607 4.58651 4.40672 2 8.0015 2ZM8.0015 12.6667C10.8252 12.6667 13.2415 10.7013 13.8531 8C13.2415 5.29869 10.8252 3.33333 8.0015 3.33333C5.1777 3.33333 2.76145 5.29869 2.14982 8C2.76145 10.7013 5.1777 12.6667 8.0015 12.6667ZM8.0015 11C6.34462 11 5.00148 9.65687 5.00148 8C5.00148 6.34315 6.34462 5 8.0015 5C9.6583 5 11.0015 6.34315 11.0015 8C11.0015 9.65687 9.6583 11 8.0015 11ZM8.0015 9.66667C8.92197 9.66667 9.66817 8.92047 9.66817 8C9.66817 7.07953 8.92197 6.33333 8.0015 6.33333C7.08104 6.33333 6.33481 7.07953 6.33481 8C6.33481 8.92047 7.08104 9.66667 8.0015 9.66667Z" />
+
+                        <svg class="h-4 w-4 text-blue" data-slot="icon" fill="none" stroke-width="2"
+                            stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"
+                            aria-hidden="true" x-show="metricAttributes[item]?.show">
+                            <path stroke-linecap="round" stroke-linejoin="round"
+                                d="M2.036 12.322a1.012 1.012 0 0 1 0-.639C3.423 7.51 7.36 4.5 12 4.5c4.638 0 8.573 3.007 9.963 7.178.07.207.07.431 0 .639C20.577 16.49 16.64 19.5 12 19.5c-4.638 0-8.573-3.007-9.963-7.178Z">
+                            </path>
+                            <path stroke-linecap="round" stroke-linejoin="round"
+                                d="M15 12a3 3 0 1 1-6 0 3 3 0 0 1 6 0Z"></path>
+                        </svg>
+                        <svg class="h-4 w-4 text-red" data-slot="icon" fill="none" stroke-width="2"
+                            stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"
+                            aria-hidden="true" x-show="!metricAttributes[item]?.show">
+                            <path stroke-linecap="round" stroke-linejoin="round"
+                                d="M3.98 8.223A10.477 10.477 0 0 0 1.934 12C3.226 16.338 7.244 19.5 12 19.5c.993 0 1.953-.138 2.863-.395M6.228 6.228A10.451 10.451 0 0 1 12 4.5c4.756 0 8.773 3.162 10.065 7.498a10.522 10.522 0 0 1-4.293 5.774M6.228 6.228 3 3m3.228 3.228 3.65 3.65m7.894 7.894L21 21m-3.228-3.228-3.65-3.65m0 0a3 3 0 1 0-4.243-4.243m4.242 4.242L9.88 9.88">
+                            </path>
                         </svg>
                     </button>
 
