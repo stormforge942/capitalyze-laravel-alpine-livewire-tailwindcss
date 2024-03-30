@@ -66,7 +66,7 @@
     
                 return axis
             }
-    
+
             Object.keys(metrics).forEach((key) => {
                 const data = metrics[key];
                 const metric = this.metricsMap[key];
@@ -89,7 +89,7 @@
                     backgroundColor: metricsColor.ms[label],
                     borderColor: metricsColor.ms[label],
                     type,
-                    yAxisID: addAxis(this.metricsMap[key].yAxis || 'y', metric, metricAttributes[key]?.sAxis),
+                    yAxisID: addAxis(this.metricsMap[key].yAxis || 'y', key, metricAttributes[key]?.sAxis),
                     shouldFormat: !metric.yAxis,
                     ...(isStacked ? { stack: this.metricsMap[key].yAxis || 'y' } : {}),
                 })
@@ -106,7 +106,7 @@
             });
     
             datasets = datasets.filter(d => d.data.length)
-    
+
             this.chart = new Chart(this.$refs.canvas, {
                 type: datasets.find(item => item.type === 'bar') ? 'bar' : 'line',
                 data: {

@@ -118,8 +118,6 @@ function initGeneralTextTooltip() {
             return
         }
 
-        if (lastEl == el) return
-
         tooltip.classList.remove("hidden")
 
         tooltip.children[0].innerHTML = el.dataset.tooltipContent
