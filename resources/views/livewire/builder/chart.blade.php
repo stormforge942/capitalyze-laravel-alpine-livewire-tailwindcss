@@ -1,8 +1,3 @@
-@push('scripts')
-    <script src="https://cdn.jsdelivr.net/npm/chartjs-plugin-datalabels@2.0.0/dist/chartjs-plugin-datalabels.min.js">
-    </script>
-@endpush
-
 <div class="chart-builder-page">
     <div>
         <h1 class="text-xl font-bold">Chart</h1>
@@ -22,7 +17,10 @@
             _data: @js($data),
             dateRange: @js($dateRange),
             metricsMap: @js($metricsMap),
+            showChart: false,
             init() {
+                this.showChart = this.shouldShowChart()
+        
                 this.$watch('filters', (filters) => {
                     window.http(`/chart-builder/${$wire.tab.id}/update`, {
                         method: 'POST',
@@ -48,6 +46,8 @@
                 })
         
                 this.$watch('metricAttributes', (metric_attributes) => {
+                    this.showChart = this.shouldShowChart()
+        
                     this.$dispatch('update-chart');
         
                     window.http(`/chart-builder/${$wire.tab.id}/update`, {
@@ -75,6 +75,10 @@
                     decimalPlaces: this.filters.decimalPlaces,
                     unit: applyUnit ? this.filters.unit : 'None'
                 });
+            },
+            shouldShowChart() {
+                return Object.entries(this.metricAttributes)
+                    .find(([metric, value]) => value.show && $wire.metrics.includes(metric))
             },
             get dates() {
                 return this._dates[this.filters.period]
@@ -112,7 +116,7 @@
                 })
         
                 return data
-            }
+            },
         }" wire:key="{{ \Str::random(5) }}"
             wire:loading.class="pointer-events-none animate-pulse">
             <div class="cus-loader" wire:loading.block>
@@ -130,7 +134,7 @@
                 </div>
             </div>
 
-            <template x-if="dates.length">
+            <template x-if="showChart && dates.length">
                 <div>
                     <div class="mt-6">
                         <x-filter-box>
@@ -271,7 +275,7 @@
                 </div>
             </template>
 
-            <template x-if="!dates.length">
+            <template x-if="!showChart || !dates.length">
                 <div class="grid place-items-center py-24">
                     <svg width="168" height="164" viewBox="0 0 168 164" fill="none"
                         xmlns="http://www.w3.org/2000/svg">

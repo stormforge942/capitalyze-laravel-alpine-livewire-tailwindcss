@@ -214,7 +214,6 @@
 
                     <button class="transition-all p-0.5 rounded-sm hover:bg-dark hover:text-green-dark"
                         @click.prevent="metricAttributes[item].show = !metricAttributes[item].show">
-
                         <svg class="h-4 w-4 text-blue" data-slot="icon" fill="none" stroke-width="2"
                             stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"
                             aria-hidden="true" x-show="metricAttributes[item]?.show">

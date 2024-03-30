@@ -25,7 +25,7 @@
                 }
                 
                 let label = company + '-' + this.metricsMap[metric].title
-                metricsColor[label] = metricsColor[label] || chartColors[idx] || window.randomColor()
+                metricsColor.mm[label] = metricsColor.mm[label] || chartColors[idx] || window.randomColor()
 
                 datasets.push({
                     label: company + ' ' + this.metricsMap[metric].title,
@@ -35,9 +35,9 @@
                             y: data[company][date] || null
                         }
                     }).filter((item) => item.y != null),
-                    backgroundColor: metricsColor[label],
-                    backgroundColor: metricsColor[label],
-                    borderColor: metricsColor[label],
+                    backgroundColor: metricsColor.mm[label],
+                    backgroundColor: metricsColor.mm[label],
+                    borderColor: metricsColor.mm[label],
                     type: metricAttributes[metric]?.type || 'bar',
                     yAxisID: metricsMap[metric].yAxis || 'y',
                     shouldFormat: !metricsMap[metric].yAxis,
@@ -95,7 +95,7 @@
                         },
                         datalabels: {
                             display: (c) => {
-                                if (c.dataset.data[c.dataIndex].y === 0) {
+                                if (!showLabel || c.dataset.data[c.dataIndex].y === 0) {
                                     return false
                                 }
     

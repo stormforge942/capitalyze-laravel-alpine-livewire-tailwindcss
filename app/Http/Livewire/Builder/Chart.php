@@ -6,6 +6,7 @@ use Livewire\Component;
 use Illuminate\Support\Facades\Auth;
 use App\Models\CompanyChartComparison;
 use App\Services\ChartBuilderService;
+use Illuminate\Support\Arr;
 
 class Chart extends Component
 {
@@ -15,7 +16,11 @@ class Chart extends Component
     public array $metrics = [];
     public ?array $filters = null;
     public array $metricAttributes = [];
-    public array $metricsColor = [];
+    public array $metricsColor = [
+        'sp' => [],
+        'ms' => [],
+        'mm' => [],
+    ];
     public bool $showLabel = true;
 
     protected $listeners = [
@@ -104,6 +109,8 @@ class Chart extends Component
     public function metricsChanged($metrics)
     {
         $this->metrics = $metrics;
+        $this->metricAttributes = Arr::only($this->metricAttributes, $metrics);
+
         $this->updateTab();
     }
 

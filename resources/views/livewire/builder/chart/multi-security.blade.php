@@ -24,7 +24,7 @@
                 const metric = this.metricsMap[key];
 
                 const label = company + '-' + metric.title
-                metricsColor[label] = metricsColor[label] || chartColors[idx] || window.randomColor()
+                metricsColor.ms[label] = metricsColor.ms[label] || chartColors[idx] || window.randomColor()
     
                 datasets.push({
                     label: metric.title,
@@ -34,9 +34,9 @@
                             y: data[date] || null
                         }
                     }).filter((item) => item.y != null),
-                    backgroundColor: metricsColor[label],
-                    backgroundColor: metricsColor[label],
-                    borderColor: metricsColor[label],
+                    backgroundColor: metricsColor.ms[label],
+                    backgroundColor: metricsColor.ms[label],
+                    borderColor: metricsColor.ms[label],
                     type: metricAttributes[key]?.type || 'bar',
                     yAxisID: metric.yAxis || 'y',
                     shouldFormat: !metric.yAxis,
@@ -102,7 +102,7 @@
                         },
                         datalabels: {
                             display: (c) => {
-                                if (c.dataset.data[c.dataIndex].y === 0) {
+                                if (!showLabel || c.dataset.data[c.dataIndex].y === 0) {
                                     return false
                                 }
     

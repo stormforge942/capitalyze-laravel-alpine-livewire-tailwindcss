@@ -26,7 +26,7 @@
                 }
 
                 let label = company + '-' + this.metricsMap[metric].title
-                metricsColor[label] = metricsColor[label] || chartColors[idx] || window.randomColor()
+                metricsColor.sp[label] = metricsColor.sp[label] || chartColors[idx] || window.randomColor()
 
                 datasets.push({
                     label,
@@ -36,8 +36,8 @@
                             y: timeline[date] || null
                         }
                     }).filter((item) => item.y != null),
-                    backgroundColor: metricsColor[label],
-                    borderColor: metricsColor[label],
+                    backgroundColor: metricsColor.sp[label],
+                    borderColor: metricsColor.sp[label],
                     type: metricAttributes[metric]?.type || 'bar',
                     yAxisID: this.metricsMap[metric].yAxis || 'y',
                     shouldFormat: !this.metricsMap[metric].yAxis,
@@ -152,7 +152,7 @@
                         grid: {
                             display: false
                         },
-                        beginAtZero: true,
+                        beginAtZero: false,
                         ticks: {
                             callback: window.formatCmpctNumber,
                             padding: 10,

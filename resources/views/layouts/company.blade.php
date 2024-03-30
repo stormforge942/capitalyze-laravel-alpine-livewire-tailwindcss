@@ -22,20 +22,9 @@
     </style>
 
     <!-- Scripts -->
-    @vite(['resources/css/app.css', 'resources/js/app.js'])
+    @vite(['resources/css/app.css'])
 
     @livewireStyles
-    @once
-        @push('scripts')
-            <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
-            <script src="https://cdn.jsdelivr.net/npm/luxon"></script>
-            <script src="https://cdnjs.cloudflare.com/ajax/libs/chartjs-plugin-annotation/3.0.1/chartjs-plugin-annotation.min.js"
-                integrity="sha512-Hn1w6YiiFw6p6S2lXv6yKeqTk0PLVzeCwWY9n32beuPjQ5HLcvz5l2QsP+KilEr1ws37rCTw3bZpvfvVIeTh0Q=="
-                crossorigin="anonymous" referrerpolicy="no-referrer"></script>
-            <script src="https://cdnjs.cloudflare.com/ajax/libs/chartjs-adapter-luxon/0.2.1/chartjs-adapter-luxon.min.js"></script>
-            <script src="https://cdnjs.cloudflare.com/ajax/libs/flowbite/1.8.1/flowbite.min.js"></script>
-        @endpush
-    @endonce
 </head>
 
 <body class="min-h-screen font-sans text-base antialiased text-dark bg-gray-light">
@@ -111,14 +100,24 @@
         @livewire('slide-over-pro')
     </div>
 
-    <div class="hidden z-[1000] relative"
-        id="general-text-tooltip">
+    <div class="hidden z-[1000] relative" id="general-text-tooltip">
         <div class="content bg-dark text-white text-sm px-3 py-1 font-medium rounded "></div>
-        <div class="-z-10 absolute h-3 w-3 rotate-45 bg-dark top-[100%] left-[50%] -translate-x-[50%] -translate-y-[80%]">
+        <div
+            class="-z-10 absolute h-3 w-3 rotate-45 bg-dark top-[100%] left-[50%] -translate-x-[50%] -translate-y-[80%]">
         </div>
     </div>
 
     @livewireScripts
+    @vite(['resources/js/app.js'])
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/luxon"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/chartjs-plugin-annotation/3.0.1/chartjs-plugin-annotation.min.js"
+        integrity="sha512-Hn1w6YiiFw6p6S2lXv6yKeqTk0PLVzeCwWY9n32beuPjQ5HLcvz5l2QsP+KilEr1ws37rCTw3bZpvfvVIeTh0Q=="
+        crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chartjs-plugin-datalabels@2.0.0/dist/chartjs-plugin-datalabels.min.js">
+    </script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/chartjs-adapter-luxon/0.2.1/chartjs-adapter-luxon.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/flowbite/1.8.1/flowbite.min.js"></script>
     @stack('scripts')
 </body>
 
