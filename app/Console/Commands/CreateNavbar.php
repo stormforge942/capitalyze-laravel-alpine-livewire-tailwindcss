@@ -109,6 +109,8 @@ class CreateNavbar extends Command
                 'admin.groups-management',
                 'admin.feedbacks-management',
                 'waiting-for-approval',
+                'settings.update',
+                'chart-builder.update',
             ]);
 
             Navbar::query()
