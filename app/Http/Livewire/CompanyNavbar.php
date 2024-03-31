@@ -101,7 +101,7 @@ class CompanyNavbar extends Component
                     ->sort($this->sortFunction($builderLinks))
                     ->values()
                     ->all(),
-                'collapsed' => true
+                'collapsed' => false
             ],
             'more' => [
                 'name' => 'More',
