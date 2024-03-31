@@ -31,7 +31,7 @@
                         return
                     }
         
-                    let label = company + '-' + this.metricsMap[metric].title
+                    let label = company + ' - ' + this.metricsMap[metric].title
         
                     const color = getColor('mm', label)
         

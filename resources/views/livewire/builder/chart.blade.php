@@ -177,7 +177,7 @@
                     </x-filter-box>
                 </div>
 
-                <div class="mt-6 bg-white p-6 relative rounded-lg" x-data="{
+                <div x-data="{
                     panel: $wire.entangle('panel', true),
                     showLabel: $wire.entangle('showLabel', true),
                     chartColors: @js(config('capitalyze.chartColors')),
@@ -223,45 +223,59 @@
                         } while (true);
                 
                         return color;
-                    }
+                    },
+                    get indicators() {
+                        return Object.entries(this.usedColors).map(([label, color]) => {
+                            return { label, color }
+                        })
+                    },
                 }">
-                    <div class="flex items-center justify-between">
-                        <div
-                            class="flex items-center w-full max-w-[400px] gap-x-1 border border-[#D4DDD7] rounded bg-gray-light font-medium">
-                            <template x-for="(tab, key) in tabs">
-                                <button class="py-2 rounded flex-1 transition"
-                                    :class="panel === key ? 'bg-[#DCF6EC] border border-[#52D3A2] -m-[1px]' : ''"
-                                    @click="usedColors = {}; panel = key" x-text="tab"></button>
+                    <div class="mt-6 bg-white p-6 relative rounded-lg">
+                        <div class="flex items-center justify-between">
+                            <div
+                                class="flex items-center w-full max-w-[400px] gap-x-1 border border-[#D4DDD7] rounded bg-gray-light font-medium">
+                                <template x-for="(tab, key) in tabs">
+                                    <button class="py-2 rounded flex-1 transition"
+                                        :class="panel === key ? 'bg-[#DCF6EC] border border-[#52D3A2] -m-[1px]' : ''"
+                                        @click="usedColors = {}; $nextTick(() => {panel = key})"
+                                        x-text="tab"></button>
+                                </template>
+                            </div>
+                            <div class="flex items-center gap-x-5 justify-between" x-cloak>
+                                <label class="relative inline-flex items-center cursor-pointer flex-shrink-0">
+                                    <input type="checkbox" value="yes" class="sr-only peer" :checked="showLabel"
+                                        @change="showLabel = $event.target.checked">
+                                    <div
+                                        class="w-6 h-2.5 bg-gray-200 peer-focus:outline-none peer-focus:ring-0 rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:-start-[4px] after:bg-white after:rounded-full after:h-4 after:w-4 after:shadow-md after:transition-all peer-checked:bg-dark-light2 peer-checked:after:bg-dark">
+                                    </div>
+                                    <span class="ms-3 text-sm font-medium text-gray-900">Show Labels</span>
+                                </label>
+                            </div>
+                        </div>
+
+                        <div class="mt-4 space-y-6">
+                            <template x-if="panel === 'single-panel'">
+                                @include('livewire.builder.chart.single-panel')
+                            </template>
+                            <template x-if="panel === 'multi-security'">
+                                @include('livewire.builder.chart.multi-security')
+                            </template>
+                            <template x-if="panel === 'multi-metric'">
+                                @include('livewire.builder.chart.multi-metric')
                             </template>
                         </div>
-                        <div class="flex items-center gap-x-5 justify-between" x-cloak>
-                            <label class="relative inline-flex items-center cursor-pointer flex-shrink-0">
-                                <input type="checkbox" value="yes" class="sr-only peer" :checked="showLabel"
-                                    @change="showLabel = $event.target.checked">
-                                <div
-                                    class="w-6 h-2.5 bg-gray-200 peer-focus:outline-none peer-focus:ring-0 rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:-start-[4px] after:bg-white after:rounded-full after:h-4 after:w-4 after:shadow-md after:transition-all peer-checked:bg-dark-light2 peer-checked:after:bg-dark">
+                    </div>
+
+                    <div class="mt-4 bg-white p-6 relative rounded-lg">
+                        <h3 class="font-medium">Indicators</h3>
+                        <div class="mt-3 grid grid-cols-2">
+                            <template x-for="i in indicators" :key="i.label">
+                                <div class="flex items-center gap-x-2">
+                                    <div class="w-4 h-4 rounded-full" :style="`background-color: ${i.color}`"></div>
+                                    <div x-text="i.label"></div>
                                 </div>
-                                <span class="ms-3 text-sm font-medium text-gray-900">Show Labels</span>
-                            </label>
+                            </template>
                         </div>
-                    </div>
-
-                    <div class="mt-4 space-y-6">
-                        <template x-if="panel === 'single-panel'">
-                            @include('livewire.builder.chart.single-panel')
-                        </template>
-                        <template x-if="panel === 'multi-security'">
-                            @include('livewire.builder.chart.multi-security')
-                        </template>
-                        <template x-if="panel === 'multi-metric'">
-                            @include('livewire.builder.chart.multi-metric')
-                        </template>
-                    </div>
-                </div>
-
-                <div class="mt-4 bg-white p-6 relative rounded-lg hidden">
-                    <h3 class="font-medium">Indicators</h3>
-                    <div class="mt-3 chart-legends !grid grid-cols-2">
                     </div>
                 </div>
 

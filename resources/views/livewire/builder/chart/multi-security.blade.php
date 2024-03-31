@@ -81,7 +81,7 @@
                     const data = metrics[key];
                     const metric = this.metricsMap[key];
         
-                    const label = company + '-' + metric.title
+                    const label = company + ' - ' + metric.title
         
                     const color = getColor('ms', label)
         
@@ -90,7 +90,7 @@
                     const isStacked = metricAttributes[key]?.type === 'stacked-bar';
         
                     datasets.push({
-                        label: metric.title,
+                        label,
                         data: this.selectedDates.map((date) => {
                             return {
                                 x: date,
