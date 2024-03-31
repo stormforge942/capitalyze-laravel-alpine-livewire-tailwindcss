@@ -100,6 +100,8 @@ class Chart extends Component
         }
 
         $this->metricAttributes = $_tab['metric_attributes'];
+
+        $this->showLabel = true;
     }
 
     private function resetColors()

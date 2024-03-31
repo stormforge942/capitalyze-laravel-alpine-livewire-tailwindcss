@@ -78,7 +78,7 @@
             },
             shouldShowChart() {
                 return Object.entries(this.metricAttributes)
-                    .find(([metric, value]) => value.show && @this.metrics.includes(metric))
+                    .find(([metric, value]) => value?.show && @this.metrics.includes(metric))
             },
             get dates() {
                 return this._dates[this.filters.period]
@@ -110,7 +110,7 @@
                 })
         
                 Object.keys(data).forEach(metric => {
-                    if (!this.metricAttributes[metric].show) {
+                    if (!this.metricAttributes[metric]?.show) {
                         delete data[metric]
                     }
                 })

@@ -30,7 +30,7 @@
         this.tmpValue.push(company.ticker)
     },
     get hasValueChanged() {
-        return this.value.join('-') !== this.tmpValue.join('-')
+        return [...this.value].sort().join('-') !== [...this.tmpValue].sort().join('-')
     },
     showResult() {
         this.value = [...this.tmpValue]

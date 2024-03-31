@@ -48,7 +48,7 @@
         return this.activeOption && this.activeOption[0] === title
     },
     get hasValueChanged() {
-        return this.value.sort().map(item => item).join('-') !== this.tmpValue.sort().map(item => item).join('-')
+        return [...this.value].sort().map(item => item).join('-') !== [...this.tmpValue].sort().map(item => item).join('-')
     },
     showResult() {
         this.value = [...this.tmpValue];
