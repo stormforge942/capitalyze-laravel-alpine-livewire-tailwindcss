@@ -1,5 +1,15 @@
-<div @update-chart.window="usedColors = {}">
-    <template x-for="(metrics, company) in data">
+<div x-data="{
+    isReset: false,
+    reset() {
+        if (this.isReset) {
+            return;
+        }
+
+        this.isReset = true;
+        usedColors = {}
+    }
+}">
+    <template x-for="(metrics, company) in data" :key="company">
         <div x-data="{
             chart: null,
             init() {
@@ -190,11 +200,11 @@
                     }
                 })
             }
-        }" @update-chart.window="$nextTick(() => initChart())">
+        }" @update-chart.window="$nextTick(() => {reset(); initChart()})">
             <p class="font-bold text-blue text-md" x-text="company"></p>
 
-            <div class="mt-4">
-                <canvas class="h-[400px] w-full" x-ref="canvas"></canvas>
+            <div class="mt-4 h-[400px]">
+                <canvas x-ref="canvas"></canvas>
             </div>
         </div>
     </template>

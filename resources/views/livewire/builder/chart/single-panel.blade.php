@@ -196,7 +196,7 @@
             }
         })
     }
-}" @update-chart.window="$nextTick(() => initChart())">
-    <canvas class="h-[500px] w-full" x-ref="canvas">
+}" @update-chart.window="$nextTick(() => initChart())" class="h-[400px]">
+    <canvas x-ref="canvas">
     </canvas>
 </div>
