@@ -36,7 +36,7 @@ class CreateNavbarGroupShows extends Command
         $groups = Groups::all();
 
         foreach ($navbars as $navbar) {
-            $isBottomNavbar = Str::startsWith($navbar->route_name, ['company.', 'company-', 'lse.', 'tsx.', 'fund.', 'mutual-fund.', 'etf.', 'fund-', 'mutual-fund-', 'shanghai.', 'japan.', 'hkex.', 'euronext.', 'otc.', 'frankfurt.', 'shenzhen.', 'builder.']);
+            $isBottomNavbar = Str::startsWith($navbar->route_name, Navbar::PRIMARY_NAV);
             $isUpperNavbar = in_array($navbar->route_name, [
                 '',
                 'track-investor',

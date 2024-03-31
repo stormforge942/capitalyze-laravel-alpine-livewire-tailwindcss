@@ -90,7 +90,9 @@ const chartJsPlugins = {
 
             const tableBody = document.createElement("tbody")
             bodyLines.reverse().forEach((body) => {
-                let [label, value] = body[0].split("|")
+                let [label, value] = body[0].split(
+                    tooltip.options.delimiter || "|"
+                )
 
                 // format number if possible
                 if (!Number.isNaN(Number(value))) {
@@ -182,9 +184,7 @@ const chartJsPlugins = {
             ul.style.fontSize = "12px"
 
             // Remove old legend items
-            while (ul.firstChild) {
-                ul.firstChild.remove()
-            }
+            ul.innerHTML = ""
 
             // Reuse the built-in legendItems generator
             const items =
@@ -193,22 +193,26 @@ const chartJsPlugins = {
             items.forEach((item) => {
                 const li = document.createElement("div")
                 li.style.alignItems = "center"
-                li.style.cursor = "pointer"
+                if (options.enableClick != false) {
+                    li.style.cursor = "pointer"
+                }
                 li.style.display = "inline-flex"
                 li.style.flexDirection = "row"
 
-                li.onclick = () => {
-                    const { type } = chart.config
-                    if (type === "pie" || type === "doughnut") {
-                        // Pie and doughnut charts only have a single dataset and visibility is per item
-                        chart.toggleDataVisibility(item.index)
-                    } else {
-                        chart.setDatasetVisibility(
-                            item.datasetIndex,
-                            !chart.isDatasetVisible(item.datasetIndex)
-                        )
+                if (options.enableClick != false) {
+                    li.onclick = () => {
+                        const { type } = chart.config
+                        if (type === "pie" || type === "doughnut") {
+                            // Pie and doughnut charts only have a single dataset and visibility is per item
+                            chart.toggleDataVisibility(item.index)
+                        } else {
+                            chart.setDatasetVisibility(
+                                item.datasetIndex,
+                                !chart.isDatasetVisible(item.datasetIndex)
+                            )
+                        }
+                        chart.update()
                     }
-                    chart.update()
                 }
 
                 // Color box
@@ -216,7 +220,11 @@ const chartJsPlugins = {
                 boxSpan.style.background = item.fillStyle
                 boxSpan.style.borderColor = item.strokeStyle
                 boxSpan.style.borderWidth = item.lineWidth + "px"
-                boxSpan.style.borderRadius = "1px"
+                if (options.rounded) {
+                    boxSpan.style.borderRadius = "50%"
+                } else {
+                    boxSpan.style.borderRadius = "1px"
+                }
                 boxSpan.style.display = "inline-block"
                 boxSpan.style.flexShrink = 0
                 boxSpan.style.height = "16px"

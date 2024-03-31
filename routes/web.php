@@ -20,12 +20,12 @@ use App\Http\Controllers\EtfController;
 use App\Http\Controllers\LseController;
 use App\Http\Controllers\OtcController;
 use App\Http\Controllers\TsxController;
-use App\Http\Livewire\PermissionDenied;
 use App\Http\Controllers\FundController;
 use App\Http\Controllers\HkexController;
 use App\Http\Controllers\HomeController;
 use App\Http\Livewire\EconomicsCalendar;
 use App\Http\Controllers\AdminController;
+use App\Http\Controllers\Builder\ChartController;
 use App\Http\Controllers\JapanController;
 use App\Http\Livewire\CompanyFilingsPage;
 use App\Http\Livewire\CompanyIdentifiers;
@@ -160,6 +160,8 @@ Route::group(['middleware' => ['auth', 'approved', 'verified', CheckPagePermissi
     Route::get('/shenzhen/{ticker}/', [ShenzhenController::class, 'metrics'])->name('shenzhen.metrics');
 
     Route::post('settings', UpdateSettingsController::class)->name('settings.update');
+
+    Route::post('chart-builder/{chart}/update', [ChartController::class, 'update'])->name('chart-builder.update');
 });
 
 Route::group(['middleware' => ['auth', 'verified', EnsureUserIsAdmin::class]], function () {

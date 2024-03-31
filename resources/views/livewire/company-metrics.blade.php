@@ -482,10 +482,8 @@
             selectedValue = [tableDates[0], tableDates[tableDates.length - 1]]
         }
 
-        console.log(selectedValue)
         let rangeMin = selectedValue[0];
         let rangeMax = selectedValue[1] ? selectedValue[1] : new Date().getFullYear();
-
 
         rangeSlider(el, {
             step: 1,

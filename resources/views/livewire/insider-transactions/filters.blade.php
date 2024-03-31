@@ -79,7 +79,7 @@
         }" x-modelable="value" x-model="filters.transaction_value" class="inline-block">
             <x-dropdown x-model="showDropdown" placement="bottom-start">
                 <x-slot name="trigger">
-                    <div class="border-[0.5px] border-[#93959880] p-2 rounded-full flex items-center gap-x-1"
+                    <div class="border-[0.5px] border-[#D4DDD7] p-2 rounded-full flex items-center gap-x-1"
                         :class="showDropdown ? 'bg-[#E2E2E2]' : 'bg-white hover:bg-[#E2E2E2]'">
                         <span class="text-sm truncate" x-text="valueText">
                         </span>
@@ -165,7 +165,7 @@
         }" x-modelable="value" x-model="filters.months" class="inline-block">
             <x-dropdown x-model="showDropdown" placement="bottom-start">
                 <x-slot name="trigger">
-                    <div class="border-[0.5px] border-[#93959880] p-2 rounded-full flex items-center gap-x-1"
+                    <div class="border-[0.5px] border-[#D4DDD7] p-2 rounded-full flex items-center gap-x-1"
                         :class="showDropdown ? 'bg-[#E2E2E2]' : 'bg-white hover:bg-[#E2E2E2]'">
                         <span class="text-sm truncate" x-text="valueText">
                         </span>
@@ -256,7 +256,7 @@
         }" x-modelable="value" x-model="filters.cso" class="inline-block">
             <x-dropdown x-model="showDropdown" placement="bottom-start">
                 <x-slot name="trigger">
-                    <div class="border-[0.5px] border-[#93959880] p-2 rounded-full flex items-center gap-x-1"
+                    <div class="border-[0.5px] border-[#D4DDD7] p-2 rounded-full flex items-center gap-x-1"
                         :class="showDropdown ? 'bg-[#E2E2E2]' : 'bg-white hover:bg-[#E2E2E2]'">
                         <span class="text-sm truncate" x-text="valueText">
                         </span>

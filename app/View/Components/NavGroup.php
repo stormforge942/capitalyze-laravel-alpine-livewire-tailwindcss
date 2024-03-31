@@ -16,7 +16,9 @@ class NavGroup extends Component
         public array $items,
         public bool $collapsed = false,
     ) {
-        //
+        if (collect($this->items)->firstWhere('active', true)) {
+            $this->collapsed = false;
+        }
     }
 
     /**
