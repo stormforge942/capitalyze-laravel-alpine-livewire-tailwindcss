@@ -13,17 +13,15 @@ class SelectCompany extends Component
     public function render()
     {
         return view('livewire.builder.select-company', [
-            'companies' => $this->getCompanies($this->selected, initial: true),
+            'companies' => $this->getCompanies($this->selected),
         ]);
     }
 
-    public function getCompanies(array $_selectedCompanies = [], bool $initial = false)
+    public function getCompanies(array $_selectedCompanies = [])
     {
-        if (!$initial) {
-            $this->skipRender();
-        }
-
         $term = "%$this->search%";
+
+        $_selectedCompanies = array_map(fn ($company) => strtoupper($company), $_selectedCompanies);
 
         $selectedCompanies = Company::query()
             ->whereIn('ticker', $_selectedCompanies)
@@ -36,7 +34,7 @@ class SelectCompany extends Component
                 ->when(
                     $this->search,
                     fn ($q) =>  $q->where('name', 'ilike', $term)
-                        ->orWhere('ticker', 'ilike', $term)
+                        ->orWhere('ticker', 'ilike', strtoupper($term))
                 )
                 ->whereNotIn('ticker', $_selectedCompanies)
                 ->limit(6)

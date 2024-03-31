@@ -1,6 +1,14 @@
 <div x-data="{
     isReset: false,
+    count: 0,
     reset() {
+        if (this.count === Object.keys(data).length) {
+            this.isReset = false;
+            this.count = 0;
+        }
+
+        this.count++;
+
         if (this.isReset) {
             return;
         }
@@ -8,7 +16,7 @@
         this.isReset = true;
         usedColors = {}
     }
-}">
+}" class="space-y-3">
     <template x-for="(metrics, company) in data" :key="company">
         <div x-data="{
             chart: null,
