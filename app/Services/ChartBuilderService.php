@@ -238,7 +238,13 @@ class ChartBuilderService
                         $data[$period][$item->ticker][$key] = self::normalizeValue($value, $period);
                     }
                 }
+
+                // sort metrics by order
+                uksort($data[$period][$item->ticker], fn ($a, $b) => array_search($a, $metrics) - array_search($b, $metrics));
             }
+
+            // sort companies by order
+            uksort($data[$period], fn ($a, $b) => array_search($a, $companies) - array_search($b, $companies));
         }
 
         $dates = self::extractDates($data);

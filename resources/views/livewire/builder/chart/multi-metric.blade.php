@@ -27,7 +27,7 @@
                 const isStacked = metricAttributes[metric]?.type === 'stacked-bar';
     
                 datasets.push({
-                    label: company + ' ' + this.metricsMap[metric].title,
+                    label,
                     data: this.selectedDates.map((date) => {
                         return {
                             x: date,
@@ -56,7 +56,7 @@
                     chartJsPlugins.htmlLegend,
                 ],
                 options: {
-                    maintainAspectRatio: true,
+                    maintainAspectRatio: false,
                     responsive: true,
                     layout: {
                         padding: {

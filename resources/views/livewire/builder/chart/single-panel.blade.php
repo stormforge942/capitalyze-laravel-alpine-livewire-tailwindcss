@@ -121,7 +121,7 @@
                 chartJsPlugins.htmlLegend,
             ],
             options: {
-                maintainAspectRatio: true,
+                maintainAspectRatio: false,
                 responsive: true,
                 layout: {
                     padding: {
