@@ -181,7 +181,7 @@
                     panel: $wire.entangle('panel', true),
                     showLabel: $wire.entangle('showLabel', true),
                     chartColors: @js(config('capitalyze.chartColors')),
-                    usedColors: [],
+                    usedColors: {},
                     tabs: {
                         'single-panel': 'Single Panel',
                         'multi-security': 'Multi Security',
@@ -193,27 +193,29 @@
                         })
                 
                         this.$watch('panel', (panel) => {
-                            this.usedColors = []
-                
                             window.http(`/chart-builder/${@this.tab.id}/update`, {
                                 method: 'POST',
                                 body: { panel }
                             })
                         })
                     },
-                    getColor(color) {
-                        let idx = this.usedColors.length
+                    getColor(key, label) {
+                        let _usedColors = Object.values(this.usedColors)
+                        let idx = _usedColors.length
+                
+                        let color = metricsColor[key]?.[label] || null;
                 
                         do {
                             color = this.chartColors[idx]
-
+                
                             if (!color || idx >= this.chartColors.length) {
                                 color = window.randomColor()
                                 break;
                             }
-                                
-                            if (!this.usedColors.includes(color)) {
-                                this.usedColors.push(color)
+                
+                            if (!_usedColors.includes(color)) {
+                                this.usedColors[label] = color
+                                metricsColor[key][label] = color
                                 break;
                             }
                 
@@ -222,18 +224,17 @@
                 
                         return color;
                     }
-                }"
-                    @update-chart.window="usedColors = []">
+                }">
                     <div class="flex items-center justify-between">
                         <div
                             class="flex items-center w-full max-w-[400px] gap-x-1 border border-[#D4DDD7] rounded bg-gray-light font-medium">
                             <template x-for="(tab, key) in tabs">
                                 <button class="py-2 rounded flex-1 transition"
                                     :class="panel === key ? 'bg-[#DCF6EC] border border-[#52D3A2] -m-[1px]' : ''"
-                                    @click="panel = key" x-text="tab"></button>
+                                    @click="usedColors = {}; panel = key" x-text="tab"></button>
                             </template>
                         </div>
-                        <div class="flex items-center gap-x-5 justify-between">
+                        <div class="flex items-center gap-x-5 justify-between" x-cloak>
                             <label class="relative inline-flex items-center cursor-pointer flex-shrink-0">
                                 <input type="checkbox" value="yes" class="sr-only peer" :checked="showLabel"
                                     @change="showLabel = $event.target.checked">

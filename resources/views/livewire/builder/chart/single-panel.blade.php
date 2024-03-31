@@ -13,6 +13,8 @@
             this.chart.destroy();
         }
 
+        usedColors = {};
+
         let datasets = []
         const axes = {}
 
@@ -70,9 +72,10 @@
 
                 let label = company + '-' + this.metricsMap[metric].title
 
-                metricsColor.sp[label] = getColor(metricsColor.sp[label])
+                const color = getColor('sp', label)
 
                 const type = metricAttributes[metric]?.type === 'line' ? 'line' : 'bar';
+
                 const isStacked = metricAttributes[metric]?.type === 'stacked-bar';
 
                 datasets.push({
@@ -83,8 +86,8 @@
                             y: timeline[date] || null
                         }
                     }).filter((item) => item.y != null),
-                    backgroundColor: metricsColor.sp[label],
-                    borderColor: metricsColor.sp[label],
+                    backgroundColor: color,
+                    borderColor: color,
                     type,
                     yAxisID: addAxis(this.metricsMap[metric].yAxis || 'y', metric, metricAttributes[metric]?.sAxis),
                     shouldFormat: !this.metricsMap[metric].yAxis,
@@ -112,7 +115,6 @@
             },
             plugins: [
                 window.ChartDataLabels,
-                chartJsPlugins.htmlLegend,
             ],
             options: {
                 maintainAspectRatio: false,
@@ -178,11 +180,6 @@
                         },
                         color: (ctx) => ctx.dataset.stack ? '#fff' : '#121A0F',
                     },
-                    htmlLegend: {
-                        container: document.querySelector('.chart-legends'),
-                        enableClick: false,
-                        rounded: true,
-                    }
                 },
                 scales: {
                     x: {
