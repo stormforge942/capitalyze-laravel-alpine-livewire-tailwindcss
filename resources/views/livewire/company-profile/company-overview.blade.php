@@ -214,8 +214,7 @@
         </div>
 
         <div class="overflow-auto">
-            <table class="mt-3 w-full rounded-lg overflow-clip text-right whitespace-nowrap text-base"
-                id="main-table">
+            <table class="mt-3 w-full rounded-lg overflow-clip text-right whitespace-nowrap text-base" id="main-table">
                 <thead class="font-semibold capitalize bg-[#EDEDED] text-dark">
                     <tr class="font-bold text-base">
                         <th class="pl-8 py-2 text-left">{{ $profile['registrant_name'] }}
@@ -253,7 +252,7 @@
                                     <?php $value = $product['yoy_change'][$date]; ?>
 
                                     <x-review-number-button x-data="{ amount: '{{ $value }}', date: '{{ $date }}' }">
-                                        {!! redIfNegative($value, fn($val) => round($val, 2) . '%') !!}
+                                        {!! redIfNegative($value, fn($val) => number_format($val, 1) . '%') !!}
                                     </x-review-number-button>
                                 </td>
                             @endforeach
@@ -282,7 +281,7 @@
                                 <?php $value = $table['total_revenue']['yoy_change'][$date]; ?>
 
                                 <x-review-number-button x-data="{ amount: '{{ $value }}', date: '{{ $date }}' }">
-                                    {!! redIfNegative($value, fn($val) => round($val, 2) . '%') !!}
+                                    {!! redIfNegative($value, fn($val) => number_format($val, 1) . '%') !!}
                                 </x-review-number-button>
                             </td>
                         @endforeach
@@ -315,7 +314,7 @@
                                 <?php $value = $table['ebitda']['yoy_change'][$date]; ?>
 
                                 <x-review-number-button x-data="{ amount: '{{ $value }}', date: '{{ $date }}' }">
-                                    {!! redIfNegative($value, fn($val) => round($val, 2) . '%') !!}
+                                    {!! redIfNegative($value, fn($val) => number_format($val, 1) . '%') !!}
                                 </x-review-number-button>
                             </td>
                         @endforeach
@@ -329,7 +328,7 @@
                                 <?php $value = $table['ebitda']['margin'][$date] ?? 0; ?>
 
                                 <x-review-number-button x-data="{ amount: '{{ $value }}', date: '{{ $date }}' }">
-                                    {!! redIfNegative($value, fn($val) => round($val) . '%') !!}
+                                    {!! redIfNegative($value, fn($val) => number_format($val) . '%') !!}
                                 </x-review-number-button>
                             </td>
                         @endforeach
@@ -363,7 +362,7 @@
                                 <?php $value = $table['adj_net_income']['yoy_change'][$date] ?? 0; ?>
 
                                 <x-review-number-button x-data="{ amount: '{{ $value }}', date: '{{ $date }}' }">
-                                    {!! redIfNegative($value, fn($val) => round($val, 2) . '%') !!}
+                                    {!! redIfNegative($value, fn($val) => number_format($val, 1) . '%') !!}
                                 </x-review-number-button>
 
                             </td>
@@ -378,14 +377,14 @@
                                 <?php $value = $table['adj_net_income']['margin'][$date] ?? 0; ?>
 
                                 <x-review-number-button x-data="{ amount: '{{ $value }}', date: '{{ $date }}' }">
-                                    {!! redIfNegative($value, fn($val) => round($val, 2) . '%') !!}
+                                    {!! redIfNegative($value, fn($val) => number_format($val, 1) . '%') !!}
                                 </x-review-number-button>
                             </td>
                         @endforeach
                     </tr>
-                    <tr>
+                    <tr class="font-bold">
                         <td class="pl-8 py-1 text-left">
-                            <span class="pl-4">Diluted Shares Out</span>
+                            <span>Diluted Shares Out</span>
                         </td>
                         @foreach ($table['dates'] as $date)
                             <td class="pl-6 py-1 last:pr-8">
@@ -406,7 +405,7 @@
                                 <?php $value = $table['diluted_shares_out']['yoy_change'][$date] ?? 0; ?>
 
                                 <x-review-number-button x-data="{ amount: '{{ $value }}', date: '{{ $date }}' }">
-                                    {!! redIfNegative($value, fn($val) => round($val, 2) . '%') !!}
+                                    {!! redIfNegative($value, fn($val) => number_format($val, 1) . '%') !!}
                                 </x-review-number-button>
                             </td>
                         @endforeach
@@ -440,9 +439,9 @@
                         @foreach ($table['dates'] as $date)
                             <td class="pl-6 last:pr-8 pt-2 whitespace-nowrap text-dark text-right">
                                 <?php $value = $table['adj_diluted_eps']['timeline'][$date]; ?>
-    
+
                                 <x-review-number-button x-data="{ amount: '{{ $value }}', date: '{{ $date }}' }">
-                                    {!! redIfNegative($value, fn($val) => number_format($val, 2)) !!}
+                                    {!! redIfNegative($value, fn($val) => number_format($val, 1)) !!}
                                 </x-review-number-button>
                                 </th>
                         @endforeach
@@ -454,9 +453,9 @@
                         @foreach ($table['dates'] as $date)
                             <td class="pl-6 py-2 last:pr-8 text-right">
                                 <?php $value = $table['adj_diluted_eps']['yoy_change'][$date]; ?>
-    
+
                                 <x-review-number-button x-data="{ amount: '{{ $value }}', date: '{{ $date }}' }">
-                                    {!! redIfNegative($value, fn($val) => round($val, 2)) !!}%
+                                    {!! redIfNegative($value, fn($val) => number_format($val, 1)) !!}%
                                 </x-review-number-button>
                             </td>
                         @endforeach

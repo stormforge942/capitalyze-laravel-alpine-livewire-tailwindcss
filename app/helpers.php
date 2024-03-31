@@ -121,6 +121,7 @@ function redIfNegative($value, ?callable $formatter = null)
     $value = str_replace(',', '', $value);
 
     if ($value < 0) {
+        $value = abs($value);
         return '<span class="text-red">(' . $formatter($value) . ')</span>';
     }
 
@@ -191,16 +192,16 @@ function format_overview_numbers($value)
 
     $val = floatval($value);
 
-    $val = number_format($val / 1000000, 2);
-
-    // remove trailing zeros
-    $val = preg_replace('/\.?0+$/', '', $val);
-    // remove trailing dot
-    $val = rtrim($val, '.');
+    $val = number_format($val / 1000000, 1);
 
     $val = $val;
 
-    return $value < 0 ? "<span class=\"text-red\">({$val})</span>" : $val;
+    if ($val >= 0) {
+        return $val;
+    }
+
+    $val = abs($val);
+    return "<span class=\"text-red\">({$val})</span>";
 }
 
 function sticky_table_class($value): string
