@@ -13,12 +13,7 @@
             this.chart.destroy();
         }
 
-        const chartColors = @js(config('capitalyze.chartColors'))
-
-        let idx = 0
-
         let datasets = []
-
         const axes = {}
 
         function addAxis(axis, metric, isExtra = false) {
@@ -74,7 +69,8 @@
                 }
 
                 let label = company + '-' + this.metricsMap[metric].title
-                metricsColor.sp[label] = metricsColor.sp[label] || chartColors[idx] || window.randomColor()
+
+                metricsColor.sp[label] = getColor(metricsColor.sp[label])
 
                 const type = metricAttributes[metric]?.type === 'line' ? 'line' : 'bar';
                 const isStacked = metricAttributes[metric]?.type === 'stacked-bar';
@@ -94,8 +90,6 @@
                     shouldFormat: !this.metricsMap[metric].yAxis,
                     ...(isStacked ? { stack: this.metricsMap[metric].yAxis || 'y' } : {}),
                 })
-
-                idx++
             })
         })
 

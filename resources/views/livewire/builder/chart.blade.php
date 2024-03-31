@@ -129,8 +129,7 @@
                 </div>
 
                 <div>
-                    <livewire:builder.select-chart-metrics :selected="$metrics"
-                        :wire:key="Str::random(5)" />
+                    <livewire:builder.select-chart-metrics :selected="$metrics" :wire:key="Str::random(5)" />
                 </div>
             </div>
 
@@ -181,6 +180,8 @@
                 <div class="mt-6 bg-white p-6 relative rounded-lg" x-data="{
                     panel: $wire.entangle('panel', true),
                     showLabel: $wire.entangle('showLabel', true),
+                    chartColors: @js(config('capitalyze.chartColors')),
+                    usedColors: [],
                     tabs: {
                         'single-panel': 'Single Panel',
                         'multi-security': 'Multi Security',
@@ -192,13 +193,37 @@
                         })
                 
                         this.$watch('panel', (panel) => {
+                            this.usedColors = []
+                
                             window.http(`/chart-builder/${@this.tab.id}/update`, {
                                 method: 'POST',
                                 body: { panel }
                             })
                         })
+                    },
+                    getColor(color) {
+                        let idx = this.usedColors.length
+                
+                        do {
+                            color = this.chartColors[idx]
+
+                            if (!color || idx >= this.chartColors.length) {
+                                color = window.randomColor()
+                                break;
+                            }
+                                
+                            if (!this.usedColors.includes(color)) {
+                                this.usedColors.push(color)
+                                break;
+                            }
+                
+                            idx++
+                        } while (true);
+                
+                        return color;
                     }
-                }">
+                }"
+                    @update-chart.window="usedColors = []">
                     <div class="flex items-center justify-between">
                         <div
                             class="flex items-center w-full max-w-[400px] gap-x-1 border border-[#D4DDD7] rounded bg-gray-light font-medium">

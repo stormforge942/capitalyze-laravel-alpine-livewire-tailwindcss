@@ -13,12 +13,7 @@
                 this.chart.destroy();
             }
     
-            const chartColors = @js(config('capitalyze.chartColors'))
-    
-            let idx = 0;
-    
             let datasets = [];
-    
             const axes = {}
     
             function addAxis(axis, metric, isExtra = false) {
@@ -66,17 +61,17 @@
     
                 return axis
             }
-
+    
             Object.keys(metrics).forEach((key) => {
-                if(!metricAttributes[key]?.show) {
+                if (!metricAttributes[key]?.show) {
                     return;
                 }
-                
+    
                 const data = metrics[key];
                 const metric = this.metricsMap[key];
     
                 const label = company + '-' + metric.title
-                metricsColor.ms[label] = metricsColor.ms[label] || chartColors[idx] || window.randomColor()
+                metricsColor.ms[label] = getColor(metricsColor.ms[label])
     
                 const type = metricAttributes[key]?.type === 'line' ? 'line' : 'bar';
                 const isStacked = metricAttributes[key]?.type === 'stacked-bar';
@@ -90,15 +85,12 @@
                         }
                     }).filter((item) => item.y != null),
                     backgroundColor: metricsColor.ms[label],
-                    backgroundColor: metricsColor.ms[label],
                     borderColor: metricsColor.ms[label],
                     type,
                     yAxisID: addAxis(this.metricsMap[key].yAxis || 'y', key, metricAttributes[key]?.sAxis),
                     shouldFormat: !metric.yAxis,
                     ...(isStacked ? { stack: this.metricsMap[key].yAxis || 'y' } : {}),
                 })
-    
-                idx++;
             });
     
             // bring line chart to front
@@ -110,7 +102,7 @@
             });
     
             datasets = datasets.filter(d => d.data.length)
-
+    
             this.chart = new Chart(this.$refs.canvas, {
                 type: 'bar',
                 data: {

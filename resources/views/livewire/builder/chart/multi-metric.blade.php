@@ -21,7 +21,7 @@
                 }
     
                 let label = company + '-' + this.metricsMap[metric].title
-                metricsColor.mm[label] = metricsColor.mm[label] || window.randomColor()
+                metricsColor.mm[label] = getColor(metricsColor.mm[label])
     
                 const type = metricAttributes[metric]?.type === 'line' ? 'line' : 'bar';
                 const isStacked = metricAttributes[metric]?.type === 'stacked-bar';
@@ -34,7 +34,6 @@
                             y: data[company][date] || null
                         }
                     }).filter((item) => item.y != null),
-                    backgroundColor: metricsColor.mm[label],
                     backgroundColor: metricsColor.mm[label],
                     borderColor: metricsColor.mm[label],
                     type,
