@@ -112,7 +112,7 @@
         const ctx = this.$refs.canvas.getContext('2d')
 
         this.chart = new Chart(ctx, {
-            type: datasets.find(item => item.type === 'bar') ? 'bar' : 'line',
+            type: 'bar',
             data: {
                 datasets,
             },

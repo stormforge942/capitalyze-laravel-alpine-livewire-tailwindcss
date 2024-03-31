@@ -68,6 +68,10 @@
             }
 
             Object.keys(metrics).forEach((key) => {
+                if(!metricAttributes[key]?.show) {
+                    return;
+                }
+                
                 const data = metrics[key];
                 const metric = this.metricsMap[key];
     
@@ -108,7 +112,7 @@
             datasets = datasets.filter(d => d.data.length)
 
             this.chart = new Chart(this.$refs.canvas, {
-                type: datasets.find(item => item.type === 'bar') ? 'bar' : 'line',
+                type: 'bar',
                 data: {
                     datasets,
                 },

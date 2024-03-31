@@ -22,7 +22,7 @@
                 this.showChart = this.shouldShowChart()
         
                 this.$watch('filters', (filters) => {
-                    window.http(`/chart-builder/${$wire.tab.id}/update`, {
+                    window.http(`/chart-builder/${@this.tab.id}/update`, {
                         method: 'POST',
                         body: { filters }
                     })
@@ -50,7 +50,7 @@
         
                     this.$dispatch('update-chart');
         
-                    window.http(`/chart-builder/${$wire.tab.id}/update`, {
+                    window.http(`/chart-builder/${@this.tab.id}/update`, {
                         method: 'POST',
                         body: { metric_attributes }
                     })
@@ -78,7 +78,7 @@
             },
             shouldShowChart() {
                 return Object.entries(this.metricAttributes)
-                    .find(([metric, value]) => value.show && $wire.metrics.includes(metric))
+                    .find(([metric, value]) => value.show && @this.metrics.includes(metric))
             },
             get dates() {
                 return this._dates[this.filters.period]
@@ -147,6 +147,8 @@
                             <div class="flex-1">
                                 <x-range-slider :min="2002" :max="date('Y')" x-init="() => {
                                     const range = fullDateRange
+
+                                    console.log($wire)
                                 
                                     min = range[0]
                                     max = range[1]
@@ -194,7 +196,7 @@
                             })
                     
                             this.$watch('panel', (panel) => {
-                                window.http(`/chart-builder/${$wire.tab.id}/update`, {
+                                window.http(`/chart-builder/${@this.tab.id}/update`, {
                                     method: 'POST',
                                     body: { panel }
                                 })

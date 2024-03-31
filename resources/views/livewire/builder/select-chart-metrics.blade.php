@@ -188,7 +188,7 @@
         <div class="mt-6 flex flex-wrap gap-3 text-sm font-semibold" x-show="value.length" x-cloak>
             <template x-for="item in value" :key="item">
                 <span class="bg-green-light rounded-full p-2 flex items-center gap-x-2.5">
-                    <span x-text="$wire.metricsMap[item].title"></span>
+                    <span x-text="metricsMap[item].title"></span>
 
                     <button class="transition-all text-blue p-0.5 rounded-sm"
                         :class="metricAttributes[item]?.type === 'line' ? 'bg-dark text-green-dark' :

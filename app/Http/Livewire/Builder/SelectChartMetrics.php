@@ -9,12 +9,10 @@ class SelectChartMetrics extends Component
 {
     public $options = [];
     public $selected = [];
-    public $metricsMap = [];
 
     public function mount()
     {
         $this->options = ChartBuilderService::options();
-        $this->metricsMap = ChartBuilderService::options(true);
     }
 
     public function render()
