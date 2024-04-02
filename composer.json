@@ -23,7 +23,6 @@
         "open-southeners/laravel-vapor-response-compression": "^2.1",
         "openspout/openspout": "^4",
         "power-components/livewire-powergrid": "^4.9",
-        "spiral/roadrunner": "^2.8.2",
         "wire-elements/pro": "^3.0"
     },
     "require-dev": {

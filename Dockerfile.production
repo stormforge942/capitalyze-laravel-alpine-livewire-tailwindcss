@@ -17,7 +17,10 @@ RUN apt-get update && apt-get install -y \
     libzip-dev \
     netcat-openbsd \
     postgresql-client \
-    && docker-php-ext-install pdo pdo_pgsql pgsql pdo_mysql mbstring exif pcntl bcmath gd zip
+    brotli
+RUN pecl install redis swoole
+RUN docker-php-ext-install pdo pdo_pgsql pgsql pdo_mysql mbstring exif pcntl bcmath gd zip
+RUN docker-php-ext-enable redis swoole
 # Clear cache
 RUN apt-get clean && rm -rf /var/lib/apt/lists/*
 
@@ -65,7 +68,10 @@ RUN apt-get update && apt-get install -y \
     libpq-dev \
     postgresql-client \
     nginx \
-    && docker-php-ext-install pdo pdo_pgsql pgsql pdo_mysql mbstring exif pcntl bcmath gd
+    cron
+RUN pecl install redis swoole
+RUN docker-php-ext-install pdo pdo_pgsql pgsql pdo_mysql mbstring exif pcntl bcmath gd
+RUN docker-php-ext-enable redis swoole
 RUN apt-get clean && rm -rf /var/lib/apt/lists/*
 
 # Copy the built assets and vendor directory from the previous stages
@@ -82,6 +88,11 @@ COPY .env.production ./.env
 # Adding debugging commands
 RUN ls -la /var/www # List files in /var/www to verify
 RUN if [ -f /var/www/artisan ]; then echo "Artisan exists"; else echo "Artisan does NOT exist"; fi
+
+RUN touch crontab.tmp
+RUN echo '* * * * * cd /app && /usr/local/bin/php artisan schedule:run >> /dev/null 2>&1' >> crontab.tmp
+RUN crontab crontab.tmp
+RUN rm -rf crontab.tmp
 
 COPY entrypoint.production.sh /usr/local/bin/entrypoint.sh
 COPY entrypoint.production.sh /usr/local/bin/
