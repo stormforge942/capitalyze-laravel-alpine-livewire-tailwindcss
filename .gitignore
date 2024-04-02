@@ -20,6 +20,7 @@ yarn-error.log
 .env.staging
 rr
 .rr.yaml
+auth.json
 
 .clj-kondo
 .lsp

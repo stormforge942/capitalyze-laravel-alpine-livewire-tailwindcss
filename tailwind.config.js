@@ -9,6 +9,7 @@ module.exports = {
         "./vendor/laravel/jetstream/**/*.blade.php",
         "./storage/framework/views/*.php",
         "./resources/views/**/*.blade.php",
+        "./resources/views/*.blade.php",
         "./vendor/power-components/livewire-powergrid/src/Themes/Tailwind.php",
         "./app/Http/Livewire/**/*.php",
         "./vendor/wire-elements/pro/config/wire-elements-pro.php",

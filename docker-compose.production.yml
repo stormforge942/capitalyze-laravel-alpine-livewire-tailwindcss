@@ -1,0 +1,38 @@
+version: '3'
+
+services:
+  app:
+    build:
+      context: .
+      dockerfile: Dockerfile.production
+    image: capitalyze:latest
+    container_name: capitalyze-app
+    platform: "linux/amd64"
+    # restart: unless-stopped
+    tty: true
+    environment:
+      SERVICE_NAME: app
+      SERVICE_TAGS: dev
+    working_dir: /var/www
+    volumes:
+      - ./:/var/www
+    networks:
+      - app-network
+
+  # webserver:
+  #   image: nginx:alpine
+  #   container_name: nginx-webserver
+  #   # restart: unless-stopped
+  #   tty: true
+  #   ports:
+  #     - "8000:80"
+  #   volumes:
+  #     - ./:/var/www
+  #     - ./docker/nginx/conf.d/:/etc/nginx/conf.d/
+
+  #   networks:
+  #     - app-network
+
+networks:
+  app-network:
+    driver: bridge
