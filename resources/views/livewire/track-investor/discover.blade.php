@@ -3,21 +3,7 @@
         <h2 class="text-xl font-semibold">Discover Funds</h2>
     </div>
 
-    <div class="mt-6 grid gap-2 grid-cols-12 items-center">
-        <div class="col-span-4">
-            <x-search-filter wire:model.debounce.800ms="search" />
-        </div>
-
-        <div class="col-span-8">
-            <x-filter-box>
-                <x-select-number-range label="Market Value" longLabel="Market Value (in millions)"></x-select-number-range>
-
-                <x-select-number-range label="Turnover" longLabel="Turnover (in millions)"></x-select-number-range>
-                
-                <x-select-number-range label="Number of Holdings"></x-select-number-range>
-            </x-filter-box>
-        </div>
-    </div>
+    @include('livewire.track-investor.filters')
 
     <div class="mt-6">
         <div wire:loading.block wire:target="search, runSearch">

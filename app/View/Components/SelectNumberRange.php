@@ -14,6 +14,9 @@ class SelectNumberRange extends Component
     public function __construct(
         public string $label,
         public ?string $longLabel = null,
+        public string $unit = 'K',
+        public string $prefix = '',
+        public bool $allowNegative = false,
     ) {
         //
     }

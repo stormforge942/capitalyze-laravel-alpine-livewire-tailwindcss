@@ -10,13 +10,15 @@
             return '{{ $label }}'
         }
 
-        return `$${this.value.min}K - $${this.value.max}K`
+        return `{{ $prefix }}${this.value[0]}{{ $unit }} - {{ $prefix }}${this.value[1]}{{ $unit }}`
     },
     init() {
-        $watch('showDropdown', value => {
+        $watch('showDropdown', () => {
+            const value = this.value ? this.value : [0, 0];
+
             this.tmpValue = {
-                min: this.value?.min || 0,
-                max: this.value?.max || 0,
+                min: value[0],
+                max: value[1],
             }
         })
     },
@@ -24,21 +26,12 @@
         this.tmpValue.min = Number(this.tmpValue.min);
         this.tmpValue.max = Number(this.tmpValue.max);
 
-        if (this.tmpValue.min <= 0 && this.tmpValue.max <= 0) {
-            this.value = null;
-            this.showDropdown = false;
-            return;
-        }
-
-        this.tmpValue.min = this.tmpValue.min < 0 ? 0 : this.tmpValue.min;
-        this.tmpValue.max = this.tmpValue.max < 0 ? 0 : this.tmpValue.max;
-
         this.tmpValue.max = this.tmpValue.max < this.tmpValue.min ? this.tmpValue.min : this.tmpValue.max;
+        this.value = this.tmpValue.min == 0 && this.tmpValue.max == 0 ? null : [this.tmpValue.min, this.tmpValue.max];
 
-        this.value = this.tmpValue;
         this.showDropdown = false;
     },
-}" x-modelable="value" class="inline-block">
+}" x-modelable="value" {{ $attributes->merge(['class' => 'inline-block']) }}>
     <x-dropdown x-model="showDropdown" placement="bottom-start">
         <x-slot name="trigger">
             <div class="border-[0.5px] border-[#93959880] p-2 rounded-full flex items-center gap-x-1"
@@ -74,15 +67,16 @@
 
                 <div class="py-4">
                     <div class="flex items-center justify-between">
-                        <input class="flex-1 w-16 rounded-sm border-2 border-gray-medium2" type="number" min="0"
-                            step="1" x-model="tmpValue.min" :max="tmpValue.max">
+                        <input class="flex-1 w-16 rounded-sm border-2 border-gray-medium2" type="number"
+                            {{ $allowNegative ? '' : 'min=0' }} step="1" x-model="tmpValue.min"
+                            :max="tmpValue.max">
                         <span class="px-5">-</span>
-                        <input class="flex-1 w-16 rounded-sm border-2 border-gray-medium2" type="number" min="0"
-                            step="1" x-model="tmpValue.max" :min="tmpValue.min">
+                        <input class="flex-1 w-16 rounded-sm border-2 border-gray-medium2" type="number" step="1"
+                            x-model="tmpValue.max" :min="tmpValue.min">
                     </div>
 
                     <button type="button" class="text-sm mt-1 hover:underline text-red"
-                        @click="tmpValue.min = 0; tmpValue.max = 0;" x-show="(tmpValue.min + tmpValue.max) > 0"
+                        @click="tmpValue.min = 0; tmpValue.max = 0;" x-show="tmpValue.min != 0 && tmpValue.max != 0"
                         x-cloak>Clear</button>
                 </div>
             </div>
