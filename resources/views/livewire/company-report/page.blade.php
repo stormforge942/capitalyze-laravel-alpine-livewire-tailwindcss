@@ -59,13 +59,9 @@
                                         [0.2, window.hex2rgb(row.color, 0.2)],
                                         [1, window.hex2rgb(row.color, 0)],
                                     ]) : row.color,
-                                    pointRadius: 1,
-                                    pointHoverRadius: 8,
                                     tension: 0.5,
                                     fill: true,
-                                    pointHoverBorderColor: '#fff',
-                                    pointHoverBorderWidth: 4,
-                                    pointHoverBackgroundColor: row.color,
+                                    pointBackgroundColor: row.color,
                                     maxBarThickness: 150,
                                     isPercent: row.isPercent,
                                 }
@@ -447,7 +443,7 @@
                                         </label>
                                     </div>
 
-                                    <div class="mt-10 h-[300px] sm:h-[345px]">
+                                    <div class="mt-4 h-[300px] sm:h-[345px]">
                                         <canvas id="chart-company-report"></canvas>
                                     </div>
                                     <div class="mt-8 flex flex-wrap justify-start items-end gap-3">
@@ -599,6 +595,11 @@
                 type: 'line',
                 data,
                 options: {
+                    layout: {
+                        padding: {
+                            top: 25,
+                        }
+                    },
                     maintainAspectRatio: false,
                     responsive: true,
                     interaction: {
