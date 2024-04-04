@@ -28,12 +28,6 @@ class Discover extends Component
         $this->perPage += 20;
     }
 
-    public function updatedSearch($search)
-    {
-        $this->search = $search;
-        $this->reset('perPage');
-    }
-
     public function render()
     {
         $filters = $this->formattedFilters();

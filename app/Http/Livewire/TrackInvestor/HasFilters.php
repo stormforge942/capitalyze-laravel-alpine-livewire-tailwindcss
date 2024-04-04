@@ -5,11 +5,22 @@ namespace App\Http\Livewire\TrackInvestor;
 trait HasFilters
 {
     public $perPage = 20;
-
     public $search = null;
     public $marketValue = null;
     public $turnover = null;
     public $holdings = null;
+
+    public function loadMore()
+    {
+        $this->perPage += 20;
+    }
+
+    public function updated($prop)
+    {
+        if (in_array($prop, ['search', 'marketValue', 'turnover', 'holdings'])) {
+            $this->reset('perPage');
+        }
+    }
 
     private function formattedFilters()
     {

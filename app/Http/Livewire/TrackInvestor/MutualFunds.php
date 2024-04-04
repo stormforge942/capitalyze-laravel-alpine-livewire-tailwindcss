@@ -11,15 +11,7 @@ use Illuminate\Support\Facades\Cache;
 
 class MutualFunds extends Component
 {
-    use AsTab;
-
-    protected $listeners = [
-        'update' => '$refresh',
-        'search:mutual-funds' => 'updatedSearch',
-    ];
-
-    public $perPage = 20;
-    public $search = "";
+    use AsTab, HasFilters;
 
     public static function title(): string
     {
@@ -31,53 +23,58 @@ class MutualFunds extends Component
         return 'mutual-funds';
     }
 
-    public function loadMore()
-    {
-        $this->perPage += 20;
-    }
-
-    public function updatedSearch($search)
-    {
-        $this->search = $search;
-        $this->reset('perPage');
-    }
-
     public function render()
     {
-        $cacheKey = 'mutual_funds_' . md5($this->search . '_perPage_' . $this->perPage);
-    
-        $cacheDuration = 3600;
+        $filters = $this->formattedFilters();
 
-        $funds = Cache::remember($cacheKey, $cacheDuration, function () {
-            return DB::connection('pgsql-xbrl')
-                ->table('mutual_fund_holdings_summary')
-                ->select('registrant_name', 'fund_symbol', 'cik', 'series_id', 'class_id', 'class_name', 'total_value', 'portfolio_size', 'change_in_total_value', 'date')
-                ->where('is_latest', true)
-                ->when($this->search, function ($query) {
-                    return $query->where(DB::raw('registrant_name'), 'ilike', "%{$this->search}%")
-                                 ->orWhere(DB::raw('fund_symbol'), 'ilike', "%{$this->search}%");
-                })
-                ->orderBy('total_value', 'desc')
-                ->paginate($this->perPage);
-        });
-    
+        $cacheKey = $filters['areApplied'] ? null : 'mutual_funds_' . md5($this->search . '_perPage_' . $this->perPage);
+
+        $funds = $cacheKey
+            ? Cache::remember($cacheKey, 3600, fn () => $this->getFunds($filters))
+            : $this->getFunds($filters);
+
         $favorites = TrackInvestorFavorite::where('user_id', Auth::id())
-                                           ->where('type', TrackInvestorFavorite::TYPE_MUTUAL_FUND)
-                                           ->pluck('identifier')
-                                           ->toArray();
-    
+            ->where('type', TrackInvestorFavorite::TYPE_MUTUAL_FUND)
+            ->pluck('identifier')
+            ->toArray();
+
         $transformedFunds = $funds->getCollection()->map(function ($fund) use ($favorites) {
             $fundArray = (array)$fund;
             $fundArray['isFavorite'] = in_array($fundArray['cik'], $favorites);
             return $fundArray;
         });
-    
+
         $funds->setCollection(collect($transformedFunds));
-    
+
         return view('livewire.track-investor.mutual-funds', [
             'funds' => $funds,
         ]);
     }
-    
-    
+
+    private function getFunds($filters)
+    {
+        return DB::connection('pgsql-xbrl')
+            ->table('mutual_fund_holdings_summary')
+            ->select('registrant_name', 'fund_symbol', 'cik', 'series_id', 'class_id', 'class_name', 'total_value', 'portfolio_size', 'change_in_total_value', 'date')
+            ->where('is_latest', true)
+            ->when(
+                $filters['search'],
+                fn ($query) => $query->where(DB::raw('registrant_name'), 'ilike', "%{$filters['search']}%")
+                    ->orWhere(DB::raw('fund_symbol'), 'ilike', "%{$filters['search']}%")
+            )
+            ->when(
+                $filters['marketValue'],
+                fn ($q) => $q->whereBetween('total_value', $filters['marketValue'])
+            )
+            ->when(
+                $filters['turnover'],
+                fn ($q) => $q->whereBetween('change_in_total_value', $filters['turnover'])
+            )
+            ->when(
+                $filters['holdings'],
+                fn ($q) => $q->whereBetween('portfolio_size', $filters['holdings'])
+            )
+            ->orderBy('total_value', 'desc')
+            ->paginate($this->perPage);
+    }
 }

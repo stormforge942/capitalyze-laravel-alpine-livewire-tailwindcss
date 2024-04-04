@@ -1,7 +1,5 @@
 <div>
-    <div class="hidden lg:flex items-baseline justify-between">
-        <h2 class="text-xl font-semibold">Discover Funds</h2>
-    </div>
+    <h2 class="text-xl font-semibold">Discover Funds</h2>
 
     @include('livewire.track-investor.filters')
 
@@ -20,8 +18,7 @@
                     @endif
                 </div>
             @else
-                <div
-                    class="grid gap-4 grid-cols-1 md:grid-cols-2 lg:grid-cols-[repeat(auto-fill,minmax(17.19rem,1fr))]">
+                <div class="grid gap-4 grid-cols-1 md:grid-cols-2 lg:grid-cols-[repeat(auto-fill,minmax(17.19rem,1fr))]">
                     @foreach ($funds as $fund)
                         <livewire:track-investor.fund-card :fund="$fund" :wire:key="Str::random(5)" />
                     @endforeach

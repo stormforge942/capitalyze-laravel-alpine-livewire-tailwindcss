@@ -1,13 +1,7 @@
 <div>
-    <div class="hidden lg:flex items-baseline justify-between">
-        <h2 class="text-xl font-semibold">Discover Mutual Funds</h2>
+    <h2 class="text-xl font-semibold">Discover Mutual Funds</h2>
 
-        @include('livewire.track-investor.search')
-    </div>
-
-    <x-tab-slot id="track-ownership-tabs" tab="mutual-funds">
-        @include('livewire.track-investor.search', ['useAlpine' => true, 'event' => 'search:mutual-funds'])
-    </x-tab-slot>
+    @include('livewire.track-investor.filters')
 
     <div class="mt-6">
         <div wire:loading.block wire:target="search, runSearch">
