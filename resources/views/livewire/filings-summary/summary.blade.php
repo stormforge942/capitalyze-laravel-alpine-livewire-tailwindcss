@@ -45,22 +45,22 @@
                     <h4 x-text="item.name" class="mx-3 text-[#3561E7] font-[600] text-[0.8125rem]" />
                 </div>
                 <div class="hidden xl:flex justify-start items-center content-center">
-                    <div class="mx-1">
-                        <input x-model="sortByDateTitle[item.value]" :name="sortByDateTitle[item.value]"
+                    <label class="mx-1">
+                        <input x-model="sortByDateTitle[item.value]" :name="key + item.value"
                             value="filing_date"
                             class="mr-1 focus:ring-0 text-[#121A0F] focus:border-transparent text-sm mx-1 mt-[-0.125rem]"
                             type="radio">
-                        <label class="text-sm mt-1">Sort by date</label>
                         </input>
-                    </div>
-                    <div class="mr-1">
-                        <input x-model="sortByDateTitle[item.value]" :name="sortByDateTitle[item.value]"
+                        <span class="text-sm mt-1">Sort by date</span>
+                    </label>
+                    <label class="mr-1">
+                        <input x-model="sortByDateTitle[item.value]" :name="key + item.value"
                             value="form_type"
                             class="mr-1 focus:ring-0 text-[#121A0F] focus:border-transparent text-sm mx-1 mt-[-0.125rem]"
                             type="radio">
-                        <label class="text-sm mt-1">Sort by title</label>
                         </input>
-                    </div>
+                        <span class="text-sm mt-1">Sort by title</span>
+                    </label>
                     <div class="flex justify-start items-center content-center">
                         <div class="m-0 p-0">
                             <img class="mt-1 mr-0" src="{{ asset('/svg/search.svg') }}" />
