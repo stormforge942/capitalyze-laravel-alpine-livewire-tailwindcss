@@ -340,7 +340,7 @@
                 <tbody class="bg-white">
                     <tr class="font-bold">
                         <td class="bg-white rounded-tl-lg pl-8 pt-2 pb-1 text-left">
-                            Adj. Net Income
+                            Net Income
                         </td>
                         @foreach ($table['dates'] as $date)
                             <td class="last:rounded-tr-lg pl-6 pt-2 pb-1 last:pr-8">
@@ -435,7 +435,7 @@
                 <table class="w-full rounded-lg overflow-hidden text-left whitespace-nowrap text-base font-bold"
                     style="background: rgba(82, 198, 255, 0.10)">
                     <tr>
-                        <td class="pl-6 pt-2 whitespace-nowrap text-dark">Adj. Diluted EPS</td>
+                        <td class="pl-6 pt-2 whitespace-nowrap text-dark">Diluted EPS</td>
                         @foreach ($table['dates'] as $date)
                             <td class="pl-6 last:pr-8 pt-2 whitespace-nowrap text-dark text-right">
                                 <?php $value = $table['adj_diluted_eps']['timeline'][$date]; ?>
