@@ -7,6 +7,7 @@ use Livewire\Component;
 use App\Models\CompanyFilings;
 use Illuminate\Support\Carbon;
 use Illuminate\Support\Facades\Cache;
+use Illuminate\Support\Facades\DB;
 
 class Shareholders extends Component
 {
@@ -46,53 +47,21 @@ class Shareholders extends Component
 
     private function quarters(): array
     {
-        $quarters = [];
+        $cacheKey = 'shareholders_date_range' . $this->ticker;
 
-        $cacheKey = 'oldest_filing_date_' . $this->ticker;
-
-        $cacheDuration = 3600;
-
-        $oldestFiling = Cache::remember($cacheKey, $cacheDuration, function () {
-            $filingDate = CompanyFilings::query()
+        $dateRange = Cache::remember($cacheKey, 3600, function () {
+            $dates = CompanyFilings::query()
                 ->where('symbol', $this->ticker)
-                ->min('report_calendar_or_quarter');
-                return $filingDate ?? '1900-01-01';
+                ->select([DB::raw('min(report_calendar_or_quarter) as start'), DB::raw('max(report_calendar_or_quarter) as end')])
+                ->first()
+                ->toArray();
+
+            $start = Carbon::parse($dates['start'] ?: now()->toDateString());
+            $end = Carbon::parse($dates['end'] ?: now()->toDateString());
+
+            return [$start, $end];
         });
 
-        $startYear = Carbon::parse($oldestFiling)->year;
-        $startQuarter = Carbon::parse($oldestFiling)->quarter;
-        $currentYear = now()->year;
-        $currentQuarter = now()->quarter;
-        $currentDay = now()->day;
-        $quarterEndDates = [
-            1 => '-03-31',
-            2 => '-06-30',
-            3 => '-09-30',
-            4 => '-12-31',
-        ];
-        $quarterEndDays = [
-            1 => 31,
-            2 => 30,
-            3 => 30,
-            4 => 31,
-        ];
-
-        for ($year = $startYear; $year <= $currentYear; $year++) {
-            $startQuarter = ($year == $startYear) ? $startQuarter : 1;
-            for ($quarter = $startQuarter; $quarter <= 4; $quarter++) {
-                if ($year == $currentYear && $quarter > $currentQuarter) {
-                    break;
-                }
-                // Don't include the current quarter if it's not over yet
-                if ($year == $currentYear && $quarter == $currentQuarter && $currentDay < $quarterEndDays[$quarter]) {
-                    continue;
-                }
-                $quarterEnd = $year . $quarterEndDates[$quarter];
-                $quarterText = 'Q' . $quarter . ' ' . $year . ' 13F Filings';
-                $quarters[$quarterEnd] = $quarterText;
-            }
-        }
-
-        return array_reverse($quarters, true);
+        return generate_quarter_options($dateRange[0], $dateRange[1], ' 13F Filings');
     }
 }

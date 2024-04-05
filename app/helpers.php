@@ -2,6 +2,7 @@
 
 use Illuminate\Support\Arr;
 use Illuminate\Support\Str;
+use Illuminate\Support\Carbon;
 
 function getLowPriceFromDashRange($lowHighString, $default = '-'): string
 {
@@ -218,4 +219,45 @@ function sticky_table_class($value): string
 function user_decimal_places($default = 1)
 {
     return data_get(auth()->user(), 'settings.decimalPlaces', $default);
+}
+
+function generate_quarter_options(Carbon $start, Carbon $end, string $suffix = '')
+{
+    $quarters = [];
+
+    $startYear = $start->year;
+    $startQuarter = $start->quarter;
+    $currentYear = $end->year;
+    $currentQuarter = $end->quarter;
+    $currentDay = $end->day;
+    $quarterEndDates = [
+        1 => '-03-31',
+        2 => '-06-30',
+        3 => '-09-30',
+        4 => '-12-31',
+    ];
+    $quarterEndDays = [
+        1 => 31,
+        2 => 30,
+        3 => 30,
+        4 => 31,
+    ];
+
+    for ($year = $startYear; $year <= $currentYear; $year++) {
+        $startQuarter = ($year == $startYear) ? $startQuarter : 1;
+        for ($quarter = $startQuarter; $quarter <= 4; $quarter++) {
+            if ($year == $currentYear && $quarter > $currentQuarter) {
+                break;
+            }
+            // Don't include the current quarter if it's not over yet
+            if ($year == $currentYear && $quarter == $currentQuarter && $currentDay < $quarterEndDays[$quarter]) {
+                continue;
+            }
+            $quarterEnd = $year . $quarterEndDates[$quarter];
+            $quarterText = 'Q' . $quarter . ' ' . $year . ($suffix ? ' ' . $suffix : '');
+            $quarters[$quarterEnd] = $quarterText;
+        }
+    }
+
+    return array_reverse($quarters, true);
 }

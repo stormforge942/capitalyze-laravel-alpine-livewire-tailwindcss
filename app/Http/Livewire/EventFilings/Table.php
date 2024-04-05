@@ -7,8 +7,6 @@ use Illuminate\Support\Facades\DB;
 use PowerComponents\LivewirePowerGrid\Column;
 use PowerComponents\LivewirePowerGrid\PowerGrid;
 use PowerComponents\LivewirePowerGrid\PowerGridColumns;
-use Illuminate\Support\Facades\Cache;
-
 
 class Table extends BaseTable
 {
@@ -39,7 +37,7 @@ class Table extends BaseTable
             ->when(isset($this->config['in']), function ($query) {
                 $in = [];
 
-                foreach($this->config['in'] as $item) {
+                foreach ($this->config['in'] as $item) {
                     $in[] = $item;
                     $in[] = $item . '/A';
                 }
@@ -53,7 +51,7 @@ class Table extends BaseTable
     {
         return [
             Column::make('Company Name', 'company', 'registrant_name')->sortable(),
-            Column::make('Filing Type', 'form_type')->sortable(),
+            Column::make('Filing Type', 'formatted_form_type', 'form_type')->sortable(),
             Column::make('Description', 'description'),
             Column::make('Filing Date', 'filing_date')->sortable(),
         ];
@@ -68,6 +66,9 @@ class Table extends BaseTable
                 return "<a class=\"text-blue hover:underline\" href=\"{$url}\">{$row->registrant_name}</a>";
             })
             ->addColumn('form_type')
+            ->addColumn('formatted_form_type', function ($row) {
+                return '<button class="inline-block px-2 py-1 bg-[#DCF6EC] rounded" @click="Livewire.emit(`slide-over.open`, `s3-link-content`, { sourceLink: `' . $row->s3_link . '` })">' . $row->form_type . '</button>';
+            })
             ->addColumn('description')
             ->addColumn('filing_date');
     }
