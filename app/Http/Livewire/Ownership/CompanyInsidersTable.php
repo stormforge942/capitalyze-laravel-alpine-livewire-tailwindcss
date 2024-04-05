@@ -2,9 +2,9 @@
 
 namespace App\Http\Livewire\Ownership;
 
-use App\Http\Livewire\AsTab;
 use App\Powergrid\BaseTable;
 use App\Models\CompanyInsider;
+use Illuminate\Support\Facades\DB;
 use PowerComponents\LivewirePowerGrid\Column;
 use PowerComponents\LivewirePowerGrid\PowerGrid;
 use Illuminate\Contracts\Database\Eloquent\Builder;
@@ -12,23 +12,65 @@ use PowerComponents\LivewirePowerGrid\PowerGridEloquent;
 
 class CompanyInsidersTable extends BaseTable
 {
-    use AsTab;
-
     public string $ticker;
-    public string $sortField = 'acceptance_time';
+    public string $sortField = 'transaction_date';
     public string $sortDirection = 'desc';
+    public array $filters = [];
 
-    public static function title(): string
+    protected function getListeners(): array
     {
-        return 'Company Insiders';
+        return array_merge(parent::getListeners(), [
+            'filterInsiderTransactionsTable' => 'updateFilters',
+        ]);
+    }
+
+    public function updateFilters(array $filters)
+    {
+        $this->filters = $filters;
+        $this->resetPage();
     }
 
     public function datasource(): ?Builder
     {
-        $query = CompanyInsider::query()
-            ->where('symbol', '=', $this->ticker);
+        return CompanyInsider::query()
+            ->where('symbol', '=', $this->ticker)
+            ->when(data_get($this->filters, 'search'), function ($query) {
+                $term = '%' . $this->filters['search'] . '%';
 
-        return $query;
+                return $query->where('reporting_person', 'ilike', $term);
+            })
+            ->when(data_get($this->filters, 'transaction_codes'), function ($query) {
+                return $query->whereIn('transaction_code', $this->filters['transaction_codes']);
+            })
+            ->when(data_get($this->filters, 'relationships'), function ($query) {
+                return $query->whereIn('relationship_of_reporting_person', $this->filters['relationships']);
+            })
+            ->when(data_get($this->filters, 'cso'), function ($query) {
+                return $query->where('ownership_percentage', '<=', intval($this->filters['cso']));
+            })
+            ->when(data_get($this->filters, 'transaction_value'), function ($query) {
+                $min = intval(data_get($this->filters, 'transaction_value.min')) * 1000;
+                $max = intval(data_get($this->filters, 'transaction_value.max')) * 1000;
+
+                return $query->whereBetween(DB::raw('amount_of_securities * price_per_security'), [$min, $max]);
+            })
+            ->when(data_get($this->filters, 'months'), function ($query) {
+                $from = now()->subMonths($this->filters['months'])->startOfMonth()->toDateString();
+
+                return $query->where('transaction_date', '>=', $from);
+            })
+            ->select([
+                'reporting_person',
+                'relationship_of_reporting_person',
+                'transaction_code',
+                'amount_of_securities',
+                'price_per_security',
+                'ownership_percentage',
+                'market_cap',
+                'transaction_date',
+                'securities_owned_following_transaction',
+                DB::raw('amount_of_securities * price_per_security as value'),
+            ]);
     }
 
     public function columns(): array

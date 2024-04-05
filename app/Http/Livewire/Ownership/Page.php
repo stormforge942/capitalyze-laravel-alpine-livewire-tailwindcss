@@ -14,15 +14,17 @@ class Page extends Component
     public Company $company;
     public $formTypes;
 
-    public array $tabs = [
-        Shareholders::class,
-        MutualFunds::class,
-        CompanyInsiders::class,
-    ];
+    public array $tabs;
 
     public function mount(Company $company)
     {
         $this->company = $company;
+
+        $this->tabs =  [
+            Shareholders::class,
+            MutualFunds::class,
+            [CompanyInsiders::class, $company->ticker . ' Insider Transactions'],
+        ];
 
         OwnershipHistoryService::push([
             'name' => $this->company->name,
@@ -38,7 +40,6 @@ class Page extends Component
 
     public function insiderFormTypes()
     {
-
         $cacheKey = 'insider_form_types_' . $this->company->ticker;
 
         $cacheDuration = 3600;
@@ -50,7 +51,7 @@ class Page extends Component
                 ->pluck('form_type')
                 ->toArray();
         });
-    
+
         return $formTypes;
     }
 

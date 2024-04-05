@@ -41,6 +41,9 @@ class Table extends BaseTable
                         ->orWhere('reporting_person', 'ilike', $term)
                 );
             })
+            ->when(data_get($this->filters, 'cso'), function ($query) {
+                return $query->where('ownership_percentage', '<=', intval($this->filters['cso']));
+            })
             ->when(data_get($this->filters, 'transaction_codes'), function ($query) {
                 return $query->whereIn('transaction_code', $this->filters['transaction_codes']);
             })

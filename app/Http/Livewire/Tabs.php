@@ -22,8 +22,15 @@ class Tabs extends Component
         $this->data = $data;
 
         foreach ($tabs as $tab) {
+            if (is_array($tab)) {
+                $title = $tab[1];
+                $tab = $tab[0];
+            } else {
+                $title = $tab::title();
+            }
+
             $this->tabs[$tab::key()] = [
-                'title' => $tab::title(),
+                'title' => $title,
                 'component' => $tab,
                 'key' => $tab::key(),
             ];
@@ -31,7 +38,7 @@ class Tabs extends Component
 
         $this->active = request()->query('tab', $active);
 
-        if(!in_array($this->active, array_keys($this->tabs))) {
+        if (!in_array($this->active, array_keys($this->tabs))) {
             $this->active = array_keys($this->tabs)[0];
         }
     }

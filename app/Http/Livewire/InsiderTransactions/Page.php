@@ -63,7 +63,7 @@ class Page extends Component
         ]);
     }
 
-    public function getTopInsiderTitles()
+    private function getTopInsiderTitles()
     {
         return DB::connection('pgsql-xbrl')
             ->table('insider_transactions')
