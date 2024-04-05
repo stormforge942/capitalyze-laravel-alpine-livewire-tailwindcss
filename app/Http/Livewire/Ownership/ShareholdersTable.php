@@ -99,7 +99,7 @@ class ShareholdersTable extends BaseTable
         return PowerGrid::eloquent()
             ->addColumn('investor_name')
             ->addColumn('investor_name_formated', function (CompanyFilings $companyFilings) {
-                return ('<a class="text-blue" href="' . route('company.fund', [$companyFilings->cik, $this->ticker]) . '">' . Str::title($companyFilings->investor_name) . (!empty($companyFilings->put_call) ? ' <span class="text-sm font-bold">(' . $companyFilings->put_call . ')</span></a>' : '</a>'));
+                return ('<a class="text-blue hover:underline" href="' . route('company.fund', [$companyFilings->cik, $this->ticker]) . '">' . Str::title($companyFilings->investor_name) . (!empty($companyFilings->put_call) ? ' <span class="text-sm font-bold">(' . $companyFilings->put_call . ')</span></a>' : '</a>'));
             })
             ->addColumn('ssh_prnamt', function (CompanyFilings $companyFilings) {
                 return number_format($companyFilings->ssh_prnamt);

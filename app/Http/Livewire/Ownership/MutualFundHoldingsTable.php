@@ -127,7 +127,7 @@ class MutualFundHoldingsTable extends BaseTable
                         $attrs
                     );
                 }
-                return '<a href=" ' . $href . ' " class="text-blue">' . $fund->symbol . (!empty($fund->name) ? ' <span class="text-xs font-light">(' . $fund->name . ')<span>' : '') . '</button>';
+                return '<a href=" ' . $href . ' " class="text-blue hover:underline">' . $fund->symbol . (!empty($fund->name) ? ' <span class="text-xs font-light">(' . $fund->name . ')<span>' : '') . '</button>';
             })
             ->addColumn('balance')
             ->addColumn(
