@@ -10,23 +10,15 @@ use Illuminate\Support\Facades\Auth;
 
 class Favorites extends Component
 {
-    use AsTab;
+    use AsTab, HasFilters;
 
     protected $listeners = [
         'update' => '$refresh',
-        'search:favorites' => 'updatedSearch',
     ];
 
     public static function title(): string
     {
         return 'My Favorites';
-    }
-
-    public $search = "";
-
-    public function updatedSearch($search)
-    {
-        $this->search = $search;
     }
 
     public function render()
@@ -49,13 +41,15 @@ class Favorites extends Component
             ->filter()
             ->toArray();
 
+        $filters = $this->formattedFilters();
+
         return view('livewire.track-investor.favorites', [
-            'funds' => $this->getFunds($funds),
-            'mutualFunds' => $this->getMutualFunds($mutualFunds),
+            'funds' => $this->getFunds($funds, $filters),
+            'mutualFunds' => $this->getMutualFunds($mutualFunds, $filters),
         ]);
     }
 
-    private function getFunds($funds)
+    private function getFunds($funds, $filters)
     {
         if (empty($funds)) return collect();
 
@@ -64,6 +58,19 @@ class Favorites extends Component
             ->select('investor_name', 'cik', 'total_value', 'portfolio_size', 'change_in_total_value')
             ->where('is_latest', true)
             ->whereIn('cik', $funds)
+            ->when($filters['search'], function ($query)  use ($filters) {
+                return $query->where(DB::raw('investor_name'), 'ilike', "%{$filters['search']}%")
+                    ->orWhere(DB::raw('cik'), $filters['search']);
+            })
+            ->when($filters['marketValue'], function ($query) use ($filters) {
+                return $query->whereBetween('total_value', $filters['marketValue']);
+            })
+            ->when($filters['turnover'], function ($query) use ($filters) {
+                return $query->whereBetween('change_in_total_value', $filters['turnover']);
+            })
+            ->when($filters['holdings'], function ($query) use ($filters) {
+                return $query->whereBetween('portfolio_size', $filters['holdings']);
+            })
             ->get()
             // sort the collection by the order of the $funds array
             ->sortBy(function ($item) use ($funds) {
@@ -77,27 +84,43 @@ class Favorites extends Component
             });
     }
 
-    private function getMutualFunds($funds)
+    private function getMutualFunds($funds, $filters)
     {
         if (empty($funds)) return collect();
 
         return DB::connection('pgsql-xbrl')
             ->table('mutual_fund_holdings_summary')
             ->select('registrant_name', 'cik', 'fund_symbol', 'series_id', 'class_id', 'class_name', 'total_value', 'portfolio_size', 'change_in_total_value', 'date')
-            ->from('mutual_fund_holdings_summary as hs')
             ->where('is_latest', true)
             ->where(function ($q) use ($funds) {
                 foreach ($funds as $fund) {
                     $q->orWhere(
-                        fn ($q) => $q->where('hs.cik', $fund['cik'])
-                            ->where('hs.series_id', $fund['series_id'])
-                            ->where('hs.class_id', $fund['class_id'])
-                            ->where('hs.class_name', $fund['class_name'])
+                        fn ($q) => $q->where('cik', $fund['cik'])
+                            ->where('series_id', $fund['series_id'])
+                            ->where('class_id', $fund['class_id'])
+                            ->where('class_name', $fund['class_name'])
                     );
                 }
 
                 return $q;
             })
+            ->when(
+                $filters['search'],
+                fn ($query) => $query->where(DB::raw('registrant_name'), 'ilike', "%{$filters['search']}%")
+                    ->orWhere(DB::raw('fund_symbol'), 'ilike', "%{$filters['search']}%")
+            )
+            ->when(
+                $filters['marketValue'],
+                fn ($q) => $q->whereBetween('total_value', $filters['marketValue'])
+            )
+            ->when(
+                $filters['turnover'],
+                fn ($q) => $q->whereBetween('change_in_total_value', $filters['turnover'])
+            )
+            ->when(
+                $filters['holdings'],
+                fn ($q) => $q->whereBetween('portfolio_size', $filters['holdings'])
+            )
             ->get()
             ->sortBy(function ($item) use ($funds) {
                 return collect($funds)->search(function ($fund) use ($item) {

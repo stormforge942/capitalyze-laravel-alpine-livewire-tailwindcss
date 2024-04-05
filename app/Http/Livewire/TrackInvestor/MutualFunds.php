@@ -13,6 +13,10 @@ class MutualFunds extends Component
 {
     use AsTab, HasFilters;
 
+    protected $listeners = [
+        'update' => '$refresh',
+    ];
+
     public static function title(): string
     {
         return 'N-PORT Filers';
@@ -39,9 +43,19 @@ class MutualFunds extends Component
             ->toArray();
 
         $transformedFunds = $funds->getCollection()->map(function ($fund) use ($favorites) {
-            $fundArray = (array)$fund;
-            $fundArray['isFavorite'] = in_array($fundArray['cik'], $favorites);
-            return $fundArray;
+            $fund = (array) $fund;
+
+            $fund['id'] = json_encode([
+                'cik' => $fund['cik'],
+                'fund_symbol' => $fund['fund_symbol'],
+                'series_id' => $fund['series_id'],
+                'class_id' => $fund['class_id'],
+                'class_name' => $fund['class_name'],
+            ]);
+
+            $fund['isFavorite'] = in_array($fund['id'], $favorites);
+            
+            return $fund;
         });
 
         $funds->setCollection(collect($transformedFunds));

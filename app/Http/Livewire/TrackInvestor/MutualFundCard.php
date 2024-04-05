@@ -11,10 +11,10 @@ class MutualFundCard extends Component
     public $fund;
     public $hideIfNotFavorite = false;
 
-    public function toggle(array $fund)
+    public function toggle()
     {
         $entry = TrackInvestorFavorite::query()
-            ->where('identifier', $fund['id'])
+            ->where('identifier', $this->fund['id'])
             ->where('type', TrackInvestorFavorite::TYPE_MUTUAL_FUND)
             ->where('user_id', Auth::id())
             ->first();
@@ -23,10 +23,10 @@ class MutualFundCard extends Component
 
         if (!$entry) {
             TrackInvestorFavorite::create([
-                'name' => $fund['registrant_name'],
+                'name' => $this->fund['registrant_name'],
                 'user_id' => Auth::id(),
                 'type' => TrackInvestorFavorite::TYPE_MUTUAL_FUND,
-                'identifier' => $fund['id'],
+                'identifier' => $this->fund['id'],
             ]);
         } else {
             $entry->delete();

@@ -13,6 +13,10 @@ class Discover extends Component
 {
     use AsTab, HasFilters;
 
+    protected $listeners = [
+        'update' => '$refresh',
+    ];
+
     public static function title(): string
     {
         return '13F Filers';

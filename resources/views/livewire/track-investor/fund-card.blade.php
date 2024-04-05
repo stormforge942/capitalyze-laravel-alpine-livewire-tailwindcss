@@ -10,7 +10,7 @@
         ?>
 
         <button class="h-6 w-6 rounded {{ $class }} transition disabled:pointer-events-none shrink-0"
-            wire:click="toggle(@js($fund))"
+            wire:click="toggle"
             wire:loading.class="opacity-90 animate-pulse" wire:loading.attr="disabled">
             <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"
                 fill="{{ $fund['isFavorite'] ? '#ffff' : 'none' }}">
