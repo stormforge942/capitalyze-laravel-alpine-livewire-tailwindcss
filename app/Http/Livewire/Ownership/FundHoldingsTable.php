@@ -71,7 +71,7 @@ class FundHoldingsTable extends BaseTable
                     );
                 }
 
-                return '<a href=" ' . $href . ' " class="text-blue hover:underline">' . $companyFilings->symbol . (!empty($companyFilings->name_of_issuer) ? ' <span class="text-xs font-light">(' . $companyFilings->name_of_issuer . ')<span>' : '') . '</button>';
+                return '<a href=" ' . $href . ' " class="text-blue hover:underline">' . $companyFilings->symbol . (!empty($companyFilings->name_of_issuer) ? ' <span class="text-xs font-light">(' . $companyFilings->name_of_issuer . ')<span>' : '') . '</a>';
             })
             ->addColumn('ssh_prnamt_formatted', function (CompanyFilings $companyFilings) {
                 return '<button class="hover:underline" onclick="Livewire.emit(`slide-over.open`, `filings-summary-s3-link-content`, {cik: `' . $companyFilings->cik . '`, date:  `' . $companyFilings->report_calendar_or_quarter . '`})">' . number_format($companyFilings->ssh_prnamt) . '</button>';

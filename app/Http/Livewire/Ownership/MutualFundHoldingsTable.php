@@ -127,7 +127,7 @@ class MutualFundHoldingsTable extends BaseTable
                         $attrs
                     );
                 }
-                return '<a href=" ' . $href . ' " class="text-blue hover:underline">' . $fund->symbol . (!empty($fund->name) ? ' <span class="text-xs font-light">(' . $fund->name . ')<span>' : '') . '</button>';
+                return '<a href=" ' . $href . ' " class="text-blue hover:underline">' . $fund->symbol . (!empty($fund->name) ? ' <span class="text-xs font-light">(' . $fund->name . ')<span>' : '') . '</a>';
             })
             ->addColumn('balance')
             ->addColumn(
@@ -178,7 +178,7 @@ class MutualFundHoldingsTable extends BaseTable
                 ])->toHtml();
 
                 return <<<HTML
-                <button class="px-2 py-1 bg-green-light rounded" @click.prevent="Livewire.emit('modal.open', 'ownership.mutual-fund-history', { fund: $fund, company: $company })">
+                <button class="px-2 py-1 bg-green-light hover:bg-green-dark rounded" @click.prevent="Livewire.emit('modal.open', 'ownership.mutual-fund-history', { fund: $fund, company: $company })">
                     <svg width="16" height="16" viewBox="0 0 16 16" fill="none" xmlns="http://www.w3.org/2000/svg">
                         <path d="M2 7.99992H4.66667V13.9999H2V7.99992ZM11.3333 5.33325H14V13.9999H11.3333V5.33325ZM6.66667 1.33325H9.33333V13.9999H6.66667V1.33325Z" fill="#121A0F"/>
                     </svg>
