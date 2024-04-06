@@ -10,7 +10,13 @@
                     No content found
                 </p>
             @else
-                <iframe class="w-full h-full" srcdoc="{!! strip_tags(htmlspecialchars($content)) !!}" frameborder="0"></iframe>
+                {!! $content !!}
+
+                @if ($quantity)
+                    <script>
+                        window.reportTextHighlighter.highlight({{ $quantity }}, '.wep-slide-over table tbody tr td .FormData')
+                    </script>
+                @endif
             @endif
         </div>
     </div>

@@ -23,7 +23,7 @@ function parseText(value, shouldBeNumber = false) {
     return term.replace(/0+$/, "")
 }
 
-function highlightSelection(value, selector) {
+function highlightSelection(value, selector, document = window.document) {
     return setTimeout(() => {
         const search = parseText(value)
 
