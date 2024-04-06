@@ -6,9 +6,9 @@ use WireElements\Pro\Components\SlideOver\SlideOver;
 
 class S3LinkContent extends SlideOver
 {
-    public string $sourceLink;
+    public ?string $sourceLink = null;
     private string $content = '';
-    
+
     public function render()
     {
         return view('livewire.s3-link-content', [
@@ -16,8 +16,9 @@ class S3LinkContent extends SlideOver
         ]);
     }
 
-    public function load() {
-        $this->content = file_get_contents($this->sourceLink) ?? '';
+    public function load()
+    {
+        $this->content =  $this->sourceLink ? (file_get_contents($this->sourceLink) ?? '') : '';
     }
 
     public static function attributes(): array

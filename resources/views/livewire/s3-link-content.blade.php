@@ -1,11 +1,11 @@
 <x-wire-elements-pro::tailwind.slide-over>
-    <div wire:init="load">
+    <div class="h-full" wire:init="load">
         <div class="place-items-center" wire:loading.grid>
             <span class="mx-auto simple-loader text-blue"></span>
         </div>
 
-        <div wire:loading.remove>
-            {!! $content !!}
+        <div class="relative h-full" wire:loading.remove>
+            <iframe class="w-full h-full" srcdoc="{!! htmlspecialchars($content) !!}" frameborder="0"></iframe>
         </div>
     </div>
 </x-wire-elements-pro::tailwind.slide-over>

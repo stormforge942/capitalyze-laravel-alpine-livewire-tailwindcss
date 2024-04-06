@@ -53,7 +53,9 @@ class Page extends Component
     public function getData($start = null, $end = null)
     {
         if (!$start) {
-            $start = strtotime($this->dates['yesterday']) < strtotime($this->dates['this_week_start']) ? $this->dates['yesterday'] : $this->dates['this_week_start'];
+            $start = strtotime($this->dates['yesterday']) < strtotime($this->dates['this_week_start'])
+                ? $this->dates['yesterday']
+                : $this->dates['this_week_start'];
         }
 
         if (!$end) {
@@ -61,25 +63,23 @@ class Page extends Component
         }
 
         $cacheKey = 'earnings_data_' . $start . '_' . $end;
-        $cacheDuration = 3600;
 
         return Cache::remember($cacheKey, 3600, function () use ($start, $end) {
-
             $newEarnings = DB::connection('pgsql-xbrl')
-            ->table('new_earnings')
-            ->select('symbol', 'date', 'exchange', 'time', 'title', 'url', 'company_name', 'acceptance_time')
-            ->whereBetween('date', [$start, $end])
-            ->get()
-            ->map(function ($item) {
-                $item->origin = '8-K';
-                $item->pub_time = $item->acceptance_time;
-                unset($item->acceptance_time);
-                return $item;
-            });
+                ->table('new_earnings')
+                ->select('symbol', 'date', 'exchange', 'time', 'title', 'url', 'company_name', 'acceptance_time', 's3_url')
+                ->whereBetween('date', [$start, $end])
+                ->get()
+                ->map(function ($item) {
+                    $item->origin = '8-K';
+                    $item->pub_time = $item->acceptance_time;
+                    unset($item->acceptance_time);
+                    return $item;
+                });
 
             $earningsCalendar = DB::connection('pgsql-xbrl')
                 ->table('earnings_calendar')
-                ->select('symbol', 'date', 'exchange', 'time', 'title', 'url', 'company_name', 'pub_time')
+                ->select('symbol', 'date', 'exchange', 'time', 'title', 'url', 'company_name', 'pub_time', 's3_url')
                 ->whereBetween('date', [$start, $end])
                 ->get()
                 ->map(function ($item) {
@@ -126,17 +126,14 @@ class Page extends Component
 
             if ($item->date === $this->dates['yesterday']) {
                 $groupedData['yesterday'][] = $item;
-                continue;
             }
 
             if ($item->date === $this->dates['today']) {
                 $groupedData['today'][] = $item;
-                continue;
             }
 
             if ($item->date === $this->dates['tomorrow']) {
                 $groupedData['tomorrow'][] = $item;
-                continue;
             }
 
             if ($date->isBetween($this->dates['this_week_start'], $this->dates['this_week_end'])) {

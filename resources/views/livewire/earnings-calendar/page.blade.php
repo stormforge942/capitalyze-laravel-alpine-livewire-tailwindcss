@@ -163,9 +163,11 @@
                                         <th class="pl-6 py-2 text-dark whitespace-nowrap"
                                             :style="`width: max-content;`">
                                             <div class="flex" :class="column.right ? 'justify-end' : ''">
-                                                <div class="inline-flex items-center gap-1" :class="column.sortable ? 'cursor-pointer' : ''" @click.prevent="column.sortable ? sortBy(column.key) : null">
+                                                <div class="inline-flex items-center gap-1"
+                                                    :class="column.sortable ? 'cursor-pointer' : ''"
+                                                    @click.prevent="column.sortable ? sortBy(column.key) : null">
                                                     <span x-text="column.name"></span>
-    
+
                                                     <template x-if="column.sortable && sort.column !== column.key">
                                                         <span>
                                                             <svg xmlns="http://www.w3.org/2000/svg" width="16"
@@ -176,9 +178,10 @@
                                                             </svg>
                                                         </span>
                                                     </template>
-    
+
                                                     <template x-if="column.sortable && sort.column === column.key">
-                                                        <span x-html="sort.direction === 'asc' ? '&#8593;' : '&#8595;'"></span>
+                                                        <span
+                                                            x-html="sort.direction === 'asc' ? '&#8593;' : '&#8595;'"></span>
                                                     </template>
                                                 </div>
                                             </div>
@@ -195,7 +198,12 @@
                                                     x-text="row.symbol"></a>
                                             </td>
                                             <td class="pl-6 py-4 whitespace-nowrap" x-text="row.company_name"></td>
-                                            <td class="pl-6 py-4 whitespace-nowrap" x-text="row.origin"></td>
+                                            <td class="pl-6 py-4 whitespace-nowrap">
+                                                <button class="inline-block px-2 py-1 bg-[#DCF6EC] rounded"
+                                                    @click="Livewire.emit('slide-over.open', 's3-link-content', { sourceLink: row.s3_url })"
+                                                    x-text="row.origin">
+                                                </button>
+                                            </td>
                                             <td class="pl-6 py-4 whitespace-nowrap" x-text="row.exchange"></td>
                                             <td class="pl-6 py-4 whitespace-nowrap text-right" x-text="row.time">
                                             </td>
