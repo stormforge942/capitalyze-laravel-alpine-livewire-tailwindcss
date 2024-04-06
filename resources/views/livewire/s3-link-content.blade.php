@@ -5,7 +5,7 @@
         </div>
 
         <div class="relative h-full" wire:loading.remove>
-            <iframe class="w-full h-full" srcdoc="{!! htmlspecialchars($content) !!}" frameborder="0"></iframe>
+            <iframe class="w-full h-full" srcdoc="{!! strip_tags(htmlspecialchars($content)) !!}" frameborder="0"></iframe>
         </div>
     </div>
 </x-wire-elements-pro::tailwind.slide-over>

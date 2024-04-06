@@ -200,7 +200,7 @@
                                             <td class="pl-6 py-4 whitespace-nowrap" x-text="row.company_name"></td>
                                             <td class="pl-6 py-4 whitespace-nowrap">
                                                 <button class="inline-block px-2 py-1 bg-[#DCF6EC] hover:bg-green-dark transition-all rounded"
-                                                    @click="Livewire.emit('slide-over.open', 's3-link-content', { sourceLink: row.s3_url })"
+                                                    @click="Livewire.emit('slide-over.open', 's3-link-content', { sourceLink: row.s3_url, highlightDates: true })"
                                                     x-text="row.origin">
                                                 </button>
                                             </td>
