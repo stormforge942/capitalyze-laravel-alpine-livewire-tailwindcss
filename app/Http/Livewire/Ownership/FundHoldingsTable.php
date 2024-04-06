@@ -105,7 +105,7 @@ class FundHoldingsTable extends BaseTable
                 }
 
                 return <<<HTML
-                <button class="px-2 py-1 bg-green-light rounded" @click.prevent="Livewire.emit('modal.open', 'ownership.fund-history', { fund: '$this->cik', company: { name: '$companyName', symbol: '$companyFilings->symbol' } })">
+                <button class="px-2 py-1 bg-green-light hover:bg-green-dark transition-all rounded" @click.prevent="Livewire.emit('modal.open', 'ownership.fund-history', { fund: '$this->cik', company: { name: '$companyName', symbol: '$companyFilings->symbol' } })">
                     <svg width="16" height="16" viewBox="0 0 16 16" fill="none" xmlns="http://www.w3.org/2000/svg">
                         <path d="M2 7.99992H4.66667V13.9999H2V7.99992ZM11.3333 5.33325H14V13.9999H11.3333V5.33325ZM6.66667 1.33325H9.33333V13.9999H6.66667V1.33325Z" fill="#121A0F"/>
                     </svg>
