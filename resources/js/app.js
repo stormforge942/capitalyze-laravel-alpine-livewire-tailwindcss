@@ -22,6 +22,7 @@ import "./report-text-highlighter"
 import "./chartjs-plugins"
 import "./pages/ownership"
 import "./pages/analysis"
+import './export-table-to-excel'
 import { createPopper } from "@popperjs/core"
 
 Alpine.plugin(focus)

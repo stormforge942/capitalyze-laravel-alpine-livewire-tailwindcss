@@ -73,7 +73,13 @@
             @endif
 
             @if (is_string($data))
-                {!! $data !!}
+                <div x-data="{
+                    init() {
+                        window.initTableExport(this.$el)
+                    }
+                }">
+                    {!! $data !!}
+                </div>
             @endif
 
             @if (!$data && !$result)

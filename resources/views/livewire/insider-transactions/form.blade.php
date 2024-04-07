@@ -14,7 +14,7 @@
 
                 @if ($quantity)
                     <script>
-                        window.reportTextHighlighter.highlight({{ $quantity }}, '.wep-slide-over table tbody tr td .FormData')
+                        window.reportTextHighlighter.highlight({{ $quantity }}, '.wep-slide-over-container table tbody tr td .FormData')
                     </script>
                 @endif
             @endif

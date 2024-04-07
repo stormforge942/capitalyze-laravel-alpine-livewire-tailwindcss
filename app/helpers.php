@@ -201,7 +201,7 @@ function format_overview_numbers($value)
         return $val;
     }
 
-    $val = abs($val);
+    $val = ltrim($val, "-");
     return "<span class=\"text-red\">({$val})</span>";
 }
 
