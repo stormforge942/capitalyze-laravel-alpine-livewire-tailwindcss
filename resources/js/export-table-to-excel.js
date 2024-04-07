@@ -62,9 +62,7 @@ function initTableExport(container) {
         button.style.cursor = "pointer"
 
         button.addEventListener("click", () => {
-            tables.forEach((table, idx) => {
-                exportTableToExcel(table, idx + 1)
-            })
+            exportTablesToExcel(tables)
 
             // not sure why but buttons are disabled after click
             setTimeout(() => {
@@ -73,7 +71,7 @@ function initTableExport(container) {
         })
 
         const wrapper = document.createElement("div")
-        wrapper.style.paddingBottom = "0.25rem"        
+        wrapper.style.paddingBottom = "0.25rem"
 
         wrapper.appendChild(button)
 
@@ -173,5 +171,115 @@ function exportTableToExcel(table, idx) {
     const a = document.createElement("a")
     a.href = url
     a.download = `table-${idx}.csv`
+    a.click()
+}
+
+function exportTablesToExcel(tables) {
+    const items = [...tables].map((table) => {
+        const rows = table.querySelectorAll("tr")
+        const data = []
+
+        rows.forEach((row) => {
+            const rowData = []
+            row.querySelectorAll("td").forEach((cell) => {
+                const colspan = cell.getAttribute("colspan")
+                if (colspan) {
+                    for (let i = 0; i < parseInt(colspan - 1); i++) {
+                        rowData.push("")
+                    }
+                }
+
+                // get cell text content but perform some cleanup like br to newline
+                let content = new DOMParser().parseFromString(
+                    cell.innerHTML,
+                    "text/html"
+                )
+
+                content.querySelectorAll("br").forEach((br) => {
+                    br.replaceWith("\n")
+                })
+
+                content = content.body.innerText
+                    .replace(/,/g, ",")
+                    .replace(/"/g, '""')
+                    .trim()
+
+                rowData.push(content)
+            })
+
+            data.push(rowData)
+        })
+
+        if (data.length) {
+            // maintain same column length
+            const maxColumns = Math.max(...data.map((row) => row.length))
+            data.forEach((row) => {
+                while (row.length < maxColumns) {
+                    row.push("")
+                }
+            })
+
+            // remove empty columns or contains only currency symbols
+            for (let i = 0; i < maxColumns; i++) {
+                if (
+                    data.every((row) =>
+                        ["$", "¥", "€", "£", ""].includes(row[i])
+                    )
+                ) {
+                    data.forEach((row) => row.splice(i, 1))
+                    i--
+                }
+            }
+
+            // if first column is empty for row, shift it to left
+            data.forEach((row) => {
+                if (!row[0] && !row[1]) {
+                    row.shift()
+                    row.push("")
+                }
+            })
+
+            // remove firt and last row if it is empty
+            if (data[0].every((cell) => cell === "")) {
+                data.shift()
+            }
+            if (data[data.length - 1].every((cell) => cell === "")) {
+                data.pop()
+            }
+
+            // remove empty columns or contains only currency symbols
+            for (let i = 0; i < maxColumns; i++) {
+                if (data.every((row) => !row[i])) {
+                    data.forEach((row) => row.splice(i, 1))
+                }
+            }
+        } else {
+            data.push(["No data found"])
+        }
+
+        return data
+    })
+
+    const data = []
+
+    items.forEach((item, idx) => {
+        if (idx > 0) {
+            data.push(["", "", ""])
+            data.push(["", "", ""])
+        }
+
+        data.push([`-- Table ${idx + 1} --`])
+        data.push(...item)
+    })
+
+    const csvContent = data
+        .map((row) => row.map((cell) => `"${cell}"`).join(","))
+        .join("\n")
+    const blob = new Blob([csvContent], { type: "text/csv" })
+    const url = URL.createObjectURL(blob)
+
+    const a = document.createElement("a")
+    a.href = url
+    a.download = `tables.csv`
     a.click()
 }
