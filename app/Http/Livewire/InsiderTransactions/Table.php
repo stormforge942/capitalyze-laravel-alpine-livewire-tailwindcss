@@ -61,24 +61,25 @@ class Table extends BaseTable
 
                 return $query->where('transaction_date', '>=', $from);
             })
-            ->leftJoin('company_links', function ($join) {
-                $join->on('insider_transactions.symbol', '=', 'company_links.symbol')
-                    ->on('insider_transactions.url', '=', 'company_links.final_link');
-            })
+            // ->leftJoin('company_links', function ($join) {
+            //     $join->on('insider_transactions.symbol', '=', 'company_links.symbol')
+            //         ->on('insider_transactions.url', '=', 'company_links.final_link');
+            // })
             ->select([
-                'insider_transactions.symbol',
-                'insider_transactions.registrant_name',
-                'insider_transactions.reporting_person',
-                'insider_transactions.relationship_of_reporting_person',
-                'insider_transactions.transaction_code',
-                'insider_transactions.amount_of_securities',
-                'insider_transactions.price_per_security',
-                'insider_transactions.ownership_percentage',
-                'insider_transactions.market_cap',
-                'insider_transactions.transaction_date',
-                'insider_transactions.securities_owned_following_transaction',
-                'company_links.s3_link',
-                DB::raw('insider_transactions.amount_of_securities * insider_transactions.price_per_security as value'),
+                'symbol',
+                'registrant_name',
+                'reporting_person',
+                'relationship_of_reporting_person',
+                'transaction_code',
+                'amount_of_securities',
+                'price_per_security',
+                'ownership_percentage',
+                'market_cap',
+                'transaction_date',
+                'securities_owned_following_transaction',
+                'url',
+                // 'company_links.s3_link',
+                DB::raw('amount_of_securities * price_per_security as value'),
             ]);
     }
 
@@ -143,11 +144,11 @@ class Table extends BaseTable
                         return '-';
                     }
 
-                    if (!$row->s3_link) {
-                        return number_format($row->amount_of_securities);
-                    }
+                    // if (!$row->s3_link) {
+                    //     return number_format($row->amount_of_securities);
+                    // }
 
-                    return '<button type="button" class="inline-block px-2 py-1 bg-[#DCF6EC] hover:bg-green-dark transition-all rounded" onclick="Livewire.emit(`slide-over.open`, `insider-transactions.form`, { sourceLink: `' . $row->s3_link . '`, quantity: ' . $row->amount_of_securities . ' })">' . number_format($row->amount_of_securities) . '</button>';
+                    return '<button type="button" class="inline-block px-2 py-1 bg-[#DCF6EC] hover:bg-green-dark transition-all rounded" onclick="Livewire.emit(`slide-over.open`, `insider-transactions.form`, { url: `' . $row->url . '`, symbol: `' . $row->symbol . '`, quantity: ' . $row->amount_of_securities . ' })">' . number_format($row->amount_of_securities) . '</button>';
                 }
             )
             ->addColumn('formatted_price', fn ($row) => is_null($row->price_per_security) ? '-' : number_format($row->price_per_security, 2))
