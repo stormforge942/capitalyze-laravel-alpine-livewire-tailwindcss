@@ -16,14 +16,19 @@ export function updateQueryParam(key, value) {
 export function initFundHistoryChart(canvas, data) {
     const ctx = canvas.getContext("2d")
 
+    data.datasets.forEach((dataset) => {
+        if (dataset.type !== "line") {
+            dataset.maxBarThickness = 150
+        }
+    })
+
     const chart = new Chart(ctx, {
         plugins: [chartJsPlugins.pointLine],
-        maintainAspectRatio: false,
-        aspectRatio: 2,
-        responsive: true,
         type: "bar",
         data,
         options: {
+            maintainAspectRatio: false,
+            responsive: true,
             interaction: {
                 intersect: false,
                 mode: "index",

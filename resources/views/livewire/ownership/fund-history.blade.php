@@ -26,7 +26,7 @@
                 }">
                     <h4 class="font-extrabold mb-6">{{ $company['name'] }}</h4>
     
-                    <div>
+                    <div style="height: 300px"> 
                         <canvas id="fundHistoryChartCanvas" x-ref="canvas"></canvas>
                     </div>
                 </div>
