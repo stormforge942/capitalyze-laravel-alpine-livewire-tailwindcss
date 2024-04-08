@@ -54,7 +54,7 @@ class MutualFunds extends Component
             ]);
 
             $fund['isFavorite'] = in_array($fund['id'], $favorites);
-            
+
             return $fund;
         });
 
@@ -73,8 +73,10 @@ class MutualFunds extends Component
             ->where('is_latest', true)
             ->when(
                 $filters['search'],
-                fn ($query) => $query->where(DB::raw('registrant_name'), 'ilike', "%{$filters['search']}%")
-                    ->orWhere(DB::raw('fund_symbol'), 'ilike', "%{$filters['search']}%")
+                fn ($query) => $query->where(
+                    fn ($q) => $q->where(DB::raw('registrant_name'), 'ilike', "%{$filters['search']}%")
+                        ->orWhere(DB::raw('fund_symbol'), 'ilike', "%{$filters['search']}%")
+                )
             )
             ->when(
                 $filters['marketValue'],

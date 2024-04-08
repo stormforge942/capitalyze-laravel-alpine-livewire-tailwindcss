@@ -66,10 +66,13 @@ class Discover extends Component
             ->table('filings_summary')
             ->select('investor_name', 'cik', 'total_value', 'portfolio_size', 'change_in_total_value')
             ->where('is_latest', true)
-            ->when($filters['search'], function ($query)  use ($filters) {
-                return $query->where(DB::raw('investor_name'), 'ilike', "%{$filters['search']}%")
-                    ->orWhere(DB::raw('cik'), $filters['search']);
-            })
+            ->when(
+                $filters['search'],
+                fn ($query) => $query->where(
+                    fn ($q) => $q->where(DB::raw('investor_name'), 'ilike', "%{$filters['search']}%")
+                        ->orWhere(DB::raw('cik'), $filters['search'])
+                )
+            )
             ->when($filters['marketValue'], function ($query) use ($filters) {
                 return $query->whereBetween('total_value', $filters['marketValue']);
             })
