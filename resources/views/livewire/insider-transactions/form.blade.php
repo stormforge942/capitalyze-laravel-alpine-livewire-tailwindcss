@@ -10,13 +10,22 @@
                     No content found
                 </p>
             @else
-                {!! $content !!}
+                <div class="h-full"
+                    @if ($quantity) x-data="{
+                    init() {
+                        const iframe = this.$el.children[0]
 
-                @if ($quantity)
-                    <script>
-                        window.reportTextHighlighter.highlight({{ $quantity }}, '.wep-slide-over-container table tbody tr td .FormData')
-                    </script>
-                @endif
+                        iframe.onload = () => {
+                            window.reportTextHighlighter.highlight(
+                                {{ $quantity }},
+                                'table tbody tr td .FormData',
+                                iframe.contentDocument
+                            )
+                        }
+                                            }
+                }" @endif>
+                    <iframe class="w-full h-full" srcdoc="{!! strip_tags(htmlspecialchars($content)) !!}" frameborder="0"></iframe>
+                </div>
             @endif
         </div>
     </div>
