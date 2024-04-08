@@ -40,10 +40,11 @@
         <x-primary-tabs :tabs="$tabs" :active="$activeTab" min-width="160px"
             @tab-changed="tabActive = $event.detail.key; activeSubTab = subTabs[0].title;">
             <div>
-                <div class="overflow-x-auto flex border-b border-[#D4DDD7]">
+                <div class="overflow-x-auto flex gap-x-1 border-b border-[#D4DDD7]">
                     <template x-for="subtab in subTabs" :key="subtab.title">
-                        <a href="#" class="inline-block w-[12rem] py-2.5 px-4 text-center border-b-2"
-                            :class="activeSubTab === subtab.title ? 'border-green-dark' : 'border-transparent'"
+                        <a href="#" class="inline-block w-[12rem] py-2.5 px-4 text-center border-b-2 transition-all"
+                            :class="activeSubTab === subtab.title ? 'border-green-dark' :
+                                'border-transparent hover:border-gray-medium'"
                             @click.prevent="activeSubTab = subtab.title">
                             <p class="font-medium"
                                 :class="activeSubTab === subtab.title ? 'text-dark' : 'text-gray-medium2'"

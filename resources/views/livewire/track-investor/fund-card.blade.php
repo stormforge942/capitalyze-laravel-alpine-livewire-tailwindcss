@@ -1,8 +1,9 @@
 <div
     class="{{ $hideIfNotFavorite && !$fund['isFavorite'] ? 'hidden' : '' }} bg-white rounded border-[0.5px] border-[#D4DDD7] px-4 py-6 overflow-hidden">
     <div class="flex items-center justify-between gap-2">
-        <a href="{{ route('company.fund', ['fund' => $fund['cik'], 'tab' => 'holdings', 'from' => 'track-investors']) }}">
-            <h4 class="text-blue font-semibold capitalize">{{ strtolower($fund['investor_name']) }}</h4>
+        <a href="{{ route('company.fund', ['fund' => $fund['cik'], 'tab' => 'holdings', 'from' => 'track-investors']) }}"
+            class="text-blue font-semibold capitalize hover:underline">
+            {{ strtolower($fund['investor_name']) }}
         </a>
 
         <?php
@@ -10,8 +11,7 @@
         ?>
 
         <button class="h-6 w-6 rounded {{ $class }} transition disabled:pointer-events-none shrink-0"
-            wire:click="toggle"
-            wire:loading.class="opacity-90 animate-pulse" wire:loading.attr="disabled">
+            wire:click="toggle" wire:loading.class="opacity-90 animate-pulse" wire:loading.attr="disabled">
             <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"
                 fill="{{ $fund['isFavorite'] ? '#ffff' : 'none' }}">
                 <path

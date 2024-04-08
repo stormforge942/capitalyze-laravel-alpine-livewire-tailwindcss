@@ -17,11 +17,11 @@
         });
     }
 }">
-    <div class="overflow-x-auto flex border-b border-[#D4DDD7] mb-6">
+    <div class="overflow-x-auto flex border-b border-[#D4DDD7] mb-6 gap-x-1">
         <template x-for="(title, subtab) in subtabs" :key="subtab">
-            <a href="#" class="inline-block w-[12rem] py-2.5 px-4 text-center border-b-2"
+            <a href="#" class="inline-block w-[12rem] py-2.5 px-4 text-center border-b-2 transition-all"
                 :class="activeSubTab === subtab ? 'border-green-dark' :
-                    'border-transparent'"
+                    'border-transparent hover:border-gray-medium'"
                 @click.prevent="activeSubTab = subtab">
                 <p class="font-medium" :class="activeSubTab === subtab ? 'text-dark' : 'text-gray-medium2'"
                     x-text="title"></p>

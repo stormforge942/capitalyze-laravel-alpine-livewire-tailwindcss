@@ -346,12 +346,12 @@
                             @endforeach
                         </div>
 
-                        <div class="hidden mb-6 border-b border-[#D4DDD7] px-3 overflow-x-auto lg:flex items-center gap text-gray-medium2 whitespace-nowrap font-medium"
+                        <div class="hidden mb-6 border-b gap-x-1 border-[#D4DDD7] px-3 overflow-x-auto lg:flex items-center gap text-gray-medium2 whitespace-nowrap font-medium"
                             style="line-height: 16px">
                             @foreach ($disclosureTabs as $dtab => $title)
-                                <button class="px-6 py-2"
+                                <button class="px-6 py-2 border-b-2 transition-all"
                                     :class="disclosureTab === `{{ $dtab }}` ?
-                                        'font-medium border-b-2 border-green' : ''"
+                                        'font-medium border-green' : 'border-transparent hover:border-gray-medium'"
                                     @click="disclosureTab = `{{ $dtab }}`">
                                     {{ $title }}
                                 </button>
