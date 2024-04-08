@@ -3,6 +3,7 @@
 namespace App\Http\Livewire\InsiderTransactions;
 
 use App\Powergrid\BaseTable;
+use Carbon\Carbon;
 use Illuminate\Support\Facades\DB;
 use PowerComponents\LivewirePowerGrid\Column;
 use PowerComponents\LivewirePowerGrid\PowerGrid;
@@ -10,7 +11,7 @@ use PowerComponents\LivewirePowerGrid\PowerGridColumns;
 
 class Table extends BaseTable
 {
-    public string $sortField = 'transaction_date';
+    public string $sortField = 'acceptance_time';
     public string $sortDirection = 'desc';
     public array $filters = [];
 
@@ -78,6 +79,7 @@ class Table extends BaseTable
                 'transaction_date',
                 'securities_owned_following_transaction',
                 'url',
+                'acceptance_time',
                 // 'company_links.s3_link',
                 DB::raw('amount_of_securities * price_per_security as value'),
             ]);
@@ -91,6 +93,8 @@ class Table extends BaseTable
             Column::make('Insider Name', 'reporting_person')->sortable(),
             Column::make('Title', 'relationship_of_reporting_person'),
             Column::make('Transaction', 'formatted_transaction_code'),
+            Column::make('Reported date', 'reported_date', 'acceptance_time')->sortable()
+                ->headerAttribute('[&>div]:justify-end')->bodyAttribute('text-right'),
             Column::make('Quantity', 'formatted_quantity', 'amount_of_securities')->sortable()
                 ->headerAttribute('[&>div]:justify-end')->bodyAttribute('text-right'),
             Column::make('Price',  'formatted_price', 'price_per_security')->sortable()
@@ -127,6 +131,13 @@ class Table extends BaseTable
             ->addColumn('value')
             ->addColumn('securities_owned_following_transaction')
             ->addColumn('transaction_date')
+            ->addColumn('reported_date', function ($row) {
+                if (!$row->acceptance_time) {
+                    return '-';
+                }
+
+                return Carbon::parse($row->acceptance_time)->format('Y-m-d');
+            })
             ->addColumn(
                 'formatted_transaction_code',
                 function ($row) {
