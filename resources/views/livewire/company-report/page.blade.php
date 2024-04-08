@@ -284,8 +284,10 @@
                                     ...this.formatTableValue(value.value, row.isPercent)
                                 };
                             });
-                
-                            rows.push(_row);
+
+                            if(!row.seg_start || this.showAllRows) {
+                                rows.push(_row);
+                            } 
                 
                             row.children.forEach(child => {
                                 addRow(child, section, depth + 1, _row.id);
