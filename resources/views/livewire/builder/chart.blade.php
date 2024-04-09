@@ -55,6 +55,12 @@
                         body: { metric_attributes }
                     })
                 })
+        
+                this.$watch('showChart', (showChart) => {
+                    if (showChart) {
+                        setTimeout(() => window.dispatchEvent(new Event('resize')), 100)
+                    }
+                })
             },
             formatDate(date) {
                 if (this.filters.period === 'annual') {
@@ -236,7 +242,8 @@
                                 class="flex items-center w-full max-w-[400px] gap-x-1 border border-[#D4DDD7] rounded bg-gray-light font-medium">
                                 <template x-for="(tab, key) in tabs">
                                     <button class="py-2 rounded flex-1 border transition -m-[1px]"
-                                        :class="panel === key ? 'bg-[#DCF6EC] border-[#52D3A2]' : 'border-transparent hover:border-gray-medium text-gray-medium2'"
+                                        :class="panel === key ? 'bg-[#DCF6EC] border-[#52D3A2]' :
+                                            'border-transparent hover:border-gray-medium text-gray-medium2'"
                                         @click="usedColors = {}; $nextTick(() => {panel = key})"
                                         x-text="tab"></button>
                                 </template>
@@ -354,7 +361,29 @@
                     </defs>
                 </svg>
                 <p class="mt-6 text-xl font-bold">No Data</p>
-                <p class="mt-2 text-md">Create financial charts to analyse data</p>
+                <p class="mt-2 text-md" x-data="{
+                    msg: 'Create financial charts to analyse data',
+                    init() {
+                        if ($wire.companies.length && $wire.metrics.length) {
+                            {{-- handle hidden metrics --}}
+                            if ($wire.metrics.every((metric) => $wire.metricAttributes[metric].show === false)) {
+                                this.msg = 'Add metrics to chart data for the companies you have selected';
+                                return;
+                            }
+                
+                            return;
+                        }
+                
+                        if ($wire.metrics.length && !$wire.companies.length) {
+                            this.msg = 'Add companies to chart data for the metrics you have selected';
+                        }
+                
+                        if ($wire.companies.length && !$wire.metrics.length) {
+                            this.msg = 'Add metrics to chart data for the companies you have selected';
+                        }
+                    }
+                }" x-text="msg">
+                </p>
             </div>
         </div>
     @else
