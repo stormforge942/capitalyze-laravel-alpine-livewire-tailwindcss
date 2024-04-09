@@ -74,7 +74,7 @@ class FundHoldingsTable extends BaseTable
                 return '<a href=" ' . $href . ' " class="text-blue hover:underline">' . $companyFilings->symbol . (!empty($companyFilings->name_of_issuer) ? ' <span class="text-xs font-light">(' . $companyFilings->name_of_issuer . ')<span>' : '') . '</a>';
             })
             ->addColumn('ssh_prnamt_formatted', function (CompanyFilings $companyFilings) {
-                return '<button class="hover:underline" onclick="Livewire.emit(`slide-over.open`, `filings-summary-s3-link-content`, {cik: `' . $companyFilings->cik . '`, date:  `' . $companyFilings->report_calendar_or_quarter . '`})">' . number_format($companyFilings->ssh_prnamt) . '</button>';
+                return '<button type="button" class="inline-block px-2 py-1 bg-[#DCF6EC] hover:bg-green-dark transition-all rounded" onclick="Livewire.emit(`slide-over.open`, `filings-summary-s3-link-content`, {cik: `' . $companyFilings->cik . '`, date:  `' . $companyFilings->report_calendar_or_quarter . '`})">' . number_format($companyFilings->ssh_prnamt) . '</button>';
             })
             ->addColumn('market_value', function (CompanyFilings $companyFilings) {
                 return number_format($companyFilings->value, 0) . ' $';
