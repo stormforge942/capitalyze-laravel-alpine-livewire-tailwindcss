@@ -26,6 +26,13 @@ class FilingsSummaryS3LinkContent extends SlideOver
             ])
             ->value('s3_url');
 
+        // if file size is greater than 1MB, display message
+        $size = data_get(get_headers($url, true), 'Content-Length', PHP_INT_MAX);
+        if ($size > (1024 * 1024 * 1)) {
+            $this->content = 'File too large to display. Click on the <a class="text-blue hover:underline font-medium" href="' . $url . '" target="_blank">link</a> to download.';
+            return;
+        }
+
         $this->content = file_get_contents($url);
     }
 
