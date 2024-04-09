@@ -10,9 +10,9 @@ class KeyExhibits extends Component
     public $ticker;
     public $selectedTab = "articles-inc-bylaws";
 
-    public function handleSelectTab($tab){
-        $this->selectedTab = $tab;
-        $this->emit('passTabNameInParent', $this->selectedTab);
+    public function updatedSelectedTab($tab)
+    {
+        $this->emit('passTabNameInParent', $tab);
     }
 
     public function render()
