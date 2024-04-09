@@ -52,33 +52,31 @@ class ShareholdersTable extends BaseTable
     public function columns(): array
     {
         return [
-            Column::add()
-                ->title('Fund')
-                ->field('investor_name_formated', 'investor_name')
+            Column::make('Fund', 'investor_name_formated', 'investor_name')
                 ->sortable()
                 ->searchable(),
 
-            Column::make('Shares Held', 'ssh_prnamt')
+            Column::make('Shares Held', 'shares_held', 'ssh_prnamt')
                 ->sortable()
                 ->headerAttribute('[&>div]:justify-end')->bodyAttribute('text-right'),
 
-            Column::make('Market Value', 'value')
+            Column::make('Market Value', 'market_value', 'value')
                 ->sortable()
                 ->headerAttribute('[&>div]:justify-end')->bodyAttribute('text-right'),
 
-            Column::make('% of Portfolio', 'weight')
+            Column::make('% of Portfolio', 'portfolio_percent', 'weight')
                 ->sortable()
                 ->headerAttribute('[&>div]:justify-end')->bodyAttribute('text-right'),
 
-            Column::make('Prior % of Portfolio', 'last_weight')
+            Column::make('Prior % of Portfolio', 'prior_portfolio_percent', 'last_weight')
                 ->sortable()
                 ->headerAttribute('[&>div]:justify-end')->bodyAttribute('text-right'),
 
-            Column::make('Change in Shares', 'change_in_shares')
+            Column::make('Change in Shares', 'formatted_change_in_shares', 'change_in_shares')
                 ->sortable()
                 ->headerAttribute('[&>div]:justify-end')->bodyAttribute('text-right'),
 
-            Column::make('% Ownership', 'ownership')
+            Column::make('% Ownership', 'ownership_percent', 'ownership')
                 ->sortable()
                 ->headerAttribute('[&>div]:justify-end')->bodyAttribute('text-right'),
 
@@ -86,9 +84,7 @@ class ShareholdersTable extends BaseTable
                 ->sortable()
                 ->headerAttribute('[&>div]:justify-end')->bodyAttribute('text-right'),
 
-            Column::add()
-                ->title('Estimated Avg Price Paid')
-                ->field('estimated_average_price')
+            Column::make('Estimated Avg Price Paid', 'formatted_estimated_average_price', 'estimated_average_price')
                 ->sortable()
                 ->headerAttribute('[&>div]:justify-end')->bodyAttribute('text-right'),
         ];
@@ -101,30 +97,37 @@ class ShareholdersTable extends BaseTable
             ->addColumn('investor_name_formated', function (CompanyFilings $companyFilings) {
                 return ('<a class="text-blue hover:underline" href="' . route('company.fund', [$companyFilings->cik, $this->ticker]) . '">' . Str::title($companyFilings->investor_name) . (!empty($companyFilings->put_call) ? ' <span class="text-sm font-bold">(' . $companyFilings->put_call . ')</span></a>' : '</a>'));
             })
-            ->addColumn('ssh_prnamt', function (CompanyFilings $companyFilings) {
-                return number_format($companyFilings->ssh_prnamt);
+            ->addColumn('ssh_prnamt')
+            ->addColumn('shares_held', function (CompanyFilings $companyFilings) {
+                return '<button type="button" class="inline-block px-2 py-1 bg-[#DCF6EC] hover:bg-green-dark transition-all rounded" onclick="Livewire.emit(`slide-over.open`, `filings-summary-s3-link-content`, {cik: `' . $companyFilings->cik . '`, date:  `' . $companyFilings->report_calendar_or_quarter . '`})">' . number_format($companyFilings->ssh_prnamt) . '</button>';
             })
-            ->addColumn('value', function (CompanyFilings $companyFilings) {
-                return number_format($companyFilings->value, 4);
+            ->addColumn('value')
+            ->addColumn('market_value', function (CompanyFilings $companyFilings) {
+                return number_format($companyFilings->value);
             })
-            ->addColumn('weight', function (CompanyFilings $companyFilings) {
+            ->addColumn('weight')
+            ->addColumn('portfolio_percent', function (CompanyFilings $companyFilings) {
                 return number_format($companyFilings->weight, 4) . '%';
             })
-            ->addColumn('last_weight', function (CompanyFilings $companyFilings) {
+            ->addColumn('last_weight')
+            ->addColumn('prior_portfolio_percent', function (CompanyFilings $companyFilings) {
                 return number_format($companyFilings->last_weight, 4) . '%';
             })
-            ->addColumn('change_in_shares', function (CompanyFilings $companyFilings) {
+            ->addColumn('change_in_shares')
+            ->addColumn('formatted_change_in_shares', function (CompanyFilings $companyFilings) {
                 if ($companyFilings->change_in_shares >= 0) {
                     return number_format($companyFilings->change_in_shares);
                 }
 
                 return '<span class="text-red">(' . number_format(-1 * $companyFilings->change_in_shares) . ')</span>';
             })
-            ->addColumn('ownership', function (CompanyFilings $companyFilings) {
+            ->addColumn('ownership')
+            ->addColumn('ownership_percent', function (CompanyFilings $companyFilings) {
                 return number_format($companyFilings->ownership, 4) . '%';
             })
             ->addColumn('signature_date')
-            ->addColumn('estimated_average_price', function (CompanyFilings $companyFilings) {
+            ->addColumn('estimated_average_price')
+            ->addColumn('formatted_estimated_average_price', function (CompanyFilings $companyFilings) {
                 return number_format($companyFilings->estimated_average_price, 4);
             });
     }

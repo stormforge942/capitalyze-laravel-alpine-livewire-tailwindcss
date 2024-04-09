@@ -55,6 +55,7 @@ class FundHoldingsTable extends BaseTable
     {
         return PowerGrid::eloquent()
             ->addColumn('symbol')
+            ->addColumn('name_of_issuer')
             ->addColumn('name', function (CompanyFilings $companyFilings) {
                 if ($this->redirectToOverview) {
                     $href = route('company.profile', $companyFilings->symbol);
@@ -73,26 +74,32 @@ class FundHoldingsTable extends BaseTable
 
                 return '<a href=" ' . $href . ' " class="text-blue hover:underline">' . $companyFilings->symbol . (!empty($companyFilings->name_of_issuer) ? ' <span class="text-xs font-light">(' . $companyFilings->name_of_issuer . ')<span>' : '') . '</a>';
             })
+            ->addColumn('ssh_prnamt')
             ->addColumn('ssh_prnamt_formatted', function (CompanyFilings $companyFilings) {
                 return '<button type="button" class="inline-block px-2 py-1 bg-[#DCF6EC] hover:bg-green-dark transition-all rounded" onclick="Livewire.emit(`slide-over.open`, `filings-summary-s3-link-content`, {cik: `' . $companyFilings->cik . '`, date:  `' . $companyFilings->report_calendar_or_quarter . '`})">' . number_format($companyFilings->ssh_prnamt) . '</button>';
             })
+            ->addColumn('value')
             ->addColumn('market_value', function (CompanyFilings $companyFilings) {
                 return number_format($companyFilings->value, 0) . ' $';
             })
-            ->addColumn('weight', function (CompanyFilings $companyFilings) {
+            ->addColumn('weight')
+            ->addColumn('portfolio_percent', function (CompanyFilings $companyFilings) {
                 return number_format($companyFilings->weight, 4) . '%';
             })
-            ->addColumn('last_weight', function (CompanyFilings $companyFilings) {
+            ->addColumn('last_weight')
+            ->addColumn('prior_portfolio_percent', function (CompanyFilings $companyFilings) {
                 return number_format($companyFilings->last_weight, 4) . '%';
             })
-            ->addColumn('change_in_shares', function (CompanyFilings $companyFilings) {
+            ->addColumn('change_in_shares')
+            ->addColumn('formatted_change_in_shares', function (CompanyFilings $companyFilings) {
                 if ($companyFilings->change_in_shares >= 0) {
                     return number_format($companyFilings->change_in_shares);
                 }
 
                 return '<span class="text-red">(' . number_format(-1 * $companyFilings->change_in_shares) . ')</span>';
             })
-            ->addColumn('ownership', function (CompanyFilings $companyFilings) {
+            ->addColumn('ownership')
+            ->addColumn('ownership_percent', function (CompanyFilings $companyFilings) {
                 return number_format($companyFilings->ownership, 4) . '%';
             })
             ->addColumn('signature_date')
@@ -119,9 +126,7 @@ class FundHoldingsTable extends BaseTable
         return [
             Column::make('', 'history'),
 
-            Column::add()
-                ->title('Company')
-                ->field('name', 'symbol')
+            Column::make('Company', 'name', 'symbol')
                 ->searchable()
                 ->sortable(),
 
@@ -133,19 +138,19 @@ class FundHoldingsTable extends BaseTable
                 ->sortable()
                 ->headerAttribute('[&>div]:justify-end')->bodyAttribute('text-right'),
 
-            Column::make('% of Portfolio', 'weight')
+            Column::make('% of Portfolio', 'portfolio_percent', 'weight')
                 ->sortable()
                 ->headerAttribute('[&>div]:justify-end')->bodyAttribute('text-right'),
 
-            Column::make('Prior % of Portfolio', 'last_weight')
+            Column::make('Prior % of Portfolio', 'prior_portfolio_percent', 'last_weight')
                 ->sortable()
                 ->headerAttribute('[&>div]:justify-end')->bodyAttribute('text-right'),
 
-            Column::make('Change in Shares', 'change_in_shares')
+            Column::make('Change in Shares', 'formatted_change_in_shares', 'change_in_shares')
                 ->sortable()
                 ->headerAttribute('[&>div]:justify-end')->bodyAttribute('text-right'),
 
-            Column::make('% Ownership', 'ownership')
+            Column::make('% Ownership', 'ownership_percent', 'ownership')
                 ->sortable()
                 ->headerAttribute('[&>div]:justify-end')->bodyAttribute('text-right'),
 
