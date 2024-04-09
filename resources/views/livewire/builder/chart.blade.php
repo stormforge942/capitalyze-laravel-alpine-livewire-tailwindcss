@@ -235,8 +235,8 @@
                             <div
                                 class="flex items-center w-full max-w-[400px] gap-x-1 border border-[#D4DDD7] rounded bg-gray-light font-medium">
                                 <template x-for="(tab, key) in tabs">
-                                    <button class="py-2 rounded flex-1 transition"
-                                        :class="panel === key ? 'bg-[#DCF6EC] border border-[#52D3A2] -m-[1px]' : ''"
+                                    <button class="py-2 rounded flex-1 border transition -m-[1px]"
+                                        :class="panel === key ? 'bg-[#DCF6EC] border-[#52D3A2]' : 'border-transparent hover:border-gray-medium text-gray-medium2'"
                                         @click="usedColors = {}; $nextTick(() => {panel = key})"
                                         x-text="tab"></button>
                                 </template>
