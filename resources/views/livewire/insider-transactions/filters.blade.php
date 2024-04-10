@@ -93,7 +93,7 @@
                                 xmlns="http://www.w3.org/2000/svg">
                                 <path
                                     d="M6.4 19L5 17.6L10.6 12L5 6.4L6.4 5L12 10.6L17.6 5L19 6.4L13.4 12L19 17.6L17.6 19L12 13.4L6.4 19Z"
-                                    fill="#686868" />
+                                    fill="#C22929" />
                             </svg>
                         </button>
                     </div>
@@ -120,7 +120,7 @@
 
                     <div class="p-6">
                         <button type="button"
-                            class="w-full px-4 py-3 font-medium bg-green-dark hover:bg-opacity-80 rounded disabled:pointer-events-none disabled:bg-[#D1D3D5] disabled:text-gray-medium2 text-base"
+                            class="w-full px-4 py-3 font-medium bg-green-dark hover:bg-opacity-80 rounded disabled:pointer-events-none disabled:bg-[#D4DDD7] disabled:text-gray-medium2 text-base"
                             @click="value = tmpValue; showDropdown = false;" :disabled="value === tmpValue">
                             Show Result
                         </button>
@@ -184,7 +184,7 @@
                                 xmlns="http://www.w3.org/2000/svg">
                                 <path
                                     d="M6.4 19L5 17.6L10.6 12L5 6.4L6.4 5L12 10.6L17.6 5L19 6.4L13.4 12L19 17.6L17.6 19L12 13.4L6.4 19Z"
-                                    fill="#686868" />
+                                    fill="#C22929" />
                             </svg>
                         </button>
                     </div>
@@ -211,7 +211,7 @@
 
                     <div class="p-6">
                         <button type="button"
-                            class="w-full px-4 py-3 font-medium bg-green-dark hover:bg-opacity-80 rounded disabled:pointer-events-none disabled:bg-[#D1D3D5] disabled:text-gray-medium2 text-base"
+                            class="w-full px-4 py-3 font-medium bg-green-dark hover:bg-opacity-80 rounded disabled:pointer-events-none disabled:bg-[#D4DDD7] disabled:text-gray-medium2 text-base"
                             @click="value = tmpValue; showDropdown = false;" :disabled="value === tmpValue">
                             Show Result
                         </button>
