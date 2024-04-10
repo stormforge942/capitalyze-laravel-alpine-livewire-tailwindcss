@@ -282,20 +282,13 @@ class Page extends Component
     private function extractDates($array, $dates = [])
     {
         foreach ($array as $key => $value) {
-            if (is_array($value)) {
-                $timestamp = strtotime($key);
-
-                if ($timestamp) {
-                    $date = date('Y-m-d', $timestamp);
-
-                    if (!in_array($date, $dates)) {
-                        $dates[] = $date;
-                    }
+            // is key date
+            if (preg_match('/^\d{4}-\d{2}-\d{2}$/', $key)) {
+                if (!in_array($key, $dates)) {
+                    $dates[] = $key;
                 }
-
-                $dates = $this->extractDates($value, $dates);
             } else {
-                break;
+                $dates = $this->extractDates($value, $dates);
             }
         }
 
@@ -399,7 +392,8 @@ class Page extends Component
         $isUsdPerShares = false;
 
         foreach ($data as $key => $value) {
-            if (strtotime($key)) {
+            // is key date
+            if (preg_match('/^\d{4}-\d{2}-\d{2}$/', $key)) {
                 foreach ($this->tableDates as $tableDate) {
                     if (substr($tableDate, 0, 7) == substr($key, 0, 7)) {
                         if (in_array($value[1] ?? '', ['%', 'USD/Shares'])) {
