@@ -6,6 +6,6 @@
     </svg>
 
     <input type="search" placeholder="Search"
-        class="placeholder:text-gray-medium2 border-none flex-1 focus:outline-none focus:ring-0 h-[30px] min-w-0"
+        class="placeholder:text-gray-medium2 border-none flex-1 focus:outline-none focus:ring-0 h-[30px] min-w-0 search-x-button"
         {{ $attributes }}>
 </div>

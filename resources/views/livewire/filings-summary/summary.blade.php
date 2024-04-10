@@ -66,7 +66,7 @@
                             <img class="mt-1 mr-0" src="{{ asset('/svg/search.svg') }}" />
                         </div>
                         <input x-model="search[item.value]" type="search"
-                            class="focus:ring-0 focus:border-blue-500 placeholder:text-sm text-sm  border-none w-[9rem] leading-[1.45rem] h-[1.45rem]"
+                            class="focus:ring-0 focus:border-blue-500 placeholder:text-sm text-sm  border-none w-[9rem] leading-[1.45rem] h-[1.45rem] search-x-button-small"
                             placeholder="search document" />
                     </div>
                 </div>
