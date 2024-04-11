@@ -78,6 +78,8 @@
 
                 const isStacked = metricAttributes[metric]?.type === 'stacked-bar';
 
+                const yAxisID = addAxis(this.metricsMap[metric].yAxis || 'y', metric, metricAttributes[metric]?.sAxis);
+
                 datasets.push({
                     label,
                     data: this.selectedDates.map(date => {
@@ -89,9 +91,9 @@
                     backgroundColor: color,
                     borderColor: color,
                     type,
-                    yAxisID: addAxis(this.metricsMap[metric].yAxis || 'y', metric, metricAttributes[metric]?.sAxis),
+                    yAxisID,
                     shouldFormat: !this.metricsMap[metric].yAxis,
-                    ...(isStacked ? { stack: this.metricsMap[metric].yAxis || 'y' } : {}),
+                    ...(isStacked ? { stack: yAxisID } : {}),
                 })
             })
         })
