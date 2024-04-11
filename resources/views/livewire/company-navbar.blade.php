@@ -26,9 +26,9 @@
             }
         }
     }"
-        class="fixed top-0 left-0 z-40 hidden h-screen pt-10 bg-white border-r border-gray-200 lg:block dark:bg-gray-800 dark:border-gray-700 w-56"
-        :class="collapsed ? '!w-20' : 'w-56'" aria-label="Sidebar">
-        <div class="flex flex-col h-full pb-4 bg-white dark:bg-gray-800">
+        class="fixed top-0 left-0 z-40 hidden h-screen pt-10 bg-white lg:block  w-56"
+        :class="collapsed ? '!w-20' : 'w-56'" aria-label="Sidebar" style="box-shadow: 0px 4px 20px 0px #0000000D">
+        <div class="flex flex-col h-full pb-4 bg-white">
             <button class="absolute -right-3 top-40" :class="collapsed ? 'rotate-180' : ''" @click="toggle">
                 <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
                     <path
