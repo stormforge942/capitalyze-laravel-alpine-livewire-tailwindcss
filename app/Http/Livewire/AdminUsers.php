@@ -54,6 +54,13 @@ class AdminUsers extends Component
         $user->notify(new AccountApprovedNotification);
     }
 
+    public function verifyUserEmail(User $user)
+    {
+        if (!$user->email_verified_at) {
+            $user->markEmailAsVerified();
+        }
+    }
+
     public function disapproveUser(User $user)
     {
         $user->update([

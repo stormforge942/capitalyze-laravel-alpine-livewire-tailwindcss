@@ -15,7 +15,7 @@
                         <th class="capitalize p-2 whitespace-nowrap bg-gray-100"><a href="#"
                                 wire:click.prevent="sortBy('email')">Group</a></th>
                         <th class="capitalize p-2 whitespace-nowrap bg-gray-100"><a href="#"
-                                wire:click.prevent="sortBy('approved')">Approved</a></th>
+                                wire:click.prevent="sortBy('email_verified_at')">Email Verified At</a></th>
                         <th class="capitalize p-2 whitespace-nowrap bg-gray-100"><a href="#"
                                 wire:click.prevent="sortBy('created_at')">Registration Date</a></th>
                         <th colspan="2" class="capitalize p-2 whitespace-nowrap bg-gray-100">Action</th>
@@ -43,7 +43,17 @@
                                     @endforeach
                                 </select>
                             </td>
-                            <td class="p-2">{{ $user->is_approved ? 'Yes' : 'No' }}</td>
+                            <td class="p-2">
+                                @if ($user->email_verified_at)
+                                    {{ $user->email_verified_at->format('m/d/Y H:i') }}
+                                @else
+                                    <button
+                                        class="border px-4 py-2 rounded-full bg-green-400 hover:bg-green-500 text-white font-semibold"
+                                        wire:click="verifyUserEmail({{ $user->id }})">
+                                        Verify
+                                    </button>
+                                @endif
+                            </td>
                             <td class="p-2">{{ $user->created_at->format('m/d/Y') }}</td>
                             <td class="p-2 text-left">
                                 @if (!$user->is_approved)
