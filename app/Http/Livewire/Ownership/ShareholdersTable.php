@@ -99,7 +99,7 @@ class ShareholdersTable extends BaseTable
             })
             ->addColumn('ssh_prnamt')
             ->addColumn('shares_held', function (CompanyFilings $companyFilings) {
-                return '<button type="button" class="inline-block px-2 py-1 bg-[#DCF6EC] hover:bg-green-dark transition-all rounded" onclick="Livewire.emit(`slide-over.open`, `filings-summary-s3-link-content`, {cik: `' . $companyFilings->cik . '`, date:  `' . $companyFilings->report_calendar_or_quarter . '`})">' . number_format($companyFilings->ssh_prnamt) . '</button>';
+                return '<button type="button" class="inline-block px-2 py-1 bg-[#DCF6EC] hover:bg-green-dark transition-all rounded" onclick="Livewire.emit(`slide-over.open`, `filings-summary-s3-link-content`, {cik: `' . $companyFilings->cik . '`, date:  `' . $companyFilings->report_calendar_or_quarter . '`, name_of_issuer:  `' . $companyFilings->name_of_issuer . '`})">' . number_format($companyFilings->ssh_prnamt) . '</button>';
             })
             ->addColumn('value')
             ->addColumn('market_value', function (CompanyFilings $companyFilings) {
