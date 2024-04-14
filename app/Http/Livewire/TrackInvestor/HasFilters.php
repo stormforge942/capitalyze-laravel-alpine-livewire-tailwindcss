@@ -9,6 +9,8 @@ trait HasFilters
     public $marketValue = null;
     public $turnover = null;
     public $holdings = null;
+    public $view = 'most-recent';
+    public $loading = false;
 
     public function loadMore()
     {
@@ -17,7 +19,7 @@ trait HasFilters
 
     public function updated($prop)
     {
-        if (in_array($prop, ['search', 'marketValue', 'turnover', 'holdings'])) {
+        if (in_array($prop, ['search', 'marketValue', 'turnover', 'holdings', 'view'])) {
             $this->reset('perPage');
         }
     }
@@ -37,6 +39,7 @@ trait HasFilters
             'marketValue' => $formatRange($this->marketValue),
             'turnover' => $formatRange($this->turnover),
             'holdings' => $formatRange($this->holdings, 1),
+            'view' => $this->view ?: 'most-recent',
         ];
 
         $filters['areApplied'] = collect($filters)->some(fn ($val) => $val !== null);

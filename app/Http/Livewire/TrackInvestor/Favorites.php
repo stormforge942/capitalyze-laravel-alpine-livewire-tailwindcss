@@ -43,6 +43,8 @@ class Favorites extends Component
 
         $filters = $this->formattedFilters();
 
+        $this->loading = false;
+        
         return view('livewire.track-investor.favorites', [
             'funds' => $this->getFunds($funds, $filters),
             'mutualFunds' => $this->getMutualFunds($mutualFunds, $filters),

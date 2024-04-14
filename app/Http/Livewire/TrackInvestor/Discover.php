@@ -2,11 +2,12 @@
 
 namespace App\Http\Livewire\TrackInvestor;
 
-use App\Http\Livewire\AsTab;
 use Livewire\Component;
+use App\Http\Livewire\AsTab;
+use Illuminate\Support\Carbon;
 use Illuminate\Support\Facades\DB;
-use App\Models\TrackInvestorFavorite;
 use Illuminate\Support\Facades\Auth;
+use App\Models\TrackInvestorFavorite;
 use Illuminate\Support\Facades\Cache;
 
 class Discover extends Component
@@ -16,6 +17,8 @@ class Discover extends Component
     protected $listeners = [
         'update' => '$refresh',
     ];
+
+    public $views = [];
 
     public static function title(): string
     {
@@ -27,9 +30,22 @@ class Discover extends Component
         return 'discover';
     }
 
-    public function loadMore()
+    public function mount()
     {
-        $this->perPage += 20;
+        $entry = DB::connection('pgsql-xbrl')
+            ->table('filings_summary')
+            ->select(DB::raw("min(date) as start"), DB::raw("max(date) as end"))
+            ->first();
+
+        $start = Carbon::parse($entry->start ?: now()->toDateString());
+        $end = Carbon::parse($entry->end ?: now()->toDateString());
+
+        $quarters = generate_quarter_options($start, $end);
+        $this->views = [
+            'most-recent' => 'Most Recent',
+            'all' => 'All Historical Filers',
+            ...$quarters,
+        ];
     }
 
     public function render()
@@ -55,6 +71,8 @@ class Discover extends Component
 
         $funds->setCollection(collect($transformedFunds));
 
+        $this->loading = false;
+
         return view('livewire.track-investor.discover', [
             'funds' => $funds,
         ]);
@@ -62,17 +80,28 @@ class Discover extends Component
 
     private function getFunds(array $filters)
     {
-        return DB::connection('pgsql-xbrl')
+        $q = DB::connection('pgsql-xbrl')
             ->table('filings_summary')
-            ->select('investor_name', 'cik', 'total_value', 'portfolio_size', 'change_in_total_value')
-            ->where('is_latest', true)
-            ->when(
-                $filters['search'],
-                fn ($query) => $query->where(
-                    fn ($q) => $q->where(DB::raw('investor_name'), 'ilike', "%{$filters['search']}%")
-                        ->orWhere(DB::raw('cik'), $filters['search'])
-                )
+            ->select('investor_name', 'cik', 'total_value', 'portfolio_size', 'change_in_total_value');
+
+        if ($filters['view'] === 'most-recent') {
+            $quarters = array_keys($this->views);
+
+            $q->whereIn('date', [$quarters[3], $quarters[4]])
+                ->where('is_latest', true);
+        } else if ($filters['view'] == 'all') {
+            $q->where('is_latest', true);
+        } else {
+            $q->where('date', $filters['view']);
+        }
+
+        $q = $q->when(
+            $filters['search'],
+            fn ($query) => $query->where(
+                fn ($q) => $q->where(DB::raw('investor_name'), 'ilike', "%{$filters['search']}%")
+                    ->orWhere(DB::raw('cik'), $filters['search'])
             )
+        )
             ->when($filters['marketValue'], function ($query) use ($filters) {
                 return $query->whereBetween('total_value', $filters['marketValue']);
             })
@@ -84,5 +113,7 @@ class Discover extends Component
             })
             ->orderBy('total_value', 'desc')
             ->paginate($this->perPage);
+
+        return $q;
     }
 }

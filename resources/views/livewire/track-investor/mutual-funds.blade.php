@@ -1,16 +1,18 @@
-<div>
+<div x-data="{
+    loading: $wire.entangle('loading', true),
+}">
     <h2 class="text-xl font-semibold">Discover Mutual Funds</h2>
 
     @include('livewire.track-investor.filters')
 
     <div class="mt-6">
-        <div wire:loading.block wire:target="search, runSearch">
+        <div x-show="loading" x-cloak>
             <div class="py-10 grid place-items-center">
                 <span class="mx-auto simple-loader !text-green-dark"></span>
             </div>
         </div>
 
-        <div wire:loading.remove wire:target="search, runSearch">
+        <div x-show="!loading" x-cloak>
             @if (!count($funds ?? []))
                 <div class="text-dark-light2">
                     No funds found @if ($search)
@@ -18,8 +20,7 @@
                     @endif
                 </div>
             @else
-                <div
-                    class="grid gap-4 grid-cols-1 md:grid-cols-2 lg:grid-cols-[repeat(auto-fill,minmax(17.19rem,1fr))]">
+                <div class="grid gap-4 grid-cols-1 md:grid-cols-2 lg:grid-cols-[repeat(auto-fill,minmax(17.19rem,1fr))]">
                     @foreach ($funds as $fund)
                         <livewire:track-investor.mutual-fund-card :fund="$fund" :wire:key="Str::random(5)" />
                     @endforeach

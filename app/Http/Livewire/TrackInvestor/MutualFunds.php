@@ -2,11 +2,12 @@
 
 namespace App\Http\Livewire\TrackInvestor;
 
-use App\Http\Livewire\AsTab;
 use Livewire\Component;
+use App\Http\Livewire\AsTab;
+use Illuminate\Support\Carbon;
 use Illuminate\Support\Facades\DB;
-use App\Models\TrackInvestorFavorite;
 use Illuminate\Support\Facades\Auth;
+use App\Models\TrackInvestorFavorite;
 use Illuminate\Support\Facades\Cache;
 
 class MutualFunds extends Component
@@ -17,6 +18,8 @@ class MutualFunds extends Component
         'update' => '$refresh',
     ];
 
+    public $views = [];
+
     public static function title(): string
     {
         return 'N-PORT Filers';
@@ -25,6 +28,24 @@ class MutualFunds extends Component
     public static function key(): string
     {
         return 'mutual-funds';
+    }
+
+    public function mount()
+    {
+        $entry = DB::connection('pgsql-xbrl')
+            ->table('mutual_fund_holdings_summary')
+            ->select(DB::raw("min(date) as start"), DB::raw("max(date) as end"))
+            ->first();
+
+        $start = Carbon::parse($entry->start ?: now()->toDateString());
+        $end = Carbon::parse($entry->end ?: now()->toDateString());
+
+        $quarters = generate_quarter_options($start, $end);
+        $this->views = [
+            'most-recent' => 'Most Recent',
+            'all' => 'All Historical Filers',
+            ...$quarters,
+        ];
     }
 
     public function render()
@@ -60,6 +81,8 @@ class MutualFunds extends Component
 
         $funds->setCollection(collect($transformedFunds));
 
+        $this->loading = false;
+
         return view('livewire.track-investor.mutual-funds', [
             'funds' => $funds,
         ]);
@@ -67,10 +90,21 @@ class MutualFunds extends Component
 
     private function getFunds($filters)
     {
-        return DB::connection('pgsql-xbrl')
+        $q = DB::connection('pgsql-xbrl')
             ->table('mutual_fund_holdings_summary')
-            ->select('registrant_name', 'fund_symbol', 'cik', 'series_id', 'class_id', 'class_name', 'total_value', 'portfolio_size', 'change_in_total_value', 'date')
-            ->where('is_latest', true)
+            ->select('registrant_name', 'fund_symbol', 'cik', 'series_id', 'class_id', 'class_name', 'total_value', 'portfolio_size', 'change_in_total_value', 'date');
+
+        if ($filters['view'] === 'most-recent') {
+            $quarters = array_keys($this->views);
+
+            $q->whereIn('date', [$quarters[2], $quarters[3]]);
+        } else if ($filters['view'] == 'all') {
+            $q->where('is_latest', true);
+        } else {
+            $q->where('date', $filters['view']);
+        }
+
+        $q = $q->where('is_latest', true)
             ->when(
                 $filters['search'],
                 fn ($query) => $query->where(
@@ -92,5 +126,7 @@ class MutualFunds extends Component
             )
             ->orderBy('total_value', 'desc')
             ->paginate($this->perPage);
+
+        return $q;
     }
 }
