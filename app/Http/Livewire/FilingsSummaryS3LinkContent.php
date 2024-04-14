@@ -2,6 +2,7 @@
 
 namespace App\Http\Livewire;
 
+use Illuminate\Pagination\LengthAwarePaginator;
 use Illuminate\Support\Facades\DB;
 use WireElements\Pro\Components\SlideOver\SlideOver;
 
@@ -11,86 +12,121 @@ class FilingsSummaryS3LinkContent extends SlideOver
     public string $date;
     public string $name_of_issuer;
     public string $content = '';
+    public ?string $url = null;
+    public int $page = 0;
+    public int $numberOfPages = 1;
+
+    private const PAGE_SIZE = 20;
+
+    public function updatedPage()
+    {
+        $this->load();
+    }
 
     public function render()
     {
-        return view('livewire.filings-summary-s3-link-content');
+        $paginator = new LengthAwarePaginator([], $this->numberOfPages * self::PAGE_SIZE, self::PAGE_SIZE, $this->page);
+                
+        return view('livewire.filings-summary-s3-link-content', [
+            'pages' => $paginator->linkCollection(),
+        ]);
     }
 
-    public function load()  // Accepts the name of the issuer to find
+    public function load(?int $page = null)
     {
-        $url = DB::connection('pgsql-xbrl')
-            ->table('filings_summary')
-            ->where([
-                'cik' => $this->cik,
-                'date' => $this->date,
-            ])
-            ->value('s3_url');
+        if ($page) {
+            $this->page = $page;
+        }
 
-        $this->content = file_get_contents($url);
+        if (!$this->url) {
+            $this->url = DB::connection('pgsql-xbrl')
+                ->table('filings_summary')
+                ->where([
+                    'cik' => $this->cik,
+                    'date' => $this->date,
+                ])
+                ->value('s3_url');
+        }
 
+        $this->content = file_get_contents($this->url);
+
+        $this->paginateContent();
+    }
+
+    public function paginateContent()
+    {
         $dom = new \DOMDocument();
-        @$dom->loadHTML($this->content);  // Suppress warnings from malformed HTML
+        @$dom->loadHTML($this->content);
 
         $xpath = new \DOMXPath($dom);
         $tables = $xpath->query("//table[@summary]");
 
-        if ($tables->length > 0) {
-            $lastTable = $tables->item($tables->length - 1);
-            $rows = $lastTable->getElementsByTagName('tr');
+        if (!$tables->length) return;
 
-            // Find the row index containing the specified issuer name
-            $targetRowIndex = -1;
-            foreach ($rows as $index => $row) {
-                if ($index == 0) continue;  // Skip the header row if present
-                $cells = $row->getElementsByTagName('td');
-                if ($cells->length > 0 && strtolower(trim($cells->item(0)->textContent)) === strtolower(trim($this->name_of_issuer))) {
-                    foreach ($row->childNodes as $cell) {
-                        // Check if the node is a TD element
-                        // dump($cell->textContent);
-                        if ($cell->nodeName === 'td' && trim($cell->textContent) != "\u{A0}") {
-                            // Create a span element
-                            $span = $dom->createElement('span');
-                            // Set the background color style to the span
-                            $span->setAttribute('style', 'background-color:yellow; display: inline-block; padding: 2px;'); // Example style: gray background
-                            // Move the content of the cell to the span
-                            while ($cell->firstChild) {
-                                $span->appendChild($cell->firstChild);
-                            }
-                            // Replace the content of the cell with the span
-                            $cell->appendChild($span);
-                        }
-                    }
-                    $targetRowIndex = $index;
-                }
-            }
+        $lastTable = $tables->item($tables->length - 1);
 
-            // Calculate page number based on the row index
-            $page = ($targetRowIndex != -1) ? intval(($targetRowIndex - 3) / 10) + 1 : 1;
-
-            $paginationStartIndex = 3;
-            $startIndex = ($page - 1) * 10 + $paginationStartIndex;
-            $endIndex = $startIndex + 10;
-
-            // Remove rows that are not within the range of $startIndex and $endIndex, excluding the first three
-            for ($i = $rows->length - 1; $i >= $paginationStartIndex; $i--) {
-                if ($i < $startIndex || $i >= $endIndex) {
-                    $rowParent = $rows->item($i)->parentNode;
-                    $rowParent->removeChild($rows->item($i));
-                }
-            }
-
-            // Replace the original table with the modified one
-            $originalParent = $lastTable->parentNode;
-            $originalParent->replaceChild($dom->importNode($lastTable, true), $lastTable);
-
-            $this->content = $dom->saveHTML();
-        } else {
-            dd("No tables with a 'summary' attribute found.");
+        if (!$lastTable) {
+            return;
         }
-    }
 
-    
+        $rows = $lastTable->getElementsByTagName('tr');
+
+        $this->numberOfPages = ceil(($rows->length - 3) / self::PAGE_SIZE);
+
+        if ($this->page && $this->page > $this->numberOfPages) {
+            $this->page = $this->numberOfPages;
+        }
+
+        $targetRowIndex = -1;
+        foreach ($rows as $index => $row) {
+            if ($index < 3) continue;
+
+            $cells = $row->getElementsByTagName('td');
+
+            if (
+                $cells->length > 0 &&
+                strtolower(trim($cells->item(0)->textContent)) === strtolower(trim($this->name_of_issuer))
+            ) {
+                foreach ($row->childNodes as $cell) {
+                    if (trim($cell->textContent) != "\u{A0}") {
+                        $span = $dom->createElement('span');
+                        $span->setAttribute('style', 'background-color:yellow; display: inline-block; padding: 2px;');
+                        while ($cell->firstChild) {
+                            $span->appendChild($cell->firstChild);
+                        }
+                        $cell->appendChild($span);
+                    }
+                }
+
+                $targetRowIndex = $targetRowIndex >= 0 ? $targetRowIndex : $index;
+            }
+        }
+
+        // Calculate page number based on the row index
+        $page = $this->page > 0
+            ? $this->page
+            : (($targetRowIndex != -1) ? intval(($targetRowIndex - 3) / self::PAGE_SIZE) + 1 : 1);
+
+        $this->page = $page;
+
+        $paginationStartIndex = 3;
+        $startIndex = ($page - 1) * self::PAGE_SIZE + $paginationStartIndex;
+        $endIndex = $startIndex + self::PAGE_SIZE;
+
+        // Remove rows that are not within the range of $startIndex and $endIndex, excluding the first three
+        for ($i = $rows->length - 1; $i >= $paginationStartIndex; $i--) {
+            if ($i < $startIndex || $i >= $endIndex) {
+                $rowParent = $rows->item($i)->parentNode;
+                $rowParent->removeChild($rows->item($i));
+            }
+        }
+
+        // Replace the original table with the modified one
+        $originalParent = $lastTable->parentNode;
+        $originalParent->replaceChild($dom->importNode($lastTable, true), $lastTable);
+
+        $this->content = $dom->saveHTML();
+    }
 
 
     public static function attributes(): array
