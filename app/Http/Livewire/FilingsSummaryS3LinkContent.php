@@ -26,7 +26,7 @@ class FilingsSummaryS3LinkContent extends SlideOver
     public function render()
     {
         $paginator = new LengthAwarePaginator([], $this->numberOfPages * self::PAGE_SIZE, self::PAGE_SIZE, $this->page);
-                
+
         return view('livewire.filings-summary-s3-link-content', [
             'pages' => $paginator->linkCollection(),
         ]);
@@ -34,6 +34,9 @@ class FilingsSummaryS3LinkContent extends SlideOver
 
     public function load(?int $page = null)
     {
+        // Increase the time limit to 3 minutes
+        set_time_limit(60 * 3);
+
         if ($page) {
             $this->page = $page;
         }
@@ -46,6 +49,10 @@ class FilingsSummaryS3LinkContent extends SlideOver
                     'date' => $this->date,
                 ])
                 ->value('s3_url');
+        }
+
+        if (!$this->url) {
+            return;
         }
 
         $this->content = file_get_contents($this->url);
