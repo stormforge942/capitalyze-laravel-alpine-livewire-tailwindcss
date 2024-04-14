@@ -82,7 +82,7 @@ function initTableExport(container) {
 
 window.initTableExport = initTableExport
 
-function exportTableToExcel(table, idx) {
+function exportTableToExcel(table, idx, dataOnly = false) {
     const rows = table.querySelectorAll("tr")
     const data = []
 
@@ -119,20 +119,21 @@ function exportTableToExcel(table, idx) {
 
     if (data.length) {
         // maintain same column length
-        const maxColumns = Math.max(...data.map((row) => row.length))
+        let maxColumns = Math.max(...data.map((row) => row.length))
         data.forEach((row) => {
             while (row.length < maxColumns) {
                 row.push("")
             }
         })
+        
+        const symbols = ["$", "¥", "€", "£", "%", "(", ")", ""]
 
         // remove empty columns or contains only currency symbols
         for (let i = 0; i < maxColumns; i++) {
-            if (
-                data.every((row) => ["$", "¥", "€", "£", ""].includes(row[i]))
-            ) {
+            if (data.every((row) => symbols.includes(row[i]?.trim() || ""))) {
                 data.forEach((row) => row.splice(i, 1))
                 i--
+                maxColumns--
             }
         }
 
@@ -152,14 +153,20 @@ function exportTableToExcel(table, idx) {
             data.pop()
         }
 
-        // remove empty columns or contains only currency symbols
+        // remove empty columns
         for (let i = 0; i < maxColumns; i++) {
-            if (data.every((row) => !row[i])) {
+            if (data.every((row) => symbols.includes(row[i]?.trim() || ""))) {
                 data.forEach((row) => row.splice(i, 1))
+                i--
+                maxColumns--
             }
         }
     } else {
         data.push(["No data found"])
+    }
+
+    if (dataOnly) {
+        return data
     }
 
     const csvContent = data
@@ -175,90 +182,9 @@ function exportTableToExcel(table, idx) {
 }
 
 function exportTablesToExcel(tables) {
-    const items = [...tables].map((table) => {
-        const rows = table.querySelectorAll("tr")
-        const data = []
-
-        rows.forEach((row) => {
-            const rowData = []
-            row.querySelectorAll("td").forEach((cell) => {
-                const colspan = cell.getAttribute("colspan")
-                if (colspan) {
-                    for (let i = 0; i < parseInt(colspan - 1); i++) {
-                        rowData.push("")
-                    }
-                }
-
-                // get cell text content but perform some cleanup like br to newline
-                let content = new DOMParser().parseFromString(
-                    cell.innerHTML,
-                    "text/html"
-                )
-
-                content.querySelectorAll("br").forEach((br) => {
-                    br.replaceWith("\n")
-                })
-
-                content = content.body.innerText
-                    .replace(/,/g, ",")
-                    .replace(/"/g, '""')
-                    .trim()
-
-                rowData.push(content)
-            })
-
-            data.push(rowData)
-        })
-
-        if (data.length) {
-            // maintain same column length
-            const maxColumns = Math.max(...data.map((row) => row.length))
-            data.forEach((row) => {
-                while (row.length < maxColumns) {
-                    row.push("")
-                }
-            })
-
-            // remove empty columns or contains only currency symbols
-            for (let i = 0; i < maxColumns; i++) {
-                if (
-                    data.every((row) =>
-                        ["$", "¥", "€", "£", ""].includes(row[i])
-                    )
-                ) {
-                    data.forEach((row) => row.splice(i, 1))
-                    i--
-                }
-            }
-
-            // if first column is empty for row, shift it to left
-            data.forEach((row) => {
-                if (!row[0] && !row[1]) {
-                    row.shift()
-                    row.push("")
-                }
-            })
-
-            // remove firt and last row if it is empty
-            if (data[0].every((cell) => cell === "")) {
-                data.shift()
-            }
-            if (data[data.length - 1].every((cell) => cell === "")) {
-                data.pop()
-            }
-
-            // remove empty columns or contains only currency symbols
-            for (let i = 0; i < maxColumns; i++) {
-                if (data.every((row) => !row[i])) {
-                    data.forEach((row) => row.splice(i, 1))
-                }
-            }
-        } else {
-            data.push(["No data found"])
-        }
-
-        return data
-    })
+    const items = [...tables].map((table, idx) =>
+        exportTableToExcel(table, idx, true)
+    )
 
     const data = []
 

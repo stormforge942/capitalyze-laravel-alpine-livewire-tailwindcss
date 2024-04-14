@@ -117,20 +117,35 @@
                                 </div>
                             </td>
                             <template x-for="date in formattedTableDates" :key="date">
-                                <td class="pl-6 last:pr-6"
-                                    style="vertical-align: bottom;"
+                                <td class="pl-6 last:pr-6" style="vertical-align: bottom;"
                                     :class="[
                                         isLast ? 'last:rounded-br-lg' : '',
                                         index === 0 && groupIdx != 0 ? 'last:rounded-tr-lg' : '',
                                         paddings
                                     ]">
-                                    <x-review-number-button x-data="{ amount: row.values[date]?.value, date, }">
-                                        <div class="hover:underline cursor-pointer"
-                                            :class="row.values[date]?.isNegative ? 'text-red' : ''"
-                                            x-text="row.values[date]?.result"
+                                    <template x-if="row.values[date].isLink">
+                                        <button type="button"
+                                            class="inline-flex items-center gap-x-0.5 text-sm font-medium hover:text-blue"
                                             @click="Livewire.emit('slide-over.open', 'slides.right-slide', {data: row.values[date]})">
-                                        </div>
-                                    </x-review-number-button>
+                                            <span>show</span>
+                                            <svg class="h-3 w-3" data-slot="icon" fill="none" stroke-width="2.5"
+                                                stroke="currentColor" viewBox="0 0 24 24"
+                                                xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
+                                                <path stroke-linecap="round" stroke-linejoin="round"
+                                                    d="M13.5 6H5.25A2.25 2.25 0 0 0 3 8.25v10.5A2.25 2.25 0 0 0 5.25 21h10.5A2.25 2.25 0 0 0 18 18.75V10.5m-10.5 6L21 3m0 0h-5.25M21 3v5.25">
+                                                </path>
+                                            </svg>
+                                        </button>
+                                    </template>
+                                    <template x-if="!row.values[date].isLink">
+                                        <x-review-number-button x-data="{ amount: row.values[date]?.value, date, }">
+                                            <div class="hover:underline cursor-pointer"
+                                                :class="row.values[date]?.isNegative ? 'text-red' : ''"
+                                                x-text="row.values[date]?.result"
+                                                @click="Livewire.emit('slide-over.open', 'slides.right-slide', {data: row.values[date]})">
+                                            </div>
+                                        </x-review-number-button>
+                                    </template>
                                 </td>
                             </template>
                         </tr>

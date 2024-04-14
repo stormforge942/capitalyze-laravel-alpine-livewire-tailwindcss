@@ -16,6 +16,7 @@ class RightSlide extends SlideOver
     public $title = "Report Info";
     public $period = "";
     public $loaded = false;
+    public $isLink = false;
 
     public function mount($data)
     {
@@ -23,6 +24,7 @@ class RightSlide extends SlideOver
         $this->value = $data['value'];
         $this->hash = $data['hash'];
         $this->secondHash = $data['secondHash'] ?? null;
+        $this->isLink = $data['isLink'] ?? false;
     }
 
     public function loadData()
@@ -37,7 +39,13 @@ class RightSlide extends SlideOver
             $this->result = json_decode($result, true);
         }
 
-        if ($this->hash) {
+        if (!$this->hash) {
+            return;
+        }
+
+        if ($this->isLink) {
+            $hashes = [$this->hash];
+        } else {
             $query = DB::connection('pgsql-xbrl')
                 ->table('public.info_idx_tb')
                 ->where('ticker', '=', $this->ticker)
@@ -48,21 +56,19 @@ class RightSlide extends SlideOver
 
             $keyToFind = $this->hash;
 
-            if (isset($decodedQuery[$keyToFind])) {
-                $factHashes = $decodedQuery[$keyToFind];
-
-                $this->data = DB::connection('pgsql-xbrl')
-                    ->table('public.as_reported_sec_text_block_content')
-                    ->where('ticker', '=', $this->ticker)
-                    ->whereIn('fact_hash', $factHashes)
-                    ->pluck('content')
-                    ->implode('<br>');
-            } else {
-                $this->data = null;
-            }
-
-            $this->loaded = true;
+            $hashes = $decodedQuery[$keyToFind] ?? [];
         }
+
+        if (count($hashes)) {
+            $this->data = DB::connection('pgsql-xbrl')
+                ->table('public.as_reported_sec_text_block_content')
+                ->where('ticker', '=', $this->ticker)
+                ->whereIn('fact_hash', $hashes)
+                ->pluck('content')
+                ->implode('<br>');
+        }
+
+        $this->loaded = true;
     }
 
     public function render()
