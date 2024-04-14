@@ -3,6 +3,7 @@
 namespace App\Http\Livewire;
 
 use Illuminate\Pagination\LengthAwarePaginator;
+use Illuminate\Support\Facades\Cache;
 use Illuminate\Support\Facades\DB;
 use WireElements\Pro\Components\SlideOver\SlideOver;
 
@@ -55,6 +56,7 @@ class FilingsSummaryS3LinkContent extends SlideOver
             return;
         }
 
+        // $this->content = Cache::driver('file')->remember('filing_summary_s3_content:' . $this->url, 3600, fn () => file_get_contents($this->url));
         $this->content = file_get_contents($this->url);
 
         $this->paginateContent();
