@@ -76,7 +76,7 @@
                     </div>
 
                     <button type="button" class="text-sm mt-1 hover:underline text-red"
-                        @click="tmpValue.min = 0; tmpValue.max = 0;" x-show="tmpValue.min != 0 && tmpValue.max != 0"
+                        @click="tmpValue.min = 0; tmpValue.max = 0;" x-show="tmpValue.min != 0 || tmpValue.max != 0"
                         x-cloak>Clear</button>
                 </div>
             </div>
