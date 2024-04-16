@@ -56,6 +56,7 @@ module.exports = {
                     light: "#52D3A233",
                     light2: "#9edfc6",
                     dark: "#52D3A2",
+                    muted: "#D4DDD7",
                 },
                 red: {
                     ...defaultTheme.colors.red,
