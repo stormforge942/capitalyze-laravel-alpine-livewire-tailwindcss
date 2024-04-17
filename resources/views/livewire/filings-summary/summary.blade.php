@@ -48,7 +48,7 @@
                     <label class="mx-1">
                         <input x-model="sortByDateTitle[item.value]" :name="key + item.value"
                             value="filing_date"
-                            class="w-2 h-2 !bg-none outline-[0.125rem] outline-offset-[0.125rem] outline-black mr-[0.0625rem] focus:ring-0 text-dark focus:border-transparent text-sm mx-[0.0625rem] mt-[-0.125rem]"
+                            class="mr-1 focus:ring-0 text-[#121A0F] focus:border-transparent text-sm mx-1 mt-[-0.125rem]"
                             type="radio">
                         </input>
                         <span class="text-sm mt-1">Sort by date</span>
@@ -56,7 +56,7 @@
                     <label class="mr-1">
                         <input x-model="sortByDateTitle[item.value]" :name="key + item.value"
                             value="form_type"
-                            class="w-2 h-2 !bg-none outline-[0.125rem] outline-offset-[0.125rem] outline-black mr-[0.0625rem] focus:ring-0 text-dark focus:border-transparent text-sm mx-[0.0625rem] mt-[-0.125rem]"
+                            class="mr-1 focus:ring-0 text-[#121A0F] focus:border-transparent text-sm mx-1 mt-[-0.125rem]"
                             type="radio">
                         </input>
                         <span class="text-sm mt-1">Sort by title</span>
