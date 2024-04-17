@@ -5,58 +5,154 @@
         </div>
 
         <div wire:loading.remove>
-            @if ($content)
-                <div>
-                    {!! $content !!}
-                </div>
-
-
-                @if (count($pages) > 3)
-                    <div class="mt-5 flex justify-center py-3">
-                        <nav class="isolate flex flex-wrap -space-x-px rounded-md shadow-sm" aria-label="Pagination">
-                            @foreach ($pages as $_page)
-                                @if ($_page['label'] === '&laquo; Previous')
-                                    <button type="button" wire:click.prevent="load({{ $page - 1 }})"
-                                        class="relative inline-flex items-center rounded-l-md px-2 py-2 text-gray-400 ring-1 ring-inset ring-gray-300 hover:bg-gray-50 focus:z-20 focus:outline-offset-0 disabled:opacity-50 disabled:cursor-not-allowed"
-                                        @disabled($page <= 1)>
-                                        <span class="sr-only">Previous</span>
-                                        <svg class="h-5 w-5" viewBox="0 0 20 20" fill="currentColor" aria-hidden="true">
-                                            <path fill-rule="evenodd"
-                                                d="M12.79 5.23a.75.75 0 01-.02 1.06L8.832 10l3.938 3.71a.75.75 0 11-1.04 1.08l-4.5-4.25a.75.75 0 010-1.08l4.5-4.25a.75.75 0 011.06.02z"
-                                                clip-rule="evenodd" />
-                                        </svg>
-                                    </button>
-                                @elseif($_page['label'] === 'Next &raquo;')
-                                    <button type="button" wire:click.prevent="load({{ $page + 1 }})"
-                                        class="relative inline-flex items-center rounded-r-md px-2 py-2 text-gray-400 ring-1 ring-inset ring-gray-300 hover:bg-gray-50 focus:z-20 focus:outline-offset-0 disabled:opacity-50 disabled:cursor-not-allowed"
-                                        @disabled($page >= $numberOfPages)>
-                                        <span class="sr-only">Next</span>
-                                        <svg class="h-5 w-5" viewBox="0 0 20 20" fill="currentColor" aria-hidden="true">
-                                            <path fill-rule="evenodd"
-                                                d="M7.21 14.77a.75.75 0 01.02-1.06L11.168 10 7.23 6.29a.75.75 0 111.04-1.08l4.5 4.25a.75.75 0 010 1.08l-4.5 4.25a.75.75 0 01-1.06-.02z"
-                                                clip-rule="evenodd" />
-                                        </svg>
-                                    </button>
-                                @else
-                                    <button type="button" wire:click.prevent="load({{ intval($_page['label']) }})"
-                                        @class([
-                                            'relative inline-flex items-center px-4 py-2 text-sm font-semibold text-gray-900 ring-1 ring-inset ring-gray-300 hover:bg-gray-50 focus:z-20 focus:outline-offset-0 md:inline-flex' => !$_page[
-                                                'active'
-                                            ],
-                                            'relative z-10 inline-flex items-center bg-indigo-600 px-4 py-2 text-sm font-semibold text-white focus:z-20 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600' =>
-                                                $_page['active'],
-                                        ])>
-                                        {{ $_page['label'] }}
-                                    </button>
-                                @endif
-                            @endforeach
-                        </nav>
-                    </div>
-                @endif
-            @else
+            @if (!$url)
                 <div class="text-center text-gray-500">
                     No content found
                 </div>
+            @else
+                @php $id = \Str::random(10); @endphp
+                <div id="{{ $id }}">
+
+                </div>
+                <script>
+                    fetch(`{{ $url }}`, {
+                            mode: 'cors',
+                        })
+                        .then(response => response.text())
+                        .then(data => {
+                            const container = document.getElementById('{{ $id }}')
+                            container.style.display = 'none';
+                            container.innerHTML = data;
+
+                            const tables = container.querySelectorAll('table[summary]');
+
+                            if (!tables.length) return;
+
+                            const lastTable = tables[tables.length - 1];
+
+                            if (!lastTable) {
+                                return;
+                            }
+
+                            const headers = [];
+                            const rows = [];
+
+                            [...lastTable.querySelectorAll('tr')].forEach((row, idx) => {
+                                const cells = [...row.querySelectorAll('td, th')]
+
+                                // headers
+                                if (idx < 3) {
+                                    headers.push(cells.map(cell => {
+                                        return {
+                                            content: cell.innerText,
+                                            colspan: cell.getAttribute('colspan') || 1,
+                                            align: {
+                                                FormTextR: 'right',
+                                                FormTextC: 'center',
+                                            } [cell.getAttribute('class')] || 'left'
+                                        }
+                                    }))
+                                    return;
+                                }
+
+                                rows.push(cells.map(cell => cell.innerText))
+                            });
+                            lastTable.remove();
+
+                            container.appendChild(
+                                generateTable({
+                                        headers,
+                                        rows,
+                                    },
+                                    1,
+                                    '{{ $name_of_issuer }}'
+                                )
+                            );
+                            container.style.display = 'block';
+                        })
+                        .catch(error => {
+                            console.error('Error:', error)
+                        })
+
+                    function generateTable(data, page, find = null) {
+                        const PAGE_SIZE = 20;
+
+                        const table = document.createElement('table');
+                        table.style.textAlign = 'left';
+
+                        const thead = document.createElement('thead');
+                        const tbody = document.createElement('tbody');
+
+                        data.headers.forEach(row => {
+                            const tr = document.createElement('tr');
+
+                            row.forEach(cell => {
+                                const th = document.createElement('th');
+                                th.innerText = cell.content;
+                                th.setAttribute('colspan', cell.colspan);
+                                th.style.textAlign = cell.align;
+                                tr.appendChild(th);
+                            });
+
+                            thead.appendChild(tr);
+                        });
+
+                        table.appendChild(thead);
+
+                        const numberOfPages = Math.ceil(data.rows.length / PAGE_SIZE);
+
+                        // find page which contains the find in cell 0
+                        if (find) {
+                            for (let i = 0; i < data.rows.length; i++) {
+                                if (data.rows[i][0].toLowerCase().includes(find.toLowerCase())) {
+                                    page = Math.ceil((i + 1) / PAGE_SIZE);
+                                    break;
+                                }
+                            }
+                        }
+
+                        const range = {
+                            start: (page - 1) * PAGE_SIZE,
+                            end: page * PAGE_SIZE,
+                        };
+
+                        for (let i = range.start; i < range.end; i++) {
+                            const tr = document.createElement('tr');
+                            const row = data.rows[i];
+
+                            if (!row) break;
+
+                            let highlight = false;
+
+                            row.forEach((cell, idx) => {
+                                const td = document.createElement('td');
+                                td.style.textAlign = data.headers[2][idx].align;
+
+                                const span = document.createElement('span');
+                                span.innerText = cell;
+                                if (!highlight && find && cell.toLowerCase() === find.toLowerCase()) {
+                                    highlight = true;
+                                }
+                                if (highlight && cell.trim()) {
+                                    span.style.backgroundColor = 'yellow';
+                                }
+                                td.appendChild(span);
+
+                                tr.appendChild(td);
+                            });
+
+                            tbody.appendChild(tr);
+                        }
+
+                        table.appendChild(tbody);
+
+                        return table
+                    }
+
+                    function generatePaginationButton(numberOfPages, active) {
+                        
+                    }
+                </script>
             @endif
         </div>
     </div>

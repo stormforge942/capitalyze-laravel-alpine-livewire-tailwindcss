@@ -36,13 +36,13 @@ class FilingsSummaryS3LinkContent extends SlideOver
     public function load(?int $page = null)
     {
         // Increase the time limit to 3 minutes
-        set_time_limit(60 * 3);
+        // set_time_limit(60 * 3);
 
-        if ($page) {
-            $this->page = $page;
-        }
+        // if ($page) {
+        //     $this->page = $page;
+        // }
 
-        if (!$this->url) {
+        // if (!$this->url) {
             $this->url = DB::connection('pgsql-xbrl')
                 ->table('filings_summary')
                 ->where([
@@ -50,16 +50,16 @@ class FilingsSummaryS3LinkContent extends SlideOver
                     'date' => $this->date,
                 ])
                 ->value('s3_url');
-        }
+        // }
 
-        if (!$this->url) {
-            return;
-        }
+        // if (!$this->url) {
+        //     return;
+        // }
 
-        // $this->content = Cache::driver('file')->remember('filing_summary_s3_content:' . $this->url, 3600, fn () => file_get_contents($this->url));
-        $this->content = file_get_contents($this->url);
+        // // $this->content = Cache::driver('file')->remember('filing_summary_s3_content:' . $this->url, 3600, fn () => file_get_contents($this->url));
+        // $this->content = file_get_contents($this->url);
 
-        $this->paginateContent();
+        // $this->paginateContent();
     }
 
     public function paginateContent()
