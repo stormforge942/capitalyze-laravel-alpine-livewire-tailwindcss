@@ -102,7 +102,7 @@
                             fill="#464E49" />
                     </svg>
                     <input type="search" placeholder="Search"
-                        class="border-none flex-1 focus:outline-none focus:ring-0 h-6 min-w-0 search-x-button-small"
+                        class="border-none flex-1 focus:outline-none focus:ring-0 h-6 min-w-0"
                         x-model.debounce="search">
                 </div>
             @endif

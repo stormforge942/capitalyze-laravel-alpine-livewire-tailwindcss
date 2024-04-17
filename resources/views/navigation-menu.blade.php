@@ -39,7 +39,7 @@
         <div class="flex items-center justify-between gap-x-2 mx-auto" style="max-width: 1500px;">
             <div class="flex-1 transition-all lg:max-w-7xl">
                 <div
-                    class="h-14 w-full lg:w-2/3 rounded-lg border border-green-muted bg-white leading-[3rem] px-3 flex items-center focus-within:border-green-dark">
+                    class="h-14 w-full lg:w-2/3 rounded-lg border border-gray-300 bg-white leading-[3rem] px-3 flex items-center focus-within:border-green-dark">
                     <svg width="25" height="24" viewBox="0 0 25 24" fill="none"
                         xmlns="http://www.w3.org/2000/svg">
                         <path

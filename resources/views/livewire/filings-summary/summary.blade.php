@@ -66,7 +66,7 @@
                             <img class="mt-1 mr-0" src="{{ asset('/svg/search.svg') }}" />
                         </div>
                         <input x-model="search[item.value]" type="search"
-                            class="focus:ring-0 focus:border-blue-500 placeholder:text-sm text-sm  border-none w-[9rem] leading-[1.45rem] h-[1.45rem] search-x-button-small placeholder-custom-black"
+                            class="focus:ring-0 focus:border-blue-500 placeholder:text-sm text-sm  border-none w-[9rem] leading-[1.45rem] h-[1.45rem] search-x-button-small"
                             placeholder="search document" />
                     </div>
                 </div>
@@ -90,7 +90,7 @@
                     </div>
                 </div>
                 <div class="mx-3">
-                    <a hre="#" class="text-sm text-[#F78400] font-bold"
+                    <a hre="#" class="text-sm text-[#F78400]"
                         @click="$wire.emit('handleFilingsSummaryTab',['all-filings', item.value])">View All</a>
                 </div>
             </div>
@@ -103,7 +103,7 @@
                                 <td class="px-4 py-3 text-base  font-[400] text-[#121A0F] whitespace-nowrap"
                                     x-text="val.form_type"></td>
                                 <td class="px-4 py-3 text-base  font-[400] text-[#121A0F] whitespace-nowrap">
-                                    <p class="truncate w-64" x-text="val.description"></p>
+                                    <p class="truncate w-36" x-text="val.description"></p>
                                 </td>
                                 <td class="px-4 py-3 text-base  font-[400] text-[#121A0F] whitespace-nowrap"
                                     x-text="val.filing_date"></td>
