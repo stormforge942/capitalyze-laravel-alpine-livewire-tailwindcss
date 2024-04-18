@@ -35,6 +35,7 @@ class User extends Authenticatable implements MustVerifyEmail
         'group_id',
         'likedin_link',
         'settings',
+        'last_activity_at',
     ];
 
     /**
@@ -56,6 +57,7 @@ class User extends Authenticatable implements MustVerifyEmail
      */
     protected $casts = [
         'email_verified_at' => 'datetime',
+        'last_activity_at' => 'datetime',
         'is_admin' => 'boolean',
         'is_approved' => 'boolean',
         'settings' => 'array',

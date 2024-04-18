@@ -1,6 +1,18 @@
 <div class="py-6">
+    <div class="warning-wrapper max-w-5xl mx-auto mb-3">
+        <div class="warning-text text-sm">
+            <svg viewBox="0 0 16 16" fill="none" xmlns="http://www.w3.org/2000/svg">
+                <path
+                    d="M7.99967 14.6663C4.31777 14.6663 1.33301 11.6815 1.33301 7.99967C1.33301 4.31777 4.31777 1.33301 7.99967 1.33301C11.6815 1.33301 14.6663 4.31777 14.6663 7.99967C14.6663 11.6815 11.6815 14.6663 7.99967 14.6663ZM7.99967 13.333C10.9452 13.333 13.333 10.9452 13.333 7.99967C13.333 5.05415 10.9452 2.66634 7.99967 2.66634C5.05415 2.66634 2.66634 5.05415 2.66634 7.99967C2.66634 10.9452 5.05415 13.333 7.99967 13.333ZM7.33301 9.99967H8.66634V11.333H7.33301V9.99967ZM7.33301 4.66634H8.66634V8.66634H7.33301V4.66634Z"
+                    fill="#DA680B" />
+            </svg>
+            All the date(time)s are in UTC timezone.
+        </div>
+    </div>
+
     <div class="px-4 sm:px-6 bg-white lg:px-8 py-4 shadow rounded max-w-5xl mx-auto">
         <div class="mt-8 flow-root rounded-lg overflow-x-auto">
+
             <table class="table-auto min-w-full border-collapse text-left" x-data>
                 <thead>
                     <tr>
@@ -17,8 +29,10 @@
                         <th class="capitalize p-2 whitespace-nowrap bg-gray-100"><a href="#"
                                 wire:click.prevent="sortBy('email_verified_at')">Email Verified At</a></th>
                         <th class="capitalize p-2 whitespace-nowrap bg-gray-100"><a href="#"
+                                wire:click.prevent="sortBy('email_verified_at')">Last Activity At</a></th>
+                        <th class="capitalize p-2 whitespace-nowrap bg-gray-100"><a href="#"
                                 wire:click.prevent="sortBy('created_at')">Registration Date</a></th>
-                        <th colspan="2" class="capitalize p-2 whitespace-nowrap bg-gray-100">Action</th>
+                        <th class="capitalize p-2 whitespace-nowrap bg-gray-100">Action</th>
                     </tr>
                 </thead>
                 <tbody class="text-sm">
@@ -43,7 +57,7 @@
                                     @endforeach
                                 </select>
                             </td>
-                            <td class="p-2">
+                            <td class="p-2 whitespace-nowrap">
                                 @if ($user->email_verified_at)
                                     {{ $user->email_verified_at->format('m/d/Y H:i') }}
                                 @else
@@ -52,6 +66,13 @@
                                         wire:click="verifyUserEmail({{ $user->id }})">
                                         Verify
                                     </button>
+                                @endif
+                            </td>
+                            <td class="p-2 whitespace-nowrap">
+                                @if ($user->last_activity_at)
+                                    {{ $user->last_activity_at->format('m/d/Y H:i') }}
+                                @else
+                                    ---
                                 @endif
                             </td>
                             <td class="p-2">{{ $user->created_at->format('m/d/Y') }}</td>
@@ -80,17 +101,14 @@
                                         Disapprove
                                     </button>
                                 @endif
-                            </td>
-                            <td>
                                 <button wire:click="deleteUser({{ $user->id }})"
-                                    class="bg-red-500 text-white py-1 px-3 rounded hover:bg-red-600 flex items-center gap-2 whitespace-nowrap">
+                                    class="mt-1 bg-red-500 text-white py-1 px-3 rounded hover:bg-red-600 flex items-center gap-2 whitespace-nowrap">
                                     <svg class="inline w-4" xmlns="http://www.w3.org/2000/svg" fill="none"
                                         viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="w-6 h-6">
                                         <path stroke-linecap="round" stroke-linejoin="round" d="M6 18L18 6M6 6l12 12" />
                                     </svg>
                                     Delete
                                 </button>
-
                             </td>
                         </tr>
                     @endforeach
