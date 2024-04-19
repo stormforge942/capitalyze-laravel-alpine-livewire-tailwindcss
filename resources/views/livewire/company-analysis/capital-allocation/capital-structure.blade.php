@@ -1,7 +1,7 @@
 <?php $selectedDates = $this->isReverseOrder() ? array_reverse($selectedDates) : $selectedDates; ?>
 
 <div x-data="{
-    subSubTab: 'book-value',
+    subSubTab: 'market-value',
 }">
     @include('livewire.company-analysis.filters')
 
@@ -18,13 +18,14 @@
                 <div
                     class="flex items-center w-full max-w-[400px] gap-x-1 border border-[#D4DDD7] rounded bg-gray-light font-medium">
                     <button class="py-2 rounded flex-1 transition border -m-[1px]"
-                        :class="subSubTab === 'book-value' ? 'bg-[#DCF6EC] border-[#52D3A2]' :
-                            'border-transparent hover:border-gray-medium text-gray-medium2'"
-                        @click="subSubTab = 'book-value'">Book Value</button>
-                    <button class="py-2 rounded flex-1 transition border -m-[1px]"
                         :class="subSubTab === 'market-value' ? 'bg-[#DCF6EC] border-[#52D3A2]' :
                             'border-transparent hover:border-gray-medium text-gray-medium2'"
                         @click="subSubTab = 'market-value'">Market Value</button>
+
+                    <button class="py-2 rounded flex-1 transition border -m-[1px]"
+                        :class="subSubTab === 'book-value' ? 'bg-[#DCF6EC] border-[#52D3A2]' :
+                            'border-transparent hover:border-gray-medium text-gray-medium2'"
+                        @click="subSubTab = 'book-value'">Book Value</button>
                 </div>
 
                 <div class="mt-6" x-show="subSubTab === 'book-value'" x-cloak>
