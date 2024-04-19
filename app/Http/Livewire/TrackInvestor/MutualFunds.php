@@ -97,7 +97,8 @@ class MutualFunds extends Component
         if ($filters['view'] === 'most-recent') {
             $quarters = array_keys($this->views);
 
-            $q->whereIn('date', [$quarters[2], $quarters[3]]);
+            $q->whereIn('date', [$quarters[2], $quarters[3]])
+                ->where('is_latest', true);
         } else if ($filters['view'] == 'all') {
             $q->where('is_latest', true);
         } else {
