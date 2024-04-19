@@ -7,6 +7,7 @@ import Alpine from "alpinejs"
 import focus from "@alpinejs/focus"
 import Swal from "sweetalert2"
 import VanillaCalendar from "@uvarov.frontend/vanilla-calendar"
+import { createPopper } from "@popperjs/core"
 
 import rangeSlider from "range-slider-input"
 import "range-slider-input/dist/style.css"
@@ -23,7 +24,7 @@ import "./chartjs-plugins"
 import "./pages/ownership"
 import "./pages/analysis"
 import './export-table-to-excel'
-import { createPopper } from "@popperjs/core"
+import "./urlWindow.js"
 
 Alpine.plugin(focus)
 

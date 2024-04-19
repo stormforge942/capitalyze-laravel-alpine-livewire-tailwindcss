@@ -1,6 +1,8 @@
+@php $id = \Str::random(10); @endphp
+
 <x-wire-elements-pro::tailwind.slide-over>
     <div wire:init="load">
-        <div class="place-items-center" wire:loading.grid>
+        <div class="grid place-items-center" id="{{ $id }}-loader">
             <span class="mx-auto simple-loader text-blue"></span>
         </div>
 
@@ -10,15 +12,35 @@
                     No content found
                 </div>
             @else
-                @php $id = \Str::random(10); @endphp
                 <div id="{{ $id }}">
 
                 </div>
                 <script>
-                    fetch(`{{ $url }}`, {
-                            mode: 'cors',
-                        })
-                        .then(response => response.text())
+                    const getResponse = (url) => {
+                        if (window.FilingsSummaryS3LinkContents && window.FilingsSummaryS3LinkContents[url]) {
+                            return Promise.resolve(window.FilingsSummaryS3LinkContents[url]);
+                        }
+
+                        return fetch(url, {
+                                mode: 'cors',
+                            })
+                            .then(response => {
+                                if (!response.ok) {
+                                    throw new Error('Network response was not ok');
+                                }
+
+                                return response.text();
+                            }).then(data => {
+                                window.FilingsSummaryS3LinkContents = {
+                                    ...(window.FilingsSummaryS3LinkContents || {}),
+                                    [url]: data
+                                }
+
+                                return data;
+                            })
+                    }
+
+                    getResponse('{{ $url }}')
                         .then(data => {
                             const container = document.getElementById('{{ $id }}')
                             container.style.display = 'none';
@@ -65,25 +87,45 @@
                                         rows,
                                     },
                                     1,
-                                    '{{ $name_of_issuer }}'
+                                    '{{ $name_of_issuer }}',
+                                    true
                                 )
                             );
+
+                            window.addEventListener('{{ $id }}', (e) => {
+                                container.children[container.children.length - 1].remove();
+                                container.appendChild(
+                                    generateTable({
+                                            headers,
+                                            rows,
+                                        },
+                                        e.detail.page,
+                                        '{{ $name_of_issuer }}'
+                                    )
+                                );
+                            });
+
                             container.style.display = 'block';
                         })
                         .catch(error => {
+                            alert('An error occurred while fetching the content')
                             console.error('Error:', error)
                         })
+                        .finally(() => {
+                            document.getElementById('{{ $id }}-loader').remove();
+                        });
 
-                    function generateTable(data, page, find = null) {
+                    function generateTable(data, page, find = null, first = false) {
                         const PAGE_SIZE = 20;
 
                         const table = document.createElement('table');
+                        table.classList.add('w-full', 'filing-summary-table')
                         table.style.textAlign = 'left';
 
                         const thead = document.createElement('thead');
                         const tbody = document.createElement('tbody');
 
-                        data.headers.forEach(row => {
+                        data.headers.forEach((row, idx) => {
                             const tr = document.createElement('tr');
 
                             row.forEach(cell => {
@@ -102,7 +144,7 @@
                         const numberOfPages = Math.ceil(data.rows.length / PAGE_SIZE);
 
                         // find page which contains the find in cell 0
-                        if (find) {
+                        if (find && first) {
                             for (let i = 0; i < data.rows.length; i++) {
                                 if (data.rows[i][0].toLowerCase().includes(find.toLowerCase())) {
                                     page = Math.ceil((i + 1) / PAGE_SIZE);
@@ -146,11 +188,118 @@
 
                         table.appendChild(tbody);
 
-                        return table
+                        const pagination = generationPagination(numberOfPages, page);
+
+                        const div = document.createElement('div');
+                        div.appendChild(table);
+                        if (pagination) {
+                            div.appendChild(pagination);
+                        }
+
+                        return div
                     }
 
-                    function generatePaginationButton(numberOfPages, active) {
-                        
+                    function generationPagination(numberOfPages, active) {
+                        if (numberOfPages <= 1) return;
+
+                        const wid = new window.UrlWindow(numberOfPages, active).get()
+
+                        const els = [
+                                'Previous',
+                                wid.first,
+                                Array.isArray(wid.slider) ? '...' : null,
+                                wid.slider,
+                                Array.isArray(wid.last) ? '...' : null,
+                                wid.last,
+                                'Next'
+                            ].filter(Boolean)
+                            .flat()
+                            .map((el) => {
+                                let result = {
+                                    label: el,
+                                    disabled: false,
+                                    active: Number(el) === active,
+                                };
+
+                                if (
+                                    (el === 'Previous' && active === 1) ||
+                                    (el === 'Next' && active === numberOfPages) ||
+                                    el === '...' ||
+                                    el === active
+                                ) {
+                                    result.disabled = true;
+                                }
+
+                                return result;
+                            });
+
+                        const paginationContainer = document.createElement('div');
+                        paginationContainer.classList.add('flex', 'justify-center', 'py-4');
+
+                        els.forEach((el, idx) => {
+                            const button = document.createElement('button');
+                            if (el.label === 'Previous') {
+                                button.innerHTML = `<svg class="w-5 h-5" fill="currentColor" viewBox="0 0 20 20">
+                                                        <path fill-rule="evenodd" d="M12.707 5.293a1 1 0 010 1.414L9.414 10l3.293 3.293a1 1 0 01-1.414 1.414l-4-4a1 1 0 010-1.414l4-4a1 1 0 011.414 0z" clip-rule="evenodd"></path>
+                                                    </svg>`
+                            } else if (el.label === 'Next') {
+                                button.innerHTML = `<svg class="w-5 h-5" fill="currentColor" viewBox="0 0 20 20">
+                                                        <path fill-rule="evenodd" d="M7.293 14.707a1 1 0 010-1.414L10.586 10 7.293 6.707a1 1 0 011.414-1.414l4 4a1 1 0 010 1.414l-4 4a1 1 0 01-1.414 0z" clip-rule="evenodd"></path>
+                                                    </svg>`
+                            } else {
+                                button.innerText = el.label;
+                            }
+
+                            button.classList.add(...
+                                'relative inline-flex items-center py-2 -ml-px text-sm font-medium border border-gray-300 leading-5 transition ease-in-out duration-150 disabled:pointer-events-none disabled:text-gray-700 disabled:cursor-not-allowed'
+                                .split(' '));
+
+                            if (idx === 0) {
+                                button.classList.add('rounded-l-md', 'px-2');
+                            } else if (idx === els.length - 1) {
+                                button.classList.add('rounded-r-md', 'px-2');
+                            } else {
+                                button.classList.add('px-4');
+                            }
+
+                            if (el.active) {
+                                button.classList.add('!text-white', 'bg-blue');
+                            } else {
+                                button.classList.add(...
+                                    'hover:bg-gray-light focus:z-10 focus:outline-none focus:ring ring-gray-300 focus:border-blue-300'
+                                    .split(' '));
+                            }
+
+                            if (el.disabled) {
+                                button.disabled = true;
+                            }
+
+                            const goToPage = (page) => window.dispatchEvent(new CustomEvent('{{ $id }}', {
+                                detail: {
+                                    page
+                                }
+                            }))
+
+                            button.addEventListener('click', () => {
+                                if (el.label === 'Previous') {
+                                    if (active <= 1) return;
+
+                                    goToPage(active - 1)
+                                } else if (el.label === 'Next') {
+                                    if (active >= numberOfPages) return;
+
+                                    goToPage(active + 1)
+                                } else if (el.label === '...') {
+                                    return;
+                                } else {
+                                    goToPage(Number(el.label))
+                                }
+                            });
+
+                            paginationContainer.appendChild(button);
+                        });
+
+                        return paginationContainer;
                     }
                 </script>
             @endif

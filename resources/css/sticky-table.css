@@ -26,3 +26,22 @@
     z-index: 10;
     padding-right: 4px;
 }
+
+.filing-summary-table td, .filing-summary-table th {
+    @apply pr-2 py-1;
+}
+
+.filing-summary-table thead {
+    text-transform: none;
+}
+
+.filing-summary-table thead th {
+    font-size: small;
+    @apply text-dark font-medium
+}
+
+.filing-summary-table tbody td {
+    font-family: Times, serif;
+    font-size: small;
+    color: blue;
+}
