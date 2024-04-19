@@ -86,7 +86,7 @@ $replica = makeDatabase($args['drop']);
 
 $selectedTables = selectedTables($tables, $args);
 
-replicateSchema($xbrl, $replica, $selectedTables, $args['drop']);
+replicateSchema($xbrl, $replica, $selectedTables, true);
 
 $symbols = [
     'AAPL',
@@ -154,7 +154,7 @@ function selectedTables($tables, $args)
 function replicateSchema($xbrl, $replica, $tables, $drop = false)
 {
     foreach ($tables as $table) {
-        if (!$drop) {
+        if ($drop) {
             $replica->exec("DROP TABLE IF EXISTS $table");
         }
 
@@ -194,7 +194,7 @@ function fillData($xbrl, $replica, $tables, $symbols, $ciks)
             $ciks = implode(',', $ciks);
 
             if ($table === 'filings_summary' && $ciks != '') {
-                $stmt = $xbrl->query("SELECT * FROM $table WHERE is_latest=true and cik in ($ciks)");
+                $stmt = $xbrl->query("SELECT * FROM $table WHERE is_latest=true or date='2023-12-31' and cik in ($ciks)");
                 print("Filling $table with $ciks\n");
             } else if ($ciks != '') {
                 $stmt = $xbrl->query("SELECT * FROM $table WHERE cik in ($ciks) order by date desc limit 5000");
@@ -204,7 +204,7 @@ function fillData($xbrl, $replica, $tables, $symbols, $ciks)
             $ciks = array_map(fn ($cik) => "'$cik'", $ciks);
             $ciks = implode(',', $ciks);
 
-            $stmt = $xbrl->query("SELECT * FROM $table WHERE is_latest=true and cik in ($ciks)");
+            $stmt = $xbrl->query("SELECT * FROM $table WHERE is_latest=true or date='2023-12-31' and cik in ($ciks)");
         } else if ($table === 'earnings_calendar') {
             $start = now()->subDay()->toDateString();
             $end = now()->addWeek()->endOfWeek()->toDateString();

@@ -87,8 +87,7 @@ class Discover extends Component
         if ($filters['view'] === 'most-recent') {
             $quarters = array_keys($this->views);
 
-            $q->whereIn('date', [$quarters[3], $quarters[4]])
-                ->where('is_latest', true);
+            $q->whereIn('date', [$quarters[2], $quarters[3]]);
         } else if ($filters['view'] == 'all') {
             $q->where('is_latest', true);
         } else {
