@@ -45,28 +45,28 @@
                     <h4 x-text="item.name" class="mx-3 text-[#3561E7] font-[600] text-[0.8125rem]" />
                 </div>
                 <div class="hidden xl:flex justify-start items-center content-center">
-                    <label class="mx-1">
+                    <label class="mr-3 flex items-center cursor-pointer">
                         <input x-model="sortByDateTitle[item.value]" :name="key + item.value"
                             value="filing_date"
-                            class="mr-1 focus:ring-0 text-[#121A0F] focus:border-transparent text-sm mx-1 mt-[-0.125rem]"
+                            class="custom-radio focus:ring-0 border-gray-medium2 filing-summary mr-1 cursor-pointer"
                             type="radio">
                         </input>
-                        <span class="text-sm mt-1">Sort by date</span>
+                        <span class="text-sm leading-3">Sort by date</span>
                     </label>
-                    <label class="mr-1">
+                    <label class="mr-3 flex items-center cursor-pointer">
                         <input x-model="sortByDateTitle[item.value]" :name="key + item.value"
                             value="form_type"
-                            class="mr-1 focus:ring-0 text-[#121A0F] focus:border-transparent text-sm mx-1 mt-[-0.125rem]"
+                            class="custom-radio focus:ring-0 border-gray-medium2 filing-summary mr-1 cursor-pointer"
                             type="radio">
                         </input>
-                        <span class="text-sm mt-1">Sort by title</span>
+                        <span class="text-sm leading-3">Sort by title</span>
                     </label>
                     <div class="flex justify-start items-center content-center">
-                        <div class="m-0 p-0">
-                            <img class="mt-1 mr-0" src="{{ asset('/svg/search.svg') }}" />
+                        <div class="m-0 p-0 cursor-pointer">
+                            <img class="mr-0" src="{{ asset('/svg/search.svg') }}" />
                         </div>
                         <input x-model="search[item.value]" type="search"
-                            class="focus:ring-0 focus:border-blue-500 placeholder:text-sm text-sm  border-none w-[9rem] leading-[1.45rem] h-[1.45rem] search-x-button-small"
+                            class="focus:ring-0 focus:border-blue-500 placeholder:text-sm text-sm  border-none w-[9rem] leading-[1.45rem] h-[1.45rem] search-x-button-small pl-1"
                             placeholder="search document" />
                     </div>
                 </div>

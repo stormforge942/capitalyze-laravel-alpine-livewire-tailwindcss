@@ -490,6 +490,25 @@ a {
 }
 /* end custom radio */
 
+/* filings summary radio button start */
+.custom-radio.filing-summary {
+    width: 0.75rem;
+    height: 0.75rem;
+    border: 1px solid #464E49;
+}
+.custom-radio.filing-summary:checked {
+    border: 1px solid #121a0f;
+}
+.custom-radio.filing-summary::before {
+    width: 0.5rem;
+    height: 0.5rem;
+}
+.custom-radio.filing-summary:focus {
+    box-shadow: none;
+}
+
+/* filings summary radio button end */
+
 /* custom checkbox */
 .custom-checkbox {
     color: black;
