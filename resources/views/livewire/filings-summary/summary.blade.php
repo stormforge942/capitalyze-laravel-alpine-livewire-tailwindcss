@@ -95,19 +95,19 @@
                 </div>
             </div>
             <div class="overflow-hidden -mt-1 border h-[20rem] overflow-y-auto border-gray-200 dark:border-gray-700">
-                <table class="min-w-full divide-y divide-gray-200 dark:divide-gray-700">
+                <table class="table-auto w-full divide-y divide-gray-200 dark:divide-gray-700">
                     <tbody class="bg-white divide-y divide-gray-200 dark:divide-gray-700 dark:bg-gray-900">
                         <template x-for="(val, index) in item.values" :key="index">
                             <tr @click="Livewire.emit('modal.open', 'company-link-s3-content', { row: val })"
                                 class="hover:bg-gray-50 cursor-pointer">
-                                <td class="px-4 py-3 text-base  font-[400] text-[#121A0F] whitespace-nowrap"
+                                <td class="pl-4 py-3 pr-0 text-base  font-[400] text-[#121A0F] whitespace-nowrap"
                                     x-text="val.form_type"></td>
-                                <td class="px-4 py-3 text-base  font-[400] text-[#121A0F] whitespace-nowrap">
-                                    <p class="truncate w-36" x-text="val.description"></p>
-                                </td>
-                                <td class="px-4 py-3 text-base  font-[400] text-[#121A0F] whitespace-nowrap"
-                                    x-text="val.filing_date"></td>
-                                <td class="px-4 py-3 text-base  font-[400] text-[#121A0F] whitespace-nowrap"
+                                <td class="pl-2 py-3 pr-0 text-base  font-[400] text-[#121A0F] whitespace-nowrap">
+                                    <p class="truncate xl:w-36 lg:w-16 md:w-36" x-text="val.description"></p>
+                                </td>-
+                                <td class="pl-2 py-3 pr-0 text-base  font-[400] text-[#121A0F] whitespace-nowrap"
+                                    x-text="val.acceptance_time"></td>
+                                <td class="pl-2 py-3 pr-4 text-base  font-[400] text-[#121A0F] whitespace-nowrap"
                                     x-text="val.filing_date"></td>
                             </tr>
                         </template>
