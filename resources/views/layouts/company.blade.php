@@ -33,8 +33,7 @@
     <livewire:company-navbar :company="$company" />
 
     <main class="px-4 pb-10 transition-all md:px-6 lg:pl-8 lg:ml-56 overflow-x-clip" id="main-container">
-        <div class="mx-auto" style="max-width: 1500px;">
-
+        <div class="mx-auto" style="max-width: 1500px;" x-data x-cloak>
             @if ($tab == 'track-investor')
                 <livewire:track-investor.page />
             @elseif($tab == 'event-filings')
