@@ -85,8 +85,7 @@ class Table extends BaseTable
     public function columns(): array
     {
         return [
-            Column::make('Ticker', 'ticker', 'symbol')->sortable(),
-            Column::make('Company', 'registrant_name')->sortable(),
+            Column::make('Company', 'company', 'symbol')->sortable(),
             Column::make('Insider Name', 'reporting_person')->sortable(),
             Column::make('Title', 'relationship_of_reporting_person'),
             Column::make('Transaction', 'formatted_transaction_code'),
@@ -116,10 +115,10 @@ class Table extends BaseTable
         return PowerGrid::columns()
             ->addColumn('symbol')
             ->addColumn('registrant_name')
-            ->addColumn('ticker', function ($row) {
+            ->addColumn('company', function ($row) {
                 $url = route('company.ownership', ['ticker' => $row->symbol, 'tab' => 'insider-transactions']);
                 
-                return "<a class=\"text-blue hover:underline\" href=\"{$url}\">{$row->symbol}</a>";
+                return "<a class=\"text-blue hover:underline\" href=\"{$url}\">{$row->symbol} <small>({$row->registrant_name})</small></a>";
             })
             ->addColumn('reporting_person')
             ->addColumn('relationship_of_reporting_person')
