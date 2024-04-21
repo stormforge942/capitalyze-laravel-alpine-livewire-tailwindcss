@@ -17,6 +17,50 @@ jobs:
           aws-secret-access-key: ${{ secrets.AWS_GLOBAL_SECRET_ACCESS_KEY }}
           aws-region: us-east-1
 
+      # Create .env.production file
+      - name: Create .env.production file
+        run: |
+          echo APP_DEBUG=${{ secrets.APP_DEBUG }} >> .env.production
+          echo APP_ENV=${{ secrets.APP_ENV }} >> .env.production
+          echo APP_KEY=${{ secrets.APP_KEY }} >> .env.production
+          echo APP_NAME=${{ secrets.APP_NAME }} >> .env.production
+          echo APP_URL=${{ secrets.APP_URL }} >> .env.production
+          echo AWS_ACCESS_KEY_ID=${{ secrets.AWS_ACCESS_KEY_ID }} >> .env.production
+          echo AWS_BUCKET=${{ secrets.AWS_BUCKET }} >> .env.production
+          echo AWS_DEFAULT_REGION=${{ secrets.AWS_DEFAULT_REGION }} >> .env.production
+          echo AWS_SECRET_ACCESS_KEY=${{ secrets.AWS_SECRET_ACCESS_KEY }} >> .env.production
+          echo AWS_USE_PATH_STYLE_ENDPOINT=${{ secrets.AWS_USE_PATH_STYLE_ENDPOINT }} >> .env.production
+          echo BASE_URL=${{ secrets.BASE_URL }} >> .env.production
+          echo BROADCAST_DRIVER=${{ secrets.BROADCAST_DRIVER }} >> .env.production
+          echo CACHE_DRIVER=${{ secrets.CACHE_DRIVER }} >> .env.production
+          echo DB_CONNECTION=${{ secrets.DB_CONNECTION }} >> .env.production
+          echo DB_DATABASE=${{ secrets.DB_DATABASE }} >> .env.production
+          echo DB_DATABASE_XBRL=${{ secrets.DB_DATABASE_XBRL }} >> .env.production
+          echo DB_HOST=${{ secrets.DB_HOST }} >> .env.production
+          echo DB_HOST_XBRL=${{ secrets.DB_HOST_XBRL }} >> .env.production
+          echo DB_LOG=${{ secrets.DB_LOG }} >> .env.production
+          echo DB_PASSWORD=${{ secrets.DB_PASSWORD }} >> .env.production
+          echo DB_PASSWORD_XBRL=${{ secrets.DB_PASSWORD_XBRL }} >> .env.production
+          echo DB_PORT=${{ secrets.DB_PORT }} >> .env.production
+          echo DB_PORT_XBRL=${{ secrets.DB_PORT_XBRL }} >> .env.production
+          echo DB_USERNAME=${{ secrets.DB_USERNAME }} >> .env.production
+          echo DB_USERNAME_XBRL=${{ secrets.DB_USERNAME_XBRL }} >> .env.production
+          echo FILESYSTEM_DISK=${{ secrets.FILESYSTEM_DISK }} >> .env.production
+          echo LOG_CHANNEL=${{ secrets.LOG_CHANNEL }} >> .env.production
+          echo LOG_DEPRECATIONS_CHANNEL=${{ secrets.LOG_DEPRECATIONS_CHANNEL }} >> .env.production
+          echo LOG_LEVEL=${{ secrets.LOG_LEVEL }} >> .env.production
+          echo MAIL_DRIVER=${{ secrets.MAIL_DRIVER }} >> .env.production
+          echo MAIL_FROM_ADDRESS=${{ secrets.MAIL_FROM_ADDRESS }} >> .env.production
+          echo MAIL_FROM_NAME=${{ secrets.MAIL_FROM_NAME }} >> .env.production
+          echo MAIL_MAILER=${{ secrets.MAIL_MAILER }} >> .env.production
+          echo QUEUE_CONNECTION=${{ secrets.QUEUE_CONNECTION }} >> .env.production
+          echo REDIS_CLUSTER=${{ secrets.REDIS_CLUSTER }} >> .env.production
+          echo REDIS_HOST=${{ secrets.REDIS_HOST }} >> .env.production
+          echo REDIS_PASSWORD=${{ secrets.REDIS_PASSWORD }} >> .env.production
+          echo REDIS_PORT=${{ secrets.REDIS_PORT }} >> .env.production
+          echo SESSION_DRIVER=${{ secrets.SESSION_DRIVER }} >> .env.production
+          echo SESSION_LIFETIME=${{ secrets.SESSION_LIFETIME }} >> .env.production
+
       # Login to AWS ECR
       - name: Login to Amazon ECR
         run: |
@@ -29,47 +73,7 @@ jobs:
       # Build and Push Docker image
       - name: Build and push Docker image
         run: |
-          docker-compose -f docker-compose.production.yml build \
-            --build-arg APP_DEBUG="${{ secrets.APP_DEBUG }}" \
-            --build-arg APP_ENV="${{ secrets.APP_ENV }}" \
-            --build-arg APP_KEY="${{ secrets.APP_KEY }}" \
-            --build-arg APP_NAME="${{ secrets.APP_NAME }}" \
-            --build-arg APP_URL="${{ secrets.APP_URL }}" \
-            --build-arg AWS_ACCESS_KEY_ID="${{ secrets.AWS_ACCESS_KEY_ID }}" \
-            --build-arg AWS_BUCKET="${{ secrets.AWS_BUCKET }}" \
-            --build-arg AWS_DEFAULT_REGION="${{ secrets.AWS_DEFAULT_REGION }}" \
-            --build-arg AWS_SECRET_ACCESS_KEY="${{ secrets.AWS_SECRET_ACCESS_KEY }}" \
-            --build-arg AWS_USE_PATH_STYLE_ENDPOINT="${{ secrets.AWS_USE_PATH_STYLE_ENDPOINT }}" \
-            --build-arg BASE_URL="${{ secrets.BASE_URL }}" \
-            --build-arg BROADCAST_DRIVER="${{ secrets.BROADCAST_DRIVER }}" \
-            --build-arg CACHE_DRIVER="${{ secrets.CACHE_DRIVER }}" \
-            --build-arg DB_CONNECTION="${{ secrets.DB_CONNECTION }}" \
-            --build-arg DB_DATABASE="${{ secrets.DB_DATABASE }}" \
-            --build-arg DB_DATABASE_XBRL="${{ secrets.DB_DATABASE_XBRL }}" \
-            --build-arg DB_HOST="${{ secrets.DB_HOST }}" \
-            --build-arg DB_HOST_XBRL="${{ secrets.DB_HOST_XBRL }}" \
-            --build-arg DB_LOG="${{ secrets.DB_LOG }}" \
-            --build-arg DB_PASSWORD="${{ secrets.DB_PASSWORD }}" \
-            --build-arg DB_PASSWORD_XBRL="${{ secrets.DB_PASSWORD_XBRL }}" \
-            --build-arg DB_PORT="${{ secrets.DB_PORT }}" \
-            --build-arg DB_PORT_XBRL="${{ secrets.DB_PORT_XBRL }}" \
-            --build-arg DB_USERNAME="${{ secrets.DB_USERNAME }}" \
-            --build-arg DB_USERNAME_XBRL="${{ secrets.DB_USERNAME_XBRL }}" \
-            --build-arg FILESYSTEM_DISK="${{ secrets.FILESYSTEM_DISK }}" \
-            --build-arg LOG_CHANNEL="${{ secrets.LOG_CHANNEL }}" \
-            --build-arg LOG_DEPRECATIONS_CHANNEL="${{ secrets.LOG_DEPRECATIONS_CHANNEL }}" \
-            --build-arg LOG_LEVEL="${{ secrets.LOG_LEVEL }}" \
-            --build-arg MAIL_DRIVER="${{ secrets.MAIL_DRIVER }}" \
-            --build-arg MAIL_FROM_ADDRESS="${{ secrets.MAIL_FROM_ADDRESS }}" \
-            --build-arg MAIL_FROM_NAME="${{ secrets.MAIL_FROM_NAME }}" \
-            --build-arg MAIL_MAILER="${{ secrets.MAIL_MAILER }}" \
-            --build-arg QUEUE_CONNECTION="${{ secrets.QUEUE_CONNECTION }}" \
-            --build-arg REDIS_CLUSTER="${{ secrets.REDIS_CLUSTER }}" \
-            --build-arg REDIS_HOST="${{ secrets.REDIS_HOST }}" \
-            --build-arg REDIS_PASSWORD="${{ secrets.REDIS_PASSWORD }}" \
-            --build-arg REDIS_PORT="${{ secrets.REDIS_PORT }}" \
-            --build-arg SESSION_DRIVER="${{ secrets.SESSION_DRIVER }}" \
-            --build-arg SESSION_LIFETIME="${{ secrets.SESSION_LIFETIME }}"
+          docker-compose -f docker-compose.production.yml build
           docker tag capitalyze:latest 475344884420.dkr.ecr.us-east-1.amazonaws.com/capitalyze-app:latest
           docker push 475344884420.dkr.ecr.us-east-1.amazonaws.com/capitalyze-app:latest
 
