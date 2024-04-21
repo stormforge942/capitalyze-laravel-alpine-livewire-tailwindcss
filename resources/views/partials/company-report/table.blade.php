@@ -10,7 +10,7 @@
         </div>
     </div>
 
-    <div class="flex justify-end items-center gap-x-5">
+    <div class="flex justify-end items-center gap-x-5 text-sm+">
         @can('review-data')
             <button class="font-semibold hover:drop-shadow transition-all" type="button" @click="publicView = !publicView">
                 <span x-show="!publicView">Public View</span>
@@ -18,7 +18,7 @@
             </button>
         @endcan
 
-        <button class="font-semibold hover:drop-shadow transition-all" @click.prevent="showAllRows = !showAllRows">
+        <button class="font-semibold hover:drop-shadow transition-all text-sm+" @click.prevent="showAllRows = !showAllRows">
             <div class="flex items-center gap-x-2" x-show="!showAllRows" x-cloak>
                 <span>Show Details</span>
                 <svg width="16" height="16" viewBox="0 0 16 16" fill="none"
@@ -32,9 +32,16 @@
                 <span>Hide Details</span>
                 <svg width="16" height="16" viewBox="0 0 16 16" fill="none"
                     xmlns="http://www.w3.org/2000/svg">
-                    <path
-                        d="M0.789062 8C1.41607 4.58651 4.40672 2 8.0015 2C11.5962 2 14.5869 4.58651 15.2139 8C14.5869 11.4135 11.5962 14 8.0015 14C4.40672 14 1.41607 11.4135 0.789062 8ZM8.0015 11.3333C9.84244 11.3333 11.3348 9.84093 11.3348 8C11.3348 6.15905 9.84244 4.66667 8.0015 4.66667C6.16053 4.66667 4.66814 6.15905 4.66814 8C4.66814 9.84093 6.16053 11.3333 8.0015 11.3333ZM8.0015 10C6.8969 10 6.00148 9.1046 6.00148 8C6.00148 6.8954 6.8969 6 8.0015 6C9.10604 6 10.0015 6.8954 10.0015 8C10.0015 9.1046 9.10604 10 8.0015 10Z"
-                        fill="#121A0F" />
+                    <g clip-path="url(#clip0_11707_132448)">
+                        <path
+                            d="M3.01495 3.95655L0.930409 1.87201L1.87322 0.929199L15.0726 14.1285L14.1298 15.0714L11.9231 12.8647C10.7889 13.5838 9.44384 14.0003 8.0015 14.0003C4.40672 14.0003 1.41607 11.4138 0.789062 8.0003C1.08018 6.41538 1.88085 5.00877 3.01495 3.95655ZM9.83977 10.7814L8.86377 9.80537C8.60264 9.9303 8.31024 10.0003 8.0015 10.0003C6.8969 10.0003 6.00148 9.10483 6.00148 8.0003C6.00148 7.6915 6.07145 7.3991 6.19639 7.13797L5.22041 6.16201C4.8714 6.68897 4.66814 7.3209 4.66814 8.0003C4.66814 9.84123 6.16053 11.3336 8.0015 11.3336C8.68084 11.3336 9.31277 11.1304 9.83977 10.7814ZM5.31761 2.50693C6.14882 2.17989 7.05417 2.00027 8.0015 2.00027C11.5962 2.00027 14.5869 4.58678 15.2139 8.0003C15.0058 9.13337 14.5372 10.1754 13.8725 11.0618L11.2993 8.48863C11.3227 8.32923 11.3348 8.16617 11.3348 8.0003C11.3348 6.15932 9.84244 4.66694 8.0015 4.66694C7.83557 4.66694 7.6725 4.67905 7.5131 4.70245L5.31761 2.50693Z"
+                            fill="#121A0F" />
+                    </g>
+                    <defs>
+                        <clipPath id="clip0_11707_132448">
+                            <rect width="16" height="16" fill="white" />
+                        </clipPath>
+                    </defs>
                 </svg>
             </div>
         </button>
