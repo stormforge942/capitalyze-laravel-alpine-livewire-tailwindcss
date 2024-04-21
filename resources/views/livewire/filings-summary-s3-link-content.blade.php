@@ -143,14 +143,17 @@
 
                         const numberOfPages = Math.ceil(data.rows.length / PAGE_SIZE);
 
+                        let highlightPages = [];
+
                         // find page which contains the find in cell 0
-                        if (find && first) {
-                            for (let i = 0; i < data.rows.length; i++) {
-                                if (data.rows[i][0].toLowerCase().includes(find.toLowerCase())) {
-                                    page = Math.ceil((i + 1) / PAGE_SIZE);
-                                    break;
-                                }
+                        for (let i = 0; i < data.rows.length; i++) {
+                            if (data.rows[i][0].toLowerCase().includes(find.toLowerCase())) {
+                                highlightPages.push(Math.ceil((i + 1) / PAGE_SIZE));
                             }
+                        }
+
+                        if (find && first && highlightPages.length) {
+                            page = highlightPages[0];
                         }
 
                         const range = {
@@ -188,7 +191,7 @@
 
                         table.appendChild(tbody);
 
-                        const pagination = generationPagination(numberOfPages, page);
+                        const pagination = generationPagination(numberOfPages, page, [...new Set(highlightPages)]);
 
                         const div = document.createElement('div');
                         div.appendChild(table);
@@ -199,7 +202,7 @@
                         return div
                     }
 
-                    function generationPagination(numberOfPages, active) {
+                    function generationPagination(numberOfPages, active, highlightPages) {
                         if (numberOfPages <= 1) return;
 
                         const wid = new window.UrlWindow(numberOfPages, active).get()
@@ -265,6 +268,10 @@
                             if (el.active) {
                                 button.classList.add('!text-white', 'bg-blue');
                             } else {
+                                if (highlightPages.includes(el.label)) {
+                                    button.style.backgroundColor = 'yellow';
+                                }
+
                                 button.classList.add(...
                                     'hover:bg-gray-light focus:z-10 focus:outline-none focus:ring ring-gray-300 focus:border-blue-300'
                                     .split(' '));
