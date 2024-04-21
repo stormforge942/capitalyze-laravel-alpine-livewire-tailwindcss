@@ -59,19 +59,6 @@ class ChartTabs extends Component
         return view('livewire.builder.chart-tabs');
     }
 
-    public function clearAll()
-    {
-        CompanyChartComparison::query()
-            ->where('user_id', Auth::id())
-            ->delete();
-
-        $this->tabs = [];
-
-        $this->addTab();
-
-        $this->changeTab($this->tabs[0]['id']);
-    }
-
     public function addTab()
     {
         $this->tabs[] = CompanyChartComparison::query()
