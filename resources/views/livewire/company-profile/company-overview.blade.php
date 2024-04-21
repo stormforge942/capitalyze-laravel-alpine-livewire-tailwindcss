@@ -474,11 +474,11 @@
                         @endforeach
                     </tr>
                     <tr class="font-bold">
-                        <td class="rounded-bl-lg pl-8 pt-2 pb-1 text-left">
+                        <td class="rounded-bl-lg pl-8 pt-2 pb-2 text-left">
                             <span class="pl-4">% Change YoY</span>
                         </td>
                         @foreach ($table['dates'] as $date)
-                            <td class="last:rounded-br-lg pl-6 pt-2 pb-1 last:pr-8">
+                            <td class="last:rounded-br-lg pl-6 pt-2 pb-2 last:pr-8">
                                 <?php $value = $table['adj_diluted_eps']['yoy_change'][$date] ?? 0; ?>
 
                                 <x-review-number-button x-data="{ amount: '{{ $value }}', date: '{{ $date }}' }">
