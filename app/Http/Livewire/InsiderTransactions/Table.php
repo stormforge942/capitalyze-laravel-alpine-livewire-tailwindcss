@@ -49,7 +49,9 @@ class Table extends BaseTable
                 return $query->whereIn('transaction_code', $this->filters['transaction_codes']);
             })
             ->when(data_get($this->filters, 'relationships'), function ($query) {
-                return $query->whereIn('relationship_of_reporting_person', $this->filters['relationships']);
+                $relationships = array_merge(...array_map(fn ($relationship) => config('insider_transactions_mapping')[$relationship] ?? [], $this->filters['relationships']));
+
+                return $query->whereIn('relationship_of_reporting_person', $relationships);
             })
             ->when(data_get($this->filters, 'transaction_value'), function ($query) {
                 $min = intval(data_get($this->filters, 'transaction_value.min')) * 1000;
@@ -62,10 +64,6 @@ class Table extends BaseTable
 
                 return $query->where('transaction_date', '>=', $from);
             })
-            // ->leftJoin('company_links', function ($join) {
-            //     $join->on('insider_transactions.symbol', '=', 'company_links.symbol')
-            //         ->on('insider_transactions.url', '=', 'company_links.final_link');
-            // })
             ->select([
                 'symbol',
                 'registrant_name',
@@ -80,7 +78,6 @@ class Table extends BaseTable
                 'securities_owned_following_transaction',
                 'url',
                 'acceptance_time',
-                // 'company_links.s3_link',
                 DB::raw('amount_of_securities * price_per_security as value'),
             ]);
     }
@@ -154,10 +151,6 @@ class Table extends BaseTable
                     if (is_null($row->amount_of_securities)) {
                         return '-';
                     }
-
-                    // if (!$row->s3_link) {
-                    //     return number_format($row->amount_of_securities);
-                    // }
 
                     return '<button type="button" class="inline-block px-2 py-1 bg-[#DCF6EC] hover:bg-green-dark transition-all rounded" onclick="Livewire.emit(`slide-over.open`, `insider-transactions.form`, { url: `' . $row->url . '`, symbol: `' . $row->symbol . '`, quantity: ' . $row->amount_of_securities . ' })">' . number_format($row->amount_of_securities) . '</button>';
                 }

@@ -3,7 +3,6 @@
 namespace App\Http\Livewire\InsiderTransactions;
 
 use Illuminate\Http\Request;
-use Illuminate\Support\Facades\DB;
 use Livewire\Component;
 
 class Page extends Component
@@ -65,13 +64,6 @@ class Page extends Component
 
     private function getTopInsiderTitles()
     {
-        return DB::connection('pgsql-xbrl')
-            ->table('insider_transactions')
-            ->select(['relationship_of_reporting_person', DB::raw('count(*) as count')])
-            ->groupBy('relationship_of_reporting_person')
-            ->orderBy('count', 'desc')
-            ->limit(10)
-            ->pluck('relationship_of_reporting_person', 'relationship_of_reporting_person')
-            ->toArray();
+        return array_keys(config('insider_transactions_mapping'));
     }
 }
