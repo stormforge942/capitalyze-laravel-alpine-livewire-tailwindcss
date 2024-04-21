@@ -60,24 +60,30 @@
         Livewire.emit('metricsChanged', this.value)
     }
 }">
-    <label class="font-medium flex items-center gap-x-4">
-        <div>Search for Metrics</div>
-        <div class="flex items-center gap-x-2 bg-[#EDF4ED] px-4 py-1 rounded-lg">
-            <svg width="16" height="16" viewBox="0 0 16 16" fill="none" xmlns="http://www.w3.org/2000/svg">
-                <path fill-rule="evenodd" clip-rule="evenodd"
-                    d="M8 1C4.136 1 1 4.136 1 8C1 11.864 4.136 15 8 15C11.864 15 15 11.864 15 8C15 4.136 11.864 1 8 1ZM7.9998 4.5C7.61321 4.5 7.2998 4.8134 7.2998 5.2C7.2998 5.5866 7.61321 5.9 7.9998 5.9C8.3864 5.9 8.6998 5.5866 8.6998 5.2C8.6998 4.8134 8.3864 4.5 7.9998 4.5ZM8.6998 10.8C8.6998 11.185 8.3848 11.5 7.9998 11.5C7.6148 11.5 7.2998 11.185 7.2998 10.8V8C7.2998 7.615 7.6148 7.3 7.9998 7.3C8.3848 7.3 8.6998 7.615 8.6998 8V10.8ZM2.40039 8C2.40039 11.087 4.91339 13.6 8.00039 13.6C11.0874 13.6 13.6004 11.087 13.6004 8C13.6004 4.913 11.0874 2.4 8.00039 2.4C4.91339 2.4 2.40039 4.913 2.40039 8Z"
-                    fill="#464E49" />
-            </svg>
+    <div class="flex items-center justify-between">
+        <label class="font-medium flex items-center gap-x-4">
+            <div>Search for Metrics</div>
+            <div class="flex items-center gap-x-2 bg-[#EDF4ED] px-4 py-1 rounded-lg">
+                <svg width="16" height="16" viewBox="0 0 16 16" fill="none" xmlns="http://www.w3.org/2000/svg">
+                    <path fill-rule="evenodd" clip-rule="evenodd"
+                        d="M8 1C4.136 1 1 4.136 1 8C1 11.864 4.136 15 8 15C11.864 15 15 11.864 15 8C15 4.136 11.864 1 8 1ZM7.9998 4.5C7.61321 4.5 7.2998 4.8134 7.2998 5.2C7.2998 5.5866 7.61321 5.9 7.9998 5.9C8.3864 5.9 8.6998 5.5866 8.6998 5.2C8.6998 4.8134 8.3864 4.5 7.9998 4.5ZM8.6998 10.8C8.6998 11.185 8.3848 11.5 7.9998 11.5C7.6148 11.5 7.2998 11.185 7.2998 10.8V8C7.2998 7.615 7.6148 7.3 7.9998 7.3C8.3848 7.3 8.6998 7.615 8.6998 8V10.8ZM2.40039 8C2.40039 11.087 4.91339 13.6 8.00039 13.6C11.0874 13.6 13.6004 11.087 13.6004 8C13.6004 4.913 11.0874 2.4 8.00039 2.4C4.91339 2.4 2.40039 4.913 2.40039 8Z"
+                        fill="#464E49" />
+                </svg>
 
-            <span class="text-dark-light2">Metrics are applied to all companies</span>
-        </div>
-    </label>
+                <span class="text-dark-light2">Metrics are applied to all companies</span>
+            </div>
+        </label>
+        <button class="font-semibold text-gray-medium2 hover:text-dark" @click.prevent="this.tmpValue = []; showResult()">
+            Clear All Metrics
+        </button>
+    </div>
+
     <div wire:ignore>
         <x-dropdown x-model="showDropdown" placement="bottom-start" :fullWidthTrigger="true">
             <x-slot name="trigger">
                 <input type="search"
                     class="text-basde mt-4 p-4 block w-full border border-[#D4DDD7] rounded-lg placeholder:text-gray-medium2 focus:ring-0 focus:border-green-dark"
-                    id="select-chart-metrics-input" placeholder="Metrics" x-model.debounce.500ms="search"
+                    id="select-chart-metrics-input" placeholder="Select metrics..." x-model.debounce.500ms="search"
                     @click.prevent="if(showDropdown) { $event.stopPropagation(); }">
             </x-slot>
 
