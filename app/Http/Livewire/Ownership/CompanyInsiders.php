@@ -16,7 +16,7 @@ class CompanyInsiders extends Component
 
     public static function title(): string
     {
-        return 'AAPL Insider Transactions';
+        return 'Insider Transactions';
     }
 
     public function mount(array $data = [], Request $request)

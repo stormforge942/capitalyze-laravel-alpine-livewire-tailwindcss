@@ -117,7 +117,8 @@ class Table extends BaseTable
             ->addColumn('symbol')
             ->addColumn('registrant_name')
             ->addColumn('ticker', function ($row) {
-                $url = route('company.profile', $row->symbol);
+                $url = route('company.ownership', ['ticker' => $row->symbol, 'tab' => 'insider-transactions']);
+                
                 return "<a class=\"text-blue hover:underline\" href=\"{$url}\">{$row->symbol}</a>";
             })
             ->addColumn('reporting_person')
