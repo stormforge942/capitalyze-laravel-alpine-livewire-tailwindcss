@@ -11,21 +11,32 @@
     </div>
 
     <div class="flex justify-end items-center gap-x-5">
-        <button class="bg-gray-200 rounded-lg hover:bg-gray-300 transition p-2"
-            @click.prevent="showAllRows = !showAllRows">
-            <svg class="h-4 w-4" data-slot="icon" fill="none" stroke-width="2" stroke="currentColor"
-                viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg" aria-hidden="true" x-show="showAllRows" x-cloak>
-                <path stroke-linecap="round" stroke-linejoin="round"
-                    d="M2.036 12.322a1.012 1.012 0 0 1 0-.639C3.423 7.51 7.36 4.5 12 4.5c4.638 0 8.573 3.007 9.963 7.178.07.207.07.431 0 .639C20.577 16.49 16.64 19.5 12 19.5c-4.638 0-8.573-3.007-9.963-7.178Z">
-                </path>
-                <path stroke-linecap="round" stroke-linejoin="round" d="M15 12a3 3 0 1 1-6 0 3 3 0 0 1 6 0Z"></path>
-            </svg>
-            <svg class="h-4 w-4" data-slot="icon" fill="none" stroke-width="2" stroke="currentColor"
-                viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg" aria-hidden="true" x-show="!showAllRows" x-cloak>
-                <path stroke-linecap="round" stroke-linejoin="round"
-                    d="M3.98 8.223A10.477 10.477 0 0 0 1.934 12C3.226 16.338 7.244 19.5 12 19.5c.993 0 1.953-.138 2.863-.395M6.228 6.228A10.451 10.451 0 0 1 12 4.5c4.756 0 8.773 3.162 10.065 7.498a10.522 10.522 0 0 1-4.293 5.774M6.228 6.228 3 3m3.228 3.228 3.65 3.65m7.894 7.894L21 21m-3.228-3.228-3.65-3.65m0 0a3 3 0 1 0-4.243-4.243m4.242 4.242L9.88 9.88">
-                </path>
-            </svg>
+        @can('review-data')
+            <button class="font-semibold hover:drop-shadow transition-all" type="button" @click="publicView = !publicView">
+                <span x-show="!publicView">Public View</span>
+                <span x-show="publicView" x-cloak>Exit Public View</span>
+            </button>
+        @endcan
+
+        <button class="font-semibold hover:drop-shadow transition-all" @click.prevent="showAllRows = !showAllRows">
+            <div class="flex items-center gap-x-2" x-show="!showAllRows" x-cloak>
+                <span>Show Details</span>
+                <svg width="16" height="16" viewBox="0 0 16 16" fill="none"
+                    xmlns="http://www.w3.org/2000/svg">
+                    <path
+                        d="M0.789062 8C1.41607 4.58651 4.40672 2 8.0015 2C11.5962 2 14.5869 4.58651 15.2139 8C14.5869 11.4135 11.5962 14 8.0015 14C4.40672 14 1.41607 11.4135 0.789062 8ZM8.0015 11.3333C9.84244 11.3333 11.3348 9.84093 11.3348 8C11.3348 6.15905 9.84244 4.66667 8.0015 4.66667C6.16053 4.66667 4.66814 6.15905 4.66814 8C4.66814 9.84093 6.16053 11.3333 8.0015 11.3333ZM8.0015 10C6.8969 10 6.00148 9.1046 6.00148 8C6.00148 6.8954 6.8969 6 8.0015 6C9.10604 6 10.0015 6.8954 10.0015 8C10.0015 9.1046 9.10604 10 8.0015 10Z"
+                        fill="#121A0F" />
+                </svg>
+            </div>
+            <div class="flex items-center gap-x-2" x-show="showAllRows" x-cloak>
+                <span>Hide Details</span>
+                <svg width="16" height="16" viewBox="0 0 16 16" fill="none"
+                    xmlns="http://www.w3.org/2000/svg">
+                    <path
+                        d="M0.789062 8C1.41607 4.58651 4.40672 2 8.0015 2C11.5962 2 14.5869 4.58651 15.2139 8C14.5869 11.4135 11.5962 14 8.0015 14C4.40672 14 1.41607 11.4135 0.789062 8ZM8.0015 11.3333C9.84244 11.3333 11.3348 9.84093 11.3348 8C11.3348 6.15905 9.84244 4.66667 8.0015 4.66667C6.16053 4.66667 4.66814 6.15905 4.66814 8C4.66814 9.84093 6.16053 11.3333 8.0015 11.3333ZM8.0015 10C6.8969 10 6.00148 9.1046 6.00148 8C6.00148 6.8954 6.8969 6 8.0015 6C9.10604 6 10.0015 6.8954 10.0015 8C10.0015 9.1046 9.10604 10 8.0015 10Z"
+                        fill="#121A0F" />
+                </svg>
+            </div>
         </button>
 
         <div class="flex items-center">
@@ -138,13 +149,22 @@
                                         </button>
                                     </template>
                                     <template x-if="!row.values[date].isLink">
-                                        <x-review-number-button x-data="{ amount: row.values[date]?.value, date, }">
+                                        <div>
+                                            <x-review-number-button x-data="{ amount: row.values[date]?.value, date, }" x-show="!publicView">
+                                                <div class="hover:underline cursor-pointer"
+                                                    :class="row.values[date]?.isNegative ? 'text-red' : ''"
+                                                    x-text="row.values[date]?.result"
+                                                    @click="Livewire.emit('slide-over.open', 'slides.right-slide', {data: row.values[date]})">
+                                                </div>
+                                            </x-review-number-button>
+
                                             <div class="hover:underline cursor-pointer"
                                                 :class="row.values[date]?.isNegative ? 'text-red' : ''"
                                                 x-text="row.values[date]?.result"
-                                                @click="Livewire.emit('slide-over.open', 'slides.right-slide', {data: row.values[date]})">
+                                                @click="Livewire.emit('slide-over.open', 'slides.right-slide', {data: row.values[date]})"
+                                                x-cloak x-show="publicView">
                                             </div>
-                                        </x-review-number-button>
+                                        </div>
                                     </template>
                                 </td>
                             </template>

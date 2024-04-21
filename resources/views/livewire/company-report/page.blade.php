@@ -17,6 +17,7 @@
                     chart: null,
                     showLabel: true,
                     disclosureTab: $wire.entangle('disclosureTab'),
+                    publicView: false,
                     filters: {
                         view: $wire.entangle('view'),
                         period: $wire.entangle('period'),
@@ -284,10 +285,10 @@
                                     ...this.formatTableValue(value.value, row.isPercent)
                                 };
                             });
-
-                            if(!row.seg_start || this.showAllRows) {
+                
+                            if (!row.seg_start || this.showAllRows) {
                                 rows.push(_row);
-                            } 
+                            }
                 
                             row.children.forEach(child => {
                                 addRow(child, section, depth + 1, _row.id);
