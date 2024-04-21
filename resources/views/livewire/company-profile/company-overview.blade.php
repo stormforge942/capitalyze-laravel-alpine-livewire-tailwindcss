@@ -320,15 +320,58 @@
                         @endforeach
                     </tr>
                     <tr>
+                        <td class="pl-8 pt-1 pb-2 text-left">
+                            <span class="pl-4">% Margins</span>
+                        </td>
+                        @foreach ($table['dates'] as $date)
+                            <td class="pl-6 pt-1 pb-2 last:pr-8">
+                                <?php $value = $table['ebitda']['margin'][$date] ?? 0; ?>
+
+                                <x-review-number-button x-data="{ amount: '{{ $value }}', date: '{{ $date }}' }">
+                                    {!! redIfNegative($value, fn($val) => number_format($val, 1) . '%') !!}
+                                </x-review-number-button>
+                            </td>
+                        @endforeach
+                    </tr>
+
+                    <tr class="font-bold">
+                        <td class="bg-white rounded-tl-lg pl-8 pt-2 pb-1 text-left">
+                            Total Operating Income
+                        </td>
+                        @foreach ($table['dates'] as $date)
+                            <td class="last:rounded-tr-lg pl-6 pt-2 pb-1 last:pr-8">
+                                <?php $value = $table['toi']['timeline'][$date]; ?>
+
+                                <x-review-number-button x-data="{ amount: '{{ $value }}', date: '{{ $date }}' }">
+                                    {!! format_overview_numbers($value) !!}
+                                </x-review-number-button>
+                            </td>
+                        @endforeach
+                    </tr>
+                    <tr>
+                        <td class="pl-8 py-1 text-left">
+                            <span class="pl-4">% Change YoY</span>
+                        </td>
+                        @foreach ($table['dates'] as $date)
+                            <td class="pl-6 py-1 last:pr-8">
+                                <?php $value = $table['toi']['yoy_change'][$date]; ?>
+
+                                <x-review-number-button x-data="{ amount: '{{ $value }}', date: '{{ $date }}' }">
+                                    {!! redIfNegative($value, fn($val) => number_format($val, 1) . '%') !!}
+                                </x-review-number-button>
+                            </td>
+                        @endforeach
+                    </tr>
+                    <tr>
                         <td class="rounded-bl-lg pl-8 pt-1 pb-2 text-left">
                             <span class="pl-4">% Margins</span>
                         </td>
                         @foreach ($table['dates'] as $date)
                             <td class="last:rounded-br-lg pl-6 pt-1 pb-2 last:pr-8">
-                                <?php $value = $table['ebitda']['margin'][$date] ?? 0; ?>
+                                <?php $value = $table['toi']['margin'][$date] ?? 0; ?>
 
                                 <x-review-number-button x-data="{ amount: '{{ $value }}', date: '{{ $date }}' }">
-                                    {!! redIfNegative($value, fn($val) => number_format($val) . '%') !!}
+                                    {!! redIfNegative($value, fn($val) => number_format($val, 1) . '%') !!}
                                 </x-review-number-button>
                             </td>
                         @endforeach
@@ -411,58 +454,118 @@
                         @endforeach
                     </tr>
                 </tbody>
-            </table>
 
-            <div class="mt-4 bg-white rounded-lg p-2" x-data="{
-                init() {
-                        const mainCells = document.querySelectorAll('#main-table thead th');
-                        const targetCells = $el.querySelectorAll('table tr:first-child td');
-            
-                        this.copyMainTableWidth(mainCells, targetCells);
-            
-                        setInterval(() => {
-                            this.copyMainTableWidth(mainCells, targetCells);
-                        }, 2000);
-                    },
-            
-                    copyMainTableWidth(mainCells, targetCells) {
-                        mainCells.forEach((cell, index) => {
-                            {{-- subtract the padding size from each cell --}}
-                            targetCells[index].style.minWidth = (cell.offsetWidth - {{ count($table['dates']) ? 16 / count($table['dates']) : 0 }}) + 'px';
-                        });
-                    }
-            }" style="min-width: max-content">
-                <table class="w-full rounded-lg overflow-hidden text-left whitespace-nowrap text-base font-bold"
-                    style="background: rgba(82, 198, 255, 0.10)">
-                    <tr>
-                        <td class="pl-6 pt-2 whitespace-nowrap text-dark">Diluted EPS</td>
-                        @foreach ($table['dates'] as $date)
-                            <td class="pl-6 last:pr-8 pt-2 whitespace-nowrap text-dark text-right">
-                                <?php $value = $table['adj_diluted_eps']['timeline'][$date]; ?>
+                <x-table-spacer></x-table-spacer>
 
-                                <x-review-number-button x-data="{ amount: '{{ $value }}', date: '{{ $date }}' }">
-                                    {!! redIfNegative($value, fn($val) => number_format($val, 1)) !!}
-                                </x-review-number-button>
-                                </th>
-                        @endforeach
-                    </tr>
-                    <tr>
-                        <td class="pl-6 py-2">
-                            <span class="pl-4 whitespace-nowrap font-bold">% Change YoY</span>
+                <tbody style="background: rgba(82, 198, 255, 0.10)">
+                    <tr class="font-bold">
+                        <td class="rounded-tl-lg pl-8 pt-2 pb-1 text-left">
+                            Diluted EPS
                         </td>
                         @foreach ($table['dates'] as $date)
-                            <td class="pl-6 py-2 last:pr-8 text-right">
-                                <?php $value = $table['adj_diluted_eps']['yoy_change'][$date]; ?>
+                            <td class="last:rounded-tr-lg pl-6 pt-2 pb-1 last:pr-8">
+                                <?php $value = $table['adj_diluted_eps']['timeline'][$date] ?? 0; ?>
 
                                 <x-review-number-button x-data="{ amount: '{{ $value }}', date: '{{ $date }}' }">
-                                    {!! redIfNegative($value, fn($val) => number_format($val, 1)) !!}%
+                                    {!! redIfNegative($value, fn($val) => number_format($val, 3)) !!}
+                                </x-review-number-button>
+
+                            </td>
+                        @endforeach
+                    </tr>
+                    <tr class="font-bold">
+                        <td class="rounded-bl-lg pl-8 pt-2 pb-1 text-left">
+                            <span class="pl-4">% Change YoY</span>
+                        </td>
+                        @foreach ($table['dates'] as $date)
+                            <td class="last:rounded-br-lg pl-6 pt-2 pb-1 last:pr-8">
+                                <?php $value = $table['adj_diluted_eps']['yoy_change'][$date] ?? 0; ?>
+
+                                <x-review-number-button x-data="{ amount: '{{ $value }}', date: '{{ $date }}' }">
+                                    {!! redIfNegative($value, fn($val) => number_format($val, 1) . '%') !!}
                                 </x-review-number-button>
                             </td>
                         @endforeach
                     </tr>
-                </table>
-            </div>
-        </div>
+                </tbody>
 
+                <x-table-spacer></x-table-spacer>
+
+                <tbody class="bg-white">
+                    <tr class="font-bold">
+                        <td class="bg-white rounded-tl-lg pl-8 pt-2 pb-1 text-left">
+                            Levered FCF
+                        </td>
+                        @foreach ($table['dates'] as $date)
+                            <td class="last:rounded-tr-lg pl-6 pt-2 pb-1 last:pr-8">
+                                <?php $value = $table['lfcf']['timeline'][$date] ?? 0; ?>
+
+                                <x-review-number-button x-data="{ amount: '{{ $value }}', date: '{{ $date }}' }">
+                                    {!! format_overview_numbers($value) !!}
+                                </x-review-number-button>
+
+                            </td>
+                        @endforeach
+                    </tr>
+                    <tr>
+                        <td class="pl-8 py-1 text-left">
+                            <span class="pl-4">% Change YoY</span>
+                        </td>
+                        @foreach ($table['dates'] as $date)
+                            <td class="pl-6 py-1 last:pr-8">
+                                <?php $value = $table['lfcf']['yoy_change'][$date] ?? 0; ?>
+
+                                <x-review-number-button x-data="{ amount: '{{ $value }}', date: '{{ $date }}' }">
+                                    {!! redIfNegative($value, fn($val) => number_format($val, 1) . '%') !!}
+                                </x-review-number-button>
+
+                            </td>
+                        @endforeach
+                    </tr>
+                    <tr>
+                        <td class="pl-8 py-1 text-left">
+                            <span class="pl-4">% Margins</span>
+                        </td>
+                        @foreach ($table['dates'] as $date)
+                            <td class="pl-6 py-1 last:pr-8">
+                                <?php $value = $table['lfcf']['margin'][$date] ?? 0; ?>
+
+                                <x-review-number-button x-data="{ amount: '{{ $value }}', date: '{{ $date }}' }">
+                                    {!! redIfNegative($value, fn($val) => number_format($val, 1) . '%') !!}
+                                </x-review-number-button>
+                            </td>
+                        @endforeach
+                    </tr>
+                    <tr class="font-bold">
+                        <td class="pl-8 py-1 text-left">
+                            <span>FCF Per Share</span>
+                        </td>
+                        @foreach ($table['dates'] as $date)
+                            <td class="pl-6 py-1 last:pr-8">
+                                <?php $value = $table['fcf_per_share']['timeline'][$date] ?? 0; ?>
+
+                                <x-review-number-button x-data="{ amount: '{{ $value }}', date: '{{ $date }}' }">
+                                    {!! redIfNegative($value, fn($val) => number_format($val, 3)) !!}
+                                </x-review-number-button>
+                            </td>
+                        @endforeach
+                    </tr>
+                    <tr>
+                        <td class="rounded-bl-lg pl-8 pt-1 pb-2 text-left">
+                            <span class="pl-4">% Change YoY</span>
+                        </td>
+                        @foreach ($table['dates'] as $date)
+                            <td class="last:rounded-br-lg pl-6 pt-1 pb-2 last:pr-8">
+                                <?php $value = $table['fcf_per_share']['yoy_change'][$date] ?? 0; ?>
+
+                                <x-review-number-button x-data="{ amount: '{{ $value }}', date: '{{ $date }}' }">
+                                    {!! redIfNegative($value, fn($val) => number_format($val, 1) . '%') !!}
+                                </x-review-number-button>
+                            </td>
+                        @endforeach
+                    </tr>
+                </tbody>
+            </table>
+        </div>
     </div>
 </div>

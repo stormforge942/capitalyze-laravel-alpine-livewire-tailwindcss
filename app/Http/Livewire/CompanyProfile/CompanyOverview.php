@@ -16,10 +16,14 @@ class CompanyOverview extends Component
     public $period;
     private $products;
     private $ebitda;
+    private $toi;
     private $adjNetIncome;
     private $dilutedEPS;
     private $revenues;
     private $dilutedSharesOut;
+    private $lfcf;
+    private $lfcfMargin;
+    private $fcfPerShare;
 
     public function mount(array $data = [])
     {
@@ -69,6 +73,11 @@ class CompanyOverview extends Component
                 'yoy_change' => [],
                 'margin' => [],
             ],
+            'toi' => [
+                'timeline' => [],
+                'yoy_change' => [],
+                'margin' => [],
+            ],
             'adj_net_income' => [
                 'timeline' => [],
                 'change_yoy' => [],
@@ -80,6 +89,15 @@ class CompanyOverview extends Component
                 'change_yoy' => [],
             ],
             'adj_diluted_eps' => [
+                'timeline' => [],
+                'change_yoy' => [],
+            ],
+            'lfcf' => [
+                'timeline' => [],
+                'change_yoy' => [],
+                'margin' => [],
+            ],
+            'fcf_per_share' => [
                 'timeline' => [],
                 'change_yoy' => [],
             ],
@@ -101,10 +119,13 @@ class CompanyOverview extends Component
         }
 
         $lastEbitda = 0;
+        $lastToi = 0;
         $lastAdjNetIncome = 0;
         $lastDiluteEps = 0;
         $lastDilutedShares = 0;
         $lastTotalRevenue = 0;
+        $lastLfcf = 0;
+        $lastFcfPerShare = 0;
         foreach ($dates as $date) {
             $total = $this->revenues[$date] ?? 0;
             $data['total_revenue']['timeline'][$date] = $total;
@@ -122,6 +143,16 @@ class CompanyOverview extends Component
                 ? ($ebitda / $total) * 100
                 : 0;
             $lastEbitda = $ebitda;
+
+            $toi = $this->toi[$date] ?? 0;
+            $data['toi']['timeline'][$date] = $toi;
+            $data['toi']['yoy_change'][$date] = $lastToi
+                ? (($toi / $lastToi) - 1) * 100
+                : 0;
+            $data['toi']['margin'][$date] = $total
+                ? ($toi / $total) * 100
+                : 0;
+            $lastToi = $toi;
 
             $adjNetIncome = $this->adjNetIncome[$date] ?? 0;
             $data['adj_net_income']['timeline'][$date] = $adjNetIncome;
@@ -146,6 +177,21 @@ class CompanyOverview extends Component
                 ? (($dilutedEPS / $lastDiluteEps) - 1) * 100
                 : 0;
             $lastDiluteEps = $dilutedEPS;
+
+            $lfcf = $this->lfcf[$date] ?? 0;
+            $data['lfcf']['timeline'][$date] = $lfcf;
+            $data['lfcf']['yoy_change'][$date] =  $lastLfcf
+                ? (($lfcf / $lastLfcf) - 1) * 100
+                : 0;
+            $data['lfcf']['margin'][$date] =  $this->lfcfMargin[$date] ?? 0;
+            $lastLfcf = $lfcf;
+
+            $fcfPerShare = $this->fcfPerShare[$date] ?? 0;
+            $data['fcf_per_share']['timeline'][$date] = $fcfPerShare;
+            $data['fcf_per_share']['yoy_change'][$date] =  $lastFcfPerShare
+                ? (($fcfPerShare / $lastFcfPerShare) - 1) * 100
+                : 0;
+            $lastFcfPerShare = $fcfPerShare;
         }
 
         return $data;
@@ -377,12 +423,12 @@ class CompanyOverview extends Component
     {
         $cacheKey = 'as_reported_sec_segmentation_api_' . $this->profile['symbol'] . '_' . $this->period;
 
-        $cacheDuration = 3600; 
+        $cacheDuration = 3600;
 
         $json = Cache::remember($cacheKey, $cacheDuration, function () {
-            
+
             $source = ($this->period == 'annual') ? 'arps' : 'qrps';
-        
+
             return DB::connection('pgsql-xbrl')
                 ->table('as_reported_sec_segmentation_api')
                 ->where('ticker', '=', $this->profile['symbol'])
@@ -390,7 +436,7 @@ class CompanyOverview extends Component
                 ->value('api_return_open_ai');
         });
 
-    
+
         $data = json_decode($json, true);
         $this->products = [];
 
@@ -422,35 +468,49 @@ class CompanyOverview extends Component
         $cacheDuration = 3600;
 
         $rawData = Cache::remember($cacheKey, $cacheDuration, function () use ($ticker) {
-            return json_decode(
-                InfoTikrPresentation::where('ticker', $ticker)
-                    ->where('period', 'annual')
-                    ->orderByDesc('id')
-                    ->select(['income_statement'])
-                    ->first()
-                    ?->income_statement ?? "{}",
-                true
-            );
+            $data = InfoTikrPresentation::where('ticker', $ticker)
+                ->where('period', 'annual')
+                ->orderByDesc('id')
+                ->select(['income_statement', 'cash_flow'])
+                ->first();
+
+            return [
+                'income_statement' => json_decode($data?->income_statement ?? "{}", true),
+                'cash_flow' => json_decode($data?->cash_flow ?? "{}", true),
+            ];
         });
 
-        $data = [];
+        foreach ($rawData as $stmt) {
+            foreach ($stmt as $key => $value) {
+                try {
+                    $key = explode('|', $key)[0];
 
-        foreach ($rawData as $key => $value) {
-            try {
-                $key = explode('|', $key)[0];
-                $data[$key] = $value;
-            } catch (\Throwable $th) {
+                    $map = [
+                        'EBITDA' => 'ebitda',
+                        'Total Operating Income' => 'toi',
+                        'Net Income to Company' => 'adjNetIncome',
+                        'Diluted Earnings Per Share' => 'dilutedEPS',
+                        'Revenues' => 'revenues',
+                        'Weighted Avg. Diluted Shares Outstanding' => 'dilutedSharesOut',
+                        'Levered Free Cash Flow' => 'lfcf',
+                        '% LFCF Margins' => 'lfcfMargin',
+                        'Free Cash Flow per Share' => 'fcfPerShare',
+                    ];
+
+                    if (!isset($map[$key])) {
+                        continue;
+                    }
+
+                    $prop = $map[$key];
+
+                    $this->{$prop} = $value ?? [];
+                } catch (\Throwable $th) {
+                }
             }
         }
 
-        $this->ebitda = $data['EBITDA'] ?? [];
-        $this->adjNetIncome = $data['Net Income to Company'] ?? [];
-        $this->dilutedEPS = $data['Diluted Earnings Per Share'] ?? [];
-        $this->revenues = $data['Revenues'] ?? [];
-        $this->dilutedSharesOut = $data['Weighted Avg. Diluted Shares Outstanding'] ?? [];
-
-        foreach (['ebitda', 'adjNetIncome', 'dilutedEPS', 'dilutedSharesOut', 'revenues'] as $var) {
-            $this->{$var} = array_map(fn ($val) => intval(explode('|', $val[0])[0]), $this->{$var});
+        foreach (['ebitda', 'toi', 'adjNetIncome', 'dilutedEPS', 'dilutedSharesOut', 'revenues', 'lfcf', 'lfcfMargin', 'fcfPerShare'] as $var) {
+            $this->{$var} = array_map(fn ($val) => floatval(explode('|', $val[0])[0]), $this->{$var});
         }
     }
 }
