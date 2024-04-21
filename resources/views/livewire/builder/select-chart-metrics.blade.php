@@ -178,7 +178,7 @@
 
                 <div class="mt-2 p-6 border-t flex items-center gap-x-4">
                     <button type="button"
-                        class="w-full px-4 py-3 font-medium bg-green-dark hover:bg-opacity-80 rounded disabled:pointer-events-none disabled:bg-[#D1D3D5] disabled:text-white text-base"
+                        class="w-full px-4 py-3 font-medium bg-[#DCF6EC] hover:bg-green-light2 rounded disabled:pointer-events-none disabled:bg-[#D1D3D5] disabled:text-white text-base"
                         @click.prevent="tmpValue = [...value];" :disabled="!hasValueChanged">
                         Reset
                     </button>
