@@ -48,8 +48,4 @@
                 fill="#121A0F" />
         </svg>
     </button>
-
-    <button class="text-red font-semibold hover:opacity-70 transition-all" wire:click="clearAll">
-        Clear All
-    </button>
 </div>
