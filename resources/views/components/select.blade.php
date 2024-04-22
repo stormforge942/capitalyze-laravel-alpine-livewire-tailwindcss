@@ -49,6 +49,7 @@
 
         this.$watch('showDropdown', value => {
             this.tmpValue = this.value
+            this.search = ''
         })
 
         this.$watch('search', (val) => {
