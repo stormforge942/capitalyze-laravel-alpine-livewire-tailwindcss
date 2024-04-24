@@ -612,10 +612,6 @@ a {
     inset: -0.313rem auto auto 0 !important;
 }
 
-.placeholder-custom-black::placeholder {
-    color: #464E49 !important;
-}
-
 .custom-radio-xs {
     width: 12px;
     height: 12px;
