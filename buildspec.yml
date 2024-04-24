@@ -16,9 +16,9 @@ phases:
     commands:
       - echo Build started on `date`
       - echo '{"http-basic":{"wire-elements-pro.composer.sh":{"username":"mgmt@capitalyze.com","password":"$COMPOSER_PASSWORD"}}}' > auth.json
-      - php artisan env:decrypt --env=production --key=$ENVIRONMENT_KEY
       - echo Building the Docker image...
-      - docker build -t $REPOSITORY_URI:latest .
+      # - docker build -t $REPOSITORY_URI:latest .
+      - docker build -t $REPOSITORY_URI:latest -f Dockerfile.production --platform=linux/amd64 .
       - docker tag $REPOSITORY_URI:latest $REPOSITORY_URI:$IMAGE_TAG
   post_build:
     commands:

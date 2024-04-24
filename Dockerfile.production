@@ -83,6 +83,9 @@ COPY --from=php_builder /app ./
 RUN usermod -u 1000 www-data && chown -R www-data:www-data .
 
 # Copying .env.production to .env
+
+RUN php artisan env:decrypt --env=production --key=$ENVIRONMENT_KEY
+
 COPY .env.production ./.env
 
 # Adding debugging commands
