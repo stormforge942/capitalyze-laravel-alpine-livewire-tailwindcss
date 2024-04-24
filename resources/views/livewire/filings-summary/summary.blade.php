@@ -42,10 +42,10 @@
             <div
                 class="flex justify-between items-center content-center py-2 mx-[-0.75rem] mb-1 border-b border-grey-light">
                 <div>
-                    <h4 x-text="item.name" class="mx-3 text-[#3561E7] font-[600] text-[0.8125rem]" />
+                    <h4 x-text="item.name" class="mx-3 text-[#3561E7] font-[600] text-[0.8125rem] label-width-xs" />
                 </div>
                 <div class="hidden xl:flex justify-start items-center content-center ml-auto">
-                    <label class="mx-2 cursor-pointer">
+                    <label class="mx-1 cursor-pointer">
                         <input x-model="sortByDateTitle[item.value]" :name="key + item.value"
                             value="filing_date"
                             class="mr-1 text-[#121A0F] text-sm mx-1 mt-[-0.125rem] custom-radio custom-radio-xs cursor-pointer"

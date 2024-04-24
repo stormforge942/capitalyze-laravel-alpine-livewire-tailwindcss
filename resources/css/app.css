@@ -636,3 +636,9 @@ a {
 .custom-radio-xs:focus {
     box-shadow: none;
 }
+
+.label-width-xs {
+    max-width: 6.1rem;
+    line-height: 15px;
+    text-align: center;
+}
