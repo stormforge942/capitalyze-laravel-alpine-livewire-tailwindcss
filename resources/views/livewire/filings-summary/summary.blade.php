@@ -38,9 +38,9 @@
     <?php $i = 0; ?>
     <template x-for="(item, key) in filteredItems" :key="key + item.value">
         <div
-            class="bg-white p-3 rounded w-full lg:w-[calc(50%-1rem)] mr-0 lg-0 {{ $i % 2 === 0 ? 'lg:mr-3' : 'lg:ml-4' }} mb-5">
+            class="bg-white rounded w-full lg:w-[calc(50%-1rem)] mr-0 lg-0 {{ $i % 2 === 0 ? 'lg:mr-3' : 'lg:ml-4' }} mb-5">
             <div
-                class="flex justify-between items-center content-center py-2 mx-[-0.75rem] mb-1 border-b border-grey-light">
+                class="flex justify-between items-center content-center py-3 px-1 mb-1 border-b border-grey-light">
                 <div>
                     <h4 x-text="item.name" class="mx-3 text-[#3561E7] font-[600] text-[0.8125rem] label-width-xs" />
                 </div>
@@ -97,9 +97,9 @@
                         @click="$wire.emit('handleFilingsSummaryTab',['all-filings', item.value])">View All</a>
                 </div>
             </div>
-            <div class="overflow-x-auto -mt-1 border h-[20rem] overflow-y-auto border-gray-200 dark:border-gray-700">
+            <div class="overflow-x-auto -mt-1 h-[20rem] overflow-y-auto border-gray-200 dark:border-gray-700 show-scrollbar scrollbar-style overflow-y-hidden hover:overflow-y-auto">
                 <table class="min-w-full divide-y divide-gray-200 dark:divide-gray-700">
-                    <tbody class="bg-white divide-y divide-gray-200 dark:divide-gray-700 dark:bg-gray-900">
+                    <tbody class="bg-white divide-y divide-green-muted dark:divide-green-muted dark:bg-gray-900">
                         <template x-for="(val, index) in item.values" :key="index">
                             <tr @click="Livewire.emit('modal.open', 'company-link-s3-content', { row: val })"
                                 class="hover:bg-gray-50 cursor-pointer">

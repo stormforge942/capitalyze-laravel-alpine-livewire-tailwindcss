@@ -638,3 +638,12 @@ a {
     line-height: 15px;
     text-align: center;
 }
+
+.scrollbar-style::-webkit-scrollbar-track {
+    border-radius: 1.8px;
+}
+
+.scrollbar-style::-webkit-scrollbar-thumb {
+    border-radius: 1px;
+    border: 2px solid #d4ddd7;
+}
