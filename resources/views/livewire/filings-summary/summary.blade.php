@@ -93,7 +93,7 @@
                     </div>
                 </div>
                 <div class="mx-3">
-                    <a hre="#" class="text-sm text-[#F78400] font-bold hover:underline"
+                    <a hre="#" class="text-sm text-[#F78400] font-bold hover:text-[#cd7a1b]"
                         @click="$wire.emit('handleFilingsSummaryTab',['all-filings', item.value])">View All</a>
                 </div>
             </div>
