@@ -44,30 +44,33 @@
                 <div>
                     <h4 x-text="item.name" class="mx-3 text-[#3561E7] font-[600] text-[0.8125rem]" />
                 </div>
-                <div class="hidden xl:flex justify-start items-center content-center">
-                    <label class="mr-3 flex items-center cursor-pointer">
+                <div class="hidden xl:flex justify-start items-center content-center ml-auto">
+                    <label class="mx-2 cursor-pointer">
                         <input x-model="sortByDateTitle[item.value]" :name="key + item.value"
                             value="filing_date"
-                            class="custom-radio focus:ring-0 border-gray-medium2 filing-summary mr-1 cursor-pointer"
+                            class="mr-1 text-[#121A0F] text-sm mx-1 mt-[-0.125rem] custom-radio custom-radio-xs cursor-pointer"
                             type="radio">
                         </input>
-                        <span class="text-sm leading-3">Sort by date</span>
+                        <span class="text-sm mt-1">Sort by date</span>
                     </label>
-                    <label class="mr-3 flex items-center cursor-pointer">
+                    <label class="mr-3 cursor-pointer">
                         <input x-model="sortByDateTitle[item.value]" :name="key + item.value"
                             value="form_type"
-                            class="custom-radio focus:ring-0 border-gray-medium2 filing-summary mr-1 cursor-pointer"
+                            class="mr-1 text-[#121A0F] text-sm mx-1 mt-[-0.125rem] custom-radio custom-radio-xs cursor-pointer"
                             type="radio">
                         </input>
-                        <span class="text-sm leading-3">Sort by title</span>
+                        <span class="text-sm mt-1">Sort by title</span>
                     </label>
                     <div class="flex justify-start items-center content-center">
                         <div class="m-0 p-0 cursor-pointer">
-                            <img class="mr-0" src="{{ asset('/svg/search.svg') }}" />
+                            <svg width="12" height="12" viewBox="0 0 12 12" fill="none" xmlns="http://www.w3.org/2000/svg">
+<path d="M8.57633 7.54717H8.03431L7.8422 7.36192C8.51458 6.57976 8.91938 5.56432 8.91938 4.45969C8.91938 1.99657 6.92281 0 4.45969 0C1.99657 0 0 1.99657 0 4.45969C0 6.92281 1.99657 8.91938 4.45969 8.91938C5.56432 8.91938 6.57976 8.51458 7.36192 7.8422L7.54717 8.03431V8.57633L10.9777 12L12 10.9777L8.57633 7.54717ZM4.45969 7.54717C2.75129 7.54717 1.37221 6.1681 1.37221 4.45969C1.37221 2.75129 2.75129 1.37221 4.45969 1.37221C6.1681 1.37221 7.54717 2.75129 7.54717 4.45969C7.54717 6.1681 6.1681 7.54717 4.45969 7.54717Z" fill="#464E49"/>
+</svg>
+
                         </div>
                         <input x-model="search[item.value]" type="search"
-                            class="focus:ring-0 focus:border-blue-500 placeholder:text-sm text-sm  border-none w-[9rem] leading-[1.45rem] h-[1.45rem] search-x-button-small pl-1"
-                            placeholder="search document" />
+                            class="pl-1.5 pb-2 focus:ring-0 focus:border-blue-500 placeholder:text-sm text-sm  border-none w-[9rem] leading-[1.45rem] h-[1.45rem] search-x-button-small placeholder-custom-black"
+                            placeholder="Search document" />
                     </div>
                 </div>
                 <div
@@ -90,24 +93,24 @@
                     </div>
                 </div>
                 <div class="mx-3">
-                    <a hre="#" class="text-sm text-[#F78400]"
+                    <a hre="#" class="text-sm text-[#F78400] font-bold"
                         @click="$wire.emit('handleFilingsSummaryTab',['all-filings', item.value])">View All</a>
                 </div>
             </div>
             <div class="overflow-hidden -mt-1 border h-[20rem] overflow-y-auto border-gray-200 dark:border-gray-700">
-                <table class="table-auto w-full divide-y divide-gray-200 dark:divide-gray-700">
+                <table class="min-w-full divide-y divide-gray-200 dark:divide-gray-700">
                     <tbody class="bg-white divide-y divide-gray-200 dark:divide-gray-700 dark:bg-gray-900">
                         <template x-for="(val, index) in item.values" :key="index">
                             <tr @click="Livewire.emit('modal.open', 'company-link-s3-content', { row: val })"
                                 class="hover:bg-gray-50 cursor-pointer">
-                                <td class="pl-4 py-3 pr-0 text-base  font-[400] text-[#121A0F] whitespace-nowrap"
+                                <td class="px-4 py-3 text-base  font-[400] text-[#121A0F] whitespace-nowrap"
                                     x-text="val.form_type"></td>
-                                <td class="pl-2 py-3 pr-0 text-base  font-[400] text-[#121A0F] whitespace-nowrap">
-                                    <p class="truncate xl:w-36 lg:w-16 md:w-36" x-text="val.description"></p>
-                                </td>-
-                                <td class="pl-2 py-3 pr-0 text-base  font-[400] text-[#121A0F] whitespace-nowrap"
+                                <td class="px-4 py-3 text-base  font-[400] text-[#121A0F] whitespace-nowrap">
+                                    <p class="truncate w-36" x-text="val.description"></p>
+                                </td>
+                                <td class="px-4 py-3 text-base  font-[400] text-[#121A0F] whitespace-nowrap"
                                     x-text="val.acceptance_time"></td>
-                                <td class="pl-2 py-3 pr-4 text-base  font-[400] text-[#121A0F] whitespace-nowrap"
+                                <td class="px-4 py-3 text-base  font-[400] text-[#121A0F] whitespace-nowrap"
                                     x-text="val.filing_date"></td>
                             </tr>
                         </template>
