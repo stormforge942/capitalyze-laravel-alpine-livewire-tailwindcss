@@ -8,7 +8,7 @@ phases:
     commands:
       - echo Logging in to Amazon ECR...
       - aws --version
-      - $(aws ecr get-login --region us-east-1 --no-include-email)
+      - aws ecr get-login-password --region us-east-1 | docker login --username AWS --password-stdin 475344884420.dkr.ecr.us-east-1.amazonaws.com
       - REPOSITORY_URI=475344884420.dkr.ecr.us-east-1.amazonaws.com/capitalyze-app
       - COMMIT_HASH=$(echo $CODEBUILD_RESOLVED_SOURCE_VERSION | cut -c 1-7)
       - IMAGE_TAG=build-$(echo $CODEBUILD_BUILD_ID | awk -F":" '{print $2}')
@@ -16,6 +16,7 @@ phases:
     commands:
       - echo Build started on `date`
       - echo '{"http-basic":{"wire-elements-pro.composer.sh":{"username":"mgmt@capitalyze.com","password":"$COMPOSER_PASSWORD"}}}' > auth.json
+      - php artisan env:decrypt --env=production --key=$ENVIRONMENT_KEY
       - echo Building the Docker image...
       - docker build -t $REPOSITORY_URI:latest .
       - docker tag $REPOSITORY_URI:latest $REPOSITORY_URI:$IMAGE_TAG
