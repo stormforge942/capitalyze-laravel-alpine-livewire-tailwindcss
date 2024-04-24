@@ -69,7 +69,7 @@
 
                         </div>
                         <input x-model="search[item.value]" type="search"
-                            class="pl-1.5 pb-2 focus:ring-0 focus:border-blue-500 placeholder:text-sm text-sm  border-none w-[9rem] leading-[1.45rem] h-[1.45rem] search-x-button-small placeholder-custom-black"
+                            class="pl-1.5 pb-2 focus:ring-0 focus:border-blue-500 placeholder:text-sm text-sm  border-none w-[9rem] leading-[1.45rem] h-[1.45rem] search-x-button-small placeholder:text-dark-light2"
                             placeholder="Search document" />
                     </div>
                 </div>
@@ -93,11 +93,11 @@
                     </div>
                 </div>
                 <div class="mx-3">
-                    <a hre="#" class="text-sm text-[#F78400] font-bold"
+                    <a hre="#" class="text-sm text-[#F78400] font-bold hover:underline"
                         @click="$wire.emit('handleFilingsSummaryTab',['all-filings', item.value])">View All</a>
                 </div>
             </div>
-            <div class="overflow-hidden -mt-1 border h-[20rem] overflow-y-auto border-gray-200 dark:border-gray-700">
+            <div class="overflow-x-auto -mt-1 border h-[20rem] overflow-y-auto border-gray-200 dark:border-gray-700">
                 <table class="min-w-full divide-y divide-gray-200 dark:divide-gray-700">
                     <tbody class="bg-white divide-y divide-gray-200 dark:divide-gray-700 dark:bg-gray-900">
                         <template x-for="(val, index) in item.values" :key="index">
