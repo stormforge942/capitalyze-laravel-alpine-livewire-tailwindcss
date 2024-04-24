@@ -97,7 +97,7 @@
                         @click="$wire.emit('handleFilingsSummaryTab',['all-filings', item.value])">View All</a>
                 </div>
             </div>
-            <div class="overflow-x-auto -mt-1 h-[20rem] overflow-y-auto border-gray-200 dark:border-gray-700 show-scrollbar scrollbar-style overflow-y-hidden hover:overflow-y-auto">
+            <div class="overflow-x-hidden -mt-1 h-[20rem] overflow-y-auto border-gray-200 dark:border-gray-700 show-scrollbar scrollbar-style overflow-y-hidden hover:overflow-y-auto hover:overflow-x-auto">
                 <table class="min-w-full divide-y divide-gray-200 dark:divide-gray-700">
                     <tbody class="bg-white divide-y divide-green-muted dark:divide-green-muted dark:bg-gray-900">
                         <template x-for="(val, index) in item.values" :key="index">
