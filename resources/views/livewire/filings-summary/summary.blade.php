@@ -101,7 +101,7 @@
                 <table class="min-w-full divide-y divide-gray-200 dark:divide-gray-700">
                     <tbody class="bg-white divide-y divide-green-muted dark:divide-green-muted dark:bg-gray-900">
                         <template x-for="(val, index) in item.values" :key="index">
-                            <tr @click="Livewire.emit('modal.open', 'company-link-s3-content', { row: val })"
+                            <tr @click="Livewire.emit('modal.open', 'company-link-s3-content', { row: val })" :style="index === 0 ? 'border-top: none !important;' : ''"
                                 class="hover:bg-gray-50 cursor-pointer">
                                 <td class="px-4 py-3 text-base  font-[400] text-[#121A0F] whitespace-nowrap"
                                     x-text="val.form_type"></td>
