@@ -32,7 +32,7 @@ COPY composer.json composer.lock ./
 # Copy the Laravel source code and the vendor directory
 COPY . .
 
-COPY --from=composer:latest /usr/bin/composer /usr/bin/composer
+COPY --from=475344884420.dkr.ecr.us-east-1.amazonaws.com/composer:latest /usr/bin/composer /usr/bin/composer
 RUN composer install --no-dev --optimize-autoloader
 
 # Stage 2: Build the assets with Node.js
