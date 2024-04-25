@@ -1,5 +1,5 @@
 # Stage 1: Set up the PHP environment and Composer dependencies
-FROM --platform=linux/amd64 475344884420.dkr.ecr.us-east-1.amazonaws.com/php:8.3-fpm AS php_builder
+FROM --platform=linux/amd64 php:8.3-fpm AS php_builder
 WORKDIR /app
 
 COPY app/helpers.php /app/app/helpers.php
@@ -32,11 +32,11 @@ COPY composer.json composer.lock ./
 # Copy the Laravel source code and the vendor directory
 COPY . .
 
-COPY --from=475344884420.dkr.ecr.us-east-1.amazonaws.com/composer:latest /usr/bin/composer /usr/bin/composer
+COPY --from=composer:latest /usr/bin/composer /usr/bin/composer
 RUN composer install --no-dev --optimize-autoloader
 
 # Stage 2: Build the assets with Node.js
-FROM 475344884420.dkr.ecr.us-east-1.amazonaws.com/node:16 as node_builder
+FROM node:16 as node_builder
 WORKDIR /app
 # Now that PHP dependencies are installed, copy them over as needed for the Node.js build
 COPY --from=php_builder /app/vendor ./vendor
@@ -55,7 +55,7 @@ COPY postcss.config.js ./
 RUN npm run build
 
 # Stage 3: Final stage to set up the application
-FROM --platform=linux/amd64 475344884420.dkr.ecr.us-east-1.amazonaws.com/php:8.3-fpm
+FROM --platform=linux/amd64 php:8.3-fpm
 WORKDIR /var/www
 
 # Install system dependencies, PHP extensions, and PostgreSQL client
