@@ -84,6 +84,8 @@ RUN usermod -u 1000 www-data && chown -R www-data:www-data .
 
 # Copying .env.production to .env
 
+ENV ENVIRONMENT_KEY=${ENVIRONMENT_KEY}
+
 RUN php artisan env:decrypt --env=production --key=$ENVIRONMENT_KEY
 
 RUN cp .env.production ./.env
