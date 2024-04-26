@@ -30,7 +30,7 @@
     <div
         class="col-span-12 lg:col-span-9 px-4 py-3 bg-white border border-[#D4DDD7] rounded-lg flex flex-wrap items-center gap-2.5 text-sm">
         <x-select name="transaction-filing" :options="config('capitalyze.transaction_code_map')" placeholder="Transaction Filing" :multiple="true"
-            :searchable="true" x-model="filters.transaction_codes"></x-select>
+            :searchable="true" x-model="filters.transaction_codes" :applyInset="'s'"></x-select>
 
         <x-select name="insider-title" :options="$insiderTitles" placeholder="Insider Title" :multiple="true" :searchable="true"
             x-model="filters.relationships"></x-select>

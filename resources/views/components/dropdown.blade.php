@@ -21,7 +21,9 @@
         {{ $trigger ?? '' }}
     </button>
 
-    <div class="z-[1000] hidden dropdown-body" x-ref="body">
+    <div :class="{
+        'inset-s': '{{ $applyInset }}' === 's'
+    }" class="z-[1000] hidden dropdown-body" x-ref="body">
         @if ($body ?? false)
             {{ $body }}
         @else
