@@ -18,15 +18,18 @@
             dateRange: @js($dateRange),
             metricsMap: @js($metricsMap),
             showChart: false,
+            overrideColors: {},
             init() {
                 this.showChart = this.shouldShowChart()
-        
-                this.$watch('filters', (filters) => {
+
+                const onFiltersChange = Alpine.throttle((filters) => {
                     window.http(`/chart-builder/${@this.tab.id}/update`, {
                         method: 'POST',
                         body: { filters }
                     })
-                }, { deep: true })
+                }, 1000)
+        
+                this.$watch('filters', onFiltersChange, { deep: true })
         
                 this.$watch('filters.period', () => {
                     this.$dispatch('update-range-slider')
@@ -206,6 +209,11 @@
                         })
                     },
                     getColor(key, label) {
+                        if (this.overrideColors[label]) {
+                            this.usedColors[label] = this.overrideColors[label]
+                            return this.overrideColors[label]
+                        }
+                
                         let _usedColors = Object.values(this.usedColors)
                         let idx = _usedColors.length
                 
@@ -277,9 +285,13 @@
                         <h3 class="font-medium">Indicators</h3>
                         <div class="mt-3 grid grid-cols-2">
                             <template x-for="i in indicators" :key="i.label">
-                                <div class="flex items-center gap-x-2">
-                                    <div class="w-4 h-4 rounded-full" :style="`background-color: ${i.color}`"></div>
-                                    <div x-text="i.label"></div>
+                                <div>
+                                    <label class="inline-flex items-center cursor-pointer hover:text-dark-light2">
+                                        <div class="w-4 h-4 rounded-full" :style="`background-color: ${i.color}`"></div>
+                                        <input type="color" class="invisible h-0 w-0" :value="usedColors[i.label]"
+                                            @change="overrideColors[i.label] = $event.target.value; $dispatch('update-chart')">
+                                        <div class="ml-2" x-text="i.label"></div>
+                                    </label>
                                 </div>
                             </template>
                         </div>

@@ -55,7 +55,7 @@ COPY postcss.config.js ./
 RUN npm run build
 
 # Stage 3: Final stage to set up the application
-FROM php:8.3-fpm
+FROM --platform=linux/amd64 php:8.3-fpm
 WORKDIR /var/www
 
 # Install system dependencies, PHP extensions, and PostgreSQL client
@@ -83,7 +83,10 @@ COPY --from=php_builder /app ./
 RUN usermod -u 1000 www-data && chown -R www-data:www-data .
 
 # Copying .env.production to .env
-COPY .env.production ./.env
+
+RUN php artisan env:decrypt --env=production --key=${ENVIRONMENT_KEY}
+
+RUN cp .env.production ./.env
 
 # Adding debugging commands
 RUN ls -la /var/www # List files in /var/www to verify
