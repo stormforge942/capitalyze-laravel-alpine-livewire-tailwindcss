@@ -48,7 +48,7 @@ class ChartTabs extends Component
     }
 
     public function init()
-    {
+    {        
         $tab = Arr::first($this->tabs, fn ($tab) => $tab['id'] == $this->activeTab);
 
         $this->emitTo(Chart::class, 'tabChanged', $tab);
