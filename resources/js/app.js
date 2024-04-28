@@ -154,3 +154,8 @@ function initGeneralTextTooltip() {
         })
     }
 }
+
+window.addEventListener(
+    "DOMContentLoaded",
+    () => setInterval(() => fetch("/ping"), 1000 * 60 * 30) // 30 minutes
+)

@@ -192,3 +192,5 @@ Route::get(RoutePath::for('verification.verify', '/email/verify/{id}/{hash}'), V
     ->name('verification.verify');
 
 Route::post('/logout', [AuthenticatedSessionController::class, 'destroy'])->name('logout');
+
+Route::get('ping', fn () => response('OK'))->name('refresh-csrf');
