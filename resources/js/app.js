@@ -173,6 +173,6 @@ window.addEventListener("DOMContentLoaded", () => {
                     window.location.reload()
                 }
             }),
-        1000 * 70
+        1000 * 60 * 30
     ) // 30 minutes
 })
