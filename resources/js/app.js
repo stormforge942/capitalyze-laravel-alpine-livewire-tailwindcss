@@ -155,7 +155,24 @@ function initGeneralTextTooltip() {
     }
 }
 
-window.addEventListener(
-    "DOMContentLoaded",
-    () => setInterval(() => fetch("/ping"), 1000 * 60 * 30) // 30 minutes
-)
+window.addEventListener("DOMContentLoaded", () => {
+    const csrfToken = document.querySelector('meta[name="csrf-token"]').content
+
+    if (!csrfToken) return
+
+    setInterval(
+        () =>
+            fetch("/ping", {
+                method: "POST",
+                headers: {
+                    "X-CSRF-TOKEN": csrfToken,
+                },
+            }).then((res) => {
+                if (res.status === 419) {
+                    alert("You did not interact with the page for a long time. We will refresh the page.")
+                    window.location.reload()
+                }
+            }),
+        1000 * 70
+    ) // 30 minutes
+})
