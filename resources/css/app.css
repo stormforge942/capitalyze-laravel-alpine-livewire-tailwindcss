@@ -664,3 +664,11 @@ a {
     background-color: #464e49 !important;
     border: 2px solid #d4ddd7 !important;
 }
+
+.financials-table-row:hover {
+    @apply bg-gray-100;
+}
+
+.financials-table-row:hover > td:first-child {
+    @apply !bg-gray-100;
+}

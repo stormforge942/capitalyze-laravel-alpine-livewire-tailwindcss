@@ -1,12 +1,12 @@
 <div class="flex justify-between items-center mt-6">
     <div class="warning-wrapper">
-        <div class="warning-text text-sm">
+        <div class="warning-text text-sm font-medium">
             <svg viewBox="0 0 16 16" fill="none" xmlns="http://www.w3.org/2000/svg">
                 <path
                     d="M7.99967 14.6663C4.31777 14.6663 1.33301 11.6815 1.33301 7.99967C1.33301 4.31777 4.31777 1.33301 7.99967 1.33301C11.6815 1.33301 14.6663 4.31777 14.6663 7.99967C14.6663 11.6815 11.6815 14.6663 7.99967 14.6663ZM7.99967 13.333C10.9452 13.333 13.333 10.9452 13.333 7.99967C13.333 5.05415 10.9452 2.66634 7.99967 2.66634C5.05415 2.66634 2.66634 5.05415 2.66634 7.99967C2.66634 10.9452 5.05415 13.333 7.99967 13.333ZM7.33301 9.99967H8.66634V11.333H7.33301V9.99967ZM7.33301 4.66634H8.66634V8.66634H7.33301V4.66634Z"
                     fill="#DA680B" />
             </svg>
-            Click on any of the row(s) to chart the data
+            Click on row(s) to chart data; click values to view source filing
         </div>
     </div>
 
@@ -18,7 +18,8 @@
             </button>
         @endcan
 
-        <button class="font-semibold hover:drop-shadow transition-all text-sm+" @click.prevent="showAllRows = !showAllRows">
+        <button class="font-semibold hover:drop-shadow transition-all text-sm+"
+            @click.prevent="showAllRows = !showAllRows">
             <div class="flex items-center gap-x-2" x-show="!showAllRows" x-cloak>
                 <span>Show Details</span>
                 <svg width="16" height="16" viewBox="0 0 16 16" fill="none"
@@ -102,7 +103,14 @@
                                 row.isBold ? 'font-bold' : '',
                                 isRowSelectedForChart ? 'bg-[#d5ebe3]' : (row.segmentation ? 'bg-[#e4eff3]' :
                                     'bg-white'),
-                            ]">
+                                !row.empty && !row.seg_start ? 'cursor-pointer' : '',
+                                !row.empty && !row.seg_start && !isRowSelectedForChart ? 'financials-table-row' : '',
+                            ]"
+                            @click="(e) => {
+                                if(e.target.classList.contains('clickable')) return;
+
+                                toggleRowForChart(row);
+                            }">
                             <td class="pl-6 text-left"
                                 :class="[
                                     isRowSelectedForChart ? '!bg-[#d5ebe3]' : (row.segmentation ? '!bg-[#e4eff3]' : ''),
@@ -115,10 +123,9 @@
                                         :checked="isRowSelectedForChart" style="margin-left: -18px; margin-right: 2px;"
                                         @change="toggleRowForChart(row)">
 
-                                    <p class="max-w-[250px] whitespace-normal"
-                                        :style="`padding-left: ${row.depth * 8}px`"
-                                        :class="!row.empty && !row.seg_start ? 'cursor-pointer' : ''" x-text="row.title"
-                                        :data-tooltip-content="row.title" @click.prevent="toggleRowForChart(row)"></p>
+                                    <p class="max-w-[250px] w-[max-content] whitespace-normal"
+                                        :style="`padding-left: ${row.depth * 8}px`" x-text="row.title"
+                                        :data-tooltip-content="row.title"></p>
 
                                     <template x-if="row.seg_start">
                                         <button class="ml-1 shrink-0 transition-all"
@@ -143,8 +150,8 @@
                                     ]">
                                     <template x-if="row.values[date].isLink">
                                         <button type="button"
-                                            class="inline-flex items-center gap-x-0.5 text-sm font-medium hover:text-blue"
-                                            @click="Livewire.emit('slide-over.open', 'slides.right-slide', {data: row.values[date]})">
+                                            class="inline-flex items-center gap-x-0.5 text-sm font-medium hover:text-blue clickable"
+                                            @click.prevent="Livewire.emit('slide-over.open', 'slides.right-slide', {data: row.values[date]})">
                                             <span>show</span>
                                             <svg class="h-3 w-3" data-slot="icon" fill="none" stroke-width="2.5"
                                                 stroke="currentColor" viewBox="0 0 24 24"
@@ -158,17 +165,17 @@
                                     <template x-if="!row.values[date].isLink">
                                         <div>
                                             <x-review-number-button x-data="{ amount: row.values[date]?.value, date, }" x-show="!publicView">
-                                                <div class="hover:underline cursor-pointer"
+                                                <div class="hover:underline cursor-pointer clickable"
                                                     :class="row.values[date]?.isNegative ? 'text-red' : ''"
                                                     x-text="row.values[date]?.result"
-                                                    @click="Livewire.emit('slide-over.open', 'slides.right-slide', {data: row.values[date]})">
+                                                    @click.prevent="Livewire.emit('slide-over.open', 'slides.right-slide', {data: row.values[date]})">
                                                 </div>
                                             </x-review-number-button>
 
-                                            <div class="hover:underline cursor-pointer"
+                                            <div class="hover:underline cursor-pointer clickable"
                                                 :class="row.values[date]?.isNegative ? 'text-red' : ''"
                                                 x-text="row.values[date]?.result"
-                                                @click="Livewire.emit('slide-over.open', 'slides.right-slide', {data: row.values[date]})"
+                                                @click.prevent="Livewire.emit('slide-over.open', 'slides.right-slide', {data: row.values[date]})"
                                                 x-cloak x-show="publicView">
                                             </div>
                                         </div>
