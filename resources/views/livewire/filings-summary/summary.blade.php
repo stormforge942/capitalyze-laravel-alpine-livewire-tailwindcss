@@ -1,11 +1,10 @@
-<div x-cloak class="flex flex-col lg:flex-row justify-start items-center flex-wrap" x-data="{
+<div x-cloak class="grid grid-cols-1 xl:grid-cols-2 gap-6" x-data="{
     search: {},
     items: @js($items),
     order: @js($order),
     values: @js($values),
     sortByDateTitle: {},
     init() {
-        console.log(this.values)
         this.items.forEach((item) => {
             this.sortByDateTitle[item.value] = 'filing_date';
         });
@@ -41,91 +40,83 @@
         return filteredData;
     }
 }">
-    <?php $i = 0; ?>
     <template x-for="(item, key) in filteredItems" :key="key + item.value">
-        <div
-            class="bg-white rounded w-full overflow-hidden lg:w-[calc(50%-1rem)] mr-0 lg-0 {{ $i % 2 === 0 ? 'lg:mr-3' : 'lg:ml-4' }} mb-5">
-            <div class="flex justify-between items-center content-center py-3 px-1 mb-1 border-b border-grey-light">
+        <div class="bg-white rounded overflow-hidden">
+            <div class="flex justify-between items-center py-3 px-4 border-b border-green-muted">
                 <div>
-                    <h4 x-text="item.name.split(' ')[0]" class="mx-3 text-[#3561E7] font-[600] text-[0.8125rem] max-w-[100px] whitespace-nowrap truncate text-ellipsis" :data-tooltip-content="item.name" />
+                    <h4 x-text="item.name.split(' ')[0]"
+                        class="text-[#3561E7] font-[600] text-[0.8125rem] max-w-[100px] whitespace-nowrap truncate text-ellipsis"
+                        :data-tooltip-content="item.name" />
                 </div>
-                <div class="hidden justify-start items-center content-center ml-auto">
-                    <label class="mx-1 cursor-pointer">
-                        <input x-model="sortByDateTitle[item.value]" :name="key + item.value" value="filing_date"
-                            class="mr-1 text-[#121A0F] text-sm mx-1 mt-[-0.125rem] custom-radio custom-radio-xs cursor-pointer"
-                            type="radio">
-                        </input>
-                        <span class="text-sm mt-1">Sort by date</span>
-                    </label>
-                    <label class="mr-3 cursor-pointer">
-                        <input x-model="sortByDateTitle[item.value]" :name="key + item.value" value="form_type"
-                            class="mr-1 text-[#121A0F] text-sm mx-1 mt-[-0.125rem] custom-radio custom-radio-xs cursor-pointer"
-                            type="radio">
-                        </input>
-                        <span class="text-sm mt-1">Sort by title</span>
-                    </label>
-                    <div class="flex justify-start items-center content-center">
-                        <div class="m-0 p-0 cursor-pointer">
-                            <svg width="12" height="12" viewBox="0 0 12 12" fill="none"
-                                xmlns="http://www.w3.org/2000/svg">
-                                <path
-                                    d="M8.57633 7.54717H8.03431L7.8422 7.36192C8.51458 6.57976 8.91938 5.56432 8.91938 4.45969C8.91938 1.99657 6.92281 0 4.45969 0C1.99657 0 0 1.99657 0 4.45969C0 6.92281 1.99657 8.91938 4.45969 8.91938C5.56432 8.91938 6.57976 8.51458 7.36192 7.8422L7.54717 8.03431V8.57633L10.9777 12L12 10.9777L8.57633 7.54717ZM4.45969 7.54717C2.75129 7.54717 1.37221 6.1681 1.37221 4.45969C1.37221 2.75129 2.75129 1.37221 4.45969 1.37221C6.1681 1.37221 7.54717 2.75129 7.54717 4.45969C7.54717 6.1681 6.1681 7.54717 4.45969 7.54717Z"
-                                    fill="#464E49" />
-                            </svg>
 
-                        </div>
-                        <input x-model="search[item.value]" type="search"
-                            class="pl-1.5 pb-2 focus:ring-0 focus:border-blue-500 placeholder:text-sm text-sm  border-none w-[9rem] leading-[1.45rem] h-[1.45rem] search-x-button-small placeholder:text-dark-light2"
-                            placeholder="Search document" />
+                <div class="flex items-center">
+                    <div class="hidden 2xl:flex justify-start items-center gap-1">
+                        <label class="cursor-pointer flex items-center gap-1">
+                            <input x-model="sortByDateTitle[item.value]" :name="key + item.value" value="filing_date"
+                                class="custom-radio custom-radio-xs" type="radio">
+                            </input>
+                            <span class="text-sm">Sort by date</span>
+                        </label>
+                        <label class="mr-3 cursor-pointer flex items-center gap-1">
+                            <input x-model="sortByDateTitle[item.value]" :name="key + item.value" value="form_type"
+                                class="custom-radio custom-radio-xs" type="radio">
+                            </input>
+                            <span class="text-sm">Sort by title</span>
+                        </label>
                     </div>
-                </div>
-                <div class="flex items-center gap-2">
+
                     <select x-model="sortByDateTitle[item.value]" id="countries"
-                        class="h-7 py-0.75 px-3 rounded-full border border-solid border-[#939598] text-sm">
+                        class="inline-block 2xl:hidden py-1 px-2 rounded-full border border-solid border-green-muted text-sm">
                         <option value="filing_date">Sort by date</option>
                         <option value="form_type">Sort by type</option>
                     </select>
-                    <div class="flex justify-start items-start">
-                        <div class="ml-3 p-0">
-                            <img class="mt-1 mr-0" src="{{ asset('/svg/search.svg') }}" />
-                        </div>
-                        <div>
-                            <input x-model="search[item.value]" type="search"
-                                class="focus:ring-0 focus:border-blue-500 placeholder:text-sm text-sm  border-none w-[9rem] leading-[1.45rem] h-[1.45rem]"
-                                placeholder="search document" />
-                        </div>
+
+                    <div class="ml-4 flex gap-1 items-center">
+                        <svg width="16" height="16" viewBox="0 0 16 16" fill="none"
+                            xmlns="http://www.w3.org/2000/svg">
+                            <path
+                                d="M10.5763 9.54717H10.0343L9.8422 9.36192C10.5146 8.57976 10.9194 7.56432 10.9194 6.45969C10.9194 3.99657 8.92281 2 6.45969 2C3.99657 2 2 3.99657 2 6.45969C2 8.92281 3.99657 10.9194 6.45969 10.9194C7.56432 10.9194 8.57976 10.5146 9.36192 9.8422L9.54717 10.0343V10.5763L12.9777 14L14 12.9777L10.5763 9.54717ZM6.45969 9.54717C4.75129 9.54717 3.37221 8.1681 3.37221 6.45969C3.37221 4.75129 4.75129 3.37221 6.45969 3.37221C8.1681 3.37221 9.54717 4.75129 9.54717 6.45969C9.54717 8.1681 8.1681 9.54717 6.45969 9.54717Z"
+                                fill="#464E49" />
+                        </svg>
+
+                        <input x-model="search[item.value]" type="search"
+                            class="focus:ring-0 focus:border-blue-500 text-sm border-none w-[120px] search-x-button-small placeholder:text-dark-light2 px-0"
+                            placeholder="Search document" />
+                    </div>
+
+                    <div class="ml-6">
+                        <a hre="#"
+                            class="text-sm text-[#F78400] font-bold hover:text-[#cd7a1b] whitespace-nowrap"
+                            @click.prevent="$wire.emit('handleFilingsSummaryTab',['all-filings', item.value])">
+                            View All
+                        </a>
                     </div>
                 </div>
-                <div class="mx-3">
-                    <a hre="#" class="text-sm text-[#F78400] font-bold hover:text-[#cd7a1b]"
-                        @click="$wire.emit('handleFilingsSummaryTab',['all-filings', item.value])">View All</a>
+            </div>
+            <div>
+                <div class="h-[20rem] overflow-scroll filing-table no-horizontal-scrollbar">
+                    <table class="min-w-full">
+                        <tbody class="bg-white divide-y divide-green-muted">
+                            <template x-for="(val, index) in item.values" :key="index">
+                                <tr @click="Livewire.emit('modal.open', 'company-link-s3-content', { row: val })"
+                                    :style="index === 0 ? 'border-top: none !important;' : ''"
+                                    class="hover:bg-gray-50 cursor-pointer">
+                                    <td class="px-4 py-3 text-base  font-[400] text-[#121A0F] whitespace-nowrap"
+                                        x-text="val.form_type"></td>
+                                    <td class="px-4 py-3 text-base  font-[400] text-[#121A0F] whitespace-nowrap">
+                                        <p class="truncate w-36" x-text="val.description"
+                                            :data-tooltip-content="val.description"></p>
+                                    </td>
+                                    <td class="px-4 py-3 text-base  font-[400] text-[#121A0F] whitespace-nowrap"
+                                        x-text="val.acceptance_time"></td>
+                                    <td class="px-4 py-3 text-base  font-[400] text-[#121A0F] whitespace-nowrap"
+                                        x-text="val.filing_date"></td>
+                                </tr>
+                            </template>
+                        </tbody>
+                    </table>
                 </div>
             </div>
-            <div
-                class="overflow-hidden -mt-1 h-[20rem] border-gray-200 dark:border-gray-700 show-scrollbar scrollbar-style no-horizontal-scrollbar hover:overflow-auto relative">
-                <table class="min-w-[101%] divide-y divide-gray-200 dark:divide-gray-700">
-                    <tbody
-                        class="bg-white divide-y divide-green-muted dark:divide-green-muted dark:bg-gray-900 absolute">
-                        <template x-for="(val, index) in item.values" :key="index">
-                            <tr @click="Livewire.emit('modal.open', 'company-link-s3-content', { row: val })"
-                                :style="index === 0 ? 'border-top: none !important;' : ''"
-                                class="hover:bg-gray-50 cursor-pointer">
-                                <td class="px-4 py-3 text-base  font-[400] text-[#121A0F] whitespace-nowrap"
-                                    x-text="val.form_type"></td>
-                                <td class="px-4 py-3 text-base  font-[400] text-[#121A0F] whitespace-nowrap">
-                                    <p class="truncate w-36" x-text="val.description"
-                                        :data-tooltip-content="val.description"></p>
-                                </td>
-                                <td class="px-4 py-3 text-base  font-[400] text-[#121A0F] whitespace-nowrap"
-                                    x-text="val.acceptance_time"></td>
-                                <td class="px-4 py-3 text-base  font-[400] text-[#121A0F] whitespace-nowrap"
-                                    x-text="val.filing_date"></td>
-                            </tr>
-                        </template>
-                    </tbody>
-                </table>
-            </div>
         </div>
-        <?php $i++; ?>
     </template>
 </div>
