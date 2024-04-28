@@ -15,7 +15,7 @@ class Employee extends Component
     public $company;
     public $rawData = [];
     public $chartConfig = [
-        'showLabel' => true,
+        'showLabel' => false,
     ];
 
     public function mount()

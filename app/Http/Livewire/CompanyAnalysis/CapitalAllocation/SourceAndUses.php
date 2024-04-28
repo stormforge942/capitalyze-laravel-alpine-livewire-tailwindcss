@@ -14,7 +14,7 @@ class SourceAndUses extends Component
     public $rawData;
 
     public $chartConfig = [
-        'showLabel' => true,
+        'showLabel' => false,
         'type' => 'values',
     ];
 

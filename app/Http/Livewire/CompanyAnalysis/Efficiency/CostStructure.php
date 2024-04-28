@@ -13,7 +13,7 @@ class CostStructure extends Component
     public $statements;
     public $rawData = [];
     public $chartConfig = [
-        'showLabel' => true,
+        'showLabel' => false,
         'type' => 'values',
     ];
 

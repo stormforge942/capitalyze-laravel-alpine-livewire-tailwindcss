@@ -17,7 +17,7 @@ class Chart extends Component
     public ?array $filters = null;
     public array $metricAttributes = [];
     public array $metricsColor;
-    public bool $showLabel = true;
+    public bool $showLabel = false;
 
     protected $listeners = [
         'tabChanged' => 'tabChanged',
@@ -101,7 +101,7 @@ class Chart extends Component
 
         $this->metricAttributes = $_tab['metric_attributes'];
 
-        $this->showLabel = true;
+        $this->showLabel = false;
     }
 
     private function resetColors()

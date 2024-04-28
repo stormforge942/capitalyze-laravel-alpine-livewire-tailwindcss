@@ -15,7 +15,7 @@
                     formattedTableDates: [],
                     selectedDateRange: $wire.entangle('selectedDateRange', true),
                     chart: null,
-                    showLabel: true,
+                    showLabel: false,
                     disclosureTab: $wire.entangle('disclosureTab'),
                     publicView: false,
                     filters: {
