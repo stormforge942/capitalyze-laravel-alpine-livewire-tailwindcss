@@ -23,7 +23,7 @@ import "./report-text-highlighter"
 import "./chartjs-plugins"
 import "./pages/ownership"
 import "./pages/analysis"
-import './export-table-to-excel'
+import "./export-table-to-excel"
 import "./urlWindow.js"
 
 Alpine.plugin(focus)
@@ -126,11 +126,11 @@ function initGeneralTextTooltip() {
 
         const elRect = el.getBoundingClientRect()
 
-        const offset = Number(el.dataset.tooltipOffset || 7)
+        const offset = Number(el.dataset.tooltipOffset || 5)
 
         virtualElement.getBoundingClientRect = generateGetBoundingClientRect(
             elRect.x + elRect.width / 2,
-            elRect.top - elRect.height - offset
+            elRect.top - tooltip.clientHeight - offset
         )
 
         instance.update()
