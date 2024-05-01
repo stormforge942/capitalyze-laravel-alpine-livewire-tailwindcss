@@ -4,6 +4,7 @@
     init() {
         this.dropdown = new Dropdown($refs.body, $refs.trigger, {
             placement: '{{ $placement }}',
+            offsetDistance: {{ $offsetDistance }},
             onShow: () => this.open = true,
             onHide: () => this.open = false,
         });
@@ -21,9 +22,7 @@
         {{ $trigger ?? '' }}
     </button>
 
-    <div :class="{
-        'inset-s': '{{ $applyInset }}' === 's'
-    }" class="z-[1000] hidden dropdown-body" x-ref="body">
+    <div class="z-[1000] hidden dropdown-body" x-ref="body">
         @if ($body ?? false)
             {{ $body }}
         @else
