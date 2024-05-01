@@ -20,9 +20,9 @@ RUN apt-get update && apt-get install -y \
     netcat-openbsd \
     postgresql-client \
     brotli
-RUN pecl install redis swoole
+# RUN pecl install redis swoole
 RUN docker-php-ext-install pdo pdo_pgsql pgsql pdo_mysql mbstring exif pcntl bcmath gd zip
-RUN docker-php-ext-enable redis swoole
+# RUN docker-php-ext-enable redis swoole
 # Clear cache
 RUN apt-get clean && rm -rf /var/lib/apt/lists/*
 
@@ -35,9 +35,11 @@ COPY composer.json composer.lock ./
 COPY . .
 
 COPY --from=composer:latest /usr/bin/composer /usr/bin/composer
+COPY auth.json ./
 RUN composer install --no-dev --optimize-autoloader
 
-RUN php artisan env:decrypt --env=production --key=${ENVIRONMENT_KEY}
+ARG ENVIRONMENT_KEY
+RUN php artisan env:decrypt --env=production --key=${ENVIRONMENT_KEY} --force
 
 RUN cp .env.production ./.env
 
@@ -87,12 +89,6 @@ COPY --from=php_builder /app ./
 
 # Permissions adjustments, if necessary
 RUN usermod -u 1000 www-data && chown -R www-data:www-data .
-
-# Copying .env.production to .env
-
-RUN php artisan env:decrypt --env=production --key=${ENVIRONMENT_KEY}
-
-RUN cp .env.production ./.env
 
 # Adding debugging commands
 RUN ls -la /var/www # List files in /var/www to verify

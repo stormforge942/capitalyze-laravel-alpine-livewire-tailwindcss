@@ -15,11 +15,11 @@ phases:
       - IMAGE_TAG=build-$(echo $CODEBUILD_BUILD_ID | awk -F":" '{print $2}')
   build:
     commands:
-      - echo Build started on `date` with key $ENVIRONMENT_KEY
+      - echo Build started on `date`
       - echo "{\"http-basic\":{\"wire-elements-pro.composer.sh\":{\"username\":\"mgmt@capitalyze.com\",\"password\":\"$COMPOSER_PASSWORD\"}}}" > auth.json
       - echo Building the Docker image...
       # - docker build -t $REPOSITORY_URI:latest .
-      - docker build -t $REPOSITORY_URI:latest -f Dockerfile.production --platform=linux/amd64 --build-arg ENVIRONMENT_KEY=ENVIRONMENT_KEY .
+      - docker build -t $REPOSITORY_URI:latest -f Dockerfile.production --platform=linux/amd64 --build-arg ENVIRONMENT_KEY=${ENVIRONMENT_KEY} .
       - docker tag $REPOSITORY_URI:latest $REPOSITORY_URI:$IMAGE_TAG
   post_build:
     commands:
