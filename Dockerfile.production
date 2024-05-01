@@ -1,3 +1,5 @@
+ARG ENVIRONMENT_KEY defaultkey
+
 # Stage 1: Set up the PHP environment and Composer dependencies
 FROM --platform=linux/amd64 php:8.3-fpm AS php_builder
 WORKDIR /app
