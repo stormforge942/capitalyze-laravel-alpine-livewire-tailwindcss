@@ -1,5 +1,6 @@
+import logoSvgFile from "../img/svg/logo.svg"
 const logoImg = new Image();
-logoImg.src = '/img/logo.svg'
+logoImg.src = logoSvgFile
 const chartJsPlugins = {
     pointLine: {
         id: "pointLine",
