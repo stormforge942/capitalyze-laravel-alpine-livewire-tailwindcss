@@ -37,6 +37,10 @@ COPY . .
 COPY --from=composer:latest /usr/bin/composer /usr/bin/composer
 RUN composer install --no-dev --optimize-autoloader
 
+RUN php artisan env:decrypt --env=production --key=${ENVIRONMENT_KEY}
+
+RUN cp .env.production ./.env
+
 # Stage 2: Build the assets with Node.js
 FROM node:16 as node_builder
 WORKDIR /app
