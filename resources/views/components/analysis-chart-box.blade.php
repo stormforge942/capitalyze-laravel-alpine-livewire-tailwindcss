@@ -106,7 +106,7 @@
                 <div class="h-[300px] sm:h-[345px]">
                     <canvas x-ref="canvas"></canvas>
                 </div>
-                <ul class="px-6 mt-4 chart-legends"></ul>
+                <ul class="px-6 mr-16 -mt-5 chart-legends"></ul>
             </div>
         </div>
     </div>

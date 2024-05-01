@@ -17,6 +17,7 @@
     @once
         @push('scripts')
             <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+            @vite(['resources/js/chartjs-global.js'])
             <script src="https://cdn.jsdelivr.net/npm/luxon"></script>
         @endpush
     @endonce

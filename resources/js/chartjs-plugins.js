@@ -1,3 +1,5 @@
+const logoImg = new Image();
+logoImg.src = '/img/logo.svg'
 const chartJsPlugins = {
     pointLine: {
         id: "pointLine",
@@ -249,6 +251,27 @@ const chartJsPlugins = {
             })
         },
     },
+    beforeDraw: {
+        id: "appendLogoBelowChart",
+        beforeInit(chart) {
+            const desiredPaddingBottom = 20;
+            chart.options.layout.padding.bottom = desiredPaddingBottom
+        },
+        beforeDraw: (chart, args, options) => {
+            const { ctx } = chart
+
+            ctx.save();
+            const logoHeight = 16, logoWidth = 80;
+            if (logoImg.complete) {
+                ctx.drawImage(logoImg, ctx.canvas.offsetWidth - logoWidth, ctx.canvas.offsetHeight - logoHeight, logoWidth, logoHeight)
+            }
+            else {
+                logoImg.onload = () => chart.draw();
+            }
+            ctx.restore();
+
+        }
+    }
 }
 window.chartJsPlugins = chartJsPlugins
 
