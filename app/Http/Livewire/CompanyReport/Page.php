@@ -88,6 +88,7 @@ class Page extends Component
             'tabs' => $this->tabs,
             'rows' => $this->rows,
             'tableDates' => $this->tableDates,
+            'colors' => config('capitalyze.chartColors'),
             'reverse' => $this->order === 'Latest on the Left',
             'viewTypes' => [
                 'As reported',
