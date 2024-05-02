@@ -24,7 +24,7 @@
     },
 }">
     <div class="col-span-12 @if($usedIn === 'ownership') lg:col-span-3 @else lg:col-span-4 @endif">
-        <x-search-filter x-model.debounce.500ms="filters.search" :placeholder="$usedIn === 'ownership' ?'Search Insider Name...' : 'Search Company, Insider Name...'"></x-search-filter>
+        <x-search-filter x-model.debounce.500ms="filters.search" :placeholder="$usedIn === 'ownership' ? 'Search Insider Name...' : 'Search Company, Insider Name...'" font-size="base"></x-search-filter>
     </div>
 
     <div class="col-span-12 @if($usedIn === 'ownership') lg:col-span-9 @else lg:col-span-8 @endif px-4 py-3 bg-white border border-[#D4DDD7] rounded-lg flex flex-wrap items-center gap-2.5 text-sm">

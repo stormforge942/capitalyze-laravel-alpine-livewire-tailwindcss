@@ -11,8 +11,10 @@ class SearchFilter extends Component
      *
      * @return void
      */
-    public function __construct(public string $placeholder = "Search...")
-    {
+    public function __construct(
+        public string $placeholder = "Search...",
+        public string $fontSize = "sm+"
+    ) {
         //
     }
 

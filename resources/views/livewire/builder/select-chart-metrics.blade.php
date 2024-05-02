@@ -82,7 +82,7 @@
         <x-dropdown x-model="showDropdown" placement="bottom-start" :fullWidthTrigger="true">
             <x-slot name="trigger">
                 <input type="search"
-                    class="text-basde mt-4 p-4 block w-full border border-[#D4DDD7] rounded-lg placeholder:text-gray-medium2 focus:ring-0 focus:border-green-dark"
+                    class="text-base mt-4 p-4 block w-full border border-[#D4DDD7] rounded-lg placeholder:text-gray-medium2 focus:ring-0 focus:border-green-dark search-x-button"
                     id="select-chart-metrics-input" placeholder="Select metrics..." x-model.debounce.500ms="search"
                     @click.prevent="if(showDropdown) { $event.stopPropagation(); }">
             </x-slot>
