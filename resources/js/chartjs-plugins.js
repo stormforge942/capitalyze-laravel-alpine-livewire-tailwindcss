@@ -256,9 +256,10 @@ const chartJsPlugins = {
         id: "appendLogoBelowChart",
         beforeInit(chart) {
             const desiredPaddingBottom = 20;
-            chart.options.layout.padding.bottom = desiredPaddingBottom
+            const defaultPaddingBottom = chart.options.layout.padding.bottom
+            chart.options.layout.padding.bottom = defaultPaddingBottom == 0 ? desiredPaddingBottom : defaultPaddingBottom
         },
-        beforeDraw: (chart, args, options) => {
+        beforeDraw: (chart) => {
             const { ctx } = chart
 
             ctx.save();

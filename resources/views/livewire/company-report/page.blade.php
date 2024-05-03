@@ -516,7 +516,7 @@
                                         <canvas id="chart-company-report"></canvas>
                                     </div>
 
-                                    <div class="mt-8 flex flex-wrap justify-start items-end gap-3">
+                                    <div class="-mt-8 mr-20 flex flex-wrap justify-start items-end gap-3">
                                         <template x-for="item in selectedChartRows" :key="item.id"
                                             :shadow="true">
                                             <div
@@ -659,7 +659,6 @@
                     return 0; // Maintain the order if both are 'line' or both are 'bar'
                 }
             })
-
             return new Chart(ctx, {
                 plugins: [chartJsPlugins.pointLine, window.ChartDataLabels],
                 type: 'line',
@@ -668,6 +667,7 @@
                     layout: {
                         padding: {
                             top: 25,
+                            bottom: 50
                         }
                     },
                     maintainAspectRatio: false,
