@@ -24,6 +24,8 @@ class Page extends Component
 
     public $activeTab;
     public $company;
+    public $showAllRows;
+    public $publicView;
     protected $rows = [];
     protected $tableDates = [];
     public $currency = 'USD';
@@ -60,6 +62,9 @@ class Page extends Component
         $this->disclosureTab = $request->query('disclosureTab', '');
         $this->disclosureFootnote = $request->query('disclosureFootnote', '');
 
+        $this->publicView = session('company-report.publicView', false);
+        $this->showAllRows = session('company-report.showAllRows', false);
+
         $range = explode(',', $request->query('selectedDateRange', ''));
         if (count($range) === 2 && is_numeric($range[0]) && is_numeric($range[1])) {
             $this->selectedDateRange = [intval($range[0]), intval($range[1])];
@@ -79,6 +84,14 @@ class Page extends Component
     {
         if (in_array($prop, ['view', 'activeTab', 'period', 'disclosureTab', 'disclosureFootnote'])) {
             $this->setupTabData();
+        }
+
+        if (in_array($prop, ['publicView', 'showAllRows'])) {
+            info([
+                'prop' => $prop,
+                'value' => $this->{$prop}
+            ]);
+            session(['company-report.' . $prop => $this->{$prop}]);
         }
     }
 
@@ -342,6 +355,11 @@ class Page extends Component
     private function generateRows($data)
     {
         if ($this->view !== 'Standardized') {
+            if(isset($data['Income statements:']) && !isset($data['Income Statement'])) {
+                $data['Income Statement'] = $data['Income statements:'];
+                unset($data['Income statements:']);
+            }
+
             if (
                 isset($data['Income Statement']) &&
                 is_array($data['Income Statement']) &&

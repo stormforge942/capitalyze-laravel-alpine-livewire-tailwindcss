@@ -142,7 +142,7 @@
                                 </div>
                             </td>
                             <template x-for="date in formattedTableDates" :key="date">
-                                <td class="pl-6 last:pr-6" style="vertical-align: bottom;"
+                                <td class="pl-6 last:pr-6" style="vertical-align: center;"
                                     :class="[
                                         isLast ? 'last:rounded-br-lg' : '',
                                         index === 0 && groupIdx != 0 ? 'last:rounded-tr-lg' : '',
@@ -187,9 +187,5 @@
                 </tbody>
             </template>
         </table>
-    </div>
-
-    <div class="cus-loader" wire:loading.block>
-        <div class="cus-loaderBar"></div>
     </div>
 </div>

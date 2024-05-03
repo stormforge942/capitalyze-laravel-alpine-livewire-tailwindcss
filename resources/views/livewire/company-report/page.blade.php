@@ -17,7 +17,7 @@
                     chart: null,
                     showLabel: false,
                     disclosureTab: $wire.entangle('disclosureTab'),
-                    publicView: false,
+                    publicView: $wire.entangle('publicView', true),
                     filters: {
                         view: $wire.entangle('view'),
                         period: $wire.entangle('period'),
@@ -29,7 +29,7 @@
                     },
                     selectedChartRows: [],
                     hideSegments: [],
-                    showAllRows: false,
+                    showAllRows: $wire.entangle('showAllRows', true),
                     get formattedChartData() {
                         return {
                             labels: this.formattedTableDates,
@@ -279,6 +279,26 @@
                 
                             delete _row.children;
                 
+                            if (!this.showAllRows && !row.seg_start) {
+                                const shownChildren = row.children.filter(r => (!r.empty || r.children.length) && !r.mismatchedSegmentation)
+                
+                                if (
+                                    shownChildren.length === 1 &&
+                                    row.title.toLowerCase().startsWith(shownChildren[0].title.toLowerCase())
+                                ) {
+                                    console.log(row)
+                                    _row.title = shownChildren[0].title
+                                    Object.entries(shownChildren[0].values).forEach(([key, value]) => {
+                                        _row.values[key] = {
+                                            ...value,
+                                            ...this.formatTableValue(value.value, row.isPercent)
+                                        };
+                                    });
+                                    rows.push(_row);
+                                    return;
+                                }
+                            }
+                
                             Object.entries(row.values).forEach(([key, value]) => {
                                 _row.values[key] = {
                                     ...value,
@@ -365,7 +385,7 @@
                     @if ($noData)
                         <div class="grid place-items-center py-24">
                             <svg width="168" height="164" viewBox="0 0 168 164" fill="none"
-                                 xmlns="http://www.w3.org/2000/svg">
+                                xmlns="http://www.w3.org/2000/svg">
                                 <g clip-path="url(#clip0_8757_81677)">
                                     <path
                                         d="M106.655 36.8798H61.3859C60.3543 36.881 59.3653 37.2914 58.6359 38.0209C57.9064 38.7504 57.4961 39.7394 57.4948 40.7711V141.388L56.976 141.546L45.8709 144.947C45.3446 145.108 44.7761 145.053 44.2903 144.795C43.8044 144.536 43.4409 144.096 43.2795 143.57L10.2468 35.6631C10.086 35.1367 10.1408 34.5681 10.3991 34.0821C10.6574 33.5962 11.0981 33.2326 11.6243 33.0714L28.7373 27.8311L78.3484 12.6445L95.4613 7.40419C95.7217 7.32404 95.9954 7.29603 96.2667 7.32177C96.5379 7.34751 96.8015 7.42649 97.0422 7.5542C97.2829 7.68191 97.496 7.85583 97.6695 8.06602C97.8429 8.27621 97.9731 8.51854 98.0528 8.77913L106.496 36.3609L106.655 36.8798Z"
