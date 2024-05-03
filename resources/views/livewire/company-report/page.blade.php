@@ -23,6 +23,7 @@
                         period: $wire.entangle('period'),
                         unitType: $wire.entangle('unitType', true),
                         decimalPlaces: $wire.entangle('decimalPlaces', true),
+                        perShareDecimalPlaces: $wire.entangle('perShareDecimalPlaces', true),
                         order: $wire.entangle('order', true),
                         freezePane: $wire.entangle('freezePane', true),
                         footnote: $wire.entangle('disclosureFootnote'),
@@ -95,15 +96,22 @@
                             this.updateRowGroups(rows);
                             this.renderChart();
                         })
-                        this.$watch('filters.decimalPlaces', () => {
-                            this.updateRowGroups(rows)
                 
-                            this.renderChart();
+                        const onUpdateDecimalPlaces = (update = false) => {
+                            return () => {
+                                this.updateRowGroups(rows)
                 
-                            window.updateUserSettings({
-                                decimalPlaces: this.filters.decimalPlaces
-                            })
-                        })
+                                this.renderChart();
+                
+                                if (update) {
+                                    window.updateUserSettings({
+                                        decimalPlaces: this.filters.decimalPlaces
+                                    })
+                                }
+                            }
+                        }
+                        this.$watch('filters.decimalPlaces', onUpdateDecimalPlaces(true))
+                        this.$watch('filters.perShareDecimalPlaces', onUpdateDecimalPlaces())
                 
                         this.$watch('filters', (newVal, oldVal) => {
                             const url = new URL(window.location.href);
@@ -112,6 +120,7 @@
                             url.searchParams.set('period', newVal.period);
                             url.searchParams.set('unitType', newVal.unitType);
                             url.searchParams.set('decimalPlaces', newVal.decimalPlaces);
+                            url.searchParams.set('perShareDecimalPlaces', newVal.perShareDecimalPlaces);
                             url.searchParams.set('order', newVal.order);
                             url.searchParams.set('freezePane', newVal.freezePane);
                             url.searchParams.set('disclosureFootnote', newVal.footnote);
@@ -194,8 +203,8 @@
                 
                         const result = Number(Math.abs(value)).toLocaleString('en-US', {
                             style: 'decimal',
-                            minimumFractionDigits: this.filters.decimalPlaces,
-                            maximumFractionDigits: this.filters.decimalPlaces,
+                            minimumFractionDigits: isPercent ? this.filters.perShareDecimalPlaces : this.filters.decimalPlaces,
+                            maximumFractionDigits: isPercent ? this.filters.perShareDecimalPlaces : this.filters.decimalPlaces,
                         });
                 
                         const isNegative = value < 0;
@@ -235,7 +244,7 @@
                 
                         if (this.selectedChartRows.find(item => item.id === row.id) ? true : false) {
                             const toggledRow = this.selectedChartRows.find(item => item.id === row.id);
-
+                
                             this.colors.unshift(toggledRow.color);
                             this.selectedChartRows = this.selectedChartRows.filter(item => item.id !== row.id);
                         } else {
@@ -255,34 +264,34 @@
                                 isPercent: row.isPercent,
                             });
                         }
-
+                
                         let minValue = 0;
                         let maxValue = 0;
                         let minObject = null;
                         let maxObject = null;
-
+                
                         this.selectedChartRows.forEach(row => {
                             row.fill = false;
-
+                
                             const values = Object.values(row.values);
                             const min = Math.min(...values);
                             const max = Math.max(...values);
-
+                
                             if (min < minValue) {
                                 minValue = min;
                                 minObject = row;
                             }
-
+                
                             if (max > maxValue) {
                                 maxValue = max;
                                 maxObject = row;
                             }
                         });
-
+                
                         if (minObject) {
                             minObject.fill = true;
                         }
-
+                
                         if (maxObject) {
                             maxObject.fill = true;
                         }
@@ -324,7 +333,6 @@
                                     shownChildren.length === 1 &&
                                     row.title.toLowerCase().startsWith(shownChildren[0].title.toLowerCase())
                                 ) {
-                                    console.log(row)
                                     _row.title = shownChildren[0].title
                                     Object.entries(shownChildren[0].values).forEach(([key, value]) => {
                                         _row.values[key] = {

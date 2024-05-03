@@ -19,6 +19,7 @@ class Page extends Component
     public $period;
     public $unitType;
     public $decimalPlaces;
+    public $perShareDecimalPlaces;
     public $order;
     public $freezePane;
 
@@ -57,6 +58,7 @@ class Page extends Component
         $this->period = $request->query('period', 'Fiscal Annual');
         $this->unitType = $request->query('unitType', 'Millions');
         $this->decimalPlaces = intval($request->query('decimalPlaces', data_get(Auth::user(), 'settings.decimalPlaces', 1)));
+        $this->perShareDecimalPlaces = intval($request->query('perShareDecimalPlaces', 2));
         $this->order = $request->query('order', 'Latest on the Right');
         $this->freezePane = $request->query('freezePane', 'Top Row & First Column');
         $this->disclosureTab = $request->query('disclosureTab', '');
@@ -406,6 +408,7 @@ class Page extends Component
             'mismatchedSegmentation' => $mismatchedSegmentation,
             ...$this->parseTitle($title),
             'isPercent' => false,
+            'dataType' => null,
         ];
 
         $isUsdPerShares = false;
@@ -422,6 +425,8 @@ class Page extends Component
                                 $isUsdPerShares = true;
                             }
                         }
+
+                        $row['dataType'] = $value[1] ?? null;
 
                         $row['values'][$tableDate] = $this->parseCell($value, $key);
                         break;
@@ -457,7 +462,7 @@ class Page extends Component
 
         $row['id'] = Str::uuid() . '-' . Str::uuid(); // just for the charts
 
-        if ($isUsdPerShares || $row['empty'] && count($row['children'])) {
+        if ($isUsdPerShares || ($row['empty'] && count($row['children']))) {
             $row['isBold'] = true;
         }
 
