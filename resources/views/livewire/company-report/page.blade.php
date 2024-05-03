@@ -61,10 +61,11 @@
                                         [1, window.hex2rgb(row.color, 0)],
                                     ]) : row.color,
                                     tension: 0.5,
-                                    fill: true,
+                                    fill: row.fill,
                                     pointBackgroundColor: row.color,
                                     maxBarThickness: 150,
                                     isPercent: row.isPercent,
+                                    pointRadius: 0,
                                 }
                             })
                         }
@@ -84,6 +85,8 @@
                     init() {
                         const rows = @js($rows);
                 
+                        this.colors = @js($colors);
+                        this.colors.shift();
                         this.updateFormattedTableDates(this.tableDates);
                         this.updateRowGroups(rows);
                 
@@ -231,6 +234,9 @@
                         if (row.empty || row.seg_start) return;
                 
                         if (this.selectedChartRows.find(item => item.id === row.id) ? true : false) {
+                            const toggledRow = this.selectedChartRows.find(item => item.id === row.id);
+
+                            this.colors.unshift(toggledRow.color);
                             this.selectedChartRows = this.selectedChartRows.filter(item => item.id !== row.id);
                         } else {
                             let values = {};
@@ -243,10 +249,42 @@
                                 id: row.id,
                                 title: row.title,
                                 values,
-                                color: '#7C8286',
+                                color: this.colors.shift(),
                                 type: 'line',
+                                fill: false,
                                 isPercent: row.isPercent,
                             });
+                        }
+
+                        let minValue = 0;
+                        let maxValue = 0;
+                        let minObject = null;
+                        let maxObject = null;
+
+                        this.selectedChartRows.forEach(row => {
+                            row.fill = false;
+
+                            const values = Object.values(row.values);
+                            const min = Math.min(...values);
+                            const max = Math.max(...values);
+
+                            if (min < minValue) {
+                                minValue = min;
+                                minObject = row;
+                            }
+
+                            if (max > maxValue) {
+                                maxValue = max;
+                                maxObject = row;
+                            }
+                        });
+
+                        if (minObject) {
+                            minObject.fill = true;
+                        }
+
+                        if (maxObject) {
+                            maxObject.fill = true;
                         }
                     },
                     updateRowGroups(rows_) {
@@ -497,7 +535,8 @@
                                     <div class="mt-4 h-[300px] sm:h-[345px]">
                                         <canvas id="chart-company-report"></canvas>
                                     </div>
-                                    <div class="mt-8 flex flex-wrap justify-start items-end gap-3">
+
+                                    <div class="-mt-8 mr-20 flex flex-wrap justify-start items-end gap-3">
                                         <template x-for="item in selectedChartRows" :key="item.id"
                                             :shadow="true">
                                             <div
@@ -597,8 +636,8 @@
                                                         </ul>
                                                     </x-dropdown>
                                                 </div>
-                                                <button
-                                                    @click="selectedChartRows = selectedChartRows.filter(row => row.id != item.id)">
+
+                                                <button @click="toggleRowForChart(item)">
                                                     <svg xmlns="http://www.w3.org/2000/svg" width="16"
                                                         height="16" viewBox="0 0 16 16" fill="none">
                                                         <path
@@ -640,7 +679,6 @@
                     return 0; // Maintain the order if both are 'line' or both are 'bar'
                 }
             })
-
             return new Chart(ctx, {
                 plugins: [chartJsPlugins.pointLine, window.ChartDataLabels],
                 type: 'line',
@@ -649,6 +687,7 @@
                     layout: {
                         padding: {
                             top: 25,
+                            bottom: 50
                         }
                     },
                     maintainAspectRatio: false,

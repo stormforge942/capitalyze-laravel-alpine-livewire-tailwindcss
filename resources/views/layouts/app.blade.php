@@ -20,6 +20,7 @@
         @once
         @push('scripts')
         <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+        @vite(['resources/js/chartjs-global.js'])
         <script src="https://cdn.jsdelivr.net/npm/luxon"></script>
         <script src="https://cdnjs.cloudflare.com/ajax/libs/flowbite/1.8.1/flowbite.min.js"></script>
         @endpush
