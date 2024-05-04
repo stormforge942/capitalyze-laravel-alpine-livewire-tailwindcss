@@ -71,7 +71,7 @@
     text-align: center;
 }
 
-.ownership-active-bread-link::after {
+.ownership-active-bread-link::before {
     content: "";
     position: absolute;
     bottom: -8px;
@@ -79,7 +79,7 @@
     transform: translateX(-50%);
     width: 24px;
     height: 2px;
-    background-color: #3561e7;
+    @apply bg-blue;
 }
 /* ownership breadcrumb border */
 

@@ -1,5 +1,5 @@
 <div wire:init="init">
-    <div class="flex items-center gap-x-6 overflow-x-auto text-sm+ whitespace-nowrap" x-data="{
+    <div class="flex items-center gap-x-6 overflow-x-auto text-sm+ whitespace-nowrap pb-2" x-data="{
         tabs: @js($tabs) || [],
         tabsCount: null,
         init() {
@@ -17,7 +17,6 @@
             // place active tab just before the more tab
             if (this.tabsCount && this.tabs.slice(this.tabsCount, this.tabs.length).find(tab => tab.id === {{ $activeTab }})) {
                 const activeTabIndex = this.tabs.findIndex(tab => tab.id === {{ $activeTab }});
-                console.log(activeTabIndex)
                 const tmp = this.tabs[this.tabsCount - 1];
                 this.tabs[this.tabsCount - 1] = this.tabs[activeTabIndex];
                 this.tabs.splice(activeTabIndex, 1);
@@ -49,7 +48,7 @@
                     }
                 }
             }">
-                <a href="#" :class="tab.id === {{ $activeTab }} ? 'text-blue' : ''"
+                <a href="#" :class="tab.id === {{ $activeTab }} ? 'text-blue ownership-active-bread-link' : ''"
                     @click.prevent="$wire.changeTab(tab.id)" x-text="value" x-show="!edit"></a>
                 <input type="text" x-model="value" class="h-6 px-2 w-36 focus:ring-0 focus:outline-none"
                     @keyup.escape="edit = false; value = tab.name" @keyup.enter="save" x-on:blur="save" x-ref="input"

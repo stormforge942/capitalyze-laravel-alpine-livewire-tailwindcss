@@ -9,7 +9,7 @@
     </div>
 
     @if ($tab)
-        <div class="relative" x-data="{
+        <div class="relative mt-6" x-data="{
             filters: $wire.entangle('filters', true),
             metricAttributes: $wire.entangle('metricAttributes', true),
             metricsColor: $wire.entangle('metricsColor', true),
@@ -132,7 +132,7 @@
                 <div class="cus-loaderBar"></div>
             </div>
 
-            <div class="mt-6 grid grid-cols-1 xl:grid-cols-2 gap-6">
+            <div class="grid grid-cols-1 xl:grid-cols-2 gap-6">
                 <div>
                     <livewire:builder.select-company :selected="$companies" :wire:key="Str::random(5)" />
                 </div>
