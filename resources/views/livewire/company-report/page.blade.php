@@ -331,9 +331,10 @@
                 
                                 if (
                                     shownChildren.length === 1 &&
-                                    row.title.toLowerCase().startsWith(shownChildren[0].title.toLowerCase())
+                                    row.title.toLowerCase().includes(shownChildren[0].title.toLowerCase())
                                 ) {
                                     _row.title = shownChildren[0].title
+                                    _row.isBold = shownChildren[0].isBold
                                     Object.entries(shownChildren[0].values).forEach(([key, value]) => {
                                         _row.values[key] = {
                                             ...value,
