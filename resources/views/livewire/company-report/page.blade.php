@@ -316,36 +316,26 @@
                                 return;
                             }
                 
-                            let _row = {
-                                ...row,
-                                values: {},
-                                section,
-                                depth,
-                                parent,
-                            };
-                
-                            delete _row.children;
-                
-                            if (!this.showAllRows && !row.seg_start) {
+                            if (!row.seg_start && !this.showAllRows) {
                                 const shownChildren = row.children.filter(r => (!r.empty || r.children.length) && !r.mismatchedSegmentation)
                 
                                 if (
                                     shownChildren.length === 1 &&
                                     row.title.toLowerCase().includes(shownChildren[0].title.toLowerCase())
                                 ) {
-                                    _row.title = shownChildren[0].title
-                                    _row.isBold = shownChildren[0].isBold
-                                    Object.entries(shownChildren[0].values).forEach(([key, value]) => {
-                                        _row.values[key] = {
-                                            ...value,
-                                            ...this.formatTableValue(value.value, row.isPercent)
-                                        };
-                                    });
-                                    rows.push(_row);
-                                    return;
+                                    row = shownChildren[0];
                                 }
                             }
                 
+                            let _row = {
+                                ...row,
+                                values: {},
+                                section,
+                                depth,
+                                parent,
+                                children: undefined,
+                            };
+                                
                             Object.entries(row.values).forEach(([key, value]) => {
                                 _row.values[key] = {
                                     ...value,
