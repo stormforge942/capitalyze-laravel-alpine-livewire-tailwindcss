@@ -20,11 +20,11 @@ $tabs = [
 ?>
 
 <div x-data="{ active: 0 }">
-    <div class="bg-white rounded py-3 px-2 max-w-[612px] lg:max-w-[723px] xl:max-w-[800px] w-full mb-6 flex flex-wrap items-center gap-x-2 gap-y-4 text-sm [&>*]:tracking-[-0.12px]">
+    <div class="bg-white rounded py-3 px-2 max-w-[612px] lg:max-w-[723px] xl:max-w-[800px] w-full mb-6 flex flex-wrap items-center gap-x-4 gap-y-4 text-sm [&>*]:tracking-[-0.12px]">
         @foreach ($tabs as $idx => $tab)
-            <button @click.prevent="active = {{ $idx }}" class="p-2 border rounded-full transition"
-                :class="active === {{ $idx }} ? 'border-green-dark bg-green bg-opacity-20' :
-                    'border-[#D1D3D5] hover:bg-gray-200'">
+            <button @click.prevent="active = {{ $idx }}" class="px-2 py-2 border rounded-full transition"
+                :class="active === {{ $idx }} ? 'border-green-light3 bg-green-light4 text-dark font-medium' :
+                    'border-green-muted hover:bg-gray-200 text-dark font-normal'">
                 {{ $tab['title'] }}
             </button>
         @endforeach

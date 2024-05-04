@@ -5,7 +5,9 @@
     </div>
 
     <div class="mt-6">
-        @include('livewire.insider-transactions.filters')
+        @include('livewire.insider-transactions.filters', [
+            'usedIn' => 'insider-transactions',
+        ])
 
         <div class="mt-4">
             <livewire:insider-transactions.table :filters="$filters" />

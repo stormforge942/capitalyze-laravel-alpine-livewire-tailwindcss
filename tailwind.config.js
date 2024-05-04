@@ -55,7 +55,10 @@ module.exports = {
                     DEFAULT: "#13B05B",
                     light: "#52D3A233",
                     light2: "#9edfc6",
+                    light3: "#52D3A2",
+                    light4: "#DCF6EC",
                     dark: "#52D3A2",
+                    muted: "#D4DDD7",
                 },
                 red: {
                     ...defaultTheme.colors.red,

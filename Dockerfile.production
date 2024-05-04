@@ -1,3 +1,5 @@
+ARG ENVIRONMENT_KEY defaultkey
+
 # Stage 1: Set up the PHP environment and Composer dependencies
 FROM --platform=linux/amd64 php:8.3-fpm AS php_builder
 WORKDIR /app
@@ -18,9 +20,9 @@ RUN apt-get update && apt-get install -y \
     netcat-openbsd \
     postgresql-client \
     brotli
-RUN pecl install redis swoole
+# RUN pecl install redis swoole
 RUN docker-php-ext-install pdo pdo_pgsql pgsql pdo_mysql mbstring exif pcntl bcmath gd zip
-RUN docker-php-ext-enable redis swoole
+# RUN docker-php-ext-enable redis swoole
 # Clear cache
 RUN apt-get clean && rm -rf /var/lib/apt/lists/*
 
@@ -33,7 +35,13 @@ COPY composer.json composer.lock ./
 COPY . .
 
 COPY --from=composer:latest /usr/bin/composer /usr/bin/composer
+COPY auth.json ./
 RUN composer install --no-dev --optimize-autoloader
+
+ARG ENVIRONMENT_KEY
+RUN php artisan env:decrypt --env=production --key=${ENVIRONMENT_KEY} --force
+
+RUN cp .env.production ./.env
 
 # Stage 2: Build the assets with Node.js
 FROM node:16 as node_builder
@@ -55,7 +63,7 @@ COPY postcss.config.js ./
 RUN npm run build
 
 # Stage 3: Final stage to set up the application
-FROM php:8.3-fpm
+FROM --platform=linux/amd64 php:8.3-fpm
 WORKDIR /var/www
 
 # Install system dependencies, PHP extensions, and PostgreSQL client
@@ -81,9 +89,6 @@ COPY --from=php_builder /app ./
 
 # Permissions adjustments, if necessary
 RUN usermod -u 1000 www-data && chown -R www-data:www-data .
-
-# Copying .env.production to .env
-COPY .env.production ./.env
 
 # Adding debugging commands
 RUN ls -la /var/www # List files in /var/www to verify

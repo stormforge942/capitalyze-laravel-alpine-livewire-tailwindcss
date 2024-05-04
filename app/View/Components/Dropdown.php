@@ -15,6 +15,7 @@ class Dropdown extends Component
         public string $placement = 'bottom',
         public bool $shadow = false,
         public bool $fullWidthTrigger = false,
+        public int $offsetDistance = 4
     ) {
     }
 

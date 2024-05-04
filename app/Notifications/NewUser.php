@@ -2,6 +2,7 @@
 
 namespace App\Notifications;
 
+use App\Models\User;
 use Illuminate\Bus\Queueable;
 use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Notifications\Messages\MailMessage;
@@ -16,7 +17,7 @@ class NewUser extends Notification implements ShouldQueue
      *
      * @return void
      */
-    public function __construct()
+    public function __construct(private User $user)
     {
         //
     }
@@ -41,9 +42,14 @@ class NewUser extends Notification implements ShouldQueue
     public function toMail($notifiable)
     {
         return (new MailMessage)
-                    ->line('A new user registered on Capitalyze.')
-                    ->action('Review New User', url('/admin/users'))
-                    ->line('Have a great day!');
+            ->line('A new user registered on Capitalyze.')
+            ->line('Name: ' . $this->user->name)
+            ->line('Email: ' . $this->user->email)
+            ->when($this->user->linkedin_link, function ($message) {
+                return $message->line('Linkedin: ' . $this->user->linkedin_link);
+            })
+            ->action('Review New User', url('/admin/users'))
+            ->line('Have a great day!');
     }
 
     /**

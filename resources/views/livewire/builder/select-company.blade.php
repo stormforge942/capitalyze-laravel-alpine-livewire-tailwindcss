@@ -43,13 +43,13 @@
 }">
     <div class="flex items-center justify-between">
         <label class="font-medium" style="line-height: 32px;">Search for Companies</label><br>
-        <button class="font-semibold text-gray-medium2 hover:text-gray-dark" @click.prevent="this.tmpValue = []; showResult()">Clear All Companies</button>
+        <button class="font-semibold text-gray-medium2 hover:text-red" @click.prevent="tmpValue = []; showResult()" x-cloak x-show="value.length">Clear All Companies</button>
     </div>
     <div wire:ignore>
         <x-dropdown x-model="showDropdown" placement="bottom-start" :fullWidthTrigger="true">
             <x-slot name="trigger">
                 <input type="search"
-                    class="text-basde mt-4 p-4 block w-full border border-[#D4DDD7] rounded-lg placeholder:text-gray-medium2 focus:ring-0 focus:border-green-dark"
+                    class="text-base mt-4 p-4 block w-full border border-[#D4DDD7] rounded-lg placeholder:text-gray-medium2 focus:ring-0 focus:border-green-dark search-x-button"
                     placeholder="Search company..." x-model.debounce.500ms="search"
                     @click="if(showDropdown) { $event.stopPropagation(); }">
             </x-slot>

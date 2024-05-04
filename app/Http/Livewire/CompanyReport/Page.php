@@ -19,11 +19,14 @@ class Page extends Component
     public $period;
     public $unitType;
     public $decimalPlaces;
+    public $perShareDecimalPlaces;
     public $order;
     public $freezePane;
 
     public $activeTab;
     public $company;
+    public $showAllRows;
+    public $publicView;
     protected $rows = [];
     protected $tableDates = [];
     public $currency = 'USD';
@@ -55,10 +58,14 @@ class Page extends Component
         $this->period = $request->query('period', 'Fiscal Annual');
         $this->unitType = $request->query('unitType', 'Millions');
         $this->decimalPlaces = intval($request->query('decimalPlaces', data_get(Auth::user(), 'settings.decimalPlaces', 1)));
+        $this->perShareDecimalPlaces = intval($request->query('perShareDecimalPlaces', 2));
         $this->order = $request->query('order', 'Latest on the Right');
         $this->freezePane = $request->query('freezePane', 'Top Row & First Column');
         $this->disclosureTab = $request->query('disclosureTab', '');
         $this->disclosureFootnote = $request->query('disclosureFootnote', '');
+
+        $this->publicView = session('company-report.publicView', false);
+        $this->showAllRows = session('company-report.showAllRows', false);
 
         $range = explode(',', $request->query('selectedDateRange', ''));
         if (count($range) === 2 && is_numeric($range[0]) && is_numeric($range[1])) {
@@ -80,6 +87,14 @@ class Page extends Component
         if (in_array($prop, ['view', 'activeTab', 'period', 'disclosureTab', 'disclosureFootnote'])) {
             $this->setupTabData();
         }
+
+        if (in_array($prop, ['publicView', 'showAllRows'])) {
+            info([
+                'prop' => $prop,
+                'value' => $this->{$prop}
+            ]);
+            session(['company-report.' . $prop => $this->{$prop}]);
+        }
     }
 
     public function render()
@@ -88,6 +103,7 @@ class Page extends Component
             'tabs' => $this->tabs,
             'rows' => $this->rows,
             'tableDates' => $this->tableDates,
+            'colors' => config('capitalyze.chartColors'),
             'reverse' => $this->order === 'Latest on the Left',
             'viewTypes' => [
                 'As reported',
@@ -342,6 +358,11 @@ class Page extends Component
     private function generateRows($data)
     {
         if ($this->view !== 'Standardized') {
+            if(isset($data['Income statements:']) && !isset($data['Income Statement'])) {
+                $data['Income Statement'] = $data['Income statements:'];
+                unset($data['Income statements:']);
+            }
+
             if (
                 isset($data['Income Statement']) &&
                 is_array($data['Income Statement']) &&
@@ -387,6 +408,7 @@ class Page extends Component
             'mismatchedSegmentation' => $mismatchedSegmentation,
             ...$this->parseTitle($title),
             'isPercent' => false,
+            'dataType' => null,
         ];
 
         $isUsdPerShares = false;
@@ -403,6 +425,8 @@ class Page extends Component
                                 $isUsdPerShares = true;
                             }
                         }
+
+                        $row['dataType'] = $value[1] ?? null;
 
                         $row['values'][$tableDate] = $this->parseCell($value, $key);
                         break;
@@ -438,7 +462,7 @@ class Page extends Component
 
         $row['id'] = Str::uuid() . '-' . Str::uuid(); // just for the charts
 
-        if ($isUsdPerShares || $row['empty'] && count($row['children'])) {
+        if ($isUsdPerShares || ($row['empty'] && count($row['children']))) {
             $row['isBold'] = true;
         }
 

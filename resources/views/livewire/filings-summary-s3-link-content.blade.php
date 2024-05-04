@@ -17,12 +17,10 @@
                 </div>
                 <script>
                     const getResponse = (url) => {
-                        if (window.FilingsSummaryS3LinkContents && window.FilingsSummaryS3LinkContents[url]) {
-                            return Promise.resolve(window.FilingsSummaryS3LinkContents[url]);
-                        }
-
                         return fetch(url, {
                                 mode: 'cors',
+                                // if possible get from cache
+                                cache: 'force-cache'
                             })
                             .then(response => {
                                 if (!response.ok) {
@@ -30,13 +28,6 @@
                                 }
 
                                 return response.text();
-                            }).then(data => {
-                                window.FilingsSummaryS3LinkContents = {
-                                    ...(window.FilingsSummaryS3LinkContents || {}),
-                                    [url]: data
-                                }
-
-                                return data;
                             })
                     }
 

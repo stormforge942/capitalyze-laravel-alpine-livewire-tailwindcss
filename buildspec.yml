@@ -1,0 +1,39 @@
+version: 0.2
+phases:
+  install:
+    commands:
+      - nohup /usr/local/bin/dockerd --host=unix:///var/run/docker.sock --host=tcp://127.0.0.1:2375 --storage-driver=overlay2 &
+      - timeout 15 sh -c "until docker info; do echo .; sleep 1; done"
+  pre_build:
+    commands:
+      - echo Logging in to Amazon ECR...
+      - aws --version
+      - aws ecr get-login-password --region us-east-1 | docker login --username AWS --password-stdin 475344884420.dkr.ecr.us-east-1.amazonaws.com
+      - docker login -u $DOCKER_USERNAME -p $DOCKER_PASSWORD
+      - REPOSITORY_URI=475344884420.dkr.ecr.us-east-1.amazonaws.com/capitalyze-app
+      - COMMIT_HASH=$(echo $CODEBUILD_RESOLVED_SOURCE_VERSION | cut -c 1-7)
+      - IMAGE_TAG=build-$(echo $CODEBUILD_BUILD_ID | awk -F":" '{print $2}')
+  build:
+    commands:
+      - echo Build started on `date`
+      - echo "{\"http-basic\":{\"wire-elements-pro.composer.sh\":{\"username\":\"mgmt@capitalyze.com\",\"password\":\"$COMPOSER_PASSWORD\"}}}" > auth.json
+      - echo Building the Docker image...
+      # - docker build -t $REPOSITORY_URI:latest .
+      - docker build -t $REPOSITORY_URI:latest -f Dockerfile.production --platform=linux/amd64 --build-arg ENVIRONMENT_KEY=${ENVIRONMENT_KEY} .
+      - docker tag $REPOSITORY_URI:latest $REPOSITORY_URI:$IMAGE_TAG
+  post_build:
+    commands:
+      - echo Build completed on `date`
+      - echo Pushing the Docker images...
+      - docker push $REPOSITORY_URI:latest
+      - docker push $REPOSITORY_URI:$IMAGE_TAG
+      - echo Writing image definitions file...
+      - printf '{"ImageURI":"%s"}' $REPOSITORY_URI:$IMAGE_TAG > imageDetail.json
+      - cat imageDetail.json
+      - printf '[{"name":"capitalyze-app","imageUri":"%s"}]' $REPOSITORY_URI:$IMAGE_TAG > imagedefinitions.json
+      - cat imagedefinitions.json
+artifacts:
+    files:
+      - imageDetail.json
+      - imagedefinitions.json
+      - aws/**/*

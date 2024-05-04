@@ -5,7 +5,6 @@ namespace App\Http\Livewire\Ownership;
 use Livewire\Component;
 use App\Http\Livewire\AsTab;
 use Illuminate\Http\Request;
-use Illuminate\Support\Facades\DB;
 
 class CompanyInsiders extends Component
 {
@@ -13,14 +12,17 @@ class CompanyInsiders extends Component
 
     protected array $filters = [];
     public string $ticker;
+    private array $relationships = [];
 
     public static function title(): string
     {
-        return 'AAPL Insider Transactions';
+        return 'Insider Transactions';
     }
 
     public function mount(array $data = [], Request $request)
     {
+        $this->relationships = $this->getTopInsiderTitles();
+        
         $this->ticker = $data['company']['ticker'];
 
         if ($request->query('search')) {
@@ -66,21 +68,13 @@ class CompanyInsiders extends Component
     public function render()
     {
         return view('livewire.ownership.company-insiders', [
-            'insiderTitles' => $this->getTopInsiderTitles(),
+            'insiderTitles' => $this->relationships,
             'filters' => $this->filters,
         ]);
     }
 
     private function getTopInsiderTitles()
     {
-        return DB::connection('pgsql-xbrl')
-            ->table('insider_transactions')
-            ->where('symbol', '=', $this->ticker)
-            ->select(['relationship_of_reporting_person', DB::raw('count(*) as count')])
-            ->groupBy('relationship_of_reporting_person')
-            ->orderBy('count', 'desc')
-            ->limit(10)
-            ->pluck('relationship_of_reporting_person', 'relationship_of_reporting_person')
-            ->toArray();
+        return array_keys(config('insider_transactions_mapping'));
     }
 }

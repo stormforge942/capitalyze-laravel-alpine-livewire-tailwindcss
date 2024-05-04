@@ -14,12 +14,12 @@ Capitalyze Web is a Laravel 9 application that utilizes Livewire, Jetstream, and
 
 Before you proceed, make sure you have the following software installed on your system:
 
-- PHP >= 8.0.2
+- PHP == 8.3.3
+- Redis
+- Postgres
 - Composer
 - Node.js >= v18 (you can install nvm for better compatibility)
 - Yarn
-- Docker (For local development)
-- Laravel Vapor CLI (For production deployment)
 
 ## Getting Started
 
@@ -27,7 +27,7 @@ Before you proceed, make sure you have the following software installed on your 
 
 ```sh
 git clone git@github.com:Capitalyze-Inc/capitalyze-web.git
-cd xbrl-explorer-laravel
+cd capitalyze-web
 ```
 
 #### 2. Install PHP dependencies:
@@ -40,6 +40,7 @@ When you'll be installing the project for the first time you'll be prompted for 
 axxd.xxx@hxxhi.fr
 1xx4d-4xx7-4xxf-bxx1-7a6xxxxxd13e
 ```
+ask @antoine for credentials
 
 #### 3. Install Node.js dependencies:
 If you have nvm installed :
@@ -67,10 +68,10 @@ cp .env.example .env
 php artisan key:generate
 ```
 
-#### 6. Start the Docker containers for the database (locally):
+#### 7. Run Feeder
 
 ```sh
-docker-compose up -d
+php feeder.php
 ```
 
 #### 7. Run the database migrations:
@@ -89,6 +90,12 @@ php artisan capitalyze:import
 
 ```sh
 php artisan create:admin Username email@example.com 'password'
+```
+
+or
+
+```sh
+php artisan user:create-fake
 ```
 
 ## Running the Project Locally
@@ -157,7 +164,7 @@ and inside AppServiceProvider.php
 ```
 to access the papertrail interface, you need to be invited, so please ask for an account.
 
-## Deployment
+## Deployment / DO NOT USE IF NOT AUTHORIZED
 
 #### 1. Install the Vapor CLI if you haven't already:
 

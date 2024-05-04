@@ -1,3 +1,6 @@
+import logoSvgFile from "../img/svg/logo.svg"
+const logoImg = new Image();
+logoImg.src = logoSvgFile
 const chartJsPlugins = {
     pointLine: {
         id: "pointLine",
@@ -249,6 +252,28 @@ const chartJsPlugins = {
             })
         },
     },
+    beforeDraw: {
+        id: "appendLogoBelowChart",
+        beforeInit(chart) {
+            const desiredPaddingBottom = 20;
+            const defaultPaddingBottom = chart.options.layout.padding.bottom
+            chart.options.layout.padding.bottom = defaultPaddingBottom == 0 ? desiredPaddingBottom : defaultPaddingBottom
+        },
+        beforeDraw: (chart) => {
+            const { ctx } = chart
+
+            ctx.save();
+            const logoHeight = 16, logoWidth = 80;
+            if (logoImg.complete) {
+                ctx.drawImage(logoImg, ctx.canvas.offsetWidth - logoWidth, ctx.canvas.offsetHeight - logoHeight, logoWidth, logoHeight)
+            }
+            else {
+                logoImg.onload = () => chart.draw();
+            }
+            ctx.restore();
+
+        }
+    }
 }
 window.chartJsPlugins = chartJsPlugins
 

@@ -14,7 +14,7 @@ class Product extends Component
     public $company;
     public $rawData = [];
     public $chartConfig = [
-        'showLabel' => true,
+        'showLabel' => false,
         'type' => 'values',
     ];
 

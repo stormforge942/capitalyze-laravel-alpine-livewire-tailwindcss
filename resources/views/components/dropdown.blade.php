@@ -4,6 +4,7 @@
     init() {
         this.dropdown = new Dropdown($refs.body, $refs.trigger, {
             placement: '{{ $placement }}',
+            offsetDistance: {{ $offsetDistance }},
             onShow: () => this.open = true,
             onHide: () => this.open = false,
         });

@@ -109,6 +109,7 @@
     @livewireScripts
     @vite(['resources/js/app.js'])
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    @vite(['resources/js/chartjs-global.js'])
     <script src="https://cdn.jsdelivr.net/npm/luxon"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/chartjs-plugin-annotation/3.0.1/chartjs-plugin-annotation.min.js"
         integrity="sha512-Hn1w6YiiFw6p6S2lXv6yKeqTk0PLVzeCwWY9n32beuPjQ5HLcvz5l2QsP+KilEr1ws37rCTw3bZpvfvVIeTh0Q=="

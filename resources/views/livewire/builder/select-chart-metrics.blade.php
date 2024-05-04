@@ -73,7 +73,7 @@
                 <span class="text-dark-light2">Metrics are applied to all companies</span>
             </div>
         </label>
-        <button class="font-semibold text-gray-medium2 hover:text-dark" @click.prevent="this.tmpValue = []; showResult()">
+        <button class="font-semibold text-gray-medium2 hover:text-red" @click.prevent="tmpValue = []; showResult()" x-cloak x-show="value.length">
             Clear All Metrics
         </button>
     </div>
@@ -82,7 +82,7 @@
         <x-dropdown x-model="showDropdown" placement="bottom-start" :fullWidthTrigger="true">
             <x-slot name="trigger">
                 <input type="search"
-                    class="text-basde mt-4 p-4 block w-full border border-[#D4DDD7] rounded-lg placeholder:text-gray-medium2 focus:ring-0 focus:border-green-dark"
+                    class="text-base mt-4 p-4 block w-full border border-[#D4DDD7] rounded-lg placeholder:text-gray-medium2 focus:ring-0 focus:border-green-dark search-x-button"
                     id="select-chart-metrics-input" placeholder="Select metrics..." x-model.debounce.500ms="search"
                     @click.prevent="if(showDropdown) { $event.stopPropagation(); }">
             </x-slot>

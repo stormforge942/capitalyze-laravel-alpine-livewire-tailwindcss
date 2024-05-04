@@ -125,6 +125,7 @@ function renderRevenueByEmployeeChart(canvas, datasets, config) {
             chartJsPlugins.pointLine,
             window.ChartDataLabels,
             chartJsPlugins.htmlLegend,
+            chartJsPlugins.beforeDraw
         ],
         type: "bar",
         data: {
@@ -211,6 +212,7 @@ function renderCostStructureChart(canvas, datasets, config) {
             window.ChartDataLabels,
             chartJsPlugins.pointLine,
             chartJsPlugins.htmlLegend,
+            chartJsPlugins.beforeDraw
         ],
         type: "bar",
         data: {
@@ -288,6 +290,7 @@ function renderFcfConversionChart(canvas, data, config) {
             window.ChartDataLabels,
             chartJsPlugins.pointLine,
             chartJsPlugins.htmlLegend,
+            chartJsPlugins.beforeDraw
         ],
         type: "bar",
         data: {
@@ -384,6 +387,7 @@ function renderCapitalStructureChart(canvas, datasets, config) {
             chartJsPlugins.pointLine,
             window.ChartDataLabels,
             chartJsPlugins.htmlLegend,
+            chartJsPlugins.beforeDraw
         ],
         type: "line",
         data: {
@@ -470,7 +474,7 @@ function basicBarChart(canvas, datasets, config) {
     })
 
     return new Chart(ctx, {
-        plugins: [window.ChartDataLabels, chartJsPlugins.htmlLegend],
+        plugins: [window.ChartDataLabels, chartJsPlugins.htmlLegend, chartJsPlugins.beforeDraw],
         type: "bar",
         data: {
             datasets,
@@ -529,7 +533,7 @@ function percentageBarChart(canvas, datasets, config = {}) {
     })
 
     return new Chart(ctx, {
-        plugins: [window.ChartDataLabels, chartJsPlugins.htmlLegend],
+        plugins: [window.ChartDataLabels, chartJsPlugins.htmlLegend, chartJsPlugins.beforeDraw],
         type: "bar",
         data: {
             datasets,

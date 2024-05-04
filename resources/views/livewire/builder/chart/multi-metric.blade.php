@@ -1,7 +1,7 @@
 <div x-data="{
     isReset: false,
     count: 0,
-    reset() {        
+    reset() {
         if (this.count === Object.keys(dataGroupedByMetric).length) {
             this.isReset = false;
             this.count = 0;
@@ -59,7 +59,7 @@
                         borderColor: color,
                         type,
                         yAxisID: metricsMap[metric].yAxis || 'y',
-                        shouldFormat: !metricsMap[metric].yAxis,
+                        shouldFormat: ['percent'].includes(metricsMap[metric].yAxis),
                         ...(isStacked ? { stack: this.metricsMap[metric].yAxis || 'y' } : {}),
                     })
                 });

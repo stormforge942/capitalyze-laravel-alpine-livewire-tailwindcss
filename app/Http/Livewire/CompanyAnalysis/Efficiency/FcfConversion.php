@@ -13,7 +13,7 @@ class FcfConversion extends Component
     public $statements;
     public $rawData = [];
     public $chartConfig = [
-        'showLabel' => true,
+        'showLabel' => false,
         'type' => 'percentage',
     ];
 

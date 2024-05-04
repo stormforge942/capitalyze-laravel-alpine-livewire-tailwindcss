@@ -23,12 +23,11 @@
         }, { deep: true });
     },
 }">
-    <div class="col-span-12 lg:col-span-3">
-        <x-search-filter x-model.debounce.500ms="filters.search"></x-search-filter>
+    <div class="col-span-12 @if($usedIn === 'ownership') lg:col-span-3 @else lg:col-span-4 @endif">
+        <x-search-filter x-model.debounce.500ms="filters.search" :placeholder="$usedIn === 'ownership' ? 'Search Insider Name...' : 'Search Company, Insider Name...'" font-size="base"></x-search-filter>
     </div>
 
-    <div
-        class="col-span-12 lg:col-span-9 px-4 py-3 bg-white border border-[#D4DDD7] rounded-lg flex flex-wrap items-center gap-2.5 text-sm">
+    <div class="col-span-12 @if($usedIn === 'ownership') lg:col-span-9 @else lg:col-span-8 @endif px-4 py-3 bg-white border border-[#D4DDD7] rounded-lg flex flex-wrap items-center gap-2.5 text-sm">
         <x-select name="transaction-filing" :options="config('capitalyze.transaction_code_map')" placeholder="Transaction Filing" :multiple="true"
             :searchable="true" x-model="filters.transaction_codes"></x-select>
 
@@ -66,7 +65,7 @@
                 this.tmpValue = Number(this.tmpValue) - 1
             },
         }" x-modelable="value" x-model="filters.months" class="inline-block">
-            <x-dropdown x-model="showDropdown" placement="bottom-start">
+            <x-dropdown x-model="showDropdown">
                 <x-slot name="trigger">
                     <div class="border-[0.5px] border-[#D4DDD7] p-2 rounded-full flex items-center gap-x-1"
                         :class="showDropdown ? 'bg-[#E2E2E2]' : 'bg-white hover:bg-[#E2E2E2]'">
@@ -157,7 +156,7 @@
                 this.tmpValue = Number(this.tmpValue) - 1
             },
         }" x-modelable="value" x-model="filters.cso" class="inline-block">
-            <x-dropdown x-model="showDropdown" placement="bottom-start">
+            <x-dropdown x-model="showDropdown">
                 <x-slot name="trigger">
                     <div class="border-[0.5px] border-[#D4DDD7] p-2 rounded-full flex items-center gap-x-1"
                         :class="showDropdown ? 'bg-[#E2E2E2]' : 'bg-white hover:bg-[#E2E2E2]'">

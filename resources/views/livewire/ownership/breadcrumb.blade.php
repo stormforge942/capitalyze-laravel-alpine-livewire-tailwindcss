@@ -44,8 +44,8 @@
         @resize.window.throttle="updateTabsCount()" wire:key="{{ md5(json_encode($historyItems)) }}">
         <template x-for="tab in tabs.slice(0, tabsCount)" :key="tab.url">
             <div class="flex items-center gap-2">
-                <a :href="tab.active ? '#' : tab.url" class="hover:text-dark-light2 whitespace-nowrap"
-                    :class="tab.active ? `text-blue ownership-active-bread-link` : ''" x-text="tab.name"></a>
+                <a :href="tab.active ? '#' : tab.url" class="whitespace-nowrap"
+                    :class="tab.active ? `text-blue ownership-active-bread-link` : 'hover:text-dark-light2'" x-text="tab.name"></a>
 
                 <button class="h-4 w-4" @click="removeTab(tab)">
                     <svg xmlns="http://www.w3.org/2000/svg" width="10" height="10" viewBox="0 0 10 10"

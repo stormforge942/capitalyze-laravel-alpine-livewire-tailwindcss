@@ -143,7 +143,7 @@
 
                     <div class="mt-4 grid grid-cols-12 gap-2 mb-2">
                         <div class="col-span-12 sm:col-span-4">
-                            <x-search-filter x-model.debounce="search"></x-search-filter>
+                            <x-search-filter x-model.debounce="search" font-size="base"></x-search-filter>
                         </div>
 
                         <div

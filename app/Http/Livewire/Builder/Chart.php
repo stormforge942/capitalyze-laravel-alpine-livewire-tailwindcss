@@ -17,7 +17,7 @@ class Chart extends Component
     public ?array $filters = null;
     public array $metricAttributes = [];
     public array $metricsColor;
-    public bool $showLabel = true;
+    public bool $showLabel = false;
 
     protected $listeners = [
         'tabChanged' => 'tabChanged',
@@ -50,8 +50,8 @@ class Chart extends Component
                 'quarter' => [],
             ],
             'dateRange' => [
-                'annual' => [2000, 0 + date('Y')],
-                'quarter' => [2000, 0 + date('Y')],
+                'annual' => [2000, date('Y')],
+                'quarter' => [2000, date('Y')],
             ],
         ];
 
@@ -94,14 +94,14 @@ class Chart extends Component
 
         if (!count($this->filters['dateRange'])) {
             $this->filters['dateRange'] = [
-                date('Y') - 2,
-                0 + date('Y'),
+                date('Y') - 10,
+                date('Y'),
             ];
         }
 
         $this->metricAttributes = $_tab['metric_attributes'];
 
-        $this->showLabel = true;
+        $this->showLabel = false;
     }
 
     private function resetColors()
