@@ -48,6 +48,7 @@ use App\Http\Controllers\EarningsCalendarController;
 use App\Http\Middleware\CustomEmailVerificationPrompt;
 use App\Http\Controllers\InsiderTransactionsController;
 use App\Http\Controllers\ResetPasswordSuccessfulController;
+use App\Http\Controllers\TableBuilder\NoteController;
 use App\Http\Controllers\UpdateSettingsController;
 use Laravel\Fortify\Http\Controllers\AuthenticatedSessionController;
 
@@ -162,6 +163,7 @@ Route::group(['middleware' => ['auth', 'approved', 'verified', CheckPagePermissi
     Route::post('settings', UpdateSettingsController::class)->name('settings.update');
 
     Route::post('chart-builder/{chart}/update', [ChartController::class, 'update'])->name('chart-builder.update');
+    Route::post('/table-builder/{table}/update-note', NoteController::class)->name('table-builder.update-note');
 });
 
 Route::group(['middleware' => ['auth', 'verified', EnsureUserIsAdmin::class]], function () {

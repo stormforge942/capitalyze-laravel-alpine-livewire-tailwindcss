@@ -6,7 +6,7 @@ use Illuminate\Support\Carbon;
 use App\Models\InfoTikrPresentation;
 use Illuminate\Support\Facades\Cache;
 
-class ChartBuilderService
+class TableBuilderService
 {
     public static function options($flattened = false)
     {
@@ -884,9 +884,8 @@ class ChartBuilderService
         return $flattenedOptions;
     }
 
-    public static function resolveData($companies, $metrics, &$metricAttributes = [])
+    public static function resolveData($companies, $metrics)
     {
-        $metricsMap = self::options(true);
         $periods = ['annual', 'quarter'];
 
         $data = array_reduce($periods, function ($c, $i) use ($companies) {
@@ -912,7 +911,7 @@ class ChartBuilderService
             return null;
         }
 
-        $cacheKey = 'chart_builder_' . md5(implode(',', $companies) . implode(',', array_keys($standardKeys)));
+        $cacheKey = 'table_builder_' . md5(implode(',', $companies) . implode(',', array_keys($standardKeys)));
 
         $standardData = Cache::remember(
             $cacheKey,
@@ -944,17 +943,17 @@ class ChartBuilderService
 
                         foreach ($_value as $date => $v) {
                             $val = explode('|', $v[0])[0];
-                            $value[$date] = $val ? (float) $val : null;
+                            $value[$date] = $val ? round((float) $val, 3) : null;
+
+                            if (!is_null($value[$date])) {
+                                $value[$date] = [
+                                    'value' => $value[$date],
+                                    'formatted' => niceNumber($value[$date]),
+                                ];
+                            }
                         }
 
                         $key = $column . '||' . $key;
-
-                        if (!isset($metricAttributes[$key])) {
-                            $metricAttributes[$key] = [
-                                'type' => $metricsMap[$key]['type'] ?? 'bar',
-                                'show' => true,
-                            ];
-                        }
 
                         $data[$period][$item->ticker][$key] = self::normalizeValue($value, $period);
                     }
@@ -970,24 +969,9 @@ class ChartBuilderService
 
         $dates = self::extractDates($data);
 
-        $dateRange = [
-            'annual' => count($dates['annual']) ? [$dates['annual'][0], $dates['annual'][count($dates['annual']) - 1]] : null,
-            'quarter' => count($dates['quarter']) ? [$dates['quarter'][0], $dates['quarter'][count($dates['quarter']) - 1]] : null,
-        ];
-
-        foreach ($dateRange as $period => $range) {
-            if ($range) {
-                $dateRange[$period] = [
-                    0 + explode('-', $range[0])[0],
-                    0 + explode('-', $range[1])[0],
-                ];
-            }
-        }
-
         return [
             'data' => $data,
             'dates' => $dates,
-            'dateRange' => $dateRange,
         ];
     }
 
@@ -996,13 +980,13 @@ class ChartBuilderService
         $val = [];
 
         foreach ($value as $date => $v) {
-            if ($period === 'quarter') {
-                $date = Carbon::parse($date)->startOfQuarter();
-            } else {
-                $date = Carbon::parse($date)->startOfYear();
-            }
+            $date = Carbon::parse($date);
 
-            $val[$date->toDateString()] = $v;
+            $key = $period === 'quarter'
+                ? $date->year . ' Q' . $date->quarter
+                : 'FY ' . $date->year;
+
+            $val[$key] = $v;
         }
 
         return $val;

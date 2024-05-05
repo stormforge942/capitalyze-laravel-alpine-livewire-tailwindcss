@@ -3,6 +3,7 @@
 namespace App\Http\Livewire\Builder;
 
 use App\Models\CompanyTableComparison;
+use App\Services\TableBuilderService;
 use Livewire\Component;
 
 class Table extends Component
@@ -11,6 +12,7 @@ class Table extends Component
     public $companies;
     public $metrics;
     public $summaries;
+    public $data;
 
     protected $listeners = [
         'tabChanged' => 'tabChanged',
@@ -26,12 +28,14 @@ class Table extends Component
     public function companiesChanged($companies)
     {
         $this->companies = $companies;
+        $this->updateData();
         $this->updateTab();
     }
 
     public function metricsChanged($metrics)
     {
         $this->metrics = $metrics;
+        $this->updateData();
         $this->updateTab();
     }
 
@@ -47,6 +51,8 @@ class Table extends Component
         $this->companies = $_tab['companies'];
         $this->metrics = $_tab['metrics'];
         $this->summaries = $_tab['summaries'];
+
+        $this->updateData();
     }
 
     private function updateTab()
@@ -59,5 +65,10 @@ class Table extends Component
                 'metrics' => $this->metrics,
                 'summaries' => $this->summaries,
             ]);
+    }
+
+    private function updateData()
+    {
+        $this->data = TableBuilderService::resolveData($this->companies ?? [], $this->metrics ?? []);
     }
 }

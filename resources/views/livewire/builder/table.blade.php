@@ -10,9 +10,59 @@
 
     @if ($tab)
         <div class="mt-6 relative" x-data="{
-            tickers: [],
-            metrics: [],
             summaries: [],
+            tableData: [],
+            columns: [],
+            init() {
+                this.makeTableData($wire.data)
+            },
+            makeTableData(data) {
+                const years = [
+                    {{-- 'FY 2018',
+                    'FY 2019',
+                    'FY 2020',
+                    'FY 2021', --}} 'FY 2022',
+                    'FY 2023',
+                ];
+        
+                this.columns = [];
+        
+                $wire.metrics.forEach(metric => {
+                    label = metric.split('||')[1]
+        
+                    years.forEach(year => {
+                        this.columns.push({
+                            label: `${label} (${year})`,
+                            metric: metric,
+                            year: year,
+                        })
+                    })
+                })
+        
+                $wire.companies.forEach(company => {
+                    let d = {};
+        
+                    this.columns.forEach(column => {
+                        d[column.label] = data.data.annual[company]?.[column.metric]?.[column.year] || null;
+                    })
+        
+                    const row = {
+                        ticker: company,
+                        name: company,
+                        sector: '-',
+                        marketCap: '-',
+                        stockPrice: '-',
+                        totalReturn: '-',
+                        totalRevenue: '-',
+                        columns: d,
+                        notes: null,
+                    };
+        
+                    this.tableData.push(row);
+                })
+        
+                console.log(this.tableData)
+            },
         }" wire:key="{{ \Str::random(5) }}"
             wire:loading.class="pointer-events-none animate-pulse">
             <div class="cus-loader" wire:loading.block>
@@ -23,64 +73,40 @@
                 <div class="bg-white p-2 rounded-t">
                     <livewire:builder.table.select-company :selected="$companies" :wire:key="Str::random(5)" />
                 </div>
-                <div class="bg-white p-2 flex items-center justify-between gap-x-5 rounded-t">
+                <div class="bg-white p-2 rounded-t">
                     <livewire:builder.table.select-metrics :companies="$companies" :selected="$metrics"
                         :wire:key="Str::random(5)" />
                 </div>
-                <div class="bg-white p-2 flex items-center justify-between gap-x-5 rounded-t">
-                    <button class="px-4 py-2 flex items-center gap-x-2 font-medium text-sm bg-[#DCF6EC] rounded">
-                        Add Summary
-                        <svg width="16" height="16" viewBox="0 0 16 16" fill="none"
-                            xmlns="http://www.w3.org/2000/svg">
-                            <path
-                                d="M7.33594 7.33398V4.66732H8.66927V7.33398H11.3359V8.66732H8.66927V11.334H7.33594V8.66732H4.66927V7.33398H7.33594ZM8.0026 14.6673C4.3207 14.6673 1.33594 11.6825 1.33594 8.00065C1.33594 4.31875 4.3207 1.33398 8.0026 1.33398C11.6845 1.33398 14.6693 4.31875 14.6693 8.00065C14.6693 11.6825 11.6845 14.6673 8.0026 14.6673ZM8.0026 13.334C10.9481 13.334 13.3359 10.9462 13.3359 8.00065C13.3359 5.05513 10.9481 2.66732 8.0026 2.66732C5.05708 2.66732 2.66927 5.05513 2.66927 8.00065C2.66927 10.9462 5.05708 13.334 8.0026 13.334Z"
-                                fill="#121A0F" />
-                        </svg>
-                    </button>
-
-                    <div class="bg-blue rounded-full px-1.5 py-0.5 font-semibold text-xs text-white"
-                        x-text="summaries.length + ' Summaries'">
-                    </div>
+                <div class="bg-white p-2 rounded-t">
+                    @include('livewire.builder.table.select-summary')
                 </div>
             </div>
             <div class="mt-0.5 overflow-x-auto rounded-b-lg">
                 <table class="overflow-hidden">
                     <tr class="font-bold whitespace-nowrap bg-[#EDEDED]">
                         <td class="py-3 pl-8">Ticker</td>
-                        <td class="py-3 pl-6">Name</td>
-                        <td class="py-3 pl-6">Sector</td>
-                        <td class="py-3 pl-6">Market Cap</td>
-                        <td class="py-3 pl-6">Stock Price</td>
-                        <td class="py-3 pl-6">Total Return (3M)</td>
-                        <td class="py-3 pl-6">Total Revenue</td>
+                        <template x-for="column in columns" :key="column.label">
+                            <td class="py-3 pl-6" x-text="column.label">
+                            </td>
+                        </template>
                         <td class="py-3 pl-6 pr-8">Notes</td>
                     </tr>
-                    <tr class="bg-white border-y-2 border-gray-light font-semibold">
-                        <td class="py-4 pl-8">
-                            AAPL
-                        </td>
-                        <td class="py-4 pl-6">
-                            AAPL
-                        </td>
-                        <td class="py-4 pl-6">
-                            AAPL
-                        </td>
-                        <td class="py-4 pl-6">
-                            AAPL
-                        </td>
-                        <td class="py-4 pl-6">
-                            AAPL
-                        </td>
-                        <td class="py-4 pl-6">
-                            AAPL
-                        </td>
-                        <td class="py-4 pl-6">
-                            AAPL
-                        </td>
-                        <td class="py-4 pl-6 pr-8">
-                            AAPL
-                        </td>
-                    </tr>
+                    <template x-for="(row, idx) in tableData" :key="idx">
+                        <tr class="bg-white border-y-2 border-gray-light font-semibold">
+                            <td class="py-4 pl-8" x-text="row.ticker"></td>
+                            <template x-for="column in columns" :key="column.label">
+                                <td class="py-3 pl-6" :class="row.columns[column.label]?.value < 0 ? 'text-red' : ''"
+                                    x-text="row.columns[column.label]?.formatted || '-'">
+                                </td>
+                            </template>
+                            <td class="py-4 pl-6 pr-8">
+                                <button
+                                    class="bg-[#EDEDED] hover:bg-gray-medium px-2 py-1 rounded-sm font-medium text-xs text-dark-light2 whitespace-nowrap"
+                                    x-text="edit ? 'Save' : 'Add Note'">
+                                </button>
+                            </td>
+                        </tr>
+                    </template>
                 </table>
             </div>
         </div>
