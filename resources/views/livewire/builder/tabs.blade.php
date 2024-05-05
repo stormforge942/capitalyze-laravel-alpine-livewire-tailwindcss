@@ -10,7 +10,7 @@
             const container = document.querySelector('#main-container').children[0];
             const width = container.clientWidth;
     
-            const count = Math.floor(width / 150) - 1;
+            const count = Math.min(5, Math.floor(width / 250) - 1);
     
             this.tabsCount = count <= 0 ? 0 : count;
     
@@ -34,11 +34,6 @@
             <div class="flex items-center gap-2" x-data="{
                 value: tab.name,
                 edit: false,
-                init() {
-                    this.$watch('edit', value => {
-                        console.log(value)
-                    })
-                },
                 save() {
                     this.edit = false;
                     if (this.value.trim()) {
@@ -48,8 +43,12 @@
                     }
                 }
             }">
-                <a href="#" :class="tab.id === {{ $activeTab }} ? 'text-blue ownership-active-bread-link' : ''"
-                    @click.prevent="$wire.changeTab(tab.id)" x-text="value" x-show="!edit"></a>
+                <div class="flex items-center"
+                    :class="tab.id === {{ $activeTab }} ? 'text-blue ownership-active-bread-link' : ''">
+                    <a href="#" class="overflow-hidden truncate text-ellipsis inline-block"
+                        @click.prevent="$wire.changeTab(tab.id)" x-text="value" x-show="!edit"
+                        :data-tooltip-content="value.length > 24 ? value : null" style="max-width: 11rem;"></a>
+                </div>
                 <input type="text" x-model="value" class="h-6 px-2 w-36 focus:ring-0 focus:outline-none"
                     @keyup.escape="edit = false; value = tab.name" @keyup.enter="save" x-on:blur="save" x-ref="input"
                     x-show="edit" x-cloak>
@@ -115,7 +114,7 @@
         </template>
 
         <button class="flex items-center gap-2 hover:opacity-70 transition-all" wire:click="addTab">
-            <span class="font-semibold">New Chart</span>
+            <span class="font-semibold">{{ $addBtnLabel }}</span>
             <svg width="16" height="16" viewBox="0 0 16 16" fill="none" xmlns="http://www.w3.org/2000/svg">
                 <path
                     d="M8.0026 14.6693C4.3207 14.6693 1.33594 11.6845 1.33594 8.0026C1.33594 4.3207 4.3207 1.33594 8.0026 1.33594C11.6845 1.33594 14.6693 4.3207 14.6693 8.0026C14.6693 11.6845 11.6845 14.6693 8.0026 14.6693ZM7.33594 7.33594H4.66927V8.66927H7.33594V11.3359H8.66927V8.66927H11.3359V7.33594H8.66927V4.66927H7.33594V7.33594Z"

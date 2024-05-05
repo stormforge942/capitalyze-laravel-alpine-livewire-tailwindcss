@@ -1,11 +1,11 @@
 <?php
 
-namespace App\Http\Livewire\Builder;
+namespace App\Http\Livewire\Builder\Chart;
 
 use App\Services\ChartBuilderService;
 use Livewire\Component;
 
-class SelectChartMetrics extends Component
+class SelectMetrics extends Component
 {
     public $options = [];
     public $selected = [];
@@ -17,6 +17,6 @@ class SelectChartMetrics extends Component
 
     public function render()
     {
-        return view('livewire.builder.select-chart-metrics');
+        return view('livewire.builder.chart.select-metrics');
     }
 }

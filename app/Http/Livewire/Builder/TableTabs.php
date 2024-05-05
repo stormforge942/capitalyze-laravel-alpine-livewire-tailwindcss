@@ -56,7 +56,7 @@ class TableTabs extends Component
 
     public function render()
     {
-        return view('livewire.builder.table-tabs');
+        return view('livewire.builder.table.tabs');
     }
 
     public function addTab()

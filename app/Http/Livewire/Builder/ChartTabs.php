@@ -56,7 +56,7 @@ class ChartTabs extends Component
 
     public function render()
     {
-        return view('livewire.builder.chart-tabs');
+        return view('livewire.builder.chart.tabs');
     }
 
     public function addTab()

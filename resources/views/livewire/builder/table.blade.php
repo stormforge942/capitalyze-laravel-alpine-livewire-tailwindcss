@@ -6,38 +6,26 @@
 
     <div class="mt-8">
         @livewire('builder.table-tabs')
+    </div>
 
-        <div class="mt-6">
+    @if ($tab)
+        <div class="mt-6 relative" x-data="{
+            tickers: [],
+            metrics: [],
+            summaries: [],
+        }" wire:key="{{ \Str::random(5) }}"
+            wire:loading.class="pointer-events-none animate-pulse">
+            <div class="cus-loader" wire:loading.block>
+                <div class="cus-loaderBar"></div>
+            </div>
+
             <div class="grid grid-cols-1 xl:grid-cols-3 gap-2 whitespace-nowrap">
-                <div class="bg-white p-2 flex items-center justify-between gap-x-5 rounded-t">
-                    <button class="px-4 py-2 flex items-center gap-x-2 font-medium text-sm bg-[#DCF6EC] rounded">
-                        Add Ticker
-                        <svg width="16" height="16" viewBox="0 0 16 16" fill="none"
-                            xmlns="http://www.w3.org/2000/svg">
-                            <path
-                                d="M7.33594 7.33398V4.66732H8.66927V7.33398H11.3359V8.66732H8.66927V11.334H7.33594V8.66732H4.66927V7.33398H7.33594ZM8.0026 14.6673C4.3207 14.6673 1.33594 11.6825 1.33594 8.00065C1.33594 4.31875 4.3207 1.33398 8.0026 1.33398C11.6845 1.33398 14.6693 4.31875 14.6693 8.00065C14.6693 11.6825 11.6845 14.6673 8.0026 14.6673ZM8.0026 13.334C10.9481 13.334 13.3359 10.9462 13.3359 8.00065C13.3359 5.05513 10.9481 2.66732 8.0026 2.66732C5.05708 2.66732 2.66927 5.05513 2.66927 8.00065C2.66927 10.9462 5.05708 13.334 8.0026 13.334Z"
-                                fill="#121A0F" />
-                        </svg>
-                    </button>
-
-                    <div class="bg-blue rounded-full px-1.5 py-0.5 font-semibold text-xs text-white">
-                        8 Tickers
-                    </div>
+                <div class="bg-white p-2 rounded-t">
+                    <livewire:builder.table.select-company :selected="$companies" :wire:key="Str::random(5)" />
                 </div>
                 <div class="bg-white p-2 flex items-center justify-between gap-x-5 rounded-t">
-                    <button class="px-4 py-2 flex items-center gap-x-2 font-medium text-sm bg-[#DCF6EC] rounded">
-                        Add Ticker
-                        <svg width="16" height="16" viewBox="0 0 16 16" fill="none"
-                            xmlns="http://www.w3.org/2000/svg">
-                            <path
-                                d="M7.33594 7.33398V4.66732H8.66927V7.33398H11.3359V8.66732H8.66927V11.334H7.33594V8.66732H4.66927V7.33398H7.33594ZM8.0026 14.6673C4.3207 14.6673 1.33594 11.6825 1.33594 8.00065C1.33594 4.31875 4.3207 1.33398 8.0026 1.33398C11.6845 1.33398 14.6693 4.31875 14.6693 8.00065C14.6693 11.6825 11.6845 14.6673 8.0026 14.6673ZM8.0026 13.334C10.9481 13.334 13.3359 10.9462 13.3359 8.00065C13.3359 5.05513 10.9481 2.66732 8.0026 2.66732C5.05708 2.66732 2.66927 5.05513 2.66927 8.00065C2.66927 10.9462 5.05708 13.334 8.0026 13.334Z"
-                                fill="#121A0F" />
-                        </svg>
-                    </button>
-
-                    <div class="bg-blue rounded-full px-1.5 py-0.5 font-semibold text-xs text-white">
-                        8 Metrics
-                    </div>
+                    <livewire:builder.table.select-metrics :companies="$companies" :selected="$metrics"
+                        :wire:key="Str::random(5)" />
                 </div>
                 <div class="bg-white p-2 flex items-center justify-between gap-x-5 rounded-t">
                     <button class="px-4 py-2 flex items-center gap-x-2 font-medium text-sm bg-[#DCF6EC] rounded">
@@ -50,8 +38,8 @@
                         </svg>
                     </button>
 
-                    <div class="bg-blue rounded-full px-1.5 py-0.5 font-semibold text-xs text-white">
-                        0 Summary
+                    <div class="bg-blue rounded-full px-1.5 py-0.5 font-semibold text-xs text-white"
+                        x-text="summaries.length + ' Summaries'">
                     </div>
                 </div>
             </div>
@@ -96,5 +84,9 @@
                 </table>
             </div>
         </div>
-    </div>
+    @else
+        <div class="py-10 grid place-items-center">
+            <span class="mx-auto simple-loader !text-green-dark"></span>
+        </div>
+    @endif
 </div>
