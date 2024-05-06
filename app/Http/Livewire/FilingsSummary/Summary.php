@@ -2,6 +2,8 @@
 
 namespace App\Http\Livewire\FilingsSummary;
 
+use App\Models\TrackInvestorDocumentsOpened;
+use Illuminate\Support\Facades\Auth;
 use Livewire\Component;
 use DB;
 use Illuminate\Support\Facades\Cache;
@@ -15,8 +17,21 @@ class Summary extends Component
     public $values = [];
     public $items;
 
+    protected $listeners = ['markAsRead'];
+
     public function mount(){
-        $data = $this->getDataFromDB();
+        $viewed = TrackInvestorDocumentsOpened::where('user_id', Auth::id())
+            ->pluck('key')
+            ->toArray();
+
+        $data = $this->getDataFromDB()->map(function ($summary) use ($viewed) {
+            $summary = (array) $summary;
+            $key = $summary['acceptance_time'] . '_' . $summary['symbol'] . '_' . $summary['form_type'];
+            $summary['isViewed'] = in_array($key, $viewed);
+
+            return $summary;
+        });
+
         $this->values = $data;
         $this->items = getFilingsSummaryTab();
     }
@@ -36,6 +51,23 @@ class Summary extends Component
         });
         
         return $query;
+    }
+
+    public function markAsRead($row)
+    {
+        $key = $row['acceptance_time'] . '_' . $row['symbol'] . '_' . $row['form_type'];
+
+        $entry = TrackInvestorDocumentsOpened::query()
+            ->where('key', $key)
+            ->where('user_id', Auth::id())
+            ->first();
+
+        if (!$entry) {
+            TrackInvestorDocumentsOpened::create([
+                'key' => $key,
+                'user_id' => Auth::id(),
+            ]);
+        }
     }
 
     public function render()
