@@ -148,4 +148,12 @@ return [
         '#061a1d',
         '#0e2a29',
     ],
+    'table-builder' => [
+        'summaries' => [
+            'Max',
+            'Min',
+            'Sum',
+            'Median',
+        ]
+    ]
 ];

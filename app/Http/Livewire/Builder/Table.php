@@ -9,9 +9,10 @@ use Livewire\Component;
 class Table extends Component
 {
     public $tab;
+    public $notes;
     public $companies;
     public $metrics;
-    public $summaries;
+    public $summaries = [];
     public $data;
 
     protected $listeners = [
@@ -39,6 +40,26 @@ class Table extends Component
         $this->updateTab();
     }
 
+    public function updateNote($company, $note)
+    {
+        $notes = CompanyTableComparison::query()
+            ->where('user_id', auth()->id())
+            ->where('id', $this->tab['id'])
+            ->first()
+            ->notes;
+
+        $notes[$company] = $note;
+
+        CompanyTableComparison::query()
+            ->where('user_id', auth()->id())
+            ->where('id', $this->tab['id'])
+            ->update([
+                'notes' => $notes,
+            ]);
+
+        $this->notes = $notes;
+    }
+
     public function tabChanged($tab)
     {
         $this->tab = $tab;
@@ -51,6 +72,7 @@ class Table extends Component
         $this->companies = $_tab['companies'];
         $this->metrics = $_tab['metrics'];
         $this->summaries = $_tab['summaries'];
+        $this->notes = $_tab['notes'];
 
         $this->updateData();
     }

@@ -944,13 +944,6 @@ class TableBuilderService
                         foreach ($_value as $date => $v) {
                             $val = explode('|', $v[0])[0];
                             $value[$date] = $val ? round((float) $val, 3) : null;
-
-                            if (!is_null($value[$date])) {
-                                $value[$date] = [
-                                    'value' => $value[$date],
-                                    'formatted' => niceNumber($value[$date]),
-                                ];
-                            }
                         }
 
                         $key = $column . '||' . $key;

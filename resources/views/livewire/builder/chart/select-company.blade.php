@@ -86,7 +86,7 @@
                 <div class="p-6 border-t flex items-center gap-x-4">
                     <button type="button"
                         class="w-full px-4 py-3 font-medium bg-[#DCF6EC] hover:bg-green-light2 rounded disabled:pointer-events-none disabled:bg-[#D1D3D5] disabled:text-white text-base"
-                        @click="tmpValue = [...value];" :disabled="!hasValueChanged">
+                        @click="tmpValue = [];" :disabled="!tmpValue.length">
                         Reset
                     </button>
                     <button type="button"
