@@ -167,14 +167,13 @@
                                     </template>
                                     <td class="py-4 pl-6 pr-8">
                                         <div x-data="{
-                                            open: false,
+                                            openDropdown: false,
                                             content: $wire.notes?.[row.ticker] || '',
                                             init() {
-                                                this.$watch('open', value => {
+                                                this.$watch('openDropdown', value => {
                                                     if (value) {
                                                         this.content = $wire.notes?.[row.ticker] || '';
-                                        
-                                                        console.log(this.$el.querySelector('textarea'))
+                                                        this.$el.querySelector('textarea').focus()
                                                     }
                                                 })
                                             },
@@ -182,7 +181,8 @@
                                                 $wire.updateNote(row.ticker, this.content)
                                             }
                                         }">
-                                            <x-dropdown x-model="open" placement="bottom-start" :shadow="true">
+                                            <x-dropdown x-model="openDropdown" placement="bottom-start"
+                                                :shadow="true">
                                                 <x-slot name="trigger">
                                                     <p class="bg-[#EDEDED] hover:bg-green-light4 px-2 py-1 rounded-sm font-medium text-xs text-dark-light2 whitespace-nowrap"
                                                         :class="open ? 'hover:bg-green-light4' : ''" x-cloak
