@@ -92,7 +92,7 @@
                     borderColor: color,
                     type,
                     yAxisID,
-                    shouldFormat: !this.metricsMap[metric].yAxis,
+                    shouldFormat: !['ratio', 'percent'].includes(this.metricsMap[metric].yAxis),
                     ...(isStacked ? { stack: yAxisID } : {}),
                 })
             })
@@ -143,11 +143,11 @@
                         enabled: false,
                         position: 'nearest',
                         callbacks: {
-                            title: (context) => this.formatDate(context[0].raw.x),
-                            label: (context) => {
-                                let y = context.dataset.shouldFormat ? formatValue(context.raw.y) : Number(context.raw.y).toFixed(this.filters.decimalPlaces)
+                            title: (ctx) => this.formatDate(ctx[0].raw.x),
+                            label: (ctx) => {
+                                const y = formatValue(ctx.raw.y, ctx.dataset.shouldFormat)
 
-                                return `${context.dataset.label}|${y}`
+                                return `${ctx.dataset.label}|${y}`
                             },
                         },
                     },
@@ -156,11 +156,7 @@
                     },
                     datalabels: {
                         display: (c) => {
-                            if (!this.showLabel) {
-                                return false
-                            }
-
-                            if (c.dataset.data[c.dataIndex].y === 0) {
+                            if (!this.showLabel || c.dataset.data[c.dataIndex].y === 0) {
                                 return false
                             }
 
@@ -169,11 +165,7 @@
                         anchor: (ctx) => ctx.dataset.stack ? 'center' : 'end',
                         align: (ctx) => ctx.dataset.stack ? 'center' : 'end',
                         formatter: (v, ctx) => {
-                            if (ctx.dataset.shouldFormat) {
-                                return this.formatValue(v.y)
-                            }
-
-                            return Number(v.y).toFixed(this.filters.decimalPlaces)
+                            return formatValue(v.y, ctx.dataset.shouldFormat)
                         },
                         clip: false,
                         font: {
