@@ -44,7 +44,7 @@
                 }
             }">
                 <div class="flex items-center"
-                    :class="tab.id === {{ $activeTab }} ? 'text-blue ownership-active-bread-link' : ''">
+                    :class="tab.id === {{ $activeTab }} && !edit ? 'text-blue ownership-active-bread-link' : ''">
                     <a href="#" class="overflow-hidden truncate text-ellipsis inline-block"
                         @click.prevent="$wire.changeTab(tab.id)" x-text="value" x-show="!edit"
                         :data-tooltip-content="value.length > 24 ? value : null" style="max-width: 11rem;"></a>

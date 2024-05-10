@@ -148,17 +148,17 @@
                         <tr class="font-bold whitespace-nowrap bg-[#EDEDED]">
                             <td class="py-3 pl-8">Ticker</td>
                             <template x-for="column in columns" :key="column.label">
-                                <td class="py-3 pl-6" x-text="column.label">
+                                <td class="py-3 pl-6" x-text="column.label" draggable="true">
                                 </td>
                             </template>
                             <td class="py-3 pl-6 pr-8" style="min-width: 270px;">Notes</td>
                         </tr>
                         <tbody>
                             <template x-for="(row, idx) in tableRows" :key="idx">
-                                <tr class="bg-white border-y-2 border-gray-light font-semibold">
+                                <tr class="bg-white border-y-2 border-gray-light font-semibold" draggable="true">
                                     <td class="py-4 pl-8" x-text="row.ticker"></td>
                                     <template x-for="column in columns" :key="column.label">
-                                        <td class="py-3 pl-6 text-right">
+                                        <td class="py-3 pl-6 text-right" draggable="true">
                                             <span :class="row.columns[column.label] < 0 ? 'text-red' : ''"
                                                 x-text="row.columns[column.label] ? formatTableValue(row.columns[column.label]) : '-'"
                                                 :data-tooltip-content="tooltipValue(row.columns[column.label])">
