@@ -9,7 +9,7 @@ use Illuminate\Validation\Rule;
 
 class TableController extends Controller
 {
-    public function __invoke(Request $request, CompanyTableComparison $table)
+    public function update(Request $request, CompanyTableComparison $table)
     {
         $request->validate([
             'summaries' => ['required', 'array'],
@@ -17,6 +17,24 @@ class TableController extends Controller
         ]);
 
         $table->update(['summaries' => $request->summaries]);
+
+        return response('Success');
+    }
+
+    public function updateTableOrder(Request $request, CompanyTableComparison $table)
+    {
+        $request->validate([
+            'data_rows' => ['nullable', 'array'],
+            'data_rows.*' => ['string'],
+        ]);
+
+        $order = $table->table_order;
+
+        if ($request->data_rows) {
+            $order['data_rows'] = $request->data_rows;
+        }
+
+        $table->update(['table_order' => $order]);
 
         return response('Success');
     }

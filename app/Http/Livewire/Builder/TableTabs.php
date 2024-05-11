@@ -31,6 +31,7 @@ class TableTabs extends Component
                     'metrics' => [],
                     'summaries' => [],
                     'notes' => [],
+                    'table_order' => [],
                     'user_id' => Auth::id(),
                 ])
                 ->only($cols);
@@ -69,6 +70,7 @@ class TableTabs extends Component
                 'metrics' => [],
                 'summaries' => [],
                 'notes' => [],
+                'table_order' => [],
                 'user_id' => Auth::id(),
             ])
             ->only(['id', 'name']);

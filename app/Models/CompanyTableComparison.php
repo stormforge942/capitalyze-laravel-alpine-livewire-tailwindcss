@@ -16,6 +16,7 @@ class CompanyTableComparison extends Model
         'metrics',
         'summaries',
         'notes',
+        'table_order',
         'user_id',
     ];
 
@@ -24,6 +25,7 @@ class CompanyTableComparison extends Model
         'metrics' => 'array',
         'summaries' => 'array',
         'notes' => 'array',
+        'table_order' => 'array',
     ];
 
     public function user(): BelongsTo

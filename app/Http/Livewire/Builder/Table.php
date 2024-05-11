@@ -13,6 +13,7 @@ class Table extends Component
     public $companies;
     public $metrics;
     public $summaries = [];
+    public $tableOrder = [];
     public $data;
 
     protected $listeners = [
@@ -73,6 +74,7 @@ class Table extends Component
         $this->metrics = $_tab['metrics'];
         $this->summaries = $_tab['summaries'];
         $this->notes = $_tab['notes'];
+        $this->tableOrder = $_tab['table_order'];
 
         $this->updateData();
     }

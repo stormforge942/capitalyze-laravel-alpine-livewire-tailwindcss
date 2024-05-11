@@ -164,7 +164,8 @@ Route::group(['middleware' => ['auth', 'approved', 'verified', CheckPagePermissi
     Route::post('settings', UpdateSettingsController::class)->name('settings.update');
 
     Route::post('chart-builder/{chart}/update', [ChartController::class, 'update'])->name('chart-builder.update');
-    Route::post('/table-builder/{table}/update', TableController::class)->name('table-builder.update');
+    Route::post('/table-builder/{table}/update', [TableController::class, 'update'])->name('table-builder.update');
+    Route::post('/table-builder/{table}/update-table-order', [TableController::class, 'updateTableOrder'])->name('table-builder.update.table-order');
 });
 
 Route::group(['middleware' => ['auth', 'verified', EnsureUserIsAdmin::class]], function () {

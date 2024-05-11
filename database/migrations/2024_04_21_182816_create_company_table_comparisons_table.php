@@ -20,6 +20,7 @@ return new class extends Migration
             $table->json('metrics');
             $table->json('summaries');
             $table->json('notes');
+            $table->json('table_order');
             $table->foreignId('user_id')->constrained('users');
             $table->timestamps();
         });

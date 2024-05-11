@@ -16,7 +16,7 @@
             columns: [],
             init() {
                 this.makeTableRows($wire.data)
-        
+                console.log(this.tableRows.length)
                 this.makeSummaryRows()
                 this.$watch('summaries', () => {
                     window.http('{{ route('table-builder.update', $tab['id']) }}', {
@@ -27,6 +27,8 @@
                     })
                     this.makeSummaryRows()
                 })
+        
+                this.$nextTick(() => this.makeTableArrangeable())
             },
             makeTableRows(data) {
                 const years = [
@@ -68,6 +70,14 @@
                     };
         
                     this.tableRows.push(row);
+                })
+        
+                const order = $wire.tableOrder.data_rows;
+                this.tableRows.sort((a, b) => {
+                    if (!order.includes(a.ticker) || !order.includes(b.ticker))
+                        return 0;
+        
+                    return order.indexOf(a.ticker) - order.indexOf(b.ticker)
                 })
             },
             makeSummaryRows() {
@@ -124,6 +134,52 @@
         
                 return Intl.NumberFormat('en-US').format(value);
             },
+            makeTableArrangeable() {
+                const tbody = this.$el.querySelector('#content-tbody')
+                let draggingRow = null
+        
+                tbody.addEventListener('dragover', (e) => {
+                    e.preventDefault();
+        
+                    const targetRow = e.target.closest('tr');
+        
+                    if (!draggingRow || !targetRow.draggable)
+                        return;
+        
+                    let children = Array.from(targetRow.parentNode.children);
+        
+                    if (children.indexOf(targetRow) > children.indexOf(draggingRow))
+                        targetRow.after(draggingRow);
+                    else
+                        targetRow.before(draggingRow);
+                });
+        
+                tbody.querySelectorAll('tr[draggable]').forEach(row => {
+                    row.addEventListener('dragstart', (e) => {
+                        e.dataTransfer.effectAllowed = 'move';
+                        e.dataTransfer.setData('text/html', null);
+                        e.target.classList.add('opacity-70');
+                        draggingRow = e.target;
+                    });
+        
+                    row.addEventListener('dragend', (e) => {
+                        e.target.classList.remove('opacity-70');
+                        e.dataTransfer.clearData();
+                        draggingRow = null;
+                        this.updateRowsOrder()
+                    });
+                });
+            },
+            updateRowsOrder() {
+                const order = [...this.$el.querySelectorAll('#content-tbody tr')].map(row => row.dataset.key);
+        
+                http('{{ route('table-builder.update.table-order', $tab['id']) }}', {
+                    method: 'POST',
+                    body: {
+                        data_rows: order
+                    }
+                })
+            }
         }" wire:key="{{ \Str::random(5) }}"
             wire:loading.class="pointer-events-none animate-pulse">
             <div class="cus-loader" wire:loading.block>
@@ -153,13 +209,14 @@
                             </template>
                             <td class="py-3 pl-6 pr-8" style="min-width: 270px;">Notes</td>
                         </tr>
-                        <tbody>
-                            <template x-for="(row, idx) in tableRows" :key="idx">
-                                <tr class="bg-white border-y-2 border-gray-light font-semibold" draggable="true">
-                                    <td class="py-4 pl-8" x-text="row.ticker"></td>
+                        <tbody id="content-tbody" class="w-full">
+                            <template x-for="(row, idx) in tableRows" :key="row.ticker + idx">
+                                <tr class="bg-white border-y-2 border-gray-light font-semibold cursor-pointer"
+                                    draggable="true" :data-key="row.ticker">
+                                    <td class="py-4 pl-8 whitespace-nowrap cursor-text" x-text="row.ticker"></td>
                                     <template x-for="column in columns" :key="column.label">
-                                        <td class="py-3 pl-6 text-right" draggable="true">
-                                            <span :class="row.columns[column.label] < 0 ? 'text-red' : ''"
+                                        <td class="py-3 pl-6 text-right">
+                                            <span class="cursor-text" :class="row.columns[column.label] < 0 ? 'text-red' : ''"
                                                 x-text="row.columns[column.label] ? formatTableValue(row.columns[column.label]) : '-'"
                                                 :data-tooltip-content="tooltipValue(row.columns[column.label])">
                                             </span>
@@ -194,9 +251,8 @@
                                                         <span style="max-width: 200px" class="truncate text-ellipsis"
                                                             x-text="$wire.notes?.[row.ticker]"
                                                             :data-tooltip-content="$wire.notes?.[row.ticker]?.length > 25 ? $wire.notes?.[row
-                                                                    .ticker
-                                                                ] :
-                                                                ''"></span>
+                                                                .ticker
+                                                            ] : ''"></span>
                                                         <svg width="16" height="16" viewBox="0 0 16 16"
                                                             fill="none" xmlns="http://www.w3.org/2000/svg">
                                                             <path
@@ -235,7 +291,7 @@
                                 </tr>
                             </template>
                         </tbody>
-                        <tbody style="background: rgba(82, 198, 255, 0.10)">
+                        <tbody id="summary-tbody" style="background: rgba(82, 198, 255, 0.10)">
                             <template x-for="(row, idx) in summaryRows" :key="idx">
                                 <tr class="border-y-2 border-gray-light font-semibold">
                                     <td class="py-3 pl-8" x-text="row.title"></td>
