@@ -11,12 +11,12 @@
     @if ($tab)
         <div class="mt-6 relative" x-data="{
             summaries: $wire.entangle('summaries', true),
+            tableOrder: $wire.entangle('tableOrder', true),
             summaryRows: [],
             tableRows: [],
             columns: [],
             init() {
                 this.makeTableRows($wire.data)
-                console.log(this.tableRows.length)
                 this.makeSummaryRows()
                 this.$watch('summaries', () => {
                     window.http('{{ route('table-builder.update', $tab['id']) }}', {
@@ -72,7 +72,7 @@
                     this.tableRows.push(row);
                 })
         
-                const order = $wire.tableOrder.data_rows;
+                const order = this.tableOrder.data_rows || [];
                 this.tableRows.sort((a, b) => {
                     if (!order.includes(a.ticker) || !order.includes(b.ticker))
                         return 0;
@@ -135,15 +135,15 @@
                 return Intl.NumberFormat('en-US').format(value);
             },
             makeTableArrangeable() {
-                const tbody = this.$el.querySelector('#content-tbody')
+                const table = this.$el.querySelector('table')
                 let draggingRow = null
         
-                tbody.addEventListener('dragover', (e) => {
+                table.addEventListener('dragover', (e) => {
                     e.preventDefault();
         
                     const targetRow = e.target.closest('tr');
-        
-                    if (!draggingRow || !targetRow.draggable)
+                    
+                    if (!draggingRow || !targetRow.draggable || !targetRow.classList.contains('data-row'))
                         return;
         
                     let children = Array.from(targetRow.parentNode.children);
@@ -153,8 +153,8 @@
                     else
                         targetRow.before(draggingRow);
                 });
-        
-                tbody.querySelectorAll('tr[draggable]').forEach(row => {
+                        
+                table.querySelectorAll('.data-row').forEach(row => {
                     row.addEventListener('dragstart', (e) => {
                         e.dataTransfer.effectAllowed = 'move';
                         e.dataTransfer.setData('text/html', null);
@@ -171,8 +171,10 @@
                 });
             },
             updateRowsOrder() {
-                const order = [...this.$el.querySelectorAll('#content-tbody tr')].map(row => row.dataset.key);
+                const order = [...this.$el.querySelectorAll('.data-row')].map(row => row.dataset.key);
         
+                this.tableOrder.data_rows = order;
+
                 http('{{ route('table-builder.update.table-order', $tab['id']) }}', {
                     method: 'POST',
                     body: {
@@ -204,111 +206,107 @@
                         <tr class="font-bold whitespace-nowrap bg-[#EDEDED]">
                             <td class="py-3 pl-8">Ticker</td>
                             <template x-for="column in columns" :key="column.label">
-                                <td class="py-3 pl-6" x-text="column.label" draggable="true">
+                                <td class="py-3 pl-6 text-right" x-text="column.label" draggable="true">
                                 </td>
                             </template>
                             <td class="py-3 pl-6 pr-8" style="min-width: 270px;">Notes</td>
                         </tr>
-                        <tbody id="content-tbody" class="w-full">
-                            <template x-for="(row, idx) in tableRows" :key="row.ticker + idx">
-                                <tr class="bg-white border-y-2 border-gray-light font-semibold cursor-pointer"
-                                    draggable="true" :data-key="row.ticker">
-                                    <td class="py-4 pl-8 whitespace-nowrap cursor-text" x-text="row.ticker"></td>
-                                    <template x-for="column in columns" :key="column.label">
-                                        <td class="py-3 pl-6 text-right">
-                                            <span class="cursor-text" :class="row.columns[column.label] < 0 ? 'text-red' : ''"
-                                                x-text="row.columns[column.label] ? formatTableValue(row.columns[column.label]) : '-'"
-                                                :data-tooltip-content="tooltipValue(row.columns[column.label])">
-                                            </span>
-                                        </td>
-                                    </template>
-                                    <td class="py-4 pl-6 pr-8">
-                                        <div x-data="{
-                                            openDropdown: false,
-                                            content: $wire.notes?.[row.ticker] || '',
-                                            init() {
-                                                this.$watch('openDropdown', value => {
-                                                    if (value) {
-                                                        this.content = $wire.notes?.[row.ticker] || '';
-                                                        this.$el.querySelector('textarea').focus()
-                                                    }
-                                                })
-                                            },
-                                            saveNote() {
-                                                $wire.updateNote(row.ticker, this.content)
-                                            }
-                                        }">
-                                            <x-dropdown x-model="openDropdown" placement="bottom-start"
-                                                :shadow="true">
-                                                <x-slot name="trigger">
-                                                    <p class="bg-[#EDEDED] hover:bg-green-light4 px-2 py-1 rounded-sm font-medium text-xs text-dark-light2 whitespace-nowrap"
-                                                        :class="open ? 'hover:bg-green-light4' : ''" x-cloak
-                                                        x-show="!$wire.notes?.[row.ticker]">
-                                                        Add Note
+                        <template x-for="(row, idx) in tableRows" :key="row.ticker + idx">
+                            <tr class="bg-white border-y-2 border-gray-light font-semibold cursor-pointer data-row"
+                                draggable="true" :data-key="row.ticker">
+                                <td class="py-4 pl-8 whitespace-nowrap cursor-text" x-text="row.ticker"></td>
+                                <template x-for="column in columns" :key="column.label">
+                                    <td class="py-3 pl-6 text-right">
+                                        <span class="cursor-text"
+                                            :class="row.columns[column.label] < 0 ? 'text-red' : ''"
+                                            x-text="row.columns[column.label] ? formatTableValue(row.columns[column.label]) : '-'"
+                                            :data-tooltip-content="tooltipValue(row.columns[column.label])">
+                                        </span>
+                                    </td>
+                                </template>
+                                <td class="py-4 pl-6 pr-8">
+                                    <div x-data="{
+                                        openDropdown: false,
+                                        content: $wire.notes?.[row.ticker] || '',
+                                        init() {
+                                            this.$watch('openDropdown', value => {
+                                                if (value) {
+                                                    this.content = $wire.notes?.[row.ticker] || '';
+                                                    this.$el.querySelector('textarea').focus()
+                                                }
+                                            })
+                                        },
+                                        saveNote() {
+                                            $wire.updateNote(row.ticker, this.content)
+                                        }
+                                    }">
+                                        <x-dropdown x-model="openDropdown" placement="bottom-start" :shadow="true">
+                                            <x-slot name="trigger">
+                                                <p class="bg-[#EDEDED] hover:bg-green-light4 px-2 py-1 rounded-sm font-medium text-xs text-dark-light2 whitespace-nowrap"
+                                                    :class="open ? 'hover:bg-green-light4' : ''" x-cloak
+                                                    x-show="!$wire.notes?.[row.ticker]">
+                                                    Add Note
+                                                </p>
+                                                <p class="flex items-center gap-x-1" x-cloak
+                                                    x-show="$wire.notes?.[row.ticker]">
+                                                    <span style="max-width: 200px" class="truncate text-ellipsis"
+                                                        x-text="$wire.notes?.[row.ticker]"
+                                                        :data-tooltip-content="$wire.notes?.[row.ticker]?.length > 25 ? $wire.notes?.[row
+                                                            .ticker
+                                                        ] : ''"></span>
+                                                    <svg width="16" height="16" viewBox="0 0 16 16"
+                                                        fill="none" xmlns="http://www.w3.org/2000/svg">
+                                                        <path
+                                                            d="M4.82843 11.9986H2V9.17016L9.62333 1.54682C9.88373 1.28648 10.3058 1.28648 10.5661 1.54682L12.4518 3.43244C12.7121 3.69279 12.7121 4.1149 12.4518 4.37525L4.82843 11.9986ZM2 13.332H14V14.6653H2V13.332Z"
+                                                            fill="#121A0F" />
+                                                    </svg>
+                                                </p>
+                                            </x-slot>
+
+                                            <div class="w-[20rem] rounded overflow-clip border border-green-muted">
+                                                <div
+                                                    class="flex items-center justify-between px-6 py-4 bg-green-light4">
+                                                    <p class="font-semibold" x-text="'Add note for ' + row.ticker">
                                                     </p>
-                                                    <p class="flex items-center gap-x-1" x-cloak
-                                                        x-show="$wire.notes?.[row.ticker]">
-                                                        <span style="max-width: 200px" class="truncate text-ellipsis"
-                                                            x-text="$wire.notes?.[row.ticker]"
-                                                            :data-tooltip-content="$wire.notes?.[row.ticker]?.length > 25 ? $wire.notes?.[row
-                                                                .ticker
-                                                            ] : ''"></span>
-                                                        <svg width="16" height="16" viewBox="0 0 16 16"
+                                                    <button @click.prevent="$dispatch('hide-dropdown')">
+                                                        <svg width="24" height="24" viewBox="0 0 24 24"
                                                             fill="none" xmlns="http://www.w3.org/2000/svg">
                                                             <path
-                                                                d="M4.82843 11.9986H2V9.17016L9.62333 1.54682C9.88373 1.28648 10.3058 1.28648 10.5661 1.54682L12.4518 3.43244C12.7121 3.69279 12.7121 4.1149 12.4518 4.37525L4.82843 11.9986ZM2 13.332H14V14.6653H2V13.332Z"
-                                                                fill="#121A0F" />
+                                                                d="M6.4 19L5 17.6L10.6 12L5 6.4L6.4 5L12 10.6L17.6 5L19 6.4L13.4 12L19 17.6L17.6 19L12 13.4L6.4 19Z"
+                                                                fill="#C22929" />
                                                         </svg>
-                                                    </p>
-                                                </x-slot>
-
-                                                <div class="w-[20rem] rounded overflow-clip border border-green-muted">
-                                                    <div
-                                                        class="flex items-center justify-between px-6 py-4 bg-green-light4">
-                                                        <p class="font-semibold" x-text="'Add note for ' + row.ticker">
-                                                        </p>
-                                                        <button @click.prevent="$dispatch('hide-dropdown')">
-                                                            <svg width="24" height="24" viewBox="0 0 24 24"
-                                                                fill="none" xmlns="http://www.w3.org/2000/svg">
-                                                                <path
-                                                                    d="M6.4 19L5 17.6L10.6 12L5 6.4L6.4 5L12 10.6L17.6 5L19 6.4L13.4 12L19 17.6L17.6 19L12 13.4L6.4 19Z"
-                                                                    fill="#C22929" />
-                                                            </svg>
-                                                        </button>
-                                                    </div>
-                                                    <form class="px-6 py-4" @submit.prevent="saveNote">
-                                                        <textarea class="w-full focus:outline-none focus:ring-0 border-0 font-normal resize-none"
-                                                            placeholder="Write note here..." rows="10" x-model="content"></textarea>
-                                                        <button type="submit"
-                                                            class="mt-4 py-2 w-full text-sm font-medium bg-green-dark hover:bg-opacity-80 rounded">
-                                                            Save Note
-                                                        </button>
-                                                    </form>
+                                                    </button>
                                                 </div>
-                                            </x-dropdown>
-                                        </div>
+                                                <form class="px-6 py-4" @submit.prevent="saveNote">
+                                                    <textarea class="w-full focus:outline-none focus:ring-0 border-0 font-normal resize-none"
+                                                        placeholder="Write note here..." rows="10" x-model="content"></textarea>
+                                                    <button type="submit"
+                                                        class="mt-4 py-2 w-full text-sm font-medium bg-green-dark hover:bg-opacity-80 rounded">
+                                                        Save Note
+                                                    </button>
+                                                </form>
+                                            </div>
+                                        </x-dropdown>
+                                    </div>
+                                </td>
+                            </tr>
+                        </template>
+                        <template x-for="(row, idx) in summaryRows" :key="row.title + idx">
+                            <tr class="border-y-2 border-gray-light font-semibold summary-row" style="background: rgba(82, 198, 255, 0.10)">
+                                <td class="py-3 pl-8" x-text="row.title"></td>
+
+                                <template x-for="column in columns" :key="column.label">
+                                    <td class="py-3 pl-6 text-right">
+                                        <span :class="row.columns[column.label] < 0 ? 'text-red' : ''"
+                                            x-text="formatTableValue(row.columns[column.label])"
+                                            :data-tooltip-content="tooltipValue(row.columns[column.label])">
+                                        </span>
                                     </td>
-                                </tr>
-                            </template>
-                        </tbody>
-                        <tbody id="summary-tbody" style="background: rgba(82, 198, 255, 0.10)">
-                            <template x-for="(row, idx) in summaryRows" :key="idx">
-                                <tr class="border-y-2 border-gray-light font-semibold">
-                                    <td class="py-3 pl-8" x-text="row.title"></td>
+                                </template>
 
-                                    <template x-for="column in columns" :key="column.label">
-                                        <td class="py-3 pl-6 text-right">
-                                            <span :class="row.columns[column.label] < 0 ? 'text-red' : ''"
-                                                x-text="formatTableValue(row.columns[column.label])"
-                                                :data-tooltip-content="tooltipValue(row.columns[column.label])">
-                                            </span>
-                                        </td>
-                                    </template>
-
-                                    <td></td>
-                                </tr>
-                            </template>
-                        </tbody>
+                                <td></td>
+                            </tr>
+                        </template>
                     </table>
                 </div>
             @else
