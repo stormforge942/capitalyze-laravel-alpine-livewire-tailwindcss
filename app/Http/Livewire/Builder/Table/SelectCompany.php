@@ -17,11 +17,11 @@ class SelectCompany extends Component
         ]);
     }
 
-    public function getCompanies(array $_selectedCompanies = [])
+    public function getCompanies()
     {
         $term = "%$this->search%";
 
-        $_selectedCompanies = array_map(fn ($company) => strtoupper($company), $_selectedCompanies);
+        $_selectedCompanies = array_map(fn ($company) => strtoupper($company), $this->selected);
 
         $selectedCompanies = Company::query()
             ->whereIn('ticker', $_selectedCompanies)

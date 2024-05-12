@@ -17,7 +17,7 @@
 }" x-modelable="value" x-model="summaries">
     <x-dropdown x-model="showDropdown" placement="bottom-start">
         <x-slot name="trigger">
-            <p class="px-4 py-2 flex items-center gap-x-2 font-medium text-sm bg-[#DCF6EC] rounded">
+            <p class="h-8 px-4 flex items-center gap-x-2 font-medium text-sm bg-[#DCF6EC] rounded">
                 Add Summary
                 <svg width="16" height="16" viewBox="0 0 16 16" fill="none" xmlns="http://www.w3.org/2000/svg">
                     <path

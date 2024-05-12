@@ -3,7 +3,7 @@
 namespace App\Http\Livewire\Builder\Table;
 
 use Livewire\Component;
-use App\Services\ChartBuilderService;
+use App\Services\TableBuilderService;
 
 class SelectMetrics extends Component
 {
@@ -12,7 +12,7 @@ class SelectMetrics extends Component
 
     public function mount()
     {
-        $this->options = ChartBuilderService::options();
+        $this->options = TableBuilderService::options();
     }
 
     public function render()

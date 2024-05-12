@@ -81,13 +81,20 @@ class Table extends Component
 
     private function updateTab()
     {
-        CompanyTableComparison::query()
+        $comparison = CompanyTableComparison::query()
             ->where('user_id', auth()->id())
             ->where('id', $this->tab['id'])
+            ->first();
+
+        $order = $comparison->table_order;
+        $order['data_rows'] = array_filter($order['data_rows'] ?? [], fn ($row) => in_array($row, $this->companies));
+
+        $comparison
             ->update([
                 'companies' => $this->companies,
                 'metrics' => $this->metrics,
                 'summaries' => $this->summaries,
+                'order' => $order,
             ]);
     }
 

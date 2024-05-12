@@ -19,6 +19,13 @@
 
         this.$watch('showDropdown', value => {
             this.tmpValue = [...this.value]
+
+            this.$nextTick(() => {
+                if (value) {
+                    window.dispatchEvent(new Event('resize')) // this fixes the dropdown position
+                    this.$el.querySelector(`input[type='search']`).focus()
+                }
+            })
         })
     },
     toggleCompany(company) {
@@ -44,7 +51,8 @@
     <div wire:ignore>
         <x-dropdown x-model="showDropdown" placement="bottom-start">
             <x-slot name="trigger">
-                <p class="px-4 py-2 flex items-center gap-x-2 font-medium text-sm bg-[#DCF6EC] rounded">
+                <p class="h-8 px-4 flex items-center gap-x-2 font-medium text-sm bg-[#DCF6EC] rounded" x-cloak
+                    x-show="!open">
                     Add Ticker
                     <svg width="16" height="16" viewBox="0 0 16 16" fill="none"
                         xmlns="http://www.w3.org/2000/svg">
@@ -53,6 +61,11 @@
                             fill="#121A0F" />
                     </svg>
                 </p>
+
+                <template x-if="open">
+                    <input type="search" placeholder="Search Company or Ticker" class="h-8 text-sm w-52 border border-[#D4DDD7] focus:ring-0 focus:border-green-dark rounded search-x-button"
+                        @click="$event.stopPropagation()" x-model.debounce.500ms="search">
+                </template>
             </x-slot>
 
             <div class="w-[20rem] sm:w-[26rem]">
@@ -107,7 +120,6 @@
         </x-dropdown>
     </div>
 
-    <div class="bg-blue rounded-full px-1.5 py-0.5 font-semibold text-xs text-white"
-        x-text="value.length + ' Tickers'">
+    <div class="bg-blue rounded-full px-1.5 py-0.5 font-semibold text-xs text-white" x-text="value.length + ' Tickers'">
     </div>
 </div>
