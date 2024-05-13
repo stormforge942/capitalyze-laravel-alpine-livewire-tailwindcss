@@ -4,10 +4,11 @@
     value: $wire.entangle('selected', true),
     tmpValue: [],
     showDropdown: false,
-    activeOption: null,
+    active: null,
     expand: null,
+    selectedMetricType: null,
     init() {
-        this.activeOption = [this.options[0].title]
+        this.active = this.options[0].title
 
         this.$watch('showDropdown', value => {
             this.tmpValue = [...this.value]
@@ -19,33 +20,17 @@
                 }
             })
         })
-    },
-    get filteredOptions() {
-        if (!this.search.length) {
-            return this.options
-        }
 
-        return this.options;
+        this.$watch('active', () => expand = null)
     },
     get subOptions() {
-        if (!this.activeOption) {
+        if (!this.active) {
             return []
         }
 
-        const item = this.options.find(option => option.title === this.activeOption[0]) || {}
+        const item = this.options.find(option => option.title === this.active) || {}
 
-        if (!item.has_children) {
-            return item?.items
-        }
-
-        return item?.items[this.activeOption[1]] || [];
-    },
-    isActive(title) {
-        if (Array.isArray(title)) {
-            return this.activeOption && this.activeOption[0] === title[0] && this.activeOption[1] === title[1]
-        }
-
-        return this.activeOption && this.activeOption[0] === title
+        return item.items || [];
     },
     get hasValueChanged() {
         return [...this.value].sort().map(item => item).join('-') !== [...this.tmpValue].sort().map(item => item).join('-')
@@ -99,11 +84,11 @@
                 <div class="relative mt-2 px-6">
                     <div
                         class="flex items-center gap-0.5 whitespace-nowrap text-sm font-medium text-center text-gray-medium2 border-[0.5px] outline-green-muted rounded">
-                        <template x-for="(option, idx) in filteredOptions" :key="idx">
-                            <button type="button" class="px-3 border rounded -m-[0.5px]"
-                                :class="isActive(option.title) ? 'border-green-dark bg-green-light4 text-dark' :
+                        <template x-for="option in options" :key="option.title">
+                            <button type="button" class="px-3 border rounded -m-[0.5px] -mb-[1px]"
+                                :class="active === option.title ? 'border-green-dark bg-green-light4 text-dark' :
                                     'border-transparent hover:border-green-muted'"
-                                @click="activeOption = [option.title]" x-text="option.title"></button>
+                                @click="active = option.title" x-text="option.title"></button>
                         </template>
                     </div>
 
@@ -111,23 +96,13 @@
                         <div>
                             <template x-for="(option, value) in subOptions" :key="value">
                                 <div x-data="{
-                                    selected: null,
                                     get open() {
-                                        return expand === option.title
+                                        return expand === value
                                     },
-                                    init() {
-                                        console.log(value)
-                                    }
                                 }">
                                     <button type="button"
                                         class="w-full p-4 rounded flex items-center gap-5 justify-between"
-                                        @click.prevent="() => {
-                                                if(expand === option.title){
-                                                    expand = null
-                                                } else {
-                                                    expand = option.title
-                                                }
-                                            }">
+                                        @click.prevent="expand = open ? null : value">
                                         <span class="truncate text-ellipsis" x-text="option.title"></span>
 
                                         <svg class="shrink-0" width="24" height="24" viewBox="0 0 24 24"
@@ -145,9 +120,9 @@
                                             x-for="(label, key) in {value: 'Value', growth: '% Growth YoY', cagr: 'CAGR'}">
                                             <button type="button"
                                                 class="w-full block text-left px-4 py-2 rounded border-[0.5px] "
-                                                :class="selected === key ? 'bg-green-light4 border-green-dark' :
+                                                :class="selectedMetricType === key ? 'bg-green-light4 border-green-dark' :
                                                     'hover:bg-green-light4 bg-[#EDEDED] border-green-muted hover:border-green-dark'"
-                                                @click="selected = key" x-text="label">
+                                                @click="selectedMetricType = key" x-text="label">
                                             </button>
                                         </template>
                                     </div>
@@ -157,81 +132,6 @@
                         <div></div>
                     </div>
                 </div>
-
-                {{-- <div class="relative mt-2 px-6 grid grid-cols-2 gap-4" style="min-height: 350px;">
-                        <div class="space-y-2 overflow-y-auto show-scrollbar left-scrollbar" style="max-height: 340px;">
-                            <template x-for="(option, idx) in filteredOptions" :key="idx">
-                                <div x-data="{
-                                    showChildren: activeOption && activeOption[0] === option.title,
-                                }">
-                                    <button class="text-left w-full p-4 flex items-center justify-between gap-x-4 rounded"
-                                        :class="isActive(option.title) && !option.has_children ? 'bg-green-light' :
-                                            'hover:bg-green-light'"
-                                        style="letter-spacing: -0.5%"
-                                        @click.prevent="showChildren = !showChildren; if(!option.has_children) { activeOption = [option.title] }">
-                                        <span :class="option.has_children ? 'font-semibold' : ''"
-                                            x-text="option.title"></span>
-    
-                                        <template x-if="!option.has_children">
-                                            <svg width="24" height="24" viewBox="0 0 16 16" fill="none"
-                                                xmlns="http://www.w3.org/2000/svg">
-                                                <path
-                                                    d="M8.0026 7.33398V5.33398L10.6693 8.00065L8.0026 10.6673V8.66732H5.33594V7.33398H8.0026ZM8.0026 1.33398C11.6826 1.33398 14.6693 4.32065 14.6693 8.00065C14.6693 11.6807 11.6826 14.6673 8.0026 14.6673C4.3226 14.6673 1.33594 11.6807 1.33594 8.00065C1.33594 4.32065 4.3226 1.33398 8.0026 1.33398ZM8.0026 13.334C10.9493 13.334 13.3359 10.9473 13.3359 8.00065C13.3359 5.05398 10.9493 2.66732 8.0026 2.66732C5.05594 2.66732 2.66927 5.05398 2.66927 8.00065C2.66927 10.9473 5.05594 13.334 8.0026 13.334Z"
-                                                    fill="#121A0F" />
-                                            </svg>
-                                        </template>
-                                        <template x-if="option.has_children">
-                                            <svg class="transition-transform" :class="showChildren ? 'rotate-90' : ''"
-                                                width="24" height="24" viewBox="0 0 24 24" fill="none"
-                                                xmlns="http://www.w3.org/2000/svg">
-                                                <path
-                                                    d="M13.1685 12.0046L8.21875 7.05483L9.63297 5.64062L15.9969 12.0046L9.63297 18.3685L8.21875 16.9543L13.1685 12.0046Z"
-                                                    fill="#121A0F" />
-                                            </svg>
-                                        </template>
-                                    </button>
-    
-                                    <template x-if="option.has_children && showChildren">
-                                        <div class="pl-4">
-                                            <template x-for="title in Object.keys(option.items)" :key="title">
-                                                <button
-                                                    class="text-left w-full mt-2 px-4 py-2 flex items-center justify-between gap-x-4 rounded"
-                                                    :class="isActive([option.title, title]) ? 'bg-green-light' :
-                                                        'hover:bg-green-light'"
-                                                    style="letter-spacing: -0.5%"
-                                                    @click.prevent="activeOption = [option.title, title]">
-                                                    <span x-text="title"></span>
-    
-                                                    <svg width="24" height="24" viewBox="0 0 16 16" fill="none"
-                                                        xmlns="http://www.w3.org/2000/svg">
-                                                        <path
-                                                            d="M8.0026 7.33398V5.33398L10.6693 8.00065L8.0026 10.6673V8.66732H5.33594V7.33398H8.0026ZM8.0026 1.33398C11.6826 1.33398 14.6693 4.32065 14.6693 8.00065C14.6693 11.6807 11.6826 14.6673 8.0026 14.6673C4.3226 14.6673 1.33594 11.6807 1.33594 8.00065C1.33594 4.32065 4.3226 1.33398 8.0026 1.33398ZM8.0026 13.334C10.9493 13.334 13.3359 10.9473 13.3359 8.00065C13.3359 5.05398 10.9493 2.66732 8.0026 2.66732C5.05594 2.66732 2.66927 5.05398 2.66927 8.00065C2.66927 10.9473 5.05594 13.334 8.0026 13.334Z"
-                                                            fill="#121A0F" />
-                                                    </svg>
-                                                </button>
-                                            </template>
-                                        </div>
-                                    </template>
-                                </div>
-                            </template>
-                        </div>
-    
-                        <div>
-                            <div class="font-semibold" x-text="!activeOption ? '' : activeOption[activeOption.length - 1]">
-                            </div>
-                            <div class="mt-2 space-y-2 overflow-y-auto show-scrollbar" style="max-height: 310px;">
-                                <template x-for="(option, value) in subOptions" :key="value">
-                                    <label
-                                        class="p-4 flex items-center gap-x-4 cursor-pointer hover:bg-gray-100 rounded-lg">
-                                        <input type="checkbox" name="metrics" :value="value" x-model="tmpValue"
-                                            class="custom-checkbox border-dark focus:ring-0" />
-    
-                                        <span x-text="option.title"></span>
-                                    </label>
-                                </template>
-                            </div>
-                        </div>
-                    </div> --}}
 
                 <div class="mt-2 p-6 border-t flex items-center gap-x-4">
                     <button type="button"
