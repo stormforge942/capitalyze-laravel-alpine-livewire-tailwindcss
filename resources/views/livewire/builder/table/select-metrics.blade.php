@@ -1,13 +1,16 @@
 <div x-data="{
     search: '',
+    allOptions: [],
     options: @js($options),
     value: $wire.entangle('selected', true),
     tmpValue: [],
     showDropdown: false,
     active: null,
     expand: null,
-    selectedMetricType: null,
+    selectedMetricType: 'value',
     init() {
+        this.allOptions = this.options.reduce((acc, item) => ({ ...acc, ...item.items }), {})
+
         this.active = this.options[0].title
 
         this.$watch('showDropdown', value => {
@@ -21,7 +24,10 @@
             })
         })
 
-        this.$watch('active', () => expand = null)
+        this.$watch('active', () => {
+            this.expand = null
+            this.selectedMetricType = 'value'
+        })
     },
     get subOptions() {
         if (!this.active) {
@@ -34,6 +40,15 @@
     },
     get hasValueChanged() {
         return [...this.value].sort().map(item => item).join('-') !== [...this.tmpValue].sort().map(item => item).join('-')
+    },
+    get resultTitle() {
+        const metricType = {
+            value: 'Value',
+            growth: '% Growth YoY',
+            cagr: 'CAGR',
+        } [this.selectedMetricType]
+
+        return this.allOptions[this.expand].title + ` (${metricType})`
     },
     showResult() {
         this.value = [...this.tmpValue];
@@ -92,8 +107,8 @@
                         </template>
                     </div>
 
-                    <div class="mt-4 grid grid-cols-1 sm:grid-cols-2 overflow-y-scroll" style="max-height: 25rem">
-                        <div>
+                    <div class="mt-4 grid grid-cols-1 sm:grid-cols-2 gap-3" style="max-height: 25rem">
+                        <div class="overflow-y-scroll" style="max-height: 25rem">
                             <template x-for="(option, value) in subOptions" :key="value">
                                 <div x-data="{
                                     get open() {
@@ -102,7 +117,7 @@
                                 }">
                                     <button type="button"
                                         class="w-full p-4 rounded flex items-center gap-5 justify-between"
-                                        @click.prevent="expand = open ? null : value">
+                                        @click.prevent="expand = open ? null : value; selectedMetricType = 'value'">
                                         <span class="truncate text-ellipsis" x-text="option.title"></span>
 
                                         <svg class="shrink-0" width="24" height="24" viewBox="0 0 24 24"
@@ -129,7 +144,51 @@
                                 </div>
                             </template>
                         </div>
-                        <div></div>
+                        <div>
+                            <template x-if="expand && selectedMetricType">
+                                <div>
+                                    <p class="font-medium py-2 px-4" x-text="resultTitle"></p>
+
+                                    <div class="mt-2" x-data="{
+                                        open: null
+                                    }">
+                                        <div>
+                                            <button type="button"
+                                                class="w-full p-4 rounded flex items-center gap-5 justify-between"
+                                                @click="open = open == 'FA' ? null : 'FA'">
+                                                <span class="truncate text-ellipsis">Fiscal Annual</span>
+
+                                                <svg class="shrink-0" width="24" height="24" viewBox="0 0 24 24"
+                                                    fill="none" xmlns="http://www.w3.org/2000/svg"
+                                                    :class="open === 'FA' ? 'rotate-90' : ''">
+                                                    <path
+                                                        d="M13.1685 12.0046L8.21875 7.05483L9.63297 5.64062L15.9969 12.0046L9.63297 18.3685L8.21875 16.9543L13.1685 12.0046Z"
+                                                        fill="#121A0F" />
+                                                </svg>
+                                            </button>
+
+                                            <div class="mt-1 mx-4 bg-gray-light rounded p-4" x-cloak x-show="open === 'FA'">
+                                                <p class="text-sm font-medium">Choose Period</p>
+                                                <div class="mt-4 flex flex-wrap gap-x-2.5 gap-y-4 text-xs font-semibold">
+                                                    <template x-for="date in [2000, 2001, 2002, 2003]"
+                                                        :key="date">
+                                                        <button class="flex items-center gap-x-1 bg-green-muted rounded-full py-1 px-1.5">
+                                                            <span x-text="'FY ' + date"></span>
+                                                            <svg width="16" height="16" viewBox="0 0 16 16"
+                                                                fill="none" xmlns="http://www.w3.org/2000/svg">
+                                                                <path
+                                                                    d="M7.33594 7.33398V3.33398H8.66927V7.33398H12.6693V8.66732H8.66927V12.6673H7.33594V8.66732H3.33594V7.33398H7.33594Z"
+                                                                    fill="#121A0F" />
+                                                            </svg>
+                                                        </button>
+                                                    </template>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </template>
+                        </div>
                     </div>
                 </div>
 
@@ -149,6 +208,7 @@
         </x-dropdown>
     </div>
 
-    <div class="bg-blue rounded-full px-1.5 py-0.5 font-semibold text-xs text-white" x-text="value.length + ' Metrics'">
+    <div class="bg-blue rounded-full px-1.5 py-0.5 font-semibold text-xs text-white"
+        x-text="value.length + ' Metrics'">
     </div>
 </div>
