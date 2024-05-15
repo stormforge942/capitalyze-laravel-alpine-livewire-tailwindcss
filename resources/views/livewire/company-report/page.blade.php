@@ -256,7 +256,7 @@
                 
                             this.selectedChartRows.push({
                                 id: row.id,
-                                title: row.title,
+                                title: row.title + (row.parentTitle ? ` - ${row.parentTitle}` : ''),
                                 values,
                                 color: this.colors.shift(),
                                 type: 'line',

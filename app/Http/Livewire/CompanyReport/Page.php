@@ -358,7 +358,7 @@ class Page extends Component
     private function generateRows($data)
     {
         if ($this->view !== 'Standardized') {
-            if(isset($data['Income statements:']) && !isset($data['Income Statement'])) {
+            if (isset($data['Income statements:']) && !isset($data['Income Statement'])) {
                 $data['Income Statement'] = $data['Income statements:'];
                 unset($data['Income statements:']);
             }
@@ -479,8 +479,15 @@ class Page extends Component
             ? ucwords(strtolower($title))
             : $title;
 
+        $parentTitle = null;
+        
+        if (str_contains($title, ':')) {
+            [$title, $parentTitle] = explode(":", $title, 2);
+        }
+
         return [
             'title' => $title,
+            'parentTitle' => $parentTitle,
             'isBold' => ($splitted[1] ?? '') == 'true' || ($this->view !== 'Standardized' && Str::contains(strtolower($title), 'total')),
             'hasBorder' => ($splitted[2] ?? '') == 'true',
             'section' => isset($splitted[3]) ? intval($splitted[3]) : null,
