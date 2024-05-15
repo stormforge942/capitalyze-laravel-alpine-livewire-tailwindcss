@@ -93,14 +93,24 @@
                     </div>
                 </div>
             </div>
+
             <div>
                 <div class="h-[20rem] overflow-scroll filing-table no-horizontal-scrollbar">
                     <table class="min-w-full">
                         <tbody class="bg-white divide-y divide-green-muted">
                             <template x-for="(val, index) in item.values" :key="index">
-                                <tr @click="Livewire.emit('modal.open', 'company-link-s3-content', { row: val })"
+                                <tr
+                                    @click.prevent="() => {
+                                        if(!val.isViewed) {
+                                            Livewire.emit('markAsRead', val);
+                                        }
+
+                                        val.isViewed = true
+
+                                        Livewire.emit('modal.open', 'company-link-s3-content', { row: val });
+                                    }"
                                     :style="index === 0 ? 'border-top: none !important;' : ''"
-                                    class="hover:bg-gray-50 cursor-pointer">
+                                    :class="{ 'hover:bg-gray-50 cursor-pointer': true, 'opacity-60': val.isViewed }">
                                     <td class="px-4 py-3 text-base  font-[400] text-[#121A0F] whitespace-nowrap"
                                         x-text="val.form_type"></td>
                                     <td class="px-4 py-3 text-base  font-[400] text-[#121A0F] whitespace-nowrap">

@@ -109,7 +109,7 @@
                         borderColor: color,
                         type,
                         yAxisID: addAxis(this.metricsMap[key].yAxis || 'y', key, metricAttributes[key]?.sAxis),
-                        shouldFormat: !metric.yAxis,
+                        shouldFormat: !['ratio', 'percent'].includes(metric.yAxis),
                         ...(isStacked ? { stack: this.metricsMap[key].yAxis || 'y' } : {}),
                     })
                 });
@@ -159,7 +159,7 @@
                                 callbacks: {
                                     title: (context) => this.formatDate(context[0].raw.x),
                                     label: (context) => {
-                                        let y = context.dataset.shouldFormat ? formatValue(context.raw.y) : Number(context.raw.y).toFixed(this.filters.decimalPlaces)
+                                        const y = formatValue(ctx.raw.y, ctx.dataset.shouldFormat)
         
                                         return `${context.dataset.label}|${y}`
                                     },
@@ -179,11 +179,7 @@
                                 anchor: (ctx) => ctx.dataset.stack ? 'center' : 'end',
                                 align: (ctx) => ctx.dataset.stack ? 'center' : 'end',
                                 formatter: (v, ctx) => {
-                                    if (ctx.dataset.shouldFormat) {
-                                        return this.formatValue(v.y)
-                                    }
-        
-                                    return Number(v.y).toFixed(this.filters.decimalPlaces)
+                                    return formatValue(v.y, ctx.dataset.shouldFormat)
                                 },
                                 clip: false,
                                 font: {

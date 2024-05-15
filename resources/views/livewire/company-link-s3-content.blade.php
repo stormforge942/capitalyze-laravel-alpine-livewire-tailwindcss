@@ -1,6 +1,6 @@
-<div class="flex flex-col h-full p-5">
-    <div class="mb-5 flex items-center justify-between">
-        <div class="font-medium uppercase">Content</div>
+<div class="flex flex-col h-full p-5" wire:init="loadData">
+    <div class="mb-5 flex gap-5 items-start justify-between">
+        <div class="font-medium uppercase">{{ $row['description'] }}</div>
 
         <button wire:click="$emit('modal.close')">
             <svg class="h-6 w-6" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
@@ -10,15 +10,17 @@
             </svg>
         </button>
     </div>
-    @if (!$loaded)
-        <div class="py-24 grid place-items-center" wire:init="loadData">
-            <span class="mx-auto simple-loader text-green"></span>
-        </div>
-    @elseif($content)
-        <div class="show-scrollbar" style="max-height: 80vh; overflow-y: scroll;">
-            {!! $content !!}
-        </div>
-    @else
-        <p class="text-gray-500 text-center py-24">No result found</p>
-    @endif
+    <div class="py-24 place-items-center" wire:loading.grid>
+        <span class="mx-auto simple-loader text-green"></span>
+    </div>
+
+    <div wire:loading.remove>
+        @if ($content)
+            <div class="show-scrollbar" style="max-height: 80vh; overflow-y: scroll;">
+                {!! $content !!}
+            </div>
+        @else
+            <p class="text-gray-500 text-center py-24">No result found</p>
+        @endif
+    </div>
 </div>

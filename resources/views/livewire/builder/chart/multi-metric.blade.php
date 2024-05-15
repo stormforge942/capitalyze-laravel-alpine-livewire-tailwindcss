@@ -59,7 +59,7 @@
                         borderColor: color,
                         type,
                         yAxisID: metricsMap[metric].yAxis || 'y',
-                        shouldFormat: ['percent'].includes(metricsMap[metric].yAxis),
+                        shouldFormat: !['percent', 'ratio'].includes(metricsMap[metric].yAxis),
                         ...(isStacked ? { stack: this.metricsMap[metric].yAxis || 'y' } : {}),
                     })
                 });
@@ -101,8 +101,8 @@
                                 callbacks: {
                                     title: (context) => this.formatDate(context[0].raw.x),
                                     label: (ctx) => {
-                                        let y = this.formatValue(ctx.raw.y, ctx.dataset.shouldFormat)
-        
+                                        const y = formatValue(ctx.raw.y, ctx.dataset.shouldFormat)
+
                                         return `${ctx.dataset.label}|${y}`
                                     },
                                 },
