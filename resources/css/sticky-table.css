@@ -45,3 +45,7 @@
     font-size: small;
     color: blue;
 }
+
+.table-clickable tbody tr {
+    @apply cursor-pointer hover:bg-gray-light;
+}

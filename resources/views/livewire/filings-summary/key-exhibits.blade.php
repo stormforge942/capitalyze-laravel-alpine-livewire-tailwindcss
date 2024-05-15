@@ -1,4 +1,5 @@
 <div class="flex flex-col" x-data="{
+    openExhibitsPop: false,
     activeTab: $wire.entangle('selectedTab'),
 }">
     <div class="hidden md:flex bg-[#F2F2F2] w-full gap-x-1 border-b border-[#D4DDD7]">
@@ -12,7 +13,7 @@
         'underwriting-agreements': 'Underwriting Agreements'
     }"
             :key="tab">
-            <a href="#" @click.prevent="activeTab = tab;"
+            <a href="#" @click.prevent="activeTab = tab; $wire.emit('emitCountInKeyExhibits', JSON.stringify([]));"
                 class="py-2.5 px-6 text-center border-b-2 transition-all font-medium"
                 :class="activeTab === tab ? 'border-green-dark' :
                     'border-transparent hover:border-gray-medium text-gray-medium2'"
@@ -31,30 +32,14 @@
             <option value="underwriting-agreements">Underwriting Agreements</option>
         </select>
     </div>
-    <!-- just for responsive view  -->
-    <div class="mr-2 md:hidden absolute top-[52%] right-[2%] bg-white p-2 rounded-full">
-        <div class="flex justify-between items-center">
-            <div><img src="{{ asset('/svg/filter-list.svg') }}" /></div>
-            <h4 class="text-sm ml-2 text-[#121A0F] font-[400]">Table Optios</h4>
-        </div>
-    </div>
+
     <div class="relative">
         <div class="cus-loader" wire:loading.block>
             <div class="cus-loaderBar"></div>
         </div>
 
-        @if ($selectedTab === 'articles-inc-bylaws')
-            <livewire:is :component="'key-exhibits.' . $selectedTab" :company="$company" />
-        @elseif($selectedTab === 'credit-agreement')
-            <livewire:is :component="'key-exhibits.' . $selectedTab" :company="$company" />
-        @elseif($selectedTab === 'indentures')
-            <livewire:is :component="'key-exhibits.' . $selectedTab" :company="$company" />
-        @elseif($selectedTab === 'material-contracts')
-            <livewire:is :component="'key-exhibits.' . $selectedTab" :company="$company" />
-        @elseif($selectedTab === 'plans-reorganization')
-            <livewire:is :component="'key-exhibits.' . $selectedTab" :company="$company" />
-        @elseif($selectedTab === 'underwriting-agreements')
-            <livewire:is :component="'key-exhibits.' . $selectedTab" :company="$company" />
-        @endif
+        <div class="flex flex-col">
+            <livewire:key-exhibits.common-layout key="{{ now() }}" :selectedTab="$selectedTab" :company="$company" :checkedCount="$checkedCount" :selectChecked="$selectChecked" />
+        </div>
     </div>
 </div>

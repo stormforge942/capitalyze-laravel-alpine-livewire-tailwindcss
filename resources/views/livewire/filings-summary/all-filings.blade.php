@@ -11,7 +11,7 @@
             'other': 'Other'
         }"
             :key="tab">
-            <a href="#" @click.prevent="activeTab = tab; $wire.handleTabs(tab)"
+            <a href="#" @click.prevent="activeTab = tab; $wire.handleTabs(tab); $wire.emit('emitCountInAllfilings', JSON.stringify([]));"
                 class="py-2.5 px-6 text-center border-b-2 transition-all font-medium"
                 :class="activeTab === tab ? 'border-green-dark' :
                     'border-transparent hover:border-gray-medium text-gray-medium2'"
@@ -36,21 +36,9 @@
             <div class="cus-loaderBar"></div>
         </div>
 
-        @if ($selectedTab === 'all-documents')
-            <livewire:is :component="'all-filings.' . $selectedTab" key="{{ now() }}" :company="$company" />
-        @elseif($selectedTab === 'financials')
-            <livewire:is :component="'all-filings.' . $selectedTab" key="{{ now() }}" :company="$company" />
-        @elseif($selectedTab === 'other')
-            <livewire:is :component="'all-filings.' . $selectedTab" key="{{ now() }}" :company="$company" />
-        @elseif($selectedTab === 'news')
-            <livewire:is :component="'all-filings.' . $selectedTab" key="{{ now() }}" :company="$company" />
-        @elseif($selectedTab === 'registrations-and-prospectuses')
-            <livewire:is :component="'all-filings.' . $selectedTab" key="{{ now() }}" :company="$company" />
-        @elseif($selectedTab === 'proxy-materials')
-            <livewire:is :component="'all-filings.' . $selectedTab" key="{{ now() }}" :company="$company" />
-        @elseif($selectedTab === 'ownership')
-            <livewire:is :component="'all-filings.' . $selectedTab" key="{{ now() }}" :company="$company" />
-        @endif
+        <div class="flex flex-col">
+            <livewire:all-filings.common-layout key="{{ now() }}" :selectedTab="$selectedTab" :company="$company" :checkedCount="$checkedCount" :selectChecked="$selectChecked" />
+        </div>
     </div>
 
     <!-- Dialog (full screen) -->
