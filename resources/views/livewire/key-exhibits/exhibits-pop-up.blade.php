@@ -12,15 +12,15 @@
         sortOrder: false,
         originalItems: null,
         get filteredItems() {
-            const filteredData = this.items.filter((item) => 
+            const filteredData = this.items.filter((item) =>
             {
                 const searchValue = this.search;
                 if (!searchValue) {
-                    return true; 
+                    return true;
                 }
                 return item?.toLowerCase().startsWith(searchValue);
             })
-            this.filteredData = filteredData; 
+            this.filteredData = filteredData;
             return this.filteredData;
         },
         handleFormTypeTabs(form){
@@ -31,7 +31,7 @@
             let range = form.split('-');
             let startRange = range[0];
             let endRange = range[1];
-            
+
             if (this.selectedTab === 'D-9') {
                 this.dta = this.originalItems.filter(item => /\d/.test(item));
             } else {
@@ -47,7 +47,7 @@
             }
 
             // Update this.items based on this.dta
-            this.items = this.dta.length > 0 ? this.dta : [...this.originalItems]; 
+            this.items = this.dta.length > 0 ? this.dta : [...this.originalItems];
         },
         sort(col) {
             if(this.sortCol === col) this.sortOrder = !this.sortOrder;
@@ -65,8 +65,8 @@
     @click.away="open = false"
 >
     <div class="flex justify-between items-center m-0 md:hidden">
-        <h4 class="text-base font-[500] text-[#121A0F]">Browse Filing Types</h4>
-        <div class="cursor-pointer" @click="openFilingPop = false">   
+        <h4 class="text-base font-[500] text-[#121A0F]">Browse Exhibit Types</h4>
+        <div class="cursor-pointer" @click="openExhibitsPop = false">
             <img src="{{asset('/svg/close.svg')}}" alt="close icon"/>
         </div>
     </div>
@@ -89,7 +89,7 @@
                 <input type="radio" x-model="sortBy" value="form_type" @change="sort('form_type')" class="mr-3 focus:ring-0 text-[#121A0F] focus:border-transparent" name="sort" class="" id="sort"/>
                 <label for="sort">By file type</label>
             </div>
-        </div> 
+        </div>
         <div class="flex flex-col md:hidden bg-[#FAFAFA] my-2">
             <div class="flex justify-between items-center p-2">
                 <h4 class="text-[#7C8286] text-sm font-[400]">Select File Type</h4>
@@ -134,13 +134,13 @@
 
     <div class="mt-5 sm:mt-6 flex">
         <span class="flex w-full rounded-md shadow-sm">
-            <button @click.prevent="selectedIds = [];" :disabled="!(hasValueChanged || selectedIds.length > 0)" :class="`${hasValueChanged || selectedIds.length > 0 ? 'bg-[#DCF6EC] text-[#121A0F]' : 'bg-[#D1D3D5] text-[#828C85]'}`"  class="inline-flex text-base font-[500] justify-center w-full px-4 py-2  rounded">
+            <button @click.prevent="selectedIds = [];" :disabled="!(hasValueChanged || selectedIds.length > 0)" :class="`${hasValueChanged || selectedIds.length > 0 ? 'bg-[#DCF6EC] text-[#121A0F]' : 'bg-[#D1D3D5] text-[#828C85]'}`"  class="inline-flex text-base font-[500] justify-center w-full px-4 py-2 rounded">
                 Reset
             </button>
         </span>
 
         <span class="flex w-full ml-2 rounded-md shadow-sm">
-            <button @click.prevent="$wire.emit('emitCountInAllfilings', JSON.stringify(selectedIds)); openFilingPop = false;" :disabled="!hasValueChanged" :class="`${hasValueChanged ? 'bg-[#52D3A2] text-[#121A0F]' : 'bg-[#D1D3D5] text-[#828C85]'}`"  class="inline-flex text-base font-[500] justify-center w-full px-4 py-2  rounded">
+            <button @click.prevent="$wire.emit('emitCountInKeyExhibits', JSON.stringify(selectedIds)); openExhibitsPop = false;" :disabled="!hasValueChanged" :class="`${hasValueChanged ? 'bg-[#52D3A2] text-[#121A0F]' : 'bg-[#D1D3D5] text-[#828C85]'}`"  class="inline-flex text-base font-[500] justify-center w-full px-4 py-2 rounded">
                 Show Result
             </button>
         </span>
