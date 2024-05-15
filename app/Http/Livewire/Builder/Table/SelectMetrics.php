@@ -9,6 +9,8 @@ class SelectMetrics extends Component
 {
     public $options = [];
     public $selected = [];
+    public $dates = [];
+    public $companies = [];
 
     public function mount()
     {

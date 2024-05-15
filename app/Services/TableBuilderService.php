@@ -738,143 +738,106 @@ class TableBuilderService
         $flattenedOptions = [];
 
         foreach ($options as $option) {
-            if ($option['has_children']) {
-                foreach ($option['items'] as $items) {
-                    foreach ($items as $key => $item) {
-                        $flattenedOptions[$key] = $item;
-                    }
-                }
-            } else {
-                foreach ($option['items'] as $key => $item) {
-                    $flattenedOptions[$key] = $item;
-                }
+            foreach ($option['items'] as $key => $item) {
+                $flattenedOptions[$key] = $item;
             }
         }
 
         return $flattenedOptions;
     }
 
-    public static function resolveData($companies, $metrics)
+    public static function resolveData($companies)
     {
-        $periods = ['annual', 'quarter'];
-
-        $data = array_reduce($periods, function ($c, $i) use ($companies) {
-            $c[$i] = array_reduce($companies, function ($d, $j) {
-                $d[$j] = [];
-                return $d;
-            }, []);
-            return $c;
-        }, []);
-
-        $standardKeys = [];
-        foreach ($metrics as $metric) {
-            [$column, $key] = explode('||', $metric, 2);
-
-            if (!isset($standardKeys[$column])) {
-                $standardKeys[$column] = [];
-            }
-
-            $standardKeys[$column][] = $key;
+        if (!count($companies)) {
+            return [
+                'data' => [],
+                'dates' => [],
+            ];
         }
 
-        if (empty($standardKeys) || !count($companies)) {
-            return null;
-        }
+        $_companies = $companies;
+        sort($_companies);
 
-        $cacheKey = 'table_builder_' . md5(implode(',', $companies) . implode(',', array_keys($standardKeys)));
+        $cacheKey = 'table_builder_' . md5(implode(',', $_companies));
 
-        $standardData = Cache::remember(
+        return Cache::remember(
             $cacheKey,
             3600,
-            fn () => InfoTikrPresentation::query()
-                ->whereIn('ticker', $companies)
-                ->select(['ticker', 'period', ...array_keys($standardKeys)])
-                ->get()
-                ->groupBy('period')
-        );
+            function () use ($companies) {
+                $data = array_reduce($companies, function ($d, $j) {
+                    $d[$j] = [];
+                    return $d;
+                }, []);
 
-        foreach ($standardData as $period => $items) {
-            if (!in_array($period, $periods)) {
-                continue;
-            }
+                $columns = ['income_statement', 'balance_sheet', 'cash_flow', 'ratios'];
 
-            foreach ($items as $item) {
-                foreach ($standardKeys as $column => $keys) {
-                    $json = json_decode($item->{$column}, true);
+                $periods = ['annual', 'quarter'];
 
-                    foreach ($json as $key => $_value) {
-                        $key = explode('|', $key)[0];
+                $datePlaceholders = array_reduce($columns, function ($c, $i) {
+                    $c[$i] = [];
+                    return $c;
+                }, []);
 
-                        if (!in_array($key, $keys)) {
-                            continue;
+                $dates = array_reduce($periods, function ($p, $i) use ($datePlaceholders) {
+                    $p[$i] = $datePlaceholders;
+                    return $p;
+                }, []);
+
+                $standardData = InfoTikrPresentation::query()
+                    ->whereIn('ticker', $companies)
+                    ->whereIn('period', $periods)
+                    ->select(['ticker', 'period', ...$columns])
+                    ->get()
+                    ->groupBy('period');
+
+                foreach ($standardData as $period => $items) {
+                    $min = now()->year;
+                    $max = 0;
+
+                    foreach ($items as $item) {
+                        foreach ($columns as $column) {
+                            $json = json_decode($item->{$column}, true);
+
+                            foreach ($json as $key => $_value) {
+                                $key = explode('|', $key)[0];
+
+                                $value = [];
+
+                                foreach ($_value as $date => $v) {
+                                    $date = Carbon::parse($date);
+
+                                    $min = $date->year < $min ? $date->year : $min;
+                                    $max = $date->year > $max ? $date->year : $max;
+
+                                    $v_key = $period === 'quarter'
+                                        ? 'Q' . $date->quarter . ' ' . $date->year
+                                        : 'FY ' . $date->year;
+
+                                    $val = explode('|', $v[0])[0];
+                                    $value[$v_key] = is_numeric($val) ? round((float) $val, 3) : null;
+                                }
+
+                                $dates[$period][$column] = array_unique(array_merge($dates[$period][$column], array_keys($value)));
+
+                                $key = $column . '||' . $key;
+
+                                $data[$item->ticker][$key] = array_merge(
+                                    $data[$item->ticker][$key] ?? [],
+                                    $value
+                                );
+                            }
                         }
-
-                        $value = [];
-
-                        foreach ($_value as $date => $v) {
-                            $val = explode('|', $v[0])[0];
-                            $value[$date] = $val ? round((float) $val, 3) : null;
-                        }
-
-                        $key = $column . '||' . $key;
-
-                        $data[$period][$item->ticker][$key] = self::normalizeValue($value, $period);
                     }
+
+                    // sort companies by order
+                    uksort($data, fn ($a, $b) => array_search($a, $companies) - array_search($b, $companies));
                 }
 
-                // sort metrics by order
-                uksort($data[$period][$item->ticker], fn ($a, $b) => array_search($a, $metrics) - array_search($b, $metrics));
+                return [
+                    'data' => $data,
+                    'dates' => $dates,
+                ];
             }
-
-            // sort companies by order
-            uksort($data[$period], fn ($a, $b) => array_search($a, $companies) - array_search($b, $companies));
-        }
-
-        $dates = self::extractDates($data);
-
-        return [
-            'data' => $data,
-            'dates' => $dates,
-        ];
-    }
-
-    private static function normalizeValue(array $value, string $period): array
-    {
-        $val = [];
-
-        foreach ($value as $date => $v) {
-            $date = Carbon::parse($date);
-
-            $key = $period === 'quarter'
-                ? $date->year . ' Q' . $date->quarter
-                : 'FY ' . $date->year;
-
-            $val[$key] = $v;
-        }
-
-        return $val;
-    }
-
-    private static function extractDates(array $data): array
-    {
-        $dates = array_reduce(['annual', 'quarter'], function ($c, $i) {
-            $c[$i] = [];
-            return $c;
-        }, []);
-
-        foreach ($data as $period => $item) {
-            foreach ($item as $metrics) {
-                foreach ($metrics as $values) {
-                    $dates[$period] = array_merge($dates[$period], array_keys($values));
-                }
-            }
-        }
-
-        foreach ($dates as $period => $value) {
-            $dates[$period] = array_unique($value);
-            sort($dates[$period]);
-        }
-
-        return $dates;
+        );
     }
 }

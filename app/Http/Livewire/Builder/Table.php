@@ -14,7 +14,6 @@ class Table extends Component
     public $metrics;
     public $summaries = [];
     public $tableOrder = [];
-    public $data;
 
     protected $listeners = [
         'tabChanged' => 'tabChanged',
@@ -24,20 +23,24 @@ class Table extends Component
 
     public function render()
     {
-        return view('livewire.builder.table');
+        $data = TableBuilderService::resolveData($this->companies ?? []);
+        
+        return view('livewire.builder.table', [
+            'data' => $data['data'],
+            'dates' => $data['dates'],
+            'allMetrics' => TableBuilderService::options(true),
+        ]);
     }
 
     public function companiesChanged($companies)
     {
         $this->companies = $companies;
-        $this->updateData();
         $this->updateTab();
     }
 
     public function metricsChanged($metrics)
     {
         $this->metrics = $metrics;
-        $this->updateData();
         $this->updateTab();
     }
 
@@ -75,8 +78,6 @@ class Table extends Component
         $this->summaries = $_tab['summaries'];
         $this->notes = $_tab['notes'];
         $this->tableOrder = $_tab['table_order'];
-
-        $this->updateData();
     }
 
     private function updateTab()
@@ -96,10 +97,5 @@ class Table extends Component
                 'summaries' => $this->summaries,
                 'order' => $order,
             ]);
-    }
-
-    private function updateData()
-    {
-        $this->data = TableBuilderService::resolveData($this->companies ?? [], $this->metrics ?? []);
     }
 }
