@@ -50,6 +50,7 @@
                         this.columns.push({
                             label: `${label} (${date})`,
                             metric: item.metric,
+                            type: item.type,
                             date,
                         })
                     })
@@ -59,6 +60,26 @@
                     let d = {};
         
                     this.columns.forEach(column => {
+                        if (column.type === 'growth') {
+                            console.log(this.getOldDate(column.date))
+        
+                            const lastValue = data[company]?.[column.metric]?.[this.getOldDate(column.date)] || null;
+                            const value = data[company]?.[column.metric]?.[column.date] || null;
+        
+                            if (lastValue === null || value === null) {
+                                d[column.label] = null;
+                                return;
+                            }
+        
+                            d[column.label] = lastValue ? (value / lastValue) - 1 : 0;
+                            return;
+                        }
+        
+                        if (column.type === 'cagr') {
+                            d[column.label] = data[company]?.[column.metric]?.[column.date] || null;
+                            return;
+                        }
+        
                         d[column.label] = data[company]?.[column.metric]?.[column.date] || null;
                     })
         
@@ -133,8 +154,10 @@
                     return row;
                 })
             },
-            formatTableValue(value) {
-                return value < 0 ? '(' + window.niceNumber(value) + ')' : window.niceNumber(value);
+            formatTableValue(value, type) {
+                const formatted = window.niceNumber(value);
+        
+                return value < 0 ? '(' + formatted + ')' : formatted;
             },
             tooltipValue(value) {
                 if (isNaN(value))
@@ -189,6 +212,22 @@
                         data_rows: order
                     }
                 })
+            },
+            getOldDate(date) {
+                // date can be Q YYYY or FY YYYY
+        
+                if (date.startsWith('Q')) {
+                    const [q, y] = date.split(' ');
+                    const prevQuarter = q === 'Q1' ? 'Q4' : `Q${parseInt(q.slice(1)) - 1}`;
+                    const prevYear = q === 'Q1' ? parseInt(y) - 1 : parseInt(y);
+        
+                    return `${prevQuarter} ${prevYear}`;
+                }
+        
+                const [fy, year] = date.split(' ');
+                const prevYear = parseInt(year) - 1;
+        
+                return `${fy} ${prevYear}`;
             }
         }" wire:key="{{ \Str::random(5) }}"
             wire:loading.class="pointer-events-none animate-pulse">
@@ -227,7 +266,7 @@
                             <template x-for="column in columns" :key="column.label">
                                 <td class="py-3 pl-6 text-right">
                                     <span class="cursor-text" :class="row.columns[column.label] < 0 ? 'text-red' : ''"
-                                        x-text="row.columns[column.label] ? formatTableValue(row.columns[column.label]) : '-'"
+                                        x-text="row.columns[column.label] ? formatTableValue(row.columns[column.label], column.type) : '-'"
                                         :data-tooltip-content="tooltipValue(row.columns[column.label])">
                                     </span>
                                 </td>
@@ -306,7 +345,7 @@
                             <template x-for="column in columns" :key="column.label">
                                 <td class="py-3 pl-6 text-right">
                                     <span :class="row.columns[column.label] < 0 ? 'text-red' : ''"
-                                        x-text="formatTableValue(row.columns[column.label])"
+                                        x-text="formatTableValue(row.columns[column.label], column.type)"
                                         :data-tooltip-content="tooltipValue(row.columns[column.label])">
                                     </span>
                                 </td>

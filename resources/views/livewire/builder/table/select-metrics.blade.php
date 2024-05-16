@@ -51,7 +51,7 @@
         return this.allOptions[this.expand].title + ` (${metricType})`
     },
     showResult() {
-        this.value = [...this.tmpValue];
+        this.value = this.tmpValue.filter(item => item.dates.length);
         this.showDropdown = false;
 
         this.updateSelectedCount()
