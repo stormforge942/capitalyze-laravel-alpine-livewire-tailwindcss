@@ -1,4 +1,4 @@
-<div class="bg-white p-6 rounded-lg border-[0.5px] border-[#D4DDD7]" x-data="{
+<div x-data="{
     search: $wire.entangle('search', true),
     companies: @js($companies),
     value: $wire.entangle('selected', true),
@@ -19,6 +19,13 @@
 
         this.$watch('showDropdown', value => {
             this.tmpValue = [...this.value]
+
+            this.$nextTick(() => {
+                if (value) {
+                    window.dispatchEvent(new Event('resize')) // this fixes the dropdown position
+                    this.$el.querySelector(`input[type='search']`).focus()
+                }
+            })
         })
     },
     toggleCompany(company) {
@@ -40,23 +47,33 @@
     dispatchValueChanged() {
         Livewire.emit('companiesChanged', this.value)
     }
-}">
-    <div class="flex items-center justify-between">
-        <label class="font-medium" style="line-height: 32px;">Search for Companies</label><br>
-        <button class="font-semibold text-gray-medium2 hover:text-red" @click.prevent="tmpValue = []; showResult()" x-cloak x-show="value.length">Clear All Companies</button>
-    </div>
+}" class="flex items-center justify-between gap-x-5">
     <div wire:ignore>
-        <x-dropdown x-model="showDropdown" placement="bottom-start" :fullWidthTrigger="true">
+        <x-dropdown x-model="showDropdown" placement="bottom-start">
             <x-slot name="trigger">
-                <input type="search"
-                    class="text-base mt-4 p-4 block w-full border border-[#D4DDD7] rounded-lg placeholder:text-gray-medium2 focus:ring-0 focus:border-green-dark search-x-button"
-                    placeholder="Search company..." x-model.debounce.500ms="search"
-                    @click="if(showDropdown) { $event.stopPropagation(); }">
+                <p class="h-8 px-4 flex items-center gap-x-2 font-medium text-sm bg-[#DCF6EC] rounded" x-cloak
+                    x-show="!open">
+                    Add Ticker
+                    <svg width="16" height="16" viewBox="0 0 16 16" fill="none"
+                        xmlns="http://www.w3.org/2000/svg">
+                        <path
+                            d="M7.33594 7.33398V4.66732H8.66927V7.33398H11.3359V8.66732H8.66927V11.334H7.33594V8.66732H4.66927V7.33398H7.33594ZM8.0026 14.6673C4.3207 14.6673 1.33594 11.6825 1.33594 8.00065C1.33594 4.31875 4.3207 1.33398 8.0026 1.33398C11.6845 1.33398 14.6693 4.31875 14.6693 8.00065C14.6693 11.6825 11.6845 14.6673 8.0026 14.6673ZM8.0026 13.334C10.9481 13.334 13.3359 10.9462 13.3359 8.00065C13.3359 5.05513 10.9481 2.66732 8.0026 2.66732C5.05708 2.66732 2.66927 5.05513 2.66927 8.00065C2.66927 10.9462 5.05708 13.334 8.0026 13.334Z"
+                            fill="#121A0F" />
+                    </svg>
+                </p>
+
+                <template x-if="open">
+                    <input type="search" placeholder="Search Company or Ticker" class="h-8 text-sm w-52 border border-[#D4DDD7] focus:ring-0 focus:border-green-dark rounded search-x-button"
+                        @click="$event.stopPropagation()" x-model.debounce.500ms="search">
+                </template>
             </x-slot>
 
             <div class="w-[20rem] sm:w-[26rem]">
-                <div class="flex justify-between gap-2 px-6 pt-6">
-                    <span class="font-medium text-base">Select Company</span>
+                <div class="flex justify-between items-start gap-2 px-6 pt-6">
+                    <div>
+                        <p class="font-medium text-base">Search for companies or stock</p>
+                        <p class="mt-2 text-sm text-[#7C8286]">Select multiple options to analyze</p>
+                    </div>
 
                     <button @click="dropdown.hide()">
                         <svg width="24" height="24" viewBox="0 0 24 24" fill="none"
@@ -86,7 +103,7 @@
                 <div class="p-6 border-t flex items-center gap-x-4">
                     <button type="button"
                         class="w-full px-4 py-3 font-medium bg-[#DCF6EC] hover:bg-green-light2 rounded disabled:pointer-events-none disabled:bg-[#D1D3D5] disabled:text-white text-base"
-                        @click="tmpValue = [...value];" :disabled="!hasValueChanged">
+                        @click="tmpValue = [];" :disabled="!tmpValue.length">
                         Reset
                     </button>
                     <button type="button"
@@ -101,22 +118,8 @@
                 </div>
             </div>
         </x-dropdown>
+    </div>
 
-        <div class="mt-6 flex flex-wrap gap-3 text-sm font-semibold" x-show="value.length" x-cloak>
-            <template x-for="company in value">
-                <span class="bg-green-light rounded-full p-2 flex items-center gap-x-2">
-                    <span x-text="company"></span>
-                    <button type="button"
-                        @click="value = value.filter(item => item !== company); dispatchValueChanged()">
-                        <svg width="16" height="16" viewBox="0 0 16 16" fill="none"
-                            xmlns="http://www.w3.org/2000/svg">
-                            <path
-                                d="M7.99479 14.6693C4.31289 14.6693 1.32812 11.6845 1.32812 8.0026C1.32812 4.3207 4.31289 1.33594 7.99479 1.33594C11.6767 1.33594 14.6615 4.3207 14.6615 8.0026C14.6615 11.6845 11.6767 14.6693 7.99479 14.6693ZM7.99479 7.0598L6.10917 5.17418L5.16636 6.11698L7.05199 8.0026L5.16636 9.8882L6.10917 10.831L7.99479 8.9454L9.88039 10.831L10.8232 9.8882L8.93759 8.0026L10.8232 6.11698L9.88039 5.17418L7.99479 7.0598Z"
-                                fill="#C22929" />
-                        </svg>
-                    </button>
-                </span>
-            </template>
-        </div>
+    <div class="bg-blue rounded-full px-1.5 py-0.5 font-semibold text-xs text-white" x-text="value.length + ' Tickers'">
     </div>
 </div>

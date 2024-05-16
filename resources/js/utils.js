@@ -25,7 +25,7 @@ export function formatCmpctNumber(number, options = {}) {
     return usformatter.format(number)
 }
 
-export function formatNumber(number, options) {
+export function formatNumber(number, options = {}) {
     if (isNaN(Number(number))) return number
 
     const divideBy = options.unit
@@ -97,6 +97,37 @@ export function http(url, options = {}) {
     })
 }
 
+export function niceNumber(value) {
+    if (isNaN(value)) return value
+
+    if (value < 0) {
+        return "-" + this.niceNumber(-1 * value)
+    }
+
+    let suffix = ""
+
+    if (value > 1000000000000) {
+        value = value / 1000000000000
+        suffix = "T"
+    } else if (value > 1000000000) {
+        value = value / 1000000000
+        suffix = "B"
+    } else if (value > 1000000) {
+        value = value / 1000000
+        suffix = "M"
+    } else if (value > 1000) {
+        value = value / 1000
+        suffix = "K"
+    }
+
+    return (
+        Intl.NumberFormat("en-US", {
+            minimumFractionDigits: 0,
+            maximumFractionDigits: 3,
+        }).format(value) + (suffix ? " " + suffix : "")
+    )
+}
+
 window.updateUserSettings = updateUserSettings
 window.formatCmpctNumber = formatCmpctNumber
 window.formatNumber = formatNumber
@@ -105,3 +136,4 @@ window.printChart = printChart
 window.fullScreen = fullScreen
 window.randomColor = randomColor
 window.http = http
+window.niceNumber = niceNumber

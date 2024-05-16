@@ -2,12 +2,16 @@
     dropdown: null,
     open: false,
     init() {
-        this.dropdown = new Dropdown($refs.body, $refs.trigger, {
-            placement: '{{ $placement }}',
-            offsetDistance: {{ $offsetDistance }},
-            onShow: () => this.open = true,
-            onHide: () => this.open = false,
-        });
+        this.$nextTick(() => {
+            const body = document.getElementById('{{ $id }}')
+
+            this.dropdown = new Dropdown(body, $refs.trigger, {
+                placement: '{{ $placement }}',
+                offsetDistance: {{ $offsetDistance }},
+                onShow: () => this.open = true,
+                onHide: () => this.open = false,
+            });
+        })
 
         $watch('open', value => {
             if (value) {
@@ -22,7 +26,11 @@
         {{ $trigger ?? '' }}
     </button>
 
-    <div class="z-[1000] hidden dropdown-body" x-ref="body">
+    @if ($teleport)
+        <template x-teleport="body">
+    @endif
+    
+    <div class="z-[1000] hidden dropdown-body" id="{{ $id }}">
         @if ($body ?? false)
             {{ $body }}
         @else
@@ -32,4 +40,8 @@
             </div>
         @endif
     </div>
+
+    @if ($teleport)
+        </template>
+    @endif
 </div>

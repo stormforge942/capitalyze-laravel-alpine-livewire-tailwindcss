@@ -2,6 +2,7 @@
 
 namespace App\View\Components;
 
+use Illuminate\Support\Str;
 use Illuminate\View\Component;
 
 class Dropdown extends Component
@@ -15,7 +16,8 @@ class Dropdown extends Component
         public string $placement = 'bottom',
         public bool $shadow = false,
         public bool $fullWidthTrigger = false,
-        public int $offsetDistance = 4
+        public int $offsetDistance = 4,
+        public bool $teleport = false,
     ) {
     }
 
@@ -26,6 +28,8 @@ class Dropdown extends Component
      */
     public function render()
     {
-        return view('components.dropdown');
+        return view('components.dropdown', [
+            'id' => Str::random(15),
+        ]);
     }
 }

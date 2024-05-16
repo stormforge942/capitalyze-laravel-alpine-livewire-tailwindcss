@@ -113,8 +113,9 @@ function initGeneralTextTooltip() {
         }
 
         const el = e.target?.closest("[data-tooltip-content]")
+        const content = (el ? el.dataset.tooltipContent : "").trim()
 
-        if (!el) {
+        if (!content.length) {
             tooltip.classList.add("hidden")
             lastEl = el
             return

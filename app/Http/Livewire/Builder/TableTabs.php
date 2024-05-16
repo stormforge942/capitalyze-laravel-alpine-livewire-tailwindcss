@@ -4,10 +4,10 @@ namespace App\Http\Livewire\Builder;
 
 use Livewire\Component;
 use Illuminate\Support\Facades\Auth;
-use App\Models\CompanyChartComparison;
+use App\Models\CompanyTableComparison;
 use Illuminate\Support\Arr;
 
-class ChartTabs extends Component
+class TableTabs extends Component
 {
     public int $activeTab = 0;
     public array $tabs = [];
@@ -16,28 +16,29 @@ class ChartTabs extends Component
     {
         $cols = ['id', 'name'];
 
-        $this->tabs = CompanyChartComparison::query()
+        $this->tabs = CompanyTableComparison::query()
             ->where('user_id', Auth::id())
             ->oldest()
             ->get($cols)
             ->toArray();
 
         if (!count($this->tabs)) {
-            $this->tabs[] = CompanyChartComparison::query()
+            $this->tabs[] = CompanyTableComparison::query()
                 ->where('user_id', Auth::id())
                 ->create([
                     'name' => 'Untitled',
                     'companies' => [],
                     'metrics' => [],
-                    'filters' => [],
-                    'metric_attributes' => [],
+                    'summaries' => [],
+                    'notes' => [],
+                    'table_order' => [],
                     'user_id' => Auth::id(),
                 ])
                 ->only($cols);
         }
 
         if (!$this->activeTab) {
-            $activeTab = session('builder.chart.activeTab');
+            $activeTab = session('builder.table.activeTab');
 
             if ($activeTab && Arr::first($this->tabs, fn ($tab) => $tab['id'] == $activeTab)) {
                 $this->activeTab = $activeTab;
@@ -48,27 +49,28 @@ class ChartTabs extends Component
     }
 
     public function init()
-    {        
+    {
         $tab = Arr::first($this->tabs, fn ($tab) => $tab['id'] == $this->activeTab);
 
-        $this->emitTo(Chart::class, 'tabChanged', $tab);
+        $this->emitTo(Table::class, 'tabChanged', $tab);
     }
 
     public function render()
     {
-        return view('livewire.builder.chart.tabs');
+        return view('livewire.builder.table.tabs');
     }
 
     public function addTab()
     {
-        $this->tabs[] = CompanyChartComparison::query()
+        $this->tabs[] = CompanyTableComparison::query()
             ->where('user_id', Auth::id())
             ->create([
                 'name' => 'Untitled',
                 'companies' => [],
                 'metrics' => [],
-                'filters' => [],
-                'metric_attributes' => [],
+                'summaries' => [],
+                'notes' => [],
+                'table_order' => [],
                 'user_id' => Auth::id(),
             ])
             ->only(['id', 'name']);
@@ -83,19 +85,19 @@ class ChartTabs extends Component
         abort_if(!$tab, 403);
 
         if ($this->activeTab != $id) {
-            $this->emitTo(Chart::class, 'tabChanged', $tab);
+            $this->emitTo(Table::class, 'tabChanged', $tab);
         }
 
         $this->activeTab = $id;
 
-        session(['builder.chart.activeTab' => $id]);
+        session(['builder.table.activeTab' => $id]);
     }
 
     public function updateTab($id, $name)
     {
         abort_if(!Arr::first($this->tabs, fn ($tab) => $tab['id'] == $id), 403);
 
-        CompanyChartComparison::query()
+        CompanyTableComparison::query()
             ->where('user_id', Auth::id())
             ->where('id', $id)
             ->update(['name' => $name]);
@@ -112,7 +114,7 @@ class ChartTabs extends Component
     {
         abort_if(!Arr::first($this->tabs, fn ($tab) => $tab['id'] == $id), 403);
 
-        CompanyChartComparison::query()
+        CompanyTableComparison::query()
             ->where('id', $id)
             ->delete();
 

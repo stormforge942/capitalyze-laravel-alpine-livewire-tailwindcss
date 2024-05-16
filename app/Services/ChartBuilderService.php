@@ -45,8 +45,8 @@ class ChartBuilderService
                     'income_statement||Cost of Goods Sold' => [
                         'title' => 'Cost of Goods Sold',
                     ],
-                    'income_statement||Total Gross Profit' => [
-                        'title' => 'Total Gross Profit',
+                    'income_statement||Total Gross Profits' => [
+                        'title' => 'Total Gross Profits',
                     ],
                     'income_statement||SG&A Expenses' => [
                         'title' => 'SG&A Expenses',
@@ -944,7 +944,7 @@ class ChartBuilderService
 
                         foreach ($_value as $date => $v) {
                             $val = explode('|', $v[0])[0];
-                            $value[$date] = $val ? round((float) $val, 3) : null;
+                            $value[$date] = $val ? (float) $val : null;
                         }
 
                         $key = $column . '||' . $key;

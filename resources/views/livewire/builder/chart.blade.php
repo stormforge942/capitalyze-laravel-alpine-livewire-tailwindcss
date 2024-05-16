@@ -134,11 +134,11 @@
 
             <div class="grid grid-cols-1 xl:grid-cols-2 gap-6">
                 <div>
-                    <livewire:builder.select-company :selected="$companies" :wire:key="Str::random(5)" />
+                    <livewire:builder.chart.select-company :selected="$companies" :wire:key="Str::random(5)" />
                 </div>
 
                 <div>
-                    <livewire:builder.select-chart-metrics :selected="$metrics" :wire:key="Str::random(5)" />
+                    <livewire:builder.chart.select-metrics :selected="$metrics" :wire:key="Str::random(5)" />
                 </div>
             </div>
 
