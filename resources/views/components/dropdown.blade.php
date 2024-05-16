@@ -3,9 +3,7 @@
     open: false,
     init() {
         this.$nextTick(() => {
-            const body = document.getElementById('{{ $id }}')
-
-            this.dropdown = new Dropdown(body, $refs.trigger, {
+            this.dropdown = new Dropdown($refs.body, $refs.trigger, {
                 placement: '{{ $placement }}',
                 offsetDistance: {{ $offsetDistance }},
                 onShow: () => this.open = true,
@@ -29,8 +27,8 @@
     @if ($teleport)
         <template x-teleport="body">
     @endif
-    
-    <div class="z-[1000] hidden dropdown-body" id="{{ $id }}">
+
+    <div class="z-[1000] hidden dropdown-body" x-ref="body">
         @if ($body ?? false)
             {{ $body }}
         @else

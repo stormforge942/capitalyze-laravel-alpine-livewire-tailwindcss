@@ -106,7 +106,7 @@
                         d[column.label] = data[company]?.[column.metric]?.[column.date] || null;
                     })
         
-                    const row = {
+                    this.tableRows.push({
                         ticker: company,
                         name: company,
                         sector: '-',
@@ -115,10 +115,8 @@
                         totalReturn: '-',
                         totalRevenue: '-',
                         columns: d,
-                        notes: null,
-                    };
-        
-                    this.tableRows.push(row);
+                        note: $wire.notes?.[company] || null,
+                    });
                 })
         
                 const order = this.tableOrder.data_rows || [];
@@ -299,40 +297,44 @@
                             <td class="py-4 pl-6 pr-8">
                                 <div x-data="{
                                     openDropdown: false,
-                                    content: $wire.notes?.[row.ticker] || '',
+                                    content: row.note,
                                     init() {
                                         this.$watch('openDropdown', value => {
                                             if (value) {
-                                                this.content = $wire.notes?.[row.ticker] || '';
+                                                this.content = row.note;
                                                 this.$el.querySelector('textarea').focus()
                                             }
                                         })
                                     },
                                     saveNote() {
+                                        this.openDropdown = false;
+                                        row.note = this.content;
                                         $wire.updateNote(row.ticker, this.content)
-                                    }
+                                    },
                                 }">
                                     <x-dropdown x-model="openDropdown" placement="bottom-start" :shadow="true">
                                         <x-slot name="trigger">
-                                            <p class="bg-[#EDEDED] hover:bg-green-light4 px-2 py-1 rounded-sm font-medium text-xs text-dark-light2 whitespace-nowrap"
-                                                :class="open ? 'hover:bg-green-light4' : ''" x-cloak
-                                                x-show="!$wire.notes?.[row.ticker]">
-                                                Add Note
-                                            </p>
-                                            <p class="flex items-center gap-x-1" x-cloak
-                                                x-show="$wire.notes?.[row.ticker]">
-                                                <span style="max-width: 200px" class="truncate text-ellipsis"
-                                                    x-text="$wire.notes?.[row.ticker]"
-                                                    :data-tooltip-content="$wire.notes?.[row.ticker]?.length > 25 ? $wire.notes?.[row
-                                                        .ticker
-                                                    ] : ''"></span>
-                                                <svg width="16" height="16" viewBox="0 0 16 16" fill="none"
-                                                    xmlns="http://www.w3.org/2000/svg">
-                                                    <path
-                                                        d="M4.82843 11.9986H2V9.17016L9.62333 1.54682C9.88373 1.28648 10.3058 1.28648 10.5661 1.54682L12.4518 3.43244C12.7121 3.69279 12.7121 4.1149 12.4518 4.37525L4.82843 11.9986ZM2 13.332H14V14.6653H2V13.332Z"
-                                                        fill="#121A0F" />
-                                                </svg>
-                                            </p>
+                                            <template x-if="!row.note">
+                                                <p class="bg-[#EDEDED] hover:bg-green-light4 px-2 py-1 rounded-sm font-medium text-xs text-dark-light2 whitespace-nowrap"
+                                                    :class="open ? 'hover:bg-green-light4' : ''">
+                                                    Add Note
+                                                </p>
+                                            </template>
+                                            <template x-if="row.note">
+                                                <p class="flex items-center gap-x-1">
+                                                    <span style="max-width: 200px" class="truncate text-ellipsis"
+                                                        x-text="row.note"
+                                                        :data-tooltip-content="row.note?.length > 25 ? $wire.notes?.[row
+                                                            .ticker
+                                                        ] : ''"></span>
+                                                    <svg width="16" height="16" viewBox="0 0 16 16"
+                                                        fill="none" xmlns="http://www.w3.org/2000/svg">
+                                                        <path
+                                                            d="M4.82843 11.9986H2V9.17016L9.62333 1.54682C9.88373 1.28648 10.3058 1.28648 10.5661 1.54682L12.4518 3.43244C12.7121 3.69279 12.7121 4.1149 12.4518 4.37525L4.82843 11.9986ZM2 13.332H14V14.6653H2V13.332Z"
+                                                            fill="#121A0F" />
+                                                    </svg>
+                                                </p>
+                                            </template>
                                         </x-slot>
 
                                         <div class="w-[20rem] rounded overflow-clip border border-green-muted">
