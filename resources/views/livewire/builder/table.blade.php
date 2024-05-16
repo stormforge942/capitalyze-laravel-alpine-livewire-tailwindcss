@@ -44,7 +44,13 @@
                     if (!allMetrics[item.metric])
                         return;
         
-                    label = allMetrics[item.metric].title;
+                    const type = {
+                        'value': null,
+                        'growth': '% Growth YoY',
+                        'cagr': 'CAGR',
+                    } [item.type];
+        
+                    label = allMetrics[item.metric].title + (type ? ` - ${type}` : '');
         
                     item.dates.forEach(date => {
                         this.columns.push({
@@ -61,8 +67,6 @@
         
                     this.columns.forEach(column => {
                         if (column.type === 'growth') {
-                            console.log(this.getOldDate(column.date))
-        
                             const lastValue = data[company]?.[column.metric]?.[this.getOldDate(column.date)] || null;
                             const value = data[company]?.[column.metric]?.[column.date] || null;
         
@@ -259,10 +263,12 @@
                         </template>
                         <td class="py-3 pl-6 pr-8" style="min-width: 270px;">Notes</td>
                     </tr>
-                    <template x-for="(row, idx) in tableRows" :key="row.ticker + idx">
+                    <template x-for="(row, idx) in tableRows" :key="row.ticker">
                         <tr class="bg-white border-y-2 border-gray-light font-semibold cursor-pointer data-row"
                             draggable="true" :data-key="row.ticker">
-                            <td class="py-4 pl-8 whitespace-nowrap cursor-text" x-text="row.ticker"></td>
+                            <td class="py-4 pl-8 whitespace-nowrap cursor-text">
+                                <span x-text="row.ticker"></span>
+                            </td>
                             <template x-for="column in columns" :key="column.label">
                                 <td class="py-3 pl-6 text-right">
                                     <span class="cursor-text" :class="row.columns[column.label] < 0 ? 'text-red' : ''"

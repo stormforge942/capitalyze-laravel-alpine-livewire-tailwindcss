@@ -45,8 +45,8 @@ class ChartBuilderService
                     'income_statement||Cost of Goods Sold' => [
                         'title' => 'Cost of Goods Sold',
                     ],
-                    'income_statement||Total Gross Profit' => [
-                        'title' => 'Total Gross Profit',
+                    'income_statement||Total Gross Profits' => [
+                        'title' => 'Total Gross Profits',
                     ],
                     'income_statement||SG&A Expenses' => [
                         'title' => 'SG&A Expenses',
