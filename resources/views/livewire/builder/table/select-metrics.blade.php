@@ -158,8 +158,14 @@
 
                                     <div class="mt-2 space-y-2" x-data="{
                                         open: null,
-                                        periods: { annual: 'Fiscal Annual', quarter: 'Fiscal Quarterly' },
                                         selectedDates: [],
+                                        get periods() {
+                                            if (selectedMetricType === 'cagr') {
+                                                return { annual: 'Fiscal Annual' };
+                                            }
+                                    
+                                            return { annual: 'Fiscal Annual', quarter: 'Fiscal Quarterly' };
+                                        },
                                         get selectedDates() {
                                             return this.tmpValue
                                                 .find(item => item.metric === expand && item.type === selectedMetricType && item.period === this.open)
@@ -208,40 +214,121 @@
                                                 <div class="mt-1 mx-4 bg-gray-light rounded p-4" x-cloak
                                                     x-show="open === key">
                                                     <p class="text-sm font-medium">Choose Period</p>
-                                                    <div
-                                                        class="mt-4 flex flex-wrap gap-x-2.5 gap-y-4 text-xs font-semibold">
-                                                        <template x-for="date in dates(key)" :key="date">
-                                                            <button
-                                                                class="flex items-center gap-x-1 hover:opacity-80 rounded-full py-1 px-1.5 transition-colors border"
-                                                                :class="{
-                                                                    'bg-green-light4 border-green-dark': selectedDates
-                                                                        .includes(date),
-                                                                    'bg-green-muted  border-transparent': !selectedDates
-                                                                        .includes(date),
-                                                                }"
-                                                                @click="toggleDate(date)">
-                                                                <span x-text="date"></span>
-                                                                <template x-if="selectedDates.includes(date)">
-                                                                    <svg width="16" height="16"
-                                                                        viewBox="0 0 16 16" fill="none"
-                                                                        xmlns="http://www.w3.org/2000/svg">
-                                                                        <path
-                                                                            d="M6.66451 10.1146L12.4392 4.33988C12.6345 4.14462 12.9511 4.14462 13.1463 4.33988L13.382 4.57558C13.5773 4.77084 13.5773 5.08743 13.382 5.28269L6.66451 12.0002L2.77543 8.11114C2.58017 7.91587 2.58017 7.59929 2.77544 7.40403L3.01114 7.16833C3.2064 6.97307 3.52298 6.97307 3.71824 7.16833L6.66451 10.1146Z"
-                                                                            fill="#121A0F" />
-                                                                    </svg>
-                                                                </template>
-                                                                <template x-if="!selectedDates.includes(date)">
-                                                                    <svg width="16" height="16"
-                                                                        viewBox="0 0 16 16" fill="none"
-                                                                        xmlns="http://www.w3.org/2000/svg">
-                                                                        <path
-                                                                            d="M7.33594 7.33398V3.33398H8.66927V7.33398H12.6693V8.66732H8.66927V12.6673H7.33594V8.66732H3.33594V7.33398H7.33594Z"
-                                                                            fill="#121A0F" />
-                                                                    </svg>
-                                                                </template>
-                                                            </button>
-                                                        </template>
-                                                    </div>
+                                                    <template x-if="selectedMetricType !== 'cagr'">
+                                                        <div
+                                                            class="mt-4 flex flex-wrap gap-x-2.5 gap-y-4 text-xs font-semibold">
+                                                            <template x-for="date in dates(key)" :key="date">
+                                                                <button
+                                                                    class="flex items-center gap-x-1 hover:opacity-80 rounded-full py-1 px-1.5 transition-colors border"
+                                                                    :class="{
+                                                                        'bg-green-light4 border-green-dark': selectedDates
+                                                                            .includes(date),
+                                                                        'bg-green-muted  border-transparent': !
+                                                                            selectedDates
+                                                                            .includes(date),
+                                                                    }"
+                                                                    @click="toggleDate(date)">
+                                                                    <span x-text="date"></span>
+                                                                    <template x-if="selectedDates.includes(date)">
+                                                                        <svg width="16" height="16"
+                                                                            viewBox="0 0 16 16" fill="none"
+                                                                            xmlns="http://www.w3.org/2000/svg">
+                                                                            <path
+                                                                                d="M6.66451 10.1146L12.4392 4.33988C12.6345 4.14462 12.9511 4.14462 13.1463 4.33988L13.382 4.57558C13.5773 4.77084 13.5773 5.08743 13.382 5.28269L6.66451 12.0002L2.77543 8.11114C2.58017 7.91587 2.58017 7.59929 2.77544 7.40403L3.01114 7.16833C3.2064 6.97307 3.52298 6.97307 3.71824 7.16833L6.66451 10.1146Z"
+                                                                                fill="#121A0F" />
+                                                                        </svg>
+                                                                    </template>
+                                                                    <template x-if="!selectedDates.includes(date)">
+                                                                        <svg width="16" height="16"
+                                                                            viewBox="0 0 16 16" fill="none"
+                                                                            xmlns="http://www.w3.org/2000/svg">
+                                                                            <path
+                                                                                d="M7.33594 7.33398V3.33398H8.66927V7.33398H12.6693V8.66732H8.66927V12.6673H7.33594V8.66732H3.33594V7.33398H7.33594Z"
+                                                                                fill="#121A0F" />
+                                                                        </svg>
+                                                                    </template>
+                                                                </button>
+                                                            </template>
+                                                        </div>
+                                                    </template>
+                                                    <template x-if="selectedMetricType === 'cagr'">
+                                                        <div class="mt-4 text-sm border border-[#D1D3D5] rounded-lg grid grid-cols-2 divide-x divide-[#F3F3F3] [&>*]:px-4 bg-white"
+                                                            x-data="{
+                                                                from: null,
+                                                                to: null,
+                                                                get toOptions() {
+                                                                    return dates(key).filter(date => date != this.from)
+                                                                },
+                                                                get fromOptions() {
+                                                                    return dates(key).filter(date => date != this.to)
+                                                                },
+                                                                init() {
+                                                                    const obj = this.tmpValue.find(item => item.metric === expand && item.type === selectedMetricType)
+                                                            
+                                                                    if (obj) {
+                                                                        [this.from, this.to] = obj.dates
+                                                                    }
+                                                            
+                                                                    console.log(this.from, this.to)
+                                                            
+                                                                    this.$watch('to', () => this.onChange())
+                                                            
+                                                                    this.$watch('from', () => this.onChange())
+                                                                },
+                                                                onChange() {
+                                                                    if (!(this.to && this.from)) {
+                                                                        const idx = this.tmpValue.findIndex(item => item.metric === expand && item.type === selectedMetricType)
+                                                                        if (idx !== -1) {
+                                                                            this.tmpValue.splice(idx, 1)
+                                                                        }
+                                                                        return;
+                                                                    }
+                                                            
+                                                                    if (this.to < this.from) {
+                                                                        [this.to, this.from] = [this.from, this.to]
+                                                                    }
+                                                            
+                                                                    const obj = this.tmpValue.find(item => item.metric === expand && item.type === selectedMetricType)
+                                                            
+                                                                    if (!obj) {
+                                                                        this.tmpValue.push({
+                                                                            metric: expand,
+                                                                            type: selectedMetricType,
+                                                                            dates: [this.from, this.to]
+                                                                        })
+                                                                    } else {
+                                                                        obj.dates = [this.from, this.to]
+                                                                    }
+                                                                }
+                                                            }">
+                                                            <label class="py-2">
+                                                                <label class="text-[#7C8286] block">From</label>
+                                                                <select
+                                                                    class="block w-full focus:ring-0 focus:border-none bg-none"
+                                                                    x-model="from">
+                                                                    <option value="">-</option>
+                                                                    <template x-for="date in fromOptions"
+                                                                        :key="date">
+                                                                        <option :value="date" x-text="date">
+                                                                        </option>
+                                                                    </template>
+                                                                </select>
+                                                            </label>
+                                                            <div class="py-2">
+                                                                <label class="text-[#7C8286] block">To</label>
+                                                                <select
+                                                                    class="block w-full focus:ring-0 focus:border-none bg-none"
+                                                                    x-model="to">
+                                                                    <option value="">-</option>
+                                                                    <template x-for="date in toOptions"
+                                                                        :key="date">
+                                                                        <option :value="date" x-text="date">
+                                                                        </option>
+                                                                    </template>
+                                                                </select>
+                                                            </div>
+                                                        </div>
+                                                    </template>
                                                 </div>
                                             </div>
                                         </template>

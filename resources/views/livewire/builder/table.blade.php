@@ -47,10 +47,23 @@
                     const type = {
                         'value': null,
                         'growth': '% Growth YoY',
-                        'cagr': 'CAGR',
+                        'cagr': 'CAGR'
                     } [item.type];
         
-                    label = allMetrics[item.metric].title + (type ? ` - ${type}` : '');
+                    if (item.type === 'cagr') {
+                        let label = allMetrics[item.metric].title + (type ? ` - ${type}` : '') + ` (${item.dates.join(' - ')})`;
+        
+                        this.columns.push({
+                            label,
+                            metric: item.metric,
+                            type: item.type,
+                            dates: item.dates,
+                        })
+        
+                        return;
+                    }
+        
+                    let label = allMetrics[item.metric].title + (type ? ` - ${type}` : '');
         
                     item.dates.forEach(date => {
                         this.columns.push({
@@ -80,7 +93,13 @@
                         }
         
                         if (column.type === 'cagr') {
-                            d[column.label] = data[company]?.[column.metric]?.[column.date] || null;
+                            const sv = data[company]?.[column.metric]?.[column.dates[0]] || null;
+                            const ev = data[company]?.[column.metric]?.[column.dates[1]] || null;
+        
+                            const n = column.dates[1].split(' ')[1] - column.dates[0].split(' ')[1];
+        
+                            d[column.label] = sv === null || ev === null ?
+                                null : Math.pow((ev - sv + Math.abs(sv)) / Math.abs(sv), 1 / n) - 1;
                             return;
                         }
         

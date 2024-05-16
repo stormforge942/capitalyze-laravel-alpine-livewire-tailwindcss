@@ -24,7 +24,7 @@ class Table extends Component
     public function render()
     {
         $data = TableBuilderService::resolveData($this->companies ?? []);
-        
+
         return view('livewire.builder.table', [
             'data' => $data['data'],
             'dates' => $data['dates'],
