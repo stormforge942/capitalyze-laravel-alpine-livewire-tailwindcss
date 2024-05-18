@@ -8,27 +8,39 @@ use Livewire\Component;
 
 class Table extends Component
 {
-    public $tab;
-    public $notes;
-    public $companies;
-    public $metrics;
-    public $summaries = [];
-    public $tableOrder = [];
+    public $tab = null;
+    public $companies = [];
+
+    private $summaries = [];
+    private $metrics = [];
+    private $notes = [];
+    private $tableOrder = [];
 
     protected $listeners = [
         'tabChanged' => 'tabChanged',
         'companiesChanged' => 'companiesChanged',
-        'metricsChanged' => 'metricsChanged',
     ];
 
     public function render()
     {
+        // fixes the stale data issue
+        if ($this->tab) {
+            $this->tabChanged([
+                'id' => $this->tab['id'],
+                'name' => $this->tab['name'],
+            ]);
+        }
+
         $data = TableBuilderService::resolveData($this->companies ?? []);
 
         return view('livewire.builder.table', [
             'data' => $data['data'],
             'dates' => $data['dates'],
             'allMetrics' => TableBuilderService::options(true),
+            'metrics' => $this->metrics,
+            'summaries' => $this->summaries,
+            'notes' => $this->notes,
+            'tableOrder' => $this->tableOrder,
         ]);
     }
 
@@ -36,32 +48,6 @@ class Table extends Component
     {
         $this->companies = $companies;
         $this->updateTab();
-    }
-
-    public function metricsChanged($metrics)
-    {
-        $this->metrics = $metrics;
-        $this->updateTab();
-    }
-
-    public function updateNote($company, $note)
-    {
-        $notes = CompanyTableComparison::query()
-            ->where('user_id', auth()->id())
-            ->where('id', $this->tab['id'])
-            ->first()
-            ->notes;
-
-        $notes[$company] = $note;
-
-        CompanyTableComparison::query()
-            ->where('user_id', auth()->id())
-            ->where('id', $this->tab['id'])
-            ->update([
-                'notes' => $notes,
-            ]);
-
-        $this->notes = $notes;
     }
 
     public function tabChanged($tab)
@@ -87,15 +73,6 @@ class Table extends Component
             ->where('id', $this->tab['id'])
             ->first();
 
-        $order = $comparison->table_order;
-        $order['data_rows'] = array_filter($order['data_rows'] ?? [], fn ($row) => in_array($row, $this->companies));
-
-        $comparison
-            ->update([
-                'companies' => $this->companies,
-                'metrics' => $this->metrics,
-                'summaries' => $this->summaries,
-                'order' => $order,
-            ]);
+        $comparison->update(['companies' => $this->companies]);
     }
 }

@@ -1,8 +1,14 @@
+<?php
+
+$options = App\Services\TableBuilderService::options();
+
+?>
+
 <div x-data="{
     search: '',
     allOptions: [],
     options: @js($options),
-    value: $wire.entangle('selected', true),
+    value: @js($selected),
     tmpValue: [],
     showDropdown: false,
     active: null,
@@ -16,11 +22,11 @@
 
         this.active = this.options[0].title
 
-        this.$watch('showDropdown', value => {
+        this.$watch('showDropdown', (show) => {
             this.tmpValue = JSON.parse(JSON.stringify(this.value))
 
             this.$nextTick(() => {
-                if (value) {
+                if (show) {
                     window.dispatchEvent(new Event('resize')) // this fixes the dropdown position
                     this.$el.querySelector(`input[type='search']`).focus()
                 }
@@ -55,18 +61,18 @@
         this.showDropdown = false;
 
         this.updateSelectedCount()
-
-        Livewire.emit('metricsChanged', this.value)
     },
     dates(period) {
+        const dates = @js($dates)
+
         const metric = this.expand.split('||')[0]
 
-        return $wire.dates[period][metric] || []
+        return dates[period][metric] || []
     },
     updateSelectedCount() {
         this.selectedCount = new Set(this.value.map(item => item.metric)).size
     }
-}" class="flex items-center justify-between gap-x-5">
+}" class="flex items-center justify-between gap-x-5" x-modelable="value" x-model="metrics">
     <div wire:ignore>
         <x-dropdown x-model="showDropdown" placement="bottom-start" :fullWidthTrigger="true" :teleport="true">
             <x-slot name="trigger">

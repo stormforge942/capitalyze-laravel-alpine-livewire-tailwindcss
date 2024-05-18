@@ -5,18 +5,36 @@ namespace App\Http\Controllers\TableBuilder;
 use App\Http\Controllers\Controller;
 use App\Models\CompanyTableComparison;
 use Illuminate\Http\Request;
+use Illuminate\Support\Arr;
 use Illuminate\Validation\Rule;
 
 class TableController extends Controller
 {
     public function update(Request $request, CompanyTableComparison $table)
     {
-        $request->validate([
-            'summaries' => ['required', 'array'],
+        $attributes = $request->validate([
+            'summaries' => ['sometimes', 'required', 'array'],
             'summaries.*' => ['string', Rule::in(config('capitalyze.table-builder.summaries'))],
+            'metrics' => ['sometimes', 'nullable', 'array'],
+        ]);
+        
+        $table->update($attributes);
+
+        return response('Success');
+    }
+
+    public function updateNote(Request $request, CompanyTableComparison $table)
+    {
+        $request->validate([
+            'company' => ['required', 'string'],
+            'note' => ['nullable', 'string'],
         ]);
 
-        $table->update(['summaries' => $request->summaries]);
+        $notes = $table->notes;
+
+        $notes[$request->company] = $request->note;
+
+        $table->update(['notes' => Arr::only($notes, $table->companies)]);
 
         return response('Success');
     }

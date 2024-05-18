@@ -10,14 +10,14 @@
 
     @if ($tab)
         <div class="mt-6 relative" x-data="{
-            summaries: $wire.entangle('summaries', true),
-            tableOrder: $wire.entangle('tableOrder', true),
+            summaries: @js($summaries),
+            tableOrder: @js($tableOrder),
+            metrics: @js($metrics),
             summaryRows: [],
             tableRows: [],
             columns: [],
             init() {
                 this.makeTableRows()
-                this.makeSummaryRows()
         
                 this.$watch('summaries', () => {
                     window.http('{{ route('table-builder.update', $tab['id']) }}', {
@@ -29,18 +29,31 @@
                     this.makeSummaryRows()
                 })
         
+                this.$watch('metrics', () => {
+                    window.http('{{ route('table-builder.update', $tab['id']) }}', {
+                        method: 'POST',
+                        body: {
+                            metrics: this.metrics
+                        }
+                    })
+        
+                    this.makeTableRows()
+                }, { deep: true })
+        
                 this.$nextTick(() => this.makeTableArrangeable())
             },
             makeTableRows() {
                 const allMetrics = @js($allMetrics);
                 const data = @js($data);
+                const notes = @js($notes);
         
-                if (!$wire.companies.length || !$wire.metrics.length)
+                this.tableRows = [];
+                
+                if (!$wire.companies.length || !this.metrics.length)
                     return;
         
                 this.columns = [];
-        
-                $wire.metrics.forEach(item => {
+                this.metrics.forEach(item => {
                     if (!allMetrics[item.metric])
                         return;
         
@@ -115,7 +128,7 @@
                         totalReturn: '-',
                         totalRevenue: '-',
                         columns: d,
-                        note: $wire.notes?.[company] || null,
+                        note: notes?.[company] || null,
                     });
                 })
         
@@ -126,6 +139,8 @@
         
                     return order.indexOf(a.ticker) - order.indexOf(b.ticker)
                 })
+        
+                this.makeSummaryRows()
             },
             makeSummaryRows() {
                 if (!this.tableRows.length)
@@ -263,8 +278,11 @@
                 <div class="bg-white p-2 rounded-t"
                     :class="!$wire.companies.length ? 'opacity-60 cursor-not-allowed' : ''"
                     :data-tooltip-content="!$wire.companies.length ? 'Please add ticker(s) first' : ''">
-                    <livewire:builder.table.select-metrics :companies="$companies" :dates="$dates" :selected="$metrics"
-                        :wire:key="Str::random(5)" />
+                    @include('livewire.builder.table.select-metrics', [
+                        'companies' => $companies,
+                        'dates' => $dates,
+                        'selected' => $metrics,
+                    ])
                 </div>
                 <div class="bg-white p-2 rounded-t">
                     @include('livewire.builder.table.select-summary')
@@ -308,8 +326,20 @@
                                     },
                                     saveNote() {
                                         this.openDropdown = false;
+                                
+                                        const oldNote = row.note;
                                         row.note = this.content;
-                                        $wire.updateNote(row.ticker, this.content)
+                                
+                                        http(`/table-builder/${$wire.tab.id}/update-note`, {
+                                            method: 'POST',
+                                            body: {
+                                                company: row.ticker,
+                                                note: this.content,
+                                            }
+                                        }).catch(err => {
+                                            alert('Something went wrong while saving note. Please try again')
+                                            row.note = oldNote
+                                        })
                                     },
                                 }">
                                     <x-dropdown x-model="openDropdown" placement="bottom-start" :shadow="true">
@@ -324,9 +354,7 @@
                                                 <p class="flex items-center gap-x-1">
                                                     <span style="max-width: 200px" class="truncate text-ellipsis"
                                                         x-text="row.note"
-                                                        :data-tooltip-content="row.note?.length > 25 ? $wire.notes?.[row
-                                                            .ticker
-                                                        ] : ''"></span>
+                                                        :data-tooltip-content="row.note?.length > 25 ? row.note : ''"></span>
                                                     <svg width="16" height="16" viewBox="0 0 16 16"
                                                         fill="none" xmlns="http://www.w3.org/2000/svg">
                                                         <path

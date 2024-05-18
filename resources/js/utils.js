@@ -94,6 +94,10 @@ export function http(url, options = {}) {
                   ...options.body,
               })
             : undefined,
+    }).then((res) => {
+        if (res.ok) return res
+
+        return Promise.reject(res)
     })
 }
 
