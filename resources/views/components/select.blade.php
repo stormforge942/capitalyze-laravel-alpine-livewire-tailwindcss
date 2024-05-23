@@ -1,5 +1,6 @@
 <div x-data="{
     showDropdown: false,
+    selectAll: false,
     name: '{{ $name }}',
     value: @if ($multiple) [] @else '``' @endif,
     tmpValue: @if ($multiple) [] @else '``' @endif,
@@ -55,6 +56,10 @@
         this.$watch('search', (val) => {
             this.$dipatch('search', val)
         })
+
+        this.$watch('selectAll', value => {
+            this.tmpValue = value ? Object.keys(this.options) : []
+        })
     },
 }" x-modelable="value" {{ $attributes->merge(['class' => 'inline-block']) }}>
     <x-dropdown x-model="showDropdown" placement="bottom-start">
@@ -95,16 +100,31 @@
             </div>
 
             @if ($searchable)
-                <div class="mx-6 bg-white rounded p-4 gap-4 flex items-center border boder-[#D4DDD7] mt-4 mb-2">
-                    <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24"
-                        fill="none">
-                        <path
-                            d="M15.8645 14.3208H15.0515L14.7633 14.0429C15.7719 12.8696 16.3791 11.3465 16.3791 9.68954C16.3791 5.99485 13.3842 3 9.68954 3C5.99485 3 3 5.99485 3 9.68954C3 13.3842 5.99485 16.3791 9.68954 16.3791C11.3465 16.3791 12.8696 15.7719 14.0429 14.7633L14.3208 15.0515V15.8645L19.4666 21L21 19.4666L15.8645 14.3208ZM9.68954 14.3208C7.12693 14.3208 5.05832 12.2521 5.05832 9.68954C5.05832 7.12693 7.12693 5.05832 9.68954 5.05832C12.2521 5.05832 14.3208 7.12693 14.3208 9.68954C14.3208 12.2521 12.2521 14.3208 9.68954 14.3208Z"
-                            fill="#464E49" />
-                    </svg>
-                    <input type="search" placeholder="Search"
-                        class="border-none flex-1 focus:outline-none focus:ring-0 h-6 min-w-0 search-x-button"
-                        x-model.debounce="search">
+                <div class="grid grid-cols-12 gap-4 px-6 mt-4 mb-2">
+                    <div class="col-span-12" :class="{ 'md:col-span-8': multiple }">
+                        <div class="bg-white rounded px-4 py-3 gap-3 flex items-center border border-[#D4DDD7]">
+                            <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24"
+                                 fill="none">
+                                <path
+                                    d="M15.8645 14.3208H15.0515L14.7633 14.0429C15.7719 12.8696 16.3791 11.3465 16.3791 9.68954C16.3791 5.99485 13.3842 3 9.68954 3C5.99485 3 3 5.99485 3 9.68954C3 13.3842 5.99485 16.3791 9.68954 16.3791C11.3465 16.3791 12.8696 15.7719 14.0429 14.7633L14.3208 15.0515V15.8645L19.4666 21L21 19.4666L15.8645 14.3208ZM9.68954 14.3208C7.12693 14.3208 5.05832 12.2521 5.05832 9.68954C5.05832 7.12693 7.12693 5.05832 9.68954 5.05832C12.2521 5.05832 14.3208 7.12693 14.3208 9.68954C14.3208 12.2521 12.2521 14.3208 9.68954 14.3208Z"
+                                    fill="#464E49" />
+                            </svg>
+                            <input type="search" placeholder="Search"
+                                   class="border-none flex-1 focus:outline-none focus:ring-0 h-6 min-w-0 search-x-button"
+                                   x-model.debounce="search">
+                        </div>
+                    </div>
+
+                    <template x-if="multiple">
+                        <div class="col-span-12 flex md:col-span-4">
+                            <label class="cursor-pointer rounded flex items-center py-3 gap-x-3">
+                                <input type="checkbox" class="custom-checkbox border-dark focus:ring-0" x-model="selectAll">
+                                <span>
+                                    Select All
+                                </span>
+                            </label>
+                        </div>
+                    </template>
                 </div>
             @endif
 
