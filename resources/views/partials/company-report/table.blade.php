@@ -124,8 +124,7 @@
                                         @change="toggleRowForChart(row)">
 
                                     <p class="max-w-[250px] w-[max-content] whitespace-normal"
-                                        :style="`padding-left: ${row.depth * 8}px`" x-text="row.title"
-                                        :data-tooltip-content="row.title"></p>
+                                        :style="`padding-left: ${row.depth * 8}px`" x-text="row.title"></p>
 
                                     <template x-if="row.seg_start">
                                         <button class="ml-1 shrink-0 transition-all"

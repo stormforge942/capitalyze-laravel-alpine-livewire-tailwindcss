@@ -47,13 +47,12 @@
                                 value: filters.decimalPlaces,
                                 perShare: filters.perShareDecimalPlaces
                             }
-
                         })
                     },
-                    increase(type = 'value') {
+                    increase(type) {
                         this.tmpValue[type] = Number(this.tmpValue[type]) + 1
                     },
-                    decrease(type = 'value') {
+                    decrease(type) {
                         if (this.tmpValue[type] <= 0) return;
                 
                         this.tmpValue[type] = Number(this.tmpValue[type]) - 1
@@ -63,7 +62,7 @@
                         filters.perShareDecimalPlaces = this.tmpValue.perShare
                         this.showDropdown = false
                     }
-                }" class="inline-block">
+                }" class="inline-block dropdown-scroll">
                     <x-dropdown x-model="showDropdown" placement="bottom-start">
                         <x-slot name="trigger">
                             <div class="border-[0.5px] border-[#D4DDD7] p-2 rounded-full flex items-center gap-x-1"
@@ -96,53 +95,79 @@
                                 </button>
                             </div>
 
-                            <div class="p-4 flex items-center justify-between">
-                                <button @click="decrease">
-                                    <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24"
-                                        viewBox="0 0 24 24" fill="none">
-                                        <path
-                                            d="M12 22C6.47715 22 2 17.5228 2 12C2 6.47715 6.47715 2 12 2C17.5228 2 22 6.47715 22 12C22 17.5228 17.5228 22 12 22ZM12 20C16.4183 20 20 16.4183 20 12C20 7.58172 16.4183 4 12 4C7.58172 4 4 7.58172 4 12C4 16.4183 7.58172 20 12 20ZM7 11H17V13H7V11Z"
-                                            fill="#121A0F" />
-                                    </svg>
-                                </button>
-                                <div class="flex-1 text-center font-semibold">
-                                    <span class="text-sm text-blue">Set values to</span><br>
-                                    <span x-text="tmpValueText.value"></span>
+                            <div x-data="{ selectedOption: '' }" class="p-6">
+                                <div>
+                                    <label @click.prevent="selectedOption = selectedOption !== 'values' ? 'values' : null" class="cursor-pointer rounded flex items-center p-4 hover:bg-green-light gap-x-4">
+                                        <input x-model="selectedOption" type="radio" name="option" value="values" class="custom-radio border-dark focus:ring-0">
+                                        <span>Values</span>
+                                        <svg class="transition-transform ml-auto" :class="{'rotate-90': selectedOption === 'values'}" :class="showChildren ? 'rotate-90' : ''" width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                                            <path d="M13.1685 12.0046L8.21875 7.05483L9.63297 5.64062L15.9969 12.0046L9.63297 18.3685L8.21875 16.9543L13.1685 12.0046Z" fill="#121A0F"></path>
+                                        </svg>
+                                    </label>
+
+                                    <div x-show="selectedOption === 'values'" class="mb-1">
+                                        <div class="p-4 pt-2 flex items-center justify-between m-auto max-w-[85%]">
+                                            <button @click="decrease('value')">
+                                                <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24"
+                                                     viewBox="0 0 24 24" fill="none">
+                                                    <path
+                                                        d="M12 22C6.47715 22 2 17.5228 2 12C2 6.47715 6.47715 2 12 2C17.5228 2 22 6.47715 22 12C22 17.5228 17.5228 22 12 22ZM12 20C16.4183 20 20 16.4183 20 12C20 7.58172 16.4183 4 12 4C7.58172 4 4 7.58172 4 12C4 16.4183 7.58172 20 12 20ZM7 11H17V13H7V11Z"
+                                                        fill="#121A0F" />
+                                                </svg>
+                                            </button>
+                                            <div class="flex-1 text-center font-semibold">
+                                                <span class="text-sm text-blue">Set values to</span><br>
+                                                <span x-text="tmpValueText.value"></span>
+                                            </div>
+                                            <button @click="increase('value')">
+                                                <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24"
+                                                     viewBox="0 0 24 24" fill="none">
+                                                    <path
+                                                        d="M11 11V7H13V11H17V13H13V17H11V13H7V11H11ZM12 22C6.47715 22 2 17.5228 2 12C2 6.47715 6.47715 2 12 2C17.5228 2 22 6.47715 22 12C22 17.5228 17.5228 22 12 22ZM12 20C16.4183 20 20 16.4183 20 12C20 7.58172 16.4183 4 12 4C7.58172 4 4 7.58172 4 12C4 16.4183 7.58172 20 12 20Z"
+                                                        fill="#121A0F" />
+                                                </svg>
+                                            </button>
+                                        </div>
+                                    </div>
                                 </div>
-                                <button @click="increase">
-                                    <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24"
-                                        viewBox="0 0 24 24" fill="none">
-                                        <path
-                                            d="M11 11V7H13V11H17V13H13V17H11V13H7V11H11ZM12 22C6.47715 22 2 17.5228 2 12C2 6.47715 6.47715 2 12 2C17.5228 2 22 6.47715 22 12C22 17.5228 17.5228 22 12 22ZM12 20C16.4183 20 20 16.4183 20 12C20 7.58172 16.4183 4 12 4C7.58172 4 4 7.58172 4 12C4 16.4183 7.58172 20 12 20Z"
-                                            fill="#121A0F" />
-                                    </svg>
-                                </button>
+
+                                <div>
+                                    <label @click.prevent="selectedOption = selectedOption !== 'percentage' ? 'percentage' : null" class="cursor-pointer rounded flex items-center p-4 hover:bg-green-light gap-x-4">
+                                        <input x-model="selectedOption" type="radio" name="option" value="percentage" class="custom-radio border-dark focus:ring-0">
+                                        <span>Percentage</span>
+                                        <svg class="transition-transform ml-auto" :class="{'rotate-90': selectedOption === 'percentage'}" width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                                            <path d="M13.1685 12.0046L8.21875 7.05483L9.63297 5.64062L15.9969 12.0046L9.63297 18.3685L8.21875 16.9543L13.1685 12.0046Z" fill="#121A0F"></path>
+                                        </svg>
+                                    </label>
+
+                                    <div x-show="selectedOption === 'percentage'" class="mb-1">
+                                        <div class="p-4 pt-2 flex items-center justify-between m-auto max-w-[85%]">
+                                            <button @click="decrease('perShare')">
+                                                <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24"
+                                                     viewBox="0 0 24 24" fill="none">
+                                                    <path
+                                                        d="M12 22C6.47715 22 2 17.5228 2 12C2 6.47715 6.47715 2 12 2C17.5228 2 22 6.47715 22 12C22 17.5228 17.5228 22 12 22ZM12 20C16.4183 20 20 16.4183 20 12C20 7.58172 16.4183 4 12 4C7.58172 4 4 7.58172 4 12C4 16.4183 7.58172 20 12 20ZM7 11H17V13H7V11Z"
+                                                        fill="#121A0F" />
+                                                </svg>
+                                            </button>
+                                            <div class="flex-1 text-center font-semibold">
+                                                <span class="text-sm text-blue">Set percent & per share metric to</span><br>
+                                                <span x-text="tmpValueText.perShare"></span>
+                                            </div>
+                                            <button @click="increase('perShare')">
+                                                <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24"
+                                                     viewBox="0 0 24 24" fill="none">
+                                                    <path
+                                                        d="M11 11V7H13V11H17V13H13V17H11V13H7V11H11ZM12 22C6.47715 22 2 17.5228 2 12C2 6.47715 6.47715 2 12 2C17.5228 2 22 6.47715 22 12C22 17.5228 17.5228 22 12 22ZM12 20C16.4183 20 20 16.4183 20 12C20 7.58172 16.4183 4 12 4C7.58172 4 4 7.58172 4 12C4 16.4183 7.58172 20 12 20Z"
+                                                        fill="#121A0F" />
+                                                </svg>
+                                            </button>
+                                        </div>
+                                    </div>
+                                </div>
                             </div>
 
-                            <div class="p-4 flex items-center justify-between">
-                                <button @click="decrease('perShare')">
-                                    <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24"
-                                        viewBox="0 0 24 24" fill="none">
-                                        <path
-                                            d="M12 22C6.47715 22 2 17.5228 2 12C2 6.47715 6.47715 2 12 2C17.5228 2 22 6.47715 22 12C22 17.5228 17.5228 22 12 22ZM12 20C16.4183 20 20 16.4183 20 12C20 7.58172 16.4183 4 12 4C7.58172 4 4 7.58172 4 12C4 16.4183 7.58172 20 12 20ZM7 11H17V13H7V11Z"
-                                            fill="#121A0F" />
-                                    </svg>
-                                </button>
-                                <div class="flex-1 text-center font-semibold">
-                                    <span class="text-sm text-blue">Set percent & per share metric to</span><br>
-                                    <span x-text="tmpValueText.perShare"></span>
-                                </div>
-                                <button @click="increase('perShare')">
-                                    <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24"
-                                        viewBox="0 0 24 24" fill="none">
-                                        <path
-                                            d="M11 11V7H13V11H17V13H13V17H11V13H7V11H11ZM12 22C6.47715 22 2 17.5228 2 12C2 6.47715 6.47715 2 12 2C17.5228 2 22 6.47715 22 12C22 17.5228 17.5228 22 12 22ZM12 20C16.4183 20 20 16.4183 20 12C20 7.58172 16.4183 4 12 4C7.58172 4 4 7.58172 4 12C4 16.4183 7.58172 20 12 20Z"
-                                            fill="#121A0F" />
-                                    </svg>
-                                </button>
-                            </div>
-
-                            <div class="p-6">
+                            <div class="p-6 pt-0">
                                 <button type="button"
                                     class="w-full px-4 py-3 font-medium bg-green-dark hover:bg-opacity-80 rounded disabled:pointer-events-none disabled:bg-[#D4DDD7] disabled:text-gray-medium2 text-base"
                                     @click="onSave"
