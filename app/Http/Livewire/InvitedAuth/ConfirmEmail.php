@@ -1,24 +1,26 @@
 <?php
 
-namespace App\Http\Livewire;
+namespace App\Http\Livewire\InvitedAuth;
 
+use App\Models\User;
 use Illuminate\Auth\Notifications\VerifyEmail;
 use Illuminate\Support\Carbon;
 use Illuminate\Support\Facades\Config;
+use Illuminate\Support\Facades\Password;
 use Illuminate\Support\Facades\URL;
 use Livewire\Component;
-use Illuminate\Support\Facades\Auth;
 
-class CongratulationsRegistration extends Component
+class ConfirmEmail extends Component
 {
     public $user;
     public $email;
     public $isVerified;
     public $isAdminApproved;
+    public $isPasswordSet;
 
     public function resend()
     {
-        if (Auth::user()->hasVerifiedEmail()) {
+        if ($this->isVerified) {
             session()->flash('message', __('Your email is already verified'));
             return;
         }
@@ -34,23 +36,31 @@ class CongratulationsRegistration extends Component
             );
         });
 
-        Auth::user()->notify(new VerifyEmail);
+        $this->user->notify(new VerifyEmail);
 
         $this->emit('verificationEmailSent');
     }
 
-    public function mount()
+    public function resetPassword()
     {
-        $this->user = Auth::user();
-        $this->email = $this->maskEmail($this->user->email);
-        $this->isVerified = $this->user->hasVerifiedEmail();
-        $this->isAdminApproved = $this->user->is_approved;
+        Password::sendResetLink(['email' => $this->user->email]);
+
+        $this->emit('passwordResetSent');
     }
 
-
-    public function render()
+    public function mount()
     {
-        return view('livewire.congratulations-registration');
+        $userId = session()->get('user');
+
+        if ($userId) {
+            $user = User::findOrFail((int)$userId);
+
+            $this->user = $user;
+            $this->email = $this->maskEmail($this->user->email);
+            $this->isVerified = $this->user->hasVerifiedEmail();
+            $this->isAdminApproved = $this->user->is_approved;
+            $this->isPasswordSet = $this->user->is_password_set;
+        }
     }
 
     private function maskEmail(string $input) {
@@ -58,5 +68,10 @@ class CongratulationsRegistration extends Component
         $arr = explode('@', $input);
 
         return substr($arr[0],0, $symbols) . str_repeat('*',strlen($arr[0]) - $symbols) . $arr[1];
+    }
+
+    public function render()
+    {
+        return view('livewire.invited-auth.confirm-email');
     }
 }

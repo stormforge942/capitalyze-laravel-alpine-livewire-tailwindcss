@@ -14,23 +14,26 @@
     @vite(['resources/css/app.css', 'resources/js/app.js'])
 </head>
 
-<body class="text-dark text-base font-sans antialiased">
+<body class="text-dark text-base font-sans antialiased bg-gray-light">
     <x-jet-banner />
 
-    <div class="min-h-screen bg-gray-light p-8">
-        <div>
-            <a href="/">
-                <img src="{{ asset('img/logo.png') }}" alt="Capitalyze logo" class="h-9 md:h-14 2xl:h-18">
-            </a>
-        </div>
-        <div class="mt-[15vh] mb-5">
-            <div class="p-6 max-w-[27rem] mx-auto bg-white rounded-lg shadow-xl">
-                @yield('content')
+    <div class="min-h-screen relative xl:container mx-auto overflow-x-clip">
+        <div class="px-6 md:px-8 pb-10">
+            <div class="pt-12 md:pt-10 md:pb-20">
+                <a href="/">
+                    <img src="{{ asset('img/logo.png') }}" class="h-7 sm:h-9 md:h-11 w-auto" alt="Capitalyze logo">
+                </a>
+            </div>
+            <div class="mt-[15vh] mb-5">
+                <div class="p-6 max-w-[27rem] mx-auto bg-white rounded-lg shadow-xl">
+                    @yield('content')
+                </div>
             </div>
         </div>
     </div>
 
     @livewireScripts
+    @stack('scripts')
 </body>
 
 </html>

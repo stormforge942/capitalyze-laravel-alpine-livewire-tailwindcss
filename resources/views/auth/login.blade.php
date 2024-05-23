@@ -51,9 +51,12 @@
                 'type' => 'submit',
             ])
 
-            <div class="mt-4 inline-block">
-                Don't have an account? <a href="{{ route('waitlist.join') }}" class="font-semibold underline hover:bg-green-light2 rounded p-1 -mx-0.5 transition-all">Join the
-                    waitlist</a>
+            <div class="mt-6 inline-block">
+                Don't have an account? <a href="{{ route('waitlist.join') }}" class="font-semibold underline hover:bg-green-light2 rounded p-1 -mx-0.5 transition-all">Join the waitlist</a>
+            </div>
+
+            <div class="mt-4 mb-2 inline-block text-[#DA680B]">
+                Don’t have a password? <a href="{{ route('invited-auth.verify-email') }}" class="font-semibold underline hover:bg-green-light2 rounded p-1 -mx-0.5 transition-all">Create Password</a>
             </div>
         </div>
     </form>

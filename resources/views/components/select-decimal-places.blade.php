@@ -7,7 +7,7 @@
             return '.' + '0'.repeat(this.value);
         }
 
-        return 'Auto'
+        return 'Zero'
     },
     get tmpValueText() {
         if (this.tmpValue > 0) {

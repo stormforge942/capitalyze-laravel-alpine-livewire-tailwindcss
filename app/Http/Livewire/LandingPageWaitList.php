@@ -48,7 +48,7 @@ class LandingPageWaitList extends Component
         $user = app(CreateNewUser::class)->createUser([
             'email' => $this->email,
             'name' => $this->name,
-            'likedin_link' => $this->likedinLink,
+            'linkedin_link' => $this->likedinLink,
             'password' => Str::random(25),
         ]);
 

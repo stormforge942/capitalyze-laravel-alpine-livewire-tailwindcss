@@ -6,6 +6,7 @@ use App\Models\User;
 use Illuminate\Http\Request;
 use Illuminate\Auth\Events\Verified;
 use Illuminate\Auth\Access\AuthorizationException;
+use Illuminate\Support\Facades\Password;
 use Laravel\Fortify\Contracts\VerifyEmailResponse;
 
 class VerifyEmailController extends Controller
@@ -27,6 +28,11 @@ class VerifyEmailController extends Controller
             event(new Verified($user));
             
             $user->notify(new \App\Notifications\WelcomeNotification);
+
+            return redirect()->route('invited-auth.set-password', [
+                'user' => $user->id,
+                'token' => Password::createToken($user)
+            ]);
         }
 
         return app(VerifyEmailResponse::class);

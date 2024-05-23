@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\Auth\PasswordResetLinkController;
 use App\Http\Livewire\Lses;
 use App\Http\Livewire\Otcs;
 use App\Http\Livewire\Tsxs;
@@ -186,9 +187,17 @@ Route::group(['middleware' => ['guest']], function () {
 
     Route::get('/reset-password-successful', ResetPasswordSuccessfulController::class)->name('password.reset.successful');
 
+    Route::view('/verify-email', 'invited-auth.verify-email')->name('invited-auth.verify-email');
+    Route::view('/confirm-email', 'invited-auth.confirm-email')->name('invited-auth.confirm-email');
+    Route::view('/set-password/{user}/{token}', 'invited-auth.set-password')->name('invited-auth.set-password');
+
     Route::get('/reset-link-sent', ResetLinkSentController::class)->name('password.reset-link.sent');
 
     Route::redirect('/waitlist', '/')->name('waitlist.join');
+
+    Route::post(RoutePath::for('password.email', '/forgot-password'), [PasswordResetLinkController::class, 'store'])
+        ->middleware(['guest:'.config('fortify.guard')])
+        ->name('password.email');
 });
 
 // override fortify route to verify user without needing to login

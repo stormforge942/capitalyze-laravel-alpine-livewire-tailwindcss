@@ -33,9 +33,10 @@ class User extends Authenticatable implements MustVerifyEmail
         'is_approved',
         'is_admin',
         'group_id',
-        'likedin_link',
+        'linkedin_link',
         'settings',
         'last_activity_at',
+        'is_password_set',
     ];
 
     /**
@@ -60,6 +61,7 @@ class User extends Authenticatable implements MustVerifyEmail
         'last_activity_at' => 'datetime',
         'is_admin' => 'boolean',
         'is_approved' => 'boolean',
+        'is_password_set' => 'boolean',
         'settings' => 'array',
     ];
 
