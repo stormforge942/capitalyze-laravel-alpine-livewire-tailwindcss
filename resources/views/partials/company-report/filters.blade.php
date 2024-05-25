@@ -97,12 +97,13 @@
 
                             <div x-data="{ selectedOption: '' }" class="p-6">
                                 <div>
-                                    <label @click.prevent="selectedOption = selectedOption !== 'values' ? 'values' : null" class="cursor-pointer rounded flex items-center p-4 hover:bg-green-light gap-x-4">
-                                        <input x-model="selectedOption" type="radio" name="option" value="values" class="custom-radio border-dark focus:ring-0">
+                                    <label @click.prevent="selectedOption = selectedOption !== 'values' ? 'values' : null" class="cursor-pointer rounded flex items-center p-4 hover:bg-green-light gap-x-4 relative">
+                                        <input x-model="selectedOption" type="radio" name="option" value="values" class="custom-radio border-dark focus:ring-0 cursor-pointer">
                                         <span>Values</span>
                                         <svg class="transition-transform ml-auto" :class="{'rotate-90': selectedOption === 'values'}" :class="showChildren ? 'rotate-90' : ''" width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
                                             <path d="M13.1685 12.0046L8.21875 7.05483L9.63297 5.64062L15.9969 12.0046L9.63297 18.3685L8.21875 16.9543L13.1685 12.0046Z" fill="#121A0F"></path>
                                         </svg>
+                                        <div class="absolute inset-0"></div>
                                     </label>
 
                                     <div x-show="selectedOption === 'values'" class="mb-1">
@@ -132,12 +133,13 @@
                                 </div>
 
                                 <div>
-                                    <label @click.prevent="selectedOption = selectedOption !== 'percentage' ? 'percentage' : null" class="cursor-pointer rounded flex items-center p-4 hover:bg-green-light gap-x-4">
-                                        <input x-model="selectedOption" type="radio" name="option" value="percentage" class="custom-radio border-dark focus:ring-0">
+                                    <label @click.prevent="selectedOption = selectedOption !== 'percentage' ? 'percentage' : null" class="cursor-pointer rounded flex items-center p-4 hover:bg-green-light gap-x-4 relative">
+                                        <input x-model="selectedOption" type="radio" name="option" value="percentage" class="custom-radio border-dark focus:ring-0 cursor-pointer">
                                         <span>Percentage</span>
                                         <svg class="transition-transform ml-auto" :class="{'rotate-90': selectedOption === 'percentage'}" width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
                                             <path d="M13.1685 12.0046L8.21875 7.05483L9.63297 5.64062L15.9969 12.0046L9.63297 18.3685L8.21875 16.9543L13.1685 12.0046Z" fill="#121A0F"></path>
                                         </svg>
+                                        <div class="absolute inset-0"></div>
                                     </label>
 
                                     <div x-show="selectedOption === 'percentage'" class="mb-1">
@@ -169,9 +171,8 @@
 
                             <div class="p-6 pt-0">
                                 <button type="button"
-                                    class="w-full px-4 py-3 font-medium bg-green-dark hover:bg-opacity-80 rounded disabled:pointer-events-none disabled:bg-[#D4DDD7] disabled:text-gray-medium2 text-base"
-                                    @click="onSave"
-                                    :disabled="filters.decimalPlaces === tmpValue?.value && filters.perShareDecimalPlaces === tmpValue?.perShare">
+                                    class="w-full px-4 py-3 font-medium bg-green-dark hover:bg-opacity-80 rounded disabled:pointer-events-none text-base"
+                                    @click="onSave">
                                     Show Result
                                 </button>
                             </div>

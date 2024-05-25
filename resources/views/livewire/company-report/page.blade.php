@@ -105,14 +105,15 @@
                 
                                 if (update) {
                                     window.updateUserSettings({
-                                        decimalPlaces: this.filters.decimalPlaces
+                                        decimalPlaces: this.filters.decimalPlaces,
+                                        perShareDecimalPlaces: this.filters.perShareDecimalPlaces,
                                     })
                                 }
                             }
                         }
                         this.$watch('filters.decimalPlaces', onUpdateDecimalPlaces(true))
-                        this.$watch('filters.perShareDecimalPlaces', onUpdateDecimalPlaces())
                 
+                        this.$watch('filters.perShareDecimalPlaces', onUpdateDecimalPlaces(true))
                         this.$watch('filters', (newVal, oldVal) => {
                             const url = new URL(window.location.href);
                 
@@ -230,6 +231,7 @@
                             this.showLabel, {
                                 unit: this.filters.unitType,
                                 decimalPlaces: this.filters.decimalPlaces,
+                                perShareDecimalPlaces: this.filters.perShareDecimalPlaces
                             });
                     },
                     toggleSegment(id) {
@@ -261,7 +263,7 @@
                                 color: this.colors.shift(),
                                 type: 'line',
                                 fill: false,
-                                isPercent: row.isPercent,
+                                isPercent: row.isPercent || row.isPerShare,
                             });
                         }
                 
@@ -335,11 +337,11 @@
                                 parent,
                                 children: undefined,
                             };
-                                
+                
                             Object.entries(row.values).forEach(([key, value]) => {
                                 _row.values[key] = {
                                     ...value,
-                                    ...this.formatTableValue(value.value, row.isPercent)
+                                    ...this.formatTableValue(value.value, row.isPercent || row.isPerShare)
                                 };
                             });
                 
@@ -729,7 +731,7 @@
 
                                     if (context.dataset.isPercent) {
                                         y = window.formatNumber(y, {
-                                            decimalPlaces: config.decimalPlaces,
+                                            decimalPlaces: config.perShareDecimalPlaces,
                                         })
                                     } else {
                                         y = window.formatNumber(y, config);
@@ -753,7 +755,7 @@
 
                                 if (ctx.dataset.isPercent) {
                                     return window.formatNumber(y, {
-                                        decimalPlaces: config.decimalPlaces,
+                                        decimalPlaces: config.perShareDecimalPlaces,
                                     })
                                 }
 

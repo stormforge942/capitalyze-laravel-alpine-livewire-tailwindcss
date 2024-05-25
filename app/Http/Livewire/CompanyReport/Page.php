@@ -408,29 +408,36 @@ class Page extends Component
             'mismatchedSegmentation' => $mismatchedSegmentation,
             ...$this->parseTitle($title),
             'isPercent' => false,
-            'dataType' => null,
+            'isPerShare' => false,
         ];
 
-        $isUsdPerShares = false;
+        $tableDates = array_reduce(
+            $this->tableDates,
+            function ($acc, $date) {
+                $yearMonth = substr($date, 0, 7);
+                $acc[$yearMonth] = $date;
+                return $acc;
+            },
+            []
+        );
 
         foreach ($data as $key => $value) {
-            // is key date
             if (preg_match('/^\d{4}-\d{2}-\d{2}$/', $key)) {
-                foreach ($this->tableDates as $tableDate) {
-                    if (substr($tableDate, 0, 7) == substr($key, 0, 7)) {
-                        if (in_array($value[1] ?? '', ['%', 'USD/Shares'])) {
-                            $row['isPercent'] = true;
-
-                            if ($value[1] === 'USD/Shares') {
-                                $isUsdPerShares = true;
-                            }
-                        }
-
-                        $row['dataType'] = $value[1] ?? null;
-
-                        $row['values'][$tableDate] = $this->parseCell($value, $key);
-                        break;
+                if ($tableDate = $tableDates[substr($key, 0, 7)] ?? null) {
+                    if (!$row['isPercent'] && $value[1] === '%') {
+                        $row['isPercent'] = true;
                     }
+
+                    if (
+                        !$row['isPerShare'] && (
+                            str_ends_with($value[1], '/Shares') ||
+                            str_contains(strtolower($row['title']), ' per ')
+                        )
+                    ) {
+                        $row['isPerShare'] = true;
+                    }
+
+                    $row['values'][$tableDate] = $this->parseCell($value, $key);
                 }
             } else {
                 if ($key === '#segmentation') {
@@ -462,7 +469,7 @@ class Page extends Component
 
         $row['id'] = Str::uuid() . '-' . Str::uuid(); // just for the charts
 
-        if ($isUsdPerShares || ($row['empty'] && count($row['children']))) {
+        if ($row['isPerShare'] || ($row['empty'] && count($row['children']))) {
             $row['isBold'] = true;
         }
 
@@ -480,7 +487,7 @@ class Page extends Component
             : $title;
 
         $parentTitle = null;
-        
+
         if (str_contains($title, ':')) {
             [$title, $parentTitle] = explode(":", $title, 2);
         }
