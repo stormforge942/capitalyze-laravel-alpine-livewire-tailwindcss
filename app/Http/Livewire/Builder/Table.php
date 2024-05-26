@@ -15,6 +15,7 @@ class Table extends Component
     private $metrics = [];
     private $notes = [];
     private $tableOrder = [];
+    private $settings = [];
 
     protected $listeners = [
         'tabChanged' => 'tabChanged',
@@ -41,6 +42,7 @@ class Table extends Component
             'summaries' => $this->summaries,
             'notes' => $this->notes,
             'tableOrder' => $this->tableOrder,
+            'settings' => $this->settings,
         ]);
     }
 
@@ -54,16 +56,20 @@ class Table extends Component
     {
         $this->tab = $tab;
 
-        $_tab = CompanyTableComparison::query()
+        /**
+         * @var CompanyTableComparison $_tab
+         */
+        $model = CompanyTableComparison::query()
             ->where('user_id', auth()->id())
             ->where('id', $tab['id'])
             ->first();
 
-        $this->companies = $_tab['companies'];
-        $this->metrics = $_tab['metrics'];
-        $this->summaries = $_tab['summaries'];
-        $this->notes = $_tab['notes'];
-        $this->tableOrder = $_tab['table_order'];
+        $this->companies = $model->companies;
+        $this->metrics = $model->metrics;
+        $this->summaries = $model->summaries;
+        $this->notes = $model->notes;
+        $this->tableOrder = $model->table_order;
+        $this->settings = $model->parsedSettings();
     }
 
     private function updateTab()

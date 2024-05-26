@@ -80,6 +80,8 @@ class ChartBuilderService
                     ],
                     'income_statement||Diluted Earnings Per Share' => [
                         'title' => 'Diluted Earnings Per Share',
+                        'type' => 'line',
+                        'yAxis' => 'ratio',
                     ],
                     'income_statement||Weighted Average Basic Shares Outstanding' => [
                         'title' => 'Weighted Average Basic Shares Outstanding',
@@ -89,6 +91,8 @@ class ChartBuilderService
                     ],
                     'income_statement||Dividends per share' => [
                         'title' => 'Dividends per share',
+                        'type' => 'line',
+                        'yAxis' => 'ratio',
                     ],
                     'income_statement||EBITDA' => [
                         'title' => 'EBITDA',
@@ -125,6 +129,8 @@ class ChartBuilderService
                     ],
                     'income_statement||Special Dividends per Share' => [
                         'title' => 'Special Dividends per Share',
+                        'type' => 'line',
+                        'yAxis' => 'ratio',
                     ],
                     'income_statement||General and Administrative Expense' => [
                         'title' => 'General and Administrative Expense',
@@ -619,7 +625,9 @@ class ChartBuilderService
                             'title' => 'Levered Free Cash Flow'
                         ],
                         'cash_flow||LFCF per Share' => [
-                            'title' => 'LFCF per Share'
+                            'title' => 'LFCF per Share',
+                            'type' => 'line',
+                            'yAxis' => 'ratio',    
                         ],
                         'cash_flow||Unlevered Free Cash Flow' => [
                             'title' => 'Unlevered Free Cash Flow'

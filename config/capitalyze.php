@@ -96,7 +96,7 @@ return [
         "#E53E8F",
         "#C22929",
         "#1D1351",
-        
+
         '#393a14',
         '#030802',
         '#2f1431',
@@ -155,5 +155,10 @@ return [
             'Sum',
             'Median',
         ]
+    ],
+    'unitTypes' => [
+        'Thousands',
+        'Millions',
+        'Billions',
     ]
 ];

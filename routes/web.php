@@ -49,7 +49,6 @@ use App\Http\Controllers\EarningsCalendarController;
 use App\Http\Middleware\CustomEmailVerificationPrompt;
 use App\Http\Controllers\InsiderTransactionsController;
 use App\Http\Controllers\ResetPasswordSuccessfulController;
-use App\Http\Controllers\TableBuilder\NoteController;
 use App\Http\Controllers\TableBuilder\TableController;
 use App\Http\Controllers\UpdateSettingsController;
 use Laravel\Fortify\Http\Controllers\AuthenticatedSessionController;

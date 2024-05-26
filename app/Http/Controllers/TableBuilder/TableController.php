@@ -16,8 +16,11 @@ class TableController extends Controller
             'summaries' => ['sometimes', 'required', 'array'],
             'summaries.*' => ['string', Rule::in(config('capitalyze.table-builder.summaries'))],
             'metrics' => ['sometimes', 'nullable', 'array'],
+            'settings' => ['sometimes', 'required', 'array'],
+            'settings.decimalPlaces' => ['integer', 'min:0'],
+            'settings.unit' => ['string', Rule::in(config('capitalyze.unitTypes'))],
         ]);
-        
+
         $table->update($attributes);
 
         return response('Success');

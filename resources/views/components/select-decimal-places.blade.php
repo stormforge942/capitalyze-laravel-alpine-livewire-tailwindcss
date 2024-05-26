@@ -2,6 +2,7 @@
     showDropdown: false,
     value: 0,
     tmpValue: '',
+    settings: @js($settings),
     get valueText() {
         if (this.value > 0) {
             return '.' + '0'.repeat(this.value);

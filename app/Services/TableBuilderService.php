@@ -55,6 +55,7 @@ class TableBuilderService
                     ],
                     'income_statement||Diluted Earnings Per Share' => [
                         'title' => 'Diluted Earnings Per Share',
+                        'type' => 'ratio',
                     ],
                     'income_statement||Weighted Average Basic Shares Outstanding' => [
                         'title' => 'Weighted Average Basic Shares Outstanding',
@@ -64,6 +65,7 @@ class TableBuilderService
                     ],
                     'income_statement||Dividends per share' => [
                         'title' => 'Dividends per share',
+                        'type' => 'ratio',
                     ],
                     'income_statement||EBITDA' => [
                         'title' => 'EBITDA',
@@ -577,7 +579,8 @@ class TableBuilderService
                         'title' => 'Levered Free Cash Flow'
                     ],
                     'cash_flow||LFCF per Share' => [
-                        'title' => 'LFCF per Share'
+                        'title' => 'LFCF per Share',
+                        'type' => 'ratio',
                     ],
                     'cash_flow||Unlevered Free Cash Flow' => [
                         'title' => 'Unlevered Free Cash Flow'
@@ -610,124 +613,161 @@ class TableBuilderService
                 'items' => [
                     'ratios||Return on Assets % (ROA)' => [
                         'title' => 'Return on Assets % (ROA)',
+                        'type' => 'ratio',
                     ],
                     'ratios||Return on Invested Capital % (ROIC)' => [
                         'title' => 'Return on Invested Capital % (ROIC)',
+                        'type' => 'ratio',
                     ],
                     'ratios||Return On Equity % (ROE)' => [
                         'title' => 'Return On Equity % (ROE)',
+                        'type' => 'ratio',
                     ],
                     'ratios||Return on Common Equity %' => [
                         'title' => 'Return on Common Equity %',
+                        'type' => 'ratio',
                     ],
                     'ratios||Return on Tangible Capital (ROTC)' => [
                         'title' => 'Return on Tangible Capital (ROTC)',
+                        'type' => 'ratio',
                     ],
                     'ratios||Return on Incremental Invested Capital (ROIIC)' => [
                         'title' => 'Return on Incremental Invested Capital (ROIIC)',
+                        'type' => 'ratio',
                     ],
-                ],
-                'Margin Analysis' => [
                     'ratios||Gross Profit Margin %' => [
                         'title' => 'Gross Profit Margin %',
+                        'type' => 'ratio',
                     ],
                     'ratios||SG&A Margin %' => [
                         'title' => 'SG&A Margin %',
+                        'type' => 'ratio',
                     ],
                     'ratios||R&D Margin %' => [
                         'title' => 'R&D Margin %',
+                        'type' => 'ratio',
                     ],
                     'ratios||EBIT Margin %' => [
                         'title' => 'EBIT Margin %',
+                        'type' => 'ratio',
                     ],
                     'ratios||EBITDA Margin %' => [
                         'title' => 'EBITDA Margin %',
+                        'type' => 'ratio',
                     ],
                     'ratios||Net Income Margin %' => [
                         'title' => 'Net Income Margin %',
+                        'type' => 'ratio',
                     ],
                     'ratios||EBITA Margin %' => [
                         'title' => 'EBITA Margin %',
+                        'type' => 'ratio',
                     ],
                     'ratios||EBT Margin %' => [
                         'title' => 'EBT Margin %',
+                        'type' => 'ratio',
                     ],
                     'ratios||Levered Free Cash Flow Margin %' => [
                         'title' => 'Levered Free Cash Flow Margin %',
+                        'type' => 'ratio',
                     ],
                     'ratios||Unlevered Free Cash Flow Margin %' => [
                         'title' => 'Unlevered Free Cash Flow Margin %',
+                        'type' => 'ratio',
                     ],
                     'ratios||Asset Turnover' => [
                         'title' => 'Asset Turnover',
+                        'type' => 'ratio',
                     ],
                     'ratios||Fixed Assets Turnover' => [
                         'title' => 'Fixed Assets Turnover',
+                        'type' => 'ratio',
                     ],
                     'ratios||Receivables Turnover' => [
                         'title' => 'Receivables Turnover',
+                        'type' => 'ratio',
                     ],
                     'ratios||Inventory Turnover' => [
                         'title' => 'Inventory Turnover',
+                        'type' => 'ratio',
                     ],
                     'ratios||Current Ratio' => [
                         'title' => 'Current Ratio',
+                        'type' => 'ratio',
                     ],
                     'ratios||Quick Ratio' => [
                         'title' => 'Quick Ratio',
+                        'type' => 'ratio',
                     ],
                     'ratios||Dividend Payout Ratio' => [
                         'title' => 'Dividend Payout Ratio',
+                        'type' => 'ratio',
                     ],
                     'ratios||Op Cash Flow to Current Liab' => [
                         'title' => 'Op Cash Flow to Current Liab',
+                        'type' => 'ratio',
                     ],
                     'ratios||Avg. Days Sales Outstanding' => [
                         'title' => 'Avg. Days Sales Outstanding',
+                        'type' => 'ratio',
                     ],
                     'ratios||Avg. Days Outstanding Inventory' => [
                         'title' => 'Avg. Days Outstanding Inventory',
+                        'type' => 'ratio',
                     ],
                     'ratios||Avg. Days Payable Outstanding' => [
                         'title' => 'Avg. Days Payable Outstanding',
+                        'type' => 'ratio',
                     ],
                     'ratios||Avg. Cash Conversion Cycle' => [
                         'title' => 'Avg. Cash Conversion Cycle',
+                        'type' => 'ratio',
                     ],
                     'ratios||Total Debt / Equity' => [
                         'title' => 'Total Debt / Equity',
+                        'type' => 'ratio',
                     ],
                     'ratios||Total Debt / Capital' => [
                         'title' => 'Total Debt / Capital',
+                        'type' => 'ratio',
                     ],
                     'ratios||Total Liabilities / Total Assets' => [
                         'title' => 'Total Liabilities / Total Assets',
+                        'type' => 'ratio',
                     ],
                     'ratios||Total Assets / Total Equity' => [
                         'title' => 'Total Assets / Total Equity',
+                        'type' => 'ratio',
                     ],
                     'ratios||Average Assets / Average Equity' => [
                         'title' => 'Average Assets / Average Equity',
+                        'type' => 'ratio',
                     ],
                     'ratios||EBIT / Interest Expense' => [
                         'title' => 'EBIT / Interest Expense',
+                        'type' => 'ratio',
                     ],
                     'ratios||EBITDA / Interest Expense' => [
                         'title' => 'EBITDA / Interest Expense',
+                        'type' => 'ratio',
                     ],
                     'ratios||(EBITDA - Capex) / Interest Expense' => [
                         'title' => '(EBITDA - Capex) / Interest Expense',
+                        'type' => 'ratio',
                     ],
                     'ratios||Total Debt / EBITDA' => [
                         'title' => 'Total Debt / EBITDA',
+                        'type' => 'ratio',
                     ],
                     'ratios||Net Debt / EBITDA' => [
                         'title' => 'Net Debt / EBITDA',
+                        'type' => 'ratio',
                     ],
                     'ratios||Net Debt / (EBITDA - Capex)' => [
                         'title' => 'Net Debt / (EBITDA - Capex)',
+                        'type' => 'ratio',
                     ],
-                ]
+                ],
             ]
         ];
 

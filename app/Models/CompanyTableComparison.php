@@ -17,6 +17,7 @@ class CompanyTableComparison extends Model
         'summaries',
         'notes',
         'table_order',
+        'settings',
         'user_id',
     ];
 
@@ -26,10 +27,21 @@ class CompanyTableComparison extends Model
         'summaries' => 'array',
         'notes' => 'array',
         'table_order' => 'array',
+        'settings' => 'array',
     ];
 
     public function user(): BelongsTo
     {
         return $this->belongsTo(User::class);
+    }
+
+    public function parsedSettings(): array
+    {
+        $settings = $this->settings ?? [];
+
+        $settings['decimalPlaces'] = data_get($settings, 'decimalPlaces', 2);
+        $settings['unit'] = data_get($settings, 'unit', 'Millions');
+
+        return $settings;
     }
 }

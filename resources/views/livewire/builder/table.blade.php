@@ -10,6 +10,7 @@
 
     @if ($tab)
         <div class="mt-6 relative" x-data="{
+            settings: @js($settings),
             summaries: @js($summaries),
             tableOrder: @js($tableOrder),
             metrics: @js($metrics),
@@ -40,6 +41,17 @@
                     this.makeTableRows()
                 }, { deep: true })
         
+                this.$watch('settings', () => {
+                    this.makeTableRows();
+        
+                    window.http('{{ route('table-builder.update', $tab['id']) }}', {
+                        method: 'POST',
+                        body: {
+                            settings: this.settings
+                        }
+                    })
+                }, { deep: true })
+        
                 this.$nextTick(() => this.makeTableArrangeable())
             },
             makeTableRows() {
@@ -48,7 +60,7 @@
                 const notes = @js($notes);
         
                 this.tableRows = [];
-                
+        
                 if (!$wire.companies.length || !this.metrics.length)
                     return;
         
@@ -71,6 +83,7 @@
                             metric: item.metric,
                             type: item.type,
                             dates: item.dates,
+                            applyUnits: false,
                         })
         
                         return;
@@ -84,6 +97,7 @@
                             metric: item.metric,
                             type: item.type,
                             date,
+                            applyUnits: allMetrics[item.metric].type != 'ratio' && item.type != 'growth'
                         })
                     })
                 })
@@ -106,17 +120,22 @@
                         }
         
                         if (column.type === 'cagr') {
-                            const sv = data[company]?.[column.metric]?.[column.dates[0]] || null;
-                            const ev = data[company]?.[column.metric]?.[column.dates[1]] || null;
+                            let range = column.dates;
         
-                            const n = column.dates[1].split(' ')[1] - column.dates[0].split(' ')[1];
+                            if (range[0] > range[1]) {
+                                range.reverse();
+                            }
         
-                            d[column.label] = sv === null || ev === null ?
-                                null : Math.pow((ev - sv + Math.abs(sv)) / Math.abs(sv), 1 / n) - 1;
+                            const sv = data[company]?.[column.metric]?.[range[0]] || null;
+                            const ev = data[company]?.[column.metric]?.[range[1]] || null;
+        
+                            const n = Math.abs(range[0].split(' ')[1] - range[1].split(' ')[1]);
+        
+                            d[column.label] = sv && ev ? ((ev / sv) ** 1 / n) - 1 : 'N/A'
                             return;
                         }
         
-                        d[column.label] = data[company]?.[column.metric]?.[column.date] || null;
+                        d[column.label] = data[company]?.[column.metric]?.[column.date] || 'N/A';
                     })
         
                     this.tableRows.push({
@@ -148,24 +167,32 @@
         
                 const summaryHandler = {
                     'Max': (values) => {
+                        values = values.filter(value => value !== 'N/A');
+        
                         if (!values.length)
                             return '-';
         
                         return Math.max(...values)
                     },
                     'Min': (values) => {
+                        values = values.filter(value => value !== 'N/A');
+        
                         if (!values.length)
                             return '-';
         
                         return Math.min(...values)
                     },
                     'Sum': (values) => {
+                        values = values.filter(value => value !== 'N/A');
+        
                         if (!values.length)
                             return '-'
         
                         return values.reduce((a, b) => a + b, 0)
                     },
                     'Median': (values) => {
+                        values = values.filter(value => value !== 'N/A');
+        
                         if (!values.length)
                             return '-';
         
@@ -190,8 +217,11 @@
                     return row;
                 })
             },
-            formatTableValue(value, type) {
-                const formatted = window.niceNumber(value);
+            formatTableValue(value, applyUnits) {
+                const formatted = window.formatNumber(value, {
+                    unit: applyUnits ? this.settings.unit : 'None',
+                    decimalPlaces: this.settings.decimalPlaces
+                });
         
                 return value < 0 ? '(' + formatted + ')' : formatted;
             },
@@ -251,7 +281,6 @@
             },
             getOldDate(date) {
                 // date can be Q YYYY or FY YYYY
-        
                 if (date.startsWith('Q')) {
                     const [q, y] = date.split(' ');
                     const prevQuarter = q === 'Q1' ? 'Q4' : `Q${parseInt(q.slice(1)) - 1}`;
@@ -271,11 +300,11 @@
                 <div class="cus-loaderBar"></div>
             </div>
 
-            <div class="grid grid-cols-1 xl:grid-cols-3 gap-2 whitespace-nowrap">
-                <div class="bg-white p-2 rounded-t">
+            <div class="grid grid-cols-1 sm:grid-cols-10 gap-2 whitespace-nowrap flex-wrap">
+                <div class="sm:col-span-5 xl:col-span-3 bg-white p-2 rounded-t">
                     <livewire:builder.table.select-company :selected="$companies" :wire:key="Str::random(5)" />
                 </div>
-                <div class="bg-white p-2 rounded-t"
+                <div class="sm:col-span-5 xl:col-span-3 bg-white p-2 rounded-t"
                     :class="!$wire.companies.length ? 'opacity-60 cursor-not-allowed' : ''"
                     :data-tooltip-content="!$wire.companies.length ? 'Please add ticker(s) first' : ''">
                     @include('livewire.builder.table.select-metrics', [
@@ -284,8 +313,11 @@
                         'selected' => $metrics,
                     ])
                 </div>
-                <div class="bg-white p-2 rounded-t">
+                <div class="sm:col-span-8 xl:col-span-3 bg-white p-2 rounded-t">
                     @include('livewire.builder.table.select-summary')
+                </div>
+                <div class="sm:col-span-2 xl:col-span-1 bg-white px-5 py-2 rounded-t flex items-center justify-center">
+                    @include('livewire.builder.table.settings')
                 </div>
             </div>
             <div class="mt-0.5 overflow-x-auto rounded-b-lg">
@@ -307,7 +339,7 @@
                             <template x-for="column in columns" :key="column.label">
                                 <td class="py-3 pl-6 text-right">
                                     <span class="cursor-text" :class="row.columns[column.label] < 0 ? 'text-red' : ''"
-                                        x-text="row.columns[column.label] ? formatTableValue(row.columns[column.label], column.type) : '-'"
+                                        x-text="formatTableValue(row.columns[column.label], column.applyUnits)"
                                         :data-tooltip-content="tooltipValue(row.columns[column.label])">
                                     </span>
                                 </td>
@@ -400,7 +432,7 @@
                             <template x-for="column in columns" :key="column.label">
                                 <td class="py-3 pl-6 text-right">
                                     <span :class="row.columns[column.label] < 0 ? 'text-red' : ''"
-                                        x-text="formatTableValue(row.columns[column.label], column.type)"
+                                        x-text="formatTableValue(row.columns[column.label], column.applyUnits)"
                                         :data-tooltip-content="tooltipValue(row.columns[column.label])">
                                     </span>
                                 </td>
