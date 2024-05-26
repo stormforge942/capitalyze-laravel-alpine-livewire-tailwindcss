@@ -1,17 +1,24 @@
 <div class="bg-white p-6 rounded-lg border-[0.5px] border-[#D4DDD7]" x-data="{
     search: '',
-    options: @js($options),
+    options: [],
+    _options: @js($options),
     value: $wire.entangle('selected', true),
     tmpValue: [],
     showDropdown: false,
     activeOption: null,
     width: '320px',
     init() {
+        this.onSearchChange()
+
         this.activeOption = [this.options[0].title]
 
         this.$watch('showDropdown', value => {
             this.tmpValue = [...this.value]
+            this.activeOption = [this.options[0].title]
+            this.search = ''
         })
+
+        this.$watch('search', () => this.onSearchChange())
 
         this.$nextTick(() => {
             this.width = document.getElementById('select-chart-metrics-input').offsetWidth + 'px'
@@ -20,12 +27,77 @@
             })
         })
     },
-    get filteredOptions() {
-        if (!this.search.length) {
-            return this.options
+    onSearchChange() {
+        const search = this.search.toLowerCase().trim();
+
+        if (!search.length) {
+            return this.options = this._options;
         }
 
-        return this.options;
+        const options = [];
+
+        this._options.forEach(option => {
+            if (!option.has_children) {
+                let items = {};
+
+                for (const [key, item] of Object.entries(option.items)) {
+                    if (item.title.toLowerCase().includes(search)) {
+                        items[key] = item
+                    }
+                }
+
+                if (Object.values(items).length) {
+                    options.push({
+                        ...option,
+                        items
+                    })
+                }
+
+                return;
+            }
+
+            let items = {};
+
+            for (const [key, item] of Object.entries(option.items)) {
+                let _items = {}
+
+                for (const [_key, _item] of Object.entries(item)) {
+                    if (_item.title.toLowerCase().includes(search)) {
+                        _items[_key] = _item
+                    }
+                }
+
+                if (Object.values(_items).length) {
+                    items[key] = _items
+                }
+            }
+
+            if (Object.values(items).length) {
+                options.push({
+                    ...option,
+                    items
+                })
+            }
+
+            {{-- const items = Object.entries(option.items).reduce((acc, [title, items]) => {
+                const filtered = items.filter(item => item.title.toLowerCase().includes(search))
+
+                if (filtered.length) {
+                    acc[title] = filtered
+                }
+
+                return acc;
+            }, {})
+
+            if (Object.keys(items).length) {
+                options.push({
+                    ...option,
+                    items
+                })
+            } --}}
+        })
+
+        this.options = options;
     },
     get subOptions() {
         if (!this.activeOption) {
@@ -35,7 +107,7 @@
         const item = this.options.find(option => option.title === this.activeOption[0]) || {}
 
         if (!item.has_children) {
-            return item?.items
+            return item?.items || []
         }
 
         return item?.items[this.activeOption[1]] || [];
@@ -73,7 +145,8 @@
                 <span class="text-dark-light2">Metrics are applied to all companies</span>
             </div>
         </label>
-        <button class="font-semibold text-gray-medium2 hover:text-red" @click.prevent="tmpValue = []; showResult()" x-cloak x-show="value.length">
+        <button class="font-semibold text-gray-medium2 hover:text-red" @click.prevent="tmpValue = []; showResult()"
+            x-cloak x-show="value.length">
             Clear All Metrics
         </button>
     </div>
@@ -84,6 +157,7 @@
                 <input type="search"
                     class="text-base mt-4 p-4 block w-full border border-[#D4DDD7] rounded-lg placeholder:text-gray-medium2 focus:ring-0 focus:border-green-dark search-x-button"
                     id="select-chart-metrics-input" placeholder="Select metrics..." x-model.debounce.500ms="search"
+                    @keyup.space="$event.preventDefault()"
                     @click.prevent="if(showDropdown) { $event.stopPropagation(); }">
             </x-slot>
 
@@ -103,7 +177,7 @@
 
                 <div class="relative mt-2 px-6 grid grid-cols-2 gap-4" style="min-height: 350px;">
                     <div class="space-y-2 overflow-y-auto show-scrollbar left-scrollbar" style="max-height: 340px;">
-                        <template x-for="(option, idx) in filteredOptions" :key="idx">
+                        <template x-for="(option, idx) in options" :key="idx">
                             <div x-data="{
                                 showChildren: activeOption && activeOption[0] === option.title,
                             }">
@@ -157,9 +231,12 @@
                                 </template>
                             </div>
                         </template>
+                        <p class="text-gray-500" x-show="!options.length && search.length" x-cloak>
+                            No metrics found for the search
+                        </p>
                     </div>
 
-                    <div>
+                    <div x-show="options.length" x-cloak>
                         <div class="font-semibold" x-text="!activeOption ? '' : activeOption[activeOption.length - 1]">
                         </div>
                         <div class="mt-2 space-y-2 overflow-y-auto show-scrollbar" style="max-height: 310px;">
