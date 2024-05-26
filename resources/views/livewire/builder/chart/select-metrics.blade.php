@@ -31,7 +31,8 @@
         const search = this.search.toLowerCase().trim();
 
         if (!search.length) {
-            return this.options = this._options;
+            this.options = this._options;
+            return 
         }
 
         const options = [];
@@ -46,7 +47,7 @@
                     }
                 }
 
-                if (Object.values(items).length) {
+                if (Object.keys(items).length) {
                     options.push({
                         ...option,
                         items
@@ -67,34 +68,17 @@
                     }
                 }
 
-                if (Object.values(_items).length) {
+                if (Object.keys(_items).length) {
                     items[key] = _items
                 }
             }
-
-            if (Object.values(items).length) {
-                options.push({
-                    ...option,
-                    items
-                })
-            }
-
-            {{-- const items = Object.entries(option.items).reduce((acc, [title, items]) => {
-                const filtered = items.filter(item => item.title.toLowerCase().includes(search))
-
-                if (filtered.length) {
-                    acc[title] = filtered
-                }
-
-                return acc;
-            }, {})
 
             if (Object.keys(items).length) {
                 options.push({
                     ...option,
                     items
                 })
-            } --}}
+            }
         })
 
         this.options = options;

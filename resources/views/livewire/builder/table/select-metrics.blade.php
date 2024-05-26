@@ -7,6 +7,7 @@ $options = App\Services\TableBuilderService::options();
 <div x-data="{
     search: '',
     options: [],
+    _options: [],
     value: @js($selected),
     dates_: @js($dates),
     tmpValue: [],
@@ -18,6 +19,8 @@ $options = App\Services\TableBuilderService::options();
     selectedCount: 0,
     init() {
         this.makeOptions()
+
+        this.onSearchChange();
 
         this.updateSelectedCount()
 
@@ -36,6 +39,10 @@ $options = App\Services\TableBuilderService::options();
                     this.$el.querySelector(`input[type='search']`).focus()
                 }
             })
+        })
+
+        this.$watch('search', () => {
+            this.onSearchChange()
         })
 
         this.$watch('active', () => {
@@ -61,6 +68,7 @@ $options = App\Services\TableBuilderService::options();
 
         return this.options[0].items[this.expand].title + ` (${metricType})`
     },
+
     get currentSelectedCount() {
         return new Set(this.tmpValue.map(item => item.metric + item.type)).size
     },
@@ -72,7 +80,34 @@ $options = App\Services\TableBuilderService::options();
             items: options.reduce((acc, item) => ({ ...acc, ...item.items }), {})
         }
 
-        this.options = [all, ...options]
+        this._options = [all, ...options]
+    },
+    onSearchChange() {
+        const search = this.search.toLowerCase().trim()
+
+        if (!search.length) {
+            this.options = this._options
+            return
+        }
+
+        const options = []
+
+        this._options.forEach(option => {
+            const items = {};
+
+            Object.entries(option.items).filter(([key, item]) => {
+                if (item.title.toLowerCase().includes(search)) {
+                    items[key] = item
+                }
+            })
+
+            options.push({
+                ...option,
+                items
+            })
+        })
+
+        this.options = options
     },
     showResult() {
         this.value = this.tmpValue.filter(item => item.dates.length);
@@ -138,7 +173,7 @@ $options = App\Services\TableBuilderService::options();
                     </template>
                 </x-slot>
 
-                <div style="max-width: 45rem">
+                <div style="width: 45rem">
                     <div class="flex justify-between gap-2 px-6 pt-6">
                         <span class="font-medium text-base">Metrics</span>
 
