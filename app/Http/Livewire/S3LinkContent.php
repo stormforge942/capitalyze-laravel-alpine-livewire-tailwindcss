@@ -19,11 +19,15 @@ class S3LinkContent extends SlideOver
 
     public function load()
     {
-        $this->content =  $this->sourceLink ? (file_get_contents($this->sourceLink) ?? '') : '';
+        $this->content = $this->sourceLink ? (file_get_contents($this->sourceLink) ?? '') : '';
 
         if ($this->highlightDates) {
             $this->content = $this->_hightlightDates();
         }
+
+        $this->content = $this->removeThirdPartyJs($this->content);
+        $this->content = $this->injectLinkClickPrevent($this->content);
+        $this->content = $this->removeNotLoadedIcons($this->content);
     }
 
     public static function attributes(): array
@@ -31,6 +35,29 @@ class S3LinkContent extends SlideOver
         return [
             'size' => '6xl',
         ];
+    }
+
+    private function removeThirdPartyJs(string $html): string
+    {
+        return preg_replace('/<script\b[^>]*>(.*?)<\/script>/is', '', $html);
+    }
+
+    private function removeNotLoadedIcons(string $html): string
+    {
+        $css = '<style> i::before, i::after, span::before, span::after { display: none !important; } </style>';
+
+        return str_replace('</head>', $css . '</head>', $html);
+    }
+
+    private function injectLinkClickPrevent(string $html): string
+    {
+        return preg_replace_callback(
+            '/<a\s+([^>]*href=["\'][^"\']*["\'][^>]*)>/i',
+            function($matches) {
+                return '<a ' . $matches[1] . ' onclick="return false;">';
+            },
+            $html
+        );
     }
 
     private function _hightlightDates()
