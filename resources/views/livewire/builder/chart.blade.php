@@ -21,7 +21,7 @@
             overrideColors: {},
             init() {
                 this.showChart = this.shouldShowChart()
-
+        
                 const onFiltersChange = Alpine.throttle((filters) => {
                     window.http(`/chart-builder/${@this.tab.id}/update`, {
                         method: 'POST',
@@ -289,7 +289,7 @@
                                     <label class="inline-flex items-center cursor-pointer hover:text-dark-light2">
                                         <div class="w-4 h-4 rounded-full" :style="`background-color: ${i.color}`"></div>
                                         <input type="color" class="invisible h-0 w-0" :value="usedColors[i.label]"
-                                            @change="overrideColors[i.label] = $event.target.value; $dispatch('update-chart')">
+                                            @input.debounce="overrideColors[i.label] = $event.target.value; $dispatch('update-chart')">
                                         <div class="ml-2" x-text="i.label"></div>
                                     </label>
                                 </div>

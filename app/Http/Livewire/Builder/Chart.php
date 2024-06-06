@@ -50,18 +50,29 @@ class Chart extends Component
                 'quarter' => [],
             ],
             'dateRange' => [
-                'annual' => [2000, date('Y')],
-                'quarter' => [2000, date('Y')],
+                'annual' => [2000, intval(date('Y'))],
+                'quarter' => [2000, intval(date('Y'))],
             ],
         ];
 
         if ($this->tab) {
-            $data = ChartBuilderService::resolveData(
+            $_data = ChartBuilderService::resolveData(
                 $this->companies,
                 $this->metrics,
                 $this->metricAttributes,
-            ) ?? $data;
+            );
+
+            $data = $_data ?? $data;
+
+            if ($_data && !count($this->filters['dateRange'])) {
+                $range = $data['dateRange'][$this->filters['period']];
+
+                $start = max($range[0], $range[1] - 10);
+
+                $this->filters['dateRange'] = [$start, $range[1]];
+            }
         }
+
 
         return $data;
     }
@@ -92,13 +103,6 @@ class Chart extends Component
             ),
         ];
 
-        if (!count($this->filters['dateRange'])) {
-            $this->filters['dateRange'] = [
-                date('Y') - 10,
-                date('Y'),
-            ];
-        }
-
         $this->metricAttributes = $_tab['metric_attributes'];
 
         $this->showLabel = false;
@@ -116,6 +120,12 @@ class Chart extends Component
     public function companiesChanged($companies)
     {
         $this->companies = $companies;
+
+        if (!count($companies)) {
+            $this->metricAttributes = [];
+            $this->filters['dateRange'] = [];
+        }
+
         $this->updateTab();
     }
 
@@ -123,6 +133,10 @@ class Chart extends Component
     {
         $this->metrics = $metrics;
         $this->metricAttributes = Arr::only($this->metricAttributes, $metrics);
+
+        if (!count($metrics)) {
+            $this->filters['dateRange'] = [];
+        }
 
         $this->updateTab();
     }
