@@ -18,6 +18,7 @@ class CompanyChartComparison extends Model
         'metric_attributes',
         'panel',
         'user_id',
+        'metrics_color',
     ];
 
     protected $casts = [
@@ -25,6 +26,7 @@ class CompanyChartComparison extends Model
         'metrics' => 'array',
         'filters' => 'array',
         'metric_attributes' => 'array',
+        'metrics_color' => 'array',
     ];
 
     public function user(): BelongsTo

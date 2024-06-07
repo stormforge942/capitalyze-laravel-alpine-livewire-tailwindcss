@@ -91,7 +91,7 @@
         
                     const label = company + ' - ' + metric.title
         
-                    const color = getColor('ms', label)
+                    const color = getColor(label)
         
                     const type = metricAttributes[key]?.type === 'line' ? 'line' : 'bar';
         

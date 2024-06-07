@@ -72,7 +72,7 @@
 
                 let label = company + ' - ' + this.metricsMap[metric].title
 
-                const color = getColor('sp', label)
+                const color = getColor(label)
 
                 const type = metricAttributes[metric]?.type === 'line' ? 'line' : 'bar';
 

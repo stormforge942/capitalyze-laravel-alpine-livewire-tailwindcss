@@ -21,9 +21,11 @@ class ChartController extends Controller
             'filters' => ['sometimes', 'required', 'array'],
             'metric_attributes' => ['nullable', 'array'],
             'panel' => ['sometimes', 'string'],
+            'metrics_color' => ['sometimes', 'array'],
         ]);
 
         $attrs['metric_attributes'] ??= [];
+        $attrs['metrics_color'] ??= [];
 
         $chart->update(Arr::only($attrs, [
             'name',
@@ -31,6 +33,7 @@ class ChartController extends Controller
             'metrics',
             'filters',
             'metric_attributes',
+            'metrics_color',
             'panel',
         ]));
     }

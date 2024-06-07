@@ -64,6 +64,13 @@
                         setTimeout(() => window.dispatchEvent(new Event('resize')), 100)
                     }
                 })
+        
+                this.$watch('metricsColor', (metricsColor) => {
+                    window.http(`/chart-builder/${@this.tab.id}/update`, {
+                        method: 'POST',
+                        body: { metrics_color: metricsColor }
+                    })
+                }, { deep: true })
             },
             formatDate(date) {
                 if (this.filters.period === 'annual') {
@@ -208,18 +215,13 @@
                             })
                         })
                     },
-                    getColor(key, label) {
-                        if (this.overrideColors[label]) {
-                            this.usedColors[label] = this.overrideColors[label]
-                            return this.overrideColors[label]
-                        }
-                
-                        let _usedColors = Object.values(this.usedColors)
+                    getColor(label) {
+                        let _usedColors = Object.values(metricsColor)
                         let idx = _usedColors.length
                 
-                        let color = metricsColor[key]?.[label] || null;
+                        let color = metricsColor[label] || null;
                 
-                        do {
+                        while (!color) {
                             color = this.chartColors[idx]
                 
                             if (!color || idx >= this.chartColors.length) {
@@ -228,20 +230,20 @@
                             }
                 
                             if (!_usedColors.includes(color)) {
-                                this.usedColors[label] = color
-                                metricsColor[key][label] = color
+                                metricsColor[label] = color
+                                _usedColors.push(color)
                                 break;
                             }
                 
                             idx++
-                        } while (true);
+                        }
                 
                         return color;
                     },
                     get indicators() {
-                        return Object.entries(this.usedColors).map(([label, color]) => {
+                        return Object.entries(metricsColor).map(([label, color]) => {
                             return { label, color }
-                        })
+                        }).filter(item => item.label != 'default')
                     },
                 }">
                     <div class="mt-6 bg-white p-6 relative rounded-lg">
@@ -252,8 +254,7 @@
                                     <button class="py-2 rounded flex-1 border transition -m-[1px]"
                                         :class="panel === key ? 'bg-[#DCF6EC] border-[#52D3A2]' :
                                             'border-transparent hover:border-gray-medium text-gray-medium2'"
-                                        @click="usedColors = {}; $nextTick(() => {panel = key})"
-                                        x-text="tab"></button>
+                                        @click="$nextTick(() => {panel = key})" x-text="tab"></button>
                                 </template>
                             </div>
                             <div class="flex items-center gap-x-5 justify-between" x-cloak>
@@ -288,8 +289,8 @@
                                 <div>
                                     <label class="inline-flex items-center cursor-pointer hover:text-dark-light2">
                                         <div class="w-4 h-4 rounded-full" :style="`background-color: ${i.color}`"></div>
-                                        <input type="color" class="invisible h-0 w-0" :value="usedColors[i.label]"
-                                            @input.debounce="overrideColors[i.label] = $event.target.value; $dispatch('update-chart')">
+                                        <input type="color" class="invisible h-0 w-0" :value="metricsColor[i.label]"
+                                            @input.debounce="metricsColor[i.label] = $event.target.value; $dispatch('update-chart')">
                                         <div class="ml-2" x-text="i.label"></div>
                                     </label>
                                 </div>

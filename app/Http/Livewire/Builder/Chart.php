@@ -7,6 +7,7 @@ use Illuminate\Support\Facades\Auth;
 use App\Models\CompanyChartComparison;
 use App\Services\ChartBuilderService;
 use Illuminate\Support\Arr;
+use stdClass;
 
 class Chart extends Component
 {
@@ -16,7 +17,7 @@ class Chart extends Component
     public array $metrics = [];
     public ?array $filters = null;
     public array $metricAttributes = [];
-    public array $metricsColor;
+    public array $metricsColor = [];
     public bool $showLabel = false;
 
     protected $listeners = [
@@ -24,11 +25,6 @@ class Chart extends Component
         'companiesChanged' => 'companiesChanged',
         'metricsChanged' => 'metricsChanged',
     ];
-
-    public function mount()
-    {
-        $this->resetColors();
-    }
 
     public function render()
     {
@@ -84,7 +80,7 @@ class Chart extends Component
         $_tab = CompanyChartComparison::query()
             ->where('user_id', auth()->id())
             ->where('id', $tab['id'])
-            ->select('companies', 'metrics', 'filters', 'metric_attributes', 'panel')
+            ->select('companies', 'metrics', 'filters', 'metric_attributes', 'panel', 'metrics_color')
             ->first();
 
         $this->companies = $_tab['companies'];
@@ -105,16 +101,9 @@ class Chart extends Component
 
         $this->metricAttributes = $_tab['metric_attributes'];
 
-        $this->showLabel = false;
-    }
+        $this->metricsColor = $_tab['metrics_color'] ?? ['default' => null];
 
-    private function resetColors()
-    {
-        $this->metricsColor = [
-            'sp' => ['a' => 'test'],
-            'ms' => ['a' => 'test'],
-            'mm' => ['a' => 'test'],
-        ];
+        $this->showLabel = false;
     }
 
     public function companiesChanged($companies)
