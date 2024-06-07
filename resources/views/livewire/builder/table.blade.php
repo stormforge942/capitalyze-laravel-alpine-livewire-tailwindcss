@@ -93,7 +93,7 @@
         
                     item.dates.forEach(date => {
                         this.columns.push({
-                            label: `${label} (${date})`,
+                            label: `${label}<br>(${date})`,
                             metric: item.metric,
                             type: item.type,
                             date,
@@ -325,7 +325,8 @@
                     <tr class="font-bold whitespace-nowrap bg-[#EDEDED]">
                         <td class="py-3 pl-8">Ticker</td>
                         <template x-for="column in columns" :key="column.label">
-                            <td class="py-3 pl-6 text-right" x-text="column.label" draggable="true">
+                            <td class="py-3 pl-6 text-right" draggable="true">
+                                <span class="text-center inline-block" x-html="column.label"></span>
                             </td>
                         </template>
                         <td class="py-3 pl-6 pr-8" style="min-width: 270px;">Notes</td>

@@ -59,15 +59,6 @@ class CreateNavbar extends Command
         $collection = collect($query);
 
         foreach ($collection as $value) {
-            Navbar::query()
-                ->updateOrCreate([
-                    'route_name' => $value,
-                ], [
-                    'name' => $this->titleCase($value),
-                    'is_moddable' => false,
-                    'is_route' => true,
-                ]);
-
             $isModdable = !in_array($value, [
                 'login',
                 'password.request',
@@ -111,6 +102,9 @@ class CreateNavbar extends Command
                 'waiting-for-approval',
                 'settings.update',
                 'chart-builder.update',
+                'table-builder.update',
+                'table-builder.update-note',
+                'table-builder.update.table-order',
             ]);
 
             Navbar::query()
@@ -118,7 +112,8 @@ class CreateNavbar extends Command
                     'route_name' => $value
                 ], [
                     'name' => $this->titleCase($value),
-                    'is_moddable' => $isModdable
+                    'is_moddable' => $isModdable,
+                    'is_route' => true,
                 ]);
         }
 
