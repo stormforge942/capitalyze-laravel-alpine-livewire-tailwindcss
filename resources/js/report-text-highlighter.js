@@ -20,7 +20,7 @@ function parseText(value, shouldBeNumber = false) {
         term = value
     }
 
-    return term.replace(/0+$/, "")
+    return term?.replace(/0+$/, "")
 }
 
 function highlightSelection(value, selector, document = window.document) {

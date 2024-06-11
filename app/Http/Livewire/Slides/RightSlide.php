@@ -2,7 +2,9 @@
 
 namespace App\Http\Livewire\Slides;
 
+use Illuminate\Support\Facades\Cache;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Js;
 use WireElements\Pro\Components\SlideOver\SlideOver;
 
 class RightSlide extends SlideOver
@@ -14,9 +16,9 @@ class RightSlide extends SlideOver
     public $value;
     public $ticker;
     public $title = "Report Info";
-    public $period = "";
     public $loaded = false;
     public $isLink = false;
+    public $decimalPlaces = 3;
 
     public function mount($data)
     {
@@ -30,19 +32,35 @@ class RightSlide extends SlideOver
     public function loadData()
     {
         if ($this->secondHash) {
-            $result = DB::connection('pgsql-xbrl')
-                ->table('public.tikr_text_block_content')
-                ->where('ticker', '=', $this->ticker)
-                ->where('fact_hash', '=', $this->secondHash)
-                ->value('content');
+            $cacheKey = 'right_slide_secondHash_' . $this->ticker . '_' . $this->secondHash;
 
-            $this->result = json_decode($result, true);
+            $this->result = Cache::remember($cacheKey, 3600, function () {
+                $result = DB::connection('pgsql-xbrl')
+                    ->table('public.tikr_text_block_content')
+                    ->where('ticker', '=', $this->ticker)
+                    ->where('fact_hash', '=', $this->secondHash)
+                    ->value('content');
+
+                return json_decode($result, true);
+            });
         }
 
-        if (!$this->hash) {
-            return;
+        if ($this->hash) {
+            $cacheKey = 'company_report_slide_' . $this->ticker . '_' . $this->hash . '_' . $this->isLink ? 'link' : 'hash';
+
+            $this->data = Cache::remember($cacheKey, 3600, $this->getData(...));
         }
 
+        $this->loaded = true;
+    }
+
+    public function render()
+    {
+        return view('livewire.slides.right-slide');
+    }
+
+    private function getData()
+    {
         if ($this->isLink) {
             $hashes = [$this->hash];
         } else {
@@ -59,21 +77,14 @@ class RightSlide extends SlideOver
             $hashes = $decodedQuery[$keyToFind] ?? [];
         }
 
-        if (count($hashes)) {
-            $this->data = DB::connection('pgsql-xbrl')
-                ->table('public.as_reported_sec_text_block_content')
-                ->where('ticker', '=', $this->ticker)
-                ->whereIn('fact_hash', $hashes)
-                ->pluck('content')
-                ->implode('<br>');
-        }
+        if (!count($hashes)) return null;
 
-        $this->loaded = true;
-    }
-
-    public function render()
-    {
-        return view('livewire.slides.right-slide');
+        return DB::connection('pgsql-xbrl')
+            ->table('public.as_reported_sec_text_block_content')
+            ->where('ticker', '=', $this->ticker)
+            ->whereIn('fact_hash', $hashes)
+            ->pluck('content')
+            ->implode('<br>');
     }
 
     public static function behavior(): array
@@ -86,10 +97,30 @@ class RightSlide extends SlideOver
         ];
     }
 
+    public function transformHint(string $text, array $hashMapping, $value): string
+    {
+        foreach ($hashMapping as $key => $hash) {
+            if (!$hash) continue;
+
+            $data = Js::from([
+                'ticker' => $this->ticker,
+                'value' => $value,
+                'hash' => $hash,
+            ]);
+
+            $text = str_replace('[' . $key . ']', '[<button class="sub-arg-btn inline-block cursor-pointer rounded bg-gray-200 hover:bg-gray-300 transition-colors" style
+            ="padding: 0.2px 2px; margin: 0 1px;" @click="Livewire.emit(\'left-slide.open\', ' . $data . ')">' . $key . '</button>]', $text);
+            $text = str_replace('(' . $key . ')', '(<button class="sub-arg-btn inline-block cursor-pointer rounded bg-gray-200 hover:bg-gray-300 transition-colors" style
+            ="padding: 0.2px 2px; margin: 0 1px;" @click="Livewire.emit(\'left-slide.open\', ' . $data . ')">' . $key . '</button>)', $text);
+        }
+
+        return $text;
+    }
+
     public static function attributes(): array
     {
         return [
-            'size' => 'xl',
+            'size' => '3xl',
         ];
     }
 }

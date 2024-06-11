@@ -2,20 +2,17 @@
 
 namespace App\Http\Livewire\Slides;
 
+use Illuminate\Support\Facades\Cache;
 use Illuminate\Support\Facades\DB;
 use Livewire\Component;
 
 class LeftSlide extends Component
 {
     public $hash;
-    public $secondHash;
     public $data;
-    public $result;
     public $value;
     public $ticker;
-    public $json;
     public $title = "Report Info";
-    public $period = "";
     public $loaded = false;
     public $open = false;
 
@@ -35,7 +32,6 @@ class LeftSlide extends Component
         $this->ticker = $data['ticker'] ?? '';
         $this->value = $data['value'];
         $this->hash = $data['hash'];
-        $this->secondHash = $data['secondHash'] ?? null;
 
         $this->open = true;
         $this->loaded = false;
@@ -43,47 +39,40 @@ class LeftSlide extends Component
 
     public function key()
     {
-        return $this->ticker . $this->hash . $this->secondHash . $this->value . ($this->loaded ? 'loaded' : 'not-loaded');
+        return $this->ticker . $this->hash . $this->value . ($this->loaded ? 'loaded' : 'not-loaded');
     }
 
     public function loadData()
     {
-        if ($this->secondHash) {
-            $result = DB::connection('pgsql-xbrl')
-                ->table('public.tikr_text_block_content')
-                ->where('ticker', '=', $this->ticker)
-                ->where('fact_hash', '=', $this->secondHash)
-                ->value('content');
+        $cacheKey = 'company_report_slide_' . $this->ticker . '_' . $this->hash . '_' . 'hash';
 
-            $this->result = json_decode($result, true);
-        }
+        $this->data = Cache::remember($cacheKey, 3600, $this->getData(...));
 
-        if ($this->hash) {
-            $query = DB::connection('pgsql-xbrl')
-                ->table('public.info_idx_tb')
-                ->where('ticker', '=', $this->ticker)
-                ->where('info', 'ilike', '%' . $this->hash . '%')
-                ->value('info');
+        $this->loaded = true;
+    }
 
-            $decodedQuery = json_decode($query, true); // Decoding JSON into an associative array
+    private function getData()
+    {
+        $query = DB::connection('pgsql-xbrl')
+            ->table('public.info_idx_tb')
+            ->where('ticker', '=', $this->ticker)
+            ->where('info', 'ilike', '%' . $this->hash . '%')
+            ->value('info');
 
-            $keyToFind = $this->hash;
+        $decodedQuery = json_decode($query, true); // Decoding JSON into an associative array
 
-            if (isset($decodedQuery[$keyToFind])) {
-                $factHashes = $decodedQuery[$keyToFind];
+        $keyToFind = $this->hash;
 
-                $this->data = DB::connection('pgsql-xbrl')
-                    ->table('public.as_reported_sec_text_block_content')
-                    ->where('ticker', '=', $this->ticker)
-                    ->whereIn('fact_hash', $factHashes)
-                    ->pluck('content')
-                    ->implode('<br>');
-            } else {
-                $this->data = null;
-            }
+        $hashes = $decodedQuery[$keyToFind] ?? [];
 
-            $this->loaded = true;
-        }
+        if (!count($hashes)) return null;
+
+        return DB::connection('pgsql-xbrl')
+            ->table('public.as_reported_sec_text_block_content')
+            ->where('ticker', '=', $this->ticker)
+            ->whereIn('fact_hash', $hashes)
+            ->pluck('content')
+            ->implode('<br>');
     }
 
     public function render()

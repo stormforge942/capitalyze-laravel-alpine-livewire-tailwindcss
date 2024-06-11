@@ -16,60 +16,83 @@
         </div>
     @else
         <div>
-            @if ($result && array_key_exists('Mapping result', $result))
-                <h3 class="text-[21px] font-bold mb-2">{{ $result['message'] }}</h3>
-                <p>{{ $result['Mapping result'] }}</p>
-            @endif
-            @if ($result && array_key_exists('formula', $result))
-                <h1 class="text-[21px] font-bold mb-2">{{ $result['formula']['metric'] }}</h1>
-                <div class="block px-4 py-2">
-                    <span class="w-[100px] inline-block font-bold">Expression</span>
-                    <span>{{ $result['formula']['expression'] }}</span>
-                </div>
-                <div class="block px-4 py-2">
-                    <span class="w-[100px] inline-block font-bold">Simplified</span>
-                    <span>{{ $result['formula']['canonized'] }}</span>
-                </div>
-                <div class="block px-4 py-2">
-                    <span class="w-[100px] inline-block font-bold">Resolved</span>
-                    <span
-                        class="{{ str_contains($this->result['formula']['resolved'], '229234000000') ||
-                        str_contains($this->result['formula']['resolved'], '21563900000')
-                            ? 'text-yellow-500'
-                            : 'text-black' }}">
-                        @php
+            <div>
+                <h3 class="text-md font-semibold">{{ $result['message'] }}</h3>
+                <p class="mt-2 font-medium value_final_raw inline-block">
+                    {{ number_format($result['body']['value_final_raw'], $decimalPlaces) }}
+                </p>
+            </div>
 
-                            $splitedFormula = explode(' ', $result['formula']['resolved']);
-                            $finalFormula = '';
-                            $formulaValues = [];
-                            foreach ($splitedFormula as $str) {
-                                if (is_numeric($str)) {
-                                    $formulaValues[] = $str;
-                                    if ($str < 0) {
-                                        $str = "<span class='text-red'>(" . number_format(abs($str)) . ')</span>';
-                                    } else {
-                                        $str = number_format($str);
-                                    }
-                                    $formulaValues[] = $str;
-                                    $finalFormula .= ' ' . $str;
-                                } else {
-                                    $finalFormula .= ' ' . $str;
-                                }
-                            }
+            @if (data_get($result, 'body.formula_evaluation', []))
+                <div class="my-3">
+                    <p class="font-semibold">Formulas</p>
+                    <div class="space-y-3 mt-1">
+                        @foreach ($result['body']['formula_evaluation'] as $formula)
+                            <div class="space-y-2">
+                                <table class="border">
+                                    <tr class="border-b">
+                                        <td style="vertical-align: top"
+                                            class="py-1 pl-3 pr-5 min-w-[150px] font-medium">
+                                            Expression</td>
+                                        <td style="vertical-align: top" class="py-1">{{ $formula['formula'] }}</td>
+                                    </tr>
+                                    <tr class="border-b">
+                                        <td style="vertical-align: top"
+                                            class="py-1 pl-3 pr-5 min-w-[150px] font-medium">
+                                            Resolved</td>
+                                        <td style="vertical-align: top" class="py-1">{!! preg_replace('/-(\d+)/', '<span class="text-red-500">($1)</span>', $formula['resolved']) !!}</td>
+                                    </tr>
+                                    @if (count(data_get($formula, 'arguments', [])))
+                                        <tr class="border-b">
+                                            <td style="vertical-align: top"
+                                                class="py-1 pl-3 pr-5 min-w-[150px] font-medium">
+                                                Arguments</td>
+                                            <td style="vertical-align: top" class="py-1">
+                                                <div class="divide-y -my-2">
+                                                    @foreach ($formula['arguments'] as $name => $item)
+                                                        @if ($item['hint'])
+                                                            <div class="py-2">
+                                                                <p class="font-medium">{{ $name }}</p>
+                                                                <p class="mt-1"
+                                                                    @click="() => {
+                                                                    const btns = document.querySelectorAll('.wep-slide-over-container .sub-arg-btn')    
 
-                        @endphp
-                        {!! $finalFormula !!}
-                    </span>
+                                                                    setTimeout(() => {
+                                                                        btns.forEach(btn => {
+                                                                            btn.removeAttribute('disabled')
+                                                                        })
+                                                                    }, 1000)
+                                                                }">
+                                                                    {!! $this->transformHint($item['hint'], $item['sub_arguments'], $item['value']) !!}
+                                                                </p>
+                                                                <p class="mt-1">
+                                                                    {{ json_encode($item['sub_arguments']) }}
+                                                                </p>
+                                                                <p class="inline-block"> =>
+                                                                    {{ number_format($item['value'], $decimalPlaces) }}
+                                                                </p>
+                                                            </div>
+                                                        @endif
+                                                    @endforeach
+                                                </div>
+                                            </td>
+                                        </tr>
+                                    @endif
+                                    <tr>
+                                        <td style="vertical-align: top"
+                                            class="py-1 pl-3 pr-5 min-w-[150px] font-medium">
+                                            Result</td>
+                                        <td style="vertical-align: top" class="py-1">
+                                            <span>
+                                                {{ number_format($formula['equals'], $decimalPlaces) }}
+                                            </span>
+                                        </td>
+                                    </tr>
+                                </table>
+                            </div>
+                        @endforeach
+                    </div>
                 </div>
-                <div class="block px-4 py-2">
-                    <span class="w-[100px] inline-block font-bold">Result</span>
-                    <span>{{ $result['formula']['result'] }}</span>
-                </div>
-            @endif
-
-            @if ($result && array_key_exists('body', $result))
-                <livewire:company-report-slide-row :isRight="true" wire:key="{{ now() }}" :data="$result['body']"
-                    :formulaValues="$formulaValues" :ticker="$ticker" />
             @endif
 
             @if (is_string($data))
@@ -87,7 +110,10 @@
             @endif
         </div>
         <script>
-            window.reportTextHighlighter.highlight(@json($value), '.wep-slide-over-container table tbody tr td')
+            const value = @json($value)
+
+            window.reportTextHighlighter.highlight(value, '.wep-slide-over-container table tbody tr td')
+            window.reportTextHighlighter.highlight(value, '.wep-slide-over-container .value_final_raw')
         </script>
     @endif
 </x-wire-elements-pro::tailwind.slide-over>
