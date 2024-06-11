@@ -16,7 +16,14 @@ class KeyExhibits extends Component
     protected $listeners = [
         'handleKeyExhibitsTabs' => 'handleTabs',
         'emitCountInKeyExhibits' => 'emitCountInKeyExhibits',
+        'resetExhibitsFilters' => 'resetExhibitsFilters',
     ];
+
+    public function resetExhibitsFilters()
+    {
+        $this->checkedCount = 0;
+        $this->selectChecked = [];
+    }
 
     public function emitCountInKeyExhibits($selected)
     {
@@ -31,12 +38,6 @@ class KeyExhibits extends Component
     {
         $tabName = is_array($tab) ? $tab[0] : $tab;
         $this->selectedTab = $tabName;
-        $this->emit('passTabNameInParent', $this->selectedTab);
-    }
-
-    public function updatedSelectedTab($tab)
-    {
-        $this->emit('passTabNameInParent', $tab);
     }
 
     public function render()

@@ -13,7 +13,7 @@
         'underwriting-agreements': 'Underwriting Agreements'
     }"
             :key="tab">
-            <a href="#" @click.prevent="activeTab = tab; $wire.emit('emitCountInKeyExhibits', JSON.stringify([]));"
+            <a href="#" @click.prevent="activeTab = tab; $wire.emit('resetExhibitsFilters');"
                 class="py-2.5 px-6 text-center border-b-2 transition-all font-medium"
                 :class="activeTab === tab ? 'border-green-dark' :
                     'border-transparent hover:border-gray-medium text-gray-medium2'"
