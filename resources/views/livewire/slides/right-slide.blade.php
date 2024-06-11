@@ -63,7 +63,7 @@
                                                                         })
                                                                     }, 1000)
                                                                 }">
-                                                                    {!! $this->transformHint($item['hint'], $item['sub_arguments'], $item['value']) !!}
+                                                                    {!! $this->transformHint($item['hint'], $item['sub_arguments'] ?? [], $item['value']) !!}
                                                                 </p>
                                                                 <p class="inline-block"> =>
                                                                     {{ number_format($item['value'], $decimalPlaces) }}
