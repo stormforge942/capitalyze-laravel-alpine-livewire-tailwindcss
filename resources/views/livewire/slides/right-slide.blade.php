@@ -65,9 +65,6 @@
                                                                 }">
                                                                     {!! $this->transformHint($item['hint'], $item['sub_arguments'], $item['value']) !!}
                                                                 </p>
-                                                                <p class="mt-1">
-                                                                    {{ json_encode($item['sub_arguments']) }}
-                                                                </p>
                                                                 <p class="inline-block"> =>
                                                                     {{ number_format($item['value'], $decimalPlaces) }}
                                                                 </p>
