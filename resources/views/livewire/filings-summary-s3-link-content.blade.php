@@ -186,8 +186,32 @@
 
                         const div = document.createElement('div');
                         div.appendChild(table);
-                        if (pagination) {
-                            div.appendChild(pagination);
+
+                        const childDiv = document.createElement('div');
+                        div.appendChild(childDiv);
+
+                        if (highlightPages.length) {
+                            const resetButton = document.createElement('button');
+                            resetButton.innerText = 'Go to default page';
+                            resetButton.classList.add(...
+                                'relative inline-flex items-center py-2 px-4 rounded text-sm font-medium border border-gray-300 hover:bg-gray-light leading-5 transition ease-in-out duration-150'
+                                .split(' '));
+                            resetButton.addEventListener('click', () => {
+                                window.dispatchEvent(new CustomEvent('{{ $id }}', {
+                                    detail: {
+                                        page: highlightPages[0] || 1
+                                    }
+                                }))
+                            });
+                            childDiv.appendChild(resetButton)
+                        }
+
+                        if(pagination) {
+                            childDiv.appendChild(pagination);
+                        }
+
+                        if(childDiv.children.length === 2) {
+                            childDiv.classList.add('flex', 'justify-between', 'items-center');
                         }
 
                         return div
