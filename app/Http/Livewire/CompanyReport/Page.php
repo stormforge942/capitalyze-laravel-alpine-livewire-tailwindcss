@@ -495,7 +495,7 @@ class Page extends Component
         return [
             'title' => $title,
             'parentTitle' => $parentTitle,
-            'isBold' => ($splitted[1] ?? '') == 'true' || ($this->view !== 'Standardized' && Str::contains(strtolower($title), 'total')),
+            'isBold' => ($splitted[1] ?? '') == 'true',
             'hasBorder' => ($splitted[2] ?? '') == 'true',
             'section' => isset($splitted[3]) ? intval($splitted[3]) : null,
         ];
