@@ -469,10 +469,6 @@ class Page extends Component
 
         $row['id'] = Str::uuid() . '-' . Str::uuid(); // just for the charts
 
-        if ($row['isPerShare'] || ($row['empty'] && count($row['children']))) {
-            $row['isBold'] = true;
-        }
-
         return $row;
     }
 
