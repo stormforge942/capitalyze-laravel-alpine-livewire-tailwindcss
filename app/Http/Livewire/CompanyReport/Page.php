@@ -374,17 +374,17 @@ class Page extends Component
             }
 
             if (
-                isset($data['Statement of Financial Position']) &&
-                is_array($data['Statement of Financial Position'])
+                isset($data['Statement Of Financial Position']) &&
+                is_array($data['Statement Of Financial Position'])
             ) {
-                $data = $data['Statement of Financial Position'];
+                $data = $data['Statement Of Financial Position'];
             }
 
             if (
-                isset($data['Statement of Cash Flows']) &&
-                is_array($data['Statement of Cash Flows'])
+                isset($data['Statement Of Cash Flows']) &&
+                is_array($data['Statement Of Cash Flows'])
             ) {
-                $data = $data['Statement of Cash Flows'];
+                $data = $data['Statement Of Cash Flows'];
             }
         }
 
