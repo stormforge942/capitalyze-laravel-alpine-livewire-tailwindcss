@@ -40,7 +40,7 @@
                                         <td style="vertical-align: top"
                                             class="py-1 pl-3 pr-5 min-w-[150px] font-medium">
                                             Resolved</td>
-                                        <td style="vertical-align: top" class="py-1">{!! preg_replace('/-(\d+)/', '<span class="text-red-500">($1)</span>', $formula['resolved']) !!}</td>
+                                        <td style="vertical-align: top" class="py-1">{!! preg_replace('/\(?-(\d+)\)?/', '<span class="text-red-500">($1)</span>', $formula['resolved']) !!}</td>
                                     </tr>
                                     @if (count(data_get($formula, 'arguments', [])))
                                         <tr class="border-b">
@@ -63,9 +63,16 @@
                                                                         })
                                                                     }, 1000)
                                                                 }">
-                                                                    {!! $this->transformHint($item['hint'], $item['sub_arguments'] ?? [], $item['value']) !!}
+                                                                    {!! $this->transformHint($item['hint'], $item['sub_arguments'] ?? []) !!}
                                                                 </p>
-                                                                <p class="inline-block"> =>
+                                                                @if ($item['sub_arguments'])
+                                                                    <p class="inline-block">
+                                                                        <span class="font-semibold">=></span>
+                                                                        {!! $this->resolvedExpression($item['hint'], $item['sub_arguments']) !!}
+                                                                    </p><br>
+                                                                @endif
+                                                                <p class="inline-block">
+                                                                    <span class="font-semibold">=</span>
                                                                     {{ number_format($item['value'], $decimalPlaces) }}
                                                                 </p>
                                                             </div>

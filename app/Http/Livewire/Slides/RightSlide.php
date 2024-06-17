@@ -2,9 +2,10 @@
 
 namespace App\Http\Livewire\Slides;
 
-use Illuminate\Support\Facades\Cache;
-use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Js;
+use Illuminate\Support\Str;
+use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Cache;
 use WireElements\Pro\Components\SlideOver\SlideOver;
 
 class RightSlide extends SlideOver
@@ -97,22 +98,44 @@ class RightSlide extends SlideOver
         ];
     }
 
-    public function transformHint(string $text, array $hashMapping, $value): string
+    public function transformHint(string $text, array $hashMapping): string
     {
-        foreach ($hashMapping as $key => $hash) {
-            if (!$hash) continue;
+        foreach ($hashMapping as $key => $item) {
+            if (!$item) continue;
+
+            $value = !isset($item[0]) || $item[0] === "-" ? null : $item[0];
 
             $data = Js::from([
                 'ticker' => $this->ticker,
                 'value' => $value,
-                'hash' => $hash,
+                'hash' => $item[1],
             ]);
 
             $text = str_replace('[' . $key . ']', '[<button class="sub-arg-btn inline-block cursor-pointer rounded bg-gray-200 hover:bg-gray-300 transition-colors" style
             ="padding: 0.2px 2px; margin: 0 1px;" @click="Livewire.emit(\'left-slide.open\', ' . $data . ')">' . $key . '</button>]', $text);
-            $text = str_replace('(' . $key . ')', '(<button class="sub-arg-btn inline-block cursor-pointer rounded bg-gray-200 hover:bg-gray-300 transition-colors" style
-            ="padding: 0.2px 2px; margin: 0 1px;" @click="Livewire.emit(\'left-slide.open\', ' . $data . ')">' . $key . '</button>)', $text);
         }
+
+        return $text;
+    }
+
+    public function resolvedExpression(string $text, array $hashMapping): string
+    {
+        foreach ($hashMapping as $key => $item) {
+            if (!$item) continue;
+
+            $value = !isset($item[0]) || is_null($item[0]) || $item[0] === "-" ? 0 : $item[0];
+
+            $text = str_replace('[' . $key . ' ', $value, $text);
+            $text = str_replace(' ' . $key . ']', $value, $text);
+            $text = str_replace('[' . $key . ']', $value, $text);
+            $text = str_replace(' ' . $key . ' ', $value, $text);
+        }
+
+        $text = preg_replace(
+            '/\(?-(\d+)\)?/',
+            '<span class="text-red-500">($1)</span>',
+            $text
+        );
 
         return $text;
     }
