@@ -17,10 +17,14 @@
     @else
         <div>
             <div>
+                @if (data_get($result, 'message'))
                 <h3 class="text-md font-semibold">{{ $result['message'] }}</h3>
+                @endif
+                @if (data_get($result, 'body.value_final_raw'))
                 <p class="mt-2 font-medium value_final_raw inline-block">
                     {{ number_format($result['body']['value_final_raw'], $decimalPlaces) }}
                 </p>
+                @endif
             </div>
 
             @if (data_get($result, 'body.formula_evaluation', []))

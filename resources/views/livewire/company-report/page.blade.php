@@ -178,6 +178,8 @@
                     },
                     formatTableValue(value, isPercent) {
                         value = value == null ? '' : value;
+
+                        const decimals = isPercent ? this.filters.perShareDecimalPlaces : this.filters.decimalPlaces;
                 
                         if (value === '' || value === '-' || isNaN(Number(value))) {
                             const isLink = value.startsWith('@@@');
@@ -187,6 +189,7 @@
                             return {
                                 result: isLink ? value.slice(3) : parser.parseFromString(value, 'text/html').body.innerText,
                                 isLink,
+                                decimals,
                             };
                         }
                 
@@ -204,8 +207,8 @@
                 
                         const result = Number(Math.abs(value)).toLocaleString('en-US', {
                             style: 'decimal',
-                            minimumFractionDigits: isPercent ? this.filters.perShareDecimalPlaces : this.filters.decimalPlaces,
-                            maximumFractionDigits: isPercent ? this.filters.perShareDecimalPlaces : this.filters.decimalPlaces,
+                            minimumFractionDigits: decimals,
+                            maximumFractionDigits: decimals,
                         });
                 
                         const isNegative = value < 0;
@@ -213,6 +216,7 @@
                         return {
                             result: isNegative ? `(${result})` : result,
                             isNegative,
+                            decimals,
                         }
                     },
                     renderChart() {

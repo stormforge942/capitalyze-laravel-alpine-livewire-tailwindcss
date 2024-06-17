@@ -28,6 +28,7 @@ class RightSlide extends SlideOver
         $this->hash = $data['hash'];
         $this->secondHash = $data['secondHash'] ?? null;
         $this->isLink = $data['isLink'] ?? false;
+        $this->decimalPlaces = $data['decimals'] ?? 3;
     }
 
     public function loadData()
