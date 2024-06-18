@@ -76,7 +76,7 @@
                     } [item.type];
         
                     if (item.type === 'cagr') {
-                        let label = allMetrics[item.metric].title + (type ? ` - ${type}` : '') + ` (${item.dates.join(' - ')})`;
+                        let label = allMetrics[item.metric].title + (type ? ` - ${type}` : '') + `<br>(${item.dates.join(' - ')})`;
         
                         this.columns.push({
                             label,
