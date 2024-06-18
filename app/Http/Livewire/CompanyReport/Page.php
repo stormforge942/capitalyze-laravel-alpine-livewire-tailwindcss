@@ -381,10 +381,10 @@ class Page extends Component
             }
 
             if (
-                isset($data['Statement Of Cash Flows']) &&
-                is_array($data['Statement Of Cash Flows'])
+                isset($data['Statement of Cash Flows']) &&
+                is_array($data['Statement of Cash Flows']) 
             ) {
-                $data = $data['Statement Of Cash Flows'];
+                $data = $data['Statement of Cash Flows'];
             }
         }
 
