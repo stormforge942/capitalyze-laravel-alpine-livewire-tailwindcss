@@ -14,7 +14,7 @@ class Select extends Component
         public array $options = [],
         ?string $placeholder = null,
         ?string $name = null,
-        public bool $searchable = false,
+        public bool $searchable = true,
         public bool $multiple = false,
         public string $callback = "",
     ) {

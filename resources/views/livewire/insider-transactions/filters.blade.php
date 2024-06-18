@@ -65,7 +65,7 @@
                 this.tmpValue = Number(this.tmpValue) - 1
             },
         }" x-modelable="value" x-model="filters.months" class="inline-block">
-            <x-dropdown x-model="showDropdown">
+            <x-dropdown x-model="showDropdown" placement="bottom-start">
                 <x-slot name="trigger">
                     <div class="border-[0.5px] border-[#D4DDD7] p-2 rounded-full flex items-center gap-x-1"
                         :class="showDropdown ? 'bg-[#E2E2E2]' : 'bg-white hover:bg-[#E2E2E2]'">
@@ -83,7 +83,7 @@
                     </div>
                 </x-slot>
 
-                <div class="w-[20rem] sm:w-[26rem]">
+                <div class="w-[16rem]">
                     <div class="flex justify-between gap-2 px-6 pt-6">
                         <span class="font-medium text-base">Months</span>
 
@@ -156,7 +156,7 @@
                 this.tmpValue = Number(this.tmpValue) - 1
             },
         }" x-modelable="value" x-model="filters.cso" class="inline-block">
-            <x-dropdown x-model="showDropdown">
+            <x-dropdown x-model="showDropdown" placement="bottom-start">
                 <x-slot name="trigger">
                     <div class="border-[0.5px] border-[#D4DDD7] p-2 rounded-full flex items-center gap-x-1"
                         :class="showDropdown ? 'bg-[#E2E2E2]' : 'bg-white hover:bg-[#E2E2E2]'">
@@ -174,7 +174,7 @@
                     </div>
                 </x-slot>
 
-                <div class="w-[20rem] sm:w-[26rem]">
+                <div class="w-[16rem]">
                     <div class="flex justify-between gap-2 px-6 pt-6">
                         <span class="font-medium text-base">Percentage</span>
 

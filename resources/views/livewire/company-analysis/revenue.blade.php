@@ -35,7 +35,7 @@
         'geography' => 'company-analysis.revenue.geography',
         'employee' => 'company-analysis.revenue.employee',
     ] as $key => $value)
-        <div class="subtab-container" x-show="activeSubTab == '{{ $key }}'" x-cloak>
+        <div :class="{'invisible h-0 overflow-hidden': activeSubTab !== '{{ $key }}'}" class="subtab-container" x-cloak>
             @livewire($value, ['company' => $company])
         </div>
     @endforeach
