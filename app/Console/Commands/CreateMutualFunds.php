@@ -30,31 +30,44 @@ class CreateMutualFunds extends Command
      */
     public function handle()
     {
-        $collection = DB::connection('pgsql-xbrl')
-            ->table('public.mutual_fund_holdings')
-            ->whereNotNull('cik') // make sure 'cik' is not null
-            ->whereNotNull('class_name')
-            ->select('registrant_name', 'cik', 'fund_symbol', 'series_id', 'class_id', 'class_name')
-            ->distinct()
-            ->get();
+        $batchSize = 10000;
+        $offset = 0;
+        $totalImported = 0;
+        
+        do {
+            $batch = DB::connection('pgsql-xbrl')
+                ->table('public.mutual_fund_holdings')
+                ->whereNotNull('cik')
+                ->whereNotNull('class_name')
+                ->select('registrant_name', 'cik', 'fund_symbol', 'series_id', 'class_id', 'class_name')
+                ->distinct()
+                ->offset($offset)
+                ->limit($batchSize)
+                ->get();
+        
+            $offset += $batchSize;
+            
+            Log::info("Offset updated to: {$offset}");
 
-        foreach ($collection as $value) {
-            if (isset($value->cik) && !empty($value->cik)) {
-                try {
-                    MutualFunds::create([
-                        'cik' => $value->cik,
-                        'registrant_name' => $value->registrant_name,
-                        'fund_symbol' => $value->fund_symbol,
-                        'series_id' => $value->series_id,
-                        'class_id' => $value->class_id,
-                        'class_name' => $value->class_name
-                    ]);
-                } catch (\Exception $e) {
-                    Log::error("Error creating or finding company: {$e->getMessage()}");
+            foreach ($batch as $value) {
+                if (!empty($value->cik)) {
+                    try {
+                        MutualFunds::create([
+                            'cik' => $value->cik,
+                            'registrant_name' => $value->registrant_name,
+                            'fund_symbol' => $value->fund_symbol,
+                            'series_id' => $value->series_id,
+                            'class_id' => $value->class_id,
+                            'class_name' => $value->class_name
+                        ]);
+                        $totalImported++;
+                    } catch (\Exception $e) {
+                        Log::error("Error creating or finding company: {$e->getMessage()}");
+                    }
                 }
             }
-        }
-
-        $this->info('Mutual Funds import completed');
+        } while ($batch->isNotEmpty());
+        
+        $this->info("Mutual Funds import completed. Total records imported: {$totalImported}");
     }
 }
