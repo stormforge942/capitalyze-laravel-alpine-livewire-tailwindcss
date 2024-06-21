@@ -13,7 +13,6 @@ class MutualFundSummary extends Component
     use AsTab;
 
     public $fund;
-    public $cik = '';
     public $latestDate = '';
 
     public static function title(): string
@@ -23,7 +22,7 @@ class MutualFundSummary extends Component
 
     public function mount(array $data)
     {
-        $this->fund = $data['fund'];
+        $this->fund = $data['fund']->toArray();
         $this->latestDate = $this->getLatestDate();
     }
 
