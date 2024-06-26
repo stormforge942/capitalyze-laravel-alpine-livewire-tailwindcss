@@ -31,27 +31,24 @@ class CreateMutualFunds extends Command
     public function handle()
     {
         DB::connection('pgsql-xbrl')
-            ->table('public.mutual_fund_holdings')
+            ->table('public.mutual_fund_holdings_summary')
+            ->whereNotNull('cik')
+            ->whereNotNull('class_name')
             ->select('registrant_name', 'cik', 'fund_symbol', 'series_id', 'class_id', 'class_name')
-            ->orderBy('fund_symbol')
-            ->chunk(10000, function ($collection) {
-                foreach ($collection as $value) {
-                    if (!data_get($value, 'cik') || !data_get($value, 'class_name')) {
-                        continue;
-                    }
-
-                    try {
-                        MutualFunds::query()->updateOrCreate([
-                            'cik' => $value->cik,
-                            'registrant_name' => $value->registrant_name,
-                            'fund_symbol' => $value->fund_symbol,
-                            'series_id' => $value->series_id,
-                            'class_id' => $value->class_id,
-                            'class_name' => $value->class_name
-                        ]);
-                    } catch (\Exception $e) {
-                        Log::error("Error creating or finding company: {$e->getMessage()}");
-                    }
+            ->distinct('fund_symbol')
+            ->get()
+            ->each(function ($value) {
+                try {
+                    MutualFunds::query()->updateOrCreate([
+                        'cik' => $value->cik,
+                        'registrant_name' => $value->registrant_name,
+                        'fund_symbol' => $value->fund_symbol,
+                        'series_id' => $value->series_id,
+                        'class_id' => $value->class_id,
+                        'class_name' => $value->class_name
+                    ]);
+                } catch (\Exception $e) {
+                    Log::error("Error creating or finding company: {$e->getMessage()}");
                 }
             });
 
