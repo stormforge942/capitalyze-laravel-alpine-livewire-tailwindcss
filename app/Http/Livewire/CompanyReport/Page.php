@@ -19,6 +19,7 @@ class Page extends Component
     public $period;
     public $unitType;
     public $decimalPlaces;
+    public $percentageDecimalPlaces;
     public $perShareDecimalPlaces;
     public $order;
     public $freezePane;
@@ -58,6 +59,7 @@ class Page extends Component
         $this->period = $request->query('period', 'Fiscal Annual');
         $this->unitType = $request->query('unitType', 'Millions');
         $this->decimalPlaces = intval($request->query('decimalPlaces', data_get(Auth::user(), 'settings.decimalPlaces', 1)));
+        $this->percentageDecimalPlaces = intval($request->query('percentageDecimalPlaces', 2));
         $this->perShareDecimalPlaces = intval($request->query('perShareDecimalPlaces', 2));
         $this->order = $request->query('order', 'Latest on the Right');
         $this->freezePane = $request->query('freezePane', 'Top Row & First Column');

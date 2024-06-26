@@ -23,6 +23,7 @@
                         period: $wire.entangle('period'),
                         unitType: $wire.entangle('unitType', true),
                         decimalPlaces: $wire.entangle('decimalPlaces', true),
+                        percentageDecimalPlaces: $wire.entangle('percentageDecimalPlaces', true),
                         perShareDecimalPlaces: $wire.entangle('perShareDecimalPlaces', true),
                         order: $wire.entangle('order', true),
                         freezePane: $wire.entangle('freezePane', true),
@@ -66,6 +67,7 @@
                                     pointBackgroundColor: row.color,
                                     maxBarThickness: 150,
                                     isPercent: row.isPercent,
+                                    isPerShare: row.isPerShare,
                                     pointRadius: 0,
                                 }
                             })
@@ -106,14 +108,16 @@
                                 if (update) {
                                     window.updateUserSettings({
                                         decimalPlaces: this.filters.decimalPlaces,
+                                        percentageDecimalPlaces: this.filters.percentageDecimalPlaces,
                                         perShareDecimalPlaces: this.filters.perShareDecimalPlaces,
                                     })
                                 }
                             }
                         }
-                        this.$watch('filters.decimalPlaces', onUpdateDecimalPlaces(true))
-                
-                        this.$watch('filters.perShareDecimalPlaces', onUpdateDecimalPlaces(true))
+                        this.$watch('filters.decimalPlaces', onUpdateDecimalPlaces(true));
+                        this.$watch('filters.percentageDecimalPlaces', onUpdateDecimalPlaces(true));
+                        this.$watch('filters.perShareDecimalPlaces', onUpdateDecimalPlaces(true));
+
                         this.$watch('filters', (newVal, oldVal) => {
                             const url = new URL(window.location.href);
                 
@@ -121,6 +125,7 @@
                             url.searchParams.set('period', newVal.period);
                             url.searchParams.set('unitType', newVal.unitType);
                             url.searchParams.set('decimalPlaces', newVal.decimalPlaces);
+                            url.searchParams.set('percentageDecimalPlaces', newVal.percentageDecimalPlaces);
                             url.searchParams.set('perShareDecimalPlaces', newVal.perShareDecimalPlaces);
                             url.searchParams.set('order', newVal.order);
                             url.searchParams.set('freezePane', newVal.freezePane);
@@ -176,11 +181,22 @@
                     isYearInRange(year) {
                         return year >= this.selectedDateRange[0] && year <= this.selectedDateRange[1];
                     },
-                    formatTableValue(value, isPercent) {
+                    formatTableValue(value, row) {
+                        const isPercent = row.isPercent;
+                        const isPerShare = row.isPerShare;
+
                         value = value == null ? '' : value;
 
-                        const decimals = isPercent ? this.filters.perShareDecimalPlaces : this.filters.decimalPlaces;
-                
+                        let decimals = this.filters.decimalPlaces;
+
+                        if (isPercent) {
+                            decimals = this.filters.percentageDecimalPlaces;
+                        }
+
+                        if (isPerShare) {
+                            decimals = this.filters.perShareDecimalPlaces;
+                        }
+
                         if (value === '' || value === '-' || isNaN(Number(value))) {
                             const isLink = value.startsWith('@@@');
                 
@@ -195,7 +211,8 @@
                 
                         value = Number(value);
                 
-                        if (!isPercent) {
+
+                        if (!isPercent && !isPerShare) {
                             let divideBy = {
                                 Thousands: 1000,
                                 Millions: 1000000,
@@ -235,6 +252,7 @@
                             this.showLabel, {
                                 unit: this.filters.unitType,
                                 decimalPlaces: this.filters.decimalPlaces,
+                                percentageDecimalPlaces: this.filters.percentageDecimalPlaces,
                                 perShareDecimalPlaces: this.filters.perShareDecimalPlaces
                             });
                     },
@@ -267,7 +285,8 @@
                                 color: this.colors.shift(),
                                 type: 'line',
                                 fill: false,
-                                isPercent: row.isPercent || row.isPerShare,
+                                isPercent: row.isPercent,
+                                isPerShare: row.isPerShare,
                             });
                         }
                 
@@ -345,7 +364,7 @@
                             Object.entries(row.values).forEach(([key, value]) => {
                                 _row.values[key] = {
                                     ...value,
-                                    ...this.formatTableValue(value.value, row.isPercent || row.isPerShare)
+                                    ...this.formatTableValue(value.value, row)
                                 };
                             });
                 
@@ -735,6 +754,10 @@
 
                                     if (context.dataset.isPercent) {
                                         y = window.formatNumber(y, {
+                                            decimalPlaces: config.percentageDecimalPlaces,
+                                        })
+                                    } else if (context.dataset.isPerShare) {
+                                        y = window.formatNumber(y, {
                                             decimalPlaces: config.perShareDecimalPlaces,
                                         })
                                     } else {
@@ -758,6 +781,12 @@
                                 let y = v.y
 
                                 if (ctx.dataset.isPercent) {
+                                    return window.formatNumber(y, {
+                                        decimalPlaces: config.percentageDecimalPlaces,
+                                    })
+                                }
+
+                                if (ctx.dataset.isPerShare) {
                                     return window.formatNumber(y, {
                                         decimalPlaces: config.perShareDecimalPlaces,
                                     })
