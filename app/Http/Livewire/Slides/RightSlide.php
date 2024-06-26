@@ -48,7 +48,7 @@ class RightSlide extends SlideOver
         }
 
         if ($this->hash) {
-            $cacheKey = 'company_report_slide_' . $this->ticker . '_' . $this->hash . '_' . $this->isLink ? 'link' : 'hash';
+            $cacheKey = 'company_report_slide_' . $this->ticker . '_' . $this->hash . '_' . ($this->isLink ? 'link' : 'hash');
 
             $this->data = Cache::remember($cacheKey, 3600, $this->getData(...));
         }
