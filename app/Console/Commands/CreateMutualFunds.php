@@ -33,6 +33,7 @@ class CreateMutualFunds extends Command
         DB::connection('pgsql-xbrl')
             ->table('public.mutual_fund_holdings')
             ->select('registrant_name', 'cik', 'fund_symbol', 'series_id', 'class_id', 'class_name')
+            ->orderBy('fund_symbol')
             ->chunk(10000, function ($collection) {
                 foreach ($collection as $value) {
                     if (!data_get($value, 'cik') || !data_get($value, 'class_name')) {
