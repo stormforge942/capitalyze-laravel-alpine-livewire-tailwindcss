@@ -30,30 +30,30 @@ class CreateMutualFunds extends Command
      */
     public function handle()
     {
-        $collection = DB::connection('pgsql-xbrl')
+        DB::connection('pgsql-xbrl')
             ->table('public.mutual_fund_holdings')
-            ->whereNotNull('cik') // make sure 'cik' is not null
-            ->whereNotNull('class_name')
             ->select('registrant_name', 'cik', 'fund_symbol', 'series_id', 'class_id', 'class_name')
-            ->distinct()
-            ->get();
+            ->chunk(10000, function ($collection) {
+                foreach ($collection as $value) {
+                    if (!data_get($value, 'cik') || !data_get($value, 'class_name')) {
+                        continue;
+                    }
 
-        foreach ($collection as $value) {
-            if (isset($value->cik) && !empty($value->cik)) {
-                try {
-                    MutualFunds::create([
-                        'cik' => $value->cik,
-                        'registrant_name' => $value->registrant_name,
-                        'fund_symbol' => $value->fund_symbol,
-                        'series_id' => $value->series_id,
-                        'class_id' => $value->class_id,
-                        'class_name' => $value->class_name
-                    ]);
-                } catch (\Exception $e) {
-                    Log::error("Error creating or finding company: {$e->getMessage()}");
+                    try {
+                        MutualFunds::query()->updateOrCreate([
+                            'cik' => $value->cik,
+                            'registrant_name' => $value->registrant_name,
+                            'fund_symbol' => $value->fund_symbol,
+                            'series_id' => $value->series_id,
+                            'class_id' => $value->class_id,
+                            'class_name' => $value->class_name
+                        ]);
+                    } catch (\Exception $e) {
+                        Log::error("Error creating or finding company: {$e->getMessage()}");
+                    }
                 }
-            }
-        }
+            });
+
 
         $this->info('Mutual Funds import completed');
     }
