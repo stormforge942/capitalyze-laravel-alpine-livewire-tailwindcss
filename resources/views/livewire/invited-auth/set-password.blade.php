@@ -1,5 +1,26 @@
 <div x-data="passwordReset">
     @if($isValidToken)
+        <div x-data="{ show: true }" x-init="setTimeout(() => show = false, 5000)">
+            <div x-show="show" class="fixed inset-x-0 top-[80px] sm:top-1 flex px-4 py-6 justify-center" x-transition:enter="ease-out duration-300">
+                <div class="max-w-sm shadow-lg rounded-lg px-4 py-3 relative bg-dark text-white">
+                    <div class="flex items-center">
+                        <div class="flex-shrink-0 flex">
+                            <div class="inline-flex">
+                                <svg width="16" height="16" viewBox="0 0 16 16" fill="none" xmlns="http://www.w3.org/2000/svg">
+                                    <path fill-rule="evenodd" clip-rule="evenodd" d="M1 8C1 4.136 4.136 1 8 1C11.864 1 15 4.136 15 8C15 11.864 11.864 15 8 15C4.136 15 1 11.864 1 8ZM3.58999 8.49L6.10299 11.003C6.37599 11.276 6.82399 11.276 7.08999 11.003L12.403 5.69C12.676 5.417 12.676 4.976 12.403 4.703C12.13 4.43 11.689 4.43 11.416 4.703L6.59999 9.519L4.57699 7.503C4.30399 7.23 3.86299 7.23 3.58999 7.503C3.45892 7.63378 3.38525 7.81134 3.38525 7.9965C3.38525 8.18166 3.45892 8.35922 3.58999 8.49Z" fill="#13B05B"/>
+                                </svg>
+                            </div>
+                        </div>
+                        <div class="ml-2 flex-1">
+                            <p class="text-base leading-5 font-medium">
+                                Your email has been successfully verified
+                            </p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
         <div class="text-center mt-2">
             <h1 class="text-2xl font-semibold">Create Password</h1>
 

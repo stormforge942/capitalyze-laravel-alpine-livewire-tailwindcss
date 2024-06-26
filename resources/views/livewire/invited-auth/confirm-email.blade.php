@@ -25,17 +25,17 @@
                 </svg>
             </div>
 
-            <h1 class="text-2xl font-semibold">Password Not Set</h1>
+            <h1 class="text-2xl font-semibold">Verification link has been sent</h1>
 
             <p class="mt-3 text-[#DA680B] font-medium">
                 We have sent you a password setting email. If you did you not receive an email in your inbox, check your spam folder
             </p>
 
             <div class="mt-6 text-center">
-                <button x-show="!isRequestSent" wire:click="resetPassword" wire:loading.attr="disabled" class="block w-full px-4 py-3 bg-green-dark hover:bg-green-light2 font-semibold rounded disabled:bg-green-light4 disabled:pointer-events-none transition">
+                <button x-show="!isRequestSent" wire:click="resend" wire:loading.attr="disabled" class="block w-full px-4 py-3 bg-green-dark hover:bg-green-light2 font-semibold rounded disabled:bg-green-light4 disabled:pointer-events-none transition">
                     <span wire:loading wire:target="resend">{{ __('Sending...') }}</span>
                     <span wire:loading.remove="" wire:target="resend">
-                        {{ session('message') ?? __('Reset Password') }}
+                        {{ session('message') ?? __('Resend Verification') }}
                     </span>
                 </button>
 
@@ -44,10 +44,10 @@
                         <path d="M10 20C4.47715 20 0 15.5228 0 10C0 4.47715 4.47715 0 10 0C15.5228 0 20 4.47715 20 10C20 15.5228 15.5228 20 10 20ZM9.0026 14L16.0737 6.92893L14.6595 5.51472L9.0026 11.1716L6.17421 8.3431L4.75999 9.7574L9.0026 14Z" fill="#121A0F"/>
                     </svg>
 
-                    {{ __('Reset password link has been sent') }}
+                    {{ __('Email verifiaction link has been sent') }}
                 </button>
 
-                <p x-show="isRequestSent" x-text="`{{ __('You can send a new password reset link in ${countdown} secs') }}`" class="mt-3 text-sm text-[#DA680B] font-medium"></p>
+                <p x-show="isRequestSent" x-text="`{{ __('You can send a new email verification link in ${countdown} secs') }}`" class="mt-3 text-sm text-[#DA680B] font-medium"></p>
             </div>
         @endif
 

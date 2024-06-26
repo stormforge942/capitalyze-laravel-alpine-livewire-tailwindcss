@@ -4,10 +4,7 @@ namespace App\Http\Livewire\InvitedAuth;
 
 use App\Models\User;
 use Illuminate\Auth\Notifications\VerifyEmail;
-use Illuminate\Support\Carbon;
-use Illuminate\Support\Facades\Config;
 use Illuminate\Support\Facades\Password;
-use Illuminate\Support\Facades\URL;
 use Livewire\Component;
 
 class ConfirmEmail extends Component
@@ -20,22 +17,6 @@ class ConfirmEmail extends Component
 
     public function resend()
     {
-        if ($this->isVerified) {
-            session()->flash('message', __('Your email is already verified'));
-            return;
-        }
-
-        VerifyEmail::createUrlUsing(function ($notifiable) {
-            return URL::temporarySignedRoute(
-                'verification.verify',
-                Carbon::now()->addMinutes(Config::get('auth.verification.expire', 60)),
-                [
-                    'id' => $notifiable->getKey(),
-                    'hash' => sha1($notifiable->getEmailForVerification()),
-                ]
-            );
-        });
-
         $this->user->notify(new VerifyEmail);
 
         $this->emit('verificationEmailSent');

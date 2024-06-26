@@ -3,11 +3,11 @@
 namespace App\Http\Controllers;
 
 use App\Models\User;
+use App\Notifications\WelcomeNotification;
 use Illuminate\Http\Request;
 use Illuminate\Auth\Events\Verified;
 use Illuminate\Auth\Access\AuthorizationException;
 use Illuminate\Support\Facades\Password;
-use Laravel\Fortify\Contracts\VerifyEmailResponse;
 
 class VerifyEmailController extends Controller
 {
@@ -20,21 +20,17 @@ class VerifyEmailController extends Controller
             throw new AuthorizationException;
         }
 
-        if ($user->hasVerifiedEmail()) {
-            return app(VerifyEmailResponse::class);
-        }
+        if (!$user->hasVerifiedEmail()) {
+            $user->markEmailAsVerified();
 
-        if ($user->markEmailAsVerified()) {
             event(new Verified($user));
-            
-            $user->notify(new \App\Notifications\WelcomeNotification);
 
-            return redirect()->route('invited-auth.set-password', [
-                'user' => $user->id,
-                'token' => Password::createToken($user)
-            ]);
+            $user->notify(new WelcomeNotification);
         }
 
-        return app(VerifyEmailResponse::class);
+        return redirect()->route('invited-auth.set-password', [
+            'user' => $user->id,
+            'token' => Password::createToken($user)
+        ]);
     }
 }

@@ -15,14 +15,16 @@ use App\Models\Shanghai;
 use App\Models\Shenzhen;
 use App\Models\Frankfurt;
 use App\Models\MutualFunds;
+use Illuminate\Support\Carbon;
+use Illuminate\Support\Facades\Config;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\App;
 use Illuminate\Support\Facades\Log;
+use Illuminate\Support\Facades\URL;
 use Illuminate\Support\ServiceProvider;
 use Illuminate\Auth\Notifications\VerifyEmail;
 use Illuminate\Auth\Notifications\ResetPassword;
 use Illuminate\Notifications\Messages\MailMessage;
-use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Blade;
 use WireElements\Pro\Components\Spotlight\Spotlight;
 use WireElements\Pro\Components\Spotlight\SpotlightQuery;
@@ -276,6 +278,17 @@ class AppServiceProvider extends ServiceProvider
                     'user' => $user,
                     'url' => $url,
                 ]);
+        });
+
+        VerifyEmail::createUrlUsing(function ($notifiable) {
+            return URL::temporarySignedRoute(
+                'verification.verify',
+                Carbon::now()->addMinutes(Config::get('auth.verification.expire', 60)),
+                [
+                    'id' => $notifiable->getKey(),
+                    'hash' => sha1($notifiable->getEmailForVerification()),
+                ]
+            );
         });
 
         // customize reset password notification

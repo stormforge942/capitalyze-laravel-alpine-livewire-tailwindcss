@@ -3,9 +3,6 @@
 namespace App\Http\Livewire;
 
 use Illuminate\Auth\Notifications\VerifyEmail;
-use Illuminate\Support\Carbon;
-use Illuminate\Support\Facades\Config;
-use Illuminate\Support\Facades\URL;
 use Livewire\Component;
 use Illuminate\Support\Facades\Auth;
 
@@ -22,17 +19,6 @@ class CongratulationsRegistration extends Component
             session()->flash('message', __('Your email is already verified'));
             return;
         }
-
-        VerifyEmail::createUrlUsing(function ($notifiable) {
-            return URL::temporarySignedRoute(
-                'verification.verify',
-                Carbon::now()->addMinutes(Config::get('auth.verification.expire', 60)),
-                [
-                    'id' => $notifiable->getKey(),
-                    'hash' => sha1($notifiable->getEmailForVerification()),
-                ]
-            );
-        });
 
         Auth::user()->notify(new VerifyEmail);
 
