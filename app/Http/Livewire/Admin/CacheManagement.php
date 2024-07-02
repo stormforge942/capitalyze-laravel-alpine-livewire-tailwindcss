@@ -29,11 +29,11 @@ class CacheManagement extends Component
             if (preg_match_all('/\$cacheKey\s*=\s*([^;]+)/', $content, $matches, PREG_OFFSET_CAPTURE)) {
                 foreach ($matches[1] as $match) {
                     $assignmentFull = $match[0];
-                    $lineNumber = substr_count(substr($content, 0, $match[1]), "\n") + 1; 
-                    
+                    $lineNumber = substr_count(substr($content, 0, $match[1]), "\n") + 1;
+
                     $firstSpecialCharPos = strcspn($assignmentFull, "{ .");
-                    $assignmentPrefix = $firstSpecialCharPos !== strlen($assignmentFull) ? 
-                                        substr($assignmentFull, 0, $firstSpecialCharPos) : 
+                    $assignmentPrefix = $firstSpecialCharPos !== strlen($assignmentFull) ?
+                                        substr($assignmentFull, 0, $firstSpecialCharPos) :
                                         $assignmentFull;
 
                     $results[] = [
@@ -49,15 +49,15 @@ class CacheManagement extends Component
         $this->results = $results;
     }
 
-    
+
     public function clearCacheByPrefix($prefix)
     {
         $decodedPrefix = html_entity_decode($prefix);
         $decodedPrefix = trim($decodedPrefix, "'");
-    
+
         $pattern = $decodedPrefix . '*';
         $redis = Redis::connection();
-    
+
         // Use SCAN instead of KEYS to iterate through keys in a non-blocking way
         $cursor = 0;
         do {
@@ -69,25 +69,17 @@ class CacheManagement extends Component
                 }
             }
         } while ($cursor);
-    
+
         $formattedPattern = ucwords(trim(str_replace('_', ' ', trim(trim($decodedPrefix, '_'))), " \t\n\r\0\x0B"));
         session()->flash('message', "Cache cleared successfully for {$formattedPattern}");
     }
 
     public function clearAllCache()
     {
-    $redis = Redis::connection();
+        cache()->flush();
 
-    $redis->flushAll();
-
-    session()->flash('message', 'All caches cleared successfully.');
-}
-
-
-    
-    
-
-    
+        session()->flash('message', 'All caches cleared successfully.');
+    }
 
     public function render()
     {
