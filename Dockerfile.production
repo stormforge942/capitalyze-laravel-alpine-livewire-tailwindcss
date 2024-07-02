@@ -1,7 +1,7 @@
 ARG ENVIRONMENT_KEY defaultkey
 
 # Stage 1: Set up the PHP environment and Composer dependencies
-FROM --platform=linux/amd64 php:8.3-fpm AS php_builder
+FROM --platform=linux/amd64 php:8.3-fpm-bullseye AS php_builder
 WORKDIR /app
 
 COPY app/helpers.php /app/app/helpers.php
@@ -63,7 +63,8 @@ COPY postcss.config.js ./
 RUN npm run build
 
 # Stage 3: Final stage to set up the application
-FROM --platform=linux/amd64 php:8.3-fpm
+# FROM --platform=linux/amd64 php:8.3-fpm-bullseye
+FROM --platform=linux/amd64 phpswoole/swoole:php8.3
 WORKDIR /var/www
 
 # Install system dependencies, PHP extensions, and PostgreSQL client
@@ -71,15 +72,23 @@ RUN apt-get update && apt-get install -y \
     libpng-dev \
     libonig-dev \
     libxml2-dev \
+    libicu-dev \
     zip \
     unzip \
     libpq-dev \
     postgresql-client \
     nginx \
-    cron
-RUN pecl install redis swoole
+    cron \
+    brotli \
+    curl
+# RUN pecl channel-update https://pecl.php.net/channel.xml
+# RUN pecl install redis swoole
+
 RUN docker-php-ext-install pdo pdo_pgsql pgsql pdo_mysql mbstring exif pcntl bcmath gd
-RUN docker-php-ext-enable redis swoole
+RUN set -ex \
+    && pecl channel-update pecl.php.net \
+    && docker-php-ext-enable redis
+
 RUN apt-get clean && rm -rf /var/lib/apt/lists/*
 
 # Copy the built assets and vendor directory from the previous stages
