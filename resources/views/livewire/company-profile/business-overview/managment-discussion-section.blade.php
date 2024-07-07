@@ -11,7 +11,7 @@
     $businessContent = preg_replace('/<div(.?)(i?)(d?)=[a-z"0-9_-]+\/>/i', '<p>', $businessContent);
     $businessContent = preg_replace('/<\/div>/i', '</p>', $businessContent);
     $businessContent = str_replace('\u{A0}\u{A0}\u{A0}\u{A0}', '', $businessContent);
-    $businessContent = preg_replace('/[\x00-\x1F\x7F-\xFF]/', '', $businessContent);
+    $businessContent = preg_replace('/[\x00-\x1F\x7F]/', '', $businessContent);
     $businessContent = preg_replace('/class="(.?)+"/i', '', $businessContent);
     $businessContent = preg_replace('/<p[a-z 0-9.;%><:="-\/]+<\/p><\/p>/mi', '', $businessContent);
     $businessContent = preg_replace('/<hr (.?)[a-z="-:]+\/>/mi', '', $businessContent);
@@ -19,7 +19,7 @@
     $businessContent = str_replace('style="bottom:0;position:absolute;width:100%"', '', $businessContent);
     $businessContent = str_replace('style="min-height:42.75pt;width:100%"', '', $businessContent);
     $businessContent = str_replace('<br/>', '', $businessContent);
-    $businessContent = preg_replace('/Apple Inc. | 2022 Form 10-K | [0-9]+/i', '', $businessContent);
+    $businessContent = preg_replace('/Apple Inc. \| \d{4} Form 10-K \| [0-9]+/i', '| Form-K |', $businessContent);
     $businessContent = str_replace('||', '', $businessContent);
     $businessContent = preg_replace('/<p+ [a-z]+=("|\')[a-z0-9_-]+("|\')(.?)\/>/mi', '', $businessContent);
     $businessContent = str_replace('<p style="padding-left:45pt;text-align:justify;text-indent:-45pt"><span style="color:#000000;font-family:\'Helvetica\',sans-serif;font-size:9pt;font-weight:700;line-height:120%">Managements Discussion and Analysis of Financial Condition and Results of Operations</span></p>', '<p class="title">Managements Discussion and Analysis</p>', $businessContent);
