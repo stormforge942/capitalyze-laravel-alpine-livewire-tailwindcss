@@ -34,8 +34,8 @@
     </div>
 
     <div class="relative">
-        <div class="cus-loader" wire:loading.block>
-            <div class="cus-loaderBar"></div>
+        <div wire:loading.block class="justify-center items-center w-full mt-5">
+            <x-loader />
         </div>
 
         <div class="flex flex-col">

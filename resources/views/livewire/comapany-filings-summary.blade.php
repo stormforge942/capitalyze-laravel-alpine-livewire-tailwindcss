@@ -1,12 +1,6 @@
 <div class="flex flex-col" x-data="{
     activeTab: '{{$tabName}}'
 }">
-    @if($loading)
-        <div class="cus-loader" wire:loading.block style="top: 16.8125rem !important;">
-            <div class="cus-loaderBar"></div>
-        </div>
-    @endif
-
     <div class="flex flex-col mx-6 md:lg-0 ml-0">
         <x-company-info-header :company="['name' => $company->name, 'ticker' => $company->ticker]">
             <x-download-data-buttons />
@@ -72,6 +66,13 @@
                 </div>
             </div>
         </div>
+
+        @if($loading)
+            <div wire:loading.block class="justify-center items-center w-full mt-2 mb-5">
+                <x-loader />
+            </div>
+        @endif
+
         <div>
             @if ($tabName === 'summary')
                 <livewire:is :component="'filings-summary.' . $tabName" :company="$company" :ticker="$ticker" />

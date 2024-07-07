@@ -11,7 +11,7 @@
             'other': 'Other'
         }"
             :key="tab">
-            <a href="#" @click.prevent="activeTab = tab; $wire.handleTabs(tab); $wire.emit('emitCountInAllfilings', JSON.stringify([]));"
+            <a href="#" @click.prevent="activeTab = tab; $wire.emit('resetAllFilingsFilters');"
                 class="py-2.5 px-6 text-center border-b-2 transition-all font-medium"
                 :class="activeTab === tab ? 'border-green-dark' :
                     'border-transparent hover:border-gray-medium text-gray-medium2'"
@@ -32,8 +32,8 @@
         </select>
     </div>
     <div class="relative">
-        <div class="cus-loader" wire:loading.block>
-            <div class="cus-loaderBar"></div>
+        <div wire:loading.block class="justify-center items-center w-full mt-5">
+            <x-loader />
         </div>
 
         <div class="flex flex-col">

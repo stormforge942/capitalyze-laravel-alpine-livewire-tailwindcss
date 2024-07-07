@@ -16,7 +16,14 @@ class AllFilings extends Component
     protected $listeners = [
         'handleAllFilingsTabs' => 'handleTabs',
         'emitCountInAllfilings' => 'emitCountInAllfilings',
+        'resetAllFilingsFilters' => 'resetAllFilingsFilters',
     ];
+
+    public function resetAllFilingsFilters()
+    {
+        $this->checkedCount = 0;
+        $this->selectChecked = [];
+    }
 
     public function emitCountInAllfilings($selected)
     {
