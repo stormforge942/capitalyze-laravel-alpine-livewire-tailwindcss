@@ -32,6 +32,12 @@
 
         return this.options[this.value] || this.placeholder
     },
+    get filtersChanged() {
+        const filters = Array.from(this.value);
+        const tmpFilters = Array.from(this.tmpValue);
+
+        return filters.length === tmpFilters.length && filters.sort().join('') === tmpFilters.sort().join('');
+    },
     init() {
         this.$nextTick(() => {
             @if(!$multiple)
@@ -166,7 +172,7 @@
             <div class="p-6">
                 <button type="button"
                     class="w-full px-4 py-3 font-medium bg-green-dark hover:bg-opacity-80 rounded disabled:pointer-events-none disabled:bg-[#D4DDD7] disabled:text-gray-medium2 text-base"
-                    @click="value = tmpValue; showDropdown = false;" :disabled="value === tmpValue">
+                    @click="value = tmpValue; showDropdown = false;" :disabled="filtersChanged">
                     Show Result
                 </button>
             </div>
