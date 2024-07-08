@@ -252,8 +252,8 @@ const chartJsPlugins = {
             })
         },
     },
-    beforeDraw: {
-        id: "appendLogoBelowChart",
+    addLogo: {
+        id: "addLogo",
         beforeInit(chart) {
             const desiredPaddingBottom = 20;
             const defaultPaddingBottom = chart.options.layout.padding.bottom
@@ -262,16 +262,19 @@ const chartJsPlugins = {
         beforeDraw: (chart) => {
             const { ctx } = chart
 
+            if(!ctx) return;
+
             ctx.save();
+
             const logoHeight = 16, logoWidth = 80;
+            
             if (logoImg.complete) {
                 ctx.drawImage(logoImg, ctx.canvas.offsetWidth - logoWidth, ctx.canvas.offsetHeight - logoHeight, logoWidth, logoHeight)
-            }
-            else {
+            }else {
                 logoImg.onload = () => chart.draw();
             }
-            ctx.restore();
 
+            ctx.restore();
         }
     }
 }

@@ -82,7 +82,6 @@ class FundSummary extends Component
 
     public function getSectorAllocationData()
     {
-
         $cacheKey = 'industry_summary_' . $this->cik;
         $cacheDuration = 3600;
         
@@ -118,12 +117,13 @@ class FundSummary extends Component
         $last = collect($last)->where('industry', '!=', 'Other')->sortByDesc('weight')->take(25);
         $weight = $last->sum('weight');
         if ($weight < 100) {
-            $last[] = [
+            $last->push([
                 'industry' => 'Other',
                 'weight' => 100 - $weight,
-            ];
+            ]);
         }
         $last = $last->values()->toArray();
+        usort($last, fn ($a, $b) => $b['weight'] <=> $a['weight']);
 
         $data = [];
 
@@ -246,26 +246,19 @@ class FundSummary extends Component
         $topBuys = Cache::remember($cacheKey, $cacheDuration, function () {
             return DB::connection('pgsql-xbrl')
                 ->table('filings')
-                ->select('change_in_shares', 'change_in_value', 'symbol', 'name_of_issuer')
+                ->select(DB::raw("MAX(change_in_shares_percentage) as change"), 'symbol', 'name_of_issuer')
                 ->where('cik', '=', $this->cik)
                 ->where('report_calendar_or_quarter', '=', $this->quarter)
-                ->orderByDesc('change_in_shares')
+                ->groupBy('symbol', 'name_of_issuer') // To get unique symbols
+                ->orderByDesc('change')
                 ->where('change_in_shares', '>', 0)
                 ->limit(10)
                 ->get()
                 ->map(function ($item) {
                     $item->name_of_issuer = Str::title($item->name_of_issuer);
+                    $item->formatted_value = round($item->change, 3) . '%';
                     return $item;
                 });
-        });
-
-        $max = $topBuys->max('change_in_shares');
-        $min = $topBuys->min('change_in_shares');
-
-        $topBuys = $topBuys->map(function ($item) use ($max, $min) {
-            $diff = $max - $min;
-            $item->width = ($diff ? (($item->change_in_shares - $min) / ($diff)) : 0 * 80) + 10;
-            return $item;
         });
 
         $cacheKey = 'top_sells_' . $this->cik . '_' . $this->quarter;
@@ -274,25 +267,19 @@ class FundSummary extends Component
         $topSells = Cache::remember($cacheKey, $cacheDuration, function () {
             return DB::connection('pgsql-xbrl')
                 ->table('filings')
-                ->select('change_in_shares', 'change_in_value', 'symbol', 'name_of_issuer')
+                ->select(DB::raw("MIN(change_in_shares_percentage) as change"), 'symbol', 'name_of_issuer')
                 ->where('cik', '=', $this->cik)
                 ->where('report_calendar_or_quarter', '=', $this->quarter)
-                ->orderBy('change_in_shares') 
+                ->groupBy('symbol', 'name_of_issuer') // To get unique symbols
+                ->where('change_in_shares', '<', 0)
+                ->orderBy('change') 
                 ->limit(10)
                 ->get()
                 ->map(function ($item) {
-                    $item->name_of_issuer = Str::title($item->name_of_issuer); 
+                    $item->name_of_issuer = Str::title($item->name_of_issuer);
+                    $item->formatted_value = round(abs($item->change), 3) . '%';
                     return $item;
                 });
-        });
-
-        $max = $topSells->max('change_in_shares');
-        $min = $topSells->min('change_in_shares');
-
-        $topSells = $topSells->map(function ($item) use ($max, $min) {
-            $diff = $max - $min;
-            $item->width = ($diff ? (($item->change_in_shares - $min) / ($diff)) : 0 * 80) + 10;
-            return $item;
         });
 
         return [
@@ -303,7 +290,6 @@ class FundSummary extends Component
 
     private function getLatestQuarter()
     {
-
         $cacheKey = 'latest_filing_date_' . $this->cik;
         $cacheDuration = 3600;
 

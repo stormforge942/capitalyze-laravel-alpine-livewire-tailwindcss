@@ -1,6 +1,5 @@
 <?php
 
-use App\Http\Controllers\Auth\PasswordResetLinkController;
 use App\Http\Livewire\Lses;
 use App\Http\Livewire\Otcs;
 use App\Http\Livewire\Tsxs;
@@ -26,10 +25,10 @@ use App\Http\Controllers\HkexController;
 use App\Http\Controllers\HomeController;
 use App\Http\Livewire\EconomicsCalendar;
 use App\Http\Controllers\AdminController;
-use App\Http\Controllers\Builder\ChartController;
 use App\Http\Controllers\JapanController;
 use App\Http\Livewire\CompanyFilingsPage;
 use App\Http\Livewire\CompanyIdentifiers;
+use App\Http\Controllers\CompanyEodPrices;
 use App\Http\Middleware\EnsureUserIsAdmin;
 use App\Http\Controllers\BuilderController;
 use App\Http\Controllers\CompanyController;
@@ -43,14 +42,17 @@ use App\Http\Controllers\FrankfurtController;
 use App\Http\Controllers\MutualFundController;
 use App\Http\Controllers\VerifyEmailController;
 use App\Http\Controllers\EventFilingsController;
+use App\Http\Controllers\Builder\ChartController;
 use App\Http\Controllers\ResetLinkSentController;
 use App\Http\Controllers\TrackInvestorController;
+use App\Http\Controllers\UpdateSettingsController;
 use App\Http\Controllers\EarningsCalendarController;
+use App\Http\Controllers\TableBuilder\TableController;
 use App\Http\Middleware\CustomEmailVerificationPrompt;
 use App\Http\Controllers\InsiderTransactionsController;
+use App\Http\Controllers\Auth\PasswordResetLinkController;
+use App\Http\Controllers\CompanyEodPricesController;
 use App\Http\Controllers\ResetPasswordSuccessfulController;
-use App\Http\Controllers\TableBuilder\TableController;
-use App\Http\Controllers\UpdateSettingsController;
 use Laravel\Fortify\Http\Controllers\AuthenticatedSessionController;
 
 Route::get('/test-speed', function () {
@@ -107,6 +109,7 @@ Route::group(['middleware' => ['auth', 'approved', 'verified', CheckPagePermissi
     });
 
     Route::get('/company/{ticker}/ownership/{start?}', [CompanyController::class, 'ownership'])->name('company.ownership');
+    Route::get('/company/{symbol}/eod_prices', CompanyEodPricesController::class)->name('fund.filings');
 
     Route::get('/legacy/fund/{cik}/', [FundController::class, 'summary'])->name('fund.summary');
     Route::get('/fund/{cik}/holdings', [FundController::class, 'holdings'])->name('fund.holdings');
@@ -195,7 +198,7 @@ Route::group(['middleware' => ['guest']], function () {
     Route::redirect('/waitlist', '/')->name('waitlist.join');
 
     Route::post(RoutePath::for('password.email', '/forgot-password'), [PasswordResetLinkController::class, 'store'])
-        ->middleware(['guest:'.config('fortify.guard')])
+        ->middleware(['guest:' . config('fortify.guard')])
         ->name('password.email');
 });
 

@@ -97,7 +97,9 @@ $symbols = [
 $ciks = [
     '0001948780',
     '0001978885',
-    '0001911472'
+    '0001911472',
+    '0000102909',
+    '0000019617',
 ];
 
 fillData($xbrl, $replica, $selectedTables, $symbols, $ciks);
@@ -185,9 +187,9 @@ function fillData($xbrl, $replica, $tables, $symbols, $ciks)
 
             $stmt = $xbrl->query("SELECT * FROM $table WHERE $symbolColumn IN ($_stringSymbols)");
         } else if ($table === 'filings') {
-            $stmt = $xbrl->query("SELECT * FROM $table where cik in ($stringCiks) order by report_calendar_or_quarter desc limit 1000");
+            $stmt = $xbrl->query("SELECT * FROM $table where cik in ($stringCiks) and symbol in ('AAPL', 'MSFT') order by report_calendar_or_quarter desc");
         } else if ($table === 'mutual_fund_holdings') {
-            $stmt = $xbrl->query("SELECT * FROM $table where symbol in ($stringSymbols) order by period_of_report desc limit 1000");
+            $stmt = $xbrl->query("SELECT * FROM $table where symbol in ($stringSymbols) order by period_of_report desc");
         } else if ($table === 'filings_summary' || $table === 'industry_summary') {
             $ciks = $replica->query("SELECT distinct cik FROM filings")->fetchAll(PDO::FETCH_COLUMN);
             $ciks = array_map(fn ($cik) => "'$cik'", $ciks);
@@ -197,7 +199,7 @@ function fillData($xbrl, $replica, $tables, $symbols, $ciks)
                 $stmt = $xbrl->query("SELECT * FROM $table WHERE is_latest=true or date='2023-12-31' and cik in ($ciks)");
                 print("Filling $table with $ciks\n");
             } else if ($ciks != '') {
-                $stmt = $xbrl->query("SELECT * FROM $table WHERE cik in ($ciks) order by date desc limit 5000");
+                $stmt = $xbrl->query("SELECT * FROM $table WHERE cik in ($ciks) order by date desc");
             }
         } else if ($table === 'mutual_fund_holdings_summary') {
             $ciks = $replica->query("SELECT distinct cik FROM mutual_fund_holdings")->fetchAll(PDO::FETCH_COLUMN);

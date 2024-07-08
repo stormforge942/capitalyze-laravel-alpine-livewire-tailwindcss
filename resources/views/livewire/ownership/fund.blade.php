@@ -64,7 +64,6 @@
                         intersect: false,
                     },
                     responsive: true,
-                    aspectRatio: 1,
                     maintainAspectRatio: false,
                     plugins: {
                         legend: {
@@ -89,7 +88,8 @@
                         },
                         pointLine: {
                             color: '#0E5FD9',
-                        }
+                        },
+                        addLogo: false,
                     },
                     scales: {
                         y: {
@@ -155,6 +155,7 @@
                                 },
                             },
                         },
+                        addLogo: false,
                     },
                     scales: {
                         y: {
@@ -170,7 +171,8 @@
                             },
                             border: {
                                 display: false
-                            }
+                            },
+                            max: 100
                         },
                         x: {
                             stacked: true,
@@ -198,7 +200,7 @@
                     labels: data.labels,
                     datasets: [{
                         data: data.data,
-                        backgroundColors: data.backgroundColor,
+                        backgroundColor: data.backgroundColors,
                     }]
                 },
                 options: {
@@ -217,6 +219,7 @@
                                 },
                             },
                         },
+                        addLogo: false,
                     },
                 }
             })

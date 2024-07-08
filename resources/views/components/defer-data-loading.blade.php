@@ -26,7 +26,7 @@
             </div>
         </template>
         <template x-if="state === 'ready'">
-            <div>
+            <div class="h-full">
                 {{ $slot }}
             </div>
         </template>
@@ -37,7 +37,7 @@
         </template>
     </div>
 @else
-    <div wire:init="{{ $onInit }}" wire:loading.remove>
+    <div wire:init="{{ $onInit }}" class="h-full" wire:loading.remove>
         {{ $slot }}
     </div>
 

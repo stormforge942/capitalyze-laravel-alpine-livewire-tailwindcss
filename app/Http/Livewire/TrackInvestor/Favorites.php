@@ -2,11 +2,11 @@
 
 namespace App\Http\Livewire\TrackInvestor;
 
+use Livewire\Component;
 use App\Http\Livewire\AsTab;
 use Illuminate\Support\Facades\DB;
-use Livewire\Component;
-use App\Models\TrackInvestorFavorite;
 use Illuminate\Support\Facades\Auth;
+use App\Models\TrackInvestorFavorite;
 
 class Favorites extends Component
 {

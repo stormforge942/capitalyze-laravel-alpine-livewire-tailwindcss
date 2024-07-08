@@ -1,2 +1,2 @@
 import chartJsPlugins from "./chartjs-plugins"
-Chart.register(chartJsPlugins.beforeDraw)
+Chart.register(chartJsPlugins.addLogo)

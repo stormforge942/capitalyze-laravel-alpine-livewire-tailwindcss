@@ -13,7 +13,8 @@ class DeferDataLoading extends Component
      */
     public function __construct(
         public string $onInit,
-        public bool $useAlpine = false
+        public bool $useAlpine = false,
+        public string $contentWrapperClass=""
     ) {
         //
     }

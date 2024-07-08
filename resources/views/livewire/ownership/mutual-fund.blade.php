@@ -76,11 +76,10 @@
                         intersect: false,
                     },
                     responsive: true,
-                    aspectRatio: 1,
                     maintainAspectRatio: false,
                     plugins: {
                         legend: {
-                            display: false,
+                            display: true,
                         },
                         tooltip: {
                             bodyFont: {
@@ -101,7 +100,8 @@
                         },
                         pointLine: {
                             color: '#0E5FD9',
-                        }
+                        },
+                        addLogo: false
                     },
                     scales: {
                         y: {
