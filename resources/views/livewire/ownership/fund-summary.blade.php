@@ -1,3 +1,8 @@
+<?php
+$ranges = ['3m' => '3m', '6m' => '6m', 'ytd' => 'YTD', '1yr' => '1yr', '5yr' => '5yr', 'max' => 'MAX'];
+?>
+
+
 {{-- Check resources/views/livewire/ownership/fund.blade.php for js code --}}
 <div>
     <div class="grid grid-cols-12 gap-6">
@@ -16,14 +21,43 @@
             <x-tabs :tabs="['13F Sector Allocation Overtime', '13F Sector Allocation last Quarter']">
                 <x-defer-data-loading use-alpine="true" on-init="getSectorAllocationData" class="h-80"
                     @ready="$nextTick(() => {
-                        renderOverTimeSectorAllocation(result.overTimeSectorAllocation);
                         renderLastQuarterSectorAllocation(result.lastQuarterSectorAllocation);
                     })">
-                    <div :class="active == 0 ? 'block' : 'hidden'">
-                        <canvas id="overTimeSectorAllocation"></canvas>
+                    <div :class="active == 0 ? 'block' : 'hidden'" x-data="{
+                        period: '1yr',
+                        init() {
+                            this.renderChart();           
+                            
+                            this.$watch('period', () => {
+                                this.renderChart();
+                            });
+                        },
+                        renderChart() {
+                            const data = result.overTimeSectorAllocation.map(item => ({
+                                ...item,
+                                data: item.data.filter(item => item.periods.includes(this.period))
+                            }))
+
+                            renderOverTimeSectorAllocation(data);
+                        }
+                    }">
+                        <div class="flex items-center flex-wrap gap-x-4 gap-y-2 mb-6 text-gray-medium2">
+                            @foreach ($ranges as $value => $label)
+                                <label class="cursor-pointer flex items-center gap-x-1">
+                                    <input type="radio" name="otsa-period" value="{{ $value }}"
+                                        class="custom-radio custom-radio-xs focus:ring-0 border-gray-medium2"
+                                        x-model="period">
+                                    <span
+                                        :class="period === '{{ $value }}' ? 'text-dark' : ''">{{ $label }}</span>
+                                </label>
+                            @endforeach
+                        </div>
+                        <div>
+                            <canvas id="overTimeSectorAllocation"></canvas>
+                        </div>
                     </div>
 
-                    <div :class="active == 1 ? 'block' : 'hidden'">
+                    <div :class="active == 1 ? 'block' : 'hidden'" x-cloak>
                         <div>
                             <canvas id="lastQuarterSectorAllocation"></canvas>
                         </div>
@@ -203,9 +237,6 @@
                                                 </div>
                                                 <div
                                                     class="grid grid-cols-3 sm:grid-cols-6 gap-3 text-sm text-gray-medium2">
-                                                    <?php
-                                                    $ranges = ['3m' => '3m', '6m' => '6m', 'ytd' => 'YTD', '1yr' => '1yr', '5yr' => '5yr', 'max' => 'MAX'];
-                                                    ?>
                                                     @foreach ($ranges as $value => $label)
                                                         <label class="cursor-pointer flex items-center gap-x-1">
                                                             <input type="radio" name="tbs-period-{{ $dataLabel }}"
@@ -217,13 +248,16 @@
                                                         </label>
                                                     @endforeach
                                                 </div>
-                                                <div></div>
                                             </div>
                                         </div>
-                                        <div class="mt-2 w-full flex-1 relative" :class="chart.initial ? 'bg-gray-100/40' : ''"  style="min-height: 350px;">
-                                            <canvas id="tbs-{{ $dataLabel }}" :class="chart.loading ? 'blur-lg' : ''"></canvas>
+                                        <div class="mt-2 w-full flex-1 relative"
+                                            :class="chart.initial ? 'bg-gray-100/40' : ''" style="min-height: 350px;">
+                                            <canvas id="tbs-{{ $dataLabel }}"
+                                                :class="chart.loading ? 'blur-lg' : ''"></canvas>
 
-                                            <span class="simple-loader !text-green-dark absolute z-20" style="top: 50%; left: 50%; transform: translate(-50%)" x-show="chart.loading" x-cloak></span>
+                                            <span class="simple-loader !text-green-dark absolute z-20"
+                                                style="top: 50%; left: 50%; transform: translate(-50%)"
+                                                x-show="chart.loading" x-cloak></span>
                                         </div>
                                     </div>
                                 </div>

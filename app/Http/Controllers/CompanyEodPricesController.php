@@ -24,8 +24,8 @@ class CompanyEodPricesController extends Controller
                     'adj_close' => (float) $price->adj_close,
                     'formatted_value' => number_format($price->adj_close, 4),
                     'periods' => array_values(array_filter([
-                        $monthsDiff < 3 ? '3m' : null,
-                        $monthsDiff < 6 ? '6m' : null,
+                        $monthsDiff <= 3 ? '3m' : null,
+                        $monthsDiff <= 6 ? '6m' : null,
                         $monthsDiff <= 12 ? '1yr' : null,
                         $monthsDiff <= (12 * 5) ? '5yr' : null,
                         $date->year == now()->year ? 'ytd' : null,

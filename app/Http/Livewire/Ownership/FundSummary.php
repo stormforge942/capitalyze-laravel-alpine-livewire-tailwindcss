@@ -37,7 +37,7 @@ class FundSummary extends Component
 
     public function getSummary()
     {
-        $cacheKey ='filings_summary_' . $this->cik . '_' . $this->quarter;
+        $cacheKey = 'filings_summary_' . $this->cik . '_' . $this->quarter;
 
         $cacheDuration = 3600;
 
@@ -48,7 +48,6 @@ class FundSummary extends Component
                 ->where('cik', '=', $this->cik)
                 ->where('date', '=', $this->quarter)
                 ->first() ?? [];
-
         });
 
 
@@ -84,46 +83,62 @@ class FundSummary extends Component
     {
         $cacheKey = 'industry_summary_' . $this->cik;
         $cacheDuration = 3600;
-        
+
         $investments = Cache::remember($cacheKey, $cacheDuration, function () {
             $investments = [];
             $data = DB::connection('pgsql-xbrl')
-                    ->table('industry_summary')
-                    ->where('cik', '=', $this->cik)
-                    ->select('industry_title', 'weight', 'date')
-                    ->orderBy('date')
-                    ->get();
-                
+                ->table('industry_summary')
+                ->where('cik', '=', $this->cik)
+                ->select('industry_title', 'weight', 'date')
+                ->orderByDesc('date')
+                ->get();
+
             $data->map(function ($item) use (&$investments) {
                 $date = Carbon::parse($item->date);
                 $key = "Q{$date->quarter}-{$date->year}";
-        
+
                 if (!isset($investments[$key])) {
                     $investments[$key] = [];
                 }
-        
+                
+                $monthsDiff = now()->diffInMonths($date);
+
                 $investments[$key][] = [
                     'industry' => Str::title($item->industry_title),
                     'weight' => floatval($item->weight),
                     'quarter' => $key,
+                    'periods' => array_values(array_filter([
+                        $monthsDiff <= 3 ? '3m' : null,
+                        $monthsDiff <= 6 ? '6m' : null,
+                        $monthsDiff <= 12 ? '1yr' : null,
+                        $monthsDiff <= (12 * 5) ? '5yr' : null,
+                        $date->year == now()->year ? 'ytd' : null,
+                        'max',
+                    ]))
                 ];
             });
-        
+
             return $investments;
         });
-            
-       
-        $last = end($investments) ?: [];
-        $last = collect($last)->where('industry', '!=', 'Other')->sortByDesc('weight')->take(25);
+
+
+        $last = collect(end($investments) ?: [])
+            ->where('industry', '!=', 'Other')
+            ->sortByDesc('weight')
+            ->take(25)
+            ->map(fn ($item) => [
+                'industry' => $item['industry'],
+                'weight' => $item['weight'],
+            ]);
         $weight = $last->sum('weight');
+
         if ($weight < 100) {
             $last->push([
                 'industry' => 'Other',
                 'weight' => 100 - $weight,
             ]);
         }
-        $last = $last->values()->toArray();
-        usort($last, fn ($a, $b) => $b['weight'] <=> $a['weight']);
+        $last = $last->sortByDesc('weight')->values()->toArray();
 
         $data = [];
 
@@ -138,6 +153,7 @@ class FundSummary extends Component
                     'industry' => 'Other',
                     'weight' => 100 - $weight,
                     'quarter' => $key,
+                    'periods' => $top10->first()['periods']
                 ];
             }
         }
@@ -156,6 +172,7 @@ class FundSummary extends Component
                     fn ($item) => [
                         'x' => $item['quarter'],
                         'y' => $item['weight'],
+                        'periods' => $item['periods'] ?? []
                     ],
                     $_data
                 ),
@@ -185,7 +202,7 @@ class FundSummary extends Component
     {
         $cacheKey = 'filings_weight_' . $this->cik . '_' . $this->quarter;
         $cacheDuration = 3600;
-        
+
         $filings = Cache::remember($cacheKey, $cacheDuration, function () {
             return DB::connection('pgsql-xbrl')
                 ->table('filings')
@@ -211,7 +228,7 @@ class FundSummary extends Component
     {
         $cacheKey = 'filings_summary_values_' . $this->cik;
         $cacheDuration = 3600;
-        
+
         $totalValues = Cache::remember($cacheKey, $cacheDuration, function () {
             return DB::connection('pgsql-xbrl')
                 ->table('filings_summary')
@@ -263,7 +280,7 @@ class FundSummary extends Component
 
         $cacheKey = 'top_sells_' . $this->cik . '_' . $this->quarter;
         $cacheDuration = 3600;
-        
+
         $topSells = Cache::remember($cacheKey, $cacheDuration, function () {
             return DB::connection('pgsql-xbrl')
                 ->table('filings')
@@ -272,7 +289,7 @@ class FundSummary extends Component
                 ->where('report_calendar_or_quarter', '=', $this->quarter)
                 ->groupBy('symbol', 'name_of_issuer') // To get unique symbols
                 ->where('change_in_shares', '<', 0)
-                ->orderBy('change') 
+                ->orderBy('change')
                 ->limit(10)
                 ->get()
                 ->map(function ($item) {

@@ -133,7 +133,18 @@
         function renderOverTimeSectorAllocation(data) {
             const canvas = document.getElementById('overTimeSectorAllocation');
 
-            new Chart(canvas, {
+            data = data.map(item => ({
+                ...item,
+                borderRadius: 2,
+            }))
+
+            if (window.otsaChart) {
+                window.otsaChart.data.datasets = data;
+                window.otsaChart.update();
+                return;
+            }
+
+            window.otsaChart = new Chart(canvas, {
                 type: 'bar',
                 data: {
                     datasets: data
@@ -142,6 +153,7 @@
                     responsive: true,
                     aspectRatio: 1.7,
                     maintainAspectRatio: true,
+                    maxBarThickness: 80,
                     plugins: {
                         legend: {
                             display: true,
