@@ -12,7 +12,9 @@ $ranges = ['3m' => '3m', '6m' => '6m', 'ytd' => 'YTD', '1yr' => '1yr', '5yr' => 
             </div>
             <div class="p-6 flex-1">
                 <x-defer-data-loading on-init="getOverTimeMarketValue" class="h-80">
-                    <canvas id="overTimeMarketValue"></canvas>
+                    <div class="h-full" style="max-height: 450px;">
+                        <canvas id="overTimeMarketValue"></canvas>
+                    </div>
                 </x-defer-data-loading>
             </div>
         </div>
@@ -79,7 +81,12 @@ $ranges = ['3m' => '3m', '6m' => '6m', 'ytd' => 'YTD', '1yr' => '1yr', '5yr' => 
                                 data: [],
                             },
                             get activeRowData() {
-                                return result.{{ $dataLabel }}[this.activeRow];
+                                return result.{{ $dataLabel }}[this.activeRow] || {
+                                    name_of_issuer: '',
+                                    symbol: '',
+                                    change: 0,
+                                    formatted_value: '',
+                                };
                             },
                             init() {
                                 this.makeChart()
@@ -94,6 +101,8 @@ $ranges = ['3m' => '3m', '6m' => '6m', 'ytd' => 'YTD', '1yr' => '1yr', '5yr' => 
                                 });
                             },
                             makeChart() {
+                                if(!this.activeRowData.symbol) return;
+
                                 this.chart.loading = true;
                                 this.chart.data = [];
                         

@@ -64,6 +64,7 @@
                         intersect: false,
                     },
                     responsive: true,
+                    aspectRatio: 1,
                     maintainAspectRatio: false,
                     plugins: {
                         legend: {
