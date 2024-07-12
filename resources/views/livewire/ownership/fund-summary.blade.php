@@ -6,30 +6,33 @@ $ranges = ['3m' => '3m', '6m' => '6m', 'ytd' => 'YTD', '1yr' => '1yr', '5yr' => 
 {{-- Check resources/views/livewire/ownership/fund.blade.php for js code --}}
 <div>
     <div class="grid grid-cols-12 gap-6">
-        <div class="order-1 col-span-12 2xl:col-span-6 bg-white rounded h-full flex flex-col">
-            <div class="px-6 py-3 border-b">
-                <h3 class="font-medium text-md">Market Value Overtime</h3>
-            </div>
-            <div class="p-6 flex-1">
-                <x-defer-data-loading on-init="getOverTimeMarketValue" class="h-80">
-                    <div class="h-full" style="max-height: 450px;">
-                        <canvas id="overTimeMarketValue"></canvas>
-                    </div>
-                </x-defer-data-loading>
+        <div class="order-1 col-span-12 xl:col-span-6">
+            <div class="bg-white rounded h-full flex flex-col">
+                <div class="px-6 py-3 border-b">
+                    <h3 class="font-medium text-md">Market Value Overtime</h3>
+                </div>
+                <div class="p-6 flex-1">
+                    <x-defer-data-loading on-init="getOverTimeMarketValue" class="h-80">
+                        <div class="h-full" style="height: 350px;">
+                            <canvas id="overTimeMarketValue"></canvas>
+                        </div>
+                    </x-defer-data-loading>
+                </div>
             </div>
         </div>
 
-        <div class="order-2 col-span-12 2xl:col-span-6 p-6 bg-white rounded">
+        <div class="order-2 col-span-12 xl:col-span-6 p-6 bg-white rounded">
             <x-tabs :tabs="['13F Sector Allocation Overtime', '13F Sector Allocation last Quarter']">
                 <x-defer-data-loading use-alpine="true" on-init="getSectorAllocationData" class="h-80"
                     @ready="$nextTick(() => {
                         renderLastQuarterSectorAllocation(result.lastQuarterSectorAllocation);
                     })">
                     <div :class="active == 0 ? 'block' : 'hidden'" x-data="{
-                        period: '1yr',
+                        showLabel: false,
+                        period: '5yr',
                         init() {
-                            this.renderChart();           
-                            
+                            this.renderChart();
+                    
                             this.$watch('period', () => {
                                 this.renderChart();
                             });
@@ -39,36 +42,66 @@ $ranges = ['3m' => '3m', '6m' => '6m', 'ytd' => 'YTD', '1yr' => '1yr', '5yr' => 
                                 ...item,
                                 data: item.data.filter(item => item.periods.includes(this.period))
                             }))
-
+                    
                             renderOverTimeSectorAllocation(data);
                         }
                     }">
-                        <div class="flex items-center flex-wrap gap-x-4 gap-y-2 mb-6 text-gray-medium2">
-                            @foreach ($ranges as $value => $label)
-                                <label class="cursor-pointer flex items-center gap-x-1">
-                                    <input type="radio" name="otsa-period" value="{{ $value }}"
-                                        class="custom-radio custom-radio-xs focus:ring-0 border-gray-medium2"
-                                        x-model="period">
-                                    <span
-                                        :class="period === '{{ $value }}' ? 'text-dark' : ''">{{ $label }}</span>
+                        <div class="flex items-center justify-between gap-x-6 my-6">
+                            <div class="flex items-center flex-wrap gap-x-4 gap-y-2 text-gray-medium2">
+                                @foreach ($ranges as $value => $label)
+                                    <label class="cursor-pointer flex items-center gap-x-1">
+                                        <input type="radio" name="otsa-period" value="{{ $value }}"
+                                            class="custom-radio custom-radio-xs focus:ring-0 border-gray-medium2"
+                                            x-model="period">
+                                        <span
+                                            :class="period === '{{ $value }}' ? 'text-dark' : ''">{{ $label }}</span>
+                                    </label>
+                                @endforeach
+                            </div>
+                            <div class="flex items-center gap-x-5 justify-between" x-cloak>
+                                <label class="relative inline-flex items-center cursor-pointer flex-shrink-0">
+                                    <input type="checkbox" value="yes" class="sr-only peer" :checked="showLabel"
+                                        @change="showLabel = $event.target.checked">
+                                    <div
+                                        class="w-6 h-2.5 bg-gray-200 peer-focus:outline-none peer-focus:ring-0 rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:-start-[4px] after:bg-white after:rounded-full after:h-4 after:w-4 after:shadow-md after:transition-all peer-checked:bg-dark-light2 peer-checked:after:bg-dark">
+                                    </div>
+                                    <span class="ms-3 text-sm font-medium text-gray-900">Show Labels</span>
                                 </label>
-                            @endforeach
+                            </div>
                         </div>
-                        <div>
+                        <div class="h-[280px]">
                             <canvas id="overTimeSectorAllocation"></canvas>
+                        </div>
+                        <div x-show="showLabel" x-cloak>
+                            <div class="mt-4 px-5" id="otsa-legend"></div>
                         </div>
                     </div>
 
-                    <div :class="active == 1 ? 'block' : 'hidden'" x-cloak>
-                        <div>
+                    <div :class="active == 1 ? 'block' : 'hidden'" x-data="{ showLabel: false }" x-cloak>
+                        <div class="flex flex-row-reverse my-6">
+                            <div class="flex items-center gap-x-5 justify-between" x-cloak>
+                                <label class="relative inline-flex items-center cursor-pointer flex-shrink-0">
+                                    <input type="checkbox" value="yes" class="sr-only peer" :checked="showLabel"
+                                        @change="showLabel = $event.target.checked">
+                                    <div
+                                        class="w-6 h-2.5 bg-gray-200 peer-focus:outline-none peer-focus:ring-0 rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:-start-[4px] after:bg-white after:rounded-full after:h-4 after:w-4 after:shadow-md after:transition-all peer-checked:bg-dark-light2 peer-checked:after:bg-dark">
+                                    </div>
+                                    <span class="ms-3 text-sm font-medium text-gray-900">Show Labels</span>
+                                </label>
+                            </div>
+                        </div>
+                        <div class="h-[280px]">
                             <canvas id="lastQuarterSectorAllocation"></canvas>
+                        </div>
+                        <div x-show="showLabel" x-cloak>
+                            <div class="mt-4 px-5" id="lqsa-legend"></div>
                         </div>
                     </div>
                 </x-defer-data-loading>
             </x-tabs>
         </div>
 
-        <div class="order-3 col-span-12 2xl:col-span-8 p-6 bg-white rounded">
+        <div class="order-3 col-span-12 xl:col-span-9 2xl:col-span-8 p-6 bg-white rounded">
             <x-tabs :tabs="['Top Buys', 'Top Sells']">
                 <x-defer-data-loading use-alpine="true" on-init="getTopBuySells" class="h-80">
                     @foreach (['topBuys', 'topSells'] as $idx => $dataLabel)
@@ -101,8 +134,8 @@ $ranges = ['3m' => '3m', '6m' => '6m', 'ytd' => 'YTD', '1yr' => '1yr', '5yr' => 
                                 });
                             },
                             makeChart() {
-                                if(!this.activeRowData.symbol) return;
-
+                                if (!this.activeRowData.symbol) return;
+                        
                                 this.chart.loading = true;
                                 this.chart.data = [];
                         
@@ -199,6 +232,9 @@ $ranges = ['3m' => '3m', '6m' => '6m', 'ytd' => 'YTD', '1yr' => '1yr', '5yr' => 
                                                 },
                                                 ticks: {
                                                     maxTicksLimit: 6,
+                                                    font: {
+                                                        size: 10
+                                                    }
                                                 },
                                                 type: 'time',
                                             },
@@ -282,7 +318,7 @@ $ranges = ['3m' => '3m', '6m' => '6m', 'ytd' => 'YTD', '1yr' => '1yr', '5yr' => 
             </x-tabs>
         </div>
 
-        <div class="order-4 col-span-12 2xl:col-span-4 p-6 bg-white rounded">
+        <div class="order-4 col-span-12 xl:col-span-3 2xl:col-span-4 p-6 bg-white rounded">
             <h3 class="mb-4 text-sm font-semibold text-blue">13F Holding Summary</h3>
 
             <x-defer-data-loading use-alpine="true" on-init="getHoldingSummary" class="h-32">

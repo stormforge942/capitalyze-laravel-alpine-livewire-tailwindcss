@@ -179,11 +179,17 @@ const chartJsPlugins = {
 
             const ul = options.container
 
-            ul.style.display = "flex"
+            if (options.grid) {
+                ul.style.display = "grid"
+                ul.style.gridTemplateColumns = `repeat(auto-fit, minmax(200px, 1fr))`
+            } else {
+                ul.style.display = "flex"
+                ul.style.flexWrap = "wrap"
+            }
+
             ul.style.alignItems = "center"
-            ul.style.flexWrap = "wrap"
             ul.style.columnGap = "16px"
-            ul.style.rowGap = "4px"
+            ul.style.rowGap = "8px"
             ul.style.fontSize = "12px"
 
             // Remove old legend items
@@ -235,10 +241,8 @@ const chartJsPlugins = {
                 boxSpan.style.width = "16px"
 
                 // Text
-                const textContainer = document.createElement("p")
+                const textContainer = document.createElement("span")
                 textContainer.style.color = item.fontColor
-                textContainer.style.margin = 0
-                textContainer.style.padding = 0
                 textContainer.style.textDecoration = item.hidden
                     ? "line-through"
                     : ""
@@ -262,15 +266,15 @@ const chartJsPlugins = {
         beforeDraw: (chart) => {
             const { ctx } = chart
 
-            if(!ctx) return;
+            if (!ctx) return;
 
             ctx.save();
 
             const logoHeight = 16, logoWidth = 80;
-            
+
             if (logoImg.complete) {
                 ctx.drawImage(logoImg, ctx.canvas.offsetWidth - logoWidth, ctx.canvas.offsetHeight - logoHeight, logoWidth, logoHeight)
-            }else {
+            } else {
                 logoImg.onload = () => chart.draw();
             }
 

@@ -120,7 +120,7 @@
                         },
                         x: {
                             grid: {
-                                display: false
+                                display: false,
                             },
                             border: {
                                 display: false
@@ -150,22 +150,21 @@
                 data: {
                     datasets: data
                 },
+                plugins: [
+                    window.chartJsPlugins.htmlLegend
+                ],
                 options: {
                     responsive: true,
-                    aspectRatio: 1.7,
-                    maintainAspectRatio: true,
+                    maintainAspectRatio: false,
                     maxBarThickness: 80,
                     plugins: {
                         legend: {
-                            display: true,
-                            position: "bottom",
-                            align: "start",
-                            labels: {
-                                boxWidth: 12,
-                                boxHeight: 12,
-                                font: {
-                                    size: 12,
-                                },
+                            display: false,
+                        },
+                        htmlLegend: {
+                            container: document.querySelector('#otsa-legend'),
+                            grid: {
+                                columns: 2,
                             },
                         },
                         addLogo: false,
@@ -216,23 +215,23 @@
                         backgroundColor: data.backgroundColors,
                     }]
                 },
+                plugins: [
+                    window.chartJsPlugins.htmlLegend
+                ],
                 options: {
                     responsive: true,
-                    aspectRatio: 1.5,
+                    maintainAspectRatio: false,
                     plugins: {
                         legend: {
-                            display: true,
-                            position: "bottom",
-                            align: "start",
-                            labels: {
-                                boxWidth: 12,
-                                boxHeight: 12,
-                                font: {
-                                    size: 12,
-                                },
-                            },
+                            display: false,
                         },
                         addLogo: false,
+                        htmlLegend: {
+                            container: document.querySelector('#lqsa-legend'),
+                            grid: {
+                                columns: 2,
+                            },
+                        }
                     },
                 }
             })
