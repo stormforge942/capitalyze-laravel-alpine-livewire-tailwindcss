@@ -33,7 +33,7 @@
         'capital-structure' => 'company-analysis.capital-allocation.capital-structure',
         'source-n-uses' => 'company-analysis.capital-allocation.source-and-uses',
     ] as $key => $value)
-        <div class="subtab-container" x-show="activeSubTab == '{{ $key }}'" x-cloak>
+        <div :class="{'invisible h-0 overflow-hidden': activeSubTab !== '{{ $key }}'}" class="subtab-container" x-cloak>
             @livewire($value, ['company' => $company])
         </div>
     @endforeach
