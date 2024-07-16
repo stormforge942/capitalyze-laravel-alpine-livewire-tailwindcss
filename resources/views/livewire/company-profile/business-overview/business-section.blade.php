@@ -13,6 +13,7 @@
     $businessContent = str_replace('<br/>', '', $businessContent);
     $businessContent = preg_replace('/Apple Inc. \| \d{4} Form 10-K \| [0-9]+/i', '| Form-K |', $businessContent);
     $businessContent = str_replace('||', '', $businessContent);
+    $businessContent = preg_replace('/(<img\s+[^>]*src=")([^"]+)("[^>]*>)/i', '${1}' . $imagesUrl . '/${2}${3}', $businessContent);
     $businessContent = preg_replace('/<hr(.?)\/>/i', '', $businessContent);
     $businessContent = preg_replace('/Item 1([a-z]?)./i', '', $businessContent);
     $businessContent = preg_replace('/<hr (.?)[a-z="-:]+\/>/mi', '', $businessContent);
@@ -37,6 +38,7 @@
     $businessContent = preg_replace('/>human capital</i', "><span class='anchor' id='business-information-human-capital'></span><p class='subtitle'>Human Capital</p><", $businessContent, 1);
     $businessContent = preg_replace('/>available information</i', "><span class='anchor' id='business-information-available-information'></span><p class='subtitle'>Available Information</p><", $businessContent, 1);
     $businessContent = str_replace('9pt', '14px', $businessContent);
+    $businessContent = str_replace('8.5pt', '14px', $businessContent);
     $sidebarLinks = [];
     if (preg_match('/>company background</i', $businessContent)) {
         $sidebarLinks[] = [

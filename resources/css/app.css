@@ -118,6 +118,9 @@ input {
     font-weight: 500 !important;
     line-height: normal;
 }
+.bussiness-information-content span {
+    color: inherit !important;
+}
 .bussiness-information-content .title {
     font-size: 24px !important;
     color: #121a0f;

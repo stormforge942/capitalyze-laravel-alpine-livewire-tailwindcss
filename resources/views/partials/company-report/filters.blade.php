@@ -99,7 +99,7 @@
                                 </button>
                             </div>
 
-                            <div x-data="{ selectedOption: '' }" class="p-6">
+                            <div x-data="{ selectedOption: 'values' }" class="p-6">
                                 <div>
                                     <label @click.prevent="selectedOption = selectedOption !== 'values' ? 'values' : null" class="cursor-pointer rounded flex items-center p-4 hover:bg-green-light gap-x-4 relative">
                                         <input x-model="selectedOption" type="radio" name="option" value="values" class="custom-radio border-dark focus:ring-0 cursor-pointer">

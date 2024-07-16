@@ -105,7 +105,7 @@
                 </button>
             </div>
 
-            @if (($searchable && $multiple) || ($searchable && !$multiple && count($options) > 5))
+            @if (($searchable && $multiple) || ($searchable && !$multiple && count($options) > 10))
                 <div class="grid grid-cols-12 gap-4 px-6 mt-4 mb-2">
                     <div class="col-span-12" :class="{ 'md:col-span-8': multiple }">
                         <div class="bg-white rounded px-4 py-3 gap-3 flex items-center border border-[#D4DDD7]">
