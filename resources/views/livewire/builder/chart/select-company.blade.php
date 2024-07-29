@@ -43,7 +43,7 @@
 }">
     <div class="flex items-center justify-between">
         <label class="font-medium" style="line-height: 32px;">Search for Companies</label><br>
-        <button class="font-semibold text-gray-medium2 hover:text-red text-sm 2xl:text-base" @click.prevent="tmpValue = []; showResult()" x-cloak x-show="value.length">Clear All Companies</button>
+        <button class="font-semibold text-red text-sm 2xl:text-base" @click.prevent="tmpValue = []; showResult()" x-cloak x-show="value.length">Clear All Companies</button>
     </div>
     <div wire:ignore>
         <x-dropdown x-model="showDropdown" placement="bottom-start" :fullWidthTrigger="true">

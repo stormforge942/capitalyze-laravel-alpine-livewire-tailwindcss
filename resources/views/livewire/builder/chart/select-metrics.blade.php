@@ -129,7 +129,7 @@
                 <span class="text-dark-light2">Metrics are applied to all companies</span>
             </div>
         </label>
-        <button class="font-semibold text-gray-medium2 hover:text-red text-sm 2xl:text-base" @click.prevent="tmpValue = []; showResult()"
+        <button class="font-semibold text-red text-sm 2xl:text-base" @click.prevent="tmpValue = []; showResult()"
             x-cloak x-show="value.length">
             Clear All Metrics
         </button>
