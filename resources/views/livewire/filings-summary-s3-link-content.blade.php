@@ -79,9 +79,11 @@
                                     },
                                     1,
                                     '{{ $name_of_issuer }}',
-                                    true
+                                    true,
                                 )
                             );
+                            container.style.display = 'block';
+                            scrollToHighlightRow();
 
                             window.addEventListener('{{ $id }}', (e) => {
                                 container.children[container.children.length - 1].remove();
@@ -94,9 +96,9 @@
                                         '{{ $name_of_issuer }}'
                                     )
                                 );
+                                
+                                scrollToHighlightRow();
                             });
-
-                            container.style.display = 'block';
                         })
                         .catch(error => {
                             alert('An error occurred while fetching the content')
@@ -105,6 +107,18 @@
                         .finally(() => {
                             document.getElementById('{{ $id }}-loader').remove();
                         });
+
+                    function scrollToHighlightRow() {
+                        const highlightRow = document.querySelector('.highlight-row');
+
+                        if (highlightRow) {
+                            highlightRow.scrollIntoView({
+                                block: 'start',
+                                behavior: 'smooth',
+                                inline: 'start'
+                            });
+                        }
+                    }
 
                     function generateTable(data, page, find = null, first = false) {
                         const PAGE_SIZE = 20;
@@ -170,6 +184,7 @@
                                     highlight = true;
                                 }
                                 if (highlight && cell.trim()) {
+                                    tr.classList.add('highlight-row');
                                     span.style.backgroundColor = 'yellow';
                                 }
                                 td.appendChild(span);

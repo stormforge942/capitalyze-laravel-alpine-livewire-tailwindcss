@@ -39,7 +39,8 @@ class CreateNavbarGroupShows extends Command
             $isBottomNavbar = Str::startsWith($navbar->route_name, Navbar::PRIMARY_NAV);
             $isUpperNavbar = in_array($navbar->route_name, [
                 '',
-                'track-investor',
+                'track-investors',
+                'insider-transactions',
                 'event-filings',
                 'earnings-calendar',
                 'economics-calendar',
