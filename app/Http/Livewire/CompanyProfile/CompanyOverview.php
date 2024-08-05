@@ -510,7 +510,11 @@ class CompanyOverview extends Component
         }
 
         foreach (['ebitda', 'toi', 'adjNetIncome', 'dilutedEPS', 'dilutedSharesOut', 'revenues', 'lfcf', 'lfcfMargin', 'fcfPerShare'] as $var) {
-            $this->{$var} = array_map(fn ($val) => floatval(explode('|', $val[0])[0]), $this->{$var});
-        }
+            if (is_array($this->{$var})) {
+                $this->{$var} = array_map(fn ($val) => $val !== null ? floatval(explode('|', $val[0])[0]) : null, $this->{$var});
+            } else {
+                $this->{$var} = []; 
+            }
+        }  
     }
 }
