@@ -60,19 +60,30 @@ class S3LinkContent extends SlideOver
         );
     }
 
-    private function _hightlightDates()
+    
+    private function _hightlightDates(): string
     {
         $dateRegexes = $this->createDateRegexes();
 
-        // Callback function to replace matched date strings with highlighted version
-        $replaceCallback = function ($matches) {
-            return '<span style="background-color:yellow; color: black; display: inline;">' . $matches[0] . '</span>';
+        // Match HTML tags and content separately
+        $pattern = '/(<[^>]+>)([^<]*)(<\/[^>]+>)/s';
+        
+        // Callback function to highlight dates in the text content
+        $replaceCallback = function ($matches) use ($dateRegexes) {
+            $textContent = $matches[2];
+            
+            // Apply date highlighting to the text content
+            foreach ($dateRegexes as $regex) {
+                $textContent = preg_replace_callback($regex, function ($match) {
+                    return '<span style="background-color:yellow; color: black; display: inline;">' . $match[0] . '</span>';
+                }, $textContent);
+            }
+
+            return $matches[1] . $textContent . $matches[3];
         };
 
         // Apply regex replacements to HTML content
-        foreach ($dateRegexes as $regex) {
-            $htmlContent = preg_replace_callback($regex, $replaceCallback, $this->content);
-        }
+        $htmlContent = preg_replace_callback($pattern, $replaceCallback, $this->content);
 
         return $htmlContent;
     }
