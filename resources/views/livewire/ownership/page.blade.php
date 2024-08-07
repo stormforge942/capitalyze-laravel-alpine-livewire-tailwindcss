@@ -22,7 +22,7 @@
                 </div>
 
                 @if (count($formTypes))
-                    <div class="border rounded border-blue border-opacity-50 px-1.5 py-0.5">
+                    <div class="border rounded border-blue border-opacity-50 px-1.5 py-0.5" x-show="formType" x-cloak>
                         FORM TYPE:
                         <span class="font-semibold text-blue" x-text="formType"></span>
                     </div>

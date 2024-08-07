@@ -2,7 +2,7 @@
 
 /**
  * Usage php feeder.php --drop={true|false} --tables={table1,table2,table3}
- * 
+ *
  *  @param bool drop - drop the database before creating it
  *  @param string tables - comma separated list of tables to replicate
  */
@@ -55,6 +55,7 @@ $tables = [
     'info_facts_data',
     'info_presentations',
     'info_tikr_presentations',
+    'insider_ownership',
     'insider_transactions',
     'japan_feed',
     'japan_statements',
@@ -73,6 +74,7 @@ $tables = [
     'rss_feed',
     'shanghai_feed',
     'shanghai_statements',
+    'shares_beneficially_owned',
     'shenzhen_feed',
     'shenzhen_statements',
     'splits',
@@ -91,7 +93,7 @@ replicateSchema($xbrl, $replica, $selectedTables, true);
 $symbols = [
     'AAPL',
     'MSFT',
-    'VMI'
+    'VMI',
 ];
 
 $ciks = [
@@ -108,7 +110,9 @@ function getArgs($argv)
 {
     $args = [];
     foreach ($argv as $idx => $arg) {
-        if ($idx === 0) continue;
+        if ($idx === 0) {
+            continue;
+        }
 
         if (strpos($arg, '--') === 0) {
             $arg = substr($arg, 2);
@@ -150,7 +154,7 @@ function selectedTables($tables, $args)
 
     $selected = explode(',', $args['tables']);
 
-    return array_values(array_filter($tables, fn ($table) => in_array($table, $selected)));
+    return array_values(array_filter($tables, fn($table) => in_array($table, $selected)));
 }
 
 function replicateSchema($xbrl, $replica, $tables, $drop = false)
@@ -192,7 +196,7 @@ function fillData($xbrl, $replica, $tables, $symbols, $ciks)
             $stmt = $xbrl->query("SELECT * FROM $table where symbol in ($stringSymbols) order by period_of_report desc");
         } else if ($table === 'filings_summary' || $table === 'industry_summary') {
             $ciks = $replica->query("SELECT distinct cik FROM filings")->fetchAll(PDO::FETCH_COLUMN);
-            $ciks = array_map(fn ($cik) => "'$cik'", $ciks);
+            $ciks = array_map(fn($cik) => "'$cik'", $ciks);
             $ciks = implode(',', $ciks);
 
             if ($table === 'filings_summary' && $ciks != '') {
@@ -203,9 +207,9 @@ function fillData($xbrl, $replica, $tables, $symbols, $ciks)
             }
         } else if ($table === 'mutual_fund_holdings_summary') {
             $ciks = $replica->query("SELECT distinct cik FROM mutual_fund_holdings")->fetchAll(PDO::FETCH_COLUMN);
-            $ciks = array_map(fn ($cik) => "'$cik'", $ciks);
-            $ciks = implode(',', $ciks);
+            $ciks = array_map(fn($cik) => "'$cik'", $ciks);
 
+            $ciks = implode(',', $ciks);
             $stmt = $xbrl->query("SELECT * FROM $table WHERE is_latest=true or date='2023-12-31' and cik in ($ciks)");
         } else if ($table === 'earnings_calendar') {
             $start = now()->subDay()->toDateString();
@@ -214,13 +218,20 @@ function fillData($xbrl, $replica, $tables, $symbols, $ciks)
             $stmt = $xbrl->query("SELECT * FROM $table where date between '$start' and '$end'");
         } else if (in_array($table, ['info_idx_tb', 'tikr_text_block_content', 'as_reported_sec_text_block_content'])) {
             $stmt = $xbrl->query("SELECT * FROM $table where ticker in ($stringSymbols) limit 1000");
+        } else if (in_array($table, ['insider_ownership', 'shares_beneficially_owned'])) {
+            $stmt = $xbrl->query("SELECT * FROM $table where symbol in ($stringSymbols) limit 1000");
         }
 
-        if (!$stmt) continue;
+        if (!$stmt) {
+            continue;
+        }
 
         $data = $stmt->fetchAll(PDO::FETCH_ASSOC);
 
-        if (count($data) === 0) continue;
+        if (count($data) === 0) {
+            continue;
+        }
+
         $columns = array_keys($data[0]);
         $columns = implode(', ', $columns);
 

@@ -2,12 +2,12 @@
 
 namespace App\Http\Livewire\Ownership;
 
+use App\Http\Livewire\Ownership\CompanyInsiders;
 use App\Models\Company;
-use Livewire\Component;
 use App\Models\CompanyInsider;
 use App\Services\OwnershipHistoryService;
-use App\Http\Livewire\Ownership\CompanyInsiders;
 use Illuminate\Support\Facades\Cache;
+use Livewire\Component;
 
 class Page extends Component
 {
@@ -20,10 +20,12 @@ class Page extends Component
     {
         $this->company = $company;
 
-        $this->tabs =  [
+        $this->tabs = [
             Shareholders::class,
             MutualFunds::class,
             [CompanyInsiders::class, $company->ticker . ' Insider Transactions'],
+            InsiderOwnership::class,
+            ProxyStatement::class,
         ];
 
         OwnershipHistoryService::push([
