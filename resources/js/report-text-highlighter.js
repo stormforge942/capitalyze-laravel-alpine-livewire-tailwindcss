@@ -53,6 +53,7 @@ function highlightElement(el) {
     el = el.querySelector("span") || el.querySelector("font") || el
 
     el.style.backgroundColor = "yellow"
+    el.classList.add('highlight-text')
 }
 
 window.reportTextHighlighter = {

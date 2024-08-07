@@ -10,7 +10,24 @@
                     No content found
                 </p>
             @else
-                <iframe class="w-full h-full" srcdoc="{!! strip_tags(htmlspecialchars($content)) !!}" frameborder="0"></iframe>
+                <div class="h-full" x-data="{
+                    init() {
+                        const iframe = this.$el.children[0]
+                
+                        iframe.onload = () => {
+                            const highlightText = iframe.contentDocument.getElementsByClassName('highlight-text')
+                            if (highlightText.length) {
+                                highlightText[0].scrollIntoView({
+                                    block: 'center',
+                                    behavior: 'smooth',
+                                    inline: 'center'
+                                })
+                            }
+                        }
+                    }
+                }">
+                    <iframe class="w-full h-full" srcdoc="{!! strip_tags(htmlspecialchars($content)) !!}" frameborder="0"></iframe>
+                </div>
             @endif
         </div>
     </div>

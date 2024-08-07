@@ -21,6 +21,17 @@
                                 'table tbody tr td .FormData',
                                 iframe.contentDocument
                             )
+
+                            setTimeout(() => {
+                                const highlightText = iframe.contentDocument.getElementsByClassName('highlight-text')
+                                if (highlightText.length) {
+                                    highlightText[0].scrollIntoView({
+                                        block: 'start',
+                                        behavior: 'smooth',
+                                        inline: 'start'
+                                    })
+                                }
+                            }, 100)
                         }
                                             }
                 }" @endif>
