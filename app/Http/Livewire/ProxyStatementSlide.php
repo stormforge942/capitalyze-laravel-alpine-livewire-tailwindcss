@@ -5,7 +5,7 @@ namespace App\Http\Livewire;
 use WireElements\Pro\Components\SlideOver\SlideOver;
 use Illuminate\Support\Facades\DB;
 
-class ProxyStatementHTMLSlide extends SlideOver
+class ProxyStatementSlide extends SlideOver
 {
     public $symbol;
     public $acceptance_time;
@@ -36,7 +36,7 @@ class ProxyStatementHTMLSlide extends SlideOver
 
     public function render()
     {
-        return view('livewire.proxy-statement-html-slide');
+        return view('livewire.proxy-statement-slide');
     }
 
     public static function behavior(): array

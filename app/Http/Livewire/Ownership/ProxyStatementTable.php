@@ -77,7 +77,7 @@ class ProxyStatementTable extends BaseTable
             ->addColumn(
                 'html',
                 function ($row) {
-                    return '<button type="button" class="inline-block px-2 py-1 bg-[#DCF6EC] hover:bg-green-dark transition-all rounded" onclick="Livewire.emit(`slide-over.open`, `proxy-statement-html-slide`, { symbol: `' . $this->ticker . '`, acceptance_time: `' . $row->acceptance_time . '` })">Open</button>';
+                    return '<button type="button" class="inline-block px-2 py-1 bg-[#DCF6EC] hover:bg-green-dark transition-all rounded" onclick="Livewire.emit(`slide-over.open`, `proxy-statement-slide`, { symbol: `' . $this->ticker . '`, acceptance_time: `' . $row->acceptance_time . '` })">Open</button>';
                 }
             )
             ->addColumn(
