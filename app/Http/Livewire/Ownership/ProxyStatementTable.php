@@ -76,7 +76,7 @@ class ProxyStatementTable extends BaseTable
             ->addColumn(
                 'form_data',
                 function ($row) {
-                    return '<button type="button" class="inline-block px-2 py-1 bg-[#DCF6EC] hover:bg-green-dark transition-all rounded" onclick="Livewire.emit(`slide-over.open`, `s3-link-content`, { sourceLink: `' . $row->s3_url . '`, highlightDates: true })">Open</button>';
+                    return '<button type="button" class="inline-block px-2 py-1 bg-[#DCF6EC] hover:bg-green-dark transition-all rounded" onclick="Livewire.emit(`slide-over.open`, `s3-link-content`, { sourceLink: `' . $row->s3_url . '`, url: `' . $row->url . '`, highlightDates: true })">Open</button>';
                 }
             )
             ->addColumn('securities_owned_following_transaction')

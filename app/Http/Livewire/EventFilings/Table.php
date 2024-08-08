@@ -67,7 +67,7 @@ class Table extends BaseTable
             })
             ->addColumn('form_type')
             ->addColumn('formatted_form_type', function ($row) {
-                return '<button class="inline-block px-2 py-1 bg-[#DCF6EC] hover:bg-green-dark transition-all rounded" @click="Livewire.emit(`slide-over.open`, `s3-link-content`, { sourceLink: `' . $row->s3_link . '` })">' . $row->form_type . '</button>';
+                return '<button class="inline-block px-2 py-1 bg-[#DCF6EC] hover:bg-green-dark transition-all rounded" @click="Livewire.emit(`slide-over.open`, `s3-link-content`, { sourceLink: `' . $row->s3_link . '`, url: `' . $row->final_link . '` })">' . $row->form_type . '</button>';
             })
             ->addColumn('description')
             ->addColumn('filing_date');

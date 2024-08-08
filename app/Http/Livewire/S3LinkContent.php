@@ -7,6 +7,7 @@ use WireElements\Pro\Components\SlideOver\SlideOver;
 class S3LinkContent extends SlideOver
 {
     public ?string $sourceLink = null;
+    public ?string $url = null;
     private string $content = '';
     public bool $highlightDates = false;
 
@@ -28,6 +29,8 @@ class S3LinkContent extends SlideOver
         $this->content = $this->removeThirdPartyJs($this->content);
         $this->content = $this->injectLinkClickPrevent($this->content);
         $this->content = $this->removeNotLoadedIcons($this->content);
+
+        $this->content = $this->makeFullLinkImage($this->content);
     }
 
     public static function attributes(): array
@@ -60,6 +63,32 @@ class S3LinkContent extends SlideOver
         );
     }
 
+    private function makeFullLinkImage(string $html): string
+    {
+        if (!$this->url) {
+            return $html;
+        }
+
+        $finalLinkImage = dirname($this->url);
+
+        $htmlContent = preg_replace_callback(
+            '/<img\s+([^>]*)(src="([^"]+\.jpg)")([^>]*)>/i',
+            function ($matches) use ($finalLinkImage) {
+                $beforeSrcAttributes = $matches[1];
+                $imgSrc = $matches[3];
+                $afterSrcAttributes = $matches[4];
+
+                if (strpos($imgSrc, 'https://www.sec.gov') !== 0) {
+                    $imgSrc = $finalLinkImage . '/' . $imgSrc;
+                }
+
+                return '<img ' . $beforeSrcAttributes . 'src="' . $imgSrc . '"' . $afterSrcAttributes . '>';
+            },
+            $html
+        );
+
+        return $htmlContent;
+    }
     
     private function _hightlightDates(): string
     {
