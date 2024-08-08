@@ -44,7 +44,6 @@ class ProxyStatementTable extends BaseTable
                 'cik',
                 'company_name',
                 'acceptance_time',
-                'html',
                 'url',
                 's3_url',
             ]);
@@ -57,6 +56,8 @@ class ProxyStatementTable extends BaseTable
             Column::make('Acceptance Time', 'date', 'acceptance_time')->sortable()
                 ->headerAttribute('[&>div]:justify-end')
                 ->bodyAttribute('text-right'),
+            Column::make('HTML', 'html', 'acceptance_time')
+                ->headerAttribute('[&>div]:justify-end')->bodyAttribute('text-right'),
             Column::make('Data', 'form_data')
                 ->headerAttribute('[&>div]:justify-end')->bodyAttribute('text-right'),
         ];
@@ -73,6 +74,12 @@ class ProxyStatementTable extends BaseTable
 
                 return Carbon::parse($row->acceptance_time)->format('Y-m-d');
             })
+            ->addColumn(
+                'html',
+                function ($row) {
+                    return '<button type="button" class="inline-block px-2 py-1 bg-[#DCF6EC] hover:bg-green-dark transition-all rounded" onclick="Livewire.emit(`slide-over.open`, `proxy-statement-html-slide`, { symbol: `' . $this->ticker . '`, acceptance_time: `' . $row->acceptance_time . '` })">Open</button>';
+                }
+            )
             ->addColumn(
                 'form_data',
                 function ($row) {
