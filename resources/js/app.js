@@ -23,6 +23,7 @@ import "./report-text-highlighter"
 import "./chartjs-plugins"
 import "./pages/ownership"
 import "./pages/analysis"
+import "./pages/overlap"
 import "./export-table-to-excel"
 import "./urlWindow.js"
 
