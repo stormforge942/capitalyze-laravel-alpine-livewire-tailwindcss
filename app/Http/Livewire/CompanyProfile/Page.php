@@ -27,6 +27,7 @@ class Page extends Component
             'tabs' => [
                 CompanyOverview::class,
                 BusinessInformation::class,
+                CompanyStatistics::class,
             ],
             'tabData' => [
                 'profile' => $companyProfile,

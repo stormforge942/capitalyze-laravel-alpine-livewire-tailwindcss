@@ -82,6 +82,8 @@ $tables = [
     'tikr_text_block_content',
     'tsx_statements',
     'info_idx_tb',
+    'short_interest',
+    'key_metrics',
 ];
 
 $replica = makeDatabase($args['drop']);
@@ -192,7 +194,7 @@ function fillData($xbrl, $replica, $tables, $symbols, $ciks)
             $stmt = $xbrl->query("SELECT * FROM $table WHERE $symbolColumn IN ($_stringSymbols)");
         } else if ($table === 'filings') {
             $stmt = $xbrl->query("SELECT * FROM $table where cik in ($stringCiks) and symbol in ('AAPL', 'MSFT') order by report_calendar_or_quarter desc");
-        } else if ($table === 'mutual_fund_holdings') {
+        } else if (in_array($table, ['mutual_fund_holdings', 'key_metrics'])) {
             $stmt = $xbrl->query("SELECT * FROM $table where symbol in ($stringSymbols) order by period_of_report desc");
         } else if ($table === 'filings_summary' || $table === 'industry_summary') {
             $ciks = $replica->query("SELECT distinct cik FROM filings")->fetchAll(PDO::FETCH_COLUMN);
@@ -218,6 +220,8 @@ function fillData($xbrl, $replica, $tables, $symbols, $ciks)
             $stmt = $xbrl->query("SELECT * FROM $table where date between '$start' and '$end'");
         } else if (in_array($table, ['info_idx_tb', 'tikr_text_block_content', 'as_reported_sec_text_block_content'])) {
             $stmt = $xbrl->query("SELECT * FROM $table where ticker in ($stringSymbols) limit 1000");
+        } else if ($table === 'short_interest') {
+            $stmt = $xbrl->query("SELECT * FROM $table where symbol in ($stringSymbols) order by settlement_date desc");
         } else if (in_array($table, ['insider_ownership', 'shares_beneficially_owned'])) {
             $stmt = $xbrl->query("SELECT * FROM $table where symbol in ($stringSymbols) limit 1000");
         }
