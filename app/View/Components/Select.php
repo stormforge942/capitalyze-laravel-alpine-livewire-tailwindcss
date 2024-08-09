@@ -17,6 +17,9 @@ class Select extends Component
         public bool $searchable = true,
         public bool $multiple = false,
         public string $callback = "",
+        public bool $disabled = false,
+        public string $size = 'sm',
+        public string $color = '#D4DDD7',
     ) {
         if (!$this->associativeArray($options)) {
             $this->options = array_reduce($options, function ($carry, $item) {

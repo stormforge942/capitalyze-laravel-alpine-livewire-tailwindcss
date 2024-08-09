@@ -8,6 +8,8 @@
     search: '',
     placeholder: '{{ $placeholder }}',
     multiple: {{ $multiple ? 'true' : 'false' }},
+    disabled: @js($disabled),
+    pillTextStyle: 'text-{{ $size }} text-[{{ $color }}]',
     get computedOptions() {
         if (!this.search) {
             return this.options
@@ -33,8 +35,8 @@
         return this.options[this.value] || this.placeholder
     },
     get filtersChanged() {
-        const filters = Array.from(this.value);
-        const tmpFilters = Array.from(this.tmpValue);
+        const filters = Array.from(this.value || []);
+        const tmpFilters = Array.from(this.tmpValue || []);
 
         return filters.length === tmpFilters.length && filters.sort().join('') === tmpFilters.sort().join('');
     },
@@ -68,11 +70,12 @@
         })
     },
 }" x-modelable="value" {{ $attributes->merge(['class' => 'inline-block']) }}>
-    <x-dropdown x-model="showDropdown" placement="bottom-start">
+    <x-dropdown x-model="showDropdown" placement="bottom-start" :disabled="$disabled">
         <x-slot name="trigger">
-            <div class="border-[0.5px] border-[#D4DDD7] p-2 rounded-full flex items-center gap-x-1"
+            <div class="border border-[{{ $color }}] p-2 rounded-full flex items-center gap-x-1"
+                :class="disabled ? 'bg-[#E2E2E2]' : ''"
                 :class="showDropdown ? 'bg-[#E2E2E2]' : 'bg-white hover:bg-[#E2E2E2]'" style="max-width: 15rem">
-                <span class="text-sm truncate" x-text="pillText">
+                <span class="truncate" x-bind:class="pillTextStyle" x-text="pillText">
                 </span>
 
                 @if ($multiple)
@@ -172,7 +175,7 @@
             <div class="p-6">
                 <button type="button"
                     class="w-full px-4 py-3 font-medium bg-green-dark hover:bg-opacity-80 rounded disabled:pointer-events-none disabled:bg-[#D4DDD7] disabled:text-gray-medium2 text-base"
-                    @click="value = tmpValue; showDropdown = false;" :disabled="filtersChanged">
+                    @click="value = tmpValue; showDropdown = false; $dispatch('selected', { selected: tmpValue });" :disabled="filtersChanged">
                     Show Result
                 </button>
             </div>

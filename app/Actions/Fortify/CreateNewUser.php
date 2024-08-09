@@ -2,13 +2,15 @@
 
 namespace App\Actions\Fortify;
 
+use App\Enums\Plan;
+use App\Models\Team;
 use App\Models\User;
 use App\Models\Groups;
+use App\Notifications\NewUser;
+use Laravel\Jetstream\Jetstream;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Validator;
 use Laravel\Fortify\Contracts\CreatesNewUsers;
-use Laravel\Jetstream\Jetstream;
-use App\Notifications\NewUser;
 
 class CreateNewUser implements CreatesNewUsers
 {
@@ -43,6 +45,11 @@ class CreateNewUser implements CreatesNewUsers
             $groupId = $group->id;
         }
 
+        $team = Team::create([
+            'name' => $input['name'] . '\' Team',
+            'plan' => Plan::SOLO,
+        ]);
+
         $newUser = User::create([
             'name' => $input['name'],
             'email' => $input['email'],
@@ -50,6 +57,7 @@ class CreateNewUser implements CreatesNewUsers
             'is_approved' => false, // New users are not approved by default
             'group_id' => $groupId,
             'linkedin_link' => $input['linkedin_link'] ?? null,
+            'current_team_id' => $team->id,
         ]);
 
         $admins = User::where('is_admin', true)->get(); // Fetch all admins

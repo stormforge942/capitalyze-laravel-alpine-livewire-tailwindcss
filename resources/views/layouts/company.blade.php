@@ -88,6 +88,8 @@
                 <livewire:builder.chart />
             @elseif($tab === 'builder-table')
                 <livewire:builder.table />
+            @elseif($tab === 'account-settings')
+                <livewire:account-settings.page :src="$src" :tab="$subtab" />
             @endif
         </div>
     </main>

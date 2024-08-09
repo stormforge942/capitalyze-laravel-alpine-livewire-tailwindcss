@@ -20,7 +20,7 @@
         })
     },
 }" @hide-dropdown="dropdown.hide()" x-modelable="open" {{ $attributes }}>
-    <button class="dropdown-trigger {{ $fullWidthTrigger ? 'block w-full' : '' }}" x-ref="trigger">
+    <button class="dropdown-trigger {{ $fullWidthTrigger ? 'block w-full' : '' }}" x-ref="trigger" {{ $disabled ? 'disabled' : '' }}>
         {{ $trigger ?? '' }}
     </button>
 

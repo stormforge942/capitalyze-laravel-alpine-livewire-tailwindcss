@@ -18,6 +18,7 @@ class Dropdown extends Component
         public bool $fullWidthTrigger = false,
         public int $offsetDistance = 4,
         public bool $teleport = false,
+        public bool $disabled = false,
     ) {
     }
 

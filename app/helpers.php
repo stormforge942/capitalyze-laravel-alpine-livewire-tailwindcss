@@ -1,8 +1,10 @@
 <?php
 
+use App\Models\User;
 use Illuminate\Support\Arr;
 use Illuminate\Support\Str;
 use Illuminate\Support\Carbon;
+use Illuminate\Support\Facades\Hash;
 
 function getLowPriceFromDashRange($lowHighString, $default = '-'): string
 {
@@ -260,4 +262,99 @@ function generate_quarter_options(Carbon $start, Carbon $end, string $suffix = '
     }
 
     return array_reverse($quarters, true);
+}
+
+function getOrdinalSuffix($day)
+{
+    if ($day > 3 && $day < 21) return 'th'; // 11th, 12th, 13th, etc.
+    switch ($day % 10) {
+        case 1:
+            return 'st';
+        case 2:
+            return 'nd';
+        case 3:
+            return 'rd';
+        default:
+            return 'th';
+    }
+}
+
+function formatDate($date)
+{
+    $months = [
+        'January', 'February', 'March', 'April', 'May', 'June',
+        'July', 'August', 'September', 'October', 'November', 'December'
+    ];
+
+    $day = (int) $date->format('j');
+    $month = $months[(int) $date->format('n') - 1];
+    $year = $date->format('Y');
+
+    $ordinalSuffix = getOrdinalSuffix($day);
+
+    return "{$day}{$ordinalSuffix} {$month}, {$year}";
+}
+
+function formatTime($date)
+{
+    $hours = (int) $date->format('H');
+    $minutes = (int) $date->format('i');
+    $ampm = $hours >= 12 ? 'pm' : 'am';
+    $hours = $hours % 12;
+    $hours = $hours ? $hours : 12; // the hour '0' should be '12'
+    $strMinutes = $minutes < 10 ? '0' . $minutes : $minutes;
+
+    return "{$hours}:{$strMinutes}{$ampm}";
+}
+
+function formatDateTime($date, $middle = ' ')
+{
+    $time = formatTime($date);
+    return formatDate($date) . $middle . $time . ' CET';
+}
+
+function getCountries()
+{
+    return [
+        'Afghanistan', 'Albania', 'Algeria', 'Andorra', 'Angola', 'Antigua and Barbuda', 'Argentina', 'Armenia', 'Australia', 'Austria', 'Azerbaijan',
+        'Bahamas', 'Bahrain', 'Bangladesh', 'Barbados', 'Belarus', 'Belgium', 'Belize', 'Benin', 'Bhutan', 'Bolivia', 'Bosnia and Herzegovina', 'Botswana', 'Brazil', 'Brunei', 'Bulgaria', 'Burkina Faso', 'Burundi',
+        'Cabo Verde', 'Cambodia', 'Cameroon', 'Canada', 'Central African Republic', 'Chad', 'Chile', 'China', 'Colombia', 'Comoros', 'Congo (Congo-Brazzaville)', 'Costa Rica', 'Croatia', 'Cuba', 'Cyprus', 'Czechia (Czech Republic)',
+        'Denmark', 'Djibouti', 'Dominica', 'Dominican Republic', 'Ecuador', 'Egypt', 'El Salvador', 'Equatorial Guinea', 'Eritrea', 'Estonia', 'Eswatini (fmr. "Swaziland")', 'Ethiopia',
+        'Fiji', 'Finland', 'France',
+        'Gabon', 'Gambia', 'Georgia', 'Germany', 'Ghana', 'Greece', 'Grenada', 'Guatemala', 'Guinea', 'Guinea-Bissau', 'Guyana',
+        'Haiti', 'Honduras', 'Hungary',
+        'Iceland', 'India', 'Indonesia', 'Iran', 'Iraq', 'Ireland', 'Israel', 'Italy',
+        'Jamaica', 'Japan', 'Jordan',
+        'Kazakhstan', 'Kenya', 'Kiribati', 'Kuwait', 'Kyrgyzstan',
+        'Laos', 'Latvia', 'Lebanon', 'Lesotho', 'Liberia', 'Libya', 'Liechtenstein', 'Lithuania', 'Luxembourg',
+        'Madagascar', 'Malawi', 'Malaysia', 'Maldives', 'Mali', 'Malta', 'Marshall Islands', 'Mauritania', 'Mauritius', 'Mexico', 'Micronesia', 'Moldova', 'Monaco', 'Mongolia', 'Montenegro', 'Morocco', 'Mozambique', 'Myanmar (formerly Burma)',
+        'Namibia', 'Nauru', 'Nepal', 'Netherlands', 'New Zealand', 'Nicaragua', 'Niger', 'Nigeria', 'North Korea', 'North Macedonia', 'Norway',
+        'Oman',
+        'Pakistan', 'Palau', 'Palestine State', 'Panama', 'Papua New Guinea', 'Paraguay', 'Peru', 'Philippines', 'Poland', 'Portugal',
+        'Qatar',
+        'Romania', 'Russia', 'Rwanda',
+        'Saint Kitts and Nevis', 'Saint Lucia', 'Saint Vincent and the Grenadines', 'Samoa', 'San Marino', 'Sao Tome and Principe', 'Saudi Arabia', 'Senegal', 'Serbia', 'Seychelles', 'Sierra Leone', 'Singapore', 'Slovakia', 'Slovenia', 'Solomon Islands', 'Somalia', 'South Africa', 'South Korea', 'South Sudan', 'Spain', 'Sri Lanka', 'Sudan', 'Suriname', 'Sweden', 'Switzerland', 'Syria',
+        'Taiwan', 'Tajikistan', 'Tanzania', 'Thailand', 'Timor-Leste', 'Togo', 'Tonga', 'Trinidad and Tobago', 'Tunisia', 'Turkey', 'Turkmenistan', 'Tuvalu',
+        'Uganda', 'Ukraine', 'United Arab Emirates', 'United Kingdom', 'United States of America', 'Uruguay', 'Uzbekistan',
+        'Vanuatu', 'Venezuela', 'Vietnam',
+        'Yemen',
+        'Zambia', 'Zimbabwe'
+    ];
+}
+
+function confirmPassword(User $user, string $password): bool
+{
+    $isValid = Hash::check($password, $user->password);
+
+    if ($isValid) {
+        session(['auth.password_confirmed_at' => time()]);
+    }
+
+    return $isValid;
+}
+
+function isPasswordConfirmed(): bool
+{
+    $period = config('auth.password_timeout', 900);
+    return (time() - session('auth.password_confirmed_at', 0)) < $period;
 }

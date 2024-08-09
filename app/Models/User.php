@@ -10,6 +10,7 @@ use Laravel\Fortify\TwoFactorAuthenticatable;
 use Illuminate\Contracts\Auth\MustVerifyEmail;
 use Illuminate\Database\Eloquent\Casts\Attribute;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
+use Illuminate\Database\Eloquent\Relations\HasOne;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 
 class User extends Authenticatable implements MustVerifyEmail
@@ -30,13 +31,19 @@ class User extends Authenticatable implements MustVerifyEmail
         'name',
         'email',
         'password',
+        'job',
+        'dob',
+        'country',
         'is_approved',
         'is_admin',
         'group_id',
         'linkedin_link',
+        'facebook_link',
+        'twitter_link',
         'settings',
         'last_activity_at',
         'is_password_set',
+        'current_team_id',
     ];
 
     /**
@@ -49,6 +56,9 @@ class User extends Authenticatable implements MustVerifyEmail
         'remember_token',
         'two_factor_recovery_codes',
         'two_factor_secret',
+        'two_factor_email',
+        'two_factor_code',
+        'two_factor_expires_at',
     ];
 
     /**
@@ -72,6 +82,7 @@ class User extends Authenticatable implements MustVerifyEmail
      */
     protected $appends = [
         'profile_photo_url',
+        'initials',
     ];
 
     public function initials(): Attribute
@@ -95,8 +106,26 @@ class User extends Authenticatable implements MustVerifyEmail
         return Attribute::make(get: fn () => explode(' ', $this->name)[0]);
     }
 
+    public function team(): HasOne
+    {
+        return $this->hasOne(Team::class, 'id', 'current_team_id');
+    }
+
     public function isAdmin(): bool
     {
         return $this->is_admin;
+    }
+
+    public function resetTwoFactorCode()
+    {
+        $this->timestamps = false;
+        
+        $this->two_factor_code = null;
+        $this->two_factor_expires_at = null;
+        $this->save();
+    }
+
+    public function isTwoFactorEnabled() {
+        return $this->two_factor_email != null;
     }
 }

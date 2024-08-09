@@ -13,7 +13,8 @@ class SearchFilter extends Component
      */
     public function __construct(
         public string $placeholder = "Search...",
-        public string $fontSize = "sm+"
+        public string $fontSize = "sm+",
+        public string $py="4",
     ) {
         //
     }

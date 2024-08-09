@@ -21,6 +21,7 @@ use Laravel\Fortify\Contracts\ResetPasswordViewResponse;
 use Laravel\Fortify\Contracts\LoginResponse as LoginResponseContract;
 use App\Http\Responses\CustomSuccessfulPasswordResetLinkRequestResponse;
 use Laravel\Fortify\Contracts\SuccessfulPasswordResetLinkRequestResponse;
+use App\Http\Controllers\Auth\CustomAuthenticatedSessionController;
 
 class FortifyServiceProvider extends ServiceProvider
 {

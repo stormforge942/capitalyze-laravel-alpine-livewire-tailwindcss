@@ -1,11 +1,12 @@
-<div
-    class="bg-white flex items-center py-4 pl-4 pr-2 border border-[#D4DDD7] rounded-lg"
-    x-data="{
+<div x-data="{
+        paddingY: 'py-{{ $py }}',
         fontSizes: {
             'sm+': 'text-sm+ placeholder:text-sm+',
             'base': 'text-base placeholder:text-base'
         }
     }"
+    class="bg-white flex items-center pl-4 pr-2 border border-[#D4DDD7] rounded-lg"
+    x-bind:class="paddingY"
 >
     <svg class="h-6 w-6 shrink-0" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
         <path

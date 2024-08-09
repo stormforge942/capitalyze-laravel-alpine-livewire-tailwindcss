@@ -23,12 +23,13 @@ use App\Http\Controllers\TsxController;
 use App\Http\Controllers\FundController;
 use App\Http\Controllers\HkexController;
 use App\Http\Controllers\HomeController;
+use App\Http\Controllers\TeamController;
+use App\Http\Controllers\AccountSettingsController;
 use App\Http\Livewire\EconomicsCalendar;
 use App\Http\Controllers\AdminController;
 use App\Http\Controllers\JapanController;
 use App\Http\Livewire\CompanyFilingsPage;
 use App\Http\Livewire\CompanyIdentifiers;
-use App\Http\Controllers\CompanyEodPrices;
 use App\Http\Middleware\EnsureUserIsAdmin;
 use App\Http\Controllers\BuilderController;
 use App\Http\Controllers\CompanyController;
@@ -54,6 +55,9 @@ use App\Http\Controllers\Auth\PasswordResetLinkController;
 use App\Http\Controllers\CompanyEodPricesController;
 use App\Http\Controllers\ResetPasswordSuccessfulController;
 use Laravel\Fortify\Http\Controllers\AuthenticatedSessionController;
+use App\Http\Controllers\Auth\CustomAuthenticatedSessionController;
+use App\Http\Controllers\Auth\TwoFactorController;
+use App\Http\Controllers\TeamInvitationController;
 
 Route::get('/test-speed', function () {
     return "hello World";
@@ -61,7 +65,7 @@ Route::get('/test-speed', function () {
 
 Route::get('/', HomeController::class)->name('home');
 
-Route::group(['middleware' => ['auth', 'approved', 'verified', CheckPagePermission::class]], function () {
+Route::group(['middleware' => ['auth', 'two_factor', 'approved', 'verified', CheckPagePermission::class]], function () {
     Route::get('/track-investors', TrackInvestorController::class)->name('track-investors');
     Route::get('/event-filings', EventFilingsController::class)->name('event-filings');
     Route::get('/insider-transactions', InsiderTransactionsController::class)->name('insider-transactions');
@@ -172,7 +176,7 @@ Route::group(['middleware' => ['auth', 'approved', 'verified', CheckPagePermissi
     Route::post('/table-builder/{table}/update-table-order', [TableController::class, 'updateTableOrder'])->name('table-builder.update.table-order');
 });
 
-Route::group(['middleware' => ['auth', 'verified', EnsureUserIsAdmin::class]], function () {
+Route::group(['middleware' => ['auth', 'verified', 'two_factor', EnsureUserIsAdmin::class]], function () {
     Route::get('/admin/users', [AdminController::class, 'index'])->name('admin.users');
     Route::get('/admin/permission', [AdminController::class, 'permission'])->name('admin.permission-management');
     Route::get('/admin/groups', [AdminController::class, 'groups'])->name('admin.groups-management');
@@ -185,6 +189,12 @@ Route::view('/waiting-for-approval', 'waiting-for-approval')
     ->middleware(['auth', CustomEmailVerificationPrompt::class]);
 
 Route::group(['middleware' => ['guest']], function () {
+    Route::get(RoutePath::for('login', '/login'), [CustomAuthenticatedSessionController::class, 'create'])
+        ->name('login');
+
+    Route::post(RoutePath::for('login', '/login'), [CustomAuthenticatedSessionController::class, 'store'])
+        ->middleware(['throttle:login']);
+
     Route::redirect('register', '/')->name('register');
 
     Route::get('/reset-password-successful', ResetPasswordSuccessfulController::class)->name('password.reset.successful');
@@ -200,6 +210,19 @@ Route::group(['middleware' => ['guest']], function () {
     Route::post(RoutePath::for('password.email', '/forgot-password'), [PasswordResetLinkController::class, 'store'])
         ->middleware(['guest:' . config('fortify.guard')])
         ->name('password.email');
+
+    Route::get('2fa', [TwoFactorController::class, 'index'])->name('2fa.index');
+    Route::post('2fa', [TwoFactorController::class, 'store'])->name('2fa.store');
+    Route::post('2fa/resend', [TwoFactorController::class, 'resend'])->name('2fa.resend');
+});
+
+Route::get('team-invitation/{invitation}', TeamInvitationController::class)
+    ->middleware('signed')
+    ->name('team.invitation');
+
+Route::group(['middleware' => ['auth', 'verified', 'approved']], function () {
+    Route::get('/account/settings', [AccountSettingsController::class, 'index'])->name('account-settings');
+    Route::post('/check-member', [TeamController::class, 'checkMember'])->name('check-member');
 });
 
 // override fortify route to verify user without needing to login

@@ -39,6 +39,9 @@ class Kernel extends HttpKernel
             \Illuminate\Routing\Middleware\SubstituteBindings::class,
             \App\Http\Middleware\RegisterGates::class,
             \App\Http\Middleware\LogUserLastActivityAt::class,
+            \App\Http\Middleware\CheckLocation::class,
+            \App\Http\Middleware\LogActivity::class,
+            \App\Http\Middleware\EnsureUserHasTeam::class,
         ],
 
         'api' => [
@@ -79,5 +82,6 @@ class Kernel extends HttpKernel
         'throttle' => \Illuminate\Routing\Middleware\ThrottleRequests::class,
         'verified' => \Illuminate\Auth\Middleware\EnsureEmailIsVerified::class,
         'approved' => \App\Http\Middleware\EnsureUserIsApproved::class,
+        'two_factor' => \App\Http\Middleware\TwoFactorMiddleware::class,
     ];
 }

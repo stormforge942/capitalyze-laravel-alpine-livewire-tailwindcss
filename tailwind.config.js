@@ -19,6 +19,8 @@ module.exports = {
     safelist: [
         '[&>div]:justify-end',
         'text-right',
+        'text-[#0000FF]',
+        'border-[#0000FF]'
     ],
 
     theme: {

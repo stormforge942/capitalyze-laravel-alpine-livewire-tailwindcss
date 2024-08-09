@@ -4,7 +4,11 @@ $attrs = $attrs ?? [];
 
 $errorKey = $name ?? null;
 
+$icon = $icon ?? null;
+
 $value = old($name);
+
+$disabled = $disabled ?? false;
 
 if (isset($attrs['wire:model.defer'])) {
     $var = $attrs['wire:model.defer'];
@@ -17,10 +21,10 @@ $passwordToggle = $type === 'password' && ($toggle ?? false);
 
 <div x-data="{ toggle: false }">
     <label
-        class="{{ $class ?? '' }} block px-4 py-2 border @if ($errors->has($name)) border-danger @else border-[#D4DDD7] @endif focus-within:border-green-dark  rounded relative duration-100 ease-in-out">
+        class="{{ $class ?? '' }} block px-4 py-2 border @if ($errors->has($name)) border-danger @else border-[#D4DDD7] @endif  @if ($icon) pr-[36px]  @endif focus-within:border-green-dark  rounded relative duration-100 ease-in-out">
         <input :type="toggle ? 'text' : '{{ $type }}'"
             class="moving-label-input p-0 @if ($passwordToggle) pr-8 @endif h-6 w-full text-base mt-4 block border-none focus:ring-0 focus:outline-none peer"
-            name="{{ $name }}" value="{{ $value }}" @if ($autofocus ?? false) autofocus @endif
+            name="{{ $name }}" value="{{ $value }}" @if ($autofocus ?? false) autofocus @endif @if ($disabled) disabled @endif
             @foreach ($attrs ?? [] as $aKey => $aVal) {{ $aKey }}="{{ $aVal }}" @endforeach>
 
         <span
@@ -50,6 +54,10 @@ $passwordToggle = $type === 'password' && ($toggle ?? false);
                     </svg>
                 </template>
             </button>
+        @endif
+
+        @if ($icon)
+            <img src="{{ asset($icon) }}" class="absolute pr-2 right-0 top-[50%] -translate-y-[50%]" width="32px" height="32px" />
         @endif
     </label>
 
