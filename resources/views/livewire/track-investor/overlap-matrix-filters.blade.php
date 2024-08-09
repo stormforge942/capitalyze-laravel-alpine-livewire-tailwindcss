@@ -1,54 +1,6 @@
 <div class="mt-6 w-full items-center" x-data="{
     showDropdown: false,
     search: $wire.entangle('search'),
-    loading: @entangle('loading').defer,
-    loadingInfinite: false,
-    tmpCurInvestors: [],
-    currentCategory: @entangle('category'),
-    canLoadMore: @entangle('canLoadMore').defer,
-    investors: @entangle('investors').defer,
-    categories: {
-        all: 'All Investors',
-        fund: '13F Filers',
-        mutual_fund: 'N-Port Filers',
-        favourite: 'My Favourites'
-    },
-    init() {
-        this.$watch('showDropdown', value => {
-            if (value) {
-                this.tmpCurInvestors = [...curInvestors];
-            } else {
-                curInvestors = [...this.tmpCurInvestors];
-            }
-        });
-    },
-    handleClickInvestor(invt) {
-        const id = this.generateID(invt);
-        const index = this.tmpCurInvestors.findIndex(item => item.id === id);
-        if (index >= 0) {
-            this.tmpCurInvestors.splice(index, 1);
-        } else {
-            this.tmpCurInvestors.push({ ...invt, id, bAdded: true });
-        }
-    },
-    get tmpCurInvestorIDs() {
-        return this.tmpCurInvestors.map(item => item.id);
-    },
-    generateID(invt) {
-        return invt.type === 'fund' ?
-            `${invt.cik}-${invt.cusip}` :
-            `${invt.cik}-${invt.name}-${invt.fund_symbol}-${invt.series_id}-${invt.class_id}-${invt.class_name}`;
-    },
-    changeCategory(category) {
-        if (this.currentCategory !== category) {
-            this.loading = true;
-            this.currentCategory = category;
-            this.$nextTick(() => this.$refs.investorList.scrollTop = 0);
-        }
-    },
-    loadMore() {
-        return @this.loadMore();
-    }
 }">
     <x-dropdown x-model="showDropdown" placement="bottom-start" :fullWidthTrigger="true" :teleport="true">
         <x-slot name="trigger">
@@ -63,7 +15,61 @@
                     x-model.debounce.500ms="search">
             </div>
         </x-slot>
-        <div class="w-[30rem] sm:w-[30rem]">
+        <div class="w-[30rem] sm:w-[30rem]" x-data="{
+            loading: @entangle('loading').defer,
+            loadingInfinite: false,
+            placeholder: 'Search investors',
+            tmpCurInvestors: [],
+            currentCategory: @entangle('category'),
+            categories: {
+                all: 'All Investors',
+                fund: '13F Filers',
+                mutual_fund: 'N-Port Filers',
+                favourite: 'My Favourites'
+            },
+            investors: @entangle('investors').defer,
+            canLoadMore: @entangle('canLoadMore').defer,
+            init() {
+                this.$watch('showDropdown', value => {
+                    if (value) {
+                        this.tmpCurInvestors = [...curInvestors];
+                    } else {
+                        curInvestors = [...this.tmpCurInvestors];
+                    }
+                });
+            },
+            handleClickInvestor(invt) {
+                const id = this.generateID(invt);
+                if (this.tmpCurInvestors.find(item => item.id === id)) {
+                    this.tmpCurInvestors = this.tmpCurInvestors.filter(item => item.id !== id);
+                } else {
+                    this.tmpCurInvestors.push({
+                        ...invt,
+                        id: this.generateID(invt),
+                        bAdded: true,
+                    });
+                }
+            },
+            get tmpCurInvestorIDs() {
+                return this.tmpCurInvestors.map(item => item.id);
+            },
+            generateID(invt) {
+                if (invt.type === 'fund') {
+                    return `${invt.cik}-${invt.cusip}`;
+                } else {
+                    return `${invt.cik}-${invt.name}-${invt.fund_symbol}-${invt.series_id}-${invt.class_id}-${invt.class_name}`;
+                }
+            },
+            changeCategory(category) {
+                if (this.currentCategory === category) return;
+                this.loading = true;
+                this.currentCategory = category;
+                this.$nextTick(() => this.$refs.investorList.scrollTop = 0);
+            },
+            loadMore() {
+                return @this.loadMore();
+            }
+        }">
             <div class="flex justify-between gap-2 px-6 pt-6 mb-3">
                 <span class="font-medium text-base">Search Investors</span>
                 <button type="button" @click="showDropdown = false">

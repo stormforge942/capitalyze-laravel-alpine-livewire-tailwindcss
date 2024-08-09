@@ -106,7 +106,7 @@
                                         x-bind:value="selectAllStatus" @input="handleSelectAll">
                                     <span class="font-bold">Select All</span>
                                 </label>
-                                <template x-for="invt in curInvestors">
+                                <template x-for="invt in curInvestors" :key="invt.name + '-' + invt.fund_symbol">
                                     <div class="flex flex-row justify-between items-center gap-x-2">
                                         <div class="flex flex-row justify-start items-center gap-x-1">
                                             <label class="cursor-pointer py-1 rounded flex items-center gap-x-3">
@@ -161,11 +161,11 @@
                         </div>
                     </div>
 
-                    <template x-for="(value, key) in overlapMatrix">
+                    <template x-for="(value, key) in overlapMatrix" :key="key + '-investors'">
                         <div class="col-span-1">
                             <div class="py-3 font-semibold text-md bg-white text-black flex flex-row justify-center items-center"
                                 x-text="key + ' investors'"></div>
-                            <template x-for="investor in value">
+                            <template x-for="investor in value" :key="investor.company_name">
                                 <div class="my-3 px-2 py-3 bg-white">
                                     <div class="flex flex-row justify-between text-md font-semibold px-2 py-2">
                                         <span x-text="investor.company_name"></span>
