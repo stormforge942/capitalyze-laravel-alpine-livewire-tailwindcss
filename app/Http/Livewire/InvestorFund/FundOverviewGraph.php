@@ -42,10 +42,11 @@ class FundOverviewGraph extends Component
         $this->load();
     }
 
-    public function updateChartPeriod($value)
+    public function updated($propertyName)
     {
-        $this->currentChartPeriod = $value;
-        $this->load();
+        if ($propertyName === 'currentChartPeriod') {
+            $this->load();
+        }
     }
 
     public function load()

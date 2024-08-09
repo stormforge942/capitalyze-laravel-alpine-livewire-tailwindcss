@@ -1,6 +1,54 @@
 <div class="mt-6 w-full items-center" x-data="{
     showDropdown: false,
     search: $wire.entangle('search'),
+    loading: @entangle('loading').defer,
+    loadingInfinite: false,
+    tmpCurInvestors: [],
+    currentCategory: @entangle('category'),
+    canLoadMore: @entangle('canLoadMore').defer,
+    investors: @entangle('investors').defer,
+    categories: {
+        all: 'All Investors',
+        fund: '13F Filers',
+        mutual_fund: 'N-Port Filers',
+        favourite: 'My Favourites'
+    },
+    init() {
+        this.$watch('showDropdown', value => {
+            if (value) {
+                this.tmpCurInvestors = [...curInvestors];
+            } else {
+                curInvestors = [...this.tmpCurInvestors];
+            }
+        });
+    },
+    handleClickInvestor(invt) {
+        const id = this.generateID(invt);
+        const index = this.tmpCurInvestors.findIndex(item => item.id === id);
+        if (index >= 0) {
+            this.tmpCurInvestors.splice(index, 1);
+        } else {
+            this.tmpCurInvestors.push({ ...invt, id, bAdded: true });
+        }
+    },
+    get tmpCurInvestorIDs() {
+        return this.tmpCurInvestors.map(item => item.id);
+    },
+    generateID(invt) {
+        return invt.type === 'fund' ?
+            `${invt.cik}-${invt.cusip}` :
+            `${invt.cik}-${invt.name}-${invt.fund_symbol}-${invt.series_id}-${invt.class_id}-${invt.class_name}`;
+    },
+    changeCategory(category) {
+        if (this.currentCategory !== category) {
+            this.loading = true;
+            this.currentCategory = category;
+            this.$nextTick(() => this.$refs.investorList.scrollTop = 0);
+        }
+    },
+    loadMore() {
+        return @this.loadMore();
+    }
 }">
     <x-dropdown x-model="showDropdown" placement="bottom-start" :fullWidthTrigger="true" :teleport="true">
         <x-slot name="trigger">
@@ -15,61 +63,7 @@
                     x-model.debounce.500ms="search">
             </div>
         </x-slot>
-        <div class="w-[30rem] sm:w-[30rem]" x-data="{
-            loading: @entangle('loading').defer,
-            loading_infinite: false,
-            placeholder: 'Search investors',
-            tmpCurInvestors: [],
-            currentCategory: @entangle('category'),
-            categories: {
-                all: 'All Investors',
-                fund: '13F Filers',
-                mutual_fund: 'N-Port Filers',
-                favourite: 'My Favourites'
-            },
-            investors: @entangle('investors').defer,
-            canLoadMore: @entangle('canLoadMore').defer,
-            init() {
-                this.$watch('showDropdown', value => {
-                    if (value) {
-                        this.tmpCurInvestors = [...curInvestors];
-                    } else {
-                        curInvestors = [...this.tmpCurInvestors];
-                    }
-                });
-            },
-            handleClickInvestor(invt) {
-                const id = this.generateID(invt);
-                if (this.tmpCurInvestors.find(item => item.id === id)) {
-                    this.tmpCurInvestors = this.tmpCurInvestors.filter(item => item.id !== id);
-                } else {
-                    this.tmpCurInvestors.push({
-                        ...invt,
-                        id: this.generateID(invt),
-                        bAdded: true,
-                    });
-                }
-            },
-            get tmpCurInvestorIDs() {
-                return this.tmpCurInvestors.map(item => item.id);
-            },
-            generateID(invt) {
-                if (invt.type === 'fund') {
-                    return `${invt.cik}-${invt.cusip}`;
-                } else {
-                    return `${invt.cik}-${invt.name}-${invt.fund_symbol}-${invt.series_id}-${invt.class_id}-${invt.class_name}`;
-                }
-            },
-            changeCategory(category) {
-                if (this.currentCategory === category) return;
-                this.loading = true;
-                this.currentCategory = category;
-                this.$nextTick(() => this.$refs.investorList.scrollTop = 0);
-            },
-            loadMore() {
-                return @this.loadMore();
-            }
-        }">
+        <div class="w-[30rem] sm:w-[30rem]">
             <div class="flex justify-between gap-2 px-6 pt-6 mb-3">
                 <span class="font-medium text-base">Search Investors</span>
                 <button type="button" @click="showDropdown = false">
@@ -101,14 +95,14 @@
                     <div class="py-4 flex flex-row justify-between items-center hover:bg-gray-200 cursor-pointer"
                         @click="handleClickInvestor(invt)">
                         <div class="flex flex-row items-center">
-                            <svg x-show="!(tmpCurInvestorIDs.indexOf(generateID(invt)) >= 0)" width="20"
-                                height="20" viewBox="0 0 20 20" fill="none" xmlns="http://www.w3.org/2000/svg">
+                            <svg x-show="!(tmpCurInvestorIDs.includes(generateID(invt)))" width="20" height="20"
+                                viewBox="0 0 20 20" fill="none" xmlns="http://www.w3.org/2000/svg">
                                 <path
                                     d="M10 20C4.47715 20 0 15.5228 0 10C0 4.47715 4.47715 0 10 0C15.5228 0 20 4.47715 20 10C20 15.5228 15.5228 20 10 20ZM9 9H5V11H9V15H11V11H15V9H11V5H9V9Z"
                                     fill="#121A0F" />
                             </svg>
-                            <svg x-show="(tmpCurInvestorIDs.indexOf(generateID(invt)) >= 0)" width="20"
-                                height="20" viewBox="0 0 20 20" fill="none" xmlns="http://www.w3.org/2000/svg">
+                            <svg x-show="(tmpCurInvestorIDs.includes(generateID(invt)))" width="20" height="20"
+                                viewBox="0 0 20 20" fill="none" xmlns="http://www.w3.org/2000/svg">
                                 <path
                                     d="M10 20C4.47715 20 0 15.5228 0 10C0 4.47715 4.47715 0 10 0C15.5228 0 20 4.47715 20 10C20 15.5228 15.5228 20 10 20ZM9 9H5V11H15V9H5"
                                     fill="#121A0F" />
@@ -116,34 +110,35 @@
                             <span class="ml-4 font-bold text-black"
                                 x-text="invt.name + (invt.fund_symbol ? ` (${invt.fund_symbol})` : '')"></span>
                         </div>
-                        <span class="text-[#7C8286]" x-text="`Owns ${invt.stock_count} stocks`"></span>
+                        <span class="text-[#7C8286] whitespace-nowrap"
+                            x-text="`Owns ${invt.stock_count} stocks`"></span>
                     </div>
                 </template>
 
-                <div class="grid place-items-center" x-show="loading_infinite">
+                <div class="grid place-items-center" x-show="loadingInfinite">
                     <span class="mx-auto simple-loader !text-green-dark"></span>
                 </div>
 
-                <template x-if="canLoadMore && currentCategory != 'favourite'">
+                <template x-if="canLoadMore && currentCategory !== 'favourite'">
                     <div x-data="{
                         observe() {
-                            if (loading_infinite) return;
+                            if (loadingInfinite) return;
                     
-                            let observer = new IntersectionObserver((entries) => {
+                            const observer = new IntersectionObserver(entries => {
                                 entries.forEach(entry => {
                                     if (entry.isIntersecting) {
-                                        loading_infinite = true;
+                                        loadingInfinite = true;
                                         loadMore().finally(() => {
-                                            loading_infinite = false;
+                                            loadingInfinite = false;
                                         });
                                     }
-                                })
+                                });
                             }, {
                                 root: null
-                            })
+                            });
                     
-                            observer.observe(this.$el)
-                        },
+                            observer.observe(this.$el);
+                        }
                     }" x-init="observe"></div>
                 </template>
             </div>

@@ -6,6 +6,7 @@ use App\Http\Livewire\AsTab;
 use App\Models\CompanyFilings;
 use App\Models\MutualFundsPage;
 use App\Models\TrackInvestorFavorite;
+use Illuminate\Support\Facades\Cache;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
 use Livewire\Component;
@@ -46,139 +47,283 @@ class OverlapMatrix extends Component
         }
     }
 
-    public function getInvestors()
+    private function getInvestors()
     {
         $this->canLoadMore = true;
         $offset = ($this->page - 1) * $this->limit;
 
-        $fundsQuery = DB::connection('pgsql-xbrl')
-            ->table('filings_summary')
-            ->select(
-                'filings_summary.investor_name as name',
-                'filings_summary.cik as cik',
-                'filings_summary.total_value as total_value',
-                'filings_summary.portfolio_size as portfolio_size',
-                'filings_summary.change_in_total_value as change_in_total_value',
-                'filings_summary.date as date',
-                DB::raw('COUNT(DISTINCT filings.name_of_issuer) as stock_count')
-            )
-            ->leftJoin('filings', 'filings_summary.cik', '=', 'filings.cik')
-            ->when($this->search, function ($query, $search) {
-                return $query->where('filings_summary.investor_name', 'ilike', '%' . $search . '%');
-            })
-            ->groupBy(
-                'filings_summary.investor_name',
-                'filings_summary.cik',
-                'filings_summary.total_value',
-                'filings_summary.portfolio_size',
-                'filings_summary.change_in_total_value',
-                'filings_summary.date'
-            );
+        $data = Cache::remember('investors_' . $this->category . '_' . $this->search . '_' . $this->page . '_' . Auth::id(), 300, function () use ($offset) {
+            // Initialize favorite identifiers
+            $favouriteFunds = TrackInvestorFavorite::where('user_id', Auth::id())
+                ->where('type', TrackInvestorFavorite::TYPE_FUND)
+                ->pluck('identifier')
+                ->toArray();
 
-        $mutualFundsQuery = DB::connection('pgsql-xbrl')
-            ->table('mutual_fund_holdings_summary')
-            ->select(
-                'mutual_fund_holdings_summary.registrant_name as name',
-                'mutual_fund_holdings_summary.cik as cik',
-                'mutual_fund_holdings_summary.total_value as total_value',
-                'mutual_fund_holdings_summary.portfolio_size as portfolio_size',
-                'mutual_fund_holdings_summary.change_in_total_value as change_in_total_value',
-                'mutual_fund_holdings_summary.fund_symbol as fund_symbol',
-                'mutual_fund_holdings_summary.series_id as series_id',
-                'mutual_fund_holdings_summary.class_id as class_id',
-                'mutual_fund_holdings_summary.class_name as class_name',
-                'mutual_fund_holdings_summary.date as date',
-                DB::raw('COUNT(DISTINCT mutual_fund_holdings.name) as stock_count')
-            )
-            ->leftJoin('mutual_fund_holdings', function ($join) {
-                $join->on('mutual_fund_holdings_summary.cik', '=', 'mutual_fund_holdings.cik')
-                    ->on('mutual_fund_holdings_summary.fund_symbol', '=', 'mutual_fund_holdings.fund_symbol')
-                    ->on('mutual_fund_holdings_summary.series_id', '=', 'mutual_fund_holdings.series_id')
-                    ->on('mutual_fund_holdings_summary.class_id', '=', 'mutual_fund_holdings.class_id');
-            })
-            ->when($this->search, function ($query, $search) {
-                return $query->where('mutual_fund_holdings_summary.registrant_name', 'ilike', '%' . $search . '%')
-                    ->orWhere('mutual_fund_holdings_summary.fund_symbol', 'ilike', '%' . $search . '%');
-            })
-            ->groupBy(
-                'mutual_fund_holdings_summary.registrant_name',
-                'mutual_fund_holdings_summary.cik',
-                'mutual_fund_holdings_summary.total_value',
-                'mutual_fund_holdings_summary.portfolio_size',
-                'mutual_fund_holdings_summary.change_in_total_value',
-                'mutual_fund_holdings_summary.fund_symbol',
-                'mutual_fund_holdings_summary.series_id',
-                'mutual_fund_holdings_summary.class_id',
-                'mutual_fund_holdings_summary.class_name',
-                'mutual_fund_holdings_summary.date'
-            );
+            $favouriteIdentifiers = TrackInvestorFavorite::where('user_id', Auth::id())
+                ->where('type', TrackInvestorFavorite::TYPE_MUTUAL_FUND)
+                ->pluck('identifier')
+                ->toArray();
 
-        $favouriteFunds = TrackInvestorFavorite::where('user_id', Auth::id())
-            ->where('type', TrackInvestorFavorite::TYPE_FUND)
-            ->pluck('identifier')
-            ->toArray();
+            // Set up funds and mutual funds queries
+            $fundsQuery = DB::connection('pgsql-xbrl')
+                ->table('filings_summary')
+                ->select(
+                    'investor_name as name',
+                    'cik',
+                    'total_value',
+                    'portfolio_size',
+                    'change_in_total_value',
+                    'date'
+                )
+                ->when($this->search, function ($query, $search) {
+                    return $query->where('investor_name', 'ilike', '%' . $search . '%');
+                })
+                ->where('is_latest', true);
 
-        $favouriteIdentifiers = TrackInvestorFavorite::where('user_id', Auth::id())
-            ->where('type', TrackInvestorFavorite::TYPE_MUTUAL_FUND)
-            ->pluck('identifier');
+            $mutualFundsQuery = DB::connection('pgsql-xbrl')
+                ->table('mutual_fund_holdings_summary')
+                ->select(
+                    'registrant_name as name',
+                    'cik',
+                    'total_value',
+                    'portfolio_size',
+                    'change_in_total_value',
+                    'fund_symbol',
+                    'series_id',
+                    'class_id',
+                    'class_name',
+                    'date'
+                )
+                ->when($this->search, function ($query, $search) {
+                    return $query->where('registrant_name', 'ilike', '%' . $search . '%')
+                                ->orWhere('fund_symbol', 'ilike', '%' . $search . '%');
+                })
+                ->where('is_latest', true);
 
-        $favouriteMutualFunds = $favouriteIdentifiers->map(function ($identifier) {
-            return json_decode($identifier, true);
+            // Determine which category to fetch data for
+            switch ($this->category) {
+                case 'fund':
+                    $funds = $fundsQuery->skip($offset)->take($this->limit)->get();
+                    $mutualFunds = collect([]);
+                    $this->canLoadMore = count($funds) === $this->limit;
+                    break;
+
+                case 'mutual_fund':
+                    $mutualFunds = $mutualFundsQuery->skip($offset)->take($this->limit)->get();
+                    $funds = collect([]);
+                    $this->canLoadMore = count($mutualFunds) === $this->limit;
+                    break;
+
+                case 'favourite':
+                    $funds = $fundsQuery->whereIn('cik', $favouriteFunds)->get();
+                    $mutualFunds = $this->getFavouriteMutualFunds($mutualFundsQuery, $favouriteIdentifiers);
+                    break;
+
+                default:
+                    $funds = $fundsQuery->skip($offset)->take($this->limit)->get();
+                    $mutualFunds = $mutualFundsQuery->skip($offset)->take($this->limit)->get();
+                    $this->canLoadMore = count($funds) === $this->limit && count($mutualFunds) === $this->limit;
+                    break;
+            }
+
+            // Get stock counts for funds
+            $stockCounts = $this->getStockCountsForFunds($funds);
+
+            // Get stock counts for mutual funds
+            $mutualStockCounts = $this->getStockCountsForMutualFunds($mutualFunds);
+
+            // Process funds data
+            $this->processFundsData($funds, $favouriteFunds, $stockCounts);
+
+            // Process mutual funds data
+            $this->processMutualFundsData($mutualFunds, $favouriteIdentifiers, $mutualStockCounts); 
+
+            return $funds->merge($mutualFunds);
         });
 
-        $favouriteIdentifiers = $favouriteIdentifiers->toArray();
+        // Merge the investors data
+        $this->investors = $this->investors->merge($data);
+        $this->loading = false;
+    }
 
-        if ($this->category === 'fund') {
-            $funds = $fundsQuery->skip($offset)->take($this->limit)->get();
-            if (count($funds) < $this->limit) {
-                $this->canLoadMore = false;
-            }
-            $mutualFunds = collect([]);
-        } elseif ($this->category === 'mutual_fund') {
-            $mutualFunds = $mutualFundsQuery->skip($offset)->take($this->limit)->get();
-            if (count($mutualFunds) < $this->limit) {
-                $this->canLoadMore = false;
-            }
-            $funds = collect([]);
-        } elseif ($this->category === 'favourite') {
-            $funds = $fundsQuery->whereIn('filings_summary.cik', $favouriteFunds)->get();
+    private function getOverlapMatrix($investors)
+    {
+        $period = '';
 
-            if (count($favouriteMutualFunds) == 0) {
-                $mutualFunds = collect([]);
+        // Initialize filter arrays
+        $mutualFundFilters = [];
+        $fundFilters = [];
+
+        // Classify investors into funds and mutual funds
+        foreach ($investors as $investor) {
+            if ($investor['type'] === 'fund') {
+                $fundFilters[] = $investor['cik'];
             } else {
-                $mutualFunds = $mutualFundsQuery->where(function ($q) use ($favouriteMutualFunds) {
-                    foreach ($favouriteMutualFunds as $fund) {
-                        $q->orWhere(
-                            fn($q) => $q->where('mutual_fund_holdings_summary.cik', $fund['cik'])
-                                ->where('mutual_fund_holdings_summary.series_id', $fund['series_id'])
-                                ->where('mutual_fund_holdings_summary.class_id', $fund['class_id'])
-                                ->where('mutual_fund_holdings_summary.class_name', $fund['class_name'])
-                        );
-                    }
-                    return $q;
-                })->get();
-            }
-        } else {
-            $funds = $fundsQuery->skip($offset)->take($this->limit)->get();
-            $mutualFunds = $mutualFundsQuery->skip($offset)->take($this->limit)->get();
-
-            if (count($funds) < $this->limit && count($mutualFunds) < $this->limit) {
-                $this->canLoadMore = false;
+                $mutualFundFilters[] = [
+                    'cik' => $investor['cik'],
+                    'registrant_name' => $investor['registrant_name'],
+                    'fund_symbol' => $investor['fund_symbol'],
+                    'series_id' => $investor['series_id'],
+                    'class_id' => $investor['class_id'],
+                    'class_name' => $investor['class_name'],
+                ];
             }
         }
 
-        $funds = $funds->map(function ($fund) use ($favouriteFunds) {
+        // Fetch filtered mutual funds data
+        $filteredMutualFunds = collect();
+        if (count($mutualFundFilters)) {
+            $filteredMutualFunds = DB::connection('pgsql-xbrl')
+                ->table('mutual_fund_holdings')
+                ->select('cik', 'registrant_name as name', 'fund_symbol', 'name as company_name', 'symbol as ticker', 'change_in_balance as change_amount', 'series_id', 'class_id', 'class_name', 'previous_weight as previous', 'price_per_unit as price')
+                ->where(function ($query) use($mutualFundFilters) {
+                    foreach ($mutualFundFilters as $filter) {
+                        $query->orWhere(function ($q) use ($filter) {
+                            $q->where('cik', $filter['cik'])
+                                ->where('registrant_name', $filter['registrant_name'])
+                                ->where('fund_symbol', $filter['fund_symbol'])
+                                ->where('series_id', $filter['series_id'])
+                                ->where('class_id', $filter['class_id'])
+                                ->where('class_name', $filter['class_name']);
+                        });
+                    }
+                })
+                ->get();
+        }
+
+        // Fetch filtered funds data
+        $filteredFunds = collect();
+        if (count($fundFilters)) {
+            $filteredFunds = DB::connection('pgsql-xbrl')
+                ->table('filings')
+                ->select('cik', 'investor_name as name', 'name_of_issuer as company_name', 'symbol as ticker', 'change_in_shares as change_amount', 'last_shares as previous', 'price_paid as price', DB::raw('NULL AS fund_symbol'), DB::raw('NULL AS series_id'), DB::raw('NULL AS class_id'), DB::raw('NULL AS class_name'))
+                ->whereIn('cik', $fundFilters)
+                ->get();
+        }
+
+        // Convert collections to arrays
+        $combinedData = $filteredMutualFunds->concat($filteredFunds);
+
+        // Group by company_name and count distinct cik values
+        $result = $combinedData->groupBy('company_name')
+            ->map(function ($companyGroup) {
+                $uniqueFunds = $companyGroup->unique(function ($item) {
+                    return $item->cik . $item->series_id . $item->class_id . $item->class_name;
+                });
+
+                // Avoid calling first() multiple times
+                $firstItem = $companyGroup->first();
+                $ticker = $firstItem->ticker;
+                $companyName = $firstItem->company_name;
+
+                // Use a conditional to fetch price only once
+                $price = DB::connection('pgsql-xbrl')
+                    ->table('eod_prices')
+                    ->select('close')
+                    ->where('symbol', strtolower($ticker))
+                    ->orderBy('date', 'desc')
+                    ->value('close') ?? 0; // Default to 0 if not found
+
+                return [
+                    'ticker' => $ticker,
+                    'price' => $price,
+                    'company_name' => $companyName,
+                    'count' => $uniqueFunds->count(),
+                    'funds' => $uniqueFunds->values(),
+                ];
+            });
+
+        $this->overlapMatrix = $result->values()->sortByDesc('count')->groupBy('count');
+    }
+
+    private function getFavouriteMutualFunds($mutualFundsQuery, $favouriteIdentifiers)
+    {
+        if (empty($favouriteIdentifiers)) {
+            return collect([]);
+        }
+
+        return $mutualFundsQuery->where(function ($query) use ($favouriteIdentifiers) {
+            foreach ($favouriteIdentifiers as $identifier) {
+                $fund = json_decode($identifier, true);
+                $query->orWhere(function ($q) use ($fund) {
+                    $q->where('cik', $fund['cik'])
+                    ->where('series_id', $fund['series_id'])
+                    ->where('class_id', $fund['class_id'])
+                    ->where('class_name', $fund['class_name']);
+                });
+            }
+        })->get();
+    }
+
+    private function getStockCountsForFunds($funds)
+    {
+        if ($funds->isEmpty()) {
+            return collect();
+        }
+
+        $ciks = $funds->pluck('cik')->toArray();
+        return DB::connection('pgsql-xbrl')
+            ->table('filings as f')
+            ->select('f.cik', DB::raw('COUNT(DISTINCT f.name_of_issuer) as stock_count'))
+            ->whereIn('f.cik', $ciks)
+            ->groupBy('f.cik')
+            ->get()
+            ->keyBy('cik'); // Key by CIK for easy lookup
+    }
+
+    private function getStockCountsForMutualFunds($mutualFunds)
+    {
+        if ($mutualFunds->isEmpty()) {
+            return collect();
+        }
+
+        $mutualFilters = $mutualFunds->map(function ($mutualFund) {
+            return [
+                'cik' => $mutualFund->cik,
+                'fund_symbol' => $mutualFund->fund_symbol,
+                'series_id' => $mutualFund->series_id,
+                'class_id' => $mutualFund->class_id,
+            ];
+        });
+
+        return DB::connection('pgsql-xbrl')
+            ->table('mutual_fund_holdings as mf')
+            ->select('mf.cik', 'mf.fund_symbol', 'mf.series_id', 'mf.class_id', DB::raw('COUNT(DISTINCT mf.name) as stock_count'))
+            ->where(function ($query) use($mutualFilters) {
+                foreach ($mutualFilters as $filter) {
+                    $query->orWhere(function ($q) use ($filter) {
+                        $q->where('mf.cik', $filter['cik'])
+                            ->where('mf.series_id', $filter['series_id'])
+                            ->where('mf.class_id', $filter['class_id'])
+                            ->where('mf.fund_symbol', $filter['fund_symbol']);
+                    });
+                }
+            })
+            ->groupBy('mf.cik', 'mf.fund_symbol', 'mf.series_id', 'mf.class_id')
+            ->get()
+            ->keyBy(function ($item) {
+                return $item->cik . '-' . $item->fund_symbol . '-' . $item->series_id . '-' . $item->class_id;
+            });
+    }
+
+    private function processFundsData($funds, $favouriteFunds, $stockCounts)
+    {
+        $funds->transform(function ($fund) use ($favouriteFunds, $stockCounts) {
             $fundArray = (array) $fund;
             $fundArray['type'] = 'fund';
             $fundArray['series_id'] = '';
             $fundArray['class_id'] = '';
             $fundArray['class_name'] = '';
             $fundArray['isFavorite'] = in_array($fundArray['cik'], $favouriteFunds);
+            $fundArray['stock_count'] = $stockCounts->get($fundArray['cik'])->stock_count ?? 0;
 
             return $fundArray;
         });
+    }
 
-        $mutualFunds = $mutualFunds->map(function ($mutualFund) use ($favouriteIdentifiers) {
+    private function processMutualFundsData($mutualFunds, $favouriteIdentifiers, $mutualStockCounts)
+    {
+        $mutualFunds->transform(function ($mutualFund) use ($favouriteIdentifiers, $mutualStockCounts) {
             $fundArray = (array) $mutualFund;
             $fundArray['type'] = 'mutual_fund';
 
@@ -192,19 +337,11 @@ class OverlapMatrix extends Component
             ]);
 
             $fundArray['isFavorite'] = in_array($id, $favouriteIdentifiers);
+            $key = $fundArray['cik'] . '-' . $fundArray['fund_symbol'] . '-' . $fundArray['series_id'] . '-' . $fundArray['class_id'];
+            $fundArray['stock_count'] = $mutualStockCounts->get($key)->stock_count ?? 0;
 
             return $fundArray;
         });
-
-        // Remove duplicate data and keep latest one
-        $combinedData = $funds->merge($mutualFunds);
-        $combinedData = $combinedData->sortByDesc('date');
-        $combinedData = $combinedData->unique(function ($item) {
-            return $item['type'] . $item['cik'] . $item['series_id'] . $item['class_id'] . $item['class_name'];
-        });
-
-        $this->investors = $this->investors->merge($combinedData);
-        $this->loading = false;
     }
 
     public function loadMore()
@@ -220,93 +357,6 @@ class OverlapMatrix extends Component
         } else {
             $this->overlapMatrix = [];
         }
-    }
-
-    public function getOverlapMatrix($investors)
-    {
-        $period = '';
-
-        // Define filter conditions
-        $mutualFundFilterCIKs = [];
-        $mutualFundFilterNames = [];
-        $mutualFundFilterFundSymbols = [];
-        $mutualFundFilterSeriesIDs = [];
-        $mutualFundFilterClassIDs = [];
-        $mutualFundFilterClassNames = [];
-        $fundFilterCIKs = [];
-
-        // Filter by investor type
-        foreach ($investors as $investor) {
-            if ($investor['type'] === 'fund') {
-                $fundFilterCIKs[] = $investor['cik'];
-            } else {
-                $mutualFundFilterCIKs[] = $investor['cik'];
-                $mutualFundFilterNames[] = $investor['name'];
-                $mutualFundFilterFundSymbols[] = $investor['fund_symbol'];
-                $mutualFundFilterSeriesIDs[] = $investor['series_id'];
-                $mutualFundFilterClassIDs[] = $investor['class_id'];
-                $mutualFundFilterClassNames[] = $investor['class_name'];
-            }
-        }
-
-        // Fetch filtered mutual funds data
-        $filteredMutualFunds = MutualFundsPage::select('cik', 'registrant_name as name', 'fund_symbol', 'name as company_name', 'symbol as ticker', 'change_in_balance as change_amount', 'series_id', 'class_id', 'class_name', 'previous_weight as previous', 'price_per_unit as price')
-            ->whereIn('cik', $mutualFundFilterCIKs)
-            ->whereIn('registrant_name', $mutualFundFilterNames)
-            ->whereIn('fund_symbol', $mutualFundFilterFundSymbols)
-            ->whereIn('series_id', $mutualFundFilterSeriesIDs)
-            ->whereIn('class_id', $mutualFundFilterClassIDs)
-            ->whereIn('class_name', $mutualFundFilterClassNames)
-            ->get();
-
-        // Fetch filtered funds data
-        $filteredFunds = CompanyFilings::select('cik', 'investor_name as name', 'name_of_issuer as company_name', 'symbol as ticker', 'change_in_shares as change_amount', 'last_shares as previous', 'price_paid as price')
-            ->whereIn('cik', $fundFilterCIKs)
-            ->get();
-
-        $filteredFunds = $filteredFunds->map(function ($fund) {
-            $fund['series_id'] = '';
-            $fund['class_id'] = '';
-            $fund['class_name'] = '';
-            return $fund;
-        });
-
-        // Convert collections to arrays
-        $filteredMutualFundsArray = $filteredMutualFunds->toArray();
-        $filteredFundsArray = $filteredFunds->toArray();
-
-        // Combine the data as arrays and then convert back to a collection
-        $combinedDataArray = array_merge($filteredMutualFundsArray, $filteredFundsArray);
-        $combinedData = collect($combinedDataArray);
-
-        // Group by company_name and count distinct cik values
-        $result = $combinedData->groupBy('company_name')
-            ->map(function ($companyGroup) {
-                $uniqueFunds = $companyGroup->unique(function ($item) {
-                    return $item['cik'] . $item['series_id'] . $item['class_id'] . $item['class_name'];
-                });
-
-                $company_name = $companyGroup->first()['company_name'];
-                $ticker = $companyGroup->first()['ticker'];
-                $price = DB::connection('pgsql-xbrl')
-                    ->table('eod_prices')
-                    ->select('close')
-                    ->where('symbol', strtolower($ticker))
-                    ->orderBy('date', 'desc')
-                    ->first();
-
-                $price = $price ? $price : (object) ['close' => 0];
-
-                return [
-                    'company_name' => $company_name,
-                    'ticker' => $ticker,
-                    'price' => $price->close,
-                    'count' => $uniqueFunds->count(),
-                    'funds' => $uniqueFunds->values(),
-                ];
-            });
-
-        $this->overlapMatrix = $result->values()->sortByDesc('count')->groupBy('count');
     }
 
     public static function title(): string

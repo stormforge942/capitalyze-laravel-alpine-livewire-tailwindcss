@@ -15,12 +15,6 @@
     removeCurInvestor(invt) {
         this.curInvestors = this.curInvestors.filter(item => !(item.cik === invt.cik && item.fund_symbol === invt.fund_symbol && item.class_id === invt.class_id && item.series_id === invt.series_id));
     },
-    loadMore(event) {
-        const { scrollTop, scrollHeight, clientHeight } = event.target;
-        if (scrollTop + clientHeight >= scrollHeight - 5) {
-            this.visibleInvestorsCount += 50;
-        }
-    },
     handleSelectAll(event) {
         this.curInvestors.forEach(invt => invt.bAdded = event.target.checked);
     },
