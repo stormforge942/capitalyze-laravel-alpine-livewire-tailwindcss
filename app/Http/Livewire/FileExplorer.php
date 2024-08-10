@@ -34,6 +34,8 @@ class FileExplorer extends Component
     }
 
     function isImage($file_path) {
+
+        return true;
         $allowed_image_types = [
             IMAGETYPE_JPEG,
             IMAGETYPE_PNG,
