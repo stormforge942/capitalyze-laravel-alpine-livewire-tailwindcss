@@ -19,16 +19,35 @@ $type = $type ?? 'text';
 $passwordToggle = $type === 'password' && ($toggle ?? false);
 ?>
 
-<div x-data="{ toggle: false }">
+<div x-data="{
+    toggle: false,
+    hasContent: false,
+    init() {
+        const fn = setInterval(() => {
+            const input = this.$el.querySelector('input');
+            if (!input) {
+                clearInterval(fn);
+                return;
+            }
+
+            this.hasContent = input.value.length > 0;
+        }, 100);
+    }
+}">
     <label
-        class="{{ $class ?? '' }} block px-4 py-2 border @if ($errors->has($name)) border-danger @else border-[#D4DDD7] @endif  @if ($icon) pr-[36px]  @endif focus-within:border-green-dark  rounded relative duration-100 ease-in-out">
+        class="{{ $class ?? '' }} block px-4 py-2 border @if ($errors->has($name)) border-danger @else border-[#D4DDD7] @endif  @if ($icon) pr-[36px] @endif focus-within:border-green-dark  rounded relative duration-100 ease-in-out">
         <input :type="toggle ? 'text' : '{{ $type }}'"
             class="moving-label-input p-0 @if ($passwordToggle) pr-8 @endif h-6 w-full text-base mt-4 block border-none focus:ring-0 focus:outline-none peer"
-            name="{{ $name }}" value="{{ $value }}" @if ($autofocus ?? false) autofocus @endif @if ($disabled) disabled @endif
+            name="{{ $name }}" value="{{ $value }}" @if ($autofocus ?? false) autofocus @endif
+            @if ($disabled) disabled @endif
             @foreach ($attrs ?? [] as $aKey => $aVal) {{ $aKey }}="{{ $aVal }}" @endforeach>
 
         <span
-            class="text-gray-medium2 transition-all absolute left-4 @if ($value) top-4 text-sm @else top-[50%] @endif -translate-y-[50%] peer-focus-within:top-4 peer-focus-within:text-sm">
+            class="text-gray-medium2 transition-all absolute left-4 -translate-y-[50%] peer-focus-within:top-4 peer-focus-within:text-sm"
+            :class="{
+                'top-4 text-sm': hasContent,
+                'top-[50%]': !hasContent
+            }">
             {{ $label ?? '' }}@if ($required ?? false)
                 *
             @endif
@@ -57,7 +76,8 @@ $passwordToggle = $type === 'password' && ($toggle ?? false);
         @endif
 
         @if ($icon)
-            <img src="{{ asset($icon) }}" class="absolute pr-2 right-0 top-[50%] -translate-y-[50%]" width="32px" height="32px" />
+            <img src="{{ asset($icon) }}" class="absolute pr-2 right-0 top-[50%] -translate-y-[50%]" width="32px"
+                height="32px" />
         @endif
     </label>
 
