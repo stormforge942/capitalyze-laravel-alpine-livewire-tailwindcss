@@ -28,7 +28,7 @@
                     <img src="{{ $profilePhoto->temporaryUrl() }}" alt="Profile Photo"
                         class="rounded-full w-full h-full" />
                 @elseif ($user->profile_photo_path)
-                    <img src="{{ asset('storage/' . $user->profile_photo_path) }}" alt="Profile Photo"
+                    <img src="{{ $user->profile_photo_url }}" alt="Profile Photo"
                         class="rounded-full w-full h-full">
                 @else
                     <div
