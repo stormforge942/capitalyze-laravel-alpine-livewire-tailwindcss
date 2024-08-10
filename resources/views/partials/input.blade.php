@@ -23,15 +23,23 @@ $passwordToggle = $type === 'password' && ($toggle ?? false);
     toggle: false,
     hasContent: false,
     init() {
-        const fn = setInterval(() => {
+        const fn = () => {
             const input = this.$el.querySelector('input');
             if (!input) {
                 clearInterval(fn);
                 return;
             }
 
-            this.hasContent = input.value.length > 0;
-        }, 100);
+            if ('{{ $type }}' == 'date') {
+                this.hasContent = true;
+                clearInterval(fn);
+                return;
+            }
+
+            this.hasContent = input.value.trim().length > 0;
+        }
+            
+        const interval = setInterval(fn, 100);
     }
 }">
     <label
