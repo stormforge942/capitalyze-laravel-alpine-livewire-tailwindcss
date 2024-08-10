@@ -14,8 +14,6 @@ class ProfileInformation extends Component
 
     public $isEdit = false;
 
-    public $user;
-
     public $name;
 
     public $email;
@@ -40,6 +38,7 @@ class ProfileInformation extends Component
         'job' => 'nullable|string',
         'dob' => 'nullable|date',
         'country' => 'nullable|string',
+        'profilePhoto' => 'nullable|image|max:2048',
         'linkedin_link' => [
             'nullable',
             'url',
@@ -68,19 +67,30 @@ class ProfileInformation extends Component
 
     public function mount()
     {
-        $this->user = Auth::user();
-        $this->updateProps();
+        $user = Auth::user();
+
+        $this->name = $user->name;
+        $this->email = $user->email;
+        $this->job = $user->job;
+        $this->dob = $user->dob;
+        $this->country = $user->country;
+        $this->linkedin_link = $user->linkedin_link;
+        $this->facebook_link = $user->facebook_link;
+        $this->twitter_link = $user->twitter_link;
     }
 
     public function updateProfile()
     {
         $this->validate();
 
+        /** @var \App\Models\User */
+        $user = Auth::user();
+
         if ($this->profilePhoto) {
-            $this->user->updateProfilePhoto($this->profilePhoto);
+            $user->updateProfilePhoto($this->profilePhoto);
         }
 
-        $this->user->update([
+        $user->update([
             'name' => $this->name,
             'email' => $this->email,
             'job' => $this->job,
@@ -96,22 +106,11 @@ class ProfileInformation extends Component
         $this->isEdit = false;
     }
 
-    public function updateProps()
-    {
-        $this->name = $this->user->name;
-        $this->email = $this->user->email;
-        $this->job = $this->user->job;
-        $this->dob = $this->user->dob;
-        $this->country = $this->user->country;
-        $this->linkedin_link = $this->user->linkedin_link;
-        $this->facebook_link = $this->user->facebook_link;
-        $this->twitter_link = $this->user->twitter_link;
-    }
-
     public function render()
     {
         return view('livewire.account-settings.profile-information', [
             'countries' => getCountries(),
+            'user' => Auth::user(),
         ]);
     }
 }

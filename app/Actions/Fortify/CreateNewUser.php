@@ -7,6 +7,7 @@ use App\Models\Team;
 use App\Models\User;
 use App\Models\Groups;
 use App\Notifications\NewUser;
+use Illuminate\Support\Facades\DB;
 use Laravel\Jetstream\Jetstream;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Validator;
@@ -45,20 +46,26 @@ class CreateNewUser implements CreatesNewUsers
             $groupId = $group->id;
         }
 
-        $team = Team::create([
-            'name' => $input['name'] . '\' Team',
-            'plan' => Plan::SOLO,
-        ]);
+        $newUser = DB::transaction(function () use ($input, $groupId) {
+            $newUser = User::create([
+                'name' => $input['name'],
+                'email' => $input['email'],
+                'password' => Hash::make($input['password']),
+                'is_approved' => false, // New users are not approved by default
+                'group_id' => $groupId,
+                'linkedin_link' => $input['linkedin_link'] ?? null,
+            ]);
 
-        $newUser = User::create([
-            'name' => $input['name'],
-            'email' => $input['email'],
-            'password' => Hash::make($input['password']),
-            'is_approved' => false, // New users are not approved by default
-            'group_id' => $groupId,
-            'linkedin_link' => $input['linkedin_link'] ?? null,
-            'current_team_id' => $team->id,
-        ]);
+            $team = Team::create([
+                'name' => $input['name'] . '\' Team',
+                'plan' => Plan::SOLO,
+                'owner_id' => $newUser->id
+            ]);
+
+            $newUser->update(['current_team_id' => $team->id]);
+
+            return $newUser;
+        });
 
         $admins = User::where('is_admin', true)->get(); // Fetch all admins
 
