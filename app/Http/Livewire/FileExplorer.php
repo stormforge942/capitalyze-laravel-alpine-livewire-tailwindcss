@@ -5,6 +5,7 @@ namespace App\Http\Livewire;
 use App\Models\File;
 use Illuminate\Support\Facades\Storage;
 use Livewire\Component;
+use Illuminate\Support\Str;
 
 class FileExplorer extends Component
 {
@@ -18,7 +19,7 @@ class FileExplorer extends Component
 
         $files->each(
             fn ($file) => $this->files[] = [
-                'temporaryUrl' => Storage::disk("s3")->temporaryUrl($file->path, now()->addMinutes(10)),
+                'temporaryUrl' => Storage::disk("s3")->url($file->path),
                 'path' => $file->path,
                 'name' => basename($file->path),
                 'isImage' => $this->isImage($file->path)
@@ -34,20 +35,8 @@ class FileExplorer extends Component
     }
 
     function isImage($file_path) {
-
-        return true;
-        $allowed_image_types = [
-            IMAGETYPE_JPEG,
-            IMAGETYPE_PNG,
-            IMAGETYPE_GIF,
-            IMAGETYPE_BMP,
-            IMAGETYPE_WEBP,
-            IMAGETYPE_ICO
-        ];
-
-        $image_type = @exif_imagetype($file_path);
-
-        return in_array($image_type, $allowed_image_types);
+        $mimeType = Storage::disk("s3")->mimeType($file_path);
+        return strpos($mimeType, 'image/') === 0;
     }
 }
 
