@@ -1,5 +1,5 @@
 <div class="w-100" x-data="{
-    settings: @entangle('settings'),
+    settings: $wire.entangle('settings', true),
 
     init() {
         this.$watch('settings', (val) => {

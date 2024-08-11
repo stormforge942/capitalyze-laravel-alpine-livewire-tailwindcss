@@ -66,7 +66,7 @@ class Page extends Component
         $this->disclosureTab = $request->query('disclosureTab', '');
         $this->disclosureFootnote = $request->query('disclosureFootnote', '');
 
-        $this->publicView = session('company-report.publicView', false);
+        $this->publicView = data_get(Auth::user(), 'settings.publicView', true);
         $this->showAllRows = session('company-report.showAllRows', false);
 
         $range = explode(',', $request->query('selectedDateRange', ''));
@@ -90,11 +90,7 @@ class Page extends Component
             $this->setupTabData();
         }
 
-        if (in_array($prop, ['publicView', 'showAllRows'])) {
-            info([
-                'prop' => $prop,
-                'value' => $this->{$prop}
-            ]);
+        if (in_array($prop, ['showAllRows'])) {
             session(['company-report.' . $prop => $this->{$prop}]);
         }
     }
@@ -384,7 +380,7 @@ class Page extends Component
 
             if (
                 isset($data['Statement of Cash Flows']) &&
-                is_array($data['Statement of Cash Flows']) 
+                is_array($data['Statement of Cash Flows'])
             ) {
                 $data = $data['Statement of Cash Flows'];
             }

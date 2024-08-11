@@ -11,7 +11,7 @@ class DataSettings extends Component
     use AsTab;
 
     public $data_settings_columns = [
-        'viewTypes' => [
+        'view' => [
             'title' => 'View',
             'description' => 'View data in different formats',
             'options' => [
@@ -22,7 +22,7 @@ class DataSettings extends Component
                 'Common size' => 'Common size',
             ],
         ],
-        'periodTypes' => [
+        'period' => [
             'title' => 'Period Type',
             'description' => 'Choose preferred period type',
             'options' => [
@@ -39,7 +39,7 @@ class DataSettings extends Component
             'description' => 'Choose preferred year range',
             'type' => 'year-range',
         ],
-        'unitTypes' => [
+        'unit' => [
             'title' => 'Unit Type',
             'description' => 'Enterprise',
             'options' => [
@@ -54,7 +54,7 @@ class DataSettings extends Component
             'description' => 'Enterprise',
             'type' => 'decimal',
         ],
-        'orderTypes' => [
+        'order' => [
             'title' => 'Order',
             'description' => 'Enterprise',
             'options' => [
@@ -62,7 +62,7 @@ class DataSettings extends Component
                 'Latest On The Left' => 'Latest On The Left',
             ],
         ],
-        'freezePaneTypes' => [
+        'freezePane' => [
             'title' => 'Freeze Panes',
             'description' => 'Enerprise',
             'options' => [
@@ -71,47 +71,42 @@ class DataSettings extends Component
                 'Top Row & First Column' => 'Top Row & First Column',
             ],
         ],
+        'publicView' => [
+            'title' => 'Public View',
+            'description' => 'Show or hide review button',
+            'options' => [
+                'yes' => 'Yes',
+                'no' => 'No',
+            ]
+        ],
     ];
 
     public $settings;
 
     public function mount()
     {
-        $settings = Auth::user()->settings;
+        $settings = Auth::user()->settings ?? [];
 
-        if (gettype($settings) == 'string') {
-            $settings = json_decode($settings);
-        }
-        if (gettype($settings) == 'object') {
-            $settings = (array) $settings;
-        }
+        $settings['publicView'] = data_get($settings, 'publicView', true) ? 'yes' : 'no';
 
-        if ($settings == null || empty($settings)) {
-            $settings = [
-                'view' => 'As reported',
-                'period' => 'Fiscal Annual',
-                'default_year_range' => [2005, 2023],
-                'unit' => 'Billions',
-                'decimalPlaces' => 2,
-                'perShareDecimalPlaces' => 1,
-                'order' => 'Latest On The Right',
-                'freezePane' => 'Top Row & First Column',
-            ];
-        }
-
-        $this->settings = $settings;
+        $this->settings = array_merge([
+            'view' => 'As reported',
+            'period' => 'Fiscal Annual',
+            'default_year_range' => [2005, 2023],
+            'unit' => 'Billions',
+            'decimalPlaces' => 2,
+            'perShareDecimalPlaces' => 1,
+            'order' => 'Latest On The Right',
+            'freezePane' => 'Top Row & First Column',
+            'publicView' => 'yes',
+        ], $settings);
     }
 
-    public function updateSetting($newSettings)
+    public function updateSetting($settings)
     {
-        $this->settings = $newSettings;
-        $this->saveSettings();
-    }
+        $settings['publicView'] = $settings['publicView'] === 'yes';
 
-    public function saveSettings()
-    {
-        Auth::user()->settings = $this->settings;
-        Auth::user()->save();
+        Auth::user()->update(['settings' => $settings]);
     }
 
     public function render()

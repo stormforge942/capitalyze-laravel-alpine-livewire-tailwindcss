@@ -93,6 +93,12 @@
                         this.updateFormattedTableDates(this.tableDates);
                         this.updateRowGroups(rows);
                 
+                        this.$watch('publicView', () => {
+                            window.updateUserSettings({
+                                publicView: this.publicView
+                            })
+                        })
+                
                         this.$watch('showAllRows', this.updateRowGroups.bind(this, rows))
                         this.$watch('filters.unitType', () => {
                             this.updateRowGroups(rows);
@@ -117,7 +123,7 @@
                         this.$watch('filters.decimalPlaces', onUpdateDecimalPlaces(true));
                         this.$watch('filters.percentageDecimalPlaces', onUpdateDecimalPlaces(true));
                         this.$watch('filters.perShareDecimalPlaces', onUpdateDecimalPlaces(true));
-
+                
                         this.$watch('filters', (newVal, oldVal) => {
                             const url = new URL(window.location.href);
                 
@@ -184,19 +190,19 @@
                     formatTableValue(value, row) {
                         const isPercent = row.isPercent;
                         const isPerShare = row.isPerShare;
-
+                
                         value = value == null ? '' : value;
-
+                
                         let decimals = this.filters.decimalPlaces;
-
+                
                         if (isPercent) {
                             decimals = this.filters.percentageDecimalPlaces;
                         }
-
+                
                         if (isPerShare) {
                             decimals = this.filters.perShareDecimalPlaces;
                         }
-
+                
                         if (value === '' || value === '-' || isNaN(Number(value))) {
                             const isLink = value.startsWith('@@@');
                 
@@ -211,7 +217,7 @@
                 
                         value = Number(value);
                 
-
+                
                         if (!isPercent && !isPerShare) {
                             let divideBy = {
                                 Thousands: 1000,
