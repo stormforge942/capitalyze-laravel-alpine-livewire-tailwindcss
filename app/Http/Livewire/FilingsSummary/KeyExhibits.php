@@ -2,6 +2,7 @@
 
 namespace App\Http\Livewire\FilingsSummary;
 
+use App\Http\Livewire\KeyExhibits\CommonLayout;
 use App\Http\Livewire\KeyExhibits\ExhibitsTable;
 use Livewire\Component;
 
@@ -25,11 +26,15 @@ class KeyExhibits extends Component
         $this->selectChecked = [];
     }
 
-    public function emitCountInKeyExhibits($selected)
+    public function emitCountInKeyExhibits($selected, $order = null)
     {
         $data = json_decode($selected) ?? [];
         $this->checkedCount = count($data);
         $this->selectChecked = $data;
+
+        if ($order) {
+            $this->emitTo(CommonLayout::class, 'onDateSort', $order);
+        }
 
         $this->emitTo(ExhibitsTable::class, 'updateFilteredEvent', $this->selectChecked);
     }

@@ -11,6 +11,8 @@
 
         this.$watch('dateSortOrder', (newVal, oldVal) => {
             @this.emit('onDateSort', newVal);
+
+            Livewire.emit('setSortOrder', newVal);
         })
     }
 }">
@@ -91,7 +93,7 @@
                             </div>
 
                             <div class="py-4 px-6">
-                                <livewire:key-exhibits.exhibits-pop-up :selectChecked="$selectChecked"/>
+                                <livewire:filings-filter-pop-up :type="'exhibit'" :selectChecked="$selectChecked" :sortOrder="$dateSortOrder" />
                             </div>
                         </div>
                     </div>
@@ -106,7 +108,7 @@
 
     <div class="fixed z-50 top-0 left-0 flex items-center justify-center w-full h-full md:hidden" style="background-color: rgba(0,0,0,.5);" x-show="openExhibitsPop">
         <div class="px-6 py-6 mx-2 text-left bg-white rounded shadow-xl max-w-[90vw]">
-            <livewire:key-exhibits.exhibits-pop-up :selectChecked="$selectChecked"/>
+            <livewire:filings-filter-pop-up :type="'exhibit'" :selectChecked="$selectChecked" :sortOrder="$dateSortOrder" />
         </div>
     </div>
 </div>

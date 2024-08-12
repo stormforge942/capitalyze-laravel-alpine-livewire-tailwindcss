@@ -2,6 +2,7 @@
 
 namespace App\Http\Livewire\FilingsSummary;
 
+use App\Http\Livewire\AllFilings\CommonLayout;
 use App\Http\Livewire\AllFilings\FilingsTable;
 use Livewire\Component;
 
@@ -25,11 +26,15 @@ class AllFilings extends Component
         $this->selectChecked = [];
     }
 
-    public function emitCountInAllfilings($selected)
+    public function emitCountInAllfilings($selected, $order = null)
     {
         $data = json_decode($selected) ?? [];
         $this->checkedCount = count($data);
         $this->selectChecked = $data;
+
+        if ($order) {
+            $this->emitTo(CommonLayout::class, 'onDateSort', $order);
+        }
 
         $this->emitTo(FilingsTable::class, 'updateFilteredEvent', $this->selectChecked);
     }
