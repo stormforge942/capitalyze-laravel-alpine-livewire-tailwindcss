@@ -17,7 +17,7 @@
     }
 }">
     <div class="flex flex-col">
-        <div class="mr-2 md:hidden absolute top-[52%] right-[2%] bg-white p-2 rounded-full border-2 border-[#2C71F0] {{$checkedCount ? 'bg-[#EAF1FE]' : ''}} z-10">
+        <div class="w-fit mr-2 mt-6 md:hidden bg-white p-2 rounded-full border-2 border-[#2C71F0] {{$checkedCount ? 'bg-[#EAF1FE]' : ''}}">
             <div @click="openExhibitsPop = true" class="flex justify-between items-center">
                 <div>
                     <img src="{{asset('/svg/filter-list.svg')}}"/>
@@ -26,7 +26,6 @@
                 <div class="flex justify-between items-center">
                     <h4 class="text-sm ml-2 text-[#121A0F] font-[400]">Table Options</h4>
 
-                    {{ $checkedCount }}
                     @if($checkedCount)
                         <span class="bg-[#2C71F0] px-3 ml-2 py-0 rounded-full text-[0.625rem] font-[600] text-white">{{$checkedCount}}</span>
                     @endif
@@ -108,6 +107,17 @@
 
     <div class="fixed z-50 top-0 left-0 flex items-center justify-center w-full h-full md:hidden" style="background-color: rgba(0,0,0,.5);" x-show="openExhibitsPop">
         <div class="px-6 py-6 mx-2 text-left bg-white rounded shadow-xl max-w-[90vw]">
+            <div class="flex gap-2 mb-6 justify-end">
+                <button @click="openExhibitsPop = false">
+                    <svg width="24" height="24" viewBox="0 0 24 24" fill="none"
+                         xmlns="http://www.w3.org/2000/svg">
+                        <path
+                            d="M6.4 19L5 17.6L10.6 12L5 6.4L6.4 5L12 10.6L17.6 5L19 6.4L13.4 12L19 17.6L17.6 19L12 13.4L6.4 19Z"
+                            fill="#C22929" />
+                    </svg>
+                </button>
+            </div>
+
             <livewire:filings-filter-pop-up :type="'exhibit'" :selectChecked="$selectChecked" :sortOrder="$dateSortOrder" />
         </div>
     </div>
