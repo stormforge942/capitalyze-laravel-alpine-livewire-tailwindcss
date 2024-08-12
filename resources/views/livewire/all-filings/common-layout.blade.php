@@ -28,7 +28,7 @@
     }
 }">
     <div class="flex flex-col">
-        <div class="mr-2 md:hidden absolute top-[52%] right-[2%] bg-white p-2 rounded-full border-2 border-[#2C71F0] {{$checkedCount ? 'bg-[#EAF1FE]' : ''}} z-10">
+        <div class="w-fit mr-2 mt-6 md:hidden bg-white p-2 rounded-full border-2 border-[#2C71F0] {{$checkedCount ? 'bg-[#EAF1FE]' : ''}}">
             <div @click="openFilingPop = true" class="flex justify-between items-center">
                 <div>
                     <img src="{{asset('/svg/filter-list.svg')}}"/>

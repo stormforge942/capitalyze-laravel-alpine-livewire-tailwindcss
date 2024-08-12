@@ -1,7 +1,7 @@
 <div class="flex flex-col" x-data="{
     activeTab: '{{$tabName}}'
 }">
-    <div class="flex flex-col mx-6 md:lg-0 ml-0">
+    <div class="flex flex-col mx-0 sm:mx-6 md:lg-0 ml-0">
         <x-company-info-header :company="['name' => $company->name, 'ticker' => $company->ticker]">
             <x-download-data-buttons />
         </x-company-info-header>
@@ -36,27 +36,24 @@
                     </svg>
                 </button>
                 <div x-show="dropdownMenu" class="absolute z-50 left-0 py-2 mt-10 bg-white  rounded-md shadow-xl w-44">
-                    <div class="flex justify-start items-center content-start">
-                        <a href="javascript;" wire:click.prevent="setTabName('summary')"
-                            class="block px-4 py-2 text-sm font-[600]">
+                    <div class="flex justify-start items-center content-start" wire:click.prevent="setTabName('summary')">
+                        <a href="javascript;" class="block px-4 py-2 text-sm font-[600]">
                             Filings Summary
                         </a>
                         @if ($tabName == 'summary')
                             <div><img src="{{ asset('/svg/tick.svg') }}" alt="tick" /></div>
                         @endif
                     </div>
-                    <div class="flex justify-start items-center content-start">
-                        <a href="javascript;" wire:click.prevent="setTabName('all-filings')"
-                            class="block px-4 py-2 text-sm font-[600]">
+                    <div class="flex justify-start items-center content-start" wire:click.prevent="setTabName('all-filings')">
+                        <a href="javascript;" class="block px-4 py-2 text-sm font-[600]">
                             All Filings
                         </a>
                         @if ($tabName == 'all-filings')
                             <div><img src="{{ asset('/svg/tick.svg') }}" alt="tick" /></div>
                         @endif
                     </div>
-                    <div class="flex justify-start items-center content-start">
-                        <a href="javascript;" wire:click.prevent="setTabName('key-exhibits')"
-                            class="block px-4 py-2 text-sm font-[600]">
+                    <div class="flex justify-start items-center content-start" wire:click.prevent="setTabName('key-exhibits')">
+                        <a href="javascript;" class="block px-4 py-2 text-sm font-[600]">
                             Key Exhibits
                         </a>
                         @if ($tabName == 'key-exhibits')
