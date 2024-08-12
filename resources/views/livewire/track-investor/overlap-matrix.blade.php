@@ -84,15 +84,15 @@
     </template>
     <template x-if="curInvestors.length">
         <div class="mt-6">
-            <div x-show="loading" x-cloak>
+            <template x-if="loading">
                 <div class="py-10 grid place-items-center">
                     <span class="mx-auto simple-loader !text-green-dark"></span>
                 </div>
-            </div>
+            </template>
 
-            <div x-show="!loading">
-                <div class="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-6 gap-4">
-                    <div class="col-span-1">
+            <template x-if="!loading">
+                <div class="flex gap-x-4">
+                    <div class="w-1/2 md:w-1/3 lg:w-1/4 xl:w-1/6">
                         <div
                             class="py-3 font-semibold text-md bg-white text-black flex flex-row justify-center items-center">
                             Investor List
@@ -161,77 +161,87 @@
                         </div>
                     </div>
 
-                    <template x-for="(value, key) in overlapMatrix" :key="key + '-investors'">
-                        <div class="col-span-1">
-                            <div class="py-3 font-semibold text-md bg-white text-black flex flex-row justify-center items-center"
-                                x-text="key + ' investors'"></div>
-                            <template x-for="investor in value" :key="investor.company_name">
-                                <div class="my-3 px-2 py-3 bg-white">
-                                    <div class="flex flex-row justify-between text-md font-semibold px-2 py-2">
-                                        <span x-text="investor.company_name"></span>
-                                        <span x-text="'$' + investor.price"></span>
-                                    </div>
+                    <div
+                        class="w-1/2 md:w-2/3 lg:w-3/4 xl:w-5/6 grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-5 gap-4">
+                        <template x-for="(value, key) in overlapMatrix" :key="key + '-investors'">
+                            <div class="col-span-1">
+                                <div class="py-3 font-semibold text-md bg-white text-black flex flex-row justify-center items-center"
+                                    x-text="key + ' investors'"></div>
 
-                                    <div class="my-3 mx-2">
-                                        <div x-show="getNewPosition(investor.funds).length"
-                                            class="flex flex-row text-sm">
-                                            <div class="pt-0.5">
-                                                <svg width="16px" height="16px">
-                                                    <circle cx="8" cy="8" r="6" fill="blue" />
-                                                </svg>
+                                <div>
+                                    <template x-for="investor in value" :key="investor.company_name">
+                                        <div class="my-3 px-2 py-3 bg-white">
+                                            <div class="flex flex-row justify-between text-md font-semibold px-2 py-2">
+                                                <span x-text="investor.company_name"></span>
+                                                <span x-text="'$' + investor.price"></span>
                                             </div>
-                                            <span class="pl-1">
-                                                <span
-                                                    x-text="getNewPosition(investor.funds).map(fund => (fund.fund_symbol ? `${fund.name} (${fund.fund_symbol})` : fund.name)).join(' | ')"></span>
-                                            </span>
-                                        </div>
-                                        <div x-show="getIncreasedPosition(investor.funds).length"
-                                            class="flex flex-row text-sm mt-3">
-                                            <div class="pt-0.5">
-                                                <svg width="16px" height="16px">
-                                                    <circle cx="8" cy="8" r="6" fill="green" />
-                                                </svg>
-                                            </div>
-                                            <span class="pl-1">
-                                                <span
-                                                    x-text="getIncreasedPosition(investor.funds).map(fund => (fund.fund_symbol ? `${fund.name} (${fund.fund_symbol})` : fund.name)).join(' | ')"></span>
-                                            </span>
-                                        </div>
-                                        <div x-show="getReducedPosition(investor.funds).length"
-                                            class="flex flex-row text-sm mt-3">
-                                            <div class="pt-0.5">
-                                                <svg width="16px" height="16px">
-                                                    <circle cx="8" cy="8" r="6" fill="red" />
-                                                </svg>
-                                            </div>
-                                            <span class="pl-1">
-                                                <span
-                                                    x-text="getReducedPosition(investor.funds).map(fund => (fund.fund_symbol ? `${fund.name} (${fund.fund_symbol})` : fund.name)).join(' | ')"></span>
-                                            </span>
-                                        </div>
-                                        <div x-show="getMaintainedPosition(investor.funds).length"
-                                            class="flex flex-row text-sm mt-3">
-                                            <div class="pt-0.5">
-                                                <svg width="16px" height="16px">
-                                                    <circle cx="8" cy="8" r="6" fill="gray" />
-                                                </svg>
-                                            </div>
-                                            <span class="pl-1">
-                                                <span
-                                                    x-text="getMaintainedPosition(investor.funds).map(fund => (fund.fund_symbol ? `${fund.name} (${fund.fund_symbol})` : fund.name)).join(' | ')"></span>
-                                            </span>
-                                        </div>
-                                    </div>
 
-                                    <a class="block mx-auto font-semibold text-center cursor-pointer"
-                                        @click.prevent="showInvestorActivities(key, investor)">See Investors
-                                        Activities</a>
+                                            <div class="my-3 mx-2">
+                                                <div x-show="getNewPosition(investor.funds).length"
+                                                    class="flex flex-row text-sm">
+                                                    <div class="pt-0.5">
+                                                        <svg width="16px" height="16px">
+                                                            <circle cx="8" cy="8" r="6"
+                                                                fill="blue" />
+                                                        </svg>
+                                                    </div>
+                                                    <span class="pl-1">
+                                                        <span
+                                                            x-text="getNewPosition(investor.funds).map(fund => (fund.fund_symbol ? `${fund.name} (${fund.fund_symbol})` : fund.name)).join(' | ')"></span>
+                                                    </span>
+                                                </div>
+                                                <div x-show="getIncreasedPosition(investor.funds).length"
+                                                    class="flex flex-row text-sm mt-3">
+                                                    <div class="pt-0.5">
+                                                        <svg width="16px" height="16px">
+                                                            <circle cx="8" cy="8" r="6"
+                                                                fill="green" />
+                                                        </svg>
+                                                    </div>
+                                                    <span class="pl-1">
+                                                        <span
+                                                            x-text="getIncreasedPosition(investor.funds).map(fund => (fund.fund_symbol ? `${fund.name} (${fund.fund_symbol})` : fund.name)).join(' | ')"></span>
+                                                    </span>
+                                                </div>
+                                                <div x-show="getReducedPosition(investor.funds).length"
+                                                    class="flex flex-row text-sm mt-3">
+                                                    <div class="pt-0.5">
+                                                        <svg width="16px" height="16px">
+                                                            <circle cx="8" cy="8" r="6"
+                                                                fill="red" />
+                                                        </svg>
+                                                    </div>
+                                                    <span class="pl-1">
+                                                        <span
+                                                            x-text="getReducedPosition(investor.funds).map(fund => (fund.fund_symbol ? `${fund.name} (${fund.fund_symbol})` : fund.name)).join(' | ')"></span>
+                                                    </span>
+                                                </div>
+                                                <div x-show="getMaintainedPosition(investor.funds).length"
+                                                    class="flex flex-row text-sm mt-3">
+                                                    <div class="pt-0.5">
+                                                        <svg width="16px" height="16px">
+                                                            <circle cx="8" cy="8" r="6"
+                                                                fill="gray" />
+                                                        </svg>
+                                                    </div>
+                                                    <span class="pl-1">
+                                                        <span
+                                                            x-text="getMaintainedPosition(investor.funds).map(fund => (fund.fund_symbol ? `${fund.name} (${fund.fund_symbol})` : fund.name)).join(' | ')"></span>
+                                                    </span>
+                                                </div>
+                                            </div>
+
+                                            <a class="block mx-auto font-semibold text-center cursor-pointer"
+                                                @click.prevent="showInvestorActivities(key, investor)">See Investors
+                                                Activities</a>
+                                        </div>
+                                    </template>
                                 </div>
-                            </template>
-                        </div>
-                    </template>
+                            </div>
+                        </template>
+                    </div>
                 </div>
-            </div>
+            </template>
         </div>
     </template>
 </div>
