@@ -16,7 +16,7 @@ class FundItem extends Component
         $this->fund = $fund;
 
         // Check if the fund is a mutual fund or not
-        if (array_key_exists('fund_symbol', $this->fund)) {
+        if (array_key_exists('fund_symbol', $this->fund) && $this->fund['fund_symbol']) {
             $this->getMutualFundMarketValue();
         } else {
             $this->getFundMarketValue();

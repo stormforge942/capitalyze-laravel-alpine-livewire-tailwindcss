@@ -33,10 +33,12 @@
                 this.$watch('showDropdown', value => {
                     if (value) {
                         this.tmpCurInvestors = [...curInvestors];
-                    } else {
-                        curInvestors = [...this.tmpCurInvestors];
                     }
                 });
+            },
+            handleShowResult() {
+                this.showDropdown = false;
+                curInvestors = [...this.tmpCurInvestors];
             },
             handleClickInvestor(invt) {
                 const id = this.generateID(invt);
@@ -113,8 +115,8 @@
                                     d="M10 20C4.47715 20 0 15.5228 0 10C0 4.47715 4.47715 0 10 0C15.5228 0 20 4.47715 20 10C20 15.5228 15.5228 20 10 20ZM9 9H5V11H15V9H5"
                                     fill="#121A0F" />
                             </svg>
-                            <span class="ml-4 font-bold text-black"
-                                x-text="invt.name + (invt.fund_symbol ? ` (${invt.fund_symbol})` : '')"></span>
+                            <span class="capitalize ml-4 font-bold text-black"
+                                x-text="(invt.name.toLowerCase() + (invt.fund_symbol ? ` (${invt.fund_symbol})` : ''))"></span>
                         </div>
                         <span class="text-[#7C8286] whitespace-nowrap"
                             x-text="`Owns ${invt.stock_count} stocks`"></span>
@@ -147,6 +149,12 @@
                         }
                     }" x-init="observe"></div>
                 </template>
+            </div>
+            <div class="p-6">
+                <button type="button" @click="handleShowResult"
+                    class="w-full px-4 py-3 font-medium bg-green-dark hover:bg-opacity-80 rounded disabled:pointer-events-none disabled:bg-[#D4DDD7] disabled:text-gray-medium2 text-base">
+                    Show Result
+                </button>
             </div>
         </div>
     </x-dropdown>

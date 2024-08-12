@@ -6,7 +6,9 @@
     init() {
         this.$watch('curInvestors', value => {
             const param = this.curInvestors.filter(invt => invt.bAdded);
-            this.$wire.updateInvestors(param);
+            this.loading = true;
+            this.$wire.updateInvestors(param)
+                .finally(() => this.loading = false);
         });
     },
     showInvestorActivities(company_name, data) {
@@ -84,85 +86,81 @@
     </template>
     <template x-if="curInvestors.length">
         <div class="mt-6">
-            <template x-if="loading">
-                <div class="py-10 grid place-items-center">
-                    <span class="mx-auto simple-loader !text-green-dark"></span>
-                </div>
-            </template>
-
-            <template x-if="!loading">
-                <div class="flex gap-x-4">
-                    <div class="w-1/2 md:w-1/3 lg:w-1/4 xl:w-1/6">
-                        <div
-                            class="py-3 font-semibold text-md bg-white text-black flex flex-row justify-center items-center">
-                            Investor List
-                            <span class="ml-2 rounded-full bg-black text-white text-sm px-1"
-                                x-text="curInvestors.length"></span>
-                        </div>
-                        <div class="my-3 py-3 px-4 bg-white">
-                            <div>
-                                <label class="cursor-pointer rounded flex items-center mt-3 py-1 gap-x-3">
-                                    <input type="checkbox" class="custom-checkbox border-dark focus:ring-0"
-                                        x-bind:value="selectAllStatus" @input="handleSelectAll">
-                                    <span class="font-bold">Select All</span>
-                                </label>
-                                <template x-for="invt in curInvestors" :key="invt.name + '-' + invt.fund_symbol">
-                                    <div class="flex flex-row justify-between items-center gap-x-2">
-                                        <div class="flex flex-row justify-start items-center gap-x-1">
-                                            <label class="cursor-pointer py-1 rounded flex items-center gap-x-3">
-                                                <input type="checkbox" :name="name" x-model="invt.bAdded"
-                                                    class="custom-checkbox border-dark focus:ring-0">
-                                                <span
-                                                    x-text="invt.fund_symbol ? `${invt.name} (${invt.fund_symbol})` : invt.name"></span>
-                                            </label>
-
+            <div class="flex gap-x-4">
+                <div class="w-1/2 lg:w-1/3 xl:w-1/5">
+                    <div
+                        class="py-3 font-semibold text-md bg-white text-black flex flex-row justify-center items-center">
+                        Investor List
+                        <span class="ml-2 rounded-full bg-black text-white text-sm px-1"
+                            x-text="curInvestors.length"></span>
+                    </div>
+                    <div class="my-3 py-3 px-4 bg-white">
+                        <div>
+                            <label class="cursor-pointer rounded flex items-center mt-3 py-1 gap-x-3">
+                                <input type="checkbox" class="custom-checkbox border-dark focus:ring-0"
+                                    x-bind:value="selectAllStatus" @input="handleSelectAll">
+                                <span class="font-bold">Select All</span>
+                            </label>
+                            <template x-for="invt in curInvestors" :key="invt.name + '-' + invt.fund_symbol">
+                                <div class="flex flex-row justify-between items-center gap-x-2">
+                                    <div class="flex flex-row justify-start items-center gap-x-1">
+                                        <label class="cursor-pointer py-1 rounded flex items-center gap-x-3">
+                                            <input type="checkbox" :name="name" x-model="invt.bAdded"
+                                                class="custom-checkbox border-dark focus:ring-0">
                                             <span
-                                                class="rounded-full text-xs font-medium leading-none grid place-items-center bg-blue text-white min-w-[20px] min-h-[20px]"
-                                                x-text="invt.stock_count">
-                                            </span>
-                                        </div>
-                                        <div class="hover:cursor-pointer hover:text-red"
-                                            @click="removeCurInvestor(invt)">
-                                            <svg width="11" height="11" viewBox="0 0 10 10" fill="none"
-                                                xmlns="http://www.w3.org/2000/svg">
-                                                <path
-                                                    d="M5.00045 4.05767L7.94676 1.11137C8.14203 0.916104 8.45861 0.916104 8.65387 1.11137L8.88957 1.34706C9.08483 1.54233 9.08483 1.85891 8.88956 2.05417L5.94325 5.00047L8.88956 7.94671C9.08482 8.14197 9.08483 8.45856 8.88956 8.65382L8.65387 8.88952C8.45861 9.08478 8.14203 9.08478 7.94676 8.88952L5.00045 5.94327L2.05418 8.88952C1.85892 9.08478 1.54234 9.08478 1.34707 8.88952L1.11137 8.65382C0.916108 8.45856 0.916108 8.14197 1.11137 7.94671L4.05765 5.00047L1.11137 2.05417C0.916104 1.85891 0.916105 1.54233 1.11137 1.34707L1.34707 1.11136C1.54233 0.916103 1.85892 0.916105 2.05418 1.11137L5.00045 4.05767Z"
-                                                    fill="#C22929" />
-                                            </svg>
-                                        </div>
-                                    </div>
-                                </template>
-                            </div>
+                                                x-text="invt.fund_symbol ? `${invt.name} (${invt.fund_symbol})` : invt.name"></span>
+                                        </label>
 
-                            <div class="flex flex-row items-center mt-6">
-                                <svg width="16px" height="16px">
-                                    <circle cx="8" cy="8" r="6" fill="blue" />
-                                </svg>
-                                <span class="pl-3">New Buys</span>
-                            </div>
-                            <div class="flex flex-row items-center">
-                                <svg width="16px" height="16px">
-                                    <circle cx="8" cy="8" r="6" fill="green" />
-                                </svg>
-                                <span class="pl-3">Position Increased</span>
-                            </div>
-                            <div class="flex flex-row items-center">
-                                <svg width="16px" height="16px">
-                                    <circle cx="8" cy="8" r="6" fill="red" />
-                                </svg>
-                                <span class="pl-3">Position Reduced</span>
-                            </div>
-                            <div class="flex flex-row items-center">
-                                <svg width="16px" height="16px">
-                                    <circle cx="8" cy="8" r="6" fill="gray" />
-                                </svg>
-                                <span class="pl-3">Position Maintained</span>
-                            </div>
+                                        <span
+                                            class="rounded-full text-xs font-medium leading-none grid place-items-center bg-blue text-white min-w-[20px] min-h-[20px]"
+                                            x-text="invt.stock_count">
+                                        </span>
+                                    </div>
+                                    <div class="hover:cursor-pointer hover:text-red" @click="removeCurInvestor(invt)">
+                                        <svg width="11" height="11" viewBox="0 0 10 10" fill="none"
+                                            xmlns="http://www.w3.org/2000/svg">
+                                            <path
+                                                d="M5.00045 4.05767L7.94676 1.11137C8.14203 0.916104 8.45861 0.916104 8.65387 1.11137L8.88957 1.34706C9.08483 1.54233 9.08483 1.85891 8.88956 2.05417L5.94325 5.00047L8.88956 7.94671C9.08482 8.14197 9.08483 8.45856 8.88956 8.65382L8.65387 8.88952C8.45861 9.08478 8.14203 9.08478 7.94676 8.88952L5.00045 5.94327L2.05418 8.88952C1.85892 9.08478 1.54234 9.08478 1.34707 8.88952L1.11137 8.65382C0.916108 8.45856 0.916108 8.14197 1.11137 7.94671L4.05765 5.00047L1.11137 2.05417C0.916104 1.85891 0.916105 1.54233 1.11137 1.34707L1.34707 1.11136C1.54233 0.916103 1.85892 0.916105 2.05418 1.11137L5.00045 4.05767Z"
+                                                fill="#C22929" />
+                                        </svg>
+                                    </div>
+                                </div>
+                            </template>
+                        </div>
+
+                        <div class="flex flex-row items-center mt-6">
+                            <svg width="16px" height="16px">
+                                <circle cx="8" cy="8" r="6" fill="blue" />
+                            </svg>
+                            <span class="pl-3">New Buys</span>
+                        </div>
+                        <div class="flex flex-row items-center">
+                            <svg width="16px" height="16px">
+                                <circle cx="8" cy="8" r="6" fill="green" />
+                            </svg>
+                            <span class="pl-3">Position Increased</span>
+                        </div>
+                        <div class="flex flex-row items-center">
+                            <svg width="16px" height="16px">
+                                <circle cx="8" cy="8" r="6" fill="red" />
+                            </svg>
+                            <span class="pl-3">Position Reduced</span>
+                        </div>
+                        <div class="flex flex-row items-center">
+                            <svg width="16px" height="16px">
+                                <circle cx="8" cy="8" r="6" fill="gray" />
+                            </svg>
+                            <span class="pl-3">Position Maintained</span>
                         </div>
                     </div>
-
-                    <div
-                        class="w-1/2 md:w-2/3 lg:w-3/4 xl:w-5/6 grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-5 gap-4">
+                </div>
+                <div class="w-1/2 lg:w-2/3 xl:w-4/5 grid grid-cols-1 lg:grid-cols-2 xl:grid-cols-4 gap-4">
+                    <template x-if="loading">
+                        <div class="col-span-5 py-10 grid place-items-center">
+                            <span class="mx-auto simple-loader !text-green-dark"></span>
+                        </div>
+                    </template>
+                    <template x-if="!loading">
                         <template x-for="(value, key) in overlapMatrix" :key="key + '-investors'">
                             <div class="col-span-1">
                                 <div class="py-3 font-semibold text-md bg-white text-black flex flex-row justify-center items-center"
@@ -239,9 +237,9 @@
                                 </div>
                             </div>
                         </template>
-                    </div>
+                    </template>
                 </div>
-            </template>
+            </div>
         </div>
     </template>
 </div>

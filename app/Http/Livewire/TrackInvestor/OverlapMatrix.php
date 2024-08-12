@@ -161,7 +161,7 @@ class OverlapMatrix extends Component
             } else {
                 $mutualFundFilters[] = [
                     'cik' => $investor['cik'],
-                    'registrant_name' => $investor['registrant_name'],
+                    'registrant_name' => $investor['name'],
                     'fund_symbol' => $investor['fund_symbol'],
                     'series_id' => $investor['series_id'],
                     'class_id' => $investor['class_id'],
