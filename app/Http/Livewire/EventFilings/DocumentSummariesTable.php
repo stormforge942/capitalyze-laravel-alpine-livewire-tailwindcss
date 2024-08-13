@@ -40,10 +40,10 @@ class DocumentSummariesTable extends BaseTable
     public function columns(): array
     {
         return [
-            Column::make('Symbol', 'formatted_symbol', 'symbol')->sortable(),
-            Column::make('Filing Type', 'formatted_form_type', 'form_type')->sortable(),
-            Column::make('Summary', 'formatted_summary', 'summary'),
-            Column::make('Filing Date', 'filing_date')->sortable(),
+            Column::make('Symbol', 'formatted_symbol', 'symbol')->sortable()->bodyAttribute('w-[5rem]'),
+            Column::make('Filing Type', 'formatted_form_type', 'form_type')->sortable()->bodyAttribute('w-[5rem]'),
+            Column::make('Summary', 'formatted_summary', 'summary')->bodyAttribute('max-w-[20rem]'),
+            Column::make('Filing Date', 'filing_date')->sortable()->bodyAttribute('w-[10rem]'),
         ];
     }
 
@@ -57,13 +57,12 @@ class DocumentSummariesTable extends BaseTable
             })
             ->addColumn('form_type')
             ->addColumn('formatted_form_type', function ($row) {
-                return '<button class="inline-block px-2 py-1 bg-[#DCF6EC] hover:bg-green-dark transition-all rounded" @click="Livewire.emit(`slide-over.open`, `s3-link-content`, { sourceLink: `' . $row->s3_link . '` })">' . $row->form_type . '</button>';
+                return '<button class="inline-block px-2 py-1 bg-[#DCF6EC] hover:bg-green-dark transition-all rounded" @click="Livewire.emit(`slide-over.open`, `s3-link-content`, { sourceLink: `' . $row->s3_link . '`, summary: `' . $row->summary . '` })">' . $row->form_type . '</button>';
             })
             ->addColumn('summary')
             ->addColumn('formatted_summary', function ($row) {
-                return '<span class="inline-block w-full overflow-hidden overflow-ellipsis whitespace-nowrap" style="min-width: 0;">' . 
-                    (strlen($row->summary) > 100 ? substr($row->summary, 0, 100) . '...' : $row->summary) . 
-                    '</span>';
+                $summary = htmlspecialchars($row->summary); // Encode HTML entities to prevent XSS
+                return '<span class="inline-block w-full ellipsis-on-hover">' . $summary . '</span>';
             })
             ->addColumn('filing_date');
     }

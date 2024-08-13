@@ -15,13 +15,25 @@
                         const iframe = this.$el.children[0]
                 
                         iframe.onload = () => {
-                            const highlightText = iframe.contentDocument.getElementsByClassName('highlight-text')
-                            if (highlightText.length) {
-                                highlightText[0].scrollIntoView({
-                                    block: 'center',
-                                    behavior: 'smooth',
-                                    inline: 'center'
-                                })
+                            const doc = iframe.contentDocument;
+                            if (doc) {
+                                @if($summary)
+                                const summaryDiv = doc.createElement('div');
+                                summaryDiv.innerHTML = `<h2 style='font-size: 1.125rem; font-weight: 600; color: #2d3748;'>Summary</h2><p style='font-size: 0.875rem; color: #6b7280;'>{{ $summary }}</p>`;
+                                summaryDiv.style.padding = '1rem';
+                                summaryDiv.style.backgroundColor = '#f7fafc';
+                                summaryDiv.style.marginBottom = '1rem';
+                                doc.body.insertBefore(summaryDiv, doc.body.firstChild);
+                                @endif
+                
+                                const highlightText = doc.getElementsByClassName('highlight-text');
+                                if (highlightText.length) {
+                                    highlightText[0].scrollIntoView({
+                                        block: 'center',
+                                        behavior: 'smooth',
+                                        inline: 'center'
+                                    });
+                                }
                             }
                         }
                     }

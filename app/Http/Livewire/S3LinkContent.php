@@ -8,6 +8,7 @@ class S3LinkContent extends SlideOver
 {
     public ?string $sourceLink = null;
     public ?string $url = null;
+    public ?string $summary = null;
     private string $content = '';
     public bool $highlightDates = false;
 
