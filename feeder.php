@@ -84,6 +84,7 @@ $tables = [
     'info_idx_tb',
     'short_interest',
     'key_metrics',
+    'document_summaries',
 ];
 
 $replica = makeDatabase($args['drop']);
@@ -224,6 +225,8 @@ function fillData($xbrl, $replica, $tables, $symbols, $ciks)
             $stmt = $xbrl->query("SELECT * FROM $table where symbol in ($stringSymbols) order by settlement_date desc");
         } else if (in_array($table, ['insider_ownership', 'shares_beneficially_owned'])) {
             $stmt = $xbrl->query("SELECT * FROM $table where symbol in ($stringSymbols) limit 1000");
+        } else if ($table === 'document_summaries') {
+            $stmt = $xbrl->query("SELECT * FROM $table where symbol in ($stringSymbols) order by acceptance_time desc");
         }
 
         if (!$stmt) {

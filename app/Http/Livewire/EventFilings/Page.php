@@ -164,6 +164,9 @@ class Page extends Component
                     'in' => ['SC TO-I', 'SC TO-T', 'SC 14D9'],
                 ]
             ]
+        ],
+        'Document Summaries' => [
+            'table' => 'document_summaries',
         ]
     ];
 
@@ -179,7 +182,7 @@ class Page extends Component
 
         $this->activeSubTab = $request->query('subtab');
         if (!collect($this->data[$this->activeTab])->where('title', $this->activeSubTab)->first()) {
-            $this->activeSubTab = $this->data[$this->activeTab][0]['title'];
+            $this->activeSubTab = $this->activeTab === 'Document Summaries' ? '' : $this->data[$this->activeTab][0]['title'];
         }
     }
 
@@ -189,7 +192,7 @@ class Page extends Component
             'data' => $this->data,
             'activeTab' => $this->activeTab,
             'activeSubTab' => $this->activeSubTab,
-            'tableConfiguration' => collect($this->data[$this->activeTab])
+            'tableConfiguration' => $this->activeTab === 'Document Summaries' ? [] : collect($this->data[$this->activeTab])
                 ->where('title', $this->activeSubTab)
                 ->first()['match'],
         ]);
