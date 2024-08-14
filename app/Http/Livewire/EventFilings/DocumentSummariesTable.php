@@ -57,7 +57,7 @@ class DocumentSummariesTable extends BaseTable
             })
             ->addColumn('form_type')
             ->addColumn('formatted_form_type', function ($row) {
-                return '<button class="inline-block px-2 py-1 bg-[#DCF6EC] hover:bg-green-dark transition-all rounded" @click="Livewire.emit(`slide-over.open`, `s3-link-content`, { sourceLink: `' . $row->s3_link . '`, summary: `' . $row->summary . '` })">' . $row->form_type . '</button>';
+                return '<button class="inline-block px-2 py-1 bg-[#DCF6EC] hover:bg-green-dark transition-all rounded" @click="Livewire.emit(`slide-over.open`, `document-summary-content`, { sourceLink: `' . $row->s3_link . '`, symbol: `' . $row->symbol . '`, date: `' . $row->filing_date . '`})">' . $row->form_type . '</button>';
             })
             ->addColumn('summary')
             ->addColumn('formatted_summary', function ($row) {
