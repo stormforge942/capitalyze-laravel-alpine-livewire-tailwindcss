@@ -1,5 +1,5 @@
 <div class="flex flex-col" x-data="{
-    activeTab: '{{$tabName}}'
+    activeTab: '{{ $tabName }}'
 }">
     <div class="flex flex-col mx-0 sm:mx-6 md:lg-0 ml-0">
         <x-company-info-header :company="['name' => $company->name, 'ticker' => $company->ticker]">
@@ -11,15 +11,26 @@
                 <div @class([
                     'tab text-base font-[500]',
                     'active font-[600]' => $tabName == 'summary',
-                ]) wire:click="setTabName('summary')" @click="activeTab = 'summary'" :class="{ 'active': activeTab === 'summary' }">Filings Summary</div>
+                ]) wire:click="setTabName('summary')" @click="activeTab = 'summary'"
+                    :class="{ 'active': activeTab === 'summary' }">Filings Summary</div>
                 <div @class([
                     'tab text-base font-[500]',
                     'active font-[600]' => $tabName == 'all-filings',
-                ]) wire:click="setTabName('all-filings')" @click="activeTab = 'all-filings'" :class="{ 'active': activeTab === 'all-filings' }">All Filings</div>
+                ]) wire:click="setTabName('all-filings')"
+                    @click="activeTab = 'all-filings'" :class="{ 'active': activeTab === 'all-filings' }">All Filings
+                </div>
                 <div @class([
                     'tab text-base font-[500]',
                     'active font-[600]' => $tabName == 'key-exhibits',
-                ]) wire:click="setTabName('key-exhibits')" @click="activeTab = 'key-exhibits'" :class="{ 'active': activeTab === 'key-exhibits' }">Key Exhibits</div>
+                ]) wire:click="setTabName('key-exhibits')"
+                    @click="activeTab = 'key-exhibits'" :class="{ 'active': activeTab === 'key-exhibits' }">Key Exhibits
+                </div>
+                <div @class([
+                    'tab text-base font-[500]',
+                    'active font-[600]' => $tabName == 'earning-presentations',
+                ]) wire:click="setTabName('earning-presentations')"
+                    @click="activeTab = 'earning-presentations'"
+                    :class="{ 'active': activeTab === 'earning-presentations' }">Earning Presentations</div>
             </div>
             <div class="flex lg:hidden justify-between relative w-full mt-2 mx-0 mb-3" x-data="{ dropdownMenu: false }"
                 @keydown.window.escape="dropdownMenu = false" @click.away="dropdownMenu = false">
@@ -36,7 +47,8 @@
                     </svg>
                 </button>
                 <div x-show="dropdownMenu" class="absolute z-50 left-0 py-2 mt-10 bg-white rounded-md shadow-xl w-44">
-                    <div class="flex justify-start items-center content-start" @click="dropdownMenu = false" wire:click.prevent="setTabName('summary')">
+                    <div class="flex justify-start items-center content-start" @click="dropdownMenu = false"
+                        wire:click.prevent="setTabName('summary')">
                         <a href="javascript;" class="block px-4 py-2 text-sm font-[600]">
                             Filings Summary
                         </a>
@@ -44,7 +56,8 @@
                             <div><img src="{{ asset('/svg/tick.svg') }}" alt="tick" /></div>
                         @endif
                     </div>
-                    <div class="flex justify-start items-center content-start" @click="dropdownMenu = false" wire:click.prevent="setTabName('all-filings')">
+                    <div class="flex justify-start items-center content-start" @click="dropdownMenu = false"
+                        wire:click.prevent="setTabName('all-filings')">
                         <a href="javascript;" class="block px-4 py-2 text-sm font-[600]">
                             All Filings
                         </a>
@@ -52,7 +65,8 @@
                             <div><img src="{{ asset('/svg/tick.svg') }}" alt="tick" /></div>
                         @endif
                     </div>
-                    <div class="flex justify-start items-center content-start" @click="dropdownMenu = false" wire:click.prevent="setTabName('key-exhibits')">
+                    <div class="flex justify-start items-center content-start" @click="dropdownMenu = false"
+                        wire:click.prevent="setTabName('key-exhibits')">
                         <a href="javascript;" class="block px-4 py-2 text-sm font-[600]">
                             Key Exhibits
                         </a>
@@ -64,7 +78,7 @@
             </div>
         </div>
 
-        @if($loading)
+        @if ($loading)
             <div wire:loading.block class="justify-center items-center w-full mt-2 mb-5">
                 <x-loader />
             </div>
@@ -77,8 +91,9 @@
                 <livewire:is :component="'filings-summary.' . $tabName" :company="$company" :ticker="$ticker" />
             @elseif($tabName === 'key-exhibits')
                 <livewire:is :component="'filings-summary.' . $tabName" :company="$company" :ticker="$ticker" />
+            @elseif($tabName === 'earning-presentations')
+                <livewire:filings-summary.earning-presentations :ticker="$company->ticker" />
             @endif
         </div>
     </div>
 </div>
-
