@@ -62,7 +62,7 @@ class DocumentSummariesTable extends BaseTable
             ->addColumn('summary')
             ->addColumn('formatted_summary', function ($row) {
                 $summary = htmlspecialchars($row->summary); // Encode HTML entities to prevent XSS
-                return '<span class="inline-block w-full ellipsis-on-hover">' . $summary . '</span>';
+                return '<span class="inline-block w-full whitespace-nowrap overflow-hidden text-ellipsis">' . $summary . '</span>';
             })
             ->addColumn('filing_date');
     }

@@ -675,11 +675,3 @@ a {
 .financials-table-row:hover > td:first-child {
     @apply !bg-gray-200;
 }
-
-.ellipsis-on-hover {
-    @apply whitespace-nowrap overflow-hidden text-ellipsis;
-}
-
-.ellipsis-on-hover:hover {
-    @apply whitespace-normal overflow-visible text-clip;
-}
