@@ -85,6 +85,7 @@ $tables = [
     'short_interest',
     'key_metrics',
     'document_summaries',
+    'earning_presentations',
 ];
 
 $replica = makeDatabase($args['drop']);
@@ -227,6 +228,8 @@ function fillData($xbrl, $replica, $tables, $symbols, $ciks)
             $stmt = $xbrl->query("SELECT * FROM $table where symbol in ($stringSymbols) limit 1000");
         } else if ($table === 'document_summaries') {
             $stmt = $xbrl->query("SELECT * FROM $table where symbol in ($stringSymbols) order by acceptance_time desc");
+        } else if ($table === 'earning_presentations') {
+            $stmt = $xbrl->query("SELECT * FROM $table order by updated_at desc");
         }
 
         if (!$stmt) {

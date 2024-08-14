@@ -165,9 +165,8 @@ class Page extends Component
                 ]
             ]
         ],
-        'Document Summaries' => [
-            'table' => 'document_summaries',
-        ]
+        'Document Summaries' => [],
+        'Earning Presentations' => [],
     ];
 
     public $activeTab;
@@ -182,7 +181,7 @@ class Page extends Component
 
         $this->activeSubTab = $request->query('subtab');
         if (!collect($this->data[$this->activeTab])->where('title', $this->activeSubTab)->first()) {
-            $this->activeSubTab = $this->activeTab === 'Document Summaries' ? '' : $this->data[$this->activeTab][0]['title'];
+            $this->activeSubTab = in_array($this->activeTab, ['Document Summaries', 'Earning Presentations']) ? '' : $this->data[$this->activeTab][0]['title'];
         }
     }
 
@@ -192,7 +191,7 @@ class Page extends Component
             'data' => $this->data,
             'activeTab' => $this->activeTab,
             'activeSubTab' => $this->activeSubTab,
-            'tableConfiguration' => $this->activeTab === 'Document Summaries' ? [] : collect($this->data[$this->activeTab])
+            'tableConfiguration' => in_array($this->activeTab, ['Document Summaries', 'Earning Presentations']) ? [] : collect($this->data[$this->activeTab])
                 ->where('title', $this->activeSubTab)
                 ->first()['match'],
         ]);

@@ -24,19 +24,16 @@
             });
         },
         changeTable() {
-            if (this.tabActive !== 'Document Summaries') {
-                window.Livewire
-                    .emit(
-                        'updateEventFilingsTable',
-                        this.data[this.tabActive].find(subtab => subtab.title === this.activeSubTab).match,
-                        this.search
-                    );
-            } else {
-                window.Livewire
-                    .emit(
-                        'updateDocumentSummariesTable', {},
-                        this.search
-                    );
+            switch (this.tabActive) {
+                case 'Document Summaries':
+                    window.Livewire.emit('updateDocumentSummariesTable', {}, this.search);
+                    break;
+                case 'Earning Presentations':
+                    window.Livewire.emit('updateEarningPresentationsTable', {}, this.search);
+                    break;
+                default:
+                    window.Livewire.emit('updateEventFilingsTable', this.data[this.tabActive].find(subtab => subtab.title === this.activeSubTab).match, this.search);
+                    break;
             }
         }
     }">
@@ -73,7 +70,7 @@
                 </div>
 
                 <div class="mt-4">
-                    <div x-show="tabActive !== 'Document Summaries'">
+                    <div x-show="tabActive !== 'Document Summaries' && tabActive !== 'Earning Presentations'">
                         <livewire:event-filings.table :config="$tableConfiguration" />
                     </div>
                 </div>
@@ -81,7 +78,11 @@
                     <livewire:event-filings.document-summaries-table />
                 </div>
             </div>
+            <div x-show="tabActive === 'Earning Presentations'">
+                <livewire:event-filings.earning-presentations-table />
+            </div>
     </div>
-    </x-primary-tabs>
+</div>
+</x-primary-tabs>
 </div>
 </div>
