@@ -10,8 +10,8 @@ use PowerComponents\LivewirePowerGrid\PowerGridColumns;
 
 class EarningPresentationsTable extends BaseTable
 {
-    public string $sortField = 'updated_at';
-    public string $sortDirection = 'desc';
+    public string $sortField = 'fiscal_period';
+    public string $sortDirection = 'asc';
     public array $config = [];
     public string $search = '';
 
@@ -34,7 +34,8 @@ class EarningPresentationsTable extends BaseTable
     {
         return DB::connection('pgsql-xbrl')
             ->table('earning_presentations')
-            ->when($this->search, fn ($q) => $q->where('registrant_name', 'ilike', "%{$this->search}%"));
+            ->when($this->search, fn ($q) => $q->where('registrant_name', 'ilike', "%{$this->search}%"))
+            ->orderBy('fiscal_year', 'desc');
     }
 
     public function columns(): array
