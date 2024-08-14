@@ -155,22 +155,25 @@ function renderPurchaseChart(canvas, data) {
 
     const width = canvas.width;
     const height = canvas.height;
+
     const lineHeight = height / 2;
     const circleRadius = 25;
-    const rectWidth = 20;
+    const rectWidth = 25;
+
+    ctx.clearRect(0, 0, width, height);
 
     // Draw background line and rectangle
     ctx.beginPath();
-    ctx.moveTo(20, lineHeight);
-    ctx.lineTo(width - 20, lineHeight);
+    ctx.moveTo(rectWidth, lineHeight);
+    ctx.lineTo(width - rectWidth, lineHeight);
     ctx.lineWidth = 5;
     ctx.stroke();
 
     ctx.beginPath();
-    ctx.moveTo(20 - rectWidth, lineHeight);
-    ctx.lineTo(20, lineHeight - rectWidth);
-    ctx.lineTo(20 + rectWidth, lineHeight);
-    ctx.lineTo(20, lineHeight + rectWidth);
+    ctx.moveTo(rectWidth - rectWidth, lineHeight);
+    ctx.lineTo(rectWidth, lineHeight - rectWidth);
+    ctx.lineTo(rectWidth + rectWidth, lineHeight);
+    ctx.lineTo(rectWidth, lineHeight + rectWidth);
     ctx.lineWidth = 0;
     ctx.closePath();
 
@@ -178,10 +181,10 @@ function renderPurchaseChart(canvas, data) {
     ctx.fill();
 
     ctx.beginPath();
-    ctx.moveTo(width - 20 - rectWidth, lineHeight);
-    ctx.lineTo(width - 20, lineHeight - rectWidth);
-    ctx.lineTo(width - 20 + rectWidth, lineHeight);
-    ctx.lineTo(width - 20, lineHeight + rectWidth);
+    ctx.moveTo(width - rectWidth - rectWidth, lineHeight);
+    ctx.lineTo(width - rectWidth, lineHeight - rectWidth);
+    ctx.lineTo(width - rectWidth + rectWidth, lineHeight);
+    ctx.lineTo(width - rectWidth, lineHeight + rectWidth);
     ctx.lineWidth = 0;
     ctx.closePath();
 
@@ -201,7 +204,7 @@ function renderPurchaseChart(canvas, data) {
 
         // Draw text inside circle
         ctx.fillStyle = item.current ? "#fff" : "#000";
-        ctx.font = "bold 16px Arial";
+        ctx.font = "bold 14px Arial";
         ctx.textAlign = "center";
         ctx.textBaseline = "middle";
         ctx.fillText('$' + formatNumber(item.price), item.x, lineHeight);
@@ -217,11 +220,11 @@ function renderPurchaseChart(canvas, data) {
         if (item.current) {
             ctx.fillStyle = "#376bfb";
             ctx.font = "12px Arial";
-            ctx.fillText("Current Stock Price", item.x, lineHeight + circleRadius + 30);
+            ctx.fillText("Current Stock Price", item.x, lineHeight + circleRadius + 25);
         } else {
             ctx.fillStyle = "#000";
             ctx.font = "12px Arial";
-            ctx.fillText("Average Price Paid", item.x, lineHeight + circleRadius + 30);
+            ctx.fillText("Average Price Paid", item.x, lineHeight + circleRadius + 25);
         }
     });
 }

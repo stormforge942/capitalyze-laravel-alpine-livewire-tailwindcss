@@ -1,10 +1,26 @@
 <div x-data="{
     chartData: @js($chartData),
     data: @js($data),
+    width: 1120,
     init() {
-        this.renderChart();
+        this.setupResizeObserver();
     },
-    renderChart() {
+    setupResizeObserver() {
+        // Create a ResizeObserver instance
+        const observer = new ResizeObserver(entries => {
+            for (let entry of entries) {
+                const { width } = entry.contentRect;
+                if (width === 0) return;
+                this.width = width;
+
+                this.$nextTick(() => this.renderChart(width));
+            }
+        });
+
+        // Observe the element
+        observer.observe(this.$refs.canvas.parentElement);
+    },
+    renderChart(width) {
         const tempData = [];
         for (const key in this.chartData) {
             tempData.push({ name: key, price: this.chartData[key] });
@@ -35,7 +51,7 @@
 
         const data1 = data.map((item, index) => {
             return {
-                x: index === 0 ? 100 : index === data.length - 1 ? 900 : 100 + (item.price - data[0].price) / (data[data.length - 1].price - data[0].price) * 800,
+                x: index === 0 ? 100 : index === data.length - 1 ? (width - 100) : 100 + (item.price - data[0].price) / (data[data.length - 1].price - data[0].price) * (width - 200),
                 name: item.name,
                 price: item.price,
                 current: item.current,
@@ -49,7 +65,7 @@
         <div class="font-extrabold">Purchase Continuum</div>
 
         <div class="mt-3 h-[150px]">
-            <canvas width="1000" height="150" class="w-full h-full" x-ref="canvas"></canvas>
+            <canvas :width="width" height="150" class="w-full h-full" x-ref="canvas"></canvas>
         </div>
     </div>
 </div>
