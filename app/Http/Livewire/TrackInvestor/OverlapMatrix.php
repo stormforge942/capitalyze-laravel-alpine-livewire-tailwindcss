@@ -52,7 +52,7 @@ class OverlapMatrix extends Component
         $this->canLoadMore = true;
         $offset = ($this->page - 1) * $this->limit;
 
-        $data = Cache::remember('investors_' . $this->category . '_' . $this->search . '_' . $this->page . '_' . Auth::id(), 300, function () use ($offset) {
+        $data = Cache::remember('investors_' . $this->category . '_' . $this->search . '_' . $this->page . '_' . Auth::id(), $this->category !== 'favourite' ? 300 : 3, function () use ($offset) {
             // Initialize favorite identifiers
             $favouriteFunds = TrackInvestorFavorite::where('user_id', Auth::id())
                 ->where('type', TrackInvestorFavorite::TYPE_FUND)
@@ -75,10 +75,11 @@ class OverlapMatrix extends Component
                     'change_in_total_value',
                     'date'
                 )
+                ->where('is_latest', true)
                 ->when($this->search, function ($query, $search) {
                     return $query->where('investor_name', 'ilike', '%' . $search . '%');
-                })
-                ->where('is_latest', true);
+                });
+                
 
             $mutualFundsQuery = DB::connection('pgsql-xbrl')
                 ->table('mutual_fund_holdings_summary')
@@ -94,11 +95,11 @@ class OverlapMatrix extends Component
                     'class_name',
                     'date'
                 )
+                ->where('is_latest', true)
                 ->when($this->search, function ($query, $search) {
                     return $query->where('registrant_name', 'ilike', '%' . $search . '%')
                                 ->orWhere('fund_symbol', 'ilike', '%' . $search . '%');
-                })
-                ->where('is_latest', true);
+                });
 
             // Determine which category to fetch data for
             switch ($this->category) {
@@ -174,30 +175,60 @@ class OverlapMatrix extends Component
         $filteredMutualFunds = collect();
         if (count($mutualFundFilters)) {
             $filteredMutualFunds = DB::connection('pgsql-xbrl')
-                ->table('mutual_fund_holdings')
-                ->select('cik', 'registrant_name as name', 'fund_symbol', 'name as company_name', 'symbol as ticker', 'change_in_balance as change_amount', 'series_id', 'class_id', 'class_name', 'previous_weight as previous', 'price_per_unit as price')
-                ->where(function ($query) use($mutualFundFilters) {
-                    foreach ($mutualFundFilters as $filter) {
-                        $query->orWhere(function ($q) use ($filter) {
-                            $q->where('cik', $filter['cik'])
-                                ->where('registrant_name', $filter['registrant_name'])
-                                ->where('fund_symbol', $filter['fund_symbol'])
-                                ->where('series_id', $filter['series_id'])
-                                ->where('class_id', $filter['class_id'])
-                                ->where('class_name', $filter['class_name']);
-                        });
-                    }
-                })
+                ->table(DB::raw("
+                    (SELECT DISTINCT ON (fund_symbol, symbol) *
+                    FROM mutual_fund_holdings
+                    WHERE " . implode(' OR ', array_map(function($filter) {
+                        return "(" .
+                            "cik = '" . $filter['cik'] . "' AND " .
+                            "registrant_name = '" . $filter['registrant_name'] . "' AND " .
+                            "fund_symbol = '" . $filter['fund_symbol'] . "' AND " .
+                            "series_id = '" . $filter['series_id'] . "' AND " .
+                            "class_id = '" . $filter['class_id'] . "' AND " .
+                            "class_name = '" . $filter['class_name'] . "'" .
+                        ")";
+                    }, $mutualFundFilters)) . "
+                    ORDER BY fund_symbol, symbol, acceptance_time DESC) as mf
+                "))
+                ->select(
+                    'mf.cik',
+                    'mf.registrant_name as name',
+                    'mf.fund_symbol',
+                    'mf.name as company_name',
+                    'mf.symbol as ticker',
+                    'mf.change_in_balance as change_amount',
+                    'mf.series_id',
+                    'mf.class_id',
+                    'mf.class_name',
+                    'mf.previous_weight as previous',
+                    'mf.price_per_unit as price'
+                )
                 ->get();
+
         }
 
-        // Fetch filtered funds data
         $filteredFunds = collect();
         if (count($fundFilters)) {
             $filteredFunds = DB::connection('pgsql-xbrl')
-                ->table('filings')
-                ->select('cik', 'investor_name as name', 'name_of_issuer as company_name', 'symbol as ticker', 'change_in_shares as change_amount', 'last_shares as previous', 'price_paid as price', DB::raw('NULL AS fund_symbol'), DB::raw('NULL AS series_id'), DB::raw('NULL AS class_id'), DB::raw('NULL AS class_name'))
-                ->whereIn('cik', $fundFilters)
+                ->table(DB::raw("
+                    (SELECT DISTINCT ON (cik, symbol) *
+                    FROM filings
+                    WHERE cik IN ('" . implode("','", array_map('strval', $fundFilters)) . "')
+                    ORDER BY cik, symbol, report_calendar_or_quarter DESC) as f
+                "))
+                ->select(
+                    'f.cik',
+                    'f.investor_name as name',
+                    'f.name_of_issuer as company_name',
+                    'f.symbol as ticker',
+                    'f.change_in_shares as change_amount',
+                    'f.last_shares as previous',
+                    'f.price_paid as price',
+                    DB::raw('NULL AS fund_symbol'),
+                    DB::raw('NULL AS series_id'),
+                    DB::raw('NULL AS class_id'),
+                    DB::raw('NULL AS class_name')
+                )
                 ->get();
         }
 
@@ -205,7 +236,7 @@ class OverlapMatrix extends Component
         $combinedData = $filteredMutualFunds->concat($filteredFunds);
 
         // Group by company_name and count distinct cik values
-        $result = $combinedData->groupBy('company_name')
+        $result = $combinedData->groupBy('ticker')
             ->map(function ($companyGroup) {
                 $uniqueFunds = $companyGroup->unique(function ($item) {
                     return $item->cik . $item->series_id . $item->class_id . $item->class_name;
@@ -264,7 +295,7 @@ class OverlapMatrix extends Component
         $ciks = $funds->pluck('cik')->toArray();
         return DB::connection('pgsql-xbrl')
             ->table('filings as f')
-            ->select('f.cik', DB::raw('COUNT(DISTINCT f.name_of_issuer) as stock_count'))
+            ->select('f.cik', DB::raw('COUNT(DISTINCT f.symbol) as stock_count'))
             ->whereIn('f.cik', $ciks)
             ->groupBy('f.cik')
             ->get()
@@ -288,7 +319,7 @@ class OverlapMatrix extends Component
 
         return DB::connection('pgsql-xbrl')
             ->table('mutual_fund_holdings as mf')
-            ->select('mf.cik', 'mf.fund_symbol', 'mf.series_id', 'mf.class_id', DB::raw('COUNT(DISTINCT mf.name) as stock_count'))
+            ->select('mf.cik', 'mf.fund_symbol', 'mf.series_id', 'mf.class_id', DB::raw('COUNT(DISTINCT mf.symbol) as stock_count'))
             ->where(function ($query) use($mutualFilters) {
                 foreach ($mutualFilters as $filter) {
                     $query->orWhere(function ($q) use ($filter) {

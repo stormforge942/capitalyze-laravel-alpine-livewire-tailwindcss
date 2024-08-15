@@ -127,7 +127,7 @@
                     <span class="mx-auto simple-loader !text-green-dark"></span>
                 </div>
 
-                <template x-if="canLoadMore && currentCategory !== 'favourite'">
+                <template x-if="!loading && canLoadMore && currentCategory !== 'favourite'">
                     <div x-data="{
                         observe() {
                             if (loadingInfinite) return;

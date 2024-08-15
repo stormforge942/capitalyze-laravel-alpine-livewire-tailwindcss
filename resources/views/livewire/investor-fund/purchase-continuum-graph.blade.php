@@ -51,7 +51,7 @@
 
         const data1 = data.map((item, index) => {
             return {
-                x: index === 0 ? 100 : index === data.length - 1 ? (width - 100) : 100 + (item.price - data[0].price) / (data[data.length - 1].price - data[0].price) * (width - 200),
+                x: index === 0 ? 100 : index === data.length - 1 ? (width * window.devicePixelRatio - 100) : 100 + (item.price - data[0].price) / (data[data.length - 1].price - data[0].price) * (width * window.devicePixelRatio - 200),
                 name: item.name,
                 price: item.price,
                 current: item.current,
@@ -65,7 +65,8 @@
         <div class="font-extrabold">Purchase Continuum</div>
 
         <div class="mt-3 h-[150px]">
-            <canvas :width="width" height="150" class="w-full h-full" x-ref="canvas"></canvas>
+            <canvas :width="width * devicePixelRatio" :height="150 * window.devicePixelRatio" class="w-full h-full"
+                x-ref="canvas"></canvas>
         </div>
     </div>
 </div>

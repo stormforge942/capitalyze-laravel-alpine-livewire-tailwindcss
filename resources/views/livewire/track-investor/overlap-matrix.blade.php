@@ -107,8 +107,8 @@
                                         <label class="cursor-pointer py-1 rounded flex items-center gap-x-3">
                                             <input type="checkbox" :name="name" x-model="invt.bAdded"
                                                 class="custom-checkbox border-dark focus:ring-0">
-                                            <span
-                                                x-text="invt.fund_symbol ? `${invt.name} (${invt.fund_symbol})` : invt.name"></span>
+                                            <span class="capitalize break-all"
+                                                x-text="invt.fund_symbol ? `${invt.name.toLowerCase()} (${invt.fund_symbol})` : invt.name.toLowerCase()"></span>
                                         </label>
 
                                         <span
@@ -184,8 +184,8 @@
                                                         </svg>
                                                     </div>
                                                     <span class="pl-1">
-                                                        <span
-                                                            x-text="getNewPosition(investor.funds).map(fund => (fund.fund_symbol ? `${fund.name} (${fund.fund_symbol})` : fund.name)).join(' | ')"></span>
+                                                        <span class="capitalize"
+                                                            x-text="getNewPosition(investor.funds).map(fund => (fund.fund_symbol ? `${fund.name.toLowerCase()} (${fund.fund_symbol})` : fund.name.toLowerCase())).join(' | ')"></span>
                                                     </span>
                                                 </div>
                                                 <div x-show="getIncreasedPosition(investor.funds).length"
@@ -197,8 +197,8 @@
                                                         </svg>
                                                     </div>
                                                     <span class="pl-1">
-                                                        <span
-                                                            x-text="getIncreasedPosition(investor.funds).map(fund => (fund.fund_symbol ? `${fund.name} (${fund.fund_symbol})` : fund.name)).join(' | ')"></span>
+                                                        <span class="capitalize"
+                                                            x-text="getIncreasedPosition(investor.funds).map(fund => (fund.fund_symbol ? `${fund.name.toLowerCase()} (${fund.fund_symbol})` : fund.name.toLowerCase())).join(' | ')"></span>
                                                     </span>
                                                 </div>
                                                 <div x-show="getReducedPosition(investor.funds).length"
@@ -210,8 +210,8 @@
                                                         </svg>
                                                     </div>
                                                     <span class="pl-1">
-                                                        <span
-                                                            x-text="getReducedPosition(investor.funds).map(fund => (fund.fund_symbol ? `${fund.name} (${fund.fund_symbol})` : fund.name)).join(' | ')"></span>
+                                                        <span class="capitalize"
+                                                            x-text="getReducedPosition(investor.funds).map(fund => (fund.fund_symbol ? `${fund.name.toLowerCase()} (${fund.fund_symbol})` : fund.name.toLowerCase())).join(' | ')"></span>
                                                     </span>
                                                 </div>
                                                 <div x-show="getMaintainedPosition(investor.funds).length"
@@ -223,8 +223,8 @@
                                                         </svg>
                                                     </div>
                                                     <span class="pl-1">
-                                                        <span
-                                                            x-text="getMaintainedPosition(investor.funds).map(fund => (fund.fund_symbol ? `${fund.name} (${fund.fund_symbol})` : fund.name)).join(' | ')"></span>
+                                                        <span class="capitalize"
+                                                            x-text="getMaintainedPosition(investor.funds).map(fund => (fund.fund_symbol ? `${fund.name.toLowerCase()} (${fund.fund_symbol})` : fund.name.toLowerCase())).join(' | ')"></span>
                                                     </span>
                                                 </div>
                                             </div>
