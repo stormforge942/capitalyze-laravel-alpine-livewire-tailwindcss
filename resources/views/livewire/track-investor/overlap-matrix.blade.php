@@ -161,13 +161,13 @@
                         </div>
                     </template>
                     <template x-if="!loading">
-                        <template x-for="(value, key) in overlapMatrix" :key="key + '-investors'">
+                        <template x-for="(value, key) in overlapMatrix">
                             <div class="col-span-1">
                                 <div class="py-3 font-semibold text-md bg-white text-black flex flex-row justify-center items-center"
                                     x-text="key + ' investors'"></div>
 
                                 <div>
-                                    <template x-for="investor in value" :key="investor.company_name">
+                                    <template x-for="investor in value">
                                         <div class="my-3 px-2 py-3 bg-white">
                                             <div class="flex flex-row justify-between text-md font-semibold px-2 py-2">
                                                 <span x-text="investor.company_name"></span>

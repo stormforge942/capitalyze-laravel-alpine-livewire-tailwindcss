@@ -1,23 +1,25 @@
 <div class="mt-6 w-full items-center" x-data="{
     showDropdown: false,
-    search: $wire.entangle('search'),
 }">
     <x-dropdown x-model="showDropdown" placement="bottom-start" :fullWidthTrigger="true" :teleport="true">
         <x-slot name="trigger">
-            <div class="bg-white border-[0.5px] border-[#D4DDD7] p-2 flex items-center gap-x-1 w-full">
+            <div
+                class="h-14 w-full border-[0.5px] border-[#D4DDD7] bg-white leading-[3rem] flex items-center focus-within:border-green-dark p-2">
                 <svg class="h-6 w-6 shrink-0" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
                     <path
                         d="M15.8645 14.3208H15.0515L14.7633 14.0429C15.7719 12.8696 16.3791 11.3465 16.3791 9.68954C16.3791 5.99485 13.3842 3 9.68954 3C5.99485 3 3 5.99485 3 9.68954C3 13.3842 5.99485 16.3791 9.68954 16.3791C11.3465 16.3791 12.8696 15.7719 14.0429 14.7633L14.3208 15.0515V15.8645L19.4666 21L21 19.4666L15.8645 14.3208ZM9.68954 14.3208C7.12693 14.3208 5.05832 12.2521 5.05832 9.68954C5.05832 7.12693 7.12693 5.05832 9.68954 5.05832C12.2521 5.05832 14.3208 7.12693 14.3208 9.68954C14.3208 12.2521 12.2521 14.3208 9.68954 14.3208Z"
                         fill="#828C85" />
                 </svg>
-                <input type="search" placeholder="Search"
-                    class="placeholder:text-gray-medium2 bg-transparent border-none flex-1 focus:outline-none focus:ring-0 h-[30px] search-x-button placeholder:font-medium text-sm w-full"
-                    x-model.debounce.500ms="search">
+
+                <div class="w-full text-left text-[#7C8286] ml-3 focus:outline-none">
+                    Search
+                </div>
             </div>
         </x-slot>
         <div class="w-[30rem] sm:w-[30rem]" x-data="{
             loading: @entangle('loading').defer,
             loadingInfinite: false,
+            search: @entangle('search'),
             placeholder: 'Search investors',
             tmpCurInvestors: [],
             currentCategory: @entangle('category'),
@@ -34,6 +36,9 @@
                     if (value) {
                         this.tmpCurInvestors = [...curInvestors];
                     }
+                });
+                this.$watch('search', value => {
+                    this.loading = true;
                 });
             },
             handleShowResult() {
@@ -72,7 +77,7 @@
                 return @this.loadMore();
             }
         }">
-            <div class="flex justify-between gap-2 px-6 pt-6 mb-3">
+            <div class="flex justify-between gap-2 px-6 pt-6 mb-1">
                 <span class="font-medium text-base">Search Investors</span>
                 <button type="button" @click="showDropdown = false">
                     <svg width="24" height="24" viewBox="0 0 24 24" fill="none"
@@ -84,6 +89,18 @@
                 </button>
             </div>
             <span class="px-6 text-gry-500 text-[#7C8286]">Add funds and analyze the overlap in their portfolios.</span>
+
+            <div class="bg-white border-[0.5px] border-[#D4DDD7] p-2 flex items-center gap-x-1 mx-6 mt-2">
+                <svg class="h-6 w-6 shrink-0" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                    <path
+                        d="M15.8645 14.3208H15.0515L14.7633 14.0429C15.7719 12.8696 16.3791 11.3465 16.3791 9.68954C16.3791 5.99485 13.3842 3 9.68954 3C5.99485 3 3 5.99485 3 9.68954C3 13.3842 5.99485 16.3791 9.68954 16.3791C11.3465 16.3791 12.8696 15.7719 14.0429 14.7633L14.3208 15.0515V15.8645L19.4666 21L21 19.4666L15.8645 14.3208ZM9.68954 14.3208C7.12693 14.3208 5.05832 12.2521 5.05832 9.68954C5.05832 7.12693 7.12693 5.05832 9.68954 5.05832C12.2521 5.05832 14.3208 7.12693 14.3208 9.68954C14.3208 12.2521 12.2521 14.3208 9.68954 14.3208Z"
+                        fill="#828C85" />
+                </svg>
+                <input type="search" placeholder="Search"
+                    class="placeholder:text-gray-medium2 bg-transparent border-none flex-1 focus:outline-none focus:ring-0 h-[30px] search-x-button placeholder:font-medium text-sm w-full"
+                    x-model.debounce.500ms="search">
+            </div>
+
             <div class="grid grid-cols-12 gap-4 px-6 mt-4 mb-2">
                 <div class="col-span-12 flex flex-row gap-3">
                     <template x-for="(value, key) in categories" :key="key">
@@ -95,6 +112,7 @@
                     </template>
                 </div>
             </div>
+
             <div x-show="loading" class="grid place-items-center">
                 <span class="mx-auto simple-loader text-blue"></span>
             </div>

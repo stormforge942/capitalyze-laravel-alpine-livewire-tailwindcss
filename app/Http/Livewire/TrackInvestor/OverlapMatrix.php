@@ -18,7 +18,7 @@ class OverlapMatrix extends Component
     public $investors;
     public $canLoadMore = true;
 
-    public $category = 'all';
+    public $category = 'fund';
     public $overlapMatrix = [];
 
     public $loading = true;
@@ -97,8 +97,7 @@ class OverlapMatrix extends Component
                 )
                 ->where('is_latest', true)
                 ->when($this->search, function ($query, $search) {
-                    return $query->where('registrant_name', 'ilike', '%' . $search . '%')
-                                ->orWhere('fund_symbol', 'ilike', '%' . $search . '%');
+                    return $query->where('registrant_name', 'ilike', '%' . $search . '%');
                 });
 
             // Determine which category to fetch data for
