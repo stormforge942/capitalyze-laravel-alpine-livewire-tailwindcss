@@ -9,6 +9,7 @@ use App\Models\TrackInvestorFavorite;
 use Illuminate\Support\Facades\Cache;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Carbon;
 use Livewire\Component;
 
 class OverlapMatrix extends Component
@@ -28,10 +29,63 @@ class OverlapMatrix extends Component
 
     public $search = '';
 
+    public $fundPeriod;
+    public $mutualPeriod;
+
     public function mount()
     {
+        $this->fundPeriod = $this->getFundLatestQuarter();
+        $this->mutualPeriod = $this->getMutualFundLatestQuarter();
+
         $this->investors = collect([]);
         $this->getInvestors();
+    }
+
+    private function getFundLatestQuarter()
+    {
+        $currentYear = Carbon::now()->year;
+        $currentQuarter = Carbon::now()->quarter;
+
+        $quarterEndDates = [
+            1 => '-03-31',
+            2 => '-06-30',
+            3 => '-09-30',
+            4 => '-12-31',
+        ];
+
+        $latestQuarter = $currentQuarter - 1;
+        $latestYear = $currentYear;
+        if ($latestQuarter === 0) {
+            $latestQuarter = 4;
+            $latestYear = $currentYear - 1;
+        }
+
+        return $latestYear . $quarterEndDates[$latestQuarter];
+    }
+
+    private function getMutualFundLatestQuarter()
+    {
+        $currentYear = Carbon::now()->year;
+        $currentQuarter = Carbon::now()->quarter;
+
+        $quarterEndDates = [
+            1 => '-03-31',
+            2 => '-06-30',
+            3 => '-09-30',
+            4 => '-12-31',
+        ];
+
+        $quarter = $currentQuarter - 2;
+        $year = $currentYear;
+        if ($quarter <= 0) {
+            $quarter += 4;
+            $year = $currentYear - 1;
+        }
+
+        $end = Carbon::parse($year . $quarterEndDates[$quarter]);
+        $start = $end->clone()->startOfQuarter();
+
+        return [$start, $end];
     }
 
     public function updated($prop)
@@ -187,6 +241,7 @@ class OverlapMatrix extends Component
                             "class_name = '" . $filter['class_name'] . "'" .
                         ")";
                     }, $mutualFundFilters)) . "
+                    WHERE period_of_report BETWEEN '{$this->mutualPeriod[0]}' AND '{$this->mutualPeriod[1]}'
                     ORDER BY fund_symbol, symbol, acceptance_time DESC) as mf
                 "))
                 ->select(
@@ -213,6 +268,7 @@ class OverlapMatrix extends Component
                     (SELECT DISTINCT ON (cik, symbol) *
                     FROM filings
                     WHERE cik IN ('" . implode("','", array_map('strval', $fundFilters)) . "')
+                    AND report_calendar_or_quarter = '{$this->fundPeriod}'
                     ORDER BY cik, symbol, report_calendar_or_quarter DESC) as f
                 "))
                 ->select(
@@ -292,9 +348,10 @@ class OverlapMatrix extends Component
         }
 
         $ciks = $funds->pluck('cik')->toArray();
+
         return DB::connection('pgsql-xbrl')
             ->table('filings as f')
-            ->select('f.cik', DB::raw('COUNT(DISTINCT f.symbol) as stock_count'))
+            ->select('f.cik', DB::raw("COUNT(DISTINCT CASE WHEN f.report_calendar_or_quarter = '{$this->fundPeriod}' THEN f.symbol END) as stock_count"))
             ->whereIn('f.cik', $ciks)
             ->groupBy('f.cik')
             ->get()
@@ -318,7 +375,7 @@ class OverlapMatrix extends Component
 
         return DB::connection('pgsql-xbrl')
             ->table('mutual_fund_holdings as mf')
-            ->select('mf.cik', 'mf.fund_symbol', 'mf.series_id', 'mf.class_id', DB::raw('COUNT(DISTINCT mf.symbol) as stock_count'))
+            ->select('mf.cik', 'mf.fund_symbol', 'mf.series_id', 'mf.class_id', DB::raw("COUNT(DISTINCT mf.symbol) as stock_count"))
             ->where(function ($query) use($mutualFilters) {
                 foreach ($mutualFilters as $filter) {
                     $query->orWhere(function ($q) use ($filter) {
@@ -329,6 +386,7 @@ class OverlapMatrix extends Component
                     });
                 }
             })
+            ->whereBetween('mf.period_of_report', $this->mutualPeriod)
             ->groupBy('mf.cik', 'mf.fund_symbol', 'mf.series_id', 'mf.class_id')
             ->get()
             ->keyBy(function ($item) {
