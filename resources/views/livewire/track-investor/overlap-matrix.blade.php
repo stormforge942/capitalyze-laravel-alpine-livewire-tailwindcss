@@ -113,7 +113,7 @@
 
                                         <span
                                             class="rounded-full text-xs font-medium leading-none grid place-items-center bg-blue text-white min-w-[20px] min-h-[20px]"
-                                            x-text="invt.stock_count">
+                                            x-text="invt.portfolio_size">
                                         </span>
                                     </div>
                                     <div class="hover:cursor-pointer hover:text-red" @click="removeCurInvestor(invt)">

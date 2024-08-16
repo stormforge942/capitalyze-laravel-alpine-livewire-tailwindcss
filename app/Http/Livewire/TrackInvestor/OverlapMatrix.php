@@ -29,63 +29,10 @@ class OverlapMatrix extends Component
 
     public $search = '';
 
-    public $fundPeriod;
-    public $mutualPeriod;
-
     public function mount()
     {
-        $this->fundPeriod = $this->getFundLatestQuarter();
-        $this->mutualPeriod = $this->getMutualFundLatestQuarter();
-
         $this->investors = collect([]);
         $this->getInvestors();
-    }
-
-    private function getFundLatestQuarter()
-    {
-        $currentYear = Carbon::now()->year;
-        $currentQuarter = Carbon::now()->quarter;
-
-        $quarterEndDates = [
-            1 => '-03-31',
-            2 => '-06-30',
-            3 => '-09-30',
-            4 => '-12-31',
-        ];
-
-        $latestQuarter = $currentQuarter - 1;
-        $latestYear = $currentYear;
-        if ($latestQuarter === 0) {
-            $latestQuarter = 4;
-            $latestYear = $currentYear - 1;
-        }
-
-        return $latestYear . $quarterEndDates[$latestQuarter];
-    }
-
-    private function getMutualFundLatestQuarter()
-    {
-        $currentYear = Carbon::now()->year;
-        $currentQuarter = Carbon::now()->quarter;
-
-        $quarterEndDates = [
-            1 => '-03-31',
-            2 => '-06-30',
-            3 => '-09-30',
-            4 => '-12-31',
-        ];
-
-        $quarter = $currentQuarter - 2;
-        $year = $currentYear;
-        if ($quarter <= 0) {
-            $quarter += 4;
-            $year = $currentYear - 1;
-        }
-
-        $end = Carbon::parse($year . $quarterEndDates[$quarter]);
-        $start = $end->clone()->startOfQuarter();
-
-        return [$start, $end];
     }
 
     public function updated($prop)
@@ -180,17 +127,11 @@ class OverlapMatrix extends Component
                     break;
             }
 
-            // Get stock counts for funds
-            $stockCounts = $this->getStockCountsForFunds($funds);
-
-            // Get stock counts for mutual funds
-            $mutualStockCounts = $this->getStockCountsForMutualFunds($mutualFunds);
-
             // Process funds data
-            $this->processFundsData($funds, $favouriteFunds, $stockCounts);
+            $this->processFundsData($funds, $favouriteFunds);
 
             // Process mutual funds data
-            $this->processMutualFundsData($mutualFunds, $favouriteIdentifiers, $mutualStockCounts); 
+            $this->processMutualFundsData($mutualFunds, $favouriteIdentifiers); 
 
             return $funds->merge($mutualFunds);
         });
@@ -212,6 +153,7 @@ class OverlapMatrix extends Component
         foreach ($investors as $investor) {
             if ($investor['type'] === 'fund') {
                 $fundFilters[] = $investor['cik'];
+                $fundPeriod = $investor['date'];
             } else {
                 $mutualFundFilters[] = [
                     'cik' => $investor['cik'],
@@ -221,76 +163,72 @@ class OverlapMatrix extends Component
                     'class_id' => $investor['class_id'],
                     'class_name' => $investor['class_name'],
                 ];
+                $mutualFundPeriod = $investor['date'];
             }
         }
 
         // Fetch filtered mutual funds data
         $filteredMutualFunds = collect();
         if (count($mutualFundFilters)) {
-            $filteredMutualFunds = DB::connection('pgsql-xbrl')
-                ->table(DB::raw("
-                    (SELECT DISTINCT ON (fund_symbol, symbol) *
-                    FROM mutual_fund_holdings
-                    WHERE " . implode(' OR ', array_map(function($filter) {
-                        return "(" .
-                            "cik = '" . $filter['cik'] . "' AND " .
-                            "registrant_name = '" . $filter['registrant_name'] . "' AND " .
-                            "fund_symbol = '" . $filter['fund_symbol'] . "' AND " .
-                            "series_id = '" . $filter['series_id'] . "' AND " .
-                            "class_id = '" . $filter['class_id'] . "' AND " .
-                            "class_name = '" . $filter['class_name'] . "'" .
-                        ")";
-                    }, $mutualFundFilters)) . "
-                    WHERE period_of_report BETWEEN '{$this->mutualPeriod[0]}' AND '{$this->mutualPeriod[1]}'
-                    ORDER BY fund_symbol, symbol, acceptance_time DESC) as mf
-                "))
-                ->select(
-                    'mf.cik',
-                    'mf.registrant_name as name',
-                    'mf.fund_symbol',
-                    'mf.name as company_name',
-                    'mf.symbol as ticker',
-                    'mf.change_in_balance as change_amount',
-                    'mf.series_id',
-                    'mf.class_id',
-                    'mf.class_name',
-                    'mf.previous_weight as previous',
-                    'mf.price_per_unit as price'
-                )
-                ->get();
+            $startDate = Carbon::parse($mutualFundPeriod)->startOfQuarter()->format('Y-m-d');
+            $endDate = Carbon::parse($mutualFundPeriod)->endOfQuarter()->format('Y-m-d');
 
+            $filteredMutualFunds = DB::connection('pgsql-xbrl')
+                ->table('mutual_fund_holdings')
+                ->select(
+                    'cik',
+                    'registrant_name as name',
+                    'fund_symbol',
+                    'name as company_name',
+                    'symbol as ticker',
+                    'change_in_balance as change_amount',
+                    'series_id',
+                    'class_id',
+                    'class_name',
+                    'previous_weight as previous',
+                    'price_per_unit as price'
+                )
+                ->whereBetween('period_of_report', [$startDate, $endDate])
+                ->where(function($query) use ($mutualFundFilters) {
+                    foreach ($mutualFundFilters as $filter) {
+                        $query->orWhere(function($subQuery) use ($filter) {
+                            $subQuery->where('cik', $filter['cik'])
+                                ->where('registrant_name', $filter['registrant_name'])
+                                ->where('fund_symbol', $filter['fund_symbol'])
+                                ->where('series_id', $filter['series_id'])
+                                ->where('class_id', $filter['class_id'])
+                                ->where('class_name', $filter['class_name']);
+                        });
+                    }
+                })
+                ->get();
         }
 
         $filteredFunds = collect();
         if (count($fundFilters)) {
             $filteredFunds = DB::connection('pgsql-xbrl')
-                ->table(DB::raw("
-                    (SELECT DISTINCT ON (cik, symbol) *
-                    FROM filings
-                    WHERE cik IN ('" . implode("','", array_map('strval', $fundFilters)) . "')
-                    AND report_calendar_or_quarter = '{$this->fundPeriod}'
-                    ORDER BY cik, symbol, report_calendar_or_quarter DESC) as f
-                "))
+                ->table('filings')
                 ->select(
-                    'f.cik',
-                    'f.investor_name as name',
-                    'f.name_of_issuer as company_name',
-                    'f.symbol as ticker',
-                    'f.change_in_shares as change_amount',
-                    'f.last_shares as previous',
-                    'f.price_paid as price',
+                    'cik',
+                    'investor_name as name',
+                    'name_of_issuer as company_name',
+                    'symbol as ticker',
+                    'change_in_shares as change_amount',
+                    'last_shares as previous',
+                    'price_paid as price',
                     DB::raw('NULL AS fund_symbol'),
                     DB::raw('NULL AS series_id'),
                     DB::raw('NULL AS class_id'),
                     DB::raw('NULL AS class_name')
                 )
+                ->whereIn('cik', array_map('strval', $fundFilters))
+                ->where('report_calendar_or_quarter', $fundPeriod)
                 ->get();
         }
 
         // Convert collections to arrays
         $combinedData = $filteredMutualFunds->concat($filteredFunds);
 
-        // Group by company_name and count distinct cik values
         $result = $combinedData->groupBy('ticker')
             ->map(function ($companyGroup) {
                 $uniqueFunds = $companyGroup->unique(function ($item) {
@@ -341,77 +279,23 @@ class OverlapMatrix extends Component
         })->get();
     }
 
-    private function getStockCountsForFunds($funds)
+    private function processFundsData($funds, $favouriteFunds)
     {
-        if ($funds->isEmpty()) {
-            return collect();
-        }
-
-        $ciks = $funds->pluck('cik')->toArray();
-
-        return DB::connection('pgsql-xbrl')
-            ->table('filings as f')
-            ->select('f.cik', DB::raw("COUNT(DISTINCT CASE WHEN f.report_calendar_or_quarter = '{$this->fundPeriod}' THEN f.symbol END) as stock_count"))
-            ->whereIn('f.cik', $ciks)
-            ->groupBy('f.cik')
-            ->get()
-            ->keyBy('cik'); // Key by CIK for easy lookup
-    }
-
-    private function getStockCountsForMutualFunds($mutualFunds)
-    {
-        if ($mutualFunds->isEmpty()) {
-            return collect();
-        }
-
-        $mutualFilters = $mutualFunds->map(function ($mutualFund) {
-            return [
-                'cik' => $mutualFund->cik,
-                'fund_symbol' => $mutualFund->fund_symbol,
-                'series_id' => $mutualFund->series_id,
-                'class_id' => $mutualFund->class_id,
-            ];
-        });
-
-        return DB::connection('pgsql-xbrl')
-            ->table('mutual_fund_holdings as mf')
-            ->select('mf.cik', 'mf.fund_symbol', 'mf.series_id', 'mf.class_id', DB::raw("COUNT(DISTINCT mf.symbol) as stock_count"))
-            ->where(function ($query) use($mutualFilters) {
-                foreach ($mutualFilters as $filter) {
-                    $query->orWhere(function ($q) use ($filter) {
-                        $q->where('mf.cik', $filter['cik'])
-                            ->where('mf.series_id', $filter['series_id'])
-                            ->where('mf.class_id', $filter['class_id'])
-                            ->where('mf.fund_symbol', $filter['fund_symbol']);
-                    });
-                }
-            })
-            ->whereBetween('mf.period_of_report', $this->mutualPeriod)
-            ->groupBy('mf.cik', 'mf.fund_symbol', 'mf.series_id', 'mf.class_id')
-            ->get()
-            ->keyBy(function ($item) {
-                return $item->cik . '-' . $item->fund_symbol . '-' . $item->series_id . '-' . $item->class_id;
-            });
-    }
-
-    private function processFundsData($funds, $favouriteFunds, $stockCounts)
-    {
-        $funds->transform(function ($fund) use ($favouriteFunds, $stockCounts) {
+        $funds->transform(function ($fund) use ($favouriteFunds) {
             $fundArray = (array) $fund;
             $fundArray['type'] = 'fund';
             $fundArray['series_id'] = '';
             $fundArray['class_id'] = '';
             $fundArray['class_name'] = '';
             $fundArray['isFavorite'] = in_array($fundArray['cik'], $favouriteFunds);
-            $fundArray['stock_count'] = $stockCounts->get($fundArray['cik'])->stock_count ?? 0;
 
             return $fundArray;
         });
     }
 
-    private function processMutualFundsData($mutualFunds, $favouriteIdentifiers, $mutualStockCounts)
+    private function processMutualFundsData($mutualFunds, $favouriteIdentifiers)
     {
-        $mutualFunds->transform(function ($mutualFund) use ($favouriteIdentifiers, $mutualStockCounts) {
+        $mutualFunds->transform(function ($mutualFund) use ($favouriteIdentifiers) {
             $fundArray = (array) $mutualFund;
             $fundArray['type'] = 'mutual_fund';
 
@@ -426,7 +310,6 @@ class OverlapMatrix extends Component
 
             $fundArray['isFavorite'] = in_array($id, $favouriteIdentifiers);
             $key = $fundArray['cik'] . '-' . $fundArray['fund_symbol'] . '-' . $fundArray['series_id'] . '-' . $fundArray['class_id'];
-            $fundArray['stock_count'] = $mutualStockCounts->get($key)->stock_count ?? 0;
 
             return $fundArray;
         });

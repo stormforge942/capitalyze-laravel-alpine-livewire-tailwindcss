@@ -137,7 +137,7 @@
                                 x-text="(invt.name.toLowerCase() + (invt.fund_symbol ? ` (${invt.fund_symbol})` : ''))"></span>
                         </div>
                         <span class="text-[#7C8286] whitespace-nowrap"
-                            x-text="`Owns ${invt.stock_count} stocks`"></span>
+                            x-text="`Owns ${invt.portfolio_size} stocks`"></span>
                     </div>
                 </template>
 
