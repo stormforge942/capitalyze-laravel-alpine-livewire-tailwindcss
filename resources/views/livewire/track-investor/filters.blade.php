@@ -22,11 +22,11 @@
         })
     }
 }" wire:ignore>
-    <div class="col-span-4">
+    <div class="col-span-12 md:col-span-3">
         <x-search-filter x-model.debounce.800ms="search" />
     </div>
 
-    <div class="col-span-8">
+    <div class="col-span-12 md:col-span-9">
         <x-filter-box>
             @if (isset($views))
                 <x-select placeholder="View" :options="$views" x-model="view"></x-select>
