@@ -1,39 +1,6 @@
 <x-wire-elements-pro::tailwind.slide-over>
-    <div class="relative h-full" x-data="{
-        loadingPDF: true,
-        init() {
-            this.fetchAndDisplayPDF('{{ $sourceLink }}');
-        },
-        async fetchAndDisplayPDF(url) {
-            this.loadingPDF = true; // Start loading
-    
-            try {
-                const response = await fetch(url);
-    
-                if (!response.ok) {
-                    throw new Error(`HTTP error! Status: ${response.status}`);
-                }
-    
-                const blob = await response.blob();
-                const pdfUrl = URL.createObjectURL(blob);
-                const iframe = document.createElement('iframe');
-                iframe.style.width = '100%';
-                iframe.style.height = '100%';
-                iframe.src = pdfUrl;
-    
-                this.$refs.container.innerHTML = '';
-                this.$refs.container.appendChild(iframe);
-    
-                this.loadingPDF = false; // Hide loading indicator
-            } catch (error) {
-                console.error('Error fetching PDF:', error);
-                this.loadingPDF = false; // Hide loading indicator in case of error
-    
-                this.$refs.container.innerHTML = '<p>Failed to load PDF. Please try again later.</p>';
-            }
-        }
-    }">
-        <div x-show="loadingPDF" class="justify-center items-center min-w-full flex">
+    <div class="relative h-full" wire:init="load">
+        <div wire:loading wire:target="load" class="justify-center items-center min-w-full flex">
             <div class="grid place-content-center h-full" role="status">
                 <svg aria-hidden="true" class="w-12 h-12 mr-2 text-gray-200 animate-spin dark:text-gray-600 fill-blue-600"
                     viewBox="0 0 100 101" fill="none" xmlns="http://www.w3.org/2000/svg">
@@ -47,6 +14,14 @@
                 <span class="sr-only">Loading...</span>
             </div>
         </div>
-        <div x-show="!loadingPDF" class="w-full h-full" x-ref="container"></div>
+        <div wire:loading.remove wire:target="load" class="w-full h-full">
+            @if ($pdfDataUrl)
+                <iframe x-init="$el.src = '{{ $pdfDataUrl }}';
+                loadingPDF = false" class="w-full h-full" frameborder="0">
+                </iframe>
+            @else
+                <p>No PDF content available.</p>
+            @endif
+        </div>
     </div>
 </x-wire-elements-pro::tailwind.slide-over>
