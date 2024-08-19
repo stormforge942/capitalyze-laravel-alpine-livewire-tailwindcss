@@ -42,7 +42,6 @@ class EarningPresentationsTable extends BaseTable
     {
         return [
             Column::make('Company Name', 'company', 'registrant_name'),
-            Column::make('Period', 'period'),
             Column::make('Result', 'formatted_result', 'presentation_url'),
         ];
     }
@@ -55,12 +54,9 @@ class EarningPresentationsTable extends BaseTable
                 $url = route('company.profile', $row->symbol);
                 return "<a class=\"text-blue hover:underline\" href=\"{$url}\">{$row->registrant_name}</a>";
             })
-            ->addColumn('period', function ($row) {
-                return "<span>{$row->fiscal_year} {$row->fiscal_period}</span>";
-            })
             ->addColumn('presentation_url')
             ->addColumn('formatted_result', function ($row) {
-                return '<button class="inline-block px-2 py-1 bg-[#DCF6EC] hover:bg-green-dark transition-all rounded" @click="Livewire.emit(`slide-over.open`, `earning-presentation-content`, { sourceLink: `' . $row->presentation_url . '` })">Show PDF</button>';
+                return '<button class="inline-block px-2 py-1 bg-[#DCF6EC] hover:bg-green-dark transition-all rounded" @click="Livewire.emit(`slide-over.open`, `earning-presentation-content`, { sourceLink: `' . $row->presentation_url . '` })">' . $row->fiscal_year . '_' . $row->fiscal_period . ' Presentation</button>';
             });
     }
 }
