@@ -1,6 +1,7 @@
 <div x-data="{
     chartData: @entangle('chartData').defer,
-    chart: null,
+    chartFund: null,
+    chartMutualFund: null,
 
     init() {
         this.$watch('chartData', value => {
@@ -11,8 +12,17 @@
     },
 
     drawChart() {
-        if (!this.chart) {
-            this.chart = new Chart(this.$refs.canvas.getContext('2d'), {
+        if (!this.chartFund) {
+            this.chartFund = new Chart(this.$refs.pieFundCanvas.getContext('2d'), {
+                type: 'doughnut',
+                data: {
+                    labels: [],
+                    datasets: []
+                },
+            });
+        }
+        if (!this.chartMutualFund) {
+            this.chartMutualFund = new Chart(this.$refs.pieMutualFundCanvas.getContext('2d'), {
                 type: 'doughnut',
                 data: {
                     labels: [],
@@ -21,26 +31,17 @@
             });
         }
 
-        this.chart.data.labels = Object.keys(this.chartData);
-        this.chart.data.datasets = [{
-            label: 'Ownership',
-            data: Object.values(this.chartData),
-            backgroundColor: [
-                'rgba(255, 99, 132, 0.2)',
-                'rgba(54, 162, 235, 0.2)',
-                'rgba(255, 206, 86, 0.2)',
-                'rgba(75, 192, 192, 0.2)',
-                'rgba(153, 102, 255, 0.2)',
-                'rgba(255, 159, 64, 0.2)'
-            ],
-            borderColor: [
-                'rgb(255, 99, 132)',
-                'rgb(54, 162, 235)',
-                'rgb(255, 206, 86)',
-                'rgb(75, 192, 192)',
-                'rgb(153, 102, 255)',
-                'rgb(255, 159, 64)'
-            ],
+        this.chartFund.data.labels = Object.keys(this.chartData['fund']);
+        this.chartFund.data.datasets = [{
+            label: 'Shareholders',
+            data: Object.values(this.chartData['fund']),
+            borderWidth: 1
+        }];
+
+        this.chartMutualFund.data.labels = Object.keys(this.chartData['mutual']);
+        this.chartMutualFund.data.datasets = [{
+            label: 'Mutual Funds',
+            data: Object.values(this.chartData['mutual']),
             borderWidth: 1
         }];
     }
@@ -70,38 +71,16 @@
         <div class="block col-span-1 rounded rounded-lg border border-sky-950 overflow-hidden">
             <div
                 class="chart-title whitespace-nowrap px-2 py-3.5 text-left text-sm font-semibold text-white bg-sky-950 text-center">
-                <p>Shareholders Summary</p>
+                <p>Shareholders</p>
             </div>
-            <canvas x-ref="canvas" class="p-4"></canvas>
+            <canvas x-ref="pieFundCanvas" class="p-4"></canvas>
         </div>
-        <div class="block col-span-1">
-            <div class="w-full rounded rounded-lg border border-sky-950 overflow-scroll inline-block">
-                <table class="table-auto min-w-full" style="font-size:1em;color:#000;">
-                    <thead>
-                        <tr>
-                            <th colspan="2" scope="colgroup"
-                                class="whitespace-nowrap px-2 py-3.5 text-left text-sm font-semibold text-white bg-sky-950 text-center">
-                                Shareholdrs</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        <tr class="border-t border-gray-200">
-                            <th class="bg-gray-50 py-2 pl-4 pr-3 text-left text-sm font-semibold text-gray-900 sm:pl-3">
-                                Name
-                            </th>
-                            <th class="bg-gray-50 py-2 pl-4 pr-3 text-left text-sm font-semibold text-gray-900 sm:pl-3">
-                                %
-                                Ownership</th>
-                        </tr>
-                        @foreach ($chartData as $key => $value)
-                            <tr class="border-t border-gray-200">
-                                <td class="px-4 py-2 text-sm font-semibold text-gray-900">{{ $key }}</td>
-                                <td class="px-4 py-2 text-sm font-semibold text-gray-900">{{ $value }}</td>
-                            </tr>
-                        @endforeach
-                    </tbody>
-                </table>
+        <div class="block col-span-1 rounded rounded-lg border border-sky-950 overflow-hidden">
+            <div
+                class="chart-title whitespace-nowrap px-2 py-3.5 text-left text-sm font-semibold text-white bg-sky-950 text-center">
+                <p>Mutual Funds</p>
             </div>
+            <canvas x-ref="pieMutualFundCanvas" class="p-4"></canvas>
         </div>
     </div>
 </div>

@@ -86,6 +86,7 @@ $tables = [
     'key_metrics',
     'document_summaries',
     'earning_presentations',
+    'issued_shares',
 ];
 
 $replica = makeDatabase($args['drop']);
@@ -230,6 +231,8 @@ function fillData($xbrl, $replica, $tables, $symbols, $ciks)
             $stmt = $xbrl->query("SELECT * FROM $table where symbol in ($stringSymbols) order by acceptance_time desc");
         } else if ($table === 'earning_presentations') {
             $stmt = $xbrl->query("SELECT * FROM $table order by updated_at desc");
+        } else if ($table === 'issued_shares') {
+            $stmt = $xbrl->query("SELECT * FROM $table order by date desc");
         }
 
         if (!$stmt) {
