@@ -71,7 +71,7 @@ class MutualFundsTable extends BaseTable
                 ->sortable()
                 ->headerAttribute('[&>div]:justify-end')->bodyAttribute('text-right'),
 
-            Column::make('% of Portfolio', 'portfolio_percent', 'weight')
+            Column::make('% of Portfolio', 'portfolio_percent', 'pct_val')
                 ->sortable()
                 ->headerAttribute('[&>div]:justify-end')->bodyAttribute('text-right'),
 
@@ -131,10 +131,10 @@ class MutualFundsTable extends BaseTable
                 fn ($fund) => redIfNegative($fund->val_usd, number_format(...))
             )
 
-            ->addColumn('weight')
+            ->addColumn('pct_val')
             ->addColumn(
                 'portfolio_percent',
-                fn ($fund) => redIfNegative($fund->weight, fn ($val) => round($val, 4) . '%')
+                fn ($fund) => redIfNegative($fund->pct_val, fn ($val) => round($val, 4) . '%')
             )
 
             ->addColumn('previous_weight')
