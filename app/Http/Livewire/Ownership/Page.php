@@ -26,6 +26,7 @@ class Page extends Component
             [CompanyInsiders::class, $company->ticker . ' Insider Transactions'],
             InsiderOwnership::class,
             ProxyStatement::class,
+            FundsSummary::class,
         ];
 
         OwnershipHistoryService::push([
