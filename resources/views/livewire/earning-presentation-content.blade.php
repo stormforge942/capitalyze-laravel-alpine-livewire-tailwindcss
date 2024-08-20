@@ -1,7 +1,8 @@
 <x-wire-elements-pro::tailwind.slide-over>
-    <div class="relative h-full" wire:init="load">
-        <div wire:loading wire:target="load" class="justify-center items-center min-w-full flex">
-            <div class="grid place-content-center h-full" role="status">
+    <div class="relative h-full" x-data="{ isLoading: true }">
+        <div class="h-full">
+            <!-- Display loading state while the iframe is loading -->
+            <div x-show="isLoading" class="flex items-center justify-center h-full">
                 <svg aria-hidden="true" class="w-12 h-12 mr-2 text-gray-200 animate-spin dark:text-gray-600 fill-blue-600"
                     viewBox="0 0 100 101" fill="none" xmlns="http://www.w3.org/2000/svg">
                     <path
@@ -13,14 +14,15 @@
                 </svg>
                 <span class="sr-only">Loading...</span>
             </div>
-        </div>
-        <div wire:loading.remove wire:target="load" class="w-full h-full">
-            @if ($pdfDataUrl)
-                <iframe x-init="$el.src = '{{ $pdfDataUrl }}';
-                loadingPDF = false" class="w-full h-full" frameborder="0">
+
+            @if ($sourceLink)
+                <iframe src="{{ route('pdf-viewer', ['sourceLink' => $sourceLink]) }}" class="w-full h-full"
+                    frameborder="0" @load="isLoading = false">
+                    Your browser does not support iframes. Please download the PDF to view it:
+                    <a href="{{ route('pdf-viewer', ['sourceLink' => $sourceLink]) }}">Download PDF</a>
                 </iframe>
             @else
-                <p>No PDF content available.</p>
+                <p>No PDF available.</p>
             @endif
         </div>
     </div>

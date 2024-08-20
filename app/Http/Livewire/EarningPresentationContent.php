@@ -1,33 +1,46 @@
 <?php
+
 namespace App\Http\Livewire;
 
 use WireElements\Pro\Components\SlideOver\SlideOver;
+use Illuminate\Support\Facades\Storage;
+use Illuminate\Support\Facades\Http;
+use Illuminate\Support\Facades\Response;
+use Illuminate\Http\Request;
 
 class EarningPresentationContent extends SlideOver
 {
     public ?string $sourceLink = null;
-    public $pdfDataUrl = null;
 
     public function render()
     {
-        return view('livewire.earning-presentation-content', [
-            'pdfDataUrl' => $this->pdfDataUrl,
-        ]);
+        return view('livewire.earning-presentation-content');
     }
 
-    public function load()
+    public function load(Request $request)
     {
-        if ($this->sourceLink) {
-            // Fetch the PDF content
-            $pdfContent = file_get_contents($this->sourceLink);
-            
-            // Convert binary PDF content to base64
-            $base64 = base64_encode($pdfContent);
-            
-            // Create a data URL
-            $this->pdfDataUrl = 'data:application/pdf;base64,' . $base64;
+        $sourceLink = $request->input('sourceLink');
+        
+        if ($sourceLink) {
+            $response = Http::withOptions(['stream' => true])->get($sourceLink);
+
+            if ($response->ok()) {
+                return Response::stream(
+                    function () use ($response) {
+                        echo $response->body();
+                    },
+                    $response->status(),
+                    [
+                        'Content-Type' => 'application/pdf',
+                        'Content-Disposition' => 'inline; filename="document.pdf"',
+                    ]
+                );
+            }
         }
+
+        abort(404, 'File not found');
     }
+
     public static function attributes(): array
     {
         return [

@@ -59,6 +59,8 @@ use App\Http\Controllers\Auth\CustomAuthenticatedSessionController;
 use App\Http\Controllers\Auth\TwoFactorController;
 use App\Http\Controllers\TeamInvitationController;
 
+use App\Http\Livewire\EarningPresentationContent;
+
 Route::get('/test-speed', function () {
     return "hello World";
 });
@@ -223,6 +225,7 @@ Route::get('team-invitation/{invitation}', TeamInvitationController::class)
 Route::group(['middleware' => ['auth', 'verified', 'approved']], function () {
     Route::get('/account/settings', [AccountSettingsController::class, 'index'])->name('account-settings');
     Route::post('/check-member', [TeamController::class, 'checkMember'])->name('check-member');
+    Route::get('/pdf-viewer', [EarningPresentationContent::class, 'load'])->name('pdf-viewer');
 });
 
 // override fortify route to verify user without needing to login
