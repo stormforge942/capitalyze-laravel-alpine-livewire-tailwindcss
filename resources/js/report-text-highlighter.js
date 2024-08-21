@@ -29,7 +29,15 @@ function highlightSelection(value, selector, document = window.document) {
 
         if (!search.length) return;
 
-        const values = document.querySelectorAll(selector)
+        const values = [];
+
+        if (typeof selector === "string") {
+            values.push(...document.querySelectorAll(selector))
+        } else {
+            for (const s of selector) {
+                values.push(...document.querySelectorAll(s))
+            }
+        }
 
         // regular expression to match the search term with any number of trailing zeros
         const regex = new RegExp(`^${search}0*$`)

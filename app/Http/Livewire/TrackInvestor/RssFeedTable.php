@@ -70,7 +70,9 @@ class RssFeedTable extends BaseTable
         return PowerGrid::eloquent()
             ->addColumn('investor_name')
             ->addColumn('formatted_name', function ($row) {
-                return Str::title(strtolower($row->investor_name));
+                $name = Str::title(strtolower($row->investor_name));
+                $url = route('company.fund', $row->cik);
+                return "<a class=\"text-blue hover:underline\" href=\"{$url}\">{$name}</a>";
             })
             ->addColumn('cik')
             ->addColumn('form_type')
