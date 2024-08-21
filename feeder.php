@@ -233,6 +233,8 @@ function fillData($xbrl, $replica, $tables, $symbols, $ciks)
             $stmt = $xbrl->query("SELECT * FROM $table order by updated_at desc");
         } else if ($table === 'issued_shares') {
             $stmt = $xbrl->query("SELECT * FROM $table order by date desc");
+        } else if ($table === 'rss_feed') {
+            $stmt = $xbrl->query("SELECT * FROM $table where cik in ($stringCiks) order by acceptance_time desc");
         }
 
         if (!$stmt) {

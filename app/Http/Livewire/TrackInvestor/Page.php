@@ -13,6 +13,7 @@ class Page extends Component
                 Discover::class,
                 MutualFunds::class,
                 Favorites::class,
+                RssFeeds::class,
                 OverlapMatrix::class,
             ]
         ]);
