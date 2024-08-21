@@ -87,6 +87,7 @@ $tables = [
     'document_summaries',
     'earning_presentations',
     'issued_shares',
+    'acquisition_of_beneficial_ownership',
     'executive_compensation_feed',
 ];
 
@@ -228,7 +229,7 @@ function fillData($xbrl, $replica, $tables, $symbols, $ciks)
             $stmt = $xbrl->query("SELECT * FROM $table where symbol in ($stringSymbols) order by settlement_date desc");
         } else if (in_array($table, ['insider_ownership', 'shares_beneficially_owned'])) {
             $stmt = $xbrl->query("SELECT * FROM $table where symbol in ($stringSymbols) limit 1000");
-        } else if ($table === 'document_summaries') {
+        } else if (in_array($table, ['document_summaries', 'acquisition_of_beneficial_ownership'])) {
             $stmt = $xbrl->query("SELECT * FROM $table where symbol in ($stringSymbols) order by acceptance_time desc");
         } else if ($table === 'earning_presentations') {
             $stmt = $xbrl->query("SELECT * FROM $table order by updated_at desc");

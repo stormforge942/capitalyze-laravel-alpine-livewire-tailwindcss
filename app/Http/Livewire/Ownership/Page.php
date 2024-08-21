@@ -25,6 +25,7 @@ class Page extends Component
             MutualFunds::class,
             [CompanyInsiders::class, $company->ticker . ' Insider Transactions'],
             InsiderOwnership::class,
+            BeneficialOwnership::class,
             ProxyStatement::class,
             FundsSummary::class,
         ];
