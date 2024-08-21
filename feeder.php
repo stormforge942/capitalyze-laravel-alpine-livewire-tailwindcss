@@ -87,6 +87,7 @@ $tables = [
     'document_summaries',
     'earning_presentations',
     'issued_shares',
+    'executive_compensation_feed',
 ];
 
 $replica = makeDatabase($args['drop']);
@@ -235,6 +236,10 @@ function fillData($xbrl, $replica, $tables, $symbols, $ciks)
             $stmt = $xbrl->query("SELECT * FROM $table order by date desc");
         } else if ($table === 'rss_feed') {
             $stmt = $xbrl->query("SELECT * FROM $table where cik in ($stringCiks) order by acceptance_time desc");
+        } else if ($table === 'executive_compensation') {
+            $stmt = $xbrl->query("SELECT * FROM $table where symbol in ($stringSymbols) order by acceptance_time desc");
+        } else if ($table === 'executive_compensation_feed') {
+            $stmt = $xbrl->query("SELECT * FROM $table order by acceptance_time desc");
         }
 
         if (!$stmt) {

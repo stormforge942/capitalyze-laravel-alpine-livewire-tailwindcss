@@ -28,6 +28,7 @@ class Page extends Component
                 CompanyOverview::class,
                 BusinessInformation::class,
                 CompanyStatistics::class,
+                ExecutiveCompensations::class,
             ],
             'tabData' => [
                 'profile' => $companyProfile,
