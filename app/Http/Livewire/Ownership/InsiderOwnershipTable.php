@@ -54,9 +54,11 @@ class InsiderOwnershipTable extends BaseTable
     {
         return [
             Column::make('Insider Name', 'reporting_person')->sortable(),
-            Column::make('Quantity', 'formatted_quantity', 'securities_owned_following_transaction')->sortable()
+            Column::make('Security Type', 'formatted_security_type', 'derivative_or_nonderivative'),
+            Column::make('Ownership Type', 'formatted_ownership_type', 'ownership_form'),
+            Column::make('Number of Shares/Units', 'formatted_quantity', 'securities_owned_following_transaction')->sortable()
                 ->headerAttribute('[&>div]:justify-end')->bodyAttribute('text-right'),
-            Column::make('Transaction Date', 'reported_date', 'reported_date')->sortable()
+            Column::make('Transaction Date', 'reported_date', 'date')->sortable()
                 ->headerAttribute('[&>div]:justify-end')
                 ->bodyAttribute('text-right'),
         ];
@@ -72,6 +74,12 @@ class InsiderOwnershipTable extends BaseTable
                 }
 
                 return Carbon::parse($row->date)->format('Y-m-d');
+            })
+            ->addColumn('formatted_security_type', function ($row) {
+                return $row->derivative_or_nonderivative === 'D' ? 'Derivative' : 'Nonderivative';
+            })
+            ->addColumn('formatted_ownership_type', function ($row) {
+                return $row->ownership_form === 'D' ? 'Direct' : 'Indirect';
             })
             ->addColumn(
                 'formatted_quantity',
