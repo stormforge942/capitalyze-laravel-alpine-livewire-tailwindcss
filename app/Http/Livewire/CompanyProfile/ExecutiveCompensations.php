@@ -5,7 +5,7 @@ namespace App\Http\Livewire\CompanyProfile;
 use Livewire\Component;
 use App\Http\Livewire\AsTab;
 use Illuminate\Support\Facades\DB;
-use App\Models\InfoTikrPresentation;
+use App\Models\ExecutiveCompensation;
 use Illuminate\Support\Facades\Cache;
 
 class ExecutiveCompensations extends Component
@@ -13,13 +13,34 @@ class ExecutiveCompensations extends Component
     use AsTab;
 
     public $profile;
-    public $period;
     public $search;
+    public $years;
+    public $year;
 
     public function mount(array $data = [])
     {
         $this->profile = $this->formatProfile($data['profile']);
-        $this->period = $data['period'];
+        $this->years = $this->getYears();
+        $this->year = array_key_first($this->years) ?? (now()->year);
+    }
+
+    public function getYears()
+    {
+        $years = ExecutiveCompensation::query()
+            ->select('year')
+            ->distinct()
+            ->where('symbol', $this->profile['symbol'])
+            ->orderByDesc('year')
+            ->get()
+            ->pluck('year')
+            ->toArray();
+        
+        $formattedYears = array_combine(
+            array_map('strval', $years), // Convert keys to strings
+            array_map('strval', $years)  // Convert values to strings
+        );
+
+        return $formattedYears;
     }
 
     public function render()
