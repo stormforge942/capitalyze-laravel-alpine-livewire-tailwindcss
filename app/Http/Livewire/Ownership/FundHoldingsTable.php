@@ -48,7 +48,8 @@ class FundHoldingsTable extends BaseTable
                     fn ($q) => $q->where('symbol', 'ilike', $term)
                         ->orWhere('name_of_issuer', 'ilike', $term)
                 ); // remove this if the query is too slow
-            });
+            })
+            ->where('value', '>', 0);
     }
 
     public function addColumns(): PowerGridEloquent
