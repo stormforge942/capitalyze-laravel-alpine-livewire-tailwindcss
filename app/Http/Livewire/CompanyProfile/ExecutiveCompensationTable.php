@@ -43,6 +43,7 @@ class ExecutiveCompensationTable extends Component
                     return $query->where('name_and_position', 'ilike', $term);
                 })
                 ->orderByDesc('filing_date')
+                ->orderByDesc('total')
                 ->get();
         });
 

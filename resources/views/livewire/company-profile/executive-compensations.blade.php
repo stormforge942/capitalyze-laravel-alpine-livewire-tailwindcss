@@ -4,11 +4,15 @@
 
     init() {
         this.$watch('search', value => {
-            Livewire.emit('updateExecutiveCompensationTable', this.search, this.year);
+            this.update();
         });
         this.$watch('year', value => {
-            Livewire.emit('updateExecutiveCompensationTable', this.search, this.year);
+            this.update();
         });
+    },
+
+    update() {
+        Livewire.emit('updateExecutiveCompensationTable', this.search, this.year);
     }
 }">
     <div class="grid grid-cols-12">
@@ -18,7 +22,7 @@
         </div>
         <div class="col-span-12 lg:col-span-8">
             <x-filter-box>
-                <x-select placeholder="Select year" :options="$years" x-model="year"></x-select>
+                <x-select-digits placeholder="Select year" :options="$years" x-model="year"></x-select>
             </x-filter-box>
         </div>
     </div>

@@ -21,7 +21,7 @@ class ExecutiveCompensations extends Component
     {
         $this->profile = $this->formatProfile($data['profile']);
         $this->years = $this->getYears();
-        $this->year = array_key_first($this->years) ?? (now()->year);
+        $this->year = $this->years[0][0] ?? (now()->year);
     }
 
     public function getYears()
@@ -35,10 +35,10 @@ class ExecutiveCompensations extends Component
             ->pluck('year')
             ->toArray();
         
-        $formattedYears = array_combine(
-            array_map('strval', $years), // Convert keys to strings
-            array_map('strval', $years)  // Convert values to strings
-        );
+        $formattedYears = [];
+        foreach ($years as $year) {
+            $formattedYears[] = [$year, $year];
+        }
 
         return $formattedYears;
     }

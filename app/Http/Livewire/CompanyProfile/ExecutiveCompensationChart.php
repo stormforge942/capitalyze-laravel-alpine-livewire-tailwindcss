@@ -56,6 +56,10 @@ class ExecutiveCompensationChart extends Component
 
     private function getChartData()
     {
+        if (!$this->totalRevenue) {
+            return [];
+        }
+
         $data = ExecutiveCompensation::query()
             ->when($this->symbol, fn ($q) => $q->where('symbol', $this->symbol))
             ->when($this->year, fn ($q) => $q->where('year', $this->year))
@@ -67,6 +71,9 @@ class ExecutiveCompensationChart extends Component
             })
             ->unique('normalized_name_and_position')
             ->values()
+            ->sort(function ($a, $b) {
+                return $b->total - $a->total;
+            })
             ->toArray();
 
         $chartData = [];
