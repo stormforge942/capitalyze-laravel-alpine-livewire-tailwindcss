@@ -64,7 +64,7 @@ RUN npm run build
 
 # Stage 3: Final stage to set up the application
 # FROM --platform=linux/amd64 php:8.3-fpm-bullseye
-FROM --platform=linux/amd64 phpswoole/swoole:5.1-php8.3
+FROM --platform=linux/amd64 phpswoole/swoole:php8.3
 WORKDIR /var/www
 
 # Install system dependencies, PHP extensions, and PostgreSQL client
