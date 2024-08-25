@@ -11,7 +11,7 @@ use PowerComponents\LivewirePowerGrid\PowerGridColumns;
 class EarningPresentations extends BaseTable
 {
     public string $sortField = 'fiscal_period';
-    public string $sortDirection = 'asc';
+    public string $sortDirection = 'desc';
     public $ticker = null;
     public array $config = [];
     public string $search = '';
