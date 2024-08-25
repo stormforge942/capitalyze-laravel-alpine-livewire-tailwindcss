@@ -87,7 +87,7 @@
     <template x-if="curInvestors.length">
         <div class="mt-6">
             <div class="flex gap-x-4">
-                <div class="w-2/3 lg:w-1/2 xl:w-2/5">
+                <div class="w-1/2 lg:w-4/9 xl:w-4/15">
                     <div
                         class="py-3 font-semibold text-md bg-white text-black flex flex-row justify-center items-center">
                         Investor List
@@ -103,7 +103,7 @@
                             </label>
                             <template x-for="invt in curInvestors" :key="invt.name + '-' + invt.fund_symbol">
                                 <div class="flex flex-row justify-between items-center gap-x-2">
-                                    <div class="flex flex-row justify-start items-center gap-x-1">
+                                    <div class="flex flex-row justify-start items-center gap-x-2">
                                         <label class="cursor-pointer py-1 rounded flex items-center gap-x-3">
                                             <input type="checkbox" :name="name" x-model="invt.bAdded"
                                                 class="custom-checkbox border-dark focus:ring-0">
@@ -154,7 +154,7 @@
                         </div>
                     </div>
                 </div>
-                <div class="w-1/3 lg:w-1/2 xl:w-3/5 grid grid-cols-1 lg:grid-cols-2 xl:grid-cols-3 gap-4">
+                <div class="w-1/2 lg:w-5/9 xl:w-11/15 grid grid-cols-1 lg:grid-cols-2 xl:grid-cols-3 gap-4">
                     <template x-if="loading">
                         <div class="col-span-5 py-10 grid place-items-center">
                             <span class="mx-auto simple-loader !text-green-dark"></span>
