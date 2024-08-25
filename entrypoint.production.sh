@@ -13,8 +13,8 @@ php artisan user:create-fake
 echo "test user created"
 
 # Execute the main process
-echo "Starting php-fpm"
-php-fpm -D
+# echo "Starting php-fpm"
+# php-fpm -D
 # nginx -g 'daemon off;'
 
 php artisan octane:start --host=0.0.0.0 --port=80
