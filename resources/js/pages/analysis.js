@@ -50,6 +50,9 @@ const dataLabelConfig = (config) => ({
 
 const scales = (percentage = false, xOffset = true, reverseX) => ({
     y: {
+        afterFit(scale) {
+            scale.width = 50;
+        },
         stacked: true,
         display: true,
         ticks: {
@@ -260,6 +263,9 @@ function renderCostStructureChart(canvas, datasets, config) {
             scales: {
                 ...scales(config.type === "percentage", true, config.reverse),
                 y1: {
+                    afterFit(scale) {
+                        scale.width = 50;
+                    },
                     display: true,
                     ticks: {
                         callback: (val) => val + "%",
@@ -363,6 +369,9 @@ function renderFcfConversionChart(canvas, data, config) {
             scales: {
                 ...scales(true, true, config.reverse),
                 y1: {
+                    afterFit(scale) {
+                        scale.width = 40;
+                    },
                     display: true,
                     ticks: {
                         callback: formatCmpctNumber,
