@@ -2,7 +2,6 @@
 $ranges = ['3m' => '3m', '6m' => '6m', 'ytd' => 'YTD', '1yr' => '1yr', '5yr' => '5yr', 'max' => 'MAX'];
 ?>
 
-
 {{-- Check resources/views/livewire/ownership/fund.blade.php for js code --}}
 <div>
     <div class="grid grid-cols-12 gap-6">
@@ -13,7 +12,7 @@ $ranges = ['3m' => '3m', '6m' => '6m', 'ytd' => 'YTD', '1yr' => '1yr', '5yr' => 
                 </div>
                 <div class="p-6 flex-1">
                     <x-defer-data-loading on-init="getOverTimeMarketValue" class="h-80">
-                        <div class="h-full" style="height: 350px;">
+                        <div class="h-full xl:max-h-[350px]">
                             <canvas id="overTimeMarketValue"></canvas>
                         </div>
                     </x-defer-data-loading>

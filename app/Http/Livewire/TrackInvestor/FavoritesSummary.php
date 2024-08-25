@@ -3,40 +3,66 @@
 namespace App\Http\Livewire\TrackInvestor;
 
 use Livewire\Component;
-use Illuminate\Support\Str;
-use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Arr;
+use Illuminate\Support\Facades\Cache;
+use App\Services\FundsSummaryGenerator;
+use App\Services\MutualFundsSummaryGenerator;
 
 class FavoritesSummary extends Component
 {
     public $funds;
     public $mutualFunds;
 
+    public $activeTab = 'funds';
+
+    public $fundsSummary = null;
+    public $mutualFundsSummary = null;
+
+    private $data = [];
+
+    private $tabs = ['funds' => '13F Filers', 'mutual-funds' => 'N-PORT Filers'];
+
     public function render()
     {
-        dump($this->getTopBuys());
         return view('livewire.track-investor.favorites-summary', [
-            'topBuys' => $this->getTopBuys(),
+            'data' => $this->data,
+            'tabs' => $this->tabs,
+            'ranges' => [
+                '3m' => '3m',
+                '6m' => '6m',
+                'ytd' => 'YTD',
+                '1yr' => '1yr',
+                '5yr' => '5yr',
+                'max' => 'MAX',
+            ],
         ]);
     }
 
-    public function getTopBuys()
+    public function getData()
     {
-        return array_values(DB::connection('pgsql-xbrl')
-            ->table('filings')
-            ->select(DB::raw("MAX(change_in_shares_percentage) as buy_change"),  DB::raw('MIN(change_in_shares_percentage) as sell_change'), 'symbol', 'name_of_issuer', 'cik')
-            ->whereIn('cik', array_keys($this->funds))
-            ->where('report_calendar_or_quarter', '=', '2023-12-31')
-            ->groupBy('symbol', 'name_of_issuer', 'cik') // To get unique symbols
-            ->limit(10)
-            ->get()
-            ->map(function ($item) {
-                $item->fund_name = $this->funds[$item->cik];
-                $item->name_of_issuer = Str::title($item->name_of_issuer);
-                $item->formatted_buy_change = round($item->buy_change, 3) . '%';
-                $item->formatted_sell_change = round($item->sell_change, 3) . '%';
-                return $item;
-            })
-            ->groupBy('cik')
-            ->toArray());
+        $this->activeTab = !in_array($this->activeTab, array_keys($this->tabs)) ? 'funds' : $this->activeTab;
+
+        $fn = match ($this->activeTab) {
+            'funds' => function () {
+                if (!$this->fundsSummary) {
+                    $key = 'fav-summary-f:' . Arr::join(array_keys($this->funds), ',');
+
+                    $this->fundsSummary = Cache::rememberForever($key, fn() => app(FundsSummaryGenerator::class, ['funds' => $this->funds])->generate());
+                }
+
+                return $this->fundsSummary;
+            },
+            'mutual-funds' => function () {
+                if (!$this->mutualFundsSummary) {
+                    $key = 'fav-summary-mf:' . Arr::join(array_keys($this->mutualFunds), ',');
+
+                    $this->mutualFundsSummary = Cache::rememberForever($key, fn() => app(MutualFundsSummaryGenerator::class, ['funds' => $this->mutualFunds])->generate());
+                }
+
+                return $this->mutualFundsSummary;
+            },
+        };
+
+        $this->data = $fn();
     }
 }

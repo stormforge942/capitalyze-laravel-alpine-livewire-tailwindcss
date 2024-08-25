@@ -80,40 +80,55 @@ class MutualFundSummary extends Component
     {
         $investments = [];
 
-        DB::connection('pgsql-xbrl')
+        $data = DB::connection('pgsql-xbrl')
             ->table('mutual_fund_industry_summary')
             ->where($this->fundPrimaryKey())
             ->select('industry_title', 'weight', 'date')
             ->orderBy('date')
-            ->get()
-            ->map(function ($item) use (&$investments) {
-                $date = Carbon::parse($item->date);
-                $key = "Q{$date->quarter}-{$date->year}";
+            ->get();
 
-                if (!isset($investments[$key])) {
-                    $investments[$key] = [];
-                }
+        $data->map(function ($item) use (&$investments) {
+            $date = Carbon::parse($item->date);
+            $key = "Q{$date->quarter}-{$date->year}";
 
-                $investments[$key][] = [
-                    'industry' => Str::title($item->industry_title),
-                    'weight' => floatval($item->weight),
-                    'quarter' => $key,
-                ];
-            });
+            if (!isset($investments[$key])) {
+                $investments[$key] = [];
+            }
+
+            $monthsDiff = now()->diffInMonths($date);
+
+            $investments[$key][] = [
+                'industry' => Str::title($item->industry_title),
+                'weight' => floatval($item->weight),
+                'quarter' => $key,
+                'periods' => array_values(array_filter([
+                    $monthsDiff <= 3 ? '3m' : null,
+                    $monthsDiff <= 6 ? '6m' : null,
+                    $monthsDiff <= 12 ? '1yr' : null,
+                    $monthsDiff <= (12 * 5) ? '5yr' : null,
+                    $date->year == now()->year ? 'ytd' : null,
+                    'max',
+                ]))
+            ];
+        });
 
         $last = collect(end($investments) ?: [])
             ->where('industry', '!=', 'Other')
             ->sortByDesc('weight')
-            ->take(25);
+            ->take(25)
+            ->map(fn($item) => [
+                'industry' => $item['industry'],
+                'weight' => $item['weight'],
+            ]);
 
         $weight = $last->sum('weight');
         if ($weight < 100) {
-            $last[] = [
+            $last->push([
                 'industry' => 'Other',
                 'weight' => 100 - $weight,
-            ];
+            ]);
         }
-        $last = $last->values()->toArray();
+        $last = $last->sortByDesc('weight')->values()->toArray();
 
         $data = [];
         foreach ($investments as $key => $value) {
@@ -127,6 +142,7 @@ class MutualFundSummary extends Component
                     'industry' => 'Other',
                     'weight' => 100 - $weight,
                     'quarter' => $key,
+                    'periods' => $top10->first()['periods']
                 ];
             }
         }
@@ -142,9 +158,10 @@ class MutualFundSummary extends Component
             $datasetOverTime[] = [
                 'label' => $label,
                 'data' => array_map(
-                    fn ($item) => [
+                    fn($item) => [
                         'x' => $item['quarter'],
                         'y' => $item['weight'],
+                        'periods' => $item['periods'] ?? [],
                     ],
                     $_data
                 ),

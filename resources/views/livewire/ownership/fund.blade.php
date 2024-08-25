@@ -124,7 +124,7 @@
                             },
                             border: {
                                 display: false
-                            }
+                            },
                         }
                     }
                 }
@@ -177,9 +177,7 @@
                                 display: false
                             },
                             ticks: {
-                                callback: function(value) {
-                                    return value + '%';
-                                },
+                                callback: (value) => value + '%',
                             },
                             border: {
                                 display: false

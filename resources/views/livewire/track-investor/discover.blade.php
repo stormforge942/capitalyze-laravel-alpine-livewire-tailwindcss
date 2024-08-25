@@ -5,14 +5,12 @@
 
     @include('livewire.track-investor.filters')
 
-    <div class="mt-6">
-        <div x-show="loading" x-cloak>
-            <div class="py-10 grid place-items-center">
-                <span class="mx-auto simple-loader !text-green-dark"></span>
-            </div>
+    <div class="mt-6 relative">
+        <div class="py-10 grid place-items-center absolute top-0 left-0 w-full" x-show="loading" x-cloak>
+            <span class="mx-auto simple-loader !text-green-dark"></span>
         </div>
 
-        <div x-show="!loading" x-cloak>
+        <div :class="loading ? 'invisible' : ''" x-cloak>
             @if (!count($funds ?? []))
                 <div class="text-dark-light2">
                     No funds found @if ($search)

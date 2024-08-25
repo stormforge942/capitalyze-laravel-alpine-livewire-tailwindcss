@@ -14,7 +14,7 @@ class MutualFundCard extends Component
     public function toggle()
     {
         $entry = TrackInvestorFavorite::query()
-            ->where('identifier', $this->fund['id'])
+            ->where('identifier', $this->fund['fund_symbol'])
             ->where('type', TrackInvestorFavorite::TYPE_MUTUAL_FUND)
             ->where('user_id', Auth::id())
             ->first();
@@ -26,7 +26,7 @@ class MutualFundCard extends Component
                 'name' => $this->fund['registrant_name'],
                 'user_id' => Auth::id(),
                 'type' => TrackInvestorFavorite::TYPE_MUTUAL_FUND,
-                'identifier' => $this->fund['id'],
+                'identifier' => $this->fund['fund_symbol'],
             ]);
         } else {
             $entry->delete();
@@ -47,11 +47,7 @@ class MutualFundCard extends Component
             'url' => route(
                 'company.mutual-fund',
                 [
-                    'cik' => $this->fund['cik'],
                     'fund_symbol' => $this->fund['fund_symbol'],
-                    'series_id' => $this->fund['series_id'],
-                    'class_id' => $this->fund['class_id'],
-                    'class_name' => $this->fund['class_name'],
                     'tab' => 'holdings',
                     'from' => 'track-investors',
                 ]

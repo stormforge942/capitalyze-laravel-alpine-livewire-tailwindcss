@@ -1,29 +1,23 @@
-<div x-data="{
-    loading: $wire.entangle('loading', true),
-}">
-    <div x-show="loading" x-cloak>
-        <div class="py-10 grid place-items-center">
-            <span class="mx-auto simple-loader !text-green-dark"></span>
+<div>
+    @if (count($funds) || count($mutualFunds))
+        <div class="mb-6">
+            <h2 class="mb-2.5 text-md font-semibold">Summary of selected Favorites</h2>
+
+            <livewire:track-investor.favorites-summary :funds="$funds->pluck('investor_name', 'cik')->toArray()" :mutual-funds="$mutualFunds->pluck('registrant_name', 'fund_symbol')->toArray()" :wire:key="$summaryKey"/>
         </div>
-    </div>
+    @endif
 
-    <div x-show="!loading" x-cloak>
-        @if (!count($funds ?? []) && !count($mutualFunds ?? []))
-            <div class="text-dark-light2">
-                No result found @if ($search)
-                    for search "{{ $search }}"
-                @endif
-            </div>
-        @else
-            {{-- <livewire:track-investor.favorites-summary :funds="$funds->pluck('investor_name', 'cik')->toArray()" :mutual-funds="$mutualFunds->toArray()" /> --}}
+    <div x-data="{
+        loading: $wire.entangle('loading', true),
+    }">
+        <h2 class="text-xl font-semibold">My Favorites</h2>
 
-            {{-- <div class="mt-6"> --}}
-            <div>
-                <h2 class="text-xl font-semibold">My Favorites</h2>
+        @include('livewire.track-investor.filters')
 
-                @include('livewire.track-investor.filters')
+        <div class="mt-6 relative">
+            <div :class="loading ? 'invisible' : ''" x-cloak>
+                @if (count($funds ?? []) || count($mutualFunds ?? []))
 
-                <div class="mt-6">
                     <div
                         class="grid gap-4 grid-cols-1 md:grid-cols-2 lg:grid-cols-[repeat(auto-fill,minmax(17.19rem,1fr))]">
                         @foreach ($funds as $idx => $fund)
@@ -39,13 +33,22 @@
                     <div
                         class="grid gap-4 grid-cols-1 md:grid-cols-2 lg:grid-cols-[repeat(auto-fill,minmax(17.19rem,1fr))]">
                         @foreach ($mutualFunds as $idx => $fund)
-                            <livewire:track-investor.mutual-fund-card :fund="$fund" :wire:key="$idx . $fund['id']"
-                                :hide-if-not-favorite="true" />
+                            <livewire:track-investor.mutual-fund-card :fund="$fund"
+                                :wire:key="$idx . $fund['fund_symbol']" :hide-if-not-favorite="true" />
                         @endforeach
                     </div>
-                </div>
-
+                @else
+                    <div class="text-dark-light2">
+                        No result found @if ($search)
+                            for search "{{ $search }}"
+                        @endif
+                    </div>
+                @endif
             </div>
-        @endif
+
+            <div class="py-10 grid place-items-center absolute top-0 left-0 w-full" x-show="loading" x-cloak>
+                <span class="mx-auto simple-loader !text-green-dark"></span>
+            </div>
+        </div>
     </div>
 </div>

@@ -126,7 +126,7 @@ Route::group(['middleware' => ['auth', 'two_factor', 'approved', 'verified', Che
 
     // if company is supplied in url, it will show history of fund for that company otherwise it will show history of fund for all companies
     Route::get('/fund/{fund}/{company?}', [CompanyController::class, 'fund'])->name('company.fund');
-    Route::get('/mutual-fund/{cik}/{fund_symbol}/{series_id}/{class_id}/{class_name}{company?}', [CompanyController::class, 'mutualFund'])->name('company.mutual-fund');
+    Route::get('/mutual-fund/{fund_symbol}/{company?}', [CompanyController::class, 'mutualFund'])->name('company.mutual-fund');
 
     Route::get('builder/chart', [BuilderController::class, 'chart'])->name('builder.chart');
     Route::get('builder/table', [BuilderController::class, 'table'])->name('builder.table');

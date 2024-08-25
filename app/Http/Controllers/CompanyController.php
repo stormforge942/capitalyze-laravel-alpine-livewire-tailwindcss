@@ -210,7 +210,7 @@ class CompanyController extends BaseController
 
         $cacheKey = 'company_data_' . $ticker;
 
-        $cacheDuration = 3600; 
+        $cacheDuration = 3600;
 
         $company = Cache::remember($cacheKey, $cacheDuration, function () use ($ticker) {
             return Company::query()
@@ -222,11 +222,11 @@ class CompanyController extends BaseController
         $cacheKey = 'current_company_data_' . $ticker;
 
         $currentCompany = $ticker === $company->ticker ? $company :
-        Cache::remember($cacheKey, $cacheDuration, function () use ($ticker) {
-            return Company::query()
-                ->where('ticker', $ticker)
-                ->firstOrFail();
-        });
+            Cache::remember($cacheKey, $cacheDuration, function () use ($ticker) {
+                return Company::query()
+                    ->where('ticker', $ticker)
+                    ->firstOrFail();
+            });
 
         return view('layouts.company', [
             'company' => $company,
@@ -252,7 +252,7 @@ class CompanyController extends BaseController
         if ($company) {
             $cacheKey = 'company_by_ticker_' . $company;
             $cacheDuration = 3600;
-        
+
             $currentCompany = Cache::remember($cacheKey, $cacheDuration, function () use ($company) {
                 return Company::query()
                     ->where('ticker', $company)
@@ -280,12 +280,7 @@ class CompanyController extends BaseController
 
     public function mutualFund(Request $request, ?string $company = null)
     {
-        $fund = MutualFunds::query()
-            ->where('cik', $request->route('cik'))
-            ->where('fund_symbol', $request->route('fund_symbol'))
-            ->where('series_id', $request->route('series_id'))
-            ->where('class_id', $request->route('class_id'))
-            ->firstOrFail();
+        $fund = MutualFunds::query()->where('fund_symbol', $request->route('fund_symbol'))->firstOrFail();
 
         $currentCompany = $company
             ? Company::query()
@@ -321,7 +316,7 @@ class CompanyController extends BaseController
     {
         $cacheKey = 'company_' . $ticker;
 
-        $cacheDuration = 3600; 
+        $cacheDuration = 3600;
 
         $company = Cache::remember($cacheKey, $cacheDuration, function () use ($ticker) {
             return Company::query()

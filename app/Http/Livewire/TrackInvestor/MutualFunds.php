@@ -66,15 +66,7 @@ class MutualFunds extends Component
         $transformedFunds = $funds->getCollection()->map(function ($fund) use ($favorites) {
             $fund = (array) $fund;
 
-            $fund['id'] = json_encode([
-                'cik' => $fund['cik'],
-                'fund_symbol' => $fund['fund_symbol'],
-                'series_id' => $fund['series_id'],
-                'class_id' => $fund['class_id'],
-                'class_name' => $fund['class_name'],
-            ]);
-
-            $fund['isFavorite'] = in_array($fund['id'], $favorites);
+            $fund['isFavorite'] = in_array($fund['fund_symbol'], $favorites);
 
             return $fund;
         });
@@ -97,7 +89,7 @@ class MutualFunds extends Component
         if ($filters['view'] === 'most-recent') {
             $quarters = array_keys($this->views);
 
-            $q->whereIn('date', [$quarters[2], $quarters[3]])
+            $q->whereIn('date', [$quarters[2] ?? 'wrong-date', $quarters[3] ?? 'wrong-date'])
                 ->where('is_latest', true);
         } else if ($filters['view'] == 'all') {
             $q->where('is_latest', true);

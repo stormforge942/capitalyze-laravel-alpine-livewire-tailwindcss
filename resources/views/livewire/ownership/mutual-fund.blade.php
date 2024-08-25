@@ -52,7 +52,7 @@
             new Chart(canvas, {
                 type: 'line',
                 data: {
-                    labels: data.map(item => item.date),
+                    labels: data.map(item => item.quarter),
                     datasets: [{
                         data: data.map(item => item.total),
                         borderColor: "#0E5FD9",
@@ -76,10 +76,11 @@
                         intersect: false,
                     },
                     responsive: true,
+                    aspectRatio: 1,
                     maintainAspectRatio: false,
                     plugins: {
                         legend: {
-                            display: true,
+                            display: false,
                         },
                         tooltip: {
                             bodyFont: {
@@ -136,12 +137,6 @@
                             border: {
                                 display: false
                             },
-                            type: 'timeseries',
-                            time: {
-                                displayFormats: {
-                                    quarter: 'MMM YYYY'
-                                }
-                            },
                         }
                     }
                 }
@@ -151,28 +146,40 @@
         function renderOverTimeSectorAllocation(data) {
             const canvas = document.getElementById('overTimeSectorAllocation');
 
-            new Chart(canvas, {
+            data = data.map(item => ({
+                ...item,
+                borderRadius: 2,
+            }))
+
+            if (window.otsaChart) {
+                window.otsaChart.data.datasets = data;
+                window.otsaChart.update();
+                return;
+            }
+
+            window.otsaChart = new Chart(canvas, {
                 type: 'bar',
                 data: {
                     datasets: data
                 },
+                plugins: [
+                    window.chartJsPlugins.htmlLegend
+                ],
                 options: {
                     responsive: true,
-                    aspectRatio: 1.7,
-                    maintainAspectRatio: true,
+                    maintainAspectRatio: false,
+                    maxBarThickness: 80,
                     plugins: {
                         legend: {
-                            display: true,
-                            position: "bottom",
-                            align: "start",
-                            labels: {
-                                boxWidth: 12,
-                                boxHeight: 12,
-                                font: {
-                                    size: 12,
-                                },
+                            display: false,
+                        },
+                        htmlLegend: {
+                            container: document.querySelector('#otsa-legend'),
+                            grid: {
+                                columns: 2,
                             },
                         },
+                        addLogo: false,
                     },
                     scales: {
                         y: {
@@ -182,9 +189,7 @@
                                 display: false
                             },
                             ticks: {
-                                callback: function(value) {
-                                    return value + '%';
-                                },
+                                callback: (value) => value + '%',
                             },
                             border: {
                                 display: false
@@ -219,22 +224,23 @@
                         backgroundColors: data.backgroundColor,
                     }]
                 },
+                plugins: [
+                    window.chartJsPlugins.htmlLegend
+                ],
                 options: {
                     responsive: true,
-                    aspectRatio: 1.5,
+                    maintainAspectRatio: false,
                     plugins: {
                         legend: {
-                            display: true,
-                            position: "bottom",
-                            align: "start",
-                            labels: {
-                                boxWidth: 12,
-                                boxHeight: 12,
-                                font: {
-                                    size: 12,
-                                },
-                            },
+                            display: false,
                         },
+                        addLogo: false,
+                        htmlLegend: {
+                            container: document.querySelector('#lqsa-legend'),
+                            grid: {
+                                columns: 2,
+                            },
+                        }
                     },
                 }
             })
