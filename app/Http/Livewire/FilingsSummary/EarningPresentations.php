@@ -29,6 +29,7 @@ class EarningPresentations extends BaseTable
     {
         return [
             Column::make('Period', 'period'),
+            Column::make('Source URL', 'formatted_source_url', 'source_url'),
             Column::make('Result', 'formatted_result', 'presentation_url'),
         ];
     }
@@ -38,6 +39,10 @@ class EarningPresentations extends BaseTable
         return PowerGrid::columns()
             ->addColumn('period', function ($row) {
                 return "<span>{$row->fiscal_year} {$row->fiscal_period}</span>";
+            })
+            ->addColumn('source_url')
+            ->addColumn('formatted_source_url', function ($row) {
+                return '<a href="' . $row->source_url . '" target="_blank" class="text-blue-500 hover:underline">' . $row->source_url . '</a>';
             })
             ->addColumn('presentation_url')
             ->addColumn('formatted_result', function ($row) {
