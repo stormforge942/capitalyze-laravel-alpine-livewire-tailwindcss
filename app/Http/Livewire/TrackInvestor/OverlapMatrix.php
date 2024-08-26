@@ -154,8 +154,10 @@ class OverlapMatrix extends Component
         // Classify investors into funds and mutual funds
         foreach ($investors as $investor) {
             if ($investor['type'] === 'fund') {
-                $fundFilters[] = $investor['cik'];
-                $fundPeriod = $investor['date'];
+                $fundFilters[] = [
+                    'cik' => $investor['cik'],
+                    'period' => $investor['date'],
+                ];
             } else {
                 $mutualFundFilters[] = [
                     'cik' => $investor['cik'],
@@ -164,17 +166,14 @@ class OverlapMatrix extends Component
                     'series_id' => $investor['series_id'],
                     'class_id' => $investor['class_id'],
                     'class_name' => $investor['class_name'],
+                    'period' => $investor['date'],
                 ];
-                $mutualFundPeriod = $investor['date'];
             }
         }
 
         // Fetch filtered mutual funds data
         $filteredMutualFunds = collect();
         if (count($mutualFundFilters)) {
-            $startDate = Carbon::parse($mutualFundPeriod)->startOfQuarter()->format('Y-m-d');
-            $endDate = Carbon::parse($mutualFundPeriod)->endOfQuarter()->format('Y-m-d');
-
             $filteredMutualFunds = DB::connection('pgsql-xbrl')
                 ->table('mutual_fund_holdings')
                 ->select(
@@ -190,16 +189,19 @@ class OverlapMatrix extends Component
                     'previous_weight as previous',
                     'price_per_unit as price'
                 )
-                ->whereBetween('period_of_report', [$startDate, $endDate])
                 ->where(function($query) use ($mutualFundFilters) {
                     foreach ($mutualFundFilters as $filter) {
                         $query->orWhere(function($subQuery) use ($filter) {
+                            $startDate = Carbon::parse($filter['period'])->startOfQuarter()->format('Y-m-d');
+                            $endDate = Carbon::parse($filter['period'])->endOfQuarter()->format('Y-m-d');
+
                             $subQuery->where('cik', $filter['cik'])
                                 ->where('registrant_name', $filter['registrant_name'])
                                 ->where('fund_symbol', $filter['fund_symbol'])
                                 ->where('series_id', $filter['series_id'])
                                 ->where('class_id', $filter['class_id'])
-                                ->where('class_name', $filter['class_name']);
+                                ->where('class_name', $filter['class_name'])
+                                ->whereBetween('period_of_report', [$startDate, $endDate]);
                         });
                     }
                 })
@@ -223,8 +225,14 @@ class OverlapMatrix extends Component
                     DB::raw('NULL AS class_id'),
                     DB::raw('NULL AS class_name')
                 )
-                ->whereIn('cik', array_map('strval', $fundFilters))
-                ->where('report_calendar_or_quarter', $fundPeriod)
+                ->where(function ($query) use ($fundFilters) {
+                    foreach ($fundFilters as $filter) {
+                        $query->orWhere(function ($subQuery) use ($filter) {
+                            $subQuery->where('cik', $filter['cik'])
+                                ->where('report_calendar_or_quarter', $filter['period']);
+                        });
+                    }
+                })
                 ->get();
         }
 
@@ -241,14 +249,7 @@ class OverlapMatrix extends Component
                 $firstItem = $companyGroup->first();
                 $ticker = $firstItem->ticker;
                 $companyName = $firstItem->company_name;
-
-                // Use a conditional to fetch price only once
-                $price = DB::connection('pgsql-xbrl')
-                    ->table('eod_prices')
-                    ->select('close')
-                    ->where('symbol', strtolower($ticker))
-                    ->orderBy('date', 'desc')
-                    ->value('close') ?? 0; // Default to 0 if not found
+                $price = $firstItem->price;
 
                 return [
                     'ticker' => $ticker,
