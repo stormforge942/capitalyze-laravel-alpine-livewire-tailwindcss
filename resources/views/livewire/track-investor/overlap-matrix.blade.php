@@ -79,7 +79,6 @@
                     fill="#D4DDD7" />
             </svg>
 
-
             <p class="mt-6 text-xl font-bold">No Data</p>
             <p class="mt-2 text-md">Use the search bar to add funds and analyze the overlap in their portfolios</p>
         </div>
@@ -171,7 +170,8 @@
                                         <div class="my-3 px-2 py-3 bg-white">
                                             <div class="flex flex-row justify-between text-md font-semibold px-2 py-2">
                                                 <span x-text="investor.company_name"></span>
-                                                <span x-text="'$' + investor.price"></span>
+                                                <span
+                                                    x-text="investor.price ? '$' + investor.price : 'Sold Out'"></span>
                                             </div>
 
                                             <div class="my-3 mx-2">

@@ -79,7 +79,8 @@ class OverlapMatrix extends Component
                 ->where('is_latest', true)
                 ->when($this->search, function ($query, $search) {
                     return $query->where('investor_name', 'ilike', '%' . $search . '%');
-                });
+                })
+                ->orderBy('portfolio_size', 'desc');
                 
 
             $mutualFundsQuery = DB::connection('pgsql-xbrl')
@@ -99,7 +100,8 @@ class OverlapMatrix extends Component
                 ->where('is_latest', true)
                 ->when($this->search, function ($query, $search) {
                     return $query->where('registrant_name', 'ilike', '%' . $search . '%');
-                });
+                })
+                ->orderBy('portfolio_size', 'desc');
 
             // Determine which category to fetch data for
             switch ($this->category) {
@@ -227,7 +229,7 @@ class OverlapMatrix extends Component
         }
 
         // Convert collections to arrays
-        $combinedData = $filteredMutualFunds->concat($filteredFunds);
+        $combinedData = $filteredMutualFunds->concat($filteredFunds)->sortByDesc('change_amount');
 
         $result = $combinedData->groupBy('ticker')
             ->map(function ($companyGroup) {
@@ -257,7 +259,7 @@ class OverlapMatrix extends Component
                 ];
             });
 
-        $this->overlapMatrix = $result->values()->sortByDesc('count')->groupBy('count');
+        $this->overlapMatrix = $result->values()->groupBy('count');
     }
 
     private function getFavouriteMutualFunds($mutualFundsQuery, $favouriteIdentifiers)
