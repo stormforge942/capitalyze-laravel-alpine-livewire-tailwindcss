@@ -171,7 +171,7 @@
                                             <div class="flex flex-row justify-between text-md font-semibold px-2 py-2">
                                                 <span x-text="investor.company_name"></span>
                                                 <span
-                                                    x-text="+investor.price ? '$' + investor.price : 'Sold Out'"></span>
+                                                    x-text="+investor.ssh_prnamt ? '$' + investor.price : 'Sold Out'"></span>
                                             </div>
 
                                             <div class="my-3 mx-2">

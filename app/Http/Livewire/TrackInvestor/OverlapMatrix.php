@@ -187,7 +187,8 @@ class OverlapMatrix extends Component
                     'class_id',
                     'class_name',
                     'previous_weight as previous',
-                    'price_per_unit as price'
+                    'price_per_unit as price',
+                    'balance as ssh_prnamt'
                 )
                 ->where(function($query) use ($mutualFundFilters) {
                     foreach ($mutualFundFilters as $filter) {
@@ -220,6 +221,7 @@ class OverlapMatrix extends Component
                     'change_in_shares as change_amount',
                     'last_shares as previous',
                     'price_paid as price',
+                    'ssh_prnamt',
                     DB::raw('NULL AS fund_symbol'),
                     DB::raw('NULL AS series_id'),
                     DB::raw('NULL AS class_id'),
@@ -249,11 +251,13 @@ class OverlapMatrix extends Component
                 $firstItem = $companyGroup->first();
                 $ticker = $firstItem->ticker;
                 $companyName = $firstItem->company_name;
-                $price = $firstItem->price;
+                $price = number_format($firstItem->price, 2);
+                $ssh_prnamt = $firstItem->ssh_prnamt;
 
                 return [
                     'ticker' => $ticker,
                     'price' => $price,
+                    'ssh_prnamt' => $ssh_prnamt,
                     'company_name' => $companyName,
                     'count' => $uniqueFunds->count(),
                     'funds' => $uniqueFunds->values(),
