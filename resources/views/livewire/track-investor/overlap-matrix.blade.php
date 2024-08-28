@@ -116,10 +116,13 @@
                                                 x-text="invt.fund_symbol ? `${invt.name.toLowerCase()} (${invt.fund_symbol})` : invt.name.toLowerCase()"></span>
                                         </label>
 
-                                        <span
-                                            class="rounded-full text-xs font-medium leading-none grid place-items-center bg-blue text-white min-w-[20px] min-h-[20px]"
-                                            x-text="invt.portfolio_size">
-                                        </span>
+                                        <div class="block flex-grow">
+                                            <span
+                                                class="rounded-full text-xs font-medium leading-none grid place-items-center bg-blue text-white min-w-[20px] min-h-[20px]"
+                                                :class="invt.portfolio_size >= 100 ? 'px-1' : ''"
+                                                x-text="invt.portfolio_size">
+                                            </span>
+                                        </div>
                                     </div>
                                     <div class="hover:cursor-pointer hover:text-red" @click="removeCurInvestor(invt)">
                                         <svg width="11" height="11" viewBox="0 0 10 10" fill="none"
@@ -248,6 +251,7 @@
                                                     Expand List
                                                     <span
                                                         class="rounded-full text-xs font-medium leading-none grid place-items-center bg-blue text-white min-w-[20px] min-h-[20px]"
+                                                        :class="value['countMore'] >= 100 ? 'px-1' : ''"
                                                         x-text="value['countMore']"></span>
                                                     <svg class="w-[16px]" width="16" height="16"
                                                         viewBox="0 0 16 16" fill="none"
