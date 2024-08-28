@@ -240,10 +240,10 @@
                                                     Activities</a>
                                             </div>
                                         </template>
-                                        <div class="text-sm text-blue flex justify-center"
-                                            x-show="value['countMore'] > 0">
-                                            <template x-if="!loadingMore">
-                                                <button class="flex flex-row justify-center items-center gap-x-2"
+                                        <template x-if="value['countMore'] > 0">
+                                            <div class="text-sm text-blue flex justify-center">
+                                                <button x-show="!loadingMore"
+                                                    class="flex flex-row justify-center items-center gap-x-2"
                                                     @click="loadMore(key)">
                                                     Expand List
                                                     <span
@@ -257,11 +257,10 @@
                                                             fill="#3561E7" />
                                                     </svg>
                                                 </button>
-                                            </template>
-                                            <template x-if="loadingMore">
-                                                <div class="ml-2 text-sm text-gray-600">Loading more...</div>
-                                            </template>
-                                        </div>
+                                                <div x-show="loadingMore" class="ml-2 text-sm text-gray-600">Loading
+                                                    more...</div>
+                                            </div>
+                                        </template>
                                     </div>
                                 </div>
                             </template>
