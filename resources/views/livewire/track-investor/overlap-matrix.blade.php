@@ -1,8 +1,9 @@
 <div x-data="{
     loading: false,
+    loadingMore: false, // New state for loading more data
     curInvestors: [],
     visibleInvestorsCount: 50,
-    overlapMatrix: @entangle('overlapMatrix').defer,
+    overlapMatrix: $wire.entangle('overlapMatrix').defer,
     init() {
         this.$watch('curInvestors', value => {
             const param = this.curInvestors.filter(invt => invt.bAdded);
@@ -35,6 +36,11 @@
     getMaintainedPosition(funds) {
         return funds.filter(fund => fund.change_amount == 0);
     },
+    loadMore(count) {
+        this.loadingMore = true;
+        this.$wire.loadMoreOverlapMatrix(count)
+            .finally(() => this.loadingMore = false);
+    }
 }">
     <h2 class="text-xl font-semibold">Overlap Matrix</h2>
 
@@ -153,90 +159,113 @@
                         </div>
                     </div>
                 </div>
-                <div class="w-1/2 lg:w-5/9 xl:w-11/15 grid grid-cols-1 lg:grid-cols-2 xl:grid-cols-3 gap-4">
+                <div class="w-1/2 lg:w-5/9 xl:w-11/15">
                     <template x-if="loading">
                         <div class="col-span-5 py-10 grid place-items-center">
                             <span class="mx-auto simple-loader !text-green-dark"></span>
                         </div>
                     </template>
                     <template x-if="!loading">
-                        <template x-for="(value, key) in overlapMatrix">
-                            <div class="col-span-1">
-                                <div class="py-3 font-semibold text-md bg-white text-black flex flex-row justify-center items-center"
-                                    x-text="key + ' investors'"></div>
+                        <div class="w-full grid grid-cols-1 lg:grid-cols-2 xl:grid-cols-3 gap-x-4 gap-y-6">
+                            <template x-for="(value, key) in overlapMatrix">
+                                <div class="col-span-1">
+                                    <div class="mb-3 py-3 font-semibold text-md bg-white text-black flex flex-row justify-center items-center"
+                                        x-text="key + ' investors'"></div>
 
-                                <div>
-                                    <template x-for="investor in value">
-                                        <div class="my-3 px-2 py-3 bg-white">
-                                            <div class="flex flex-row justify-between text-md font-semibold px-2 py-2">
-                                                <span x-text="investor.company_name"></span>
-                                                <span
-                                                    x-text="+investor.ssh_prnamt ? '$' + investor.price : 'Sold Out'"></span>
+                                    <div class="h-screen/2 overflow-auto">
+                                        <template x-for="investor in value['items']">
+                                            <div class="mb-3 px-2 py-3 bg-white">
+                                                <div class="text-md font-semibold px-2 py-2">
+                                                    <span x-text="investor.company_name"></span>
+                                                </div>
+
+                                                <div class="my-3 mx-2">
+                                                    <div x-show="getNewPosition(investor.funds).length"
+                                                        class="flex flex-row text-sm">
+                                                        <div class="pt-0.5">
+                                                            <svg width="16px" height="16px">
+                                                                <circle cx="8" cy="8" r="6"
+                                                                    fill="blue" />
+                                                            </svg>
+                                                        </div>
+                                                        <span class="pl-1">
+                                                            <span class="capitalize"
+                                                                x-text="getNewPosition(investor.funds).map(fund => (fund.fund_symbol ? `${fund.name.toLowerCase()} (${fund.fund_symbol})` : fund.name.toLowerCase())).join(' | ')"></span>
+                                                        </span>
+                                                    </div>
+                                                    <div x-show="getIncreasedPosition(investor.funds).length"
+                                                        class="flex flex-row text-sm mt-3">
+                                                        <div class="pt-0.5">
+                                                            <svg width="16px" height="16px">
+                                                                <circle cx="8" cy="8" r="6"
+                                                                    fill="green" />
+                                                            </svg>
+                                                        </div>
+                                                        <span class="pl-1">
+                                                            <span class="capitalize"
+                                                                x-text="getIncreasedPosition(investor.funds).map(fund => (fund.fund_symbol ? `${fund.name.toLowerCase()} (${fund.fund_symbol})` : fund.name.toLowerCase())).join(' | ')"></span>
+                                                        </span>
+                                                    </div>
+                                                    <div x-show="getReducedPosition(investor.funds).length"
+                                                        class="flex flex-row text-sm mt-3">
+                                                        <div class="pt-0.5">
+                                                            <svg width="16px" height="16px">
+                                                                <circle cx="8" cy="8" r="6"
+                                                                    fill="red" />
+                                                            </svg>
+                                                        </div>
+                                                        <span class="pl-1">
+                                                            <span class="capitalize"
+                                                                x-text="getReducedPosition(investor.funds).map(fund => (fund.fund_symbol ? `${fund.name.toLowerCase()} (${fund.fund_symbol})` : fund.name.toLowerCase())).join(' | ')"></span>
+                                                        </span>
+                                                    </div>
+                                                    <div x-show="getMaintainedPosition(investor.funds).length"
+                                                        class="flex flex-row text-sm mt-3">
+                                                        <div class="pt-0.5">
+                                                            <svg width="16px" height="16px">
+                                                                <circle cx="8" cy="8" r="6"
+                                                                    fill="gray" />
+                                                            </svg>
+                                                        </div>
+                                                        <span class="pl-1">
+                                                            <span class="capitalize"
+                                                                x-text="getMaintainedPosition(investor.funds).map(fund => (fund.fund_symbol ? `${fund.name.toLowerCase()} (${fund.fund_symbol})` : fund.name.toLowerCase())).join(' | ')"></span>
+                                                        </span>
+                                                    </div>
+                                                </div>
+
+                                                <a class="block mx-auto font-semibold text-center cursor-pointer"
+                                                    @click.prevent="showInvestorActivities(key, investor)">See
+                                                    Investors
+                                                    Activities</a>
                                             </div>
-
-                                            <div class="my-3 mx-2">
-                                                <div x-show="getNewPosition(investor.funds).length"
-                                                    class="flex flex-row text-sm">
-                                                    <div class="pt-0.5">
-                                                        <svg width="16px" height="16px">
-                                                            <circle cx="8" cy="8" r="6"
-                                                                fill="blue" />
-                                                        </svg>
-                                                    </div>
-                                                    <span class="pl-1">
-                                                        <span class="capitalize"
-                                                            x-text="getNewPosition(investor.funds).map(fund => (fund.fund_symbol ? `${fund.name.toLowerCase()} (${fund.fund_symbol})` : fund.name.toLowerCase())).join(' | ')"></span>
-                                                    </span>
-                                                </div>
-                                                <div x-show="getIncreasedPosition(investor.funds).length"
-                                                    class="flex flex-row text-sm mt-3">
-                                                    <div class="pt-0.5">
-                                                        <svg width="16px" height="16px">
-                                                            <circle cx="8" cy="8" r="6"
-                                                                fill="green" />
-                                                        </svg>
-                                                    </div>
-                                                    <span class="pl-1">
-                                                        <span class="capitalize"
-                                                            x-text="getIncreasedPosition(investor.funds).map(fund => (fund.fund_symbol ? `${fund.name.toLowerCase()} (${fund.fund_symbol})` : fund.name.toLowerCase())).join(' | ')"></span>
-                                                    </span>
-                                                </div>
-                                                <div x-show="getReducedPosition(investor.funds).length"
-                                                    class="flex flex-row text-sm mt-3">
-                                                    <div class="pt-0.5">
-                                                        <svg width="16px" height="16px">
-                                                            <circle cx="8" cy="8" r="6"
-                                                                fill="red" />
-                                                        </svg>
-                                                    </div>
-                                                    <span class="pl-1">
-                                                        <span class="capitalize"
-                                                            x-text="getReducedPosition(investor.funds).map(fund => (fund.fund_symbol ? `${fund.name.toLowerCase()} (${fund.fund_symbol})` : fund.name.toLowerCase())).join(' | ')"></span>
-                                                    </span>
-                                                </div>
-                                                <div x-show="getMaintainedPosition(investor.funds).length"
-                                                    class="flex flex-row text-sm mt-3">
-                                                    <div class="pt-0.5">
-                                                        <svg width="16px" height="16px">
-                                                            <circle cx="8" cy="8" r="6"
-                                                                fill="gray" />
-                                                        </svg>
-                                                    </div>
-                                                    <span class="pl-1">
-                                                        <span class="capitalize"
-                                                            x-text="getMaintainedPosition(investor.funds).map(fund => (fund.fund_symbol ? `${fund.name.toLowerCase()} (${fund.fund_symbol})` : fund.name.toLowerCase())).join(' | ')"></span>
-                                                    </span>
-                                                </div>
-                                            </div>
-
-                                            <a class="block mx-auto font-semibold text-center cursor-pointer"
-                                                @click.prevent="showInvestorActivities(key, investor)">See Investors
-                                                Activities</a>
+                                        </template>
+                                        <div class="text-sm text-blue flex justify-center"
+                                            x-show="value['countMore'] > 0">
+                                            <template x-if="!loadingMore">
+                                                <button class="flex flex-row justify-center items-center gap-x-2"
+                                                    @click="loadMore(key)">
+                                                    Expand List
+                                                    <span
+                                                        class="rounded-full text-xs font-medium leading-none grid place-items-center bg-blue text-white min-w-[20px] min-h-[20px]"
+                                                        x-text="value['countMore']"></span>
+                                                    <svg class="w-[16px]" width="16" height="16"
+                                                        viewBox="0 0 16 16" fill="none"
+                                                        xmlns="http://www.w3.org/2000/svg">
+                                                        <path
+                                                            d="M10.3083 6.19514L7.72167 8.78378L5.135 6.19514C5.01045 6.07021 4.84135 6 4.665 6C4.48865 6 4.31955 6.07021 4.195 6.19514C3.935 6.45534 3.935 6.87566 4.195 7.13585L7.255 10.1982C7.515 10.4584 7.935 10.4584 8.195 10.1982L11.255 7.13585C11.515 6.87566 11.515 6.45534 11.255 6.19514C10.995 5.94161 10.5683 5.93494 10.3083 6.19514Z"
+                                                            fill="#3561E7" />
+                                                    </svg>
+                                                </button>
+                                            </template>
+                                            <template x-if="loadingMore">
+                                                <div class="ml-2 text-sm text-gray-600">Loading more...</div>
+                                            </template>
                                         </div>
-                                    </template>
+                                    </div>
                                 </div>
-                            </div>
-                        </template>
+                            </template>
+                        </div>
                     </template>
                 </div>
             </div>

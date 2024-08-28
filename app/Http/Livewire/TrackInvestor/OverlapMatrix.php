@@ -2,7 +2,7 @@
 
 namespace App\Http\Livewire\TrackInvestor;
 
-use App\Http\Livewire\AsTab;
+    use App\Http\Livewire\AsTab;
 use App\Models\CompanyFilings;
 use App\Models\MutualFundsPage;
 use App\Models\TrackInvestorFavorite;
@@ -29,10 +29,13 @@ class OverlapMatrix extends Component
 
     public $search = '';
 
+    public $cacheKey;
+
     public function mount()
     {
         $this->investors = collect([]);
         $this->getInvestors();
+        $this->cacheKey = 'overlap_matrix_' . Auth::user()->id;
     }
 
     public function updated($prop)
@@ -143,7 +146,7 @@ class OverlapMatrix extends Component
         $this->loading = false;
     }
 
-    private function getOverlapMatrix($investors)
+    private function getOverlapMatrixData($investors)
     {
         $period = '';
 
@@ -238,33 +241,98 @@ class OverlapMatrix extends Component
                 ->get();
         }
 
-        // Convert collections to arrays
+        // Combine the data and process it
         $combinedData = $filteredMutualFunds->concat($filteredFunds)->sortByDesc('change_amount');
 
         $result = $combinedData->groupBy('ticker')
             ->map(function ($companyGroup) {
-                $uniqueFunds = $companyGroup->unique(function ($item) {
-                    return $item->cik . $item->series_id . $item->class_id . $item->class_name;
-                });
-
-                // Avoid calling first() multiple times
+                $uniqueFunds = $companyGroup->unique(fn($item) => $item->cik . $item->series_id . $item->class_id . $item->class_name);
                 $firstItem = $companyGroup->first();
-                $ticker = $firstItem->ticker;
-                $companyName = $firstItem->company_name;
-                $price = number_format($firstItem->price, 2);
-                $ssh_prnamt = $firstItem->ssh_prnamt;
 
                 return [
-                    'ticker' => $ticker,
-                    'price' => $price,
-                    'ssh_prnamt' => $ssh_prnamt,
-                    'company_name' => $companyName,
+                    'ticker' => $firstItem->ticker,
+                    'price' => number_format($firstItem->price, 2),
+                    'ssh_prnamt' => $firstItem->ssh_prnamt,
+                    'company_name' => $firstItem->company_name,
                     'count' => $uniqueFunds->count(),
                     'funds' => $uniqueFunds->values(),
                 ];
+            })
+            ->filter(fn($companyGroup) => $companyGroup['count'] > 1)
+            ->values();  // Ensure you reset the keys
+
+        // Group by 'count'
+        $groupedByCount = $result->groupBy('count');
+
+        return $groupedByCount;
+    }
+
+    private function getOverlapMatrix($investors, $itemsPerPage = 5)
+    {
+        Cache::forget($this->cacheKey);
+
+        Cache::remember($this->cacheKey, Carbon::now()->addMinutes(30), function() use($investors, $itemsPerPage) {
+            $groupedByCount = $this->getOverlapMatrixData($investors);
+
+            $paginatedGroups = $groupedByCount->map(function ($group) use ($itemsPerPage) {
+                return $group->chunk($itemsPerPage);
             });
 
-        $this->overlapMatrix = $result->values()->groupBy('count');
+            // Load the initial pages
+            $this->overlapMatrix = $paginatedGroups->map(function ($pages, $key) use($groupedByCount) {
+                $item = $pages->first();
+                return [
+                    'items' => $item,
+                    'investorCount' => $key,
+                    'countMore' => $groupedByCount[$key]->count() - $item->count(),
+                ];
+            });
+
+            // Initialize loaded counts and page numbers
+            $this->loadedCounts = $groupedByCount->map(fn($group) => 1);
+            $this->itemsPerPage = $itemsPerPage;
+
+            return $paginatedGroups;
+        });
+    }
+
+    public function loadMoreOverlapMatrix($investorCount, $additional = 1)
+    {
+        if (! Cache::has($this->cacheKey)) {
+            $groupedByCount = $this->getOverlapMatrixData($this->investors);
+
+            $paginatedGroups = $groupedByCount->map(function ($group) {
+                return $group->chunk($this->itemsPerPage);
+            });
+
+            Cache::put($this->cacheKey, $paginatedGroups, Carbon::now()->addMinutes(30));
+        } else {
+            $paginatedGroups = Cache::get($this->cacheKey);
+        }
+
+        if (!isset($this->loadedCounts[$investorCount])) {
+            return;
+        }
+
+        $loadedCount = $this->loadedCounts[$investorCount];
+        $newLoadedCount = $loadedCount + $additional;
+
+        $group = $paginatedGroups[$investorCount] ?? collect();
+
+        // Ensure we don't exceed the available pages
+        $newPages = $group->take($newLoadedCount);
+
+        $this->loadedCounts[$investorCount] = $newLoadedCount;
+        $this->overlapMatrix = $this->overlapMatrix->map(function ($item, $key) use ($investorCount, $newPages, $additional) {
+            if ($key == $investorCount) {
+                return [
+                    'items' => $newPages->flatten(1),
+                    'investorCount' => $key,
+                    'countMore' => $item['countMore'] - $this->itemsPerPage * $additional,
+                ];
+            }
+            return $item;
+        });
     }
 
     private function getFavouriteMutualFunds($mutualFundsQuery, $favouriteIdentifiers)
