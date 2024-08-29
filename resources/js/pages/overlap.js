@@ -163,6 +163,9 @@ function renderPurchaseChart(canvas, data) {
     ctx.clearRect(0, 0, width, height);
 
     // Draw background line and rectangle
+
+    ctx.strokeStyle = "#000000";
+
     ctx.beginPath();
     ctx.moveTo(rectWidth, lineHeight);
     ctx.lineTo(width - rectWidth, lineHeight);
@@ -203,7 +206,7 @@ function renderPurchaseChart(canvas, data) {
         ctx.stroke();
 
         ctx.fillStyle = item.current ? "#fff" : "#000";
-        ctx.font = "bold 14px Arial";
+        ctx.font = "bold 12px Arial";
         ctx.textAlign = "center";
         ctx.textBaseline = "middle";
         ctx.fillText('$' + formatNumber(item.price), item.x, lineHeight);
@@ -212,7 +215,7 @@ function renderPurchaseChart(canvas, data) {
         ctx.textBaseline = "top";
         ctx.fillText(truncateText(ctx, item.name, circleRadius * 6), item.x, lineHeight + circleRadius + 10);
 
-        ctx.font = "12px Arial";
+        ctx.font = "10px Arial";
         ctx.fillStyle = item.current ? "#376bfb" : "#000"; // Text color for label
         ctx.fillText(item.current ? "Current Stock Price" : "Average Price Paid", item.x, lineHeight + circleRadius + 27);
     });

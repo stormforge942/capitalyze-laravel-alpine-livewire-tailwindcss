@@ -249,9 +249,16 @@ class OverlapMatrix extends Component
                 $uniqueFunds = $companyGroup->unique(fn($item) => $item->cik . $item->series_id . $item->class_id . $item->class_name);
                 $firstItem = $companyGroup->first();
 
+                $price = DB::connection('pgsql-xbrl')
+                    ->table('eod_prices')
+                    ->select('close')
+                    ->where('symbol', strtolower($firstItem->ticker))
+                    ->orderBy('date', 'desc')
+                    ->value('close') ?? 0; // Default to 0 if not found
+
                 return [
                     'ticker' => $firstItem->ticker,
-                    'price' => number_format($firstItem->price, 2),
+                    'price' => number_format($price, 2),
                     'ssh_prnamt' => $firstItem->ssh_prnamt,
                     'company_name' => $firstItem->company_name,
                     'count' => $uniqueFunds->count(),
