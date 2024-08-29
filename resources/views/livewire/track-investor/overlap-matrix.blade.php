@@ -179,7 +179,8 @@
                                         <template x-for="investor in value['items']">
                                             <div class="mb-3 px-2 py-3 bg-white">
                                                 <div class="text-md font-semibold px-2 py-2">
-                                                    <span x-text="investor.company_name"></span>
+                                                    <span x-text="investor.ticker"></span>
+                                                    <small x-text="`(${investor.company_name})`"></small>
                                                 </div>
 
                                                 <div class="my-3 mx-2">

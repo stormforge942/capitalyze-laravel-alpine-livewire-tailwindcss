@@ -1,6 +1,6 @@
-<div class="flex flex-col h-full p-5">
+<div class="flex flex-col h-full p-5 bg-gray-100">
     <div class="w-full mb-5 flex gap-5 items-start justify-between">
-        <div class="font-medium uppercase">{{ $company_name }}</div>
+        <div class="font-medium uppercase">{{ $ticker }} (<small>{{ $company_name }}</small>)</div>
 
         <button wire:click="$emit('modal.close')">
             <svg class="h-6 w-6" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
@@ -35,11 +35,10 @@
             </div>
         </div>
 
-
         <div x-show="activeTab == 'Summary'">
             <div>
-                <livewire:investor-fund.fund-overview-graph :ticker="$ticker" />
-                <livewire:investor-fund.purchase-continuum-graph :data="$data" />
+                <div class="my-3"><livewire:investor-fund.fund-overview-graph :ticker="$ticker" /></div>
+                <div><livewire:investor-fund.purchase-continuum-graph :data="$data" /></div>
             </div>
         </div>
 
