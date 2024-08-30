@@ -10,7 +10,7 @@ class KeyExhibits extends Component
 {
     public $company;
     public $ticker;
-    public $selectedTab = "articles-inc-bylaws";
+    public $selectedTab;
     public $checkedCount = 0;
     public $selectChecked = [];
 
@@ -20,7 +20,25 @@ class KeyExhibits extends Component
         'resetExhibitsFilters' => 'resetExhibitsFilters',
     ];
 
-    public function resetExhibitsFilters()
+    private $tabs = [
+        'articles-inc-bylaws' => 'Articles of Inc. and Bylaws',
+        'credit-agreement' => 'Credit Agreement',
+        'indentures' => 'Indentures',
+        'material-contracts' => 'Material Contracts',
+        'plans-reorganization' => 'Plans of Reorganization',
+        'underwriting-agreements' => 'Underwriting Agreements'
+    ];
+
+    public function mount($tab)
+    {
+        $this->selectedTab = $tab;
+
+        if (!in_array($this->selectedTab, array_keys($this->tabs))) {
+            $this->selectedTab = 'articles-inc-bylaws';
+        }
+    }
+
+    public function updatedSelectedTab()
     {
         $this->checkedCount = 0;
         $this->selectChecked = [];
@@ -47,6 +65,8 @@ class KeyExhibits extends Component
 
     public function render()
     {
-        return view('livewire.filings-summary.key-exhibits');
+        return view('livewire.filings-summary.key-exhibits', [
+            'tabs' => $this->tabs,
+        ]);
     }
 }

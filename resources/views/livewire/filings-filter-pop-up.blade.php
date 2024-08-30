@@ -110,7 +110,7 @@
                     <div class="flex justify-start items-center overflow-auto-x my-4">
                         <div class="flex justify-start items-center rounded border border-[#E8EBF2] overflow-visible">
                             <template x-for="form in formTypes" :key="form">
-                                <div :class="`${selectedTab === form ? 'border-[#52D3A2] bg-green-100 border-2 -m-px' : 'opacity-50'}`" class="tracking-widest px-6 sm:px-9 cursor-pointer py-[0.15rem] rounded text-sm text-[#01090F] font-[500]" @click.prevent="handleFormTypeTabs(form)" x-text="form"></div>
+                                <div :class="`${selectedTab === form ? 'border-[#52D3A2] bg-green-100 border-2 -m-px' : 'opacity-50'}`" class="tracking-widest px-6 sm:px-9 cursor-pointer py-[0.15rem] rounded text-sm text-[#01090F] font-[500] whitespace-nowrap" @click.prevent="handleFormTypeTabs(form)" x-text="form"></div>
                             </template>
                         </div>
                     </div>

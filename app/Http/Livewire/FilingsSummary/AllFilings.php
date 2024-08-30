@@ -2,9 +2,9 @@
 
 namespace App\Http\Livewire\FilingsSummary;
 
+use Livewire\Component;
 use App\Http\Livewire\AllFilings\CommonLayout;
 use App\Http\Livewire\AllFilings\FilingsTable;
-use Livewire\Component;
 
 class AllFilings extends Component
 {
@@ -17,10 +17,28 @@ class AllFilings extends Component
     protected $listeners = [
         'handleAllFilingsTabs' => 'handleTabs',
         'emitCountInAllfilings' => 'emitCountInAllfilings',
-        'resetAllFilingsFilters' => 'resetAllFilingsFilters',
     ];
 
-    public function resetAllFilingsFilters()
+    private $tabs = [
+        'all-documents' => 'All Documents',
+        'financials' => 'Financials',
+        'news' => 'News',
+        'registrations-and-prospectuses' => 'Registrations and Prospectuses',
+        'proxy-materials' => 'Proxy Materials',
+        'ownership' => 'Ownership',
+        'other' => 'Other'
+    ];
+
+    public function mount($tab)
+    {
+        $this->selectedTab = $tab;
+
+        if (!in_array($this->selectedTab, array_keys($this->tabs))) {
+            $this->selectedTab = 'financials';
+        }
+    }
+
+    public function updatedSelectedTab()
     {
         $this->checkedCount = 0;
         $this->selectChecked = [];
@@ -46,22 +64,10 @@ class AllFilings extends Component
         $this->emit('passTabNameInParent', $this->selectedTab);
     }
 
-    public function updateSelectedTab($tabName)
-    {
-        $this->selectedTab = $tabName;
-    }
-
-    public function mount() {
-        $this->selectedTab = 'financials';
-    }
-
-    public function handleFilingBrowserType($val)
-    {
-        $this->emit('handleFilingBrowserType', true);
-    }
-
     public function render()
     {
-        return view('livewire.filings-summary.all-filings', ['selectedTab'=>$this->selectedTab]);
+        return view('livewire.filings-summary.all-filings', [
+            'tabs' => $this->tabs,
+        ]);
     }
 }
