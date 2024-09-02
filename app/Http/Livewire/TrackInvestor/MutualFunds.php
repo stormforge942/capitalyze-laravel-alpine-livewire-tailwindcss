@@ -9,6 +9,7 @@ use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Auth;
 use App\Models\TrackInvestorFavorite;
 use Illuminate\Support\Facades\Cache;
+use App\Services\TrackInvestorService;
 
 class MutualFunds extends Component
 {
@@ -55,7 +56,7 @@ class MutualFunds extends Component
         $cacheKey = $filters['areApplied'] ? null : 'mutual_funds_' . md5($this->search . '_perPage_' . $this->perPage);
 
         $funds = $cacheKey
-            ? Cache::remember($cacheKey, 3600, fn () => $this->getFunds($filters))
+            ? Cache::remember($cacheKey, 3600, fn() => $this->getFunds($filters))
             : $this->getFunds($filters);
 
         $favorites = TrackInvestorFavorite::where('user_id', Auth::id())
@@ -77,46 +78,14 @@ class MutualFunds extends Component
 
         return view('livewire.track-investor.mutual-funds', [
             'funds' => $funds,
+            'filters' => $filters,
         ]);
     }
 
     private function getFunds($filters)
     {
-        $q = DB::connection('pgsql-xbrl')
-            ->table('mutual_fund_holdings_summary')
-            ->select('registrant_name', 'fund_symbol', 'cik', 'series_id', 'class_id', 'class_name', 'total_value', 'portfolio_size', 'change_in_total_value', 'date');
-
-        if ($filters['view'] === 'most-recent') {
-            $quarters = array_keys($this->views);
-
-            $q->whereIn('date', [$quarters[2] ?? 'wrong-date', $quarters[3] ?? 'wrong-date'])
-                ->where('is_latest', true);
-        } else if ($filters['view'] == 'all') {
-            $q->where('is_latest', true);
-        } else {
-            $q->where('date', $filters['view']);
-        }
-
-        $q = $q->where('is_latest', true)
-            ->when(
-                $filters['search'],
-                fn ($query) => $query->where(
-                    fn ($q) => $q->where(DB::raw('registrant_name'), 'ilike', "%{$filters['search']}%")
-                        ->orWhere(DB::raw('fund_symbol'), 'ilike', "%{$filters['search']}%")
-                )
-            )
-            ->when(
-                $filters['marketValue'],
-                fn ($q) => $q->whereBetween('total_value', $filters['marketValue'])
-            )
-            ->when(
-                $filters['turnover'],
-                fn ($q) => $q->whereBetween('change_in_total_value', $filters['turnover'])
-            )
-            ->when(
-                $filters['holdings'],
-                fn ($q) => $q->whereBetween('portfolio_size', $filters['holdings'])
-            )
+        return app(TrackInvestorService::class)
+            ->mutualFundsQuery($filters, $this->views)
             ->orderBy('total_value', 'desc')
             ->paginate($this->perPage);
 

@@ -11,43 +11,48 @@
         </div>
 
         <div :class="loading ? 'invisible' : ''" x-cloak>
-            @if (!count($funds ?? []))
-                <div class="text-dark-light2">
-                    No funds found @if ($search)
-                        for search "{{ $search }}"
-                    @endif
-                </div>
+            @if ($listStyle === 'list')
+                <livewire:track-investor.listing-table type="funds" :filters="$filters" :views="$views" />
             @else
-                <div class="grid gap-4 grid-cols-1 md:grid-cols-2 lg:grid-cols-[repeat(auto-fill,minmax(17.19rem,1fr))]">
-                    @foreach ($funds as $fund)
-                        <livewire:track-investor.fund-card :fund="$fund" :wire:key="Str::random(5)" />
-                    @endforeach
-                </div>
-
-                @if ($funds->hasMorePages())
-                    <div x-data="{
-                        loading: false,
-                        observe() {
-                            if (this.loading) return;
-                    
-                            let observer = new IntersectionObserver((entries) => {
-                                entries.forEach(entry => {
-                                    if (entry.isIntersecting) {
-                                        $wire.call('loadMore').finally(() => {
-                                            this.loading = false;
-                                        });
-                                    }
-                                })
-                            }, {
-                                root: null
-                            })
-                            observer.observe(this.$el)
-                        },
-                    }" x-init="observe" wire:key="{{ $perPage }}"></div>
-
-                    <div class="place-items-center" wire:loading.grid wire:target="loadMore">
-                        <span class="mx-auto simple-loader !text-green-dark"></span>
+                @if (!count($funds ?? []))
+                    <div class="text-dark-light2 text-center">
+                        No funds found @if ($search)
+                            for search "{{ $search }}"
+                        @endif
                     </div>
+                @else
+                    <div
+                        class="grid gap-4 grid-cols-1 md:grid-cols-2 lg:grid-cols-[repeat(auto-fill,minmax(17.19rem,1fr))]">
+                        @foreach ($funds as $fund)
+                            <livewire:track-investor.fund-card :fund="$fund" :wire:key="Str::random(5)" />
+                        @endforeach
+                    </div>
+
+                    @if ($funds->hasMorePages())
+                        <div x-data="{
+                            loading: false,
+                            observe() {
+                                if (this.loading) return;
+                        
+                                let observer = new IntersectionObserver((entries) => {
+                                    entries.forEach(entry => {
+                                        if (entry.isIntersecting) {
+                                            $wire.call('loadMore').finally(() => {
+                                                this.loading = false;
+                                            });
+                                        }
+                                    })
+                                }, {
+                                    root: null
+                                })
+                                observer.observe(this.$el)
+                            },
+                        }" x-init="observe" wire:key="{{ $perPage }}"></div>
+
+                        <div class="place-items-center" wire:loading.grid wire:target="loadMore">
+                            <span class="mx-auto simple-loader !text-green-dark"></span>
+                        </div>
+                    @endif
                 @endif
             @endif
         </div>

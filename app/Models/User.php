@@ -105,7 +105,7 @@ class User extends Authenticatable implements MustVerifyEmail
 
     public function firstName(): Attribute
     {
-        return Attribute::make(get: fn () => explode(' ', $this->name)[0]);
+        return Attribute::make(get: fn() => explode(' ', $this->name)[0]);
     }
 
     public function team(): HasOne
@@ -121,13 +121,14 @@ class User extends Authenticatable implements MustVerifyEmail
     public function resetTwoFactorCode()
     {
         $this->timestamps = false;
-        
+
         $this->two_factor_code = null;
         $this->two_factor_expires_at = null;
         $this->save();
     }
 
-    public function isTwoFactorEnabled() {
+    public function isTwoFactorEnabled()
+    {
         return $this->two_factor_email != null;
     }
 
@@ -142,5 +143,19 @@ class User extends Authenticatable implements MustVerifyEmail
                 Storage::disk($this->profilePhotoDisk())->delete($previous);
             }
         });
+    }
+
+    public function getSetting(string $key, mixed $default = null)
+    {
+        return ($this->settings ?? [])[$key] ?? $default;
+    }
+
+    public function updateSetting(string $key, mixed $value)
+    {
+        $settings = $this->settings ?? [];
+
+        $settings[$key] = $value;
+
+        $this->update(['settings' => $settings]);
     }
 }

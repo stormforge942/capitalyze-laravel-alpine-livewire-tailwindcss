@@ -8,6 +8,7 @@ use Illuminate\Support\Carbon;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Auth;
 use App\Models\TrackInvestorFavorite;
+use App\Services\TrackInvestorService;
 use Illuminate\Support\Facades\Cache;
 
 class Discover extends Component
@@ -52,11 +53,24 @@ class Discover extends Component
     {
         $filters = $this->formattedFilters();
 
+        $this->loading = false;
+
+        return view('livewire.track-investor.discover', [
+            'funds' => $this->listStyle === 'grid' ? $this->getFunds($filters) : null,
+            'filters' => $filters,
+        ]);
+    }
+
+    private function getFunds(array $filters)
+    {
         $cacheKey = $filters['areApplied'] ? null : 'funds_' . md5($this->search . '_perPage_' . $this->perPage);
 
-        $funds = $cacheKey
-            ? Cache::remember($cacheKey, 3600, fn () => $this->getFunds($filters))
-            : $this->getFunds($filters);
+        $cb = fn() => app(TrackInvestorService::class)
+            ->fundsQuery($filters, $this->views)
+            ->orderBy('total_value', 'desc')
+            ->paginate($this->perPage);
+
+        $funds = $cacheKey ? Cache::remember($cacheKey, 3600, $cb) : $cb();
 
         $favorites = TrackInvestorFavorite::where('user_id', Auth::id())
             ->where('type', TrackInvestorFavorite::TYPE_FUND)
@@ -71,49 +85,6 @@ class Discover extends Component
 
         $funds->setCollection(collect($transformedFunds));
 
-        $this->loading = false;
-
-        return view('livewire.track-investor.discover', [
-            'funds' => $funds,
-        ]);
-    }
-
-    private function getFunds(array $filters)
-    {
-        $q = DB::connection('pgsql-xbrl')
-            ->table('filings_summary')
-            ->select('investor_name', 'cik', 'total_value', 'portfolio_size', 'change_in_total_value');
-
-        if ($filters['view'] === 'most-recent') {
-            $quarters = array_keys($this->views);
-
-            $q->whereIn('date', [$quarters[2] ?? 'wrong-date', $quarters[3] ?? 'wrong-date'])
-                ->where('is_latest', true);
-        } else if ($filters['view'] == 'all') {
-            $q->where('is_latest', true);
-        } else {
-            $q->where('date', $filters['view']);
-        }
-
-        $q = $q->when(
-            $filters['search'],
-            fn ($query) => $query->where(
-                fn ($q) => $q->where(DB::raw('investor_name'), 'ilike', "%{$filters['search']}%")
-                    ->orWhere(DB::raw('cik'), $filters['search'])
-            )
-        )
-            ->when($filters['marketValue'], function ($query) use ($filters) {
-                return $query->whereBetween('total_value', $filters['marketValue']);
-            })
-            ->when($filters['turnover'], function ($query) use ($filters) {
-                return $query->whereBetween('change_in_total_value', $filters['turnover']);
-            })
-            ->when($filters['holdings'], function ($query) use ($filters) {
-                return $query->whereBetween('portfolio_size', $filters['holdings']);
-            })
-            ->orderBy('total_value', 'desc')
-            ->paginate($this->perPage);
-
-        return $q;
+        return $funds;
     }
 }

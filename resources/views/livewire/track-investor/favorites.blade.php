@@ -3,7 +3,7 @@
         <div class="mb-6">
             <h2 class="mb-2.5 text-md font-semibold">Summary of selected Favorites</h2>
 
-            <livewire:track-investor.favorites-summary :funds="$funds->pluck('investor_name', 'cik')->toArray()" :mutual-funds="$mutualFunds->pluck('registrant_name', 'fund_symbol')->toArray()" :wire:key="$summaryKey"/>
+            <livewire:track-investor.favorites-summary :funds="$funds->pluck('investor_name', 'cik')->toArray()" :mutual-funds="$mutualFunds->pluck('registrant_name', 'fund_symbol')->toArray()" :wire:key="$summaryKey" />
         </div>
     @endif
 
@@ -16,8 +16,13 @@
 
         <div class="mt-6 relative">
             <div :class="loading ? 'invisible' : ''" x-cloak>
-                @if (count($funds ?? []) || count($mutualFunds ?? []))
+                @if ($listStyle === 'list')
+                    <livewire:track-investor.listing-table type="funds" :filters="$filters" :pagination="false" :source="$funds" />
 
+                    <hr class="my-4 md:my-6">
+
+                    <livewire:track-investor.listing-table type="mutual-funds" :filters="$filters" :pagination="false" :source="$mutualFunds" />
+                @elseif (count($funds ?? []) || count($mutualFunds ?? []))
                     <div
                         class="grid gap-4 grid-cols-1 md:grid-cols-2 lg:grid-cols-[repeat(auto-fill,minmax(17.19rem,1fr))]">
                         @foreach ($funds as $idx => $fund)

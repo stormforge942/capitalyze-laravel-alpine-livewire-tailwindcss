@@ -4,9 +4,9 @@ namespace App\Http\Livewire\TrackInvestor;
 
 use Livewire\Component;
 use App\Http\Livewire\AsTab;
-use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Auth;
 use App\Models\TrackInvestorFavorite;
+use App\Services\TrackInvestorService;
 
 class Favorites extends Component
 {
@@ -50,6 +50,7 @@ class Favorites extends Component
             'funds' => $funds,
             'mutualFunds' => $mutualFunds,
             'summaryKey' => $funds->pluck('cik')->join('_') . '||' . $mutualFunds->pluck('fund_symbol')->join('_'),
+            'filters' => $filters,
         ]);
     }
 
@@ -57,27 +58,11 @@ class Favorites extends Component
     {
         if (empty($funds)) return collect();
 
-        return DB::connection('pgsql-xbrl')
-            ->table('filings_summary')
-            ->select('investor_name', 'cik', 'total_value', 'portfolio_size', 'change_in_total_value')
-            ->where('is_latest', true)
-            ->whereIn('cik', $funds)
-            ->when(
-                $filters['search'],
-                fn($query) => $query->where(
-                    fn($q) => $q->where(DB::raw('investor_name'), 'ilike', "%{$filters['search']}%")
-                        ->orWhere(DB::raw('cik'), $filters['search'])
-                )
+        return app(TrackInvestorService::class)
+            ->fundsQuery(
+                filters: $filters,
+                only: $funds
             )
-            ->when($filters['marketValue'], function ($query) use ($filters) {
-                return $query->whereBetween('total_value', $filters['marketValue']);
-            })
-            ->when($filters['turnover'], function ($query) use ($filters) {
-                return $query->whereBetween('change_in_total_value', $filters['turnover']);
-            })
-            ->when($filters['holdings'], function ($query) use ($filters) {
-                return $query->whereBetween('portfolio_size', $filters['holdings']);
-            })
             ->get()
             // sort the collection by the order of the $funds array
             ->sortBy(fn($item) => array_search($item->cik, $funds))
@@ -93,29 +78,10 @@ class Favorites extends Component
     {
         if (empty($funds)) return collect();
 
-        return DB::connection('pgsql-xbrl')
-            ->table('mutual_fund_holdings_summary')
-            ->select('registrant_name', 'cik', 'fund_symbol', 'series_id', 'class_id', 'class_name', 'total_value', 'portfolio_size', 'change_in_total_value', 'date')
-            ->where('is_latest', true)
-            ->whereIn('fund_symbol', $funds)
-            ->when(
-                $filters['search'],
-                fn($query) => $query->where(
-                    fn($q) => $q->where(DB::raw('registrant_name'), 'ilike', "%{$filters['search']}%")
-                        ->orWhere(DB::raw('fund_symbol'), 'ilike', "%{$filters['search']}%")
-                )
-            )
-            ->when(
-                $filters['marketValue'],
-                fn($q) => $q->whereBetween('total_value', $filters['marketValue'])
-            )
-            ->when(
-                $filters['turnover'],
-                fn($q) => $q->whereBetween('change_in_total_value', $filters['turnover'])
-            )
-            ->when(
-                $filters['holdings'],
-                fn($q) => $q->whereBetween('portfolio_size', $filters['holdings'])
+        return app(TrackInvestorService::class)
+            ->mutualFundsQuery(
+                filters: $filters,
+                only: $funds
             )
             ->get()
             ->sortBy(fn($item) => array_search($item->fund_symbol, $funds))

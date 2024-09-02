@@ -2,12 +2,22 @@
     loading: true,
     activeTab: $wire.entangle('activeTab', true),
     init() {
+        window.favSummaryCharts = window.favSummaryCharts || {};
+
         $wire.getData()
             .finally(() => {
                 this.loading = false;
             });
     },
     changeTab(tab) {
+        if (tab === this.activeTab) return;
+
+        {{-- destroy all the charts --}}
+        Object.keys(window.favSummaryCharts).forEach(key => {
+            window.favSummaryCharts[key].destroy();
+            delete window.favSummaryCharts[key];
+        });
+
         this.loading = true;
         this.activeTab = tab;
         $wire.getData()
@@ -80,9 +90,11 @@
                     renderChart() {
                         const data = this.chart.data.filter(item => item.periods.includes(this.period))
                 
-                        if (window.chart_{{ \Str::camel($item['title']) }}) {
-                            window.chart_{{ \Str::camel($item['title']) }}.data.datasets[0].data = JSON.parse(JSON.stringify(data));
-                            window.chart_{{ \Str::camel($item['title']) }}.update();
+                        let chart = window.favSummaryCharts['{{ $item['title'] }}']
+                
+                        if (chart) {
+                            chart.data.datasets[0].data = JSON.parse(JSON.stringify(data));
+                            chart.update();
                             return;
                         }
                 
@@ -95,7 +107,7 @@
                         gradientBg.addColorStop(0, 'rgba(19,176,91, 0.18)')
                         gradientBg.addColorStop(1, 'rgba(19,176,91, 0)')
                 
-                        window.chart_{{ \Str::camel($item['title']) }} = new Chart(ctx, {
+                        window.favSummaryCharts['{{ $item['title'] }}'] = new Chart(ctx, {
                             type: 'line',
                             data: {
                                 datasets: [{

@@ -107,5 +107,3 @@
 
     <livewire:ownership.mutual-funds-table :ticker="$ticker" :quarter="$this->filters['quarter']" />
 </div>
-{{-- extra div just to fix some bug --}}
-</div>

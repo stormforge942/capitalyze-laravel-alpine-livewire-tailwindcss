@@ -5,4 +5,3 @@
         <livewire:ownership.insider-ownership-table :ticker="$ticker">
     </div>
 </div>
-</div>

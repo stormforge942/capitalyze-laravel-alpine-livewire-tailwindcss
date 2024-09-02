@@ -5,4 +5,3 @@
         <livewire:ownership.beneficial-ownership-table :ticker="$ticker">
     </div>
 </div>
-</div>

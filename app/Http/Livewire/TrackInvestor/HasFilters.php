@@ -2,6 +2,8 @@
 
 namespace App\Http\Livewire\TrackInvestor;
 
+use Illuminate\Support\Facades\Auth;
+
 trait HasFilters
 {
     public $perPage = 20;
@@ -11,10 +13,27 @@ trait HasFilters
     public $holdings = null;
     public $view = 'most-recent';
     public $loading = false;
+    public $listStyle = 'grid';
+
+    public function bootHasFilters()
+    {
+        $this->listStyle = Auth::user()->getSetting('track_investor_list_style:' . get_class($this), 'grid');
+    }
 
     public function loadMore()
     {
         $this->perPage += 20;
+    }
+
+    public function filters()
+    {
+        return [
+            'search' => $this->search,
+            'marketValue' => $this->marketValue,
+            'turnover' => $this->turnover,
+            'holdings' => $this->holdings,
+            'view' => $this->view,
+        ];
     }
 
     public function updated($prop)
@@ -22,6 +41,15 @@ trait HasFilters
         if (in_array($prop, ['search', 'marketValue', 'turnover', 'holdings', 'view'])) {
             $this->reset('perPage');
         }
+
+        if ($prop === 'listStyle') {
+            Auth::user()->updateSetting('track_investor_list_style:' . get_class($this), $this->listStyle);
+        }
+    }
+
+    public function toggleListStyle()
+    {
+        $this->listStyle = $this->listStyle === 'grid' ? 'list' : 'grid';
     }
 
     private function formattedFilters()
@@ -42,7 +70,7 @@ trait HasFilters
             'view' => $this->view ?: 'most-recent',
         ];
 
-        $filters['areApplied'] = collect($filters)->some(fn ($val) => $val !== null);
+        $filters['areApplied'] = collect($filters)->some(fn($val) => $val !== null);
 
         return $filters;
     }

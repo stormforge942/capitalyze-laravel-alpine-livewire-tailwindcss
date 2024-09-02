@@ -19,5 +19,3 @@
 
     <livewire:ownership.shareholders-table :ticker="$ticker" :quarter="$quarter" :search="$search" />
 </div>
-{{-- extra div just to fix some bug --}}
-</div>

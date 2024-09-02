@@ -5,4 +5,3 @@
         <livewire:ownership.proxy-statement-table :ticker="$ticker">
     </div>
 </div>
-</div>
