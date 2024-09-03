@@ -2,6 +2,9 @@
 
 namespace App\Http\Livewire\InvestorFund;
 
+use Illuminate\Support\Carbon;
+use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Cache;
 use WireElements\Pro\Components\Modal\Modal;
 
 class CompanyFundContent extends Modal
@@ -14,12 +17,15 @@ class CompanyFundContent extends Modal
     public $reduced;
     public $increased;
     public $tabs;
+    public $price;
 
     public function mount($name, $data)
     {
         $this->company_name = $data['company_name'];
         $this->data = $data;
         $this->ticker = $data['ticker'];
+
+        $this->price = $this->getEodPrice();
 
         $data = collect($data['funds']);
         $this->newbuys = $data->filter(function ($fund) {
@@ -57,6 +63,21 @@ class CompanyFundContent extends Modal
         }
 
         $this->tabs = $tabs;
+    }
+
+    private function getEodPrice() {
+        $cacheKey = 'eod_price-' . $this->ticker;
+
+        $price = Cache::remember($cacheKey, Carbon::now()->addMinutes(5), function () {
+            return DB::connection('pgsql-xbrl')
+                ->table('eod_prices')
+                ->select('close')
+                ->where('symbol', strtolower($this->ticker))
+                ->orderBy('date', 'desc')
+                ->value('close') ?? 0;
+        });
+
+        return $price;
     }
 
     public function render()

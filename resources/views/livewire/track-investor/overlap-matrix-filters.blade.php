@@ -117,7 +117,7 @@
                 <span class="mx-auto simple-loader text-blue"></span>
             </div>
             <div class="pl-8 pr-5 py-2 overflow-y-auto h-[200px]" x-ref="investorList">
-                <template x-for="invt in investors" :key="generateID(invt)">
+                <template x-for="invt in investors">
                     <div class="py-4 flex flex-row justify-between items-center hover:bg-gray-200 cursor-pointer"
                         @click="handleClickInvestor(invt)">
                         <div class="flex flex-row items-center">

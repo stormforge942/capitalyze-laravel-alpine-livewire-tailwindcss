@@ -36,34 +36,34 @@
         </div>
 
         <div x-show="activeTab == 'Summary'">
-            <div>
-                <div class="my-3"><livewire:investor-fund.fund-overview-graph :ticker="$ticker" /></div>
-                <div><livewire:investor-fund.purchase-continuum-graph :data="$data" /></div>
+            <div class="py-3">
+                <div class="mb-3"><livewire:investor-fund.fund-overview-graph :ticker="$ticker" /></div>
+                <div><livewire:investor-fund.purchase-continuum-graph :data="$data" :price="$price" /></div>
             </div>
         </div>
 
-        <div x-show="activeTab == 'New Buys'">
-            <div>
+        <template x-if="activeTab == 'New Buys'">
+            <div class="pt-3">
                 @foreach ($newbuys as $fund)
-                    <livewire:investor-fund.fund-item :fund="$fund" />
+                    <div class="mb-3"><livewire:investor-fund.fund-item :fund="$fund" /></div>
                 @endforeach
             </div>
-        </div>
+        </template>
 
-        <div x-show="activeTab == 'Increased'">
-            <div>
+        <template x-if="activeTab == 'Increased'">
+            <div class="pt-3">
                 @foreach ($increased as $fund)
-                    <livewire:investor-fund.fund-item :fund="$fund" />
+                    <div class="mb-3"><livewire:investor-fund.fund-item :fund="$fund" /></div>
                 @endforeach
             </div>
-        </div>
+        </template>
 
-        <div x-show="activeTab == 'Reduced'">
-            <div>
+        <template x-if="activeTab == 'Reduced'">
+            <div class="pt-3">
                 @foreach ($reduced as $fund)
-                    <livewire:investor-fund.fund-item :fund="$fund" />
+                    <div class="mb-3"><livewire:investor-fund.fund-item :fund="$fund" /></div>
                 @endforeach
             </div>
-        </div>
+        </template>
     </div>
 </div>

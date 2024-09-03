@@ -11,7 +11,7 @@ use Livewire\Component;
 class FundOverviewGraph extends Component
 {
     public $ticker = "";
-    public $currentChartPeriod = "6m";
+    public $currentChartPeriod = "3m";
     public $chartData = [];
     public $loading = false;
 
@@ -39,7 +39,6 @@ class FundOverviewGraph extends Component
 
         $this->name = $companyName;
         $this->ticker = $ticker;
-        $this->load();
     }
 
     public function updated($propertyName)
@@ -126,17 +125,17 @@ class FundOverviewGraph extends Component
         $this->resetChart();
     }
 
-    public function countYPaddingValue($max)
+    private function countYPaddingValue($max)
     {
         return ceil($max / 50) * 50;
     }
 
-    public function resetChart()
+    private function resetChart()
     {
         $this->emit('investorChartReset', $this->chartData);
     }
 
-    public function getPeriod()
+    private function getPeriod()
     {
         $toDate = Carbon::now();
         $fromDate = Carbon::now()->subMonths(3);
@@ -169,7 +168,7 @@ class FundOverviewGraph extends Component
         return [$fromDate, $toDate];
     }
 
-    public function calculateDateDifference($period)
+    private function calculateDateDifference($period)
     {
         $fromDateTime = Carbon::parse($period[0]);
         $toDateTime = Carbon::parse($period[1]);

@@ -10,14 +10,12 @@
         this.$watch('chartData', value => {
             this.renderChart();
         });
-
-        this.renderChart();
     },
     renderChart() {
         this.chart?.destroy();
         this.chart = window.investorFundPage.renderOverviewChart(this.$refs.canvas, this.chartData);
     },
-}" id="livewireComponent">
+}" id="livewireComponent" wire:init="load">
     <div class="bg-white px-4 py-6 md:px-6 rounded-lg relative" x-transition>
         <div class="flex items-center gap-x-5">
             <div>

@@ -1,6 +1,7 @@
 <div x-data="{
     chartData: @js($chartData),
     data: @js($data),
+    price: @js($price),
     width: 1120,
     init() {
         this.setupResizeObserver();
@@ -25,7 +26,7 @@
         for (const key in this.chartData) {
             tempData.push({ name: key, price: this.chartData[key] });
         }
-        tempData.push({ name: this.data.company_name, price: this.data.price, current: true });
+        tempData.push({ name: this.data.company_name, price: this.price, current: true });
         tempData.sort((a, b) => a.price - b.price);
 
         // on tempData, when price is same, make them as one and the name should be sum of them
@@ -60,11 +61,15 @@
 
         window.investorFundPage.renderPurchaseChart(this.$refs.canvas, data1);
     },
-}">
+}" wire:init="load">
     <div class="bg-white px-4 py-6 md:px-6 rounded-lg relative" x-transition>
         <div class="font-extrabold">Purchase Continuum</div>
 
-        <div class="mt-3 h-[150px]">
+        <div class="mt-3 place-items-center h-[150px]" wire:loading.grid>
+            <span class="mx-auto simple-loader text-blue"></span>
+        </div>
+
+        <div class="mt-3 h-[150px]" wire:loading.remove>
             <canvas :width="width" :height="150" class="w-full h-full" x-ref="canvas"></canvas>
         </div>
     </div>
