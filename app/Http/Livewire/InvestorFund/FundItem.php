@@ -37,6 +37,30 @@ class FundItem extends Component
                 "estimated_average_price",
             ]);
 
+        $minDate = $data->min('report_calendar_or_quarter');
+        $maxDate = $data->max('report_calendar_or_quarter');
+        $period = [$minDate, $maxDate];
+
+        $eod_prices = DB::connection('pgsql-xbrl')
+            ->table('eod_prices')
+            ->select('date', 'close')
+            ->where('symbol', strtolower($this->fund['ticker']))
+            ->whereBetween('date', $period)
+            ->get()
+            ->keyBy('date')
+            ->groupBy(function ($item) {
+                $date = Carbon::parse($item->date);
+                return $date->endOfQuarter()->format('Y-m-d');
+            })
+            ->map(function ($group) {
+                return $group->last()->close;
+            });
+
+        $eod_prices = $data->pluck('report_calendar_or_quarter')
+            ->map(function ($item) use ($eod_prices) {
+                return $eod_prices->get($item) ?? null;
+            });
+
         $this->chartData = [
             'labels' => $data->pluck('report_calendar_or_quarter')
                 ->map(fn($item) => Carbon::parse($item)->format('Y M'))
@@ -59,6 +83,13 @@ class FundItem extends Component
                     'borderRadius' => 4,
                     'maxBarThickness' => 150,
                 ],
+                [
+                    'label' => 'Average Price Paid',
+                    'type' => 'line',
+                    'fill' => false,
+                    'data' => $eod_prices->values()->toArray(),
+                    'borderColor' => '#0000FF',
+                ]
             ],
         ];
 
@@ -85,6 +116,30 @@ class FundItem extends Component
                 "estimated_average_price",
             ]);
 
+        $minDate = $data->min('period_of_report');
+        $maxDate = $data->max('period_of_report');
+        $period = [$minDate, $maxDate];
+
+        $eod_prices = DB::connection('pgsql-xbrl')
+            ->table('eod_prices')
+            ->select('date', 'close')
+            ->where('symbol', strtolower($this->fund['ticker']))
+            ->whereBetween('date', $period)
+            ->get()
+            ->keyBy('date')
+            ->groupBy(function ($item) {
+                $date = Carbon::parse($item->date);
+                return $date->endOfQuarter()->format('Y-m-d');
+            })
+            ->map(function ($group) {
+                return $group->last()->close;
+            });
+
+        $eod_prices = $data->pluck('period_of_report')
+            ->map(function ($item) use ($eod_prices) {
+                return $eod_prices->get($item) ?? null;
+            });
+
         $this->chartData = [
             'labels' => $data->pluck('period_of_report')->toArray(),
             'datasets' => [
@@ -104,6 +159,13 @@ class FundItem extends Component
                     'hoverBackgroundColor' => '#13B05B',
                     'borderColor' => '#52D3A2',
                     'borderRadius' => 4,
+                ],
+                [
+                    'label' => 'Average Price Paid',
+                    'type' => 'line',
+                    'fill' => false,
+                    'data' => $eod_prices->values()->toArray(),
+                    'borderColor' => '#0000FF',
                 ],
             ],
         ];

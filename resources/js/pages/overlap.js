@@ -152,13 +152,15 @@ function truncateText(ctx, text, maxWidth) {
 
 function renderPurchaseChart(canvas, data) {
     const ctx = canvas.getContext("2d");
+    const scale = window.devicePixelRatio || 1;
+    const width = Math.floor(canvas.width / scale);
+    const height = Math.floor(canvas.height / scale);
 
-    const width = canvas.width;
-    const height = canvas.height;
+    ctx.setTransform(scale, 0, 0, scale, 0, 0);
 
     const lineHeight = height / 2;
-    const circleRadius = 25;
-    const rectWidth = 25;
+    const circleRadius = 30;
+    const rectWidth = 30;
 
     ctx.clearRect(0, 0, width, height);
 
@@ -206,7 +208,7 @@ function renderPurchaseChart(canvas, data) {
         ctx.stroke();
 
         ctx.fillStyle = item.current ? "#fff" : "#000";
-        ctx.font = "bold 12px Arial";
+        ctx.font = "bold 14px Arial";
         ctx.textAlign = "center";
         ctx.textBaseline = "middle";
         ctx.fillText('$' + formatNumber(item.price), item.x, lineHeight);
@@ -215,7 +217,7 @@ function renderPurchaseChart(canvas, data) {
         ctx.textBaseline = "top";
         ctx.fillText(truncateText(ctx, item.name, circleRadius * 6), item.x, lineHeight + circleRadius + 10);
 
-        ctx.font = "10px Arial";
+        ctx.font = "12px Arial";
         ctx.fillStyle = item.current ? "#376bfb" : "#000"; // Text color for label
         ctx.fillText(item.current ? "Current Stock Price" : "Average Price Paid", item.x, lineHeight + circleRadius + 27);
     });

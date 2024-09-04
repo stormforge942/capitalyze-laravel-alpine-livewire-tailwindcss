@@ -112,7 +112,7 @@
                                         <label class="cursor-pointer py-1 rounded flex items-center gap-x-3">
                                             <input type="checkbox" :name="name" x-model="invt.bAdded"
                                                 class="custom-checkbox border-dark focus:ring-0">
-                                            <span class="capitalize break-all"
+                                            <span class="capitalize"
                                                 x-text="invt.fund_symbol ? `${invt.name.toLowerCase()} (${invt.fund_symbol})` : invt.name.toLowerCase()"></span>
                                         </label>
 

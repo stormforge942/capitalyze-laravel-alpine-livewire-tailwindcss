@@ -70,7 +70,8 @@
         </div>
 
         <div class="mt-3 h-[150px]" wire:loading.remove>
-            <canvas :width="width" :height="150" class="w-full h-full" x-ref="canvas"></canvas>
+            <canvas :width="Math.floor(width * (window.devicePixelRatio || 1))"
+                :height="Math.floor(150 * (window.devicePixelRatio || 1))" class="w-full h-full" x-ref="canvas"></canvas>
         </div>
     </div>
 </div>
