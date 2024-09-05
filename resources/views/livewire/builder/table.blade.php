@@ -19,7 +19,7 @@
             columns: [],
             init() {
                 this.makeTableRows()
-        
+
                 this.$watch('summaries', () => {
                     window.http('{{ route('table-builder.update', $tab['id']) }}', {
                         method: 'POST',
@@ -29,7 +29,7 @@
                     })
                     this.makeSummaryRows()
                 })
-        
+
                 this.$watch('metrics', () => {
                     window.http('{{ route('table-builder.update', $tab['id']) }}', {
                         method: 'POST',
@@ -37,13 +37,13 @@
                             metrics: this.metrics
                         }
                     })
-        
+
                     this.makeTableRows()
                 }, { deep: true })
-        
+
                 this.$watch('settings', () => {
                     this.makeTableRows();
-        
+
                     window.http('{{ route('table-builder.update', $tab['id']) }}', {
                         method: 'POST',
                         body: {
@@ -51,33 +51,33 @@
                         }
                     })
                 }, { deep: true })
-        
+
                 this.$nextTick(() => this.makeTableArrangeable())
             },
             makeTableRows() {
                 const allMetrics = @js($allMetrics);
                 const data = @js($data);
                 const notes = @js($notes);
-        
+
                 this.tableRows = [];
-        
+
                 if (!$wire.companies.length || !this.metrics.length)
                     return;
-        
+
                 this.columns = [];
                 this.metrics.forEach(item => {
                     if (!allMetrics[item.metric])
                         return;
-        
+
                     const type = {
                         'value': null,
                         'growth': '% Growth YoY',
                         'cagr': 'CAGR'
                     } [item.type];
-        
+
                     if (item.type === 'cagr') {
                         let label = allMetrics[item.metric].title + (type ? ` - ${type}` : '') + `<br>(${item.dates.join(' - ')})`;
-        
+
                         this.columns.push({
                             label,
                             metric: item.metric,
@@ -85,12 +85,12 @@
                             dates: item.dates,
                             applyUnits: false,
                         })
-        
+
                         return;
                     }
-        
+
                     let label = allMetrics[item.metric].title + (type ? ` - ${type}` : '');
-        
+
                     item.dates.forEach(date => {
                         this.columns.push({
                             label: `${label}<br>(${date})`,
@@ -101,43 +101,43 @@
                         })
                     })
                 })
-        
+
                 $wire.companies.forEach(company => {
                     let d = {};
-        
+
                     this.columns.forEach(column => {
                         if (column.type === 'growth') {
                             const lastValue = data[company]?.[column.metric]?.[this.getOldDate(column.date)] || null;
                             const value = data[company]?.[column.metric]?.[column.date] || null;
-        
+
                             if (lastValue === null || value === null) {
                                 d[column.label] = null;
                                 return;
                             }
-        
+
                             d[column.label] = lastValue ? (value / lastValue) - 1 : 0;
                             return;
                         }
-        
+
                         if (column.type === 'cagr') {
                             let range = column.dates;
-        
+
                             if (range[0] > range[1]) {
                                 range.reverse();
                             }
-        
+
                             const sv = data[company]?.[column.metric]?.[range[0]] || null;
                             const ev = data[company]?.[column.metric]?.[range[1]] || null;
-        
+
                             const n = Math.abs(range[0].split(' ')[1] - range[1].split(' ')[1]);
-        
+
                             d[column.label] = sv && ev ? ((ev / sv) ** 1 / n) - 1 : 'N/A'
                             return;
                         }
-        
+
                         d[column.label] = data[company]?.[column.metric]?.[column.date] || 'N/A';
                     })
-        
+
                     this.tableRows.push({
                         ticker: company,
                         name: company,
@@ -150,70 +150,70 @@
                         note: notes?.[company] || null,
                     });
                 })
-        
+
                 const order = this.tableOrder.data_rows || [];
                 this.tableRows.sort((a, b) => {
                     if (!order.includes(a.ticker) || !order.includes(b.ticker))
                         return 0;
-        
+
                     return order.indexOf(a.ticker) - order.indexOf(b.ticker)
                 })
-        
+
                 this.makeSummaryRows()
             },
             makeSummaryRows() {
                 if (!this.tableRows.length)
                     return;
-        
+
                 const summaryHandler = {
                     'Max': (values) => {
                         values = values.filter(value => value !== 'N/A');
-        
+
                         if (!values.length)
                             return '-';
-        
+
                         return Math.max(...values)
                     },
                     'Min': (values) => {
                         values = values.filter(value => value !== 'N/A');
-        
+
                         if (!values.length)
                             return '-';
-        
+
                         return Math.min(...values)
                     },
                     'Sum': (values) => {
                         values = values.filter(value => value !== 'N/A');
-        
+
                         if (!values.length)
                             return '-'
-        
+
                         return values.reduce((a, b) => a + b, 0)
                     },
                     'Median': (values) => {
                         values = values.filter(value => value !== 'N/A');
-        
+
                         if (!values.length)
                             return '-';
-        
+
                         values.sort((a, b) => a - b);
                         const half = Math.floor(values.length / 2);
                         return values.length % 2 ? values[half] : (values[half - 1] + values[half]) / 2;
                     }
                 }
-        
+
                 this.summaryRows = this.summaries.map(summary => {
                     const row = {
                         title: summary.toUpperCase(),
                         columns: this.columns.reduce((obj, col) => {
                             const values = this.tableRows.map(row => row.columns[col.label] || null).filter(v => v !== null);
-        
+
                             obj[col.label] = summaryHandler[summary](values);
-        
+
                             return obj
                         }, {})
                     }
-        
+
                     return row;
                 })
             },
@@ -222,35 +222,35 @@
                     unit: applyUnits ? this.settings.unit : 'None',
                     decimalPlaces: this.settings.decimalPlaces
                 });
-        
+
                 return value < 0 ? '(' + formatted + ')' : formatted;
             },
             tooltipValue(value) {
                 if (isNaN(value))
                     return '';
-        
+
                 return Intl.NumberFormat('en-US').format(value);
             },
             makeTableArrangeable() {
                 const table = this.$el.querySelector('table')
                 let draggingRow = null
-        
+
                 table.addEventListener('dragover', (e) => {
                     e.preventDefault();
-        
+
                     const targetRow = e.target.closest('tr');
-        
+
                     if (!draggingRow || !targetRow.draggable || !targetRow.classList.contains('data-row'))
                         return;
-        
+
                     let children = Array.from(targetRow.parentNode.children);
-        
+
                     if (children.indexOf(targetRow) > children.indexOf(draggingRow))
                         targetRow.after(draggingRow);
                     else
                         targetRow.before(draggingRow);
                 });
-        
+
                 table.querySelectorAll('.data-row').forEach(row => {
                     row.addEventListener('dragstart', (e) => {
                         e.dataTransfer.effectAllowed = 'move';
@@ -258,7 +258,7 @@
                         e.target.classList.add('opacity-70');
                         draggingRow = e.target;
                     });
-        
+
                     row.addEventListener('dragend', (e) => {
                         e.target.classList.remove('opacity-70');
                         e.dataTransfer.clearData();
@@ -269,9 +269,9 @@
             },
             updateRowsOrder() {
                 const order = [...this.$el.querySelectorAll('.data-row')].map(row => row.dataset.key);
-        
+
                 this.tableOrder.data_rows = order;
-        
+
                 http('{{ route('table-builder.update.table-order', $tab['id']) }}', {
                     method: 'POST',
                     body: {
@@ -285,13 +285,13 @@
                     const [q, y] = date.split(' ');
                     const prevQuarter = q === 'Q1' ? 'Q4' : `Q${parseInt(q.slice(1)) - 1}`;
                     const prevYear = q === 'Q1' ? parseInt(y) - 1 : parseInt(y);
-        
+
                     return `${prevQuarter} ${prevYear}`;
                 }
-        
+
                 const [fy, year] = date.split(' ');
                 const prevYear = parseInt(year) - 1;
-        
+
                 return `${fy} ${prevYear}`;
             }
         }" wire:key="{{ \Str::random(5) }}"
@@ -359,10 +359,10 @@
                                     },
                                     saveNote() {
                                         this.openDropdown = false;
-                                
+
                                         const oldNote = row.note;
                                         row.note = this.content;
-                                
+
                                         http(`/table-builder/${$wire.tab.id}/update-note`, {
                                             method: 'POST',
                                             body: {

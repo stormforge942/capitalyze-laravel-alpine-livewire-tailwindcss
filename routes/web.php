@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\ScreenerController;
 use App\Http\Livewire\Lses;
 use App\Http\Livewire\Otcs;
 use App\Http\Livewire\Tsxs;
@@ -72,6 +73,7 @@ Route::group(['middleware' => ['auth', 'two_factor', 'approved', 'verified', Che
     Route::get('/event-filings', EventFilingsController::class)->name('event-filings');
     Route::get('/insider-transactions', InsiderTransactionsController::class)->name('insider-transactions');
     Route::get('/calendar/earnings', EarningsCalendarController::class)->name('earnings-calendar');
+    Route::get('/screener', ScreenerController::class)->name('screener');
 
     Route::get('/calendar/economics', EconomicsCalendar::class)->name('economics-calendar');
     Route::get('/calendar/economics/{release_id}/', EconomicRelease::class)->name('economics-release');
