@@ -9,10 +9,12 @@ class PurchaseContinuumGraph extends Component
     public $chartData;
     public $data;
     public $price;
+    public $companyName;
 
     public function mount($data, $price)
     {
         $this->data = $data;
+        $this->companyName = $data['company_name'];
     }
 
     public function load()

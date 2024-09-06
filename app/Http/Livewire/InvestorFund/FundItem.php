@@ -76,6 +76,14 @@ class FundItem extends Component
                     'pointHoverBackgroundColor' => '#ffff',
                 ],
                 [
+                    'label' => 'Price',
+                    'type' => 'line',
+                    'fill' => false,
+                    'yAxisID' => 'y1',
+                    'data' => $eod_prices->values()->toArray(),
+                    'borderColor' => '#0000FF',
+                ],
+                [
                     'label' => 'Common Stock Equivalent Held',
                     'data' => $data->pluck('ssh_prnamt')->toArray(),
                     'backgroundColor' => '#52D3A2',
@@ -83,13 +91,6 @@ class FundItem extends Component
                     'borderRadius' => 4,
                     'maxBarThickness' => 150,
                 ],
-                [
-                    'label' => 'Average Price Paid',
-                    'type' => 'line',
-                    'fill' => false,
-                    'data' => $eod_prices->values()->toArray(),
-                    'borderColor' => '#0000FF',
-                ]
             ],
         ];
 
@@ -153,19 +154,20 @@ class FundItem extends Component
                     'pointHoverBackgroundColor' => '#ffff',
                 ],
                 [
+                    'label' => 'Price',
+                    'type' => 'line',
+                    'fill' => false,
+                    'data' => $eod_prices->values()->toArray(),
+                    'yAxisID' => 'y1',
+                    'borderColor' => '#0000FF',
+                ],
+                [
                     'label' => 'Shares Held',
                     'data' => $data->pluck('balance')->toArray(),
                     'backgroundColor' => '#52D3A2',
                     'hoverBackgroundColor' => '#13B05B',
                     'borderColor' => '#52D3A2',
                     'borderRadius' => 4,
-                ],
-                [
-                    'label' => 'Average Price Paid',
-                    'type' => 'line',
-                    'fill' => false,
-                    'data' => $eod_prices->values()->toArray(),
-                    'borderColor' => '#0000FF',
                 ],
             ],
         ];

@@ -198,8 +198,7 @@ class OverlapMatrix extends Component
                 $query->joinSub($subquery, 'filtered_tickers', function ($join) {
                     $join->on('combined_data.ticker', '=', 'filtered_tickers.ticker');
                 });
-            })
-            ->where('combined_data.ticker', '!=', '');
+            });
 
         // Retrieve combined data
         $combinedData = $combinedDataQuery->get();
@@ -223,7 +222,7 @@ class OverlapMatrix extends Component
                     'funds' => $uniqueFunds->values(), // Collection of unique funds
                 ];
             })
-            ->filter(fn ($companyGroup) => $companyGroup['count'] > 1)
+            ->filter(fn ($companyGroup, $key) => $key != '' && $companyGroup['count'] > 1)
             ->values()
             ->groupBy('count');
 
