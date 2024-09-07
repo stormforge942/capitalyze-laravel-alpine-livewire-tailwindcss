@@ -44,19 +44,25 @@
 
         // Update the tooltip content
         tooltip.innerHTML = `
-    <p style='font-size: 11px; font-weight: 400; background-color: inherit; color: rgb(70, 78, 73);'>
-        Price
-    </p>
-    <span style='font-size: 13px; font-weight: 700; color: rgb(0, 0, 0);'>
-        $${item.price}
-    </span>
-    <p class='whitespace-nowrap' style='font-size: 11px; font-weight: 400; background-color: inherit; color: rgb(70, 78, 73);'>
-        Investors (${item.name.split('|').length})
-    </p>
-    <span class='whitespace-nowrap' style='font-size: 13px; font-weight: 700; color: rgb(0, 0, 0);'>
-        ${item.name.split('|').join('<br />')}
-    </span>
-`;
+            <p style='font-size: 11px; font-weight: 400; background-color: inherit; color: rgb(70, 78, 73);'>
+                Price
+            </p>
+            <span style='font-size: 13px; font-weight: 700; color: rgb(0, 0, 0);'>
+                $${item.price}
+            </span>
+            <p style='font-size: 11px; font-weight: 400; background-color: inherit; color: rgb(70, 78, 73);'>
+                Date
+            </p>
+            <span style='font-size: 13px; font-weight: 700; color: rgb(0, 0, 0);'>
+                ${item.date}
+            </span>
+            <p class='whitespace-nowrap' style='font-size: 11px; font-weight: 400; background-color: inherit; color: rgb(70, 78, 73);'>
+                Investors (${item.name.split('|').length})
+            </p>
+            <span class='whitespace-nowrap' style='font-size: 13px; font-weight: 700; color: rgb(0, 0, 0);'>
+                ${item.name.split('|').join('<br />')}
+            </span>
+        `;
 
         // Get the canvas and its bounding rectangle
         const canvasRect = this.$refs.canvas.getBoundingClientRect();
@@ -93,15 +99,16 @@
     renderChart(width) {
         const tempData = [];
         for (const key in this.chartData) {
-            tempData.push({ name: key, price: this.chartData[key] });
+            tempData.push({ name: key, price: this.chartData[key].price, date: this.chartData[key].date });
         }
-        tempData.push({ name: this.companyName, price: this.price, current: true });
+        tempData.push({ name: this.companyName, price: this.price.close, current: true, date: this.price.date });
         tempData.sort((a, b) => a.price - b.price);
 
         // on tempData, when price is same, make them as one and the name should be sum of them
         const data = [];
         let prevPrice = null,
             prevName = null,
+            prevDate = null,
             prevCurrent = false;
 
         const radius = 30;
@@ -114,14 +121,15 @@
                 prevCurrent = prevCurrent || (item.current ?? false);
             } else {
                 if (prevName) {
-                    data.push({ name: prevName, price: prevPrice, current: prevCurrent });
+                    data.push({ name: prevName, price: prevPrice, current: prevCurrent, date: prevDate });
                 }
                 prevPrice = item.price;
                 prevName = item.name;
+                prevDate = item.date;
                 prevCurrent = item.current ?? false;
             }
         }
-        data.push({ name: prevName, price: prevPrice, current: prevCurrent });
+        data.push({ name: prevName, price: prevPrice, current: prevCurrent, date: prevDate });
 
         // Normalize the prices to canvas width
         const minPrice = Math.min(...data.map(d => d.price));
@@ -167,7 +175,8 @@
             x: adjustedXPositions[index],
             name: item.name,
             price: item.price,
-            current: item.current
+            current: item.current,
+            date: item.date,
         }));
 
         this.xPositions = data1;

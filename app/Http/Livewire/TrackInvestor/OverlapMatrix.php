@@ -31,20 +31,20 @@ class OverlapMatrix extends Component
 
     public $cacheKey;
 
+    public $views;
+    public $view = 'most-recent';
+
     public function mount()
     {
         $this->investors = collect([]);
         $this->getInvestors();
+        $this->generateViews();
         $this->cacheKey = 'overlap_matrix_' . Auth::user()->id;
     }
 
     public function updated($prop)
     {
-        if (in_array($prop, ['search'])) {
-            $this->page = 1;
-            $this->investors = collect([]);
-            $this->getInvestors();
-        } elseif ($prop === 'category') {
+        if (in_array($prop, ['search', 'category', 'view'])) {
             $this->page = 1;
             $this->investors = collect([]);
             $this->getInvestors();
@@ -56,7 +56,7 @@ class OverlapMatrix extends Component
         $this->canLoadMore = true;
         $offset = ($this->page - 1) * $this->limit;
 
-        $data = Cache::remember('investors_' . $this->category . '_' . $this->search . '_' . $this->page . '_' . Auth::id(), $this->category !== 'favourite' ? 300 : 3, function () use ($offset) {
+        $data = Cache::remember('investors_' . $this->category . '_' . $this->search . '_' . $this->page . '_' . Auth::id() . '_' . $this->view, $this->category !== 'favourite' ? 300 : 3, function () use ($offset) {
             // Initialize favorite identifiers
             $favorites = TrackInvestorFavorite::where('user_id', Auth::id())
                 ->get()
@@ -72,7 +72,12 @@ class OverlapMatrix extends Component
             $fundsQuery = DB::connection('pgsql-xbrl')
                 ->table('filings_summary')
                 ->select('investor_name as name', 'cik', 'portfolio_size', 'date')
-                ->where('is_latest', true)
+                ->when($this->view, function ($query, $view) {
+                    if ($view === 'most-recent' || $this->category == 'favourite') {
+                        return $query->where('is_latest', true);
+                    }
+                    return $query->where('date', $view);
+                })
                 ->when($this->search, function ($query, $search) {
                     return $query->where('investor_name', 'ilike', '%' . $search . '%');
                 })
@@ -81,7 +86,12 @@ class OverlapMatrix extends Component
             $mutualFundsQuery = DB::connection('pgsql-xbrl')
                 ->table('mutual_fund_holdings_summary')
                 ->select('registrant_name as name', 'cik', 'portfolio_size', 'fund_symbol', 'series_id', 'class_id', 'class_name', 'date')
-                ->where('is_latest', true)
+                ->when($this->view, function ($query, $view) {
+                    if ($view === 'most-recent' || $this->category == 'favourite') {
+                        return $query->where('is_latest', true);
+                    }
+                    return $query->where('date', $view);
+                })
                 ->when($this->search, function ($query, $search) {
                     return $query->where('registrant_name', 'ilike', '%' . $search . '%');
                 })
@@ -253,6 +263,7 @@ class OverlapMatrix extends Component
                 'class_name',
                 'previous_weight as previous',
                 'price_per_unit as price',
+                'period_of_report as date',
             );
         }
 
@@ -298,6 +309,7 @@ class OverlapMatrix extends Component
                 DB::raw('NULL AS class_name'),
                 'last_shares as previous',
                 'price_paid as price',
+                'report_calendar_or_quarter as date',
             );
         }
 
@@ -451,6 +463,30 @@ class OverlapMatrix extends Component
         } else {
             $this->overlapMatrix = [];
         }
+    }
+
+    private function generateViews()
+    {
+        $this->views = Cache::remember('periods_overlap_matrix', Carbon::now()->addMinutes(30), function () {
+            $filingsPeriodRange = DB::connection('pgsql-xbrl')
+            ->table('filings_summary')
+            ->select(DB::raw("min(date) as start"), DB::raw("max(date) as end"))
+            ->first();
+
+            $mutualFundsPeriodRange = DB::connection('pgsql-xbrl')
+                ->table('mutual_fund_holdings_summary')
+                ->select(DB::raw("min(date) as start"), DB::raw("max(date) as end"))
+                ->first();
+
+            $start = min(Carbon::parse($filingsPeriodRange->start ?: now()->toDateString()), Carbon::parse($mutualFundsPeriodRange->start ?: now()->toDateString()));
+            $end = max(Carbon::parse($filingsPeriodRange->end ?: now()->toDateString()), Carbon::parse($mutualFundsPeriodRange->end ?: now()->toDateString()));
+
+            $quarters = generate_quarter_options($start, $end);
+            return [ 
+                'most-recent' => 'Most Recent',
+                ...$quarters,
+            ];
+        });
     }
 
     public static function title(): string

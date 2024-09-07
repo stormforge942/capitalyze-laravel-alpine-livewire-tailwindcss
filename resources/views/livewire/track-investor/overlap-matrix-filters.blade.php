@@ -29,6 +29,7 @@
                 mutual_fund: 'N-Port Filers',
                 favourite: 'My Favourites'
             },
+            view: @entangle('view'),
             investors: @entangle('investors').defer,
             canLoadMore: @entangle('canLoadMore').defer,
             init() {
@@ -39,6 +40,11 @@
                 });
                 this.$watch('search', value => {
                     this.loading = true;
+                    this.$nextTick(() => this.$refs.investorList.scrollTop = 0);
+                });
+                this.$watch('view', value => {
+                    this.loading = true;
+                    this.$nextTick(() => this.$refs.investorList.scrollTop = 0);
                 });
             },
             handleShowResult() {
@@ -99,6 +105,10 @@
                 <input type="search" placeholder="Search"
                     class="placeholder:text-gray-medium2 bg-transparent border-none flex-1 focus:outline-none focus:ring-0 h-[30px] search-x-button placeholder:font-medium text-sm w-full"
                     x-model.debounce.500ms="search">
+
+                @if (isset($views))
+                    <x-select placeholder="View" :options="$views" x-model="view"></x-select>
+                @endif
             </div>
 
             <div class="grid grid-cols-12 gap-4 px-6 mt-4 mb-2">

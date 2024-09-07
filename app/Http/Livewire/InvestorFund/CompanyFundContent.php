@@ -68,16 +68,22 @@ class CompanyFundContent extends Modal
     private function getEodPrice() {
         $cacheKey = 'eod_price-' . $this->ticker;
 
-        $price = Cache::remember($cacheKey, Carbon::now()->addMinutes(5), function () {
-            return DB::connection('pgsql-xbrl')
+        // $price = Cache::remember($cacheKey, Carbon::now()->addMinutes(5), function () {
+            $item = DB::connection('pgsql-xbrl')
                 ->table('eod_prices')
-                ->select('close')
+                ->select('date', 'close')
                 ->where('symbol', strtolower($this->ticker))
                 ->orderBy('date', 'desc')
-                ->value('close') ?? 0;
-        });
+                ->first();
 
-        return $price;
+            if (!$item) return [
+                'price' => 0,
+                'date' => Carbon::now(),
+            ];
+            return (array) $item;
+        // });
+
+        // return $price;
     }
 
     public function render()

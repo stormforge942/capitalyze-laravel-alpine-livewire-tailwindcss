@@ -15,6 +15,7 @@ class PurchaseContinuumGraph extends Component
     {
         $this->data = $data;
         $this->companyName = $data['company_name'];
+        $this->price = $price;
     }
 
     public function load()
@@ -29,7 +30,10 @@ class PurchaseContinuumGraph extends Component
             else
                 $name = $fund['name'];
 
-            $priceData[$name] = $fund['price'];
+            $priceData[$name] = [
+                'price' => $fund['price'], 
+                'date' => $fund['date']
+            ];
         });
 
         $this->chartData = $priceData;
