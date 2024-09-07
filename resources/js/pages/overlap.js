@@ -297,7 +297,7 @@ function renderInvestorChart(canvas, data) {
                     align: "center",
                 },
                 y1: {
-                    stacked: true,
+                    stacked: false,
                     display: true,
                     position: "right",
                     type: "linear",

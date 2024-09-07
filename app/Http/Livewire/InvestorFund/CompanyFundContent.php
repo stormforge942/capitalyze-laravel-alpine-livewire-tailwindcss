@@ -71,7 +71,7 @@ class CompanyFundContent extends Modal
         // $price = Cache::remember($cacheKey, Carbon::now()->addMinutes(5), function () {
             $item = DB::connection('pgsql-xbrl')
                 ->table('eod_prices')
-                ->select('date', 'close')
+                ->select('date', 'adj_close as close')
                 ->where('symbol', strtolower($this->ticker))
                 ->orderBy('date', 'desc')
                 ->first();

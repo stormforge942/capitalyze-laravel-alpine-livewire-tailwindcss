@@ -43,7 +43,7 @@ class FundItem extends Component
 
         $eod_prices = DB::connection('pgsql-xbrl')
             ->table('eod_prices')
-            ->select('date', 'close')
+            ->select('date', 'adj_close as close')
             ->where('symbol', strtolower($this->fund['ticker']))
             ->whereBetween('date', $period)
             ->get()
