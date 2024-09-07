@@ -251,7 +251,7 @@ function renderInvestorChart(canvas, data) {
             },
             elements: {
                 line: {
-                    tension: 0,
+                    tension: 0.4,
                 },
             },
             plugins: {
