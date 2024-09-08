@@ -3,18 +3,11 @@
 namespace App\Http\Livewire\Screener;
 
 use App\Models\CompanyProfile;
-use App\Models\CompanyTableComparison;
 use App\Models\ScreenerTab;
 use App\Services\ScreenerTableBuilderService;
 use App\Services\TableBuilderService;
-use Illuminate\Http\Request;
-use Illuminate\Support\Carbon;
 use Illuminate\Support\Facades\Cache;
-use Illuminate\Support\Facades\DB;
-use Illuminate\Support\Facades\Log;
-use Illuminate\Support\Js;
 use Livewire\Component;
-use Livewire\WithPagination;
 
 class Page extends Component
 {
@@ -36,12 +29,14 @@ class Page extends Component
         'marginAnalysis' => 'Margin Analysis'
     ];
 
+    public $options = null;
+    
     public $tableColumns = [];
     public $tableRows = [];
     public $summaryRows = [];
 
     public $activeTab;
-    public $summaryPlacement='top';
+    public $summaryPlacement = 'top';
     public $selectedFinancialCriteria = [];
     public $summaries = [];
     public $financialCriteriaCounters = [];
@@ -61,6 +56,22 @@ class Page extends Component
 
     public function render()
     {
+        if (!$this->options) {
+            $options = ['country', 'exchange', 'sic_group', 'sic_description', 'price_currency'];
+            foreach ($options as $option) {
+                $cacheKey = 'screener_criteria:' . $option;
+                $this->options[$option] = Cache::remember(
+                    $cacheKey,
+                    now()->addHour(),
+                    fn() => CompanyProfile::select($option)
+                        ->distinct()
+                        ->whereNotNull($option)
+                        ->pluck($option)
+                        ->toArray()
+                );
+            }
+        }
+
         return view('livewire.screener.page', [
             'tabs' => $this->tabs,
             'activeTab' => $this->activeTab,
@@ -71,26 +82,6 @@ class Page extends Component
             'summaryRows' => $this->summaryRows,
             'tableColumns' => $this->tableColumns,
         ]);
-    }
-
-    public function getLocationsProperty()
-    {
-        return CompanyProfile::select('country')->whereNotNull('country')->distinct()->get()->pluck('country');
-    }
-
-    public function getStockExchangesProperty()
-    {
-        return CompanyProfile::select('exchange')->whereNotNull('exchange')->distinct()->get()->pluck('exchange');
-    }
-
-    public function getIndustriesProperty()
-    {
-        return CompanyProfile::select('sic_group')->whereNotNull('sic_group')->distinct()->get()->pluck('sic_group');
-    }
-
-    public function getSectorsProperty()
-    {
-        return CompanyProfile::select('sic_description')->whereNotNull('sic_description')->distinct()->get()->pluck('sic_description');
     }
 
     public function getFinancialCriteriaDataProperty()
@@ -131,7 +122,7 @@ class Page extends Component
         }
     }
 
-    public function getScreenerResult($universeCriteria=null, $financialCriteria=null)
+    public function getScreenerResult($universeCriteria = null, $financialCriteria = null)
     {
         $presetType = $this->activeTab;
 
@@ -162,7 +153,7 @@ class Page extends Component
         $this->buildTable($universeCriteria, $financialCriteria);
     }
 
-    public function buildTable($universeCriteria=null, $financialCriteria=null): void
+    public function buildTable($universeCriteria = null, $financialCriteria = null): void
     {
         $screenerTableService = new ScreenerTableBuilderService();
 
@@ -180,20 +171,23 @@ class Page extends Component
         $this->makeSummaryTableRows($this->summaries);
     }
 
-    private function formatFinancialCriteria ($data) {
-            if(!isset($data)) {
-                return null;
-            }
+    private function formatFinancialCriteria($data)
+    {
+        if (!isset($data)) {
+            return null;
+        }
 
-            if(isset($data[0]['value']) && empty($data[0]['value'])) {
-                return null;
-            }
+        if (isset($data[0]['value']) && empty($data[0]['value'])) {
+            return null;
+        }
 
-            if (isset($data[0]['value'])) {
-                return array_map(function ($item) { return $item['value'][0]; }, $data);
-            }
+        if (isset($data[0]['value'])) {
+            return array_map(function ($item) {
+                return $item['value'][0];
+            }, $data);
+        }
 
-            return $data;
+        return $data;
     }
 
     private function makeTableColumns(array $tableRow)
@@ -223,7 +217,7 @@ class Page extends Component
             }
 
             if (isset($tableColumnsLabelMap[$key])) {
-                $tableColumns[] = ['label' => $tableColumnsLabelMap[$key], 'key' => $key] ;
+                $tableColumns[] = ['label' => $tableColumnsLabelMap[$key], 'key' => $key];
                 continue;
             }
 
@@ -289,7 +283,7 @@ class Page extends Component
         ]);
     }
 
-    public function checkFinancialCriteria ($financialCriteria): bool
+    public function checkFinancialCriteria($financialCriteria): bool
     {
         foreach ($financialCriteria as $key => $criterion) {
             if (count($criterion['value']) < 1) {
@@ -308,17 +302,17 @@ class Page extends Component
         ];
 
         $tableRows = $this->tableRows;
-        $tableColumns = array_filter($this->tableColumns, function ($item) use ($excludeColumnsMap)  {
+        $tableColumns = array_filter($this->tableColumns, function ($item) use ($excludeColumnsMap) {
             return !isset($excludeColumnsMap[$item['key']]);
-        }) ;
+        });
         $this->summaries  = $summaries;
 
         if (empty($tableRows)) {
-            return ;
+            return;
         }
 
         $summaryHandler = [
-            'Max' => function($values) {
+            'Max' => function ($values) {
                 $values = array_filter($values, fn($value) => $value !== 'N/A');
 
                 if (empty($values)) {
@@ -327,7 +321,7 @@ class Page extends Component
 
                 return max($values);
             },
-            'Min' => function($values) {
+            'Min' => function ($values) {
                 $values = array_filter($values, fn($value) => $value !== 'N/A');
 
                 if (empty($values)) {
@@ -336,7 +330,7 @@ class Page extends Component
 
                 return min($values);
             },
-            'Sum' => function($values) {
+            'Sum' => function ($values) {
                 $values = array_filter($values, fn($value) => $value !== 'N/A');
 
                 if (empty($values)) {
@@ -345,7 +339,7 @@ class Page extends Component
 
                 return array_sum($values);
             },
-            'Median' => function($values) {
+            'Median' => function ($values) {
                 $values = array_filter($values, fn($value) => $value !== 'N/A');
 
                 if (empty($values)) {
@@ -359,12 +353,12 @@ class Page extends Component
                 if ($count % 2) {
                     return $values[$middleIndex];
                 } else {
-                    return ((integer)$values[$middleIndex - 1] + (integer)$values[$middleIndex]) / 2;
+                    return ((int)$values[$middleIndex - 1] + (int)$values[$middleIndex]) / 2;
                 }
             }
         ];
 
-        $summaryRows = array_map(function($summary) use ($tableRows, $tableColumns, $summaryHandler) {
+        $summaryRows = array_map(function ($summary) use ($tableRows, $tableColumns, $summaryHandler) {
             $row = [
                 'title' => strtoupper($summary),
                 'columns' => []
@@ -395,7 +389,7 @@ class Page extends Component
         return $data;
     }
 
-    public function prevPage ()
+    public function prevPage()
     {
         if ($this->page > 1) {
             $this->page = $this->page - 1;
@@ -403,15 +397,15 @@ class Page extends Component
         }
     }
 
-    public function nextPage ()
+    public function nextPage()
     {
-        if($this->page < $this->totalPageCount) {
+        if ($this->page < $this->totalPageCount) {
             $this->page = $this->page + 1;
             $this->tableRows = $this->paginateTableRows($this->tableData);
         }
     }
 
-    public function goToPage ($destination)
+    public function goToPage($destination)
     {
         $this->page = (int)$destination;
         $this->tableRows = $this->paginateTableRows($this->tableData);

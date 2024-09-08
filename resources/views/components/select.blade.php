@@ -70,7 +70,7 @@
         })
     },
 }" x-modelable="value" {{ $attributes->merge(['class' => 'inline-block']) }}>
-    <x-dropdown x-model="showDropdown" placement="bottom-start" :disabled="$disabled">
+    <x-dropdown x-model="showDropdown" placement="bottom-start" :disabled="$disabled" :teleport="$teleport">
         <x-slot name="trigger">
             <div class="border border-[{{ $color }}] p-2 rounded-full flex items-center gap-x-1"
                 :class="disabled ? 'bg-[#E2E2E2]' : ''"

@@ -55,7 +55,7 @@
             <form class="w-[20rem]" @submit.prevent="updateValue">
                 <div class="px-6 pt-6">
                     <div class="flex justify-between">
-                        <span class="font-medium text-base">Market Cap</span>
+                        <span class="font-medium text-base">Market Cap (in billions)</span>
 
                         <button @click="dropdown.hide()">
                             <svg width="24" height="24" viewBox="0 0 24 24" fill="none"
