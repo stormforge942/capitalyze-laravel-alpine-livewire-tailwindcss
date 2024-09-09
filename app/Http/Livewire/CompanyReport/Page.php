@@ -47,6 +47,7 @@ class Page extends Component
         'cash-flow' => 'Cash Flow',
         'ratios' => 'Ratios',
         'disclosure' => 'Disclosure',
+        'earning-presentation' => 'Earning Presentations'
     ];
 
     protected $listeners = ['periodChange', 'tabClicked', 'tabSubClicked', 'selectRow', 'unselectRow'];

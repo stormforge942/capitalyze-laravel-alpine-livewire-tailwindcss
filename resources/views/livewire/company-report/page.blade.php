@@ -448,9 +448,11 @@
                         </div>
                     @endif
 
-                    @include('partials.company-report.filters')
+                    @if($activeTab !== 'earning-presentation')
+                        @include('partials.company-report.filters')
+                    @endif
 
-                    @if ($noData)
+                    @if ($noData && $activeTab !== 'earning-presentation')
                         <div class="grid place-items-center py-24">
                             <svg width="168" height="164" viewBox="0 0 168 164" fill="none"
                                 xmlns="http://www.w3.org/2000/svg">
@@ -496,23 +498,24 @@
                             <p class="mt-6 text-xl font-bold">No Data</p>
                             <p class="mt-2 text-md">Create financial charts to analyse data</p>
                         </div>
-                    @else
+                    @endif
+
+                    @if(!$noData && $activeTab !== 'earning-presentation')
                         <div class="mt-6">
-                            <x-range-slider :min="$rangeDates[0]" :max="$rangeDates[count($rangeDates) - 1]" :value="$selectedDateRange"
-                                @range-updated="selectedDateRange = $event.detail">
-                            </x-range-slider>
+                            <x-range-slider :min="$rangeDates[0]" :max="$rangeDates[count($rangeDates) - 1]" :value="$selectedDateRange" @range-updated="selectedDateRange = $event.detail"></x-range-slider>
                         </div>
 
                         <template x-if="selectedChartRows.length">
                             <div class="mt-6" x-data="{
-                                printChart() {
-                                    window.printChart(this.$el.querySelector('canvas'))
-                                }
-                            }"
+                                    printChart() {
+                                        window.printChart(this.$el.querySelector('canvas'))
+                                    }
+                                }"
                                 @download-chart="Livewire.emit('modal.open', 'upgrade-account-modal')"
                                 @print-chart="printChart"
                                 @full-screen="fullScreen($el.querySelector('canvas').parentElement)"
-                                @clear-chart="selectedChartRows = []">
+                                @clear-chart="selectedChartRows = []"
+                            >
                                 <div class="bg-white rounded-lg p-10 relative">
                                     <div class="absolute top-2 right-2 xl:top-3 xl:right-5">
                                         <x-dropdown placement="bottom-start" :shadow="true">
@@ -683,6 +686,10 @@
                         </template>
 
                         @include('partials.company-report.table')
+                    @endif
+
+                    @if($activeTab === 'earning-presentation')
+                        <livewire:company-report.earning-presentations-table ticker="{{ $company['ticker'] }}" />
                     @endif
                 </div>
             </x-primary-tabs>
