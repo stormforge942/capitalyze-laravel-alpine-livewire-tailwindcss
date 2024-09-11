@@ -2,6 +2,7 @@
 
 namespace App\Http\Livewire\CompanyAnalysis\CapitalAllocation;
 
+use Illuminate\Support\Facades\Auth;
 use Livewire\Component;
 use App\Models\InfoTikrPresentation;
 use App\Http\Livewire\CompanyAnalysis\HasFilters;
@@ -12,7 +13,7 @@ class SourceAndUses extends Component
 
     public $company;
     public $rawData;
-
+    public $publicView;
     public $chartConfig = [
         'showLabel' => false,
         'type' => 'values',
@@ -23,6 +24,8 @@ class SourceAndUses extends Component
         $data = $this->getData();
         $this->extractDates($data);
         $this->formatData($data);
+
+        $this->publicView = data_get(Auth::user(), 'settings.publicView', true);
     }
 
     public function updated($prop)
@@ -204,7 +207,7 @@ class SourceAndUses extends Component
             ],
         ];
 
-        // for sources 
+        // for sources
         $lastTotal = 0;
         foreach ($this->dates as $idx => $date) {
             $fcf = $statement['Levered Free Cash Flow'][$date] ?? 0;
@@ -233,7 +236,7 @@ class SourceAndUses extends Component
             $data['sources']['common_stock']['total_percent'][$date] = $total ? $ics / $total * 100 : 0;
         }
 
-        // for uses 
+        // for uses
         foreach ($this->dates as $idx => $date) {
             $total = $data['sources']['total']['timeline'][$date];
 

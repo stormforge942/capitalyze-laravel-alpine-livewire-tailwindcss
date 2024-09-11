@@ -2,6 +2,7 @@
 
 namespace App\Http\Livewire\CompanyAnalysis\Revenue;
 
+use Illuminate\Support\Facades\Auth;
 use Livewire\Component;
 use Illuminate\Support\Facades\DB;
 use App\Models\InfoTikrPresentation;
@@ -14,6 +15,7 @@ class Employee extends Component
 
     public $company;
     public $rawData = [];
+    public $publicView;
     public $chartConfig = [
         'showLabel' => false,
     ];
@@ -23,6 +25,8 @@ class Employee extends Component
         $data = $this->getData();
         $this->extractDates($data);
         $this->formatData($data);
+
+        $this->publicView = data_get(Auth::user(), 'settings.publicView', true);
     }
 
     public function updated($prop)

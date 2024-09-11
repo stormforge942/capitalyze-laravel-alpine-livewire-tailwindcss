@@ -41,7 +41,19 @@
                 </div>
             </div>
 
-            <div class="mt-6 overflow-auto">
+            <div
+                x-data="{
+                    publicView: $wire.entangle('publicView', false),
+                    init() {
+                        this.$watch('publicView', () => {
+                            window.updateUserSettings({
+                                publicView: this.publicView
+                            })
+                        })
+                    }
+                }"
+                class="mt-6 overflow-auto"
+            >
                 <div class="rounded-lg sticky-table-container" x-show="subSubTab === 'book-value'" x-cloak>
                     <table class="w-full text-right whitespace-nowrap {{ sticky_table_class($freezePane) }}">
                         <thead class="font-sm font-semibold capitalize text-dark">
@@ -68,9 +80,13 @@
 
                                     <td
                                         class="pl-6 pt-2 pb-1 last:pr-8 @if (!$loop->first) last:rounded-tr-lg @endif">
-                                        <x-review-number-button x-data="{ amount: '{{ $value['value'] }}', date: '{{ $date }}' }">
+                                        <x-review-number-button x-show="!publicView" x-data="{ amount: '{{ $value['value'] }}', date: '{{ $date }}' }">
                                             {!! redIfNegative($value) !!}
                                         </x-review-number-button>
+
+                                        <div x-show="publicView">
+                                            {!! redIfNegative($value) !!}
+                                        </div>
                                     </td>
                                 @endforeach
                             </tr>
@@ -82,9 +98,13 @@
                                     <td class="pl-6 py-1 last:pr-8">
                                         <?php $value = $data['book']['equity']['yoy_change'][$date]; ?>
 
-                                        <x-review-number-button x-data="{ amount: '{{ $value['value'] }}', date: '{{ $date }}' }">
+                                        <x-review-number-button x-show="!publicView" x-data="{ amount: '{{ $value['value'] }}', date: '{{ $date }}' }">
                                             {!! redIfNegative($value) !!}
                                         </x-review-number-button>
+
+                                        <div x-show="publicView">
+                                            {!! redIfNegative($value) !!}
+                                        </div>
                                     </td>
                                 @endforeach
                             </tr>
@@ -96,9 +116,13 @@
                                     <td class="pl-6 py-1 last:pr-8">
                                         <?php $value = $data['book']['equity']['total_percent'][$date]; ?>
 
-                                        <x-review-number-button x-data="{ amount: '{{ $value['value'] }}', date: '{{ $date }}' }">
+                                        <x-review-number-button x-show="!publicView" x-data="{ amount: '{{ $value['value'] }}', date: '{{ $date }}' }">
                                             {!! redIfNegative($value) !!}
                                         </x-review-number-button>
+
+                                        <div x-show="publicView">
+                                            {!! redIfNegative($value) !!}
+                                        </div>
                                     </td>
                                 @endforeach
                             </tr>
@@ -111,9 +135,13 @@
 
                                     <td
                                         class="pl-6 py-1 last:pr-8 @if (!$loop->first) last:rounded-tr-lg @endif">
-                                        <x-review-number-button x-data="{ amount: '{{ $value['value'] }}', date: '{{ $date }}' }">
+                                        <x-review-number-button  x-show="!publicView" x-data="{ amount: '{{ $value['value'] }}', date: '{{ $date }}' }">
                                             {!! redIfNegative($value) !!}
                                         </x-review-number-button>
+
+                                        <div x-show="publicView">
+                                            {!! redIfNegative($value) !!}
+                                        </div>
                                     </td>
                                 @endforeach
                             </tr>
@@ -125,9 +153,13 @@
                                     <td class="pl-6 py-1 last:pr-8">
                                         <?php $value = $data['book']['net_debt']['yoy_change'][$date]; ?>
 
-                                        <x-review-number-button x-data="{ amount: '{{ $value['value'] }}', date: '{{ $date }}' }">
+                                        <x-review-number-button x-show="!publicView" x-data="{ amount: '{{ $value['value'] }}', date: '{{ $date }}' }">
                                             {!! redIfNegative($value) !!}
                                         </x-review-number-button>
+
+                                        <div x-show="publicView">
+                                            {!! redIfNegative($value) !!}
+                                        </div>
                                     </td>
                                 @endforeach
                             </tr>
@@ -139,9 +171,13 @@
                                     <td class="pl-6 py-1 last:pr-8">
                                         <?php $value = $data['book']['net_debt']['total_percent'][$date]; ?>
 
-                                        <x-review-number-button x-data="{ amount: '{{ $value['value'] }}', date: '{{ $date }}' }">
+                                        <x-review-number-button x-show="!publicView" x-data="{ amount: '{{ $value['value'] }}', date: '{{ $date }}' }">
                                             {!! redIfNegative($value) !!}
                                         </x-review-number-button>
+
+                                        <div x-show="publicView">
+                                            {!! redIfNegative($value) !!}
+                                        </div>
                                     </td>
                                 @endforeach
                             </tr>
@@ -154,9 +190,13 @@
 
                                     <td
                                         class="pl-6 py-1 last:pr-8 @if (!$loop->first) last:rounded-tr-lg @endif">
-                                        <x-review-number-button x-data="{ amount: '{{ $value['value'] }}', date: '{{ $date }}' }">
+                                        <x-review-number-button x-show="!publicView" x-data="{ amount: '{{ $value['value'] }}', date: '{{ $date }}' }">
                                             {!! redIfNegative($value) !!}
                                         </x-review-number-button>
+
+                                        <div x-show="publicView">
+                                            {!! redIfNegative($value) !!}
+                                        </div>
                                     </td>
                                 @endforeach
                             </tr>
@@ -168,9 +208,13 @@
                                     <td class="pl-6 py-1 last:pr-8">
                                         <?php $value = $data['book']['preferred_equity']['total_percent'][$date]; ?>
 
-                                        <x-review-number-button x-data="{ amount: '{{ $value['value'] }}', date: '{{ $date }}' }">
+                                        <x-review-number-button x-show="!publicView" x-data="{ amount: '{{ $value['value'] }}', date: '{{ $date }}' }">
                                             {!! redIfNegative($value) !!}
                                         </x-review-number-button>
+
+                                        <div x-show="publicView">
+                                            {!! redIfNegative($value) !!}
+                                        </div>
                                     </td>
                                 @endforeach
                             </tr>
@@ -183,9 +227,13 @@
 
                                     <td
                                         class="pl-6 py-1 last:pr-8 @if (!$loop->first) last:rounded-tr-lg @endif">
-                                        <x-review-number-button x-data="{ amount: '{{ $value['value'] }}', date: '{{ $date }}' }">
+                                        <x-review-number-button x-show="!publicView" x-data="{ amount: '{{ $value['value'] }}', date: '{{ $date }}' }">
                                             {!! redIfNegative($value) !!}
                                         </x-review-number-button>
+
+                                        <div x-show="publicView">
+                                            {!! redIfNegative($value) !!}
+                                        </div>
                                     </td>
                                 @endforeach
                             </tr>
@@ -197,9 +245,13 @@
                                     <td class="pl-6 pt-1 pb-2 last:pr-8">
                                         <?php $value = $data['book']['minority_interest']['total_percent'][$date]; ?>
 
-                                        <x-review-number-button x-data="{ amount: '{{ $value['value'] }}', date: '{{ $date }}' }">
+                                        <x-review-number-button x-show="!publicView" x-data="{ amount: '{{ $value['value'] }}', date: '{{ $date }}' }">
                                             {!! redIfNegative($value) !!}
                                         </x-review-number-button>
+
+                                        <div x-show="publicView">
+                                            {!! redIfNegative($value) !!}
+                                        </div>
                                     </td>
                                 @endforeach
                             </tr>
@@ -212,9 +264,13 @@
                                     <?php $value = $data['book']['total_value']['timeline'][$date]; ?>
 
                                     <td class="pl-6 pt-2 pb-1 last:pr-8">
-                                        <x-review-number-button x-data="{ amount: '{{ $value['value'] }}', date: '{{ $date }}' }">
+                                        <x-review-number-button x-show="!publicView" x-data="{ amount: '{{ $value['value'] }}', date: '{{ $date }}' }">
                                             {!! redIfNegative($value) !!}
                                         </x-review-number-button>
+
+                                        <div x-show="publicView">
+                                            {!! redIfNegative($value) !!}
+                                        </div>
                                     </td>
                                 @endforeach
                             </tr>
@@ -226,9 +282,13 @@
                                     <td class="pl-6 py-1 last:pr-8">
                                         <?php $value = $data['book']['total_value']['yoy_change'][$date]; ?>
 
-                                        <x-review-number-button x-data="{ amount: '{{ $value['value'] }}', date: '{{ $date }}' }">
+                                        <x-review-number-button x-show="!publicView" x-data="{ amount: '{{ $value['value'] }}', date: '{{ $date }}' }">
                                             {!! redIfNegative($value) !!}
                                         </x-review-number-button>
+
+                                        <div x-show="publicView">
+                                            {!! redIfNegative($value) !!}
+                                        </div>
                                     </td>
                                 @endforeach
                             </tr>
@@ -240,9 +300,13 @@
                                     <td class="pl-6 pt-1 pb-2 last:pr-8 last:rounded-br-lg">
                                         <?php $value = $data['book']['net_debt_by_capital'][$date]; ?>
 
-                                        <x-review-number-button x-data="{ amount: '{{ $value['value'] }}', date: '{{ $date }}' }">
+                                        <x-review-number-button x-show="!publicView" x-data="{ amount: '{{ $value['value'] }}', date: '{{ $date }}' }">
                                             {!! redIfNegative($value) !!}
                                         </x-review-number-button>
+
+                                        <div x-show="publicView">
+                                            {!! redIfNegative($value) !!}
+                                        </div>
                                     </td>
                                 @endforeach
                             </tr>
@@ -276,9 +340,13 @@
 
                                     <td
                                         class="pl-6 pt-2 pb-1 last:pr-8 @if (!$loop->first) last:rounded-tr-lg @endif">
-                                        <x-review-number-button x-data="{ amount: '{{ $value['value'] }}', date: '{{ $date }}' }">
+                                        <x-review-number-button x-show="!publicView" x-data="{ amount: '{{ $value['value'] }}', date: '{{ $date }}' }">
                                             {!! redIfNegative($value) !!}
                                         </x-review-number-button>
+
+                                        <div x-show="publicView">
+                                            {!! redIfNegative($value) !!}
+                                        </div>
                                     </td>
                                 @endforeach
                             </tr>
@@ -290,9 +358,13 @@
                                     <td class="pl-6 py-1 last:pr-8">
                                         <?php $value = $data['market']['equity']['yoy_change'][$date]; ?>
 
-                                        <x-review-number-button x-data="{ amount: '{{ $value['value'] }}', date: '{{ $date }}' }">
+                                        <x-review-number-button x-show="!publicView" x-data="{ amount: '{{ $value['value'] }}', date: '{{ $date }}' }">
                                             {!! redIfNegative($value) !!}
                                         </x-review-number-button>
+
+                                        <div x-show="publicView">
+                                            {!! redIfNegative($value) !!}
+                                        </div>
                                     </td>
                                 @endforeach
                             </tr>
@@ -304,9 +376,13 @@
                                     <td class="pl-6 py-1 last:pr-8">
                                         <?php $value = $data['market']['equity']['total_percent'][$date]; ?>
 
-                                        <x-review-number-button x-data="{ amount: '{{ $value['value'] }}', date: '{{ $date }}' }">
+                                        <x-review-number-button x-show="!publicView" x-data="{ amount: '{{ $value['value'] }}', date: '{{ $date }}' }">
                                             {!! redIfNegative($value) !!}
                                         </x-review-number-button>
+
+                                        <div x-show="publicView">
+                                            {!! redIfNegative($value) !!}
+                                        </div>
                                     </td>
                                 @endforeach
                             </tr>
@@ -319,9 +395,13 @@
 
                                     <td
                                         class="pl-6 py-1 last:pr-8 @if (!$loop->first) last:rounded-tr-lg @endif">
-                                        <x-review-number-button x-data="{ amount: '{{ $value['value'] }}', date: '{{ $date }}' }">
+                                        <x-review-number-button x-show="!publicView" x-data="{ amount: '{{ $value['value'] }}', date: '{{ $date }}' }">
                                             {!! redIfNegative($value) !!}
                                         </x-review-number-button>
+
+                                        <div x-show="publicView">
+                                            {!! redIfNegative($value) !!}
+                                        </div>
                                     </td>
                                 @endforeach
                             </tr>
@@ -333,9 +413,13 @@
                                     <td class="pl-6 py-1 last:pr-8">
                                         <?php $value = $data['market']['net_debt']['yoy_change'][$date]; ?>
 
-                                        <x-review-number-button x-data="{ amount: '{{ $value['value'] }}', date: '{{ $date }}' }">
+                                        <x-review-number-button x-show="!publicView" x-data="{ amount: '{{ $value['value'] }}', date: '{{ $date }}' }">
                                             {!! redIfNegative($value) !!}
                                         </x-review-number-button>
+
+                                        <div x-show="publicView">
+                                            {!! redIfNegative($value) !!}
+                                        </div>
                                     </td>
                                 @endforeach
                             </tr>
@@ -347,9 +431,13 @@
                                     <td class="pl-6 py-1 last:pr-8">
                                         <?php $value = $data['market']['net_debt']['total_percent'][$date]; ?>
 
-                                        <x-review-number-button x-data="{ amount: '{{ $value['value'] }}', date: '{{ $date }}' }">
+                                        <x-review-number-button x-show="!publicView" x-data="{ amount: '{{ $value['value'] }}', date: '{{ $date }}' }">
                                             {!! redIfNegative($value) !!}
                                         </x-review-number-button>
+
+                                        <div x-show="publicView">
+                                            {!! redIfNegative($value) !!}
+                                        </div>
                                     </td>
                                 @endforeach
                             </tr>
@@ -362,9 +450,13 @@
 
                                     <td
                                         class="pl-6 py-1 last:pr-8 @if (!$loop->first) last:rounded-tr-lg @endif">
-                                        <x-review-number-button x-data="{ amount: '{{ $value['value'] }}', date: '{{ $date }}' }">
+                                        <x-review-number-button x-show="!publicView" x-data="{ amount: '{{ $value['value'] }}', date: '{{ $date }}' }">
                                             {!! redIfNegative($value) !!}
                                         </x-review-number-button>
+
+                                        <div x-show="publicView">
+                                            {!! redIfNegative($value) !!}
+                                        </div>
                                     </td>
                                 @endforeach
                             </tr>
@@ -376,9 +468,13 @@
                                     <td class="pl-6 py-1 last:pr-8">
                                         <?php $value = $data['market']['preferred_equity']['total_percent'][$date]; ?>
 
-                                        <x-review-number-button x-data="{ amount: '{{ $value['value'] }}', date: '{{ $date }}' }">
+                                        <x-review-number-button x-show="!publicView" x-data="{ amount: '{{ $value['value'] }}', date: '{{ $date }}' }">
                                             {!! redIfNegative($value) !!}
                                         </x-review-number-button>
+
+                                        <div x-show="publicView">
+                                            {!! redIfNegative($value) !!}
+                                        </div>
                                     </td>
                                 @endforeach
                             </tr>
@@ -391,9 +487,13 @@
 
                                     <td
                                         class="pl-6 py-1 last:pr-8 @if (!$loop->first) last:rounded-tr-lg @endif">
-                                        <x-review-number-button x-data="{ amount: '{{ $value['value'] }}', date: '{{ $date }}' }">
+                                        <x-review-number-button x-show="!publicView" x-data="{ amount: '{{ $value['value'] }}', date: '{{ $date }}' }">
                                             {!! redIfNegative($value) !!}
                                         </x-review-number-button>
+
+                                        <div x-show="publicView">
+                                            {!! redIfNegative($value) !!}
+                                        </div>
                                     </td>
                                 @endforeach
                             </tr>
@@ -405,9 +505,13 @@
                                     <td class="pl-6 pt-1 pb-2 last:pr-8">
                                         <?php $value = $data['market']['minority_interest']['total_percent'][$date]; ?>
 
-                                        <x-review-number-button x-data="{ amount: '{{ $value['value'] }}', date: '{{ $date }}' }">
+                                        <x-review-number-button x-show="!publicView" x-data="{ amount: '{{ $value['value'] }}', date: '{{ $date }}' }">
                                             {!! redIfNegative($value) !!}
                                         </x-review-number-button>
+
+                                        <div x-show="publicView">
+                                            {!! redIfNegative($value) !!}
+                                        </div>
                                     </td>
                                 @endforeach
                             </tr>
@@ -420,9 +524,13 @@
                                     <?php $value = $data['market']['total_value']['timeline'][$date]; ?>
 
                                     <td class="pl-6 pt-2 pb-1 last:pr-8">
-                                        <x-review-number-button x-data="{ amount: '{{ $value['value'] }}', date: '{{ $date }}' }">
+                                        <x-review-number-button x-show="!publicView" x-data="{ amount: '{{ $value['value'] }}', date: '{{ $date }}' }">
                                             {!! redIfNegative($value) !!}
                                         </x-review-number-button>
+
+                                        <div x-show="publicView">
+                                            {!! redIfNegative($value) !!}
+                                        </div>
                                     </td>
                                 @endforeach
                             </tr>
@@ -434,9 +542,13 @@
                                     <td class="pl-6 py-1 last:pr-8">
                                         <?php $value = $data['market']['total_value']['yoy_change'][$date]; ?>
 
-                                        <x-review-number-button x-data="{ amount: '{{ $value['value'] }}', date: '{{ $date }}' }">
+                                        <x-review-number-button x-show="!publicView" x-data="{ amount: '{{ $value['value'] }}', date: '{{ $date }}' }">
                                             {!! redIfNegative($value) !!}
                                         </x-review-number-button>
+
+                                        <div x-show="publicView">
+                                            {!! redIfNegative($value) !!}
+                                        </div>
                                     </td>
                                 @endforeach
                             </tr>
@@ -448,9 +560,13 @@
                                     <td class="pl-6 pt-1 pb-2 last:pr-8 last:rounded-br-lg">
                                         <?php $value = $data['market']['net_debt_by_capital'][$date]; ?>
 
-                                        <x-review-number-button x-data="{ amount: '{{ $value['value'] }}', date: '{{ $date }}' }">
+                                        <x-review-number-button x-show="!publicView" x-data="{ amount: '{{ $value['value'] }}', date: '{{ $date }}' }">
                                             {!! redIfNegative($value) !!}
                                         </x-review-number-button>
+
+                                        <div x-show="publicView">
+                                            {!! redIfNegative($value) !!}
+                                        </div>
                                     </td>
                                 @endforeach
                             </tr>

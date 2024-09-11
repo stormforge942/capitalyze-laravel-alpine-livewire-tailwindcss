@@ -2,6 +2,7 @@
 
 namespace App\Http\Livewire\CompanyAnalysis\Efficiency;
 
+use Illuminate\Support\Facades\Auth;
 use Livewire\Component;
 use App\Http\Livewire\CompanyAnalysis\HasFilters;
 
@@ -12,6 +13,7 @@ class FcfConversion extends Component
     public $company;
     public $statements;
     public $rawData = [];
+    public $publicView;
     public $chartConfig = [
         'showLabel' => false,
         'type' => 'percentage',
@@ -22,6 +24,8 @@ class FcfConversion extends Component
         $this->extractDates();
 
         $this->formatData();
+
+        $this->publicView = data_get(Auth::user(), 'settings.publicView', true);
     }
 
     public function updated($prop)
@@ -155,15 +159,19 @@ class FcfConversion extends Component
         $lastNetworthChange = 0;
         $lastLeveredFreeCashflow = 0;
         foreach ($this->dates as $date) {
-            $revenue = $income['Total Revenues'][$date] ?? 0;
+            $revenue = isset($income['Total Revenues'][$date]) ? $this->extractValues($income['Total Revenues'][$date])['value'] : 0;
             $data['revenues']['timeline'][$date] = $revenue;
+            $data['revenues']['hash'][$date] = isset($income['Total Revenues'][$date]) ? $this->extractValues($income['Total Revenues'][$date])['hash'] : null;
+            $data['revenues']['secondHash'][$date] = isset($income['Total Revenues'][$date]) ? $this->extractValues($income['Total Revenues'][$date])['secondHash'] : null;
             $data['revenues']['yoy_change'][$date] = $lastRev
                 ? (($revenue / $lastRev) - 1) * 100
                 : 0;
             $lastRev = $revenue;
 
-            $ebitda = $income['EBITDA'][$date] ?? 0;
+            $ebitda = isset($income['EBITDA'][$date]) ? $this->extractValues($income['EBITDA'][$date])['value'] : 0;
             $data['ebitda']['timeline'][$date] = $ebitda;
+            $data['ebitda']['hash'][$date] = isset($income['EBITDA'][$date]) ? $this->extractValues($income['EBITDA'][$date])['hash'] : null;
+            $data['ebitda']['secondHash'][$date] = isset($income['EBITDA'][$date]) ? $this->extractValues($income['EBITDA'][$date])['secondHash'] : null;
             $data['ebitda']['yoy_change'][$date] = $lastEbitda
                 ? (($ebitda / $lastEbitda) - 1) * 100
                 : 0;
@@ -172,8 +180,10 @@ class FcfConversion extends Component
                 : 0;
             $lastEbitda = $ebitda;
 
-            $cashInterest = abs($cashflow['Cash Interest Paid'][$date] ?? 0);
+            $cashInterest = isset($cashflow['Cash Interest Paid'][$date]) ? abs($this->extractValues($cashflow['Cash Interest Paid'][$date])['value']) : 0;
             $data['cash_interest']['timeline'][$date] = -1 * $cashInterest;
+            $data['cash_interest']['hash'][$date] = isset($cashflow['Cash Interest Paid'][$date]) ? $this->extractValues($cashflow['Cash Interest Paid'][$date])['hash'] : null;
+            $data['cash_interest']['secondHash'][$date] = isset($cashflow['Cash Interest Paid'][$date]) ? $this->extractValues($cashflow['Cash Interest Paid'][$date])['secondHash'] : null;
             $data['cash_interest']['yoy_change'][$date] = $lastCashInterest
                 ? (($cashInterest / $lastCashInterest) - 1) * 100
                 : 0;
@@ -182,8 +192,10 @@ class FcfConversion extends Component
                 : 0;
             $lastCashInterest = $cashInterest;
 
-            $cashTaxes = abs($cashflow['Cash Taxes Paid'][$date] ?? 0);
+            $cashTaxes = isset($cashflow['Cash Taxes Paid'][$date]) ? abs($this->extractValues($cashflow['Cash Taxes Paid'][$date])['value']) : 0;
             $data['cash_taxes']['timeline'][$date] = -1 * $cashTaxes;
+            $data['cash_taxes']['hash'][$date] = isset($cashflow['Cash Taxes Paid'][$date]) ? $this->extractValues($cashflow['Cash Taxes Paid'][$date])['hash'] : 0;
+            $data['cash_taxes']['secondHash'][$date] = isset($cashflow['Cash Taxes Paid'][$date]) ? $this->extractValues($cashflow['Cash Taxes Paid'][$date])['secondHash'] : 0;
             $data['cash_taxes']['yoy_change'][$date] = $lastCashTaxes
                 ? (($cashTaxes / $lastCashTaxes) - 1) * 100
                 : 0;
@@ -192,8 +204,10 @@ class FcfConversion extends Component
                 : 0;
             $lastCashTaxes = $cashTaxes;
 
-            $capitalExpenditure = abs($cashflow['Capital Expenditure'][$date] ?? 0);
+            $capitalExpenditure = isset($cashflow['Capital Expenditure'][$date]) ? abs($this->extractValues($cashflow['Capital Expenditure'][$date])['value']) : 0;
             $data['capital_expenditures']['timeline'][$date] = -1 * $capitalExpenditure;
+            $data['capital_expenditures']['hash'][$date] = isset($cashflow['Capital Expenditure'][$date]) ? $this->extractValues($cashflow['Capital Expenditure'][$date])['hash'] : null;
+            $data['capital_expenditures']['secondHash'][$date] = isset($cashflow['Capital Expenditure'][$date]) ? $this->extractValues($cashflow['Capital Expenditure'][$date])['secondHash'] : null;
             $data['capital_expenditures']['yoy_change'][$date] = $lastCapitalExpenditure
                 ? (($capitalExpenditure / $lastCapitalExpenditure) - 1) * 100
                 : 0;
@@ -218,8 +232,10 @@ class FcfConversion extends Component
                 : 0;
             $lastFreeCashflow = $freeCashflow;
 
-            $networthChange = $cashflow['Total Changes in Net Working Capital'][$date] ?? 0;
+            $networthChange = isset($cashflow['Total Changes in Net Working Capital'][$date]) ? $this->extractValues($cashflow['Total Changes in Net Working Capital'][$date])['value'] : 0;
             $data['networth_change']['timeline'][$date] = $networthChange;
+            $data['networth_change']['hash'][$date] = isset($cashflow['Total Changes in Net Working Capital'][$date]) ? $this->extractValues($cashflow['Total Changes in Net Working Capital'][$date])['hash'] : null;
+            $data['networth_change']['secondHash'][$date] = isset($cashflow['Total Changes in Net Working Capital'][$date]) ? $this->extractValues($cashflow['Total Changes in Net Working Capital'][$date])['secondHash'] : null;
             $data['networth_change']['yoy_change'][$date] = $lastNetworthChange
                 ? (($networthChange / $lastNetworthChange) - 1) * 100
                 : 0;
@@ -279,6 +295,10 @@ class FcfConversion extends Component
 
         foreach ($data as $idx => $item) {
             foreach ($item as $key => $values) {
+                if (in_array($key, ['hash', 'secondHash'])) {
+                    continue;
+                }
+
                 $formatter = $key === 'timeline' ? $this->formatValue(...) : $this->formatPercentageValue(...);
                 foreach ($values as $date => $value) {
                     $data[$idx][$key][$date] = [
@@ -290,5 +310,16 @@ class FcfConversion extends Component
         }
 
         return $data;
+    }
+
+    private function extractValues($value)
+    {
+        list($extractedValue, $hash, $secondHash) = array_pad(explode("|", $value ?? ""), 3, null);
+
+        return [
+            'value' => intval($extractedValue),
+            'hash' => $hash,
+            'secondHash' => $secondHash,
+        ];
     }
 }

@@ -2,6 +2,7 @@
 
 namespace App\Http\Livewire\CompanyAnalysis\CapitalAllocation;
 
+use Illuminate\Support\Facades\Auth;
 use Livewire\Component;
 use App\Models\InfoTikrPresentation;
 use App\Http\Livewire\CompanyAnalysis\HasFilters;
@@ -13,6 +14,7 @@ class CapitalStructure extends Component
 
     public $company;
     public $rawData;
+    public $publicView;
     public $chartConfig = [
         'showLabel' => false,
     ];
@@ -24,6 +26,8 @@ class CapitalStructure extends Component
         $this->extractDates($data);
 
         $this->formatData($data);
+
+        $this->publicView = data_get(Auth::user(), 'settings.publicView', true);
     }
 
     public function updated($prop)
@@ -212,7 +216,7 @@ class CapitalStructure extends Component
             ],
         ];
 
-        // for book 
+        // for book
         $lastEquity = 0;
         $lastDebt = 0;
         $lastTotal = 0;

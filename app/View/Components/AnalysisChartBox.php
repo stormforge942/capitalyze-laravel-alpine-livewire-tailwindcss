@@ -22,6 +22,7 @@ class AnalysisChartBox extends Component
         public string $defaultType = 'values',
         public bool $hasPercentageMix = true,
         public bool $toggle = true,
+        public bool $hasPublicViewToggler = true
     ) {
         //
     }

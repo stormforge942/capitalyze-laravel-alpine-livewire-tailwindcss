@@ -39,6 +39,7 @@
         <div x-data="{
             showLabel: $wire.entangle('chartConfig.showLabel', true),
             reverse: $wire.entangle('dateOrder', false),
+            publicView: $wire.entangle('publicView', false),
             type: $wire.chartConfig?.type ? $wire.entangle('chartConfig.type', true) : '{{ $defaultType }}',
             data: @js($chart['data'] ?? []),
             init() {
@@ -76,6 +77,15 @@
                 </div>
 
                 <form class="flex items-center gap-8 text-sm text-gray-medium2 mr-10" x-cloak>
+                    @if ($hasPublicViewToggler)
+                        @can('review-data')
+                            <button class="font-semibold hover:drop-shadow transition-all" type="button" @click="publicView = !publicView; $dispatch('')">
+                                <span x-show="!publicView">Public View</span>
+                                <span x-show="publicView" x-cloak>Exit Public View</span>
+                            </button>
+                        @endcan
+                    @endif
+
                     @if ($hasPercentageMix)
                         <label class="cursor-pointer flex items-center gap-1">
                             <input type="radio" value="values" class="custom-radio !h-4 !w-4 focus:ring-0"
@@ -89,6 +99,7 @@
                             <span>Percentage Mix</span>
                         </label>
                     @endif
+                        
                     @if ($toggle)
                         <label class="relative inline-flex items-center cursor-pointer flex-shrink-0">
                             <input type="checkbox" value="yes" class="sr-only peer" :checked="showLabel"

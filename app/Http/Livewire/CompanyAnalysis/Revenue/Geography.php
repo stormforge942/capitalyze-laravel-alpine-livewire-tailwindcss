@@ -3,6 +3,7 @@
 namespace App\Http\Livewire\CompanyAnalysis\Revenue;
 
 use App\Http\Livewire\CompanyAnalysis\HasFilters;
+use Illuminate\Support\Facades\Auth;
 use Livewire\Component;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Cache;
@@ -13,6 +14,7 @@ class Geography extends Component
 
     public $company;
     public $rawData = [];
+    public $publicView;
     public $chartConfig = [
         'showLabel' => false,
         'type' => 'values',
@@ -25,6 +27,8 @@ class Geography extends Component
         $this->extractDates($data);
 
         $this->formatData($data);
+
+        $this->publicView = data_get(Auth::user(), 'settings.publicView', true);
     }
 
     public function updated($prop)
@@ -206,7 +210,7 @@ class Geography extends Component
                 : 0;
 
             $lastTotal = $total;
-            
+
             foreach ($data['regions'] as $region => $_) {
                 $data['regions'][$region]['total_percent'][$date] = $total != 0 ? ($data['regions'][$region]['timeline'][$date] / $total) * 100 : 0;
             }

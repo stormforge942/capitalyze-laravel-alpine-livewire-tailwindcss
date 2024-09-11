@@ -84,6 +84,6 @@ class Efficiency extends Component
 
     private function formatValue($value)
     {
-        return array_map(fn ($val) => intval(explode("|", $val[0] ?? "")[0]), $value);
+        return array_map(fn ($val) => $val[0] ?? "", $value);
     }
 }

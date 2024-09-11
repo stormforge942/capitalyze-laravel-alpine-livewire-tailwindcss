@@ -2,6 +2,7 @@
 
 namespace App\Http\Livewire\CompanyAnalysis\Efficiency;
 
+use Illuminate\Support\Facades\Auth;
 use Livewire\Component;
 use App\Http\Livewire\CompanyAnalysis\HasFilters;
 
@@ -12,6 +13,7 @@ class CostStructure extends Component
     public $company;
     public $statements;
     public $rawData = [];
+    public $publicView;
     public $chartConfig = [
         'showLabel' => false,
         'type' => 'values',
@@ -22,6 +24,8 @@ class CostStructure extends Component
         $this->extractDates();
 
         $this->formatData();
+
+        $this->publicView = data_get(Auth::user(), 'settings.publicView', true);
     }
 
     public function updated($prop)
@@ -104,9 +108,11 @@ class CostStructure extends Component
                 'timeline' => array_reduce(
                     $this->dates,
                     function ($carry, $date) use ($statement) {
-                        $carry[$date] =  abs($statement['Cost of Goods Sold'][$date] ?? 0) +
-                            abs($statement['R&D Expenses'][$date] ?? 0) +
-                            abs($statement['SG&A Expenses'][$date] ?? 0);
+                        $cgs = isset($statement['Cost of Goods Sold'][$date]) ? abs($this->extractValues($statement['Cost of Goods Sold'][$date])['value']) : 0;
+                        $rde = isset($statement['R&D Expenses'][$date]) ? abs($this->extractValues($statement['R&D Expenses'][$date])['value']) : 0;
+                        $sge = isset($statement['SG&A Expenses'][$date]) ? abs($this->extractValues($statement['SG&A Expenses'][$date])['value']) : 0;
+
+                        $carry[$date] =  $cgs + $rde + $sge;
 
                         return $carry;
                     },
@@ -116,7 +122,9 @@ class CostStructure extends Component
                 'revenue_percentage' => [],
             ],
             'revenues' => [
-                'timeline' => array_combine($this->dates, array_map(fn ($date) => $statement['Total Revenues'][$date] ?? 0, $this->dates)),
+                'timeline' => array_combine($this->dates, array_map(fn ($date) => $this->extractValues($statement['Total Revenues'][$date])['value'] ?? 0, $this->dates)),
+                'hash' => array_combine($this->dates, array_map(fn ($date) => $this->extractValues($statement['Total Revenues'][$date])['hash'], $this->dates)),
+                'secondHash' => array_combine($this->dates, array_map(fn ($date) => $this->extractValues($statement['Total Revenues'][$date])['secondHash'], $this->dates)),
                 'yoy_change' => [],
             ],
         ];
@@ -166,16 +174,19 @@ class CostStructure extends Component
 
             $lastValue = 0;
             foreach ($this->dates as $idx => $date) {
-                $value = abs($statement[$seg['key']][$date] ?? 0);
+                $value = isset($statement[$seg['key']][$date]) ? abs($this->extractValues($statement[$seg['key']][$date])['value']) : 0;
 
                 $segment['timeline'][$date] = $value;
+
+                $segment['hash'][$date] = isset($statement[$seg['key']][$date]) ? $this->extractValues($statement[$seg['key']][$date])['hash'] : null;
+                $segment['secondHash'][$date] = isset($statement[$seg['key']][$date]) ? $this->extractValues($statement[$seg['key']][$date])['secondHash'] : null;
 
                 $segment['yoy_change'][$date] = $lastValue && $idx
                     ? (($value / $lastValue) - 1) * 100
                     : 0;
 
-                $segment['revenue_percentage'][$date] = $value / ($statement['Total Revenues'][$date] ?? 0) * 100;
-                $segment['expense_percentage'][$date] = $value / $data['total_expenses']['timeline'][$date] * 100;
+                $segment['revenue_percentage'][$date] = $value / ($this->extractValues($statement['Total Revenues'][$date])['value'] ?? 0) * 100;
+                $segment['expense_percentage'][$date] = $value / $this->extractValues($data['total_expenses']['timeline'][$date])['value'] * 100;
 
                 $lastValue = $value;
             }
@@ -244,5 +255,16 @@ class CostStructure extends Component
         }
 
         return $data;
+    }
+
+    private function extractValues($value)
+    {
+        list($extractedValue, $hash, $secondHash) = array_pad(explode("|", $value ?? ""), 3, null);
+
+        return [
+            'value' => intval($extractedValue),
+            'hash' => $hash,
+            'secondHash' => $secondHash,
+        ];
     }
 }

@@ -10,7 +10,19 @@
         </div>
     @endif
 
-    <div class="mt-6 relative">
+    <div
+        x-data="{
+            publicView: $wire.entangle('publicView', false),
+            init() {
+                this.$watch('publicView', () => {
+                    window.updateUserSettings({
+                        publicView: this.publicView
+                    })
+                })
+            }
+        }"
+        class="mt-6 relative"
+    >
         @if (count($dates))
             <x-analysis-chart-box title="Free Cash Flow Before WC" :company="$company" :hasPercentageMix="false" :chart="$chart"
                 :unit="$unit" :decimal-places="$decimalPlaces" function="renderFcfConversionChart"></x-analysis-chart-box>
@@ -38,12 +50,28 @@
                             </td>
                             @foreach ($selectedDates as $date)
                                 <?php $value = $data['revenues']['timeline'][$date]; ?>
+                                <?php $hash = $data['revenues']['hash'][$date]; ?>
+                                <?php $sliderData = [
+                                    'ticker' => $company['ticker'],
+                                    'value' => $value['value'],
+                                    'hash' => $hash,
+                                    'secondHash' => $data['revenues']['secondHash'][$date],
+                                    'isLink' => false,
+                                    'decimalPlaces' => 3
+                                    ];
+                                ?>
 
                                 <td
                                     class="pl-6 pt-2 pb-1 last:pr-8 @if (!$loop->first) last:rounded-tr-lg @endif">
-                                    <x-review-number-button x-data="{ amount: '{{ $value['value'] }}', date: '{{ $date }}' }">
+                                    <x-review-number-button x-show="!publicView" x-data="{ amount: '{{ $value['value'] }}', date: '{{ $date }}' }">
                                         {!! redIfNegative($value) !!}
                                     </x-review-number-button>
+
+                                    <div x-data="{data: @js($sliderData)}" class="hover:underline cursor-pointer clickable"
+                                         @click.prevent="Livewire.emit('slide-over.open', 'slides.right-slide', { data })"
+                                         x-cloak x-show="publicView">
+                                        {!! redIfNegative($value) !!}
+                                    </div>
                                 </td>
                             @endforeach
                         </tr>
@@ -55,9 +83,13 @@
                                 <td class="pl-6 pt-1 pb-2 last:pr-8 last:rounded-br-lg">
                                     <?php $value = $data['revenues']['yoy_change'][$date]; ?>
 
-                                    <x-review-number-button x-data="{ amount: '{{ $value['value'] }}', date: '{{ $date }}' }">
+                                    <x-review-number-button x-show="!publicView" x-data="{ amount: '{{ $value['value'] }}', date: '{{ $date }}' }">
                                         {!! redIfNegative($value) !!}
                                     </x-review-number-button>
+
+                                    <div x-show="publicView">
+                                        {!! redIfNegative($value) !!}
+                                    </div>
                                 </td>
                             @endforeach
                         </tr>
@@ -73,11 +105,32 @@
 
                             @foreach ($selectedDates as $date)
                                 <?php $value = $data['ebitda']['timeline'][$date]; ?>
+                                <?php $hash = $data['ebitda']['hash'][$date]; ?>
+                                <?php $sliderData = [
+                                    'ticker' => $company['ticker'],
+                                    'value' => $value['value'],
+                                    'hash' => $hash,
+                                    'secondHash' => $data['ebitda']['secondHash'][$date],
+                                    'isLink' => false,
+                                    'decimalPlaces' => 3
+                                    ];
+                                ?>
 
                                 <td class="pl-6 pt-2 last:pr-8 last:rounded-tr-lg">
-                                    <x-review-number-button x-data="{ amount: '{{ $value['value'] }}', date: '{{ $date }}' }">
-                                        {!! redIfNegative($value) !!}
+                                    <x-review-number-button x-show="!publicView" x-data="{ amount: '{{ $value['value'] }}', date: '{{ $date }}' }">
+                                        <div x-data="{data: @js($sliderData)}" class="hover:underline cursor-pointer clickable"
+                                             @click.prevent="Livewire.emit('slide-over.open', 'slides.right-slide', { data })"
+                                             x-cloak
+                                        >
+                                            {!! redIfNegative($value) !!}
+                                        </div>
                                     </x-review-number-button>
+
+                                    <div x-data="{data: @js($sliderData)}" class="hover:underline cursor-pointer clickable"
+                                         @click.prevent="Livewire.emit('slide-over.open', 'slides.right-slide', { data })"
+                                         x-cloak x-show="publicView">
+                                        {!! redIfNegative($value) !!}
+                                    </div>
                                 </td>
                             @endforeach
                         </tr>
@@ -89,9 +142,13 @@
                                 <td class="pl-6 pt-2 pb-1 last:pr-8">
                                     <?php $value = $data['ebitda']['yoy_change'][$date]; ?>
 
-                                    <x-review-number-button x-data="{ amount: '{{ $value['value'] }}', date: '{{ $date }}' }">
+                                    <x-review-number-button x-show="!publicView" x-data="{ amount: '{{ $value['value'] }}', date: '{{ $date }}' }">
                                         {!! redIfNegative($value) !!}
                                     </x-review-number-button>
+
+                                    <div x-show="publicView">
+                                        {!! redIfNegative($value) !!}
+                                    </div>
                                 </td>
                             @endforeach
                         </tr>
@@ -103,9 +160,13 @@
                                 <td class="pl-6 py-1 last:pr-8">
                                     <?php $value = $data['ebitda']['margin'][$date]; ?>
 
-                                    <x-review-number-button x-data="{ amount: '{{ $value['value'] }}', date: '{{ $date }}' }">
+                                    <x-review-number-button x-show="!publicView" x-data="{ amount: '{{ $value['value'] }}', date: '{{ $date }}' }">
                                         {!! redIfNegative($value) !!}
                                     </x-review-number-button>
+
+                                    <div x-show="publicView">
+                                        {!! redIfNegative($value) !!}
+                                    </div>
                                 </td>
                             @endforeach
                         </tr>
@@ -126,10 +187,31 @@
                                 @foreach ($selectedDates as $date)
                                     <td class="pl-6 py-1 last:pr-8">
                                         <?php $value = $data[$key]['timeline'][$date]; ?>
+                                        <?php $hash = $data[$key]['hash'][$date]; ?>
+                                        <?php $sliderData = [
+                                            'ticker' => $company['ticker'],
+                                            'value' => $value['value'],
+                                            'hash' => $hash,
+                                            'secondHash' => $data[$key]['secondHash'][$date],
+                                            'isLink' => false,
+                                            'decimalPlaces' => 3
+                                        ];
+                                        ?>
 
-                                        <x-review-number-button x-data="{ amount: '{{ $value['value'] }}', date: '{{ $date }}' }">
-                                            {!! redIfNegative($value) !!}
+                                        <x-review-number-button x-show="!publicView" x-data="{ amount: '{{ $value['value'] }}', date: '{{ $date }}' }">
+                                            <div x-data="{data: @js($sliderData)}" class="hover:underline cursor-pointer clickable"
+                                                 @click.prevent="Livewire.emit('slide-over.open', 'slides.right-slide', { data })"
+                                                 x-cloak
+                                            >
+                                                {!! redIfNegative($value) !!}
+                                            </div>
                                         </x-review-number-button>
+
+                                        <div x-data="{data: @js($sliderData)}" class="hover:underline cursor-pointer clickable"
+                                             @click.prevent="Livewire.emit('slide-over.open', 'slides.right-slide', { data })"
+                                             x-cloak x-show="publicView">
+                                            {!! redIfNegative($value) !!}
+                                        </div>
                                     </td>
                                 @endforeach
                             </tr>
@@ -141,9 +223,13 @@
                                     <td class="pl-6 py-1 last:pr-8">
                                         <?php $value = $data[$key]['yoy_change'][$date]; ?>
 
-                                        <x-review-number-button x-data="{ amount: '{{ $value['value'] }}', date: '{{ $date }}' }">
+                                        <x-review-number-button x-show="!publicView" x-data="{ amount: '{{ $value['value'] }}', date: '{{ $date }}' }">
                                             {!! redIfNegative($value) !!}
                                         </x-review-number-button>
+
+                                        <div x-show="publicView">
+                                            {!! redIfNegative($value) !!}
+                                        </div>
                                     </td>
                                 @endforeach
                             </tr>
@@ -155,9 +241,13 @@
                                     <td class="pl-6 py-1 last:pr-8">
                                         <?php $value = $data[$key]['ebitda_percentage'][$date]; ?>
 
-                                        <x-review-number-button x-data="{ amount: '{{ $value['value'] }}', date: '{{ $date }}' }">
+                                        <x-review-number-button x-show="!publicView" x-data="{ amount: '{{ $value['value'] }}', date: '{{ $date }}' }">
                                             {!! redIfNegative($value) !!}
                                         </x-review-number-button>
+
+                                        <div x-show="publicView">
+                                            {!! redIfNegative($value) !!}
+                                        </div>
                                     </td>
                                 @endforeach
                             </tr>
@@ -170,9 +260,13 @@
                                 <td class="pl-6 pt-1 pb-2 last:pr-8 last:rounded-br-lg">
                                     <?php $value = $data[$key]['revenue_percentage'][$date]; ?>
 
-                                    <x-review-number-button x-data="{ amount: '{{ $value['value'] }}', date: '{{ $date }}' }">
+                                    <x-review-number-button x-show="!publicView" x-data="{ amount: '{{ $value['value'] }}', date: '{{ $date }}' }">
                                         {!! redIfNegative($value) !!}
                                     </x-review-number-button>
+
+                                    <div x-show="publicView">
+                                        {!! redIfNegative($value) !!}
+                                    </div>
                                 </td>
                             @endforeach
                         </tr>
@@ -190,9 +284,13 @@
                                 <?php $value = $data['free_cashflow']['timeline'][$date]; ?>
 
                                 <td class="pl-6 pt-2 pb-1 last:pr-8 last:rounded-tr-lg">
-                                    <x-review-number-button x-data="{ amount: '{{ $value['value'] }}', date: '{{ $date }}' }">
+                                    <x-review-number-button x-show="!publicView" x-data="{ amount: '{{ $value['value'] }}', date: '{{ $date }}' }">
                                         {!! redIfNegative($value) !!}
                                     </x-review-number-button>
+
+                                    <div x-show="publicView">
+                                        {!! redIfNegative($value) !!}
+                                    </div>
                                 </td>
                             @endforeach
                         </tr>
@@ -204,9 +302,13 @@
                                 <td class="pl-6 py-1 last:pr-8">
                                     <?php $value = $data['free_cashflow']['yoy_change'][$date]; ?>
 
-                                    <x-review-number-button x-data="{ amount: '{{ $value['value'] }}', date: '{{ $date }}' }">
+                                    <x-review-number-button x-show="!publicView" x-data="{ amount: '{{ $value['value'] }}', date: '{{ $date }}' }">
                                         {!! redIfNegative($value) !!}
                                     </x-review-number-button>
+
+                                    <div x-show="publicView">
+                                        {!! redIfNegative($value) !!}
+                                    </div>
                                 </td>
                             @endforeach
                         </tr>
@@ -218,9 +320,13 @@
                                 <td class="pl-6 py-1 last:pr-8">
                                     <?php $value = $data['free_cashflow']['ebitda_percentage'][$date]; ?>
 
-                                    <x-review-number-button x-data="{ amount: '{{ $value['value'] }}', date: '{{ $date }}' }">
+                                    <x-review-number-button x-show="!publicView" x-data="{ amount: '{{ $value['value'] }}', date: '{{ $date }}' }">
                                         {!! redIfNegative($value) !!}
                                     </x-review-number-button>
+
+                                    <div x-show="publicView">
+                                        {!! redIfNegative($value) !!}
+                                    </div>
                                 </td>
                             @endforeach
                         </tr>
@@ -232,9 +338,13 @@
                                 <td class="pl-6 pt-1 pb-2 last:pr-8 last:rounded-br-lg">
                                     <?php $value = $data['free_cashflow']['revenue_percentage'][$date]; ?>
 
-                                    <x-review-number-button x-data="{ amount: '{{ $value['value'] }}', date: '{{ $date }}' }">
+                                    <x-review-number-button x-show="!publicView" x-data="{ amount: '{{ $value['value'] }}', date: '{{ $date }}' }">
                                         {!! redIfNegative($value) !!}
                                     </x-review-number-button>
+
+                                    <div x-show="publicView">
+                                        {!! redIfNegative($value) !!}
+                                    </div>
                                 </td>
                             @endforeach
                         </tr>
@@ -250,11 +360,33 @@
 
                             @foreach ($selectedDates as $date)
                                 <?php $value = $data['networth_change']['timeline'][$date]; ?>
+                                <?php $hash = $data['networth_change']['hash'][$date]; ?>
+                                <?php $sliderData = [
+                                    'ticker' => $company['ticker'],
+                                    'value' => $value['value'],
+                                    'hash' => $hash,
+                                    'secondHash' => $data['networth_change']['secondHash'][$date],
+                                    'isLink' => false,
+                                    'decimalPlaces' => 3
+                                ]; ?>
 
                                 <td class="pl-6 pt-2 pb-1 last:pr-8 last:rounded-tr-lg">
-                                    <x-review-number-button x-data="{ amount: '{{ $value['value'] }}', date: '{{ $date }}' }">
-                                        {!! redIfNegative($value) !!}
+                                    <x-review-number-button x-show="!publicView" x-data="{ amount: '{{ $value['value'] }}', date: '{{ $date }}' }">
+                                        <div x-data="{data: @js($sliderData)}" class="hover:underline cursor-pointer clickable"
+                                             @click.prevent="Livewire.emit('slide-over.open', 'slides.right-slide', { data })"
+                                             x-cloak
+                                        >
+                                            {!! redIfNegative($value) !!}
+                                        </div>
                                     </x-review-number-button>
+
+                                    <div x-data="{data: @js($sliderData)}" class="hover:underline cursor-pointer clickable"
+                                         @click.prevent="Livewire.emit('slide-over.open', 'slides.right-slide', { data })"
+                                         x-cloak
+                                         x-show="publicView"
+                                    >
+                                        {!! redIfNegative($value) !!}
+                                    </div>
                                 </td>
                             @endforeach
                         </tr>
@@ -266,9 +398,13 @@
                                 <td class="pl-6 py-1 last:pr-8">
                                     <?php $value = $data['networth_change']['yoy_change'][$date]; ?>
 
-                                    <x-review-number-button x-data="{ amount: '{{ $value['value'] }}', date: '{{ $date }}' }">
+                                    <x-review-number-button x-show="!publicView" x-data="{ amount: '{{ $value['value'] }}', date: '{{ $date }}' }">
                                         {!! redIfNegative($value) !!}
                                     </x-review-number-button>
+
+                                    <div x-show="publicView">
+                                        {!! redIfNegative($value) !!}
+                                    </div>
                                 </td>
                             @endforeach
                         </tr>
@@ -280,9 +416,13 @@
                                 <td class="pl-6 py-1 last:pr-8">
                                     <?php $value = $data['networth_change']['ebitda_percentage'][$date]; ?>
 
-                                    <x-review-number-button x-data="{ amount: '{{ $value['value'] }}', date: '{{ $date }}' }">
+                                    <x-review-number-button x-show="!publicView" x-data="{ amount: '{{ $value['value'] }}', date: '{{ $date }}' }">
                                         {!! redIfNegative($value) !!}
                                     </x-review-number-button>
+
+                                    <div x-show="publicView">
+                                        {!! redIfNegative($value) !!}
+                                    </div>
                                 </td>
                             @endforeach
                         </tr>
@@ -294,9 +434,13 @@
                                 <td class="pl-6 pt-1 pb-2 last:pr-8 last:rounded-br-lg">
                                     <?php $value = $data['networth_change']['revenue_percentage'][$date]; ?>
 
-                                    <x-review-number-button x-data="{ amount: '{{ $value['value'] }}', date: '{{ $date }}' }">
+                                    <x-review-number-button x-show="!publicView" x-data="{ amount: '{{ $value['value'] }}', date: '{{ $date }}' }">
                                         {!! redIfNegative($value) !!}
                                     </x-review-number-button>
+
+                                    <div x-show="publicView">
+                                        {!! redIfNegative($value) !!}
+                                    </div>
                                 </td>
                             @endforeach
                         </tr>
@@ -314,9 +458,13 @@
                                 <?php $value = $data['levered_free_cashflow']['timeline'][$date]; ?>
 
                                 <td class="pl-6 pt-2 pb-1 last:pr-8 last:rounded-tr-lg">
-                                    <x-review-number-button x-data="{ amount: '{{ $value['value'] }}', date: '{{ $date }}' }">
+                                    <x-review-number-button x-show="!publicView" x-data="{ amount: '{{ $value['value'] }}', date: '{{ $date }}' }">
                                         {!! redIfNegative($value) !!}
                                     </x-review-number-button>
+
+                                    <div x-show="publicView">
+                                        {!! redIfNegative($value) !!}
+                                    </div>
                                 </td>
                             @endforeach
                         </tr>
@@ -328,9 +476,13 @@
                                 <td class="pl-6 py-1 last:pr-8">
                                     <?php $value = $data['levered_free_cashflow']['yoy_change'][$date]; ?>
 
-                                    <x-review-number-button x-data="{ amount: '{{ $value['value'] }}', date: '{{ $date }}' }">
+                                    <x-review-number-button x-show="!publicView" x-data="{ amount: '{{ $value['value'] }}', date: '{{ $date }}' }">
                                         {!! redIfNegative($value) !!}
                                     </x-review-number-button>
+
+                                    <div x-show="publicView">
+                                        {!! redIfNegative($value) !!}
+                                    </div>
                                 </td>
                             @endforeach
                         </tr>
@@ -342,9 +494,13 @@
                                 <td class="pl-6 py-1 last:pr-8">
                                     <?php $value = $data['levered_free_cashflow']['ebitda_percentage'][$date]; ?>
 
-                                    <x-review-number-button x-data="{ amount: '{{ $value['value'] }}', date: '{{ $date }}' }">
+                                    <x-review-number-button x-show="!publicView" x-data="{ amount: '{{ $value['value'] }}', date: '{{ $date }}' }">
                                         {!! redIfNegative($value) !!}
                                     </x-review-number-button>
+
+                                    <div x-show="publicView">
+                                        {!! redIfNegative($value) !!}
+                                    </div>
                                 </td>
                             @endforeach
                         </tr>
@@ -356,9 +512,13 @@
                                 <td class="pl-6 pt-1 pb-2 last:pr-8">
                                     <?php $value = $data['levered_free_cashflow']['margin'][$date]; ?>
 
-                                    <x-review-number-button x-data="{ amount: '{{ $value['value'] }}', date: '{{ $date }}' }">
+                                    <x-review-number-button x-show="!publicView" x-data="{ amount: '{{ $value['value'] }}', date: '{{ $date }}' }">
                                         {!! redIfNegative($value) !!}
                                     </x-review-number-button>
+
+                                    <div x-show="publicView">
+                                        {!! redIfNegative($value) !!}
+                                    </div>
                                 </td>
                             @endforeach
                         </tr>
