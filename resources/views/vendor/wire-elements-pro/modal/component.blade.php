@@ -16,7 +16,7 @@
     </div>
 
     <div class="wep-modal-container">
-        <div class="wep-modal-inner-container">
+        <div class="wep-modal-inner-container items-start pt-[50px]">
             <div x-show="open && showActiveComponent"
                  x-transition:enter="enter"
                  x-transition:enter-start="start"

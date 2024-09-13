@@ -14,6 +14,7 @@ class FundOverviewGraph extends Component
     public $currentChartPeriod = "3m";
     public $chartData = [];
     public $loading = false;
+    public $priceChange;
 
     public $chartPeriods = [
         '3m' => '3 months',
@@ -39,6 +40,8 @@ class FundOverviewGraph extends Component
 
         $this->name = $companyName;
         $this->ticker = $ticker;
+
+        $this->priceChange = 0;
     }
 
     public function updated($propertyName)
@@ -89,6 +92,7 @@ class FundOverviewGraph extends Component
             $first = $result->first()->adj_close;
             $last = $result->last()->adj_close;
             $this->percentage = $last ? round((($last - $first) / $last) * 100, 2) : 0;
+            $this->priceChange = number_format($last - $first, 2);
         }
 
         if ($this->currentChartPeriod == '5yr') {

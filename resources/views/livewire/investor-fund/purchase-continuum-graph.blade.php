@@ -169,15 +169,26 @@
         };
 
         const adjustedXPositions = adjustPositions(xPositions);
+        let previousFlag = false;
 
         // Create final data with adjusted x-values
-        const data1 = data.map((item, index) => ({
-            x: adjustedXPositions[index],
-            name: item.name,
-            price: item.price,
-            current: item.current,
-            date: item.date,
-        }));
+        const data1 = data.map((item, index) => {
+                let flag = false, requiredSpacing = 4 * radius + padding;
+
+                if (index > 0 && adjustedXPositions[index] - adjustedXPositions[index - 1] < requiredSpacing) flag = !previousFlag;
+                else flag = false;
+
+                previousFlag = flag;
+
+                return {
+                    x: adjustedXPositions[index],
+                    name: item.name,
+                    price: item.price,
+                    current: item.current,
+                    date: item.date,
+                    flag: flag,
+                };
+            });
 
         this.xPositions = data1;
 

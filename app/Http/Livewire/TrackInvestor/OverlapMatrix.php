@@ -11,12 +11,14 @@ use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Carbon;
 use Livewire\Component;
+use Illuminate\Support\Facades\Cookie;
 
 class OverlapMatrix extends Component
 {
     use AsTab;
 
     public $investors;
+    public $curInvestors;
     public $canLoadMore = true;
 
     public $category = 'fund';
@@ -34,12 +36,17 @@ class OverlapMatrix extends Component
     public $views;
     public $view = 'most-recent';
 
+    public $cookieKey = 'overlap_matrix_investors';
+
     public function mount()
     {
         $this->investors = collect([]);
         $this->getInvestors();
         $this->generateViews();
         $this->cacheKey = 'overlap_matrix_' . Auth::user()->id;
+
+        $this->curInvestors = json_decode(Cookie::get($this->cookieKey, '[]'));
+        $this->getOverlapMatrix($this->curInvestors);
     }
 
     public function updated($prop)
@@ -139,12 +146,18 @@ class OverlapMatrix extends Component
 
     private function getOverlapMatrixData($investors)
     {
+        if (count($investors) === 0) {
+            return collect();
+        }
+
         // Initialize filter arrays
         $mutualFundFilters = [];
         $fundFilters = [];
 
         // Classify investors into funds and mutual funds
         foreach ($investors as $investor) {
+            if (gettype($investor) !== 'array') $investor = (array) $investor;
+
             if ($investor['type'] === 'fund') {
                 $fundFilters[] = [
                     'cik' => $investor['cik'],
@@ -328,11 +341,21 @@ class OverlapMatrix extends Component
         return $query;
     }
 
+    private function filterInvestorsChecking($investors)
+    {
+        return array_filter(array_map(fn ($investor) => (array) $investor, $investors), fn ($investor) => $investor['bAdded']);
+    }
+
     private function getOverlapMatrix($investors, $itemsPerPage = 5)
     {
+        $this->curInvestors = $investors;
+        Cookie::queue($this->cookieKey, json_encode($this->curInvestors), 60);
+
         Cache::forget($this->cacheKey);
 
         Cache::remember($this->cacheKey, Carbon::now()->addMinutes(30), function() use($investors, $itemsPerPage) {
+            $investors = $this->filterInvestorsChecking($investors);
+
             $groupedByCount = $this->getOverlapMatrixData($investors);
 
             $paginatedGroups = $groupedByCount->map(function ($group) use ($itemsPerPage) {
@@ -360,6 +383,7 @@ class OverlapMatrix extends Component
     public function loadMoreOverlapMatrix($investorCount, $additional = 1)
     {
         if (! Cache::has($this->cacheKey)) {
+            $investors = $this->filterInvestorsChecking($this->curInvestors);
             $groupedByCount = $this->getOverlapMatrixData($this->investors);
 
             $paginatedGroups = $groupedByCount->map(function ($group) {

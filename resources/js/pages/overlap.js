@@ -213,16 +213,26 @@ function renderPurchaseChart(canvas, data, chartOptions) {
         ctx.textBaseline = "middle";
         ctx.fillText('$' + formatNumber(item.price), item.x, lineHeight);
 
-        ctx.fillStyle = "#fff";
-        ctx.fillRect(item.x - circleRadius * 3, lineHeight + circleRadius + 7, circleRadius * 6, 35);
+        // ctx.fillStyle = "#fff";
+        // ctx.fillRect(item.x - circleRadius * 3, lineHeight + circleRadius + 7, circleRadius * 6, 35);
 
         ctx.fillStyle = "#000";
-        ctx.textBaseline = "top";
-        ctx.fillText(truncateText(ctx, item.name, circleRadius * 6), item.x, lineHeight + circleRadius + 10);
 
-        ctx.font = `${chartOptions.fontSize}px Arial`;
-        ctx.fillStyle = item.current ? "#376bfb" : "#000"; // Text color for label
-        ctx.fillText(item.current ? "Current Stock Price" : "Average Price Paid", item.x, lineHeight + circleRadius + 25);
+        if (item.flag) {
+            ctx.textBaseline = "bottom";
+            ctx.fillText(truncateText(ctx, item.name, circleRadius * 6), item.x, lineHeight - circleRadius - 20);
+
+            ctx.font = `${chartOptions.fontSize}px Arial`;
+            ctx.fillStyle = item.current ? "#376bfb" : "#000"; // Text color for label
+            ctx.fillText(item.current ? "Current Stock Price" : "Average Price Paid", item.x, lineHeight - circleRadius - 35);
+        } else {
+            ctx.textBaseline = "top";
+            ctx.fillText(truncateText(ctx, item.name, circleRadius * 6), item.x, lineHeight + circleRadius + 10);
+
+            ctx.font = `${chartOptions.fontSize}px Arial`;
+            ctx.fillStyle = item.current ? "#376bfb" : "#000"; // Text color for label
+            ctx.fillText(item.current ? "Current Stock Price" : "Average Price Paid", item.x, lineHeight + circleRadius + 25);
+        }
     });
 }
 
