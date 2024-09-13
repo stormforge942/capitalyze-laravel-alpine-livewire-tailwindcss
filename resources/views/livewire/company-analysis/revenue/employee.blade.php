@@ -50,14 +50,28 @@
                             </td>
                             @foreach ($selectedDates as $date)
                                 <?php $value = $data['revenues']['timeline'][$date]; ?>
+                                <?php $sliderData = [
+                                    'ticker' => $company['ticker'],
+                                    'value' => $value['value'],
+                                    'hash' => $hashes[$date]['hash'],
+                                    'secondHash' => $hashes[$date]['secondHash'],
+                                    'isLink' => false,
+                                    'decimalPlaces' => 3
+                                ]; ?>
 
                                 <td
                                     class="pl-6 pt-2 pb-1 last:pr-8 @if (!$loop->first) last:rounded-tr-lg @endif">
                                     <x-review-number-button x-show="!publicView" x-data="{ amount: '{{ $value['value'] }}', date: '{{ $date }}' }">
-                                        {!! redIfNegative($value) !!}
+                                        <div x-data="{data: @js($sliderData)}" class="hover:underline cursor-pointer clickable"
+                                             @click.prevent="Livewire.emit('slide-over.open', 'slides.right-slide', { data })"
+                                             x-cloak>
+                                            {!! redIfNegative($value) !!}
+                                        </div>
                                     </x-review-number-button>
 
-                                    <div x-show="publicView">
+                                    <div x-data="{data: @js($sliderData)}" class="hover:underline cursor-pointer clickable"
+                                         @click.prevent="Livewire.emit('slide-over.open', 'slides.right-slide', { data })"
+                                         x-cloak x-show="publicView">
                                         {!! redIfNegative($value) !!}
                                     </div>
                                 </td>
@@ -76,7 +90,7 @@
                                     </x-review-number-button>
 
                                     <div x-show="publicView">
-                                        {!! redIfNegative($value) !!}
+                                        {!! redIfNegative($value, fn($val) => $val . '%') !!}
                                     </div>
                                 </td>
                             @endforeach
@@ -95,7 +109,7 @@
                                     </x-review-number-button>
 
                                     <div x-show="publicView">
-                                        {!! redIfNegative($value) !!}
+                                        {!! redIfNegative($value, fn($val) => $val . '%') !!}
                                     </div>
                                 </td>
                             @endforeach
@@ -113,7 +127,7 @@
                                     </x-review-number-button>
 
                                     <div x-show="publicView">
-                                        {!! redIfNegative($value) !!}
+                                        {!! redIfNegative($value, fn($val) => $val . '%') !!}
                                     </div>
                                 </td>
                             @endforeach
@@ -132,7 +146,7 @@
                                     </x-review-number-button>
 
                                     <div x-show="publicView">
-                                        {!! redIfNegative($value) !!}
+                                        {!! redIfNegative($value, fn($val) => $val . '%') !!}
                                     </div>
                                 </td>
                             @endforeach
@@ -150,7 +164,7 @@
                                     </x-review-number-button>
 
                                     <div x-show="publicView">
-                                        {!! redIfNegative($value) !!}
+                                        {!! redIfNegative($value, fn($val) => $val . '%') !!}
                                     </div>
                                 </td>
                             @endforeach

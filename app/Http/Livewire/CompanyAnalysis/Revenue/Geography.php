@@ -90,6 +90,10 @@ class Geography extends Component
 
         foreach ($result['regions'] as $region => $values) {
             foreach ($values as $key => $value) {
+                if (in_array($key, ['hash', 'secondHash'])) {
+                    continue;
+                }
+
                 foreach ($value as $date => $amt) {
                     $result['regions'][$region][$key][$date] = [
                         'value' => $amt,
@@ -123,18 +127,29 @@ class Geography extends Component
 
         $cacheDuration = 3600;
 
-        $data = Cache::remember($cacheKey, $cacheDuration, function () use ($source) {
-            return rescue(fn () => json_decode(
-                DB::connection('pgsql-xbrl')
-                    ->table('as_reported_sec_segmentation_api')
-                    ->where('ticker', '=', $this->company['ticker'])
-                    ->where('endpoint', '=', $source)
-                    ->value('api_return_open_ai'), true), [], false);
+        $periodMap = ['annual' => 'annual', 'quarterly' => 'quarter'];
+
+        $data = Cache::remember($cacheKey, $cacheDuration, function () use ($source, $periodMap) {
+            return rescue(fn () =>
+            DB::connection('pgsql-xbrl')
+                ->table('as_reported_sec_segmentation_api')
+                ->join('info_tikr_presentations', 'as_reported_sec_segmentation_api.ticker', '=', 'info_tikr_presentations.ticker')
+                ->where('as_reported_sec_segmentation_api.ticker', '=', $this->company['ticker'])
+                ->where('as_reported_sec_segmentation_api.endpoint', '=', $source)
+                ->where('info_tikr_presentations.period', '=', $periodMap[$this->period])
+                ->select('as_reported_sec_segmentation_api.api_return_open_ai', 'info_tikr_presentations.income_statement')
+                ->first()
+            );
         });
 
         $regions = [];
+        $apiReturns = json_decode($data->api_return_open_ai, true);
+        $incomeStatements = collect(json_decode($data->income_statement, true));
+        $revenueKey = $incomeStatements->search(function ($value, $key) {
+            return str_contains($key, 'Revenue');
+        });
 
-        foreach ($data as $item) {
+        foreach ($apiReturns as $item) {
             $date = array_key_first($item);
 
             foreach ($item[$date] as $key => $value) {
@@ -144,7 +159,9 @@ class Geography extends Component
                     $regions[$name] = [];
                 }
 
-                $regions[$name][$date] = intval($value);
+                $hashExtractionResult = $this->extractHashes($incomeStatements[$revenueKey][$date]);
+
+                $regions[$name][$date] = ['value' => intval($value), 'hash' => $hashExtractionResult['hash'], 'secondHash' => $hashExtractionResult['secondHash']];
             }
         }
 
@@ -188,7 +205,7 @@ class Geography extends Component
             $lastVal = 0;
 
             foreach ($this->dates as $date) {
-                $value = $timeline[$date] ?? 0;
+                $value = $timeline[$date]['value'] ?? 0;
 
                 $data['regions'][$region]['timeline'][$date] = $value;
                 $data['regions'][$region]['yoy_change'][$date] = $lastVal
@@ -196,6 +213,9 @@ class Geography extends Component
                     : 0;
 
                 $data['total']['timeline'][$date] += $value;
+
+                $data['regions'][$region]['hash'][$date] =  $timeline[$date]['hash'] ?? null;
+                $data['regions'][$region]['secondHash'][$date] = $timeline[$date]['secondHash'] ?? null;
 
                 $lastVal = $value;
             }
@@ -217,5 +237,16 @@ class Geography extends Component
         }
 
         $this->rawData = $data;
+    }
+
+    private function extractHashes($data)
+    {
+        list($value, $hash, $secondHash) = array_pad(explode('|', $data[0]), 3, null);
+
+        return [
+            'value' => $value,
+            'hash' => $hash,
+            'secondHash' => $secondHash,
+        ];
     }
 }

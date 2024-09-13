@@ -16,6 +16,7 @@ class Employee extends Component
     public $company;
     public $rawData = [];
     public $publicView;
+    public $hashes = [];
     public $chartConfig = [
         'showLabel' => false,
     ];
@@ -42,6 +43,7 @@ class Employee extends Component
     {
         return view('livewire.company-analysis.revenue.employee', [
             'data' => $this->makeData(),
+            'hashes' => $this->hashes,
             'chart' => [
                 'data' => $this->makeChartData(),
                 'key' => $this->makeChartKey(),
@@ -186,6 +188,15 @@ class Employee extends Component
 
         foreach ($stmt as $key => $value) {
             if (str_starts_with($key, 'Revenues|')) {
+                $this->hashes = array_map(function ($value) {
+                    $hashExtractionResult = $this->extractHashes($value);
+                    
+                    return [
+                        'hash' => $hashExtractionResult['hash'],
+                        'secondHash' => $hashExtractionResult['secondHash']
+                    ];
+                }, $value);
+
                 $revenues = array_map(function ($value) {
                     return intval(explode('|', $value[0])[0]);
                 }, $value);
@@ -221,5 +232,16 @@ class Employee extends Component
         $dates = array_keys($data['revenues']);
 
         $this->selectDates($dates);
+    }
+
+    private function extractHashes($data)
+    {
+        list($value, $hash, $secondHash) = array_pad(explode('|', $data[0]), 3, null);
+
+        return [
+            'value' => $value,
+            'hash' => $hash,
+            'secondHash' => $secondHash,
+        ];
     }
 }

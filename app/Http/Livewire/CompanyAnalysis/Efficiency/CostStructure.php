@@ -118,6 +118,8 @@ class CostStructure extends Component
                     },
                     []
                 ),
+                'hash' => array_combine($this->dates, array_map(fn ($date) => $this->extractValues($statement['Total Operating Expenses'][$date])['hash'] ?? 0, $this->dates)),
+                'secondHash' => array_combine($this->dates, array_map(fn ($date) => $this->extractValues($statement['Total Operating Expenses'][$date])['secondHash'] ?? 0, $this->dates)),
                 'yoy_change' => [],
                 'revenue_percentage' => [],
             ],

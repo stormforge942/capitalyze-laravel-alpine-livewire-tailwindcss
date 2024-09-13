@@ -54,6 +54,7 @@ class Efficiency extends Component
                 'SG&A Expenses',
                 'Total Revenues',
                 'EBITDA',
+                'Total Operating Expenses'
             ])) {
                 $result[$key] = $this->formatValue($value);
             }
