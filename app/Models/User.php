@@ -113,6 +113,11 @@ class User extends Authenticatable implements MustVerifyEmail
         return $this->hasOne(Team::class, 'id', 'current_team_id');
     }
 
+    public function searchHistory(): HasOne
+    {
+        return $this->hasOne(UserSearchHistory::class, 'id', 'user_id');
+    }
+
     public function isAdmin(): bool
     {
         return $this->is_admin;
