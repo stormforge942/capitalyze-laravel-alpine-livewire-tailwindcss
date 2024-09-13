@@ -34,8 +34,4 @@ return [
     'ipinfo' => [
         'key' => env('IPINFO_API_KEY'),
     ],
-
-    'logo' => [
-        'key' => env('LOGO_API_KEY'),
-    ],
 ];

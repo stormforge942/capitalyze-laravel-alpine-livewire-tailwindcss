@@ -38,7 +38,19 @@
     <div class="px-4 pt-4 pb-6 md:px-6 lg:px-8 lg:pt-8" >
         <div class="flex items-center justify-between gap-x-2 mx-auto" style="max-width: 1500px;">
             <div class="flex-1 transition-all lg:max-w-7xl">
-                <livewire:global-search />
+                <div
+                    class="h-14 w-full lg:w-2/3 rounded-lg border border-green-muted bg-white leading-[3rem] px-3 flex items-center focus-within:border-green-dark">
+                    <svg width="25" height="24" viewBox="0 0 25 24" fill="none"
+                        xmlns="http://www.w3.org/2000/svg">
+                        <path
+                            d="M16.3645 14.3208H15.5515L15.2633 14.0429C16.2719 12.8696 16.8791 11.3465 16.8791 9.68954C16.8791 5.99485 13.8842 3 10.1895 3C6.49485 3 3.5 5.99485 3.5 9.68954C3.5 13.3842 6.49485 16.3791 10.1895 16.3791C11.8465 16.3791 13.3696 15.7719 14.5429 14.7633L14.8208 15.0515V15.8645L19.9666 21L21.5 19.4666L16.3645 14.3208ZM10.1895 14.3208C7.62693 14.3208 5.55832 12.2521 5.55832 9.68954C5.55832 7.12693 7.62693 5.05832 10.1895 5.05832C12.7521 5.05832 14.8208 7.12693 14.8208 9.68954C14.8208 12.2521 12.7521 14.3208 10.1895 14.3208Z"
+                            fill="#9DA3A8" />
+                    </svg>
+
+                    <button x-data @click="$el.blur()" wire:click="$emit('spotlight.toggle')" class="w-full text-left text-[#7C8286] ml-3 focus:outline-none">
+                        Search
+                    </button>
+                </div>
             </div>
     
             <button type="button" class="h-[50px] lg:h-auto bg-dark text-green-dark font-medium text-sm flex items-center gap-x-2 px-4 py-2 rounded hover:bg-opacity-80 transition-all" onclick="Livewire.emit('modal.open', 'rate-experience')">
