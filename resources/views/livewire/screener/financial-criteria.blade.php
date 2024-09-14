@@ -1,5 +1,5 @@
 <div class="py-3 flex items-center flex-1 border border-[#D4DDD7] rounded-lg children-border-right max-w-[1230px]"
-    x-init="$watch('criteria.period', () => criteria.dates = [])">
+    x-init="$watch('criteria.type', () => criteria.dates = [])">
     <div class="flex-none px-4" x-data="{
         search: '',
         options: [],
@@ -235,10 +235,10 @@
         </x-dropdown>
     </div>
 
-    <x-select class="flex-none px-4" placeholder="Data Type" :options="['value' => 'Value', 'changeYoY' => '% Change YoY']" x-model="criteria.type"
+    <x-select class="flex-none px-4" placeholder="Choose Data Type" :options="['value' => 'Value', 'changeYoY' => '% Change YoY']" x-model="criteria.type"
         x-show="criteria.metric" :auto-disable="false" btn-text="Done"></x-select>
 
-    <x-select class="flex-none px-4" placeholder="Period" :options="['annual' => 'Fiscal Annual', 'quarterly' => 'Fiscal Quarterly']" x-model="criteria.period"
+    <x-select class="flex-none px-4" placeholder="Choose Period" :options="['annual' => 'Fiscal Annual', 'quarterly' => 'Fiscal Quarterly']" x-model="criteria.period"
         x-show="criteria.metric" :auto-disable="false" btn-text="Done"></x-select>
 
     <template x-if="criteria.metric && criteria.period === 'annual'">
@@ -249,6 +249,36 @@
     <template x-if="criteria.metric && criteria.period === 'quarterly'">
         <x-select class="flex-none px-4" placeholder="Dates" :options="$dates['quarterly']" x-model="criteria.dates"
             :multiple="true" :auto-disable="false" btn-text="Done"></x-select>
+    </template>
+
+    <template x-if="criteria.metric && criteria.dates.length">
+        <x-select class="flex-none px-4" placeholder="Choose Operation" :options="$_options['operators']"
+            x-model="criteria.operator" :auto-disable="false" btn-text="Done"
+            @selected="() => {
+                criteria.value = event.detail.selected === 'between' ? [null, null] : null
+            }"></x-select>
+    </template>
+
+    <template x-if="criteria.dates.length && criteria.metric && criteria.operator">
+        <div class="flex-none">
+            <template x-if="criteria.operator === 'between'">
+                <div class="flex items-center gap-x-2">
+                    <input x-model.debounce="criteria.value[0]"
+                        class="w-[80px] border-[0.5px] border-[#D4DDD7] p-2 rounded-full flex items-center gap-x-1 bg-white focus:ring-0 text-sm"
+                        type="number" />
+                    <span>AND</span>
+                    <input x-model.debounce="criteria.value[1]"
+                        class="w-[80px] border-[0.5px] border-[#D4DDD7] p-2 rounded-full flex items-center gap-x-1 bg-white focus:ring-0 text-sm"
+                        type="number" />
+                </div>
+            </template>
+
+            <template x-if="criteria.operator !== 'between'">
+                <input x-model.debounce="criteria.value"
+                    class="w-[80px] border-[0.5px] border-[#D4DDD7] p-2 rounded-full flex items-center gap-x-1 bg-white focus:ring-0 text-sm"
+                    type="number" />
+            </template>
+        </div>
     </template>
 
     <button class="flex-end text-red flex-none ml-auto px-4 mr-1 text-sm font-medium hover:underline"

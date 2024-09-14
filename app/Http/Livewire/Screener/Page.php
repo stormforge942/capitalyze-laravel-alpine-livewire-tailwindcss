@@ -13,6 +13,14 @@ class Page extends Component
     const DATE_START = 1990;
 
     public const SUMMARIES = ['Max', 'Min', 'Sum', 'Median'];
+    public const OPERATORS = [
+        '>'=> 'Greater than (>)',
+        '>=' => 'Greater than or equal (>=)',
+        '<' => 'Less than (<)',
+        '<=' => 'Less than or equal (<=)',
+        '=' => 'Equal (=)',
+        'between' => 'Between',
+    ];
 
     public $tab = null;
     public $options = null;
@@ -60,7 +68,10 @@ class Page extends Component
                 'annual' => $this->generateAnnualDates(),
                 'quarterly' => $this->generateQuarterlyDates(),
             ],
-            'availableSummaries' => self::SUMMARIES,
+            '_options' => [
+                'summaries' => self::SUMMARIES,
+                'operators' => self::OPERATORS,
+            ],
         ]);
     }
 
@@ -89,17 +100,6 @@ class Page extends Component
         $this->summaries = $tab->summaries;
 
         $this->views = $tab->views ?? [];
-    }
-
-    public function updateCriterias()
-    {
-        ScreenerTab::query()
-            ->where('user_id', auth()->id())
-            ->where('id', $this->tab['id'])
-            ->update([
-                'universal_criteria' => $this->universalCriteria,
-                'financial_criteria' => $this->financialCriteria,
-            ]);
     }
 
     private function generateAnnualDates()

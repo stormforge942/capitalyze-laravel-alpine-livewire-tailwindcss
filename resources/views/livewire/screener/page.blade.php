@@ -8,16 +8,19 @@ $flattenedMetrics = App\Services\ChartBuilderService::options(true);
     financialCriteria: $wire.entangle('financialCriteria', true),
     summaries: @js($summaries),
     init() {
-        const fn = Alpine.debounce((val, variable) => this.updateConfiguration(val, variable), 1000);
-
-        this.$watch('universalCriteria', (val) => fn(val, 'universal_criteria'), { deep: true });
+        this.$watch('universalCriteria', (val) => this.updateConfiguration(val, 'universal_criteria'), { deep: true });
     },
     get disabledGetResultButton() {
         return false
     },
     resetUniversalCriteria() {
-        this.universalCriteria = null;
-        this.$wire.updateCriterias();
+        this.universalCriteria = {
+            locations: { data: [], exclude: false },
+            stock_exchanges: { data: [], exclude: false },
+            industries: { data: [], exclude: false },
+            sectors: { data: [], exclude: false },
+            market_cap: [null, null],
+        };
     },
     removeFinancialCriteria(id) {
         this.financialCriteria = this.financialCriteria.filter(criteria => criteria.id !== id);
@@ -67,7 +70,7 @@ $flattenedMetrics = App\Services\ChartBuilderService::options(true);
                                 criteria</p>
                         </div>
                         <div class="flex items-center gap-4">
-                            <x-select :options="$availableSummaries" :multiple="true" :searchable="false" x-model="summaries">
+                            <x-select :options="$_options['summaries']" :multiple="true" :searchable="false" x-model="summaries">
                                 <x-slot name="trigger">
                                     <div class="p-2 flex items-center gap-x-0.5 border border-green-muted rounded text-sm"
                                         :class="showDropdown ? 'bg-[#E2E2E2]' : 'bg-white hover:bg-[#E2E2E2]'">
@@ -158,11 +161,11 @@ $flattenedMetrics = App\Services\ChartBuilderService::options(true);
                         <h4 class="text-blue font-medium text-sm mb-2">Financial Criteria</h4>
                         <div class="space-y-4" x-data="{
                             get criterias() {
-                                if (!this.financialCriteria.length) this.add();
+                                if (!this.financialCriteria.length) this.add(false);
 
                                 return this.financialCriteria;
                             },
-                            add() {
+                            add(save = true) {
                                 this.financialCriteria.push({
                                     id: Math.random().toString(36).substring(7),
                                     metric: null,
@@ -172,6 +175,10 @@ $flattenedMetrics = App\Services\ChartBuilderService::options(true);
                                     operator: null,
                                     value: null,
                                 });
+                        
+                                if (save) {
+                                    this.updateConfiguration(this.financialCriteria, 'financial_criteria');
+                                }
                             }
                         }">
                             <template x-for="(criteria, index) in criterias" :key="criteria.id">
