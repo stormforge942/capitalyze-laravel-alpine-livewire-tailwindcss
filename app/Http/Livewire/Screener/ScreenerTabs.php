@@ -30,15 +30,6 @@ class ScreenerTabs extends Component
                 ->where('user_id', Auth::id())
                 ->create([
                     'name' => 'Untitled',
-                    'locations' => null,
-                    'stock_exchanges' => null,
-                    'industries' => null,
-                    'currencies' => null,
-                    'sectors' => null,
-                    'decimal' => null,
-                    'summaries' => null,
-                    'selected_financial_criteria' => null,
-                    'screener_view_name' => 'screenerData',
                     'user_id' => Auth::id(),
                 ])
                 ->only($cols);
@@ -47,17 +38,15 @@ class ScreenerTabs extends Component
         if (!$this->activeTab) {
             $activeTab = session('screener.activeTab');
 
-            if ($activeTab && Arr::first($this->tabs, fn ($tab) => $tab['id'] == $activeTab)) {
-                $this->activeTab = $activeTab;
-            } else {
-                $this->activeTab = $this->tabs[count($this->tabs) - 1]['id'];
-            }
+            $this->activeTab = $activeTab && Arr::first($this->tabs, fn($tab) => $tab['id'] == $activeTab)
+                ? $activeTab
+                : $this->tabs[count($this->tabs) - 1]['id'];
         }
     }
 
     public function init()
     {
-        $tab = Arr::first($this->tabs, fn ($tab) => $tab['id'] == $this->activeTab);
+        $tab = Arr::first($this->tabs, fn($tab) => $tab['id'] == $this->activeTab);
 
         $this->emitTo(Page::class, 'tabChanged', $tab);
     }
@@ -75,15 +64,6 @@ class ScreenerTabs extends Component
             ->where('user_id', Auth::id())
             ->create([
                 'name' => 'Untitled',
-                'locations' => null,
-                'stock_exchanges' => null,
-                'industries' => null,
-                'currencies' => null,
-                'sectors' => null,
-                'decimal' => null,
-                'summaries' => null,
-                'selected_financial_criteria' => null,
-                'screener_view_name' => 'screenerData',
                 'user_id' => Auth::id(),
             ])
             ->only($cols);
@@ -93,7 +73,7 @@ class ScreenerTabs extends Component
 
     public function changeTab($id)
     {
-        $tab = Arr::first($this->tabs, fn ($tab) => $tab['id'] == $id);
+        $tab = Arr::first($this->tabs, fn($tab) => $tab['id'] == $id);
 
         abort_if(!$tab, 403);
 
@@ -108,7 +88,7 @@ class ScreenerTabs extends Component
 
     public function updateTab($id, $name)
     {
-        abort_if(!Arr::first($this->tabs, fn ($tab) => $tab['id'] == $id), 403);
+        abort_if(!Arr::first($this->tabs, fn($tab) => $tab['id'] == $id), 403);
 
         ScreenerTab::query()
             ->where('user_id', Auth::id())
@@ -125,13 +105,13 @@ class ScreenerTabs extends Component
 
     public function deleteTab($id)
     {
-        abort_if(!Arr::first($this->tabs, fn ($tab) => $tab['id'] == $id), 403);
+        abort_if(!Arr::first($this->tabs, fn($tab) => $tab['id'] == $id), 403);
 
         ScreenerTab::query()
             ->where('id', $id)
             ->delete();
 
-        $this->tabs = array_values(array_filter($this->tabs, fn ($tab) => $tab['id'] != $id));
+        $this->tabs = array_values(array_filter($this->tabs, fn($tab) => $tab['id'] != $id));
 
         if (!count($this->tabs)) {
             $this->addTab();

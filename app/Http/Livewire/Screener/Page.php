@@ -2,57 +2,31 @@
 
 namespace App\Http\Livewire\Screener;
 
-use App\Models\CompanyProfile;
-use App\Models\ScreenerTab;
-use App\Services\ScreenerTableBuilderService;
-use App\Services\TableBuilderService;
-use Illuminate\Support\Facades\Cache;
 use Livewire\Component;
+use App\Models\ScreenerTab;
+use App\Models\CompanyProfile;
+use Carbon\Carbon;
+use Illuminate\Support\Facades\Cache;
 
 class Page extends Component
 {
+    const DATE_START = 1990;
+
+    public const SUMMARIES = ['Max', 'Min', 'Sum', 'Median'];
+
+    public $tab = null;
+    public $options = null;
+
+    public $selectedView = 'default';
+
+    public $universalCriteria = null;
+    public $financialCriteria = null;
+    public $views = null;
+    public $summaries = null;
+
     protected $listeners = [
-        'removeFinancialCriteria' => 'removeFinancialCriteria',
-        'addFinancialCriteriaToSelected' => 'addFinancialCriteriaToSelected',
-        'getScreenerResult' => 'getScreenerResult',
-        'addFinancialCriteria' => 'addFinancialCriteria',
-        'makeScreenerSummaryRows' => 'makeSummaryTableRows',
         'tabChanged' => 'tabChanged',
     ];
-
-    protected $tabs = [
-        'screenerData' => 'Screener Results',
-        'quality' => 'Quality',
-        'growth' => 'Growth',
-        'risk' => 'Risk',
-        'returnRatios' => 'Return Ratios',
-        'marginAnalysis' => 'Margin Analysis'
-    ];
-
-    public $options = null;
-    
-    public $tableColumns = [];
-    public $tableRows = [];
-    public $summaryRows = [];
-
-    public $activeTab;
-    public $summaryPlacement = 'top';
-    public $selectedFinancialCriteria = [];
-    public $summaries = [];
-    public $financialCriteriaCounters = [];
-
-    public $page = 1;
-    public $pageSize = 15;
-    public $totalPageCount = 0;
-    public $totalRecordCount = 0;
-
-    public $locationsValue;
-    public $stockExchangesValue;
-    public $sectorsValue;
-    public $industriesValue;
-    public $currenciesValue;
-    public $marketCapValue;
-    public $decimalValue;
 
     public function render()
     {
@@ -72,342 +46,92 @@ class Page extends Component
             }
         }
 
+        // fixes the stale data issue
+        if ($this->tab) {
+            $this->tabChanged([
+                'id' => $this->tab['id'],
+                'name' => $this->tab['name'],
+            ]);
+        }
+
+
         return view('livewire.screener.page', [
-            'tabs' => $this->tabs,
-            'activeTab' => $this->activeTab,
-            '$selectedFinancialCriteria' => $this->selectedFinancialCriteria,
-            'allMetrics' => TableBuilderService::options(true),
-            'summaries' => $this->summaries,
-            'tableRows' => $this->tableRows,
-            'summaryRows' => $this->summaryRows,
-            'tableColumns' => $this->tableColumns,
+            'dates' => [
+                'annual' => $this->generateAnnualDates(),
+                'quarterly' => $this->generateQuarterlyDates(),
+            ],
+            'availableSummaries' => self::SUMMARIES,
         ]);
     }
 
-    public function getFinancialCriteriaDataProperty()
+    public function tabChanged($tab_)
     {
-        return ScreenerTableBuilderService::resolveData(['AAPL'] ?? []);
-    }
+        $this->tab = $tab_;
 
-    public function removeFinancialCriteria(string $id): void
-    {
-        if (count($this->selectedFinancialCriteria) < 2) {
-            $this->selectedFinancialCriteria = [];
-
-            $this->addFinancialCriteria();
-
-            return;
-        }
-
-        $this->selectedFinancialCriteria = array_values(array_filter($this->selectedFinancialCriteria, function ($item) use ($id) {
-            return $item['id'] !== $id;
-        }));
-    }
-
-    public function addFinancialCriteria(): void
-    {
-        $criteria['id'] = uniqid();
-        $criteria['value'] = [];
-
-        $this->selectedFinancialCriteria[] = $criteria;
-    }
-
-    public function addFinancialCriteriaToSelected($data): void
-    {
-        foreach ($data as $item) {
-            $criteria['id'] = uniqid();
-            $criteria['value'] = [$item];
-
-            $this->selectedFinancialCriteria[] = $criteria;
-        }
-    }
-
-    public function getScreenerResult($universeCriteria = null, $financialCriteria = null)
-    {
-        $presetType = $this->activeTab;
-
-        if ($presetType === 'screenerData' && $this->checkFinancialCriteria($financialCriteria ?? $this->selectedFinancialCriteria)) {
-            $this->buildTable($universeCriteria, $financialCriteria ?? $this->selectedFinancialCriteria);
-            $this->updateTab($universeCriteria, $financialCriteria);
-
-            return;
-        }
-
-        if ($presetType === 'screenerData' && !$this->checkFinancialCriteria($financialCriteria ?? $this->selectedFinancialCriteria)) {
-            $this->tableColumns = [];
-            $this->tableRows = [];
-
-            return;
-        }
-
-        $this->buildTableFromPreset(new ScreenerTableBuilderService(), $universeCriteria);
-
-        $this->updateTab($universeCriteria, $financialCriteria);
-    }
-
-    public function buildTableFromPreset(ScreenerTableBuilderService $screenerTableBuilderService, $universeCriteria): void
-    {
-        $presetType = $this->activeTab;
-        $financialCriteria = $screenerTableBuilderService->getPresetCriteria($presetType);
-
-        $this->buildTable($universeCriteria, $financialCriteria);
-    }
-
-    public function buildTable($universeCriteria = null, $financialCriteria = null): void
-    {
-        $screenerTableService = new ScreenerTableBuilderService();
-
-        $this->tableData = $screenerTableService->resolveDataTest($universeCriteria, $financialCriteria);
-
-        if (count($this->tableData) < 1) {
-            return;
-        }
-
-        $this->tableColumns = $this->makeTableColumns($this->tableData[0]);
-        $this->tableRows = $this->paginateTableRows($this->tableData);
-
-        $this->emit('refreshFinancialCriteriaCounter', $this->financialCriteriaCounters);
-
-        $this->makeSummaryTableRows($this->summaries);
-    }
-
-    private function formatFinancialCriteria($data)
-    {
-        if (!isset($data)) {
-            return null;
-        }
-
-        if (isset($data[0]['value']) && empty($data[0]['value'])) {
-            return null;
-        }
-
-        if (isset($data[0]['value'])) {
-            return array_map(function ($item) {
-                return $item['value'][0];
-            }, $data);
-        }
-
-        return $data;
-    }
-
-    private function makeTableColumns(array $tableRow)
-    {
-        $tableColumns = [];
-        $tableColumnsLabelMap = [
-            'ticker' => 'Ticker',
-            'registrant_name' => 'Name'
-        ];
-
-        $excludeColumnsMap = [
-            'country',
-            'sic_group',
-            'sic_description',
-            'exchange'
-        ];
-
-        foreach ($tableRow as $key => $value) {
-            if (in_array($key, $excludeColumnsMap)) {
-                continue;
-            }
-
-            if (str_starts_with($key, 'counter')) {
-                $financialCriteriaKey = explode('_', $key)[1];
-                $this->financialCriteriaCounters[$financialCriteriaKey] = $value;
-                continue;
-            }
-
-            if (isset($tableColumnsLabelMap[$key])) {
-                $tableColumns[] = ['label' => $tableColumnsLabelMap[$key], 'key' => $key];
-                continue;
-            }
-
-            $tableColumns[] = ['label' => $key, 'key' => $key];
-        }
-
-        return $tableColumns;
-    }
-
-    private function makeTableRows($tableData)
-    {
-        return $tableData;
-    }
-
-    public function tabChanged($tab)
-    {
-        $this->tab = $tab;
-
-        $screenerTab = ScreenerTab::query()
+        $tab = ScreenerTab::query()
             ->where('user_id', auth()->id())
-            ->where('id', $tab['id'])
-            ->first();
+            ->find($tab_['id']);
 
-        $this->tableColumns = [];
-        $this->tableRows = [];
+        $empty = ['data' => [], 'exclude' => false];
 
-        $this->locationsValue = $screenerTab->locations;
-        $this->stockExchangesValue = $screenerTab->stock_exchanges;
-        $this->sectorsValue = $screenerTab->sectors;
-        $this->industriesValue = $screenerTab->industries;
-        $this->currenciesValue = $screenerTab->currencies;
-        $this->decimalValue = $screenerTab->decimal;
-
-        $this->selectedFinancialCriteria = $screenerTab->selected_financial_criteria;
-        $this->activeTab = $screenerTab->screener_view_name;
-
-        $universeCriteria = [
-            'locations' => $this->locationsValue,
-            'stockExchanges' => $this->stockExchangesValue,
-            'sectors' => $this->sectorsValue,
-            'industries' => $this->industriesValue,
-            'currencies' => $this->currenciesValue,
+        $universalCriteria = $tab->universal_criteria ?? [];
+        $this->universalCriteria = [
+            'locations' => data_get($universalCriteria, 'locations', $empty),
+            'stock_exchanges' => data_get($universalCriteria, 'stock_exchanges', $empty),
+            'industries' => data_get($universalCriteria, 'industries', $empty),
+            'sectors' => data_get($universalCriteria, 'sectors', $empty),
+            'market_cap' => data_get($universalCriteria, 'market_cap', [null, null]),
+            'currencies' => data_get($universalCriteria, 'currencies', $empty),
         ];
 
-        $this->getScreenerResult($universeCriteria, $this->selectedFinancialCriteria);
+        $this->financialCriteria = $tab->financial_criteria ?? [];
+
+        $this->summaries = $tab->summaries;
+
+        $this->views = $tab->views ?? [];
     }
 
-    public function updateTab($universeCriteria, $financialCriteria)
+    public function updateCriterias()
     {
-        $screenerTab = ScreenerTab::query()
+        ScreenerTab::query()
             ->where('user_id', auth()->id())
             ->where('id', $this->tab['id'])
-            ->first();
-
-        $screenerTab->update([
-            'locations' => $universeCriteria['locations'],
-            'stock_exchanges' => $universeCriteria['stockExchanges'],
-            'industries' => $universeCriteria['industries'],
-            'sectors' => $universeCriteria['sectors'],
-            'summaries' => $this->summaries,
-            'selected_financial_criteria' => $financialCriteria,
-            'screener_view_name' => $this->activeTab,
-        ]);
+            ->update([
+                'universal_criteria' => $this->universalCriteria,
+                'financial_criteria' => $this->financialCriteria,
+            ]);
     }
 
-    public function checkFinancialCriteria($financialCriteria): bool
+    private function generateAnnualDates()
     {
-        foreach ($financialCriteria as $key => $criterion) {
-            if (count($criterion['value']) < 1) {
-                return false;
-            }
+        $dates = [];
+        $currentYear = Carbon::now()->year;
+
+        for ($i = self::DATE_START; $i <= $currentYear; $i++) {
+            $dates[] = 'FY ' . $i;
         }
 
-        return true;
+        return array_reverse($dates);
     }
 
-    public function makeSummaryTableRows($summaries): void
+    private function generateQuarterlyDates()
     {
-        $excludeColumnsMap = [
-            'ticker' => 'Ticker',
-            'registrant_name' => 'Name'
-        ];
+        $dates = [];
+        $currentYear = Carbon::now()->year;
 
-        $tableRows = $this->tableRows;
-        $tableColumns = array_filter($this->tableColumns, function ($item) use ($excludeColumnsMap) {
-            return !isset($excludeColumnsMap[$item['key']]);
-        });
-        $this->summaries  = $summaries;
-
-        if (empty($tableRows)) {
-            return;
+        for ($i = self::DATE_START; $i < $currentYear; $i++) {
+            $dates[] = 'Q1 ' . $i;
+            $dates[] = 'Q2 ' . $i;
+            $dates[] = 'Q3 ' . $i;
+            $dates[] = 'Q4 ' . $i;
         }
 
-        $summaryHandler = [
-            'Max' => function ($values) {
-                $values = array_filter($values, fn($value) => $value !== 'N/A');
+        $currentQuarter = Carbon::now()->quarter;
 
-                if (empty($values)) {
-                    return '-';
-                }
-
-                return max($values);
-            },
-            'Min' => function ($values) {
-                $values = array_filter($values, fn($value) => $value !== 'N/A');
-
-                if (empty($values)) {
-                    return '-';
-                }
-
-                return min($values);
-            },
-            'Sum' => function ($values) {
-                $values = array_filter($values, fn($value) => $value !== 'N/A');
-
-                if (empty($values)) {
-                    return '-';
-                }
-
-                return array_sum($values);
-            },
-            'Median' => function ($values) {
-                $values = array_filter($values, fn($value) => $value !== 'N/A');
-
-                if (empty($values)) {
-                    return '-';
-                }
-
-                sort($values);
-                $count = count($values);
-                $middleIndex = floor($count / 2);
-
-                if ($count % 2) {
-                    return $values[$middleIndex];
-                } else {
-                    return ((int)$values[$middleIndex - 1] + (int)$values[$middleIndex]) / 2;
-                }
-            }
-        ];
-
-        $summaryRows = array_map(function ($summary) use ($tableRows, $tableColumns, $summaryHandler) {
-            $row = [
-                'title' => strtoupper($summary),
-                'columns' => []
-            ];
-
-            foreach ($tableColumns as $col) {
-                $values = array_filter(array_map(fn($row) => $row[$col['label']] ?? null, $tableRows), fn($v) => $v !== null);
-
-                $row['columns'][$col['label']] = $summaryHandler[$summary]($values);
-            }
-
-            return $row;
-        }, $summaries);
-
-
-        $this->summaryRows = $summaryRows;
-    }
-
-    private function paginateTableRows(array $tableRows)
-    {
-        $this->totalRecordCount = count($tableRows);
-        $this->totalPageCount = ceil($this->totalRecordCount / $this->pageSize);
-
-        $offset = ($this->page - 1) * $this->pageSize;
-
-        $data = array_slice($tableRows, $offset, $this->pageSize);
-
-        return $data;
-    }
-
-    public function prevPage()
-    {
-        if ($this->page > 1) {
-            $this->page = $this->page - 1;
-            $this->tableRows = $this->paginateTableRows($this->tableData);
+        foreach (range(1, $currentQuarter) as $quarter) {
+            $dates[] = 'Q' . $quarter . ' ' . $currentYear;
         }
-    }
 
-    public function nextPage()
-    {
-        if ($this->page < $this->totalPageCount) {
-            $this->page = $this->page + 1;
-            $this->tableRows = $this->paginateTableRows($this->tableData);
-        }
-    }
-
-    public function goToPage($destination)
-    {
-        $this->page = (int)$destination;
-        $this->tableRows = $this->paginateTableRows($this->tableData);
+        return array_reverse($dates);
     }
 }

@@ -73,7 +73,8 @@ Route::group(['middleware' => ['auth', 'two_factor', 'approved', 'verified', Che
     Route::get('/event-filings', EventFilingsController::class)->name('event-filings');
     Route::get('/insider-transactions', InsiderTransactionsController::class)->name('insider-transactions');
     Route::get('/calendar/earnings', EarningsCalendarController::class)->name('earnings-calendar');
-    Route::get('/screener', ScreenerController::class)->name('screener');
+    Route::get('/screener', [ScreenerController::class, 'show'])->name('screener');
+    Route::post('/screener/{tab}/update', [ScreenerController::class, 'update'])->name('screener.update');
 
     Route::get('/calendar/economics', EconomicsCalendar::class)->name('economics-calendar');
     Route::get('/calendar/economics/{release_id}/', EconomicRelease::class)->name('economics-release');
@@ -237,4 +238,4 @@ Route::get(RoutePath::for('verification.verify', '/email/verify/{id}/{hash}'), V
 
 Route::post('/logout', [AuthenticatedSessionController::class, 'destroy'])->name('logout');
 
-Route::post('ping', fn () => response('OK'))->name('refresh-csrf');
+Route::post('ping', fn() => response('OK'))->name('refresh-csrf');

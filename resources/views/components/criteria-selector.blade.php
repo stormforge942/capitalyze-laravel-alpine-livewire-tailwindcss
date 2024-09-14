@@ -1,6 +1,6 @@
 @props([
     'options' => [],
-    'placeholder' => 'Placeholder'
+    'placeholder' => 'Placeholder',
 ])
 
 <div class="flex items-center justify-between gap-x-5" x-data="{
@@ -52,7 +52,7 @@
             <x-slot name="trigger">
                 <p class="flex items-center border-[0.5px] border-[#D4DDD7] dropdown-trigger rounded-tl-full rounded-bl-full p-2 text-sm"
                     :class="[
-                        value.data.length > 0 ? 'rounded-tr-none rounded-br-none' : 'rounded-tr-full rounded-br-full',
+                        value.data.length ? 'rounded-r-none' : 'rounded-r-full',
                         showDropdown ? 'bg-[#E2E2E2]' : 'bg-white hover:bg-[#E2E2E2]'
                     ]">
                     {{ $placeholder }}

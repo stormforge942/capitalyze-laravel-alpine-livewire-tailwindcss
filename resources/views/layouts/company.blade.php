@@ -42,6 +42,8 @@
                 <livewire:insider-transactions.page />
             @elseif($tab == 'earnings-calendar')
                 <livewire:earnings-calendar.page />
+            @elseif($tab === 'screener')
+                <livewire:screener.page />
             @elseif ($tab == 'geographical')
                 <livewire:company-geographical :company="$company" :ticker="$ticker" :period="$period" />
             @elseif($tab == 'products')

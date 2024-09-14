@@ -16,15 +16,10 @@ return new class extends Migration
         Schema::create('screener_tabs', function (Blueprint $table) {
             $table->id();
             $table->string('name');
-            $table->json('locations')->nullable();
-            $table->json('stock_exchanges')->nullable();
-            $table->json('industries')->nullable();
-            $table->json('currencies')->nullable();
-            $table->json('sectors')->nullable();
-            $table->json('decimal')->nullable();
+            $table->json('universal_criteria')->nullable();
+            $table->json('financial_criteria')->nullable();
             $table->json('summaries')->nullable();
-            $table->json('selected_financial_criteria')->nullable();
-            $table->string('screener_view_name');
+            $table->json('views')->nullable();
             $table->foreignId('user_id')->constrained('users');
             $table->timestamps();
         });

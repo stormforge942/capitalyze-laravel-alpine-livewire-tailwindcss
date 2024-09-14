@@ -13,27 +13,16 @@ class ScreenerTab extends Model
 
     protected $fillable = [
         'name',
-        'locations',
-        'stock_exchanges',
-        'industries',
-        'currencies',
-        'sectors',
-        'decimal',
+        'universal_criteria',
+        'financial_criteria',
         'summaries',
-        'selected_financial_criteria',
-        'screener_view_name',
+        'views',
         'user_id',
     ];
 
     protected $casts = [
-        'locations' => 'array',
-        'stock_exchanges' => 'array',
-        'industries' => 'array',
-        'currencies' => 'array',
-        'sectors' => 'array',
-        'decimal' => 'array',
-        'summaries' => 'array',
-        'selected_financial_criteria' => 'array',
+        'universal_criteria' => 'array',
+        'financial_criteria' => 'array',
     ];
 
     public function user(): BelongsTo

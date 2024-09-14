@@ -2,9 +2,7 @@
 
 namespace App\Http\Livewire\Screener;
 
-use App\Services\ChartBuilderService;
 use App\Services\ScreenerTableBuilderService;
-use App\Services\TableBuilderService;
 use Livewire\Component;
 
 class FinancialCriteria extends Component

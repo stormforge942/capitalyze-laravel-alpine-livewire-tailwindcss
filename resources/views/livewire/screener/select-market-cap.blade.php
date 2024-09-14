@@ -31,7 +31,7 @@
 
         this.showDropdown = false;
     },
-}" x-modelable="value" x-model="marketCap">
+}" x-modelable="value" x-model="universalCriteria.market_cap">
     <div class="flex items-center">
         <x-dropdown x-model="showDropdown" placement="bottom-start">
             <x-slot name="trigger">
