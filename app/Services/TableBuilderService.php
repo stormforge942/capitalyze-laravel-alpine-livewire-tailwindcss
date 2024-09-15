@@ -21,7 +21,7 @@ class TableBuilderService
                 ];
 
                 if ($option['has_children']) {
-                    $item['items'] = collect(array_values($option['items']))->flatten(1);
+                    $item['items'] = collect(array_values($option['items']))->reduce(fn($c, $i) => array_merge($c, $i), []);
                 } else {
                     $item['items'] = $option['items'];
                 }

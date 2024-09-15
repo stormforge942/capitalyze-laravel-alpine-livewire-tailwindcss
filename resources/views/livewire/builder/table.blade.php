@@ -61,10 +61,11 @@
 
                 this.tableRows = [];
 
+                this.columns = [];
+
                 if (!$wire.companies.length || !this.metrics.length)
                     return;
 
-                this.columns = [];
                 this.metrics.forEach(item => {
                     if (!allMetrics[item.metric])
                         return;
