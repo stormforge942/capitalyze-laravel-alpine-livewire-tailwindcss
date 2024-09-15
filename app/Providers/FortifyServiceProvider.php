@@ -43,7 +43,6 @@ class FortifyServiceProvider extends ServiceProvider
     public function boot()
     {        
         $this->app->singleton(RegisterResponse::class, CustomRegisterResponse::class);
-        $this->app->singleton(TwoFactorLoginResponseContract::class, LoginResponse::class);
         $this->app->singleton(LoginResponseContract::class, LoginResponse::class);
         $this->app->singleton(PasswordResetResponse::class, CustomPasswordResetResponse::class);
         $this->app->singleton(ResetPasswordViewResponse::class, CustomResetPasswordViewResponse::class);

@@ -5,12 +5,12 @@
 @section('content')
     @include('partials.auth-header', ['title' => 'Sign In', 'badge' => true])
 
-    @if($errors->count())
+    @if ($errors->count())
         <div class="text-center text-danger mt-4">
             Email or password is incorrect
-        </div>  
+        </div>
     @endif
-    
+
     <form class="mt-4" method="post" action="{{ route('login') }}" autocomplete="on">
         @csrf
 
@@ -38,8 +38,8 @@
 
         <div class="mt-4 flex justify-between items-center text-sm">
             <label class="flex items-center gap-1.5">
-                <input type="checkbox" class="text-black border-2 border-black h-4 w-4 rounded-sm focus:ring-black"
-                    name="remember" :checked="{{ old('remember') == 'on' }}">
+                <input type="checkbox" value="on" class="text-black border-2 border-black h-4 w-4 rounded-sm focus:ring-black"
+                    name="remember" @if (old('remember') == 'on') checked @endif>
                 <span>Remember Me</span>
             </label>
             <a href="{{ route('password.request') }}" class="hover:underline">Forgot Password?</a>
@@ -52,11 +52,15 @@
             ])
 
             <div class="mt-6 inline-block">
-                Don't have an account? <a href="{{ route('waitlist.join') }}" class="font-semibold underline hover:bg-green-light2 rounded p-1 -mx-0.5 transition-all">Join the waitlist</a>
+                Don't have an account? <a href="{{ route('waitlist.join') }}"
+                    class="font-semibold underline hover:bg-green-light2 rounded p-1 -mx-0.5 transition-all">Join the
+                    waitlist</a>
             </div>
 
             <div class="mt-4 mb-2 inline-block text-[#DA680B]">
-                Don’t have a password? <a href="{{ route('invited-auth.verify-email') }}" class="font-semibold underline hover:bg-green-light2 rounded p-1 -mx-0.5 transition-all">Create Password</a>
+                Don’t have a password? <a href="{{ route('invited-auth.verify-email') }}"
+                    class="font-semibold underline hover:bg-green-light2 rounded p-1 -mx-0.5 transition-all">Create
+                    Password</a>
             </div>
         </div>
     </form>

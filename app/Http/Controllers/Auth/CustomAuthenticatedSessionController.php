@@ -6,6 +6,7 @@ use App\Events\UserLoggedIn;
 use App\Mail\TwoFactorCode;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Mail;
+use Illuminate\Validation\ValidationException;
 use Laravel\Fortify\Http\Controllers\AuthenticatedSessionController;
 use Laravel\Fortify\Http\Requests\LoginRequest;
 
@@ -15,23 +16,27 @@ class CustomAuthenticatedSessionController extends AuthenticatedSessionControlle
     {
         $credentials = $request->only('email', 'password');
 
-        if (Auth::attempt($credentials)) {
-            $user = Auth::user();
-
-            if ($user->isTwoFactorEnabled()) {
-                Auth::logout();
-                $request->session()->put('user_id', $user->id);
-                $this->send2FACode($user);
-
-                return redirect()->route('2fa.index');
-            }
-
-            event(new UserLoggedIn($user));
-
-            return redirect()->route('company.profile', 'AAPL');
+        if (!Auth::attempt($credentials, $request->boolean('remember'))) {
+            throw ValidationException::withMessages([
+                'email' => 'The provided credentials are incorrect.'
+            ]);
         }
 
-        return redirect()->back()->withErrors(['email' => 'The provided credentials are incorrect.']);
+        /** @var \App\Models\User */
+        $user = Auth::user();
+
+        if ($user->isTwoFactorEnabled()) {
+            Auth::logout();
+
+            $request->session()->put('user_id', $user->id);
+            $this->send2FACode($user);
+
+            return redirect()->route('2fa.index');
+        }
+
+        event(new UserLoggedIn($user));
+
+        return redirect()->route('company.profile', 'AAPL');
     }
 
     protected function send2FACode($user)
