@@ -7,14 +7,16 @@ use App\Models\ScreenerTab;
 use App\Models\CompanyProfile;
 use Carbon\Carbon;
 use Illuminate\Support\Facades\Cache;
+use Illuminate\Support\Facades\DB;
 
 class Page extends Component
 {
     const DATE_START = 1990;
 
     public const SUMMARIES = ['Max', 'Min', 'Sum', 'Median'];
+    
     public const OPERATORS = [
-        '>'=> 'Greater than (>)',
+        '>' => 'Greater than (>)',
         '>=' => 'Greater than or equal (>=)',
         '<' => 'Less than (<)',
         '<=' => 'Less than or equal (<=)',
@@ -31,6 +33,8 @@ class Page extends Component
     public $financialCriteria = null;
     public $views = null;
     public $summaries = null;
+
+    public $result = null;
 
     protected $listeners = [
         'tabChanged' => 'tabChanged',
@@ -64,10 +68,7 @@ class Page extends Component
 
 
         return view('livewire.screener.page', [
-            'dates' => [
-                'annual' => $this->generateAnnualDates(),
-                'quarterly' => $this->generateQuarterlyDates(),
-            ],
+            'dates' => $this->generateDates(),
             '_options' => [
                 'summaries' => self::SUMMARIES,
                 'operators' => self::OPERATORS,
@@ -102,24 +103,47 @@ class Page extends Component
         $this->views = $tab->views ?? [];
     }
 
-    private function generateAnnualDates()
+    public function generateResult() {}
+
+    private function generateDates()
+    {
+        $cacheKey = 'screener_min_dates';
+        $dates = Cache::remember(
+            $cacheKey,
+            now()->addDay(),
+            fn() => DB::connection('pgsql-xbrl')
+                ->table('standardized_new')
+                ->select('period_type', DB::raw('min(year) as year'))
+                ->groupBy('period_type')
+                ->pluck('year', 'period_type')
+        );
+
+        $currentYear = Carbon::now()->year;
+
+        return [
+            'annual' => $this->generateAnnualDates($dates['annual'] ?? $currentYear),
+            'quarterly' => $this->generateQuarterlyDates($dates['quarter'] ?? $currentYear),
+        ];
+    }
+
+    private function generateAnnualDates(int $startYear)
     {
         $dates = [];
         $currentYear = Carbon::now()->year;
 
-        for ($i = self::DATE_START; $i <= $currentYear; $i++) {
+        for ($i = $startYear; $i <= $currentYear; $i++) {
             $dates[] = 'FY ' . $i;
         }
 
         return array_reverse($dates);
     }
 
-    private function generateQuarterlyDates()
+    private function generateQuarterlyDates(int $startYear)
     {
         $dates = [];
-        $currentYear = Carbon::now()->year;
+        $currentYear =  Carbon::now()->year;
 
-        for ($i = self::DATE_START; $i < $currentYear; $i++) {
+        for ($i = $startYear; $i < $currentYear; $i++) {
             $dates[] = 'Q1 ' . $i;
             $dates[] = 'Q2 ' . $i;
             $dates[] = 'Q3 ' . $i;

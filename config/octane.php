@@ -1,7 +1,7 @@
 <?php
 
 use Laravel\Octane\Octane;
-use App\Services\ClearSpotlightMemory;
+use App\Services\ClearStaticVariables;
 use Laravel\Octane\Events\TaskReceived;
 use Laravel\Octane\Events\TickReceived;
 use Laravel\Octane\Events\RequestHandled;
@@ -72,7 +72,7 @@ return [
         RequestReceived::class => [
             ...Octane::prepareApplicationForNextOperation(),
             ...Octane::prepareApplicationForNextRequest(),
-            ClearSpotlightMemory::class,
+            ClearStaticVariables::class,
         ],
 
         RequestHandled::class => [

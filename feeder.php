@@ -89,6 +89,7 @@ $tables = [
     'issued_shares',
     'acquisition_of_beneficial_ownership',
     'executive_compensation_feed',
+    'standardized_new',
 ];
 
 $replica = makeDatabase($args['drop']);
@@ -241,6 +242,8 @@ function fillData($xbrl, $replica, $tables, $symbols, $ciks)
             $stmt = $xbrl->query("SELECT * FROM $table where symbol in ($stringSymbols) order by acceptance_time desc");
         } else if ($table === 'executive_compensation_feed') {
             $stmt = $xbrl->query("SELECT * FROM $table order by acceptance_time desc");
+        } else if ($table === 'standardized_new') {
+            $stmt = $xbrl->query("(SELECT * FROM $table where period_type='annual' limit 2000) UNION ALL (SELECT * FROM $table where period_type='quarter' limit 2000)");
         }
 
         if (!$stmt) {
