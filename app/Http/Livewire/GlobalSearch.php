@@ -24,7 +24,14 @@ class GlobalSearch extends Component
     {
         $result = CompanyProfile::query()
             ->select('symbol as ticker', 'registrant_name as name', 'website', 'average_daily_volume')
-            ->when($searchString, fn ($query) =>  $query->where('registrant_name', 'ilike', '%' . $searchString . '%'))
+            ->when($searchString, function ($query) use ($searchString) {
+                $term = '%' . $searchString . '%';
+
+                return $query->where(
+                    fn ($q) => $q->where('symbol', 'ilike', $term)
+                        ->orWhere('registrant_name', 'ilike', $term)
+                );
+            })
             ->orderBy('average_daily_volume', 'desc')
             ->limit(4)
             ->get()
