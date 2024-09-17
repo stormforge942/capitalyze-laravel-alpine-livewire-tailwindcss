@@ -70,7 +70,7 @@
                                 Position And Name
                             </th>
                             <th class="bg-gray-50 py-2 pl-4 pr-3 text-left text-sm font-semibold text-gray-900 sm:pl-3">
-                                % of Total Revenue</th>
+                                {{ $totalRevenue ? '% of Total Revenue' : 'Total Revenue' }}</th>
                         </tr>
                         @foreach ($chartData as $name => $value)
                             <tr>
@@ -78,7 +78,7 @@
                                     <span class="text-base font-semibold">{{ $name }}</span>
                                 </td>
                                 <td class="px-3 py-3.5 text-left text-sm text-blue-500">
-                                    {{ number_format($value, 4) }} %</td>
+                                    {{ $totalRevenue ? '' . number_format($value, 4) . '%' : '$' . number_format($value) }}</td>
                             </tr>
                         @endforeach
                     </tbody>

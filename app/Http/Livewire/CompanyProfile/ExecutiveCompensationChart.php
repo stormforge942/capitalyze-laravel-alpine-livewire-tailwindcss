@@ -28,13 +28,16 @@ class ExecutiveCompensationChart extends Component
 
     private function getTotalRevenue()
     {   
-        $incomeStatement = DB::connection('pgsql-xbrl')
+        $data = DB::connection('pgsql-xbrl')
             ->table('info_tikr_presentations')
             ->select('income_statement')
             ->where('ticker', $this->symbol)
             ->where("period", 'annual')
-            ->first()
-            ->income_statement;
+            ->first();
+
+        if (! $data) return 0;
+
+        $incomeStatement = $data->income_statement;
 
         $totalRevenues = $this->formatIncomeData(json_decode($incomeStatement, true))['Total Revenues'];
 
@@ -56,10 +59,6 @@ class ExecutiveCompensationChart extends Component
 
     private function getChartData()
     {
-        if (!$this->totalRevenue) {
-            return [];
-        }
-
         $data = ExecutiveCompensation::query()
             ->when($this->symbol, fn ($q) => $q->where('symbol', $this->symbol))
             ->when($this->year, fn ($q) => $q->where('year', $this->year))
@@ -78,8 +77,11 @@ class ExecutiveCompensationChart extends Component
 
         $chartData = [];
         foreach ($data as $item) {
-            $total = $item['total'] / $this->totalRevenue * 100;
-            $chartData[$item['name_and_position']] = $total;
+            
+            if ($this->totalRevenue) $res = $item['total'] / $this->totalRevenue * 100;
+            else $res = $item['total'];
+
+            $chartData[$item['name_and_position']] = $res;
         }
 
         return $chartData;
