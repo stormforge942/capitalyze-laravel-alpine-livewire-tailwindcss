@@ -226,6 +226,7 @@ Route::group(['middleware' => ['auth', 'verified', 'approved']], function () {
     Route::get('/account/settings', [AccountSettingsController::class, 'index'])->name('account-settings');
     Route::post('/check-member', [TeamController::class, 'checkMember'])->name('check-member');
     Route::get('/pdf-viewer', [EarningPresentationContent::class, 'load'])->name('pdf-viewer');
+    Route::get('/icon-view', [CompanyController::class, 'icon'])->name('icon-view');
 });
 
 // override fortify route to verify user without needing to login

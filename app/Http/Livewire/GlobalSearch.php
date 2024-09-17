@@ -74,8 +74,7 @@ class GlobalSearch extends Component
     {
         $host = parse_url($website, PHP_URL_HOST);
         $domain = preg_replace('/^www\./', '', $host);
-        $key = config('services.logo.key');
-        return "https://img.logo.dev/{$domain}?token={$key}";
+        return route('icon-view', ['domain' => $domain]);
     }
 
     public function clearHistory()
