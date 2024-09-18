@@ -7,6 +7,7 @@ use Illuminate\Console\Command;
 use Illuminate\Support\Facades\Http;
 use Illuminate\Support\Facades\Storage;
 use App\Models\CompanyProfile;
+use Illuminate\Support\Facades\Log;
 
 class FillLogos extends Command
 {
@@ -53,19 +54,21 @@ class FillLogos extends Command
         $keyIndex = 0;
 
         $companies->map(function ($company) use ($keys, $keyIndex) {
+            $symbol = $company->symbol;
             $domain = $this->getDomainFromWebsite($company->website);
             $sourceLink = "https://img.logo.dev/{$domain}?token={$keys[$keyIndex]}";
 
             $response = Http::get($sourceLink);
 
             if ($response->ok()) {
-                $fileName = $domain . '.png';
+                $fileName = $symbol . '.png';
                 $filePath = '/company_logos/' . $fileName;
                 Storage::disk('s3')->put($filePath, $response->body());
 
-                print("Stored logo of {$domain} successfully\n");
+                Log::info("Stored logo of {$domain} successfully\n");
+
             } else {
-                print("Logo of {$domain} doesn't exist\n");
+                Log::error("Logo of {$domain} doesn't exist\n");
             }
 
             $keyIndex = ($keyIndex + 1) % 5;
