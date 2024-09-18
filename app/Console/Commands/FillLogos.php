@@ -16,7 +16,7 @@ class FillLogos extends Command
      *
      * @var string
      */
-    protected $signature = 'fill:images-s3-logo';
+    protected $signature = 'fill:images-s3-logo {filter?}';
 
     /**
      * The console command description.
@@ -39,6 +39,14 @@ class FillLogos extends Command
      */
     public function handle()
     {
+        $filter = $this->argument('filter');
+
+        if ($filter) {
+            list($startChar, $endChar) = explode('-', $filter);
+        } else {
+            $startChar = $endChar = null;
+        }
+
         $keys = [
             'pk_dn8ZGd16Tr2UXskby36kmA',
             'pk_UAkwNfK_RbOyAeHi16KyIg',
@@ -49,11 +57,17 @@ class FillLogos extends Command
 
         $companies = CompanyProfile::query()
             ->select('symbol', 'website')
+            ->when($startChar, function ($query) use ($startChar) {
+                return $query->where('symbol', '>=', $startChar);
+            })
+            ->when($endChar, function ($query) use ($endChar) {
+                return $query->where('symbol', '<=', $endChar . 'z');
+            })
             ->get();
 
         $keyIndex = 0;
 
-        $companies->map(function ($company) use ($keys, $keyIndex) {
+        $companies->map(function ($company) use ($keys, &$keyIndex) {
             $symbol = $company->symbol;
             $domain = $this->getDomainFromWebsite($company->website);
             $sourceLink = "https://img.logo.dev/{$domain}?token={$keys[$keyIndex]}";
@@ -65,10 +79,9 @@ class FillLogos extends Command
                 $filePath = '/company_logos/' . $fileName;
                 Storage::disk('s3')->put($filePath, $response->body());
 
-                Log::info("Stored logo of {$domain} successfully\n");
-
+                Log::info("Stored logo of {$symbol} successfully");
             } else {
-                Log::error("Logo of {$domain} doesn't exist\n");
+                Log::error("Logo of {$symbol} doesn't exist");
             }
 
             $keyIndex = ($keyIndex + 1) % 5;
