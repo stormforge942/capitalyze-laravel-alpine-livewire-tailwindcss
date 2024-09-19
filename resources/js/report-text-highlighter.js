@@ -24,8 +24,10 @@ function parseText(value, shouldBeNumber = false) {
 }
 
 function highlightSelection(value, selector, document = window.document) {
+    let selections = [];
+
     return setTimeout(() => {
-        const search = parseText(value)
+        const search = parseText(value);
 
         if (!search.length) return;
 
@@ -39,27 +41,17 @@ function highlightSelection(value, selector, document = window.document) {
             }
         }
 
-        // regular expression to match the search term with any number of trailing zeros
-        const regex = new RegExp(`^${search}0*$`)
-
         for (const value of values) {
-            const innerText = Array.from(value.childNodes)
-                .filter(node => node.nodeType === Node.TEXT_NODE)
-                .map(node => node.textContent)
-                .join('');
+            let text = parseText(value.innerText, true)
 
-            if (innerText == search) {
-                highlightElement(value)
-                continue
-            }
-
-            let text = parseText(innerText, true)
-
-            if (text && (text === search || regex.test())) {
-                highlightElement(value)
+            if (text && (text === search || String(search).includes(text))) {
+                highlightElement(value);
+                selections.push(value);
             }
         }
-    }, [100])
+
+        scrollToFirstHighlightedElement(selections);
+    }, [100]);
 }
 
 function highlightElement(el) {
@@ -67,6 +59,18 @@ function highlightElement(el) {
 
     el.style.backgroundColor = "yellow"
     el.classList.add('highlight-text')
+}
+
+function scrollToFirstHighlightedElement(selections) {
+    return setTimeout(() => {
+        const firstNode = selections.shift();
+
+        if (!firstNode) return;
+
+        const highlightedElement = firstNode.querySelector("span") || firstNode.querySelector("font") || firstNode;
+
+        highlightedElement.scrollIntoView({behavior: "smooth", block: "center"});
+    }, [100]);
 }
 
 window.reportTextHighlighter = {

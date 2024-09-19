@@ -21,6 +21,7 @@ class RightSlide extends SlideOver
     public $loaded = false;
     public $isLink = false;
     public $decimalPlaces = 3;
+    public $formatedValue;
 
     public function mount($data, $preset = null)
     {
@@ -30,6 +31,7 @@ class RightSlide extends SlideOver
         $this->secondHash = $data['secondHash'] ?? null;
         $this->isLink = $data['isLink'] ?? false;
         $this->decimalPlaces = $data['decimals'] ?? 3;
+        $this->formatedValue = number_format($data['value'], $this->decimalPlaces);
 
         if ($preset) {
             $this->preset = $data['formulaPreset'];

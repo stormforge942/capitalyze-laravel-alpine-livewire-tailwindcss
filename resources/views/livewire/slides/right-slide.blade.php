@@ -118,7 +118,7 @@
             @endif
         </div>
         <script>
-            const value = @json($value)
+            const value = @json($formatedValue)
 
             window.reportTextHighlighter.highlight(value, '.wep-slide-over-container table tbody tr td')
             window.reportTextHighlighter.highlight(value, '.wep-slide-over-container .value_final_raw')
