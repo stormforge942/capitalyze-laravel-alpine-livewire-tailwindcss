@@ -59,6 +59,10 @@ class Employee extends Component
 
         foreach ($data as $k0 => $v0) {
             foreach ($v0 as $k1 => $v1) {
+                if ($k1 === 'formulas') {
+                    continue;
+                }
+
                 foreach ($v1 as $date => $val) {
                     if ($k1 === 'timeline') {
                         $formatted = !$val ? 'N/A' : $this->formatValue($val);
@@ -115,14 +119,17 @@ class Employee extends Component
             'revenues' => [
                 'timeline' => $raw['revenues'],
                 'yoy_change' => calculateYoyChange($raw['revenues'], $this->dates),
+                'formulas' => $this->makeFormulasDescription($raw['revenues'], $this->dates, 'Total Revenues'),
             ],
             'employee_count' => [
                 'timeline' => [],
                 'yoy_change' => [],
+                'formulas' => [],
             ],
             'rev_by_emp' => [
                 'timeline' => [],
                 'yoy_change' => [],
+                'formulas' => [],
             ],
         ];
 
@@ -159,7 +166,10 @@ class Employee extends Component
         }
 
         $data['employee_count']['yoy_change'] = calculateYoyChange($data['employee_count']['timeline'], $this->dates);
+        $data['employee_count']['formulas'] = $this->makeFormulasDescription($data['employee_count']['timeline'], $this->dates, 'Employee Count');
+
         $data['rev_by_emp']['yoy_change'] = calculateYoyChange($data['rev_by_emp']['timeline'], $this->dates);
+        $data['rev_by_emp']['formulas'] = $this->makeFormulasDescription($data['rev_by_emp']['timeline'], $this->dates, "Revenue / Employee ('000s)");
 
         $this->rawData = $data;
     }
@@ -190,7 +200,7 @@ class Employee extends Component
             if (str_starts_with($key, 'Revenues|')) {
                 $this->hashes = array_map(function ($value) {
                     $hashExtractionResult = $this->extractHashes($value);
-                    
+
                     return [
                         'hash' => $hashExtractionResult['hash'],
                         'secondHash' => $hashExtractionResult['secondHash']
@@ -243,5 +253,28 @@ class Employee extends Component
             'hash' => $hash,
             'secondHash' => $secondHash,
         ];
+    }
+
+    private function makeFormulaDescription($firstValue, $secondValue, $result, $date, $metric)
+    {
+        return makeFormulaDescription($firstValue, $secondValue, $result, $date, $metric);
+    }
+
+    private function makeFormulasDescription($values, $dates, $metric)
+    {
+        $result = [];
+
+        $calculationResult = calculateYoyChange($values, $dates);
+
+        foreach ($calculationResult as $date => $value) {
+            if ($value) {
+                $firstValueDateIndex = array_search($date, $dates);
+                $secondValueDateIndex = $firstValueDateIndex - 1;
+
+                $result[$date] = $this->makeFormulaDescription($values[$dates[$firstValueDateIndex]], $values[$dates[$secondValueDateIndex]], $value, $date, $metric);
+            }
+        }
+
+        return $result;
     }
 }

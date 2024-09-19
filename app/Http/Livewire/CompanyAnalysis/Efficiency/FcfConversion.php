@@ -148,6 +148,7 @@ class FcfConversion extends Component
                 'ebitda_percentage' => [],
                 'margin' => [],
             ],
+            'formulas' => [],
         ];
 
         $lastRev = 0;
@@ -158,6 +159,7 @@ class FcfConversion extends Component
         $lastFreeCashflow = 0;
         $lastNetworthChange = 0;
         $lastLeveredFreeCashflow = 0;
+
         foreach ($this->dates as $date) {
             $revenue = isset($income['Total Revenues'][$date]) ? $this->extractValues($income['Total Revenues'][$date])['value'] : 0;
             $data['revenues']['timeline'][$date] = $revenue;
@@ -166,6 +168,9 @@ class FcfConversion extends Component
             $data['revenues']['yoy_change'][$date] = $lastRev
                 ? (($revenue / $lastRev) - 1) * 100
                 : 0;
+
+            $data['revenues']['formulas']['yoy_change'][$date] = $this->makeFormulaDescription($revenue, $lastRev, $data['revenues']['yoy_change'][$date], $date, 'Total revenues');
+
             $lastRev = $revenue;
 
             $ebitda = isset($income['EBITDA'][$date]) ? $this->extractValues($income['EBITDA'][$date])['value'] : 0;
@@ -178,6 +183,9 @@ class FcfConversion extends Component
             $data['ebitda']['margin'][$date] = $revenue
                 ? ($ebitda / $revenue * 100)
                 : 0;
+
+            $data['ebitda']['formulas']['yoy_change'][$date] = $this->makeFormulaDescription($ebitda, $lastEbitda, $data['ebitda']['yoy_change'][$date], $date, 'EBITDA');
+
             $lastEbitda = $ebitda;
 
             $cashInterest = isset($cashflow['Cash Interest Paid'][$date]) ? abs($this->extractValues($cashflow['Cash Interest Paid'][$date])['value']) : 0;
@@ -190,6 +198,9 @@ class FcfConversion extends Component
             $data['cash_interest']['ebitda_percentage'][$date] = $ebitda
                 ? -1 * ($cashInterest / $ebitda * 100)
                 : 0;
+
+            $data['cash_interest']['formulas']['yoy_change'][$date] = $this->makeFormulaDescription($cashInterest, $lastCashInterest, $data['cash_interest']['yoy_change'][$date], $date, 'Cash Interest Paid');
+
             $lastCashInterest = $cashInterest;
 
             $cashTaxes = isset($cashflow['Cash Taxes Paid'][$date]) ? abs($this->extractValues($cashflow['Cash Taxes Paid'][$date])['value']) : 0;
@@ -202,6 +213,9 @@ class FcfConversion extends Component
             $data['cash_taxes']['ebitda_percentage'][$date] = $ebitda
                 ? -1 * ($cashTaxes / $ebitda * 100)
                 : 0;
+
+            $data['cash_taxes']['formulas']['yoy_change'][$date] = $this->makeFormulaDescription($cashTaxes, $lastCashTaxes, $data['cash_taxes']['ebitda_percentage'][$date], $date, 'Cash Taxes Paid');
+
             $lastCashTaxes = $cashTaxes;
 
             $capitalExpenditure = isset($cashflow['Capital Expenditure'][$date]) ? abs($this->extractValues($cashflow['Capital Expenditure'][$date])['value']) : 0;
@@ -217,6 +231,9 @@ class FcfConversion extends Component
             $data['capital_expenditures']['revenue_percentage'][$date] = $revenue
                 ? -1 * ($capitalExpenditure / $revenue * 100)
                 : 0;
+
+            $data['capital_expenditures']['formulas']['yoy_change'][$date] = $this->makeFormulaDescription($capitalExpenditure, $lastCapitalExpenditure, $data['capital_expenditures']['yoy_change'][$date], $date, 'Capital Expenditure');
+
             $lastCapitalExpenditure = $capitalExpenditure;
 
             $freeCashflow = $ebitda - ($cashInterest + $cashTaxes + $capitalExpenditure);
@@ -230,6 +247,9 @@ class FcfConversion extends Component
             $data['free_cashflow']['revenue_percentage'][$date] = $revenue
                 ? ($freeCashflow / $revenue * 100)
                 : 0;
+
+            $data['free_cashflow']['formulas']['yoy_change'][$date] = $this->makeFormulaDescription($freeCashflow, $lastFreeCashflow, $data['free_cashflow']['yoy_change'][$date], $date, 'Free Cashflow');
+
             $lastFreeCashflow = $freeCashflow;
 
             $networthChange = isset($cashflow['Total Changes in Net Working Capital'][$date]) ? $this->extractValues($cashflow['Total Changes in Net Working Capital'][$date])['value'] : 0;
@@ -245,6 +265,9 @@ class FcfConversion extends Component
             $data['networth_change']['revenue_percentage'][$date] = $revenue
                 ? abs($networthChange / $revenue * 100)
                 : 0;
+
+            $data['networth_change']['formulas']['yoy_change'][$date] = $this->makeFormulaDescription($networthChange, $lastNetworthChange, $data['networth_change']['yoy_change'][$date], $date, 'Total Changes in Net Working Capital');
+
             $lastNetworthChange = $networthChange;
 
             $leveredFreeCashflow = $freeCashflow - $networthChange;
@@ -258,6 +281,9 @@ class FcfConversion extends Component
             $data['levered_free_cashflow']['margin'][$date] = $revenue
                 ? ($leveredFreeCashflow / $revenue * 100)
                 : 0;
+
+            $data['levered_free_cashflow']['formulas']['yoy_change'][$date] = $this->makeFormulaDescription($leveredFreeCashflow, $lastLeveredFreeCashflow, $data['levered_free_cashflow']['yoy_change'][$date], $date, 'Levered Free Cash Flow');
+
             $lastLeveredFreeCashflow = $leveredFreeCashflow;
         }
 
@@ -295,7 +321,7 @@ class FcfConversion extends Component
 
         foreach ($data as $idx => $item) {
             foreach ($item as $key => $values) {
-                if (in_array($key, ['hash', 'secondHash'])) {
+                if (in_array($key, ['hash', 'secondHash', 'formulas'])) {
                     continue;
                 }
 
@@ -321,5 +347,13 @@ class FcfConversion extends Component
             'hash' => $hash,
             'secondHash' => $secondHash,
         ];
+    }
+
+    private function makeFormulaDescription($firstValue, $secondValue, $result, $date, $metric)
+    {
+        $value = makeFormulaDescription($firstValue, $secondValue, $result, $date, $metric);
+        $value['body']['value_final'] = $this->formatPercentageValue($result);
+
+        return $value;
     }
 }

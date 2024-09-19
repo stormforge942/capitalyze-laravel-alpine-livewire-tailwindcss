@@ -358,3 +358,53 @@ function isPasswordConfirmed(): bool
     $period = config('auth.password_timeout', 900);
     return (time() - session('auth.password_confirmed_at', 0)) < $period;
 }
+
+function makeFormulaDescription($firstValue, $secondValue, $result, $date, $metric, $isNetDebt = false): array
+{
+    $title = $isNetDebt ? 'Evaluation for % Net Debt / Capital/' : 'Evaluation for % Change YoY/';
+    $firstArg = $isNetDebt ? 'Net Debt' : "$metric";
+    $secondArg = $isNetDebt ? 'Capital' : "$metric|-1";
+    $formula = $isNetDebt ? '[Net Debt]/[Capital] * 100' : "([$metric]/[$metric|-1] - 1) * 100";
+    $resolved = $isNetDebt ? "$firstValue/$secondValue * 100" : "($firstValue/$secondValue - 1) * 100";
+
+    return [
+        'message' => $title . $date,
+        'body' => [
+            'value_final' => $result,
+            'value_final_raw' => $result,
+            'value_tikr' => null,
+            'value_from_mapping' => '-',
+            'measure' => '%',
+            'value_from_mapping_raw' => '-',
+            'mapping_info' => [
+                'effectively_mapped_to' => null,
+                'high_grade_mapping' => [''],
+                'automated_mapping' => null
+            ],
+            'formula_evaluation' => [
+                [
+                    'formula' => $formula,
+                    'resolved' => $resolved,
+                    'equals' => $result,
+                    'result' => 'Ok',
+                    'arguments' => [
+                        "$firstArg" => [
+                            'value' => $firstValue,
+                            'hash' => '71a9a77670a4390b859dc45634c6470b6edf17da',
+                            'data_type' => 'xbrli:monetaryItemType',
+                            'hint' => ' ',
+                            'sub_arguments' => null
+                        ],
+                        "$secondArg" => [
+                            'value' => $secondValue,
+                            'hash' => 'a9bb60d7779632da95208e0fa41b25201dd06b91',
+                            'data_type' => 'xbrli:monetaryItemType',
+                            'hint' => ' ',
+                            'sub_arguments' => null
+                        ]
+                    ]
+                ]
+            ]
+        ]
+    ];
+}

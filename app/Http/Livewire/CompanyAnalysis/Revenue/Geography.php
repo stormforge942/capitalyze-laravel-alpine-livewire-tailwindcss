@@ -90,7 +90,7 @@ class Geography extends Component
 
         foreach ($result['regions'] as $region => $values) {
             foreach ($values as $key => $value) {
-                if (in_array($key, ['hash', 'secondHash'])) {
+                if (in_array($key, ['hash', 'secondHash', 'formulas'])) {
                     continue;
                 }
 
@@ -106,6 +106,10 @@ class Geography extends Component
         }
 
         foreach ($result['total'] as $key => $value) {
+            if (in_array($key, ['formulas'])) {
+                continue;
+            }
+
             foreach ($value as $date => $amt) {
                 $result['total'][$key][$date] = [
                     'value' => $amt,
@@ -216,6 +220,7 @@ class Geography extends Component
 
                 $data['regions'][$region]['hash'][$date] =  $timeline[$date]['hash'] ?? null;
                 $data['regions'][$region]['secondHash'][$date] = $timeline[$date]['secondHash'] ?? null;
+                $data['regions'][$region]['formulas'][$date] = $this->makeFormulaDescription($value, $lastVal, $data['regions'][$region]['yoy_change'][$date], $date, 'Total Revenue');
 
                 $lastVal = $value;
             }
@@ -228,6 +233,8 @@ class Geography extends Component
             $data['total']['yoy_change'][$date] = $lastTotal
                 ? (($total / $lastTotal) - 1) * 100
                 : 0;
+
+            $data['total']['formulas'][$date] = $this->makeFormulaDescription($total, $lastTotal, $data['total']['yoy_change'][$date], $date, 'Total Revenue');
 
             $lastTotal = $total;
 
@@ -248,5 +255,13 @@ class Geography extends Component
             'hash' => $hash,
             'secondHash' => $secondHash,
         ];
+    }
+
+    private function makeFormulaDescription($firstValue, $secondValue, $result, $date, $metric)
+    {
+        $value = makeFormulaDescription($firstValue, $secondValue, $result, $date, $metric);
+        $value['body']['value_final'] = $this->formatPercentageValue($result);
+
+        return $value;
     }
 }

@@ -89,7 +89,7 @@ class Product extends Component
         // lets update the result with correct unit and decimals
         foreach ($result['products'] as $product => $values) {
             foreach ($values as $key => $value) {
-                if (in_array($key, ['hash', 'secondHash'])) {
+                if (in_array($key, ['hash', 'secondHash', 'formulas'])) {
                     continue;
                 }
 
@@ -105,6 +105,10 @@ class Product extends Component
         }
 
         foreach ($result['total'] as $key => $value) {
+            if (in_array($key, ['formulas'])) {
+                continue;
+            }
+
             foreach ($value as $date => $amt) {
                 $result['total'][$key][$date] = [
                     'value' => $amt,
@@ -154,6 +158,7 @@ class Product extends Component
 
                 $data['products'][$product]['hash'][$date] =  $timeline[$date]['hash'] ?? null;
                 $data['products'][$product]['secondHash'][$date] = $timeline[$date]['secondHash'] ?? null;
+                $data['products'][$product]['formulas'][$date] = $this->makeFormulaDescription($value, $lastVal, $data['products'][$product]['yoy_change'][$date], $date, 'Total Revenue');
 
                 $lastVal = $value;
             }
@@ -166,6 +171,8 @@ class Product extends Component
             $data['total']['yoy_change'][$date] = $lastTotal
                 ? (($total / $lastTotal) - 1) * 100
                 : 0;
+
+            $data['total']['formulas'][$date] = $this->makeFormulaDescription($total, $lastTotal, $data['total']['yoy_change'][$date], $date, 'Total Revenue');
 
             $lastTotal = $total;
 
@@ -247,5 +254,13 @@ class Product extends Component
           'hash' => $hash,
           'secondHash' => $secondHash,
         ];
+    }
+
+    private function makeFormulaDescription($firstValue, $secondValue, $result, $date, $metric)
+    {
+        $value = makeFormulaDescription($firstValue, $secondValue, $result, $date, $metric);
+        $value['body']['value_final'] = $this->formatPercentageValue($result);
+
+        return $value;
     }
 }

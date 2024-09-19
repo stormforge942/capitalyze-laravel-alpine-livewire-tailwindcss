@@ -15,13 +15,14 @@ class RightSlide extends SlideOver
     public $data = null;
     public $result = null;
     public $value;
+    public $preset;
     public $ticker;
     public $title = "Report Info";
     public $loaded = false;
     public $isLink = false;
     public $decimalPlaces = 3;
 
-    public function mount($data)
+    public function mount($data, $preset = null)
     {
         $this->ticker = $data['ticker'];
         $this->value = $data['value'];
@@ -29,10 +30,21 @@ class RightSlide extends SlideOver
         $this->secondHash = $data['secondHash'] ?? null;
         $this->isLink = $data['isLink'] ?? false;
         $this->decimalPlaces = $data['decimals'] ?? 3;
+
+        if ($preset) {
+            $this->preset = $data['formulaPreset'];
+        }
     }
 
     public function loadData()
     {
+        if ($this->preset) {
+            $this->result = $this->preset;
+            $this->loaded = true;
+
+            return;
+        }
+
         if ($this->secondHash) {
             $cacheKey = 'right_slide_secondHash_' . $this->ticker . '_' . $this->secondHash;
 

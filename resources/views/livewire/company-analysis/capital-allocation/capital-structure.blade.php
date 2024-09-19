@@ -97,12 +97,27 @@
                                 @foreach ($selectedDates as $date)
                                     <td class="pl-6 py-1 last:pr-8">
                                         <?php $value = $data['book']['equity']['yoy_change'][$date]; ?>
+                                        <?php $sliderData = [
+                                            'ticker' => $company['ticker'],
+                                            'value' => $value['value'],
+                                            'hash' => null,
+                                            'secondHash' => null,
+                                            'isLink' => false,
+                                            'decimalPlaces' => 3,
+                                            'formulaPreset' => $data['book']['formulas']['equity']['yoy_change'][$date]
+                                        ]; ?>
 
                                         <x-review-number-button x-show="!publicView" x-data="{ amount: '{{ $value['value'] }}', date: '{{ $date }}' }">
-                                            {!! redIfNegative($value) !!}
+                                            <div x-data="{data: @js($sliderData), preset: true}" class="hover:underline cursor-pointer clickable"
+                                                 @click.prevent="Livewire.emit('slide-over.open', 'slides.right-slide', { data, preset })"
+                                                 x-cloak>
+                                                {!! redIfNegative($value) !!}
+                                            </div>
                                         </x-review-number-button>
 
-                                        <div x-show="publicView">
+                                        <div x-data="{data: @js($sliderData), preset: true}" class="hover:underline cursor-pointer clickable"
+                                             @click.prevent="Livewire.emit('slide-over.open', 'slides.right-slide', { data, preset })"
+                                             x-cloak x-show="publicView">
                                             {!! redIfNegative($value) !!}
                                         </div>
                                     </td>
@@ -132,14 +147,28 @@
                                 </td>
                                 @foreach ($selectedDates as $date)
                                     <?php $value = $data['book']['net_debt']['timeline'][$date]; ?>
+                                    <?php $sliderData = [
+                                        'ticker' => $company['ticker'],
+                                        'value' => $value['value'],
+                                        'hash' => $formulaHashes['net_debt'][$date]['hash'],
+                                        'secondHash' => $formulaHashes['net_debt'][$date]['secondHash'],
+                                        'isLink' => false,
+                                        'decimalPlaces' => 3,
+                                    ]; ?>
 
                                     <td
                                         class="pl-6 py-1 last:pr-8 @if (!$loop->first) last:rounded-tr-lg @endif">
-                                        <x-review-number-button  x-show="!publicView" x-data="{ amount: '{{ $value['value'] }}', date: '{{ $date }}' }">
-                                            {!! redIfNegative($value) !!}
+                                        <x-review-number-button x-show="!publicView" x-data="{ amount: '{{ $value['value'] }}', date: '{{ $date }}' }">
+                                            <div x-data="{data: @js($sliderData)}" class="hover:underline cursor-pointer clickable"
+                                                 @click.prevent="Livewire.emit('slide-over.open', 'slides.right-slide', { data })"
+                                                 x-cloak x-show="!publicView">
+                                                {!! redIfNegative($value, fn($val) => number_format($val)) !!}
+                                            </div>
                                         </x-review-number-button>
 
-                                        <div x-show="publicView">
+                                        <div x-data="{data: @js($sliderData)}" class="hover:underline cursor-pointer clickable"
+                                             @click.prevent="Livewire.emit('slide-over.open', 'slides.right-slide', { data })"
+                                             x-cloak x-show="publicView">
                                             {!! redIfNegative($value) !!}
                                         </div>
                                     </td>
@@ -152,12 +181,27 @@
                                 @foreach ($selectedDates as $date)
                                     <td class="pl-6 py-1 last:pr-8">
                                         <?php $value = $data['book']['net_debt']['yoy_change'][$date]; ?>
+                                        <?php $sliderData = [
+                                            'ticker' => $company['ticker'],
+                                            'value' => $value['value'],
+                                            'hash' => null,
+                                            'secondHash' => null,
+                                            'isLink' => false,
+                                            'decimalPlaces' => 3,
+                                            'formulaPreset' => $data['book']['formulas']['net_debt']['yoy_change'][$date]
+                                        ]; ?>
 
                                         <x-review-number-button x-show="!publicView" x-data="{ amount: '{{ $value['value'] }}', date: '{{ $date }}' }">
-                                            {!! redIfNegative($value) !!}
+                                            <div x-data="{data: @js($sliderData), preset: true}" class="hover:underline cursor-pointer clickable"
+                                                 @click.prevent="Livewire.emit('slide-over.open', 'slides.right-slide', { data, preset })"
+                                                 x-cloak>
+                                                {!! redIfNegative($value) !!}
+                                            </div>
                                         </x-review-number-button>
 
-                                        <div x-show="publicView">
+                                        <div x-data="{data: @js($sliderData), preset: true}" class="hover:underline cursor-pointer clickable"
+                                             @click.prevent="Livewire.emit('slide-over.open', 'slides.right-slide', { data, preset })"
+                                             x-cloak x-show="publicView">
                                             {!! redIfNegative($value) !!}
                                         </div>
                                     </td>
@@ -281,12 +325,27 @@
                                 @foreach ($selectedDates as $date)
                                     <td class="pl-6 py-1 last:pr-8">
                                         <?php $value = $data['book']['total_value']['yoy_change'][$date]; ?>
+                                            <?php $sliderData = [
+                                            'ticker' => $company['ticker'],
+                                            'value' => $value['value'],
+                                            'hash' => null,
+                                            'secondHash' => null,
+                                            'isLink' => false,
+                                            'decimalPlaces' => 3,
+                                            'formulaPreset' => $data['book']['formulas']['total_value']['yoy_change'][$date]
+                                        ]; ?>
 
                                         <x-review-number-button x-show="!publicView" x-data="{ amount: '{{ $value['value'] }}', date: '{{ $date }}' }">
-                                            {!! redIfNegative($value) !!}
+                                            <div x-data="{data: @js($sliderData), preset: true}" class="hover:underline cursor-pointer clickable"
+                                                 @click.prevent="Livewire.emit('slide-over.open', 'slides.right-slide', { data, preset })"
+                                                 x-cloak>
+                                                {!! redIfNegative($value) !!}
+                                            </div>
                                         </x-review-number-button>
 
-                                        <div x-show="publicView">
+                                        <div x-data="{data: @js($sliderData), preset: true}" class="hover:underline cursor-pointer clickable"
+                                             @click.prevent="Livewire.emit('slide-over.open', 'slides.right-slide', { data, preset })"
+                                             x-cloak x-show="publicView">
                                             {!! redIfNegative($value) !!}
                                         </div>
                                     </td>
@@ -299,12 +358,27 @@
                                 @foreach ($selectedDates as $date)
                                     <td class="pl-6 pt-1 pb-2 last:pr-8 last:rounded-br-lg">
                                         <?php $value = $data['book']['net_debt_by_capital'][$date]; ?>
+                                        <?php $sliderData = [
+                                            'ticker' => $company['ticker'],
+                                            'value' => $value['value'],
+                                            'hash' => null,
+                                            'secondHash' => null,
+                                            'isLink' => false,
+                                            'decimalPlaces' => 3,
+                                            'formulaPreset' => $data['book']['formulas']['net_debt_by_capital'][$date]
+                                        ]; ?>
 
                                         <x-review-number-button x-show="!publicView" x-data="{ amount: '{{ $value['value'] }}', date: '{{ $date }}' }">
-                                            {!! redIfNegative($value) !!}
+                                            <div x-data="{data: @js($sliderData), preset: true}" class="hover:underline cursor-pointer clickable"
+                                                 @click.prevent="Livewire.emit('slide-over.open', 'slides.right-slide', { data, preset })"
+                                                 x-cloak>
+                                                {!! redIfNegative($value) !!}
+                                            </div>
                                         </x-review-number-button>
 
-                                        <div x-show="publicView">
+                                        <div x-data="{data: @js($sliderData), preset: true}" class="hover:underline cursor-pointer clickable"
+                                             @click.prevent="Livewire.emit('slide-over.open', 'slides.right-slide', { data, preset })"
+                                             x-cloak x-show="publicView">
                                             {!! redIfNegative($value) !!}
                                         </div>
                                     </td>
@@ -357,12 +431,27 @@
                                 @foreach ($selectedDates as $date)
                                     <td class="pl-6 py-1 last:pr-8">
                                         <?php $value = $data['market']['equity']['yoy_change'][$date]; ?>
+                                        <?php $sliderData = [
+                                            'ticker' => $company['ticker'],
+                                            'value' => $value['value'],
+                                            'hash' => null,
+                                            'secondHash' => null,
+                                            'isLink' => false,
+                                            'decimalPlaces' => 3,
+                                            'formulaPreset' => $data['market']['formulas']['equity']['yoy_change'][$date]
+                                        ]; ?>
 
                                         <x-review-number-button x-show="!publicView" x-data="{ amount: '{{ $value['value'] }}', date: '{{ $date }}' }">
-                                            {!! redIfNegative($value) !!}
+                                            <div x-data="{data: @js($sliderData), preset: true}" class="hover:underline cursor-pointer clickable"
+                                                 @click.prevent="Livewire.emit('slide-over.open', 'slides.right-slide', { data, preset })"
+                                                 x-cloak>
+                                                {!! redIfNegative($value) !!}
+                                            </div>
                                         </x-review-number-button>
 
-                                        <div x-show="publicView">
+                                        <div x-data="{data: @js($sliderData), preset: true}" class="hover:underline cursor-pointer clickable"
+                                             @click.prevent="Livewire.emit('slide-over.open', 'slides.right-slide', { data, preset })"
+                                             x-cloak x-show="publicView">
                                             {!! redIfNegative($value) !!}
                                         </div>
                                     </td>
@@ -392,14 +481,28 @@
                                 </td>
                                 @foreach ($selectedDates as $date)
                                     <?php $value = $data['market']['net_debt']['timeline'][$date]; ?>
+                                    <?php $sliderData = [
+                                        'ticker' => $company['ticker'],
+                                        'value' => $value['value'],
+                                        'hash' => $formulaHashes['net_debt'][$date]['hash'],
+                                        'secondHash' => $formulaHashes['net_debt'][$date]['secondHash'],
+                                        'isLink' => false,
+                                        'decimalPlaces' => 3,
+                                    ]; ?>
 
                                     <td
                                         class="pl-6 py-1 last:pr-8 @if (!$loop->first) last:rounded-tr-lg @endif">
                                         <x-review-number-button x-show="!publicView" x-data="{ amount: '{{ $value['value'] }}', date: '{{ $date }}' }">
-                                            {!! redIfNegative($value) !!}
+                                            <div x-data="{data: @js($sliderData)}" class="hover:underline cursor-pointer clickable"
+                                                 @click.prevent="Livewire.emit('slide-over.open', 'slides.right-slide', { data })"
+                                                 x-cloak x-show="!publicView">
+                                                {!! redIfNegative($value, fn($val) => number_format($val)) !!}
+                                            </div>
                                         </x-review-number-button>
 
-                                        <div x-show="publicView">
+                                        <div x-data="{data: @js($sliderData)}" class="hover:underline cursor-pointer clickable"
+                                             @click.prevent="Livewire.emit('slide-over.open', 'slides.right-slide', { data })"
+                                             x-cloak x-show="publicView">
                                             {!! redIfNegative($value) !!}
                                         </div>
                                     </td>
@@ -412,12 +515,27 @@
                                 @foreach ($selectedDates as $date)
                                     <td class="pl-6 py-1 last:pr-8">
                                         <?php $value = $data['market']['net_debt']['yoy_change'][$date]; ?>
+                                        <?php $sliderData = [
+                                            'ticker' => $company['ticker'],
+                                            'value' => $value['value'],
+                                            'hash' => null,
+                                            'secondHash' => null,
+                                            'isLink' => false,
+                                            'decimalPlaces' => 3,
+                                            'formulaPreset' => $data['market']['formulas']['net_debt']['yoy_change'][$date]
+                                        ]; ?>
 
                                         <x-review-number-button x-show="!publicView" x-data="{ amount: '{{ $value['value'] }}', date: '{{ $date }}' }">
-                                            {!! redIfNegative($value) !!}
+                                            <div x-data="{data: @js($sliderData), preset: true}" class="hover:underline cursor-pointer clickable"
+                                                 @click.prevent="Livewire.emit('slide-over.open', 'slides.right-slide', { data, preset })"
+                                                 x-cloak>
+                                                {!! redIfNegative($value) !!}
+                                            </div>
                                         </x-review-number-button>
 
-                                        <div x-show="publicView">
+                                        <div x-data="{data: @js($sliderData), preset: true}" class="hover:underline cursor-pointer clickable"
+                                             @click.prevent="Livewire.emit('slide-over.open', 'slides.right-slide', { data, preset })"
+                                             x-cloak x-show="publicView">
                                             {!! redIfNegative($value) !!}
                                         </div>
                                     </td>
@@ -541,12 +659,27 @@
                                 @foreach ($selectedDates as $date)
                                     <td class="pl-6 py-1 last:pr-8">
                                         <?php $value = $data['market']['total_value']['yoy_change'][$date]; ?>
+                                        <?php $sliderData = [
+                                            'ticker' => $company['ticker'],
+                                            'value' => $value['value'],
+                                            'hash' => null,
+                                            'secondHash' => null,
+                                            'isLink' => false,
+                                            'decimalPlaces' => 3,
+                                            'formulaPreset' => $data['market']['formulas']['total_value']['yoy_change'][$date]
+                                        ]; ?>
 
                                         <x-review-number-button x-show="!publicView" x-data="{ amount: '{{ $value['value'] }}', date: '{{ $date }}' }">
-                                            {!! redIfNegative($value) !!}
+                                            <div x-data="{data: @js($sliderData), preset: true}" class="hover:underline cursor-pointer clickable"
+                                                 @click.prevent="Livewire.emit('slide-over.open', 'slides.right-slide', { data, preset })"
+                                                 x-cloak>
+                                                {!! redIfNegative($value) !!}
+                                            </div>
                                         </x-review-number-button>
 
-                                        <div x-show="publicView">
+                                        <div x-data="{data: @js($sliderData), preset: true}" class="hover:underline cursor-pointer clickable"
+                                             @click.prevent="Livewire.emit('slide-over.open', 'slides.right-slide', { data, preset })"
+                                             x-cloak x-show="publicView">
                                             {!! redIfNegative($value) !!}
                                         </div>
                                     </td>
@@ -559,12 +692,27 @@
                                 @foreach ($selectedDates as $date)
                                     <td class="pl-6 pt-1 pb-2 last:pr-8 last:rounded-br-lg">
                                         <?php $value = $data['market']['net_debt_by_capital'][$date]; ?>
+                                        <?php $sliderData = [
+                                            'ticker' => $company['ticker'],
+                                            'value' => $value['value'],
+                                            'hash' => null,
+                                            'secondHash' => null,
+                                            'isLink' => false,
+                                            'decimalPlaces' => 3,
+                                            'formulaPreset' => $data['market']['formulas']['net_debt_by_capital'][$date]
+                                        ]; ?>
 
                                         <x-review-number-button x-show="!publicView" x-data="{ amount: '{{ $value['value'] }}', date: '{{ $date }}' }">
-                                            {!! redIfNegative($value) !!}
+                                            <div x-data="{data: @js($sliderData), preset: true}" class="hover:underline cursor-pointer clickable"
+                                                 @click.prevent="Livewire.emit('slide-over.open', 'slides.right-slide', { data, preset })"
+                                                 x-cloak>
+                                                {!! redIfNegative($value) !!}
+                                            </div>
                                         </x-review-number-button>
 
-                                        <div x-show="publicView">
+                                        <div x-data="{data: @js($sliderData), preset: true}" class="hover:underline cursor-pointer clickable"
+                                             @click.prevent="Livewire.emit('slide-over.open', 'slides.right-slide', { data, preset })"
+                                             x-cloak x-show="publicView">
                                             {!! redIfNegative($value) !!}
                                         </div>
                                     </td>

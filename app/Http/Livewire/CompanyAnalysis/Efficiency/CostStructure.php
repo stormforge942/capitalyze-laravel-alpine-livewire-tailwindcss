@@ -129,17 +129,25 @@ class CostStructure extends Component
                 'secondHash' => array_combine($this->dates, array_map(fn ($date) => $this->extractValues($statement['Total Revenues'][$date])['secondHash'], $this->dates)),
                 'yoy_change' => [],
             ],
+            'formulas' => []
         ];
 
         // update yoy change
         foreach (['total_expenses', 'revenues'] as $key) {
             $lastValue = 0;
+            $formulasLabelMap = [
+                'total_expenses' => 'Total Expenses',
+                'revenues' => 'Revenues',
+            ];
+
             foreach ($this->dates as $idx => $date) {
                 $value = $data[$key]['timeline'][$date];
 
                 $data[$key]['yoy_change'][$date] = $lastValue && $idx
                     ? (($value / $lastValue) - 1) * 100
                     : 0;
+
+                $data['formulas'][$key]['yoy_change'][$date] = $this->makeFormulaDescription($value, $lastValue, $data[$key]['yoy_change'][$date], $date, $formulasLabelMap[$key]);
 
                 $lastValue = $value;
             }
@@ -189,6 +197,8 @@ class CostStructure extends Component
 
                 $segment['revenue_percentage'][$date] = $value / ($this->extractValues($statement['Total Revenues'][$date])['value'] ?? 0) * 100;
                 $segment['expense_percentage'][$date] = $value / $this->extractValues($data['total_expenses']['timeline'][$date])['value'] * 100;
+
+                $data['formulas'][$segment['title']]['yoy_change'][$date] = $this->makeFormulaDescription($value, $lastValue, $segment['yoy_change'][$date], $date, $segment['title']);
 
                 $lastValue = $value;
             }
@@ -268,5 +278,13 @@ class CostStructure extends Component
             'hash' => $hash,
             'secondHash' => $secondHash,
         ];
+    }
+
+    private function makeFormulaDescription($firstValue, $secondValue, $result, $date, $metric)
+    {
+        $value = makeFormulaDescription($firstValue, $secondValue, $result, $date, $metric);
+        $value['body']['value_final'] = $this->formatPercentageValue($result);
+
+        return $value;
     }
 }

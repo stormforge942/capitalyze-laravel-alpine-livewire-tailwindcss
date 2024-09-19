@@ -76,7 +76,7 @@ class SourceAndUses extends Component
 
         $idx = 0;
         foreach ($data as $key => $value) {
-            if ($key == 'total') continue;
+            if (in_array($key, ['total', 'formulas'])) continue;
 
             $datasets[] = [
                 'label' => $keyTitleMap[$key],
@@ -124,6 +124,10 @@ class SourceAndUses extends Component
 
         foreach ($data as &$value) {
             foreach ($value as $key => $row) {
+                if ($key === 'formulas') {
+                    continue;
+                }
+
                 if (isset($row['timeline'])) {
                     $value[$key]['timeline'] = array_map(
                         fn ($val) => ['value' => $val, 'formatted' => $this->formatValue($val)],
@@ -174,6 +178,7 @@ class SourceAndUses extends Component
                     'timeline' => [],
                     'yoy_change' => [],
                 ],
+                'formulas' => [],
             ],
             'uses' => [
                 'acquisition' => [
@@ -204,6 +209,7 @@ class SourceAndUses extends Component
                     'timeline' => [],
                     'yoy_change' => [],
                 ],
+                'formulas' => [],
             ],
         ];
 
@@ -221,6 +227,9 @@ class SourceAndUses extends Component
             $data['sources']['total']['yoy_change'][$date] = $total && $idx
                 ? (($total - $lastTotal) / $total * 100)
                 : 0;
+
+            $data['sources']['formulas']['total']['yoy_change'][$date] = $this->makeFormulaDescription($total, $lastTotal, $data['sources']['total']['yoy_change'][$date], $date, 'Total Sources of Cash');
+
             $lastTotal = $total;
 
             $data['sources']['free_cashflow']['timeline'][$date] = $fcf;
@@ -249,6 +258,7 @@ class SourceAndUses extends Component
 
             // copy from sources
             $data['uses']['total'] = $data['sources']['total'];
+            $data['uses']['formulas']['total'] = $data['sources']['formulas']['total'];
 
             $data['uses']['acquisition']['timeline'][$date] = $ca;
             $data['uses']['acquisition']['total_percent'][$date] = $total ? $ca / $total * 100 : 0;
@@ -324,5 +334,13 @@ class SourceAndUses extends Component
         }
 
         return $tmp;
+    }
+
+    private function makeFormulaDescription($firstValue, $secondValue, $result, $date, $metric)
+    {
+        $value = makeFormulaDescription($firstValue, $secondValue, $result, $date, $metric);
+        $value['body']['value_final'] = $this->formatPercentageValue($result);
+
+        return $value;
     }
 }
