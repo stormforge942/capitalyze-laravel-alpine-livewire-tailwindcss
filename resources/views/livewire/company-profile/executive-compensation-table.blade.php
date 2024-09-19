@@ -29,24 +29,6 @@
                 this.hideSegments = [];
             });
         },
-        number_format(number, decimals = 0, decPoint = '.', thousandsSep = ',') {
-            if (!number && number !== 0) return '-';
-    
-            if (!isFinite(number)) {
-                return '0';
-            }
-    
-            const fixedNumber = number.toFixed(decimals);
-            const [integerPart, decimalPart] = fixedNumber.split('.');
-    
-            // Add thousands separator
-            const integerWithThousands = integerPart.replace(/\B(?=(\d{3})+(?!\d))/g, thousandsSep);
-    
-            // Combine the integer part and decimal part
-            const result = decimalPart ? integerWithThousands + decPoint + decimalPart : integerWithThousands;
-    
-            return result;
-        }
     }">
         <table class="rounded-lg overflow-clip w-full text-right">
             <thead>
@@ -97,22 +79,22 @@
                                 <span x-text="row.year"></p>
                             </td>
                             <td class="py-2 text-right">
-                                <span x-text="number_format(row.total)"></p>
+                                <span x-text="window.formatDecimalNumber(row.total)"></p>
                             </td>
                             <td class="py-2 text-right">
-                                <span x-text="number_format(row.salary)"></p>
+                                <span x-text="window.formatDecimalNumber(row.salary)"></p>
                             </td>
                             <td class="py-2 text-right">
-                                <span x-text="number_format(row.bonus)"></p>
+                                <span x-text="window.formatDecimalNumber(row.bonus)"></p>
                             </td>
                             <td class="py-2 text-right">
-                                <span x-text="number_format(row.stock_award)"></p>
+                                <span x-text="window.formatDecimalNumber(row.stock_award)"></p>
                             </td>
                             <td class="py-2 text-right">
-                                <span x-text="number_format(row.incentive_plan_compensation)"></p>
+                                <span x-text="window.formatDecimalNumber(row.incentive_plan_compensation)"></p>
                             </td>
                             <td class="pr-6 py-2 text-right">
-                                <span x-text="number_format(row.all_other_compensation)"></p>
+                                <span x-text="window.formatDecimalNumber(row.all_other_compensation)"></p>
                             </td>
                         </tr>
                     </template>

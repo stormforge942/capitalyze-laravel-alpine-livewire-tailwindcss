@@ -132,6 +132,25 @@ export function niceNumber(value) {
     )
 }
 
+export function formatDecimalNumber(number, decimals = 0, decPoint = '.', thousandsSep = ',') {
+    if (!number && number !== 0) return '-';
+
+    if (!isFinite(number)) {
+        return '0';
+    }
+
+    const fixedNumber = number.toFixed(decimals);
+    const [integerPart, decimalPart] = fixedNumber.split('.');
+
+    // Add thousands separator
+    const integerWithThousands = integerPart.replace(/\B(?=(\d{3})+(?!\d))/g, thousandsSep);
+
+    // Combine the integer part and decimal part
+    const result = decimalPart ? integerWithThousands + decPoint + decimalPart : integerWithThousands;
+
+    return result;
+}
+
 window.updateUserSettings = updateUserSettings
 window.formatCmpctNumber = formatCmpctNumber
 window.formatNumber = formatNumber
@@ -141,3 +160,4 @@ window.fullScreen = fullScreen
 window.randomColor = randomColor
 window.http = http
 window.niceNumber = niceNumber
+window.formatDecimalNumber = formatDecimalNumber

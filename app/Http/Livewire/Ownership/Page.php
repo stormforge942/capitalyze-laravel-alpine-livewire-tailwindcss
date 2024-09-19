@@ -27,6 +27,7 @@ class Page extends Component
             InsiderOwnership::class,
             BeneficialOwnership::class,
             ProxyStatement::class,
+            SharesBeneficialOwnership::class,
             FundsSummary::class,
         ];
 

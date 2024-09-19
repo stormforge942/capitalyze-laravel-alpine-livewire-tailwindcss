@@ -43,12 +43,17 @@ function highlightSelection(value, selector, document = window.document) {
         const regex = new RegExp(`^${search}0*$`)
 
         for (const value of values) {
-            if (value.innerText == search) {
+            const innerText = Array.from(value.childNodes)
+                .filter(node => node.nodeType === Node.TEXT_NODE)
+                .map(node => node.textContent)
+                .join('');
+
+            if (innerText == search) {
                 highlightElement(value)
                 continue
             }
 
-            let text = parseText(value.innerText, true)
+            let text = parseText(innerText, true)
 
             if (text && (text === search || regex.test())) {
                 highlightElement(value)

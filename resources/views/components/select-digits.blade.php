@@ -11,13 +11,21 @@
     disabled: @js($disabled),
     pillTextStyle: 'text-{{ $size }} text-[{{ $color }}]',
     get computedOptions() {
+        let typedOptions;
+
+        if (! Array.isArray(this.options)) {
+            typedOptions = Object.values(this.options);
+        } else {
+            typedOptions = this.options;
+        }
+
         if (!this.search) {
-            return this.options
+            return typedOptions;
         }
 
         let options = [];
 
-        for (const [key, value] of this.options) {
+        for (const [key, value] of typedOptions) {
             const value_ = typeof value === 'object' ? value.label + ' ' + value.description : value
 
             if (value_.toLowerCase().includes(this.search.toLowerCase())) {
@@ -32,7 +40,15 @@
             return this.placeholder
         }
 
-        const find = this.options.find(option => option[0] == this.value);
+        let options;
+
+        if (! Array.isArray(this.options)) {
+            options = Object.values(this.options);
+        } else {
+            options = this.options;
+        }
+
+        const find = options.find(option => option[0] == this.value);
 
         return find ? find[0] : this.placeholder
     },
@@ -44,8 +60,10 @@
     },
     init() {
         this.$nextTick(() => {
+            let options = this.options;
+            if(! Array.isArray(this.options)) options = Object.values(this.options);
             @if(!$multiple)
-            if (this.value !== '' && !this.options.find(option => option[0] == String(this.value))) {
+            if (this.value !== '' && !options.find(option => option[0] == String(this.value))) {
                 this.value = ''
             }
             @else
