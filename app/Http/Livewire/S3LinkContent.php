@@ -9,6 +9,7 @@ class S3LinkContent extends SlideOver
     public ?string $sourceLink = null;
     public ?string $url = null;
     public ?string $summary = null;
+    public ?array $searchValues = [];
     private string $content = '';
     public bool $highlightDates = false;
 
@@ -25,6 +26,10 @@ class S3LinkContent extends SlideOver
 
         if ($this->highlightDates) {
             $this->content = $this->_hightlightDates();
+        }
+
+        if (count($this->searchValues)) {
+            $this->content = $this->highlightSearchedValues();
         }
 
         $this->content = $this->removeThirdPartyJs($this->content);
@@ -171,5 +176,51 @@ class S3LinkContent extends SlideOver
         ];
 
         return array_map(fn($pattern) => '/' . $pattern . '/i', $date_regexes);
+    }
+
+    private function highlightSearchedValues()
+    {
+        $searchValues = array_filter($this->searchValues, fn($value) => $value !== 0 && $value !== '0');
+        $valueRegex = $this->createValueRegex($searchValues);
+        $pattern = '/(<[^>]+>)([^<]*)(<\/[^>]+>)/s';
+        $replaceCallback = function ($matches) use ($valueRegex) {
+            $textContent = $matches[2];
+
+            foreach ($valueRegex as $regex) {
+                $textContent = preg_replace_callback($regex, function ($match) {
+                    return '<span class="highlight-text" style="background-color:yellow; color: black; display: inline;">' . $match[0] . '</span>';
+                }, $textContent);
+            }
+
+            return $matches[1] . $textContent . $matches[3];
+        };
+
+        return preg_replace_callback($pattern, $replaceCallback, $this->content);
+    }
+
+    private function parseText($value, $shouldBeNumber = false) {
+        $term = strval($value);
+        $term = str_replace([",", "."], "", $term);
+        $term = trim($term);
+
+        if (!is_numeric($term)) {
+            if ($shouldBeNumber) {
+                return null;
+            }
+
+            $term = $value;
+        }
+
+        return $term ?: '';
+    }
+
+    private function createValueRegex($data): array
+    {
+        return array_map(function ($value) {
+            $parsedValue = intval($this->parseText($value));
+            $parsedValue = number_format($parsedValue / 1000, 3) ;
+
+            return "/$parsedValue/";
+        }, $data);
     }
 }

@@ -116,15 +116,22 @@
                             </td>
                             @foreach ($selectedDates as $date)
                                 <?php $value = $data['employee_count']['timeline'][$date]; ?>
+                                <?php $link = $data['employee_count']['links'][$date]; ?>
 
                                 <td
                                     class="pl-6 py-1 last:pr-8 @if (!$loop->first) last:rounded-tr-lg @endif">
                                     <x-review-number-button x-show="!publicView" x-data="{ amount: '{{ $value['value'] }}', date: '{{ $date }}' }">
-                                        {!! redIfNegative($value) !!}
+                                        <div x-data="{link: @js($link), value: @js($value) , preset: true}" class="hover:underline cursor-pointer clickable"
+                                             @click.prevent="Livewire.emit('slide-over.open', 's3-link-content', { sourceLink: link, url: '', searchValues: value})"
+                                             x-cloak x-show="!publicView">
+                                            {!! redIfNegative($value) !!}
+                                        </div>
                                     </x-review-number-button>
 
-                                    <div x-show="publicView">
-                                        {!! redIfNegative($value, fn($val) => $val . '%') !!}
+                                    <div x-data="{link: @js($link), value: @js($value) , preset: true}" class="hover:underline cursor-pointer clickable"
+                                         @click.prevent="Livewire.emit('slide-over.open', 's3-link-content', { sourceLink: link, url: '', searchValues: value})"
+                                         x-cloak x-show="publicView">
+                                        {!! redIfNegative($value) !!}
                                     </div>
                                 </td>
                             @endforeach

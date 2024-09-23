@@ -59,7 +59,7 @@ class Employee extends Component
 
         foreach ($data as $k0 => $v0) {
             foreach ($v0 as $k1 => $v1) {
-                if ($k1 === 'formulas') {
+                if (in_array($k1, ['formulas', 'links'])) {
                     continue;
                 }
 
@@ -125,6 +125,7 @@ class Employee extends Component
                 'timeline' => [],
                 'yoy_change' => [],
                 'formulas' => [],
+                'links' => $this->extractLinks($raw),
             ],
             'rev_by_emp' => [
                 'timeline' => [],
@@ -134,8 +135,8 @@ class Employee extends Component
         ];
 
         $findEmployeeCount = function ($date) use ($raw) {
-            if (isset($raw['employee_count'][$date])) {
-                return $raw['employee_count'][$date];
+            if (isset($raw['employee_count'][$date]['count'])) {
+                return $raw['employee_count'][$date]['count'];
             }
 
             foreach ($raw['employee_count'] as $_date => $count) {
@@ -219,11 +220,16 @@ class Employee extends Component
         $cacheDuration = 3600;
 
         $employeeCount = Cache::remember($cacheKey, $cacheDuration, function () {
-            return DB::connection('pgsql-xbrl')
+            $result = DB::connection('pgsql-xbrl')
                 ->table('employee_count')
                 ->where('symbol', $this->company['ticker'])
-                ->pluck("count", "period_of_report")
-                ->toArray();
+                ->select('s3_url', 'count', 'period_of_report')
+                ->get();
+
+            return $result->reduce(function ($carry, $item) {
+                $carry[$item->period_of_report] = ['count' => $item->count, 'url' => $item->s3_url];
+                return $carry;
+            }, []);
         });
 
         return [
@@ -253,6 +259,17 @@ class Employee extends Component
             'hash' => $hash,
             'secondHash' => $secondHash,
         ];
+    }
+
+    private function extractLinks($data)
+    {
+        $result = [];
+
+        if (!isset($data['employee_count'])) {
+            return $result;
+        }
+
+        return array_map(function ($item) { return $item['url'];  }, $data['employee_count']);
     }
 
     private function makeFormulaDescription($firstValue, $secondValue, $result, $date, $metric)

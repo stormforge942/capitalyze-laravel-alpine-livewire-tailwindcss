@@ -118,10 +118,11 @@
             @endif
         </div>
         <script>
-            const value = @json($formatedValue)
+            const formatedValue = @json($formatedValue);
+            const value = @json($value);
 
-            window.reportTextHighlighter.highlight(value, '.wep-slide-over-container table tbody tr td')
-            window.reportTextHighlighter.highlight(value, '.wep-slide-over-container .value_final_raw')
+            window.reportTextHighlighter.highlight(value, formatedValue, '.wep-slide-over-container table tbody tr td')
+            window.reportTextHighlighter.highlight(value, formatedValue, '.wep-slide-over-container .value_final_raw')
         </script>
     @endif
 </x-wire-elements-pro::tailwind.slide-over>

@@ -23,13 +23,13 @@ function parseText(value, shouldBeNumber = false) {
     return term?.replace(/0+$/, "") || ""
 }
 
-function highlightSelection(value, selector, document = window.document) {
+function highlightSelection(value, formatedValue, selector, document = window.document) {
     let selections = [];
 
     return setTimeout(() => {
-        const search = parseText(value);
+        const regexExpressions = [value, formatedValue].map(item => new RegExp(`^${parseText(item)}$`))
 
-        if (!search.length) return;
+        if (!regexExpressions.length) return;
 
         const values = [];
 
@@ -42,11 +42,12 @@ function highlightSelection(value, selector, document = window.document) {
         }
 
         for (const value of values) {
-            let text = parseText(value.innerText, true)
+            const text = parseText(value.innerText, true)
+            const comparisonResult = regexExpressions.some(regex => regex.test(text))
 
-            if (text && (text === search || String(search).includes(text))) {
-                highlightElement(value);
-                selections.push(value);
+            if (comparisonResult) {
+                highlightElement(value)
+                selections.push(value)
             }
         }
 
