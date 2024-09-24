@@ -317,47 +317,19 @@ class CompanyController extends BaseController
 
     public function icon(Request $request)
     {
-        $domain = $request->input('domain');
-        $key = config('services.logo.key');
+        $ticker = $request->input('ticker');
 
-        if ($domain) {
-            $cacheKey = "icon_{$domain}";
-            $cacheDuration = 60 * 24; // Cache for 24 hours
-
-            // Try to get the cached icon
-            if (Cache::has($cacheKey)) {
-                $cachedFilePath = Cache::get($cacheKey);
-                if (Storage::exists($cachedFilePath)) {
-                    return response()->file(storage_path('app/' . $cachedFilePath));
-                }
+        if ($ticker) {
+            if (Storage::disk('s3')->exists("company_logos/{$ticker}.png")) {
+                $fileContents = Storage::disk('s3')->get("company_logos/{$ticker}.png");
+                return response($fileContents, 200)
+                    ->header('Content-Type', 'image/png');
+            } else {
+                $localIconPath = public_path('svg/logo.svg');
+                return response()->file($localIconPath, [
+                    'Content-Type' => 'image/svg+xml',
+                ]);
             }
-
-            $sourceLink = "https://img.logo.dev/{$domain}?token={$key}";
-
-            $response = Http::get($sourceLink);
-
-            if ($response->ok()) {
-                // Store the icon in a file
-                $fileName = md5($domain) . '.png'; // Unique file name based on the domain
-                $filePath = 'icons/' . $fileName;
-                Storage::put($filePath, $response->body());
-
-                // Cache the file path
-                Cache::put($cacheKey, $filePath, $cacheDuration);
-
-                return response()->file(storage_path('app/' . $filePath));
-            }
-        }
-
-        $localIconPath = public_path('img/logo1.png');
-
-        if (file_exists($localIconPath)) {
-            return response()->file($localIconPath, [
-                'Content-Type' => 'image/png',
-                'Content-Disposition' => 'inline; filename="icon.png"',
-            ]);
-        } else {
-            abort(404, 'Icon not found');
         }
     }
 

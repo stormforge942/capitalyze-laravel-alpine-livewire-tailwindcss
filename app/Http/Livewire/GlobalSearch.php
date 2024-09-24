@@ -36,7 +36,7 @@ class GlobalSearch extends Component
             ->limit(4)
             ->get()
             ->map(function ($item) {
-                $item->logo = $this->getLogoFromWebsite($item->website);
+                $item->logo = route('icon-view', ['ticker' => $item->ticker]);
                 $item->href = route('company.profile', $item->ticker);
                 $item->passed = true;
                 return $item;
@@ -68,13 +68,6 @@ class GlobalSearch extends Component
         }, $history);
 
         return $history;
-    }
-
-    public function getLogoFromWebsite($website)
-    {
-        $host = parse_url($website, PHP_URL_HOST);
-        $domain = preg_replace('/^www\./', '', $host);
-        return route('icon-view', ['domain' => $domain]);
     }
 
     public function clearHistory()
