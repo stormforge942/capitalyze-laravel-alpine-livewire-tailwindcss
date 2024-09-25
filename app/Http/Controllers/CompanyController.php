@@ -320,8 +320,8 @@ class CompanyController extends BaseController
         $ticker = $request->input('ticker');
 
         if ($ticker) {
-            if (Storage::exists("company_logos/{$ticker}.png")) {
-                $fileContents = Storage::get("company_logos/{$ticker}.png");
+            if (Storage::disk('s3')->exists("company_logos/{$ticker}.png")) {
+                $fileContents = Storage::disk('s3')->get("company_logos/{$ticker}.png");
                 return response($fileContents, 200)
                     ->header('Content-Type', 'image/png');
             } else {
