@@ -326,9 +326,15 @@ class CompanyController extends BaseController
                     ->header('Content-Type', 'image/png');
             } else {
                 $localIconPath = public_path('svg/logo.svg');
-                return response()->file($localIconPath, [
-                    'Content-Type' => 'image/svg+xml',
-                ]);
+                $svgUrl = asset('svg/logo.svg');
+
+                if (!file_exists($localIconPath)) {
+                    return response()->json([
+                        'error' => 'File not found.',
+                    ], 404);
+                }
+                
+                return redirect($svgUrl);
             }
         }
     }
