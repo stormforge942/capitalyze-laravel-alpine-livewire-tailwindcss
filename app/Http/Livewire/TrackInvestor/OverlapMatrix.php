@@ -120,7 +120,7 @@ class OverlapMatrix extends Component
 
                 case 'favourite':
                     $funds = $fundsQuery->whereIn('cik', $favouriteFunds)->get();
-                    $mutualFunds = $this->getFavouriteMutualFunds($mutualFundsQuery, $favouriteMutualFunds);
+                    $mutualFunds = $mutualFundsQuery->whereIn('fund_symbol', $favouriteMutualFunds)->get();
                     break;
 
                 default:
@@ -353,6 +353,11 @@ class OverlapMatrix extends Component
 
         Cache::forget($this->cacheKey);
 
+        if (count($investors) === 0) {
+            $this->overlapMatrix = [];
+            return;
+        }
+
         Cache::remember($this->cacheKey, Carbon::now()->addMinutes(30), function() use($investors, $itemsPerPage) {
             $investors = $this->filterInvestorsChecking($investors);
 
@@ -420,24 +425,6 @@ class OverlapMatrix extends Component
         });
     }
 
-    private function getFavouriteMutualFunds($mutualFundsQuery, $favouriteMutualFunds)
-    {
-        if (empty($favouriteMutualFunds)) {
-            return collect([]);
-        }
-
-        return $mutualFundsQuery->where(function ($query) use ($favouriteMutualFunds) {
-            foreach ($favouriteMutualFunds as $identifier) {
-                $fund = json_decode($identifier, true);
-                $query->orWhere(function ($q) use ($fund) {
-                    $q->where('cik', $fund['cik'])
-                    ->where('series_id', $fund['series_id'])
-                    ->where('class_id', $fund['class_id']);
-                });
-            }
-        })->get();
-    }
-
     private function processFundsData($funds, $favouriteFunds)
     {
         $funds->transform(function ($fund) use ($favouriteFunds) {
@@ -482,11 +469,7 @@ class OverlapMatrix extends Component
 
     public function updateInvestors($investors)
     {
-        if (count($investors)) {
-            $this->getOverlapMatrix($investors);
-        } else {
-            $this->overlapMatrix = [];
-        }
+        $this->getOverlapMatrix($investors);
     }
 
     private function generateViews()
