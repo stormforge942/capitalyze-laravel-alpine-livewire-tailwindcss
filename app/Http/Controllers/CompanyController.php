@@ -320,20 +320,12 @@ class CompanyController extends BaseController
         $ticker = $request->input('ticker');
 
         if ($ticker) {
-            if (Storage::disk('s3')->exists("company_logos/{$ticker}.png")) {
-                $fileContents = Storage::disk('s3')->get("company_logos/{$ticker}.png");
+            if (Storage::exists("company_logos/{$ticker}.png")) {
+                $fileContents = Storage::get("company_logos/{$ticker}.png");
                 return response($fileContents, 200)
                     ->header('Content-Type', 'image/png');
             } else {
-                $localIconPath = public_path('svg/logo.svg');
                 $svgUrl = asset('svg/logo.svg');
-
-                if (!file_exists($localIconPath)) {
-                    return response()->json([
-                        'error' => 'File not found.',
-                    ], 404);
-                }
-                
                 return redirect($svgUrl);
             }
         }
