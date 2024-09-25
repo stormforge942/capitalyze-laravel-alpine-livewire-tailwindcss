@@ -169,7 +169,7 @@ class FcfConversion extends Component
                 ? (($revenue / $lastRev) - 1) * 100
                 : 0;
 
-            $data['revenues']['formulas']['yoy_change'][$date] = $this->makeFormulaDescription($revenue, $lastRev, $data['revenues']['yoy_change'][$date], $date, 'Total revenues');
+            $data['revenues']['formulas']['yoy_change'][$date] = $this->makeFormulaDescription([$revenue, $lastRev], $data['revenues']['yoy_change'][$date], $date, 'Total revenues', 'yoy_change');
 
             $lastRev = $revenue;
 
@@ -184,7 +184,8 @@ class FcfConversion extends Component
                 ? ($ebitda / $revenue * 100)
                 : 0;
 
-            $data['ebitda']['formulas']['yoy_change'][$date] = $this->makeFormulaDescription($ebitda, $lastEbitda, $data['ebitda']['yoy_change'][$date], $date, 'EBITDA');
+            $data['ebitda']['formulas']['yoy_change'][$date] = $this->makeFormulaDescription([$ebitda, $lastEbitda], $data['ebitda']['yoy_change'][$date], $date, 'EBITDA', 'yoy_change');
+            $data['ebitda']['formulas']['margin'][$date] = $this->makeFormulaDescription([$ebitda, $revenue], $data['ebitda']['margin'][$date], $date, 'EBITDA', 'margin');
 
             $lastEbitda = $ebitda;
 
@@ -199,7 +200,8 @@ class FcfConversion extends Component
                 ? -1 * ($cashInterest / $ebitda * 100)
                 : 0;
 
-            $data['cash_interest']['formulas']['yoy_change'][$date] = $this->makeFormulaDescription($cashInterest, $lastCashInterest, $data['cash_interest']['yoy_change'][$date], $date, 'Cash Interest Paid');
+            $data['cash_interest']['formulas']['yoy_change'][$date] = $this->makeFormulaDescription([$cashInterest, $lastCashInterest], $data['cash_interest']['yoy_change'][$date], $date, 'Cash Interest Paid', 'yoy_change');
+            $data['cash_interest']['formulas']['ebitda_percentage'][$date] = $this->makeFormulaDescription([$cashInterest, $ebitda], $data['cash_interest']['ebitda_percentage'][$date], $date, 'Cash Interest Paid', 'of_ebitda');
 
             $lastCashInterest = $cashInterest;
 
@@ -214,7 +216,8 @@ class FcfConversion extends Component
                 ? -1 * ($cashTaxes / $ebitda * 100)
                 : 0;
 
-            $data['cash_taxes']['formulas']['yoy_change'][$date] = $this->makeFormulaDescription($cashTaxes, $lastCashTaxes, $data['cash_taxes']['ebitda_percentage'][$date], $date, 'Cash Taxes Paid');
+            $data['cash_taxes']['formulas']['yoy_change'][$date] = $this->makeFormulaDescription([$cashTaxes, $lastCashTaxes], $data['cash_taxes']['yoy_change'][$date], $date, 'Cash Taxes Paid', 'yoy_change');
+            $data['cash_taxes']['formulas']['ebitda_percentage'][$date] = $this->makeFormulaDescription([$cashInterest, $ebitda], $data['cash_taxes']['ebitda_percentage'][$date], $date, 'Cash Taxes Paid', 'of_ebitda');
 
             $lastCashTaxes = $cashTaxes;
 
@@ -232,7 +235,9 @@ class FcfConversion extends Component
                 ? -1 * ($capitalExpenditure / $revenue * 100)
                 : 0;
 
-            $data['capital_expenditures']['formulas']['yoy_change'][$date] = $this->makeFormulaDescription($capitalExpenditure, $lastCapitalExpenditure, $data['capital_expenditures']['yoy_change'][$date], $date, 'Capital Expenditure');
+            $data['capital_expenditures']['formulas']['yoy_change'][$date] = $this->makeFormulaDescription([$capitalExpenditure, $lastCapitalExpenditure], $data['capital_expenditures']['yoy_change'][$date], $date, 'Capital Expenditure', 'yoy_change');
+            $data['capital_expenditures']['formulas']['of_total_revenue'][$date] = $this->makeFormulaDescription([$capitalExpenditure, $revenue], $data['capital_expenditures']['revenue_percentage'][$date], $date, 'Capital Expenditure', 'of_total_revenue');
+            $data['capital_expenditures']['formulas']['ebitda_percentage'][$date] = $this->makeFormulaDescription([$capitalExpenditure, $ebitda], $data['capital_expenditures']['ebitda_percentage'][$date], $date, 'Capital Expenditure', 'of_ebitda');
 
             $lastCapitalExpenditure = $capitalExpenditure;
 
@@ -248,7 +253,11 @@ class FcfConversion extends Component
                 ? ($freeCashflow / $revenue * 100)
                 : 0;
 
-            $data['free_cashflow']['formulas']['yoy_change'][$date] = $this->makeFormulaDescription($freeCashflow, $lastFreeCashflow, $data['free_cashflow']['yoy_change'][$date], $date, 'Free Cashflow');
+
+            $data['free_cashflow']['formulas']['free_cashflow'][$date] = $this->makeFormulaDescription([$ebitda, $cashInterest, $cashTaxes, $capitalExpenditure], $freeCashflow, $date, 'Free Cashflow', 'free_cashflow');
+            $data['free_cashflow']['formulas']['yoy_change'][$date] = $this->makeFormulaDescription([$freeCashflow, $lastFreeCashflow], $data['free_cashflow']['yoy_change'][$date], $date, 'Free Cashflow', 'yoy_change');
+            $data['free_cashflow']['formulas']['of_total_revenue'][$date] = $this->makeFormulaDescription([$freeCashflow, $revenue], $data['free_cashflow']['revenue_percentage'][$date], $date, 'Free Cashflow', 'of_total_revenue');
+            $data['free_cashflow']['formulas']['ebitda_percentage'][$date] = $this->makeFormulaDescription([$freeCashflow, $ebitda], $data['free_cashflow']['ebitda_percentage'][$date], $date, 'Free Cashflow', 'of_ebitda');
 
             $lastFreeCashflow = $freeCashflow;
 
@@ -266,7 +275,9 @@ class FcfConversion extends Component
                 ? abs($networthChange / $revenue * 100)
                 : 0;
 
-            $data['networth_change']['formulas']['yoy_change'][$date] = $this->makeFormulaDescription($networthChange, $lastNetworthChange, $data['networth_change']['yoy_change'][$date], $date, 'Total Changes in Net Working Capital');
+            $data['networth_change']['formulas']['yoy_change'][$date] = $this->makeFormulaDescription([$networthChange, $lastNetworthChange], $data['networth_change']['yoy_change'][$date], $date, 'Total Changes in Net Working Capital', 'yoy_change');
+            $data['networth_change']['formulas']['ebitda_percentage'][$date] = $this->makeFormulaDescription([$networthChange, $ebitda], $data['networth_change']['ebitda_percentage'][$date], $date, 'Total Changes in Net Working Capital', 'of_ebitda');
+            $data['networth_change']['formulas']['revenue_percentage'][$date] = $this->makeFormulaDescription([$networthChange, $revenue], $data['networth_change']['revenue_percentage'][$date], $date, 'Total Changes in Net Working Capital', 'of_total_revenue');
 
             $lastNetworthChange = $networthChange;
 
@@ -282,7 +293,10 @@ class FcfConversion extends Component
                 ? ($leveredFreeCashflow / $revenue * 100)
                 : 0;
 
-            $data['levered_free_cashflow']['formulas']['yoy_change'][$date] = $this->makeFormulaDescription($leveredFreeCashflow, $lastLeveredFreeCashflow, $data['levered_free_cashflow']['yoy_change'][$date], $date, 'Levered Free Cash Flow');
+            $data['levered_free_cashflow']['formulas']['levered_free_cashflow'][$date] = $this->makeFormulaDescription([$freeCashflow, $networthChange], $leveredFreeCashflow, $date, 'Levered Free Cash Flow', 'levered_free_cashflow');
+            $data['levered_free_cashflow']['formulas']['yoy_change'][$date] = $this->makeFormulaDescription([$leveredFreeCashflow, $lastLeveredFreeCashflow], $data['levered_free_cashflow']['yoy_change'][$date], $date, 'Levered Free Cash Flow', 'yoy_change');
+            $data['levered_free_cashflow']['formulas']['lcf_margin'][$date] = $this->makeFormulaDescription([$leveredFreeCashflow, $revenue], $data['levered_free_cashflow']['margin'][$date], $date, 'Levered Free Cash Flow', 'lcf_margin');
+            $data['levered_free_cashflow']['formulas']['ebitda_percentage'][$date] = $this->makeFormulaDescription([$leveredFreeCashflow, $ebitda], $data['levered_free_cashflow']['ebitda_percentage'][$date], $date, 'Levered Free Cash Flow', 'of_ebitda');
 
             $lastLeveredFreeCashflow = $leveredFreeCashflow;
         }
@@ -349,9 +363,9 @@ class FcfConversion extends Component
         ];
     }
 
-    private function makeFormulaDescription($firstValue, $secondValue, $result, $date, $metric)
+    private function makeFormulaDescription($arguments, $result, $date, $metric, $type)
     {
-        $value = makeFormulaDescription($firstValue, $secondValue, $result, $date, $metric);
+        $value = makeFormulaDescription($arguments, $result, $date, $metric, $type);
         $value['body']['value_final'] = $this->formatPercentageValue($result);
 
         return $value;

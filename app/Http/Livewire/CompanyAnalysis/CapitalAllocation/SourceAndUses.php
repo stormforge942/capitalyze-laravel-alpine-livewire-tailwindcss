@@ -14,6 +14,7 @@ class SourceAndUses extends Component
     public $company;
     public $rawData;
     public $publicView;
+    public $formulaHashes = [];
     public $chartConfig = [
         'showLabel' => false,
         'type' => 'values',
@@ -50,7 +51,8 @@ class SourceAndUses extends Component
                     'data' => $this->makeChartData('uses'),
                     'key' => $this->makeChartKey() . ' - Uses',
                 ]
-            ]
+            ],
+            'formulaHashes' => $this->formulaHashes,
         ]);
     }
 
@@ -228,21 +230,26 @@ class SourceAndUses extends Component
                 ? (($total - $lastTotal) / $total * 100)
                 : 0;
 
-            $data['sources']['formulas']['total']['yoy_change'][$date] = $this->makeFormulaDescription($total, $lastTotal, $data['sources']['total']['yoy_change'][$date], $date, 'Total Sources of Cash');
+            $data['sources']['formulas']['total']['value'][$date] = $this->makeFormulaDescription([$fcf, $ndi, $ips, $ics], $total, $date, 'Total Sources of Cash', 'total_source_of_cash');
+            $data['sources']['formulas']['total']['yoy_change'][$date] = $this->makeFormulaDescription([$total, $lastTotal], $data['sources']['total']['yoy_change'][$date], $date, 'Total Sources of Cash', 'yoy_change');
 
             $lastTotal = $total;
 
             $data['sources']['free_cashflow']['timeline'][$date] = $fcf;
             $data['sources']['free_cashflow']['total_percent'][$date] = $total ? $fcf / $total * 100 : 0;
+            $data['sources']['formulas']['free_cashflow']['total_percent'][$date] = $this->makeFormulaDescription([$fcf, $total], $data['sources']['free_cashflow']['total_percent'][$date], $date, 'Levered Free Cash Flow', 'of_total_sources');
 
             $data['sources']['net_debt']['timeline'][$date] = $ndi;
             $data['sources']['net_debt']['total_percent'][$date] = $total ? $ndi / $total * 100 : 0;
+            $data['sources']['formulas']['net_debt']['total_percent'][$date] = $this->makeFormulaDescription([$ndi, $total], $data['sources']['net_debt']['total_percent'][$date], $date, 'Total Debt Issued', 'of_total_sources');
 
             $data['sources']['preferred_stock']['timeline'][$date] = $ips;
             $data['sources']['preferred_stock']['total_percent'][$date] = $total ? $ips / $total * 100 : 0;
+            $data['sources']['formulas']['preferred_stock']['total_percent'][$date] = $this->makeFormulaDescription([$ips, $total], $data['sources']['preferred_stock']['total_percent'][$date], $date, 'Total Preferred Equity', 'of_total_sources');
 
             $data['sources']['common_stock']['timeline'][$date] = $ics;
             $data['sources']['common_stock']['total_percent'][$date] = $total ? $ics / $total * 100 : 0;
+            $data['sources']['formulas']['common_stock']['total_percent'][$date] = $this->makeFormulaDescription([$ics, $total], $data['sources']['common_stock']['total_percent'][$date], $date, 'Issuance of Common Stock', 'of_total_sources');
         }
 
         // for uses
@@ -256,27 +263,35 @@ class SourceAndUses extends Component
             $tdp = $statement['Total Dividends Paid'][$date] ?? 0;
             $other = $total - $ca - $tbr - $rps - $rcs - $tdp;
 
+            $data['uses']['formulas']['other']['value'][$date] = $this->makeFormulaDescription([$total, $ca, $tbr, $rps, $rcs, $tdp], $other, $date, 'Cash Build / Other', 'cash_build_other');
+
             // copy from sources
             $data['uses']['total'] = $data['sources']['total'];
             $data['uses']['formulas']['total'] = $data['sources']['formulas']['total'];
 
             $data['uses']['acquisition']['timeline'][$date] = $ca;
             $data['uses']['acquisition']['total_percent'][$date] = $total ? $ca / $total * 100 : 0;
+            $data['uses']['formulas']['acquisition']['total_percent'][$date] = $this->makeFormulaDescription([$ca, $total], $data['uses']['acquisition']['total_percent'][$date], $date, 'Cash Acquisitions', 'of_total_uses');
 
             $data['uses']['debt_repaid']['timeline'][$date] = $tbr;
             $data['uses']['debt_repaid']['total_percent'][$date] = $total ? $tbr / $total * 100 : 0;
+            $data['uses']['formulas']['debt_repaid']['total_percent'][$date] = $this->makeFormulaDescription([$tbr, $total], $data['uses']['debt_repaid']['total_percent'][$date], $date, 'Total Debt Repaid', 'of_total_uses');
 
             $data['uses']['preferred_repurchase']['timeline'][$date] = $rps;
             $data['uses']['preferred_repurchase']['total_percent'][$date] = $total ? $rps / $total * 100 : 0;
+            $data['uses']['formulas']['preferred_repurchase']['total_percent'][$date] = $this->makeFormulaDescription([$rps, $total], $data['uses']['preferred_repurchase']['total_percent'][$date], $date, 'Repurchase of Preferred Stock', 'of_total_uses');
 
             $data['uses']['common_repurchase']['timeline'][$date] = $rcs;
             $data['uses']['common_repurchase']['total_percent'][$date] = $total ? $rcs / $total * 100 : 0;
+            $data['uses']['formulas']['common_repurchase']['total_percent'][$date] = $this->makeFormulaDescription([$rcs, $total], $data['uses']['common_repurchase']['total_percent'][$date], $date, 'Repurchase of Common Stock', 'of_total_uses');
 
             $data['uses']['dividends']['timeline'][$date] = $tdp;
             $data['uses']['dividends']['total_percent'][$date] = $total ? $tdp / $total * 100 : 0;
+            $data['uses']['formulas']['dividends']['total_percent'][$date] = $this->makeFormulaDescription([$tdp, $total], $data['uses']['dividends']['total_percent'][$date], $date, 'Total Dividends Paid', 'of_total_uses');
 
             $data['uses']['other']['timeline'][$date] = $other;
             $data['uses']['other']['total_percent'][$date] = $total ? $other / $total * 100 : 0;
+            $data['uses']['formulas']['other']['total_percent'][$date] = $this->makeFormulaDescription([$other, $total], $data['uses']['other']['total_percent'][$date], $date, 'Cash Build / Other', 'of_total_uses');
         }
 
         $this->rawData = $data;
@@ -310,15 +325,15 @@ class SourceAndUses extends Component
         ), false);
 
         $usedKeys = [
-            'Levered Free Cash Flow',
-            'Total Debt Issued',
-            'Issuance of Preferred Stock',
-            'Issuance of Common Stock',
-            'Cash Acquisitions',
-            'Total Debt Repaid',
-            'Repurchase of Preferred Stock',
-            'Repurchase of Common Stock',
-            'Total Dividends Paid',
+            'Levered Free Cash Flow' => 'free_cashflow',
+            'Total Debt Issued' => 'net_debt',
+            'Issuance of Preferred Stock' => 'preferred_stock',
+            'Issuance of Common Stock' => 'common_stock',
+            'Cash Acquisitions' => 'acquisition',
+            'Total Debt Repaid' => 'debt_repaid',
+            'Repurchase of Preferred Stock' => 'preferred_stock',
+            'Repurchase of Common Stock' => 'common_stock',
+            'Total Dividends Paid' => 'dividends',
         ];
 
         $valueFormatter = fn ($value) => array_map(fn ($val) => intval(explode("|", $val[0] ?? "")[0]), $value);
@@ -328,7 +343,11 @@ class SourceAndUses extends Component
         foreach ($data as $key => $value) {
             $key = explode("|", $key)[0];
 
-            if (!in_array($key, $usedKeys)) continue;
+            if (!in_array($key, array_keys($usedKeys))) continue;
+
+            if (in_array($key, array_keys($usedKeys))) {
+                $this->formulaHashes[$usedKeys[$key]] = array_map(fn ($value) => $this->extractHashes($value), $value);
+            }
 
             $tmp[$key] = $valueFormatter($value);
         }
@@ -336,11 +355,22 @@ class SourceAndUses extends Component
         return $tmp;
     }
 
-    private function makeFormulaDescription($firstValue, $secondValue, $result, $date, $metric)
+    private function makeFormulaDescription($arguments, $result, $date, $metric, $type)
     {
-        $value = makeFormulaDescription($firstValue, $secondValue, $result, $date, $metric);
+        $value = makeFormulaDescription($arguments, $result, $date, $metric, $type);
         $value['body']['value_final'] = $this->formatPercentageValue($result);
 
         return $value;
+    }
+
+    private function extractHashes($data)
+    {
+        list($value, $hash, $secondHash) = array_pad(explode('|', $data[0]), 3, null);
+
+        return [
+            'value' => $value,
+            'hash' => $hash,
+            'secondHash' => $secondHash,
+        ];
     }
 }

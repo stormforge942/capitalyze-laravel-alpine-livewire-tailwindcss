@@ -359,15 +359,109 @@ function isPasswordConfirmed(): bool
     return (time() - session('auth.password_confirmed_at', 0)) < $period;
 }
 
-function makeFormulaDescription($firstValue, $secondValue, $result, $date, $metric, $isNetDebt = false): array
+function makeFormulaDescription($arguments, $result, $date, $metric, $type): array
 {
-    $title = $isNetDebt ? 'Evaluation for % Net Debt / Capital/' : 'Evaluation for % Change YoY/';
-    $firstArg = $isNetDebt ? 'Net Debt' : "$metric";
-    $secondArg = $isNetDebt ? 'Capital' : "$metric|-1";
-    $formula = $isNetDebt ? '[Net Debt]/[Capital] * 100' : "([$metric]/[$metric|-1] - 1) * 100";
-    $resolved = $isNetDebt ? "$firstValue/$secondValue * 100" : "($firstValue/$secondValue - 1) * 100";
+    $title = match ($type) {
+        'yoy_change' => 'Evaluation for % Change YoY/',
+        'net_debt_by_capital' => 'Evaluation for % Net Debt / Capital/',
+        'of_total_revenue' => 'Evaluation for % of Total Revenue/',
+        'of_total_expenses' => 'Evaluation for % of Total Expenses/',
+        'of_ebitda' => 'Evaluation for % of EBITDA/',
+        'of_total_capital' => 'Evaluation for % of Total Capital/',
+        'of_total_sources' => 'Evaluation for % of Total Sources/',
+        'of_total_uses' => 'Evaluation for % of Total Uses/',
+        'rev_by_emp' => 'Evaluation for Total Revenue / Employees/',
+        'margin' => 'Evaluation for % EBITDA Margins/',
+        'lcf_margin' => 'Evaluation for % Levered Free Cash Flow Margins/',
+        'levered_free_cashflow' => 'Evaluation for Levered Free Cash Flow Margins/',
+        'free_cashflow' => 'Evaluation for Free Cash Flow/',
+        'market_value_of_equity' => 'Evaluation for Market/Value Of Equity/',
+        'total_enterprise_value' => 'Evaluation for Total Enterprise Value/',
+        'total_source_of_cash' => 'Total Sources of Cash/',
+        'cash_build_other' => 'Evaluation for Cash Build/Other/',
+    };
 
-    return [
+    $firstArg = match ($type) {
+        'yoy_change' => "$metric",
+        'net_debt_by_capital' => 'Net Debt',
+        'of_total_revenue' => "$metric",
+        'of_total_expenses' => "$metric",
+        'of_ebitda' => "$metric",
+        'of_total_capital' => $metric,
+        'of_total_sources' => $metric,
+        'of_total_uses' => $metric,
+        'rev_by_emp' => 'Total Revenue',
+        'margin' => "$metric",
+        'lcf_margin' => 'Levered Free Cash Flow',
+        'levered_free_cashflow' => 'Free Cashflow',
+        'free_cashflow' => 'EBITDA',
+        'market_value_of_equity' => 'Total Shares Out. on Filing Date',
+        'total_enterprise_value' => 'Market Value of Equity',
+        'total_source_of_cash' => 'Levered Free Cash Flow',
+        'cash_build_other' => 'Total Sources of Cash',
+    };
+
+    $secondArg = match ($type) {
+        'yoy_change' => "$metric",
+        'net_debt_by_capital' => 'Capital',
+        'of_total_revenue' => 'Total Revenue',
+        'of_total_expenses' => 'Total Expenses',
+        'of_ebitda' => 'EBITDA',
+        'of_total_capital' => 'Total Capital',
+        'of_total_sources' => 'Total Sources',
+        'of_total_uses' => 'Total Uses',
+        'rev_by_emp' => 'Employees',
+        'margin' => 'Total Revenue',
+        'lcf_margin' => "Total Revenue",
+        'levered_free_cashflow' => 'Total Changes in Net Working Capital',
+        'free_cashflow' => 'Cash Interest',
+        'market_value_of_equity' => 'EOD Price',
+        'total_enterprise_value' => 'Net Debt',
+        'total_source_of_cash' => 'Total Debt Issued',
+        'cash_build_other' => 'Cash Acquisitions',
+    };
+
+    $formula = match ($type) {
+        'yoy_change' => "([$metric]/[$metric]|-1] - 1) * 100",
+        'net_debt_by_capital' => '[Net Debt]/[Capital] * 100',
+        'of_total_revenue' => "[$metric]/[Total Revenue] * 100",
+        'of_total_expenses' => "[$metric]/[Total Expenses] * 100",
+        'of_ebitda' => "[$metric]/[EBITDA] * 100",
+        'of_total_capital' => "[$metric]/[Total Capital] * 100",
+        'of_total_sources' => "[$metric]/[Total Sources] * 100",
+        'of_total_uses' => "[$metric]/[Total Uses] * 100",
+        'rev_by_emp' => '[Total Revenue]/[Employees]',
+        'margin' => '[EBITDA]/[Total Revenue]',
+        'lcf_margin' => "[Levered Free Cash Flow]/[Total Revenue] * 100",
+        'levered_free_cashflow' => '[Free Cashflow]-[Total Changes in Net Working Capital]',
+        'free_cashflow' => '[EBITDA]-([Cash Interest]+[Cash Taxes]+[Capital Expenditures])',
+        'market_value_of_equity' => "[$firstArg]*[$secondArg]",
+        'total_enterprise_value' => "[$firstArg]+[$secondArg]+[Total Preferred Equity]+[Minority Interest]",
+        'total_source_of_cash' => "[$firstArg]+[$secondArg]+[Total Preferred Equity]+[Issuance of Common Stock]",
+        'cash_build_other' => "[$firstArg]-[$secondArg]-[Total Debt Repaid]-[Repurchase of Preferred Stock]-[Repurchase of Common Stock]-[Total Dividends Paid]",
+    };
+
+    $resolved = match ($type) {
+        'yoy_change' => "($arguments[0]/$arguments[1] - 1) * 100",
+        'net_debt_by_capital' => "$arguments[0]/$arguments[1] * 100",
+        'of_total_revenue' => "$arguments[0]/$arguments[1] * 100",
+        'of_total_expenses' => "$arguments[0]/$arguments[1] * 100",
+        'of_ebitda' => "$arguments[0]/$arguments[1] * 100",
+        'of_total_capital' => "$arguments[0]/$arguments[1] * 100",
+        'of_total_sources' => "$arguments[0]/$arguments[1] * 100",
+        'of_total_uses' => "$arguments[0]/$arguments[1] * 100",
+        'rev_by_emp' => "$arguments[0]/$arguments[1] * 100",
+        'margin' => "$arguments[0]/$arguments[1] * 100",
+        'lcf_margin' => "$arguments[0]/$arguments[1] * 100",
+        'levered_free_cashflow' => "$arguments[0] - $arguments[1]",
+        'free_cashflow' => 'Evaluation for Free Cash Flow',
+        'market_value_of_equity' => "$arguments[0]*$arguments[1]",
+        'total_enterprise_value' => "$arguments[0]+$arguments[1]+$arguments[2]+$arguments[3]",
+        'total_source_of_cash' => "$arguments[0]+$arguments[1]+$arguments[2]+$arguments[3]",
+        'cash_build_other' => "$arguments[0]-$arguments[1]-$arguments[2]-$arguments[3]-$arguments[4]-$arguments[5]",
+    };
+
+    $result = [
         'message' => $title . $date,
         'body' => [
             'value_final' => $result,
@@ -389,14 +483,14 @@ function makeFormulaDescription($firstValue, $secondValue, $result, $date, $metr
                     'result' => 'Ok',
                     'arguments' => [
                         "$firstArg" => [
-                            'value' => $firstValue,
+                            'value' => $arguments[0],
                             'hash' => '71a9a77670a4390b859dc45634c6470b6edf17da',
                             'data_type' => 'xbrli:monetaryItemType',
                             'hint' => ' ',
                             'sub_arguments' => null
                         ],
-                        "$secondArg" => [
-                            'value' => $secondValue,
+                        $secondArg === $firstArg ? "$secondArg| - 1" : $secondArg => [
+                            'value' => $arguments[1],
                             'hash' => 'a9bb60d7779632da95208e0fa41b25201dd06b91',
                             'data_type' => 'xbrli:monetaryItemType',
                             'hint' => ' ',
@@ -407,4 +501,112 @@ function makeFormulaDescription($firstValue, $secondValue, $result, $date, $metr
             ]
         ]
     ];
+
+    if ($type === 'free_cashflow') {
+        $result['body']['formula_evaluation'][0]['arguments']['Cash Taxes'] = [
+            'value' => $arguments[2],
+            'hash' => '71a9a77670a4390b859dc45634c6470b6edf17da',
+            'data_type' => 'xbrli:monetaryItemType',
+            'hint' => ' ',
+            'sub_arguments' => null
+        ];
+
+        $result['body']['formula_evaluation'][0]['arguments']['Capital Expenditures'] = [
+            'value' => $arguments[3],
+            'hash' => '71a9a77670a4390b859dc45634c6470b6edf17da',
+            'data_type' => 'xbrli:monetaryItemType',
+            'hint' => ' ',
+            'sub_arguments' => null
+        ];
+    }
+
+    if ($type === 'total_enterprise_value') {
+        $result['body']['formula_evaluation'][0]['arguments']['Total Preferred Equity'] = [
+            'value' => $arguments[2],
+            'hash' => '71a9a77670a4390b859dc45634c6470b6edf17da',
+            'data_type' => 'xbrli:monetaryItemType',
+            'hint' => ' ',
+            'sub_arguments' => null
+        ];
+
+        $result['body']['formula_evaluation'][0]['arguments']['Minority Interest'] = [
+            'value' => $arguments[3],
+            'hash' => '71a9a77670a4390b859dc45634c6470b6edf17da',
+            'data_type' => 'xbrli:monetaryItemType',
+            'hint' => ' ',
+            'sub_arguments' => null
+        ];
+    }
+
+    if ($type === 'total_enterprise_value') {
+        $result['body']['formula_evaluation'][0]['arguments']['Total Preferred Equity'] = [
+            'value' => $arguments[2],
+            'hash' => '71a9a77670a4390b859dc45634c6470b6edf17da',
+            'data_type' => 'xbrli:monetaryItemType',
+            'hint' => ' ',
+            'sub_arguments' => null
+        ];
+
+        $result['body']['formula_evaluation'][0]['arguments']['Minority Interest'] = [
+            'value' => $arguments[3],
+            'hash' => '71a9a77670a4390b859dc45634c6470b6edf17da',
+            'data_type' => 'xbrli:monetaryItemType',
+            'hint' => ' ',
+            'sub_arguments' => null
+        ];
+    }
+
+    if ($type === 'total_source_of_cash') {
+        $result['body']['formula_evaluation'][0]['arguments']['Total Preferred Equity'] = [
+            'value' => $arguments[2],
+            'hash' => '71a9a77670a4390b859dc45634c6470b6edf17da',
+            'data_type' => 'xbrli:monetaryItemType',
+            'hint' => ' ',
+            'sub_arguments' => null
+        ];
+
+        $result['body']['formula_evaluation'][0]['arguments']['Issuance of Common Stock'] = [
+            'value' => $arguments[3],
+            'hash' => '71a9a77670a4390b859dc45634c6470b6edf17da',
+            'data_type' => 'xbrli:monetaryItemType',
+            'hint' => ' ',
+            'sub_arguments' => null
+        ];
+    }
+
+    if ($type === 'cash_build_other') {
+        $result['body']['formula_evaluation'][0]['arguments']['Total Debt Repaid'] = [
+            'value' => $arguments[2],
+            'hash' => '71a9a77670a4390b859dc45634c6470b6edf17da',
+            'data_type' => 'xbrli:monetaryItemType',
+            'hint' => ' ',
+            'sub_arguments' => null
+        ];
+
+        $result['body']['formula_evaluation'][0]['arguments']['Repurchase of Preferred Stock'] = [
+            'value' => $arguments[3],
+            'hash' => '71a9a77670a4390b859dc45634c6470b6edf17da',
+            'data_type' => 'xbrli:monetaryItemType',
+            'hint' => ' ',
+            'sub_arguments' => null
+        ];
+
+        $result['body']['formula_evaluation'][0]['arguments']['Repurchase of Common Stock'] = [
+            'value' => $arguments[4],
+            'hash' => '71a9a77670a4390b859dc45634c6470b6edf17da',
+            'data_type' => 'xbrli:monetaryItemType',
+            'hint' => ' ',
+            'sub_arguments' => null
+        ];
+
+        $result['body']['formula_evaluation'][0]['arguments']['Total Dividends Paid'] = [
+            'value' => $arguments[5],
+            'hash' => '71a9a77670a4390b859dc45634c6470b6edf17da',
+            'data_type' => 'xbrli:monetaryItemType',
+            'hint' => ' ',
+            'sub_arguments' => null
+        ];
+    }
+
+    return $result;
 }

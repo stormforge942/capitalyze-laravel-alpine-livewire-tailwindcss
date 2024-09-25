@@ -64,6 +64,15 @@ class Employee extends Component
                 }
 
                 foreach ($v1 as $date => $val) {
+                    if ($k0 === 'employee_count' && $k1 === 'timeline') {
+                        $data[$k0][$k1][$date] = [
+                            'formatted' => custom_number_format($val, 0),
+                            'value' => $val,
+                        ];
+
+                        continue;
+                    }
+
                     if ($k1 === 'timeline') {
                         $formatted = !$val ? 'N/A' : $this->formatValue($val);
                     } else {
@@ -164,13 +173,14 @@ class Employee extends Component
             $data['employee_count']['timeline'][$date] = $empCount;
 
             $data['rev_by_emp']['timeline'][$date] = $empCount ? $revenue / $empCount : 0;
+            $data['rev_by_emp']['formulas']['rev_by_emp'][$date] = makeFormulaDescription([$revenue, $empCount], $data['rev_by_emp']['timeline'][$date], $date, '', 'rev_by_emp');
         }
 
         $data['employee_count']['yoy_change'] = calculateYoyChange($data['employee_count']['timeline'], $this->dates);
-        $data['employee_count']['formulas'] = $this->makeFormulasDescription($data['employee_count']['timeline'], $this->dates, 'Employee Count');
+        $data['employee_count']['formulas']['yoy_change'] = $this->makeFormulasDescription($data['employee_count']['timeline'], $this->dates, 'Employee Count');
 
         $data['rev_by_emp']['yoy_change'] = calculateYoyChange($data['rev_by_emp']['timeline'], $this->dates);
-        $data['rev_by_emp']['formulas'] = $this->makeFormulasDescription($data['rev_by_emp']['timeline'], $this->dates, "Revenue / Employee ('000s)");
+        $data['rev_by_emp']['formulas']['yoy_change'] = $this->makeFormulasDescription($data['rev_by_emp']['timeline'], $this->dates, "Revenue / Employee ('000s)");
 
         $this->rawData = $data;
     }
@@ -272,11 +282,6 @@ class Employee extends Component
         return array_map(function ($item) { return $item['url'];  }, $data['employee_count']);
     }
 
-    private function makeFormulaDescription($firstValue, $secondValue, $result, $date, $metric)
-    {
-        return makeFormulaDescription($firstValue, $secondValue, $result, $date, $metric);
-    }
-
     private function makeFormulasDescription($values, $dates, $metric)
     {
         $result = [];
@@ -288,7 +293,7 @@ class Employee extends Component
                 $firstValueDateIndex = array_search($date, $dates);
                 $secondValueDateIndex = $firstValueDateIndex - 1;
 
-                $result[$date] = $this->makeFormulaDescription($values[$dates[$firstValueDateIndex]], $values[$dates[$secondValueDateIndex]], $value, $date, $metric);
+                $result[$date] = makeFormulaDescription([$values[$dates[$firstValueDateIndex]], $values[$dates[$secondValueDateIndex]]], $value, $date, $metric, 'yoy_change');
             }
         }
 

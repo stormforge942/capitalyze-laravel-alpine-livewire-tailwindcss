@@ -158,7 +158,7 @@ class Product extends Component
 
                 $data['products'][$product]['hash'][$date] =  $timeline[$date]['hash'] ?? null;
                 $data['products'][$product]['secondHash'][$date] = $timeline[$date]['secondHash'] ?? null;
-                $data['products'][$product]['formulas'][$date] = $this->makeFormulaDescription($value, $lastVal, $data['products'][$product]['yoy_change'][$date], $date, 'Total Revenue');
+                $data['products'][$product]['formulas']['yoy_change'][$date] = $this->makeFormulaDescription([$value, $lastVal], $data['products'][$product]['yoy_change'][$date], $date, 'Total Revenue', 'yoy_change');
 
                 $lastVal = $value;
             }
@@ -172,12 +172,13 @@ class Product extends Component
                 ? (($total / $lastTotal) - 1) * 100
                 : 0;
 
-            $data['total']['formulas'][$date] = $this->makeFormulaDescription($total, $lastTotal, $data['total']['yoy_change'][$date], $date, 'Total Revenue');
+            $data['total']['formulas'][$date] = $this->makeFormulaDescription([$total, $lastTotal], $data['total']['yoy_change'][$date], $date, 'Total Revenue', 'yoy_change');
 
             $lastTotal = $total;
 
             foreach ($data['products'] as $product => $_) {
                 $data['products'][$product]['total_percent'][$date] = ($data['products'][$product]['timeline'][$date] / $total) * 100;
+                $data['products'][$product]['formulas']['total_percent'][$date] = $this->makeFormulaDescription([$data['products'][$product]['timeline'][$date], $total], $data['products'][$product]['total_percent'][$date], $date, 'Product Revenue', 'of_total_revenue');
             }
         }
 
@@ -256,9 +257,9 @@ class Product extends Component
         ];
     }
 
-    private function makeFormulaDescription($firstValue, $secondValue, $result, $date, $metric)
+    private function makeFormulaDescription($arguments, $result, $date, $metric, $type)
     {
-        $value = makeFormulaDescription($firstValue, $secondValue, $result, $date, $metric);
+        $value = makeFormulaDescription($arguments, $result, $date, $metric, $type);
         $value['body']['value_final'] = $this->formatPercentageValue($result);
 
         return $value;

@@ -147,7 +147,7 @@ class CostStructure extends Component
                     ? (($value / $lastValue) - 1) * 100
                     : 0;
 
-                $data['formulas'][$key]['yoy_change'][$date] = $this->makeFormulaDescription($value, $lastValue, $data[$key]['yoy_change'][$date], $date, $formulasLabelMap[$key]);
+                $data['formulas'][$key]['yoy_change'][$date] = $this->makeFormulaDescription([$value, $lastValue], $data[$key]['yoy_change'][$date], $date, $formulasLabelMap[$key], 'yoy_change');
 
                 $lastValue = $value;
             }
@@ -156,6 +156,7 @@ class CostStructure extends Component
         // calculate expenses revenue percentage
         foreach ($this->dates as $date) {
             $data['total_expenses']['revenue_percentage'][$date] = $data['total_expenses']['timeline'][$date] / $data['revenues']['timeline'][$date] * 100;
+            $data['formulas']['total_expenses']['revenue_percentage'][$date] = $this->makeFormulaDescription([$data['total_expenses']['timeline'][$date], $data['revenues']['timeline'][$date]], $data['total_expenses']['revenue_percentage'][$date], $date, 'Total Expenses', 'of_total_revenue');;
         }
 
         $segments = [
@@ -198,7 +199,9 @@ class CostStructure extends Component
                 $segment['revenue_percentage'][$date] = $value / ($this->extractValues($statement['Total Revenues'][$date])['value'] ?? 0) * 100;
                 $segment['expense_percentage'][$date] = $value / $this->extractValues($data['total_expenses']['timeline'][$date])['value'] * 100;
 
-                $data['formulas'][$segment['title']]['yoy_change'][$date] = $this->makeFormulaDescription($value, $lastValue, $segment['yoy_change'][$date], $date, $segment['title']);
+                $data['formulas'][$segment['title']]['yoy_change'][$date] = $this->makeFormulaDescription([$value, $lastValue], $segment['yoy_change'][$date], $date, $segment['title'], 'yoy_change');
+                $data['formulas'][$segment['title']]['expense_percentage'][$date] = $this->makeFormulaDescription([$value, $this->extractValues($data['total_expenses']['timeline'][$date])['value'] ?? 0], $segment['expense_percentage'][$date], $date, $segment['title'], 'of_total_expenses');
+                $data['formulas'][$segment['title']]['revenue_percentage'][$date] = $this->makeFormulaDescription([$value, $this->extractValues($statement['Total Revenues'][$date])['value'] ?? 0], $segment['revenue_percentage'][$date], $date, $segment['title'], 'of_total_revenue');
 
                 $lastValue = $value;
             }
@@ -280,9 +283,9 @@ class CostStructure extends Component
         ];
     }
 
-    private function makeFormulaDescription($firstValue, $secondValue, $result, $date, $metric)
+    private function makeFormulaDescription($arguments, $result, $date, $metric, $type)
     {
-        $value = makeFormulaDescription($firstValue, $secondValue, $result, $date, $metric);
+        $value = makeFormulaDescription($arguments, $result, $date, $metric, $type);
         $value['body']['value_final'] = $this->formatPercentageValue($result);
 
         return $value;

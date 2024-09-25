@@ -238,29 +238,34 @@ class CapitalStructure extends Component
 
             $data['book']['total_value']['timeline'][$date] = (string) $total;
             $data['book']['total_value']['yoy_change'][$date] = (string) ($lastTotal && $idx ? (($total / $lastTotal) - 1) * 100 : 0);
-            $data['book']['formulas']['total_value']['yoy_change'][$date] = $this->makeFormulaDescription($total, $lastTotal, $data['book']['total_value']['yoy_change'][$date], $date, 'Total Enterprise Value');
+            $data['book']['formulas']['total_value']['yoy_change'][$date] = $this->makeFormulaDescription([$total, $lastTotal], $data['book']['total_value']['yoy_change'][$date], $date, 'Total Enterprise Value', 'yoy_change');
+            $data['book']['formulas']['total_value']['value'][$date] = $this->makeFormulaDescription([$equity, $debt, $prefEquity, $minorityInterest], $total, $date, 'Total Capital (Book Value)', 'total_enterprise_value');
             $lastTotal = $total;
 
             $data['book']['equity']['timeline'][$date] = (string) $equity;
             $data['book']['equity']['yoy_change'][$date] = (string) ($lastEquity && $idx ? (($equity / $lastEquity) - 1) * 100 : 0);
-            $data['book']['formulas']['equity']['yoy_change'][$date] = $this->makeFormulaDescription($equity, $lastEquity, $data['book']['equity']['yoy_change'][$date], $date, 'Market Value of Equity');
+            $data['book']['formulas']['equity']['yoy_change'][$date] = $this->makeFormulaDescription([$equity, $lastEquity], $data['book']['equity']['yoy_change'][$date], $date, 'Market Value of Equity', 'yoy_change');
             $data['book']['equity']['total_percent'][$date] = (string) ($total ? $equity / $total * 100 : 0);
+            $data['book']['formulas']['equity']['total_percent'][$date] = $this->makeFormulaDescription([$equity, $total], $data['book']['equity']['total_percent'][$date], $date, 'Market Value of Equity', 'of_total_capital');
             $lastEquity = $equity;
 
             $data['book']['net_debt']['timeline'][$date] = (string) $debt;
             $data['book']['net_debt']['yoy_change'][$date] = (string) ($lastDebt && $idx ? (($debt / $lastDebt) - 1) * 100 : 0);
-            $data['book']['formulas']['net_debt']['yoy_change'][$date] = $this->makeFormulaDescription($debt, $lastDebt, $data['book']['net_debt']['yoy_change'][$date], $date, 'Total Net Debt');
+            $data['book']['formulas']['net_debt']['yoy_change'][$date] = $this->makeFormulaDescription([$debt, $lastDebt], $data['book']['net_debt']['yoy_change'][$date], $date, 'Total Net Debt', 'yoy_change');
             $data['book']['net_debt']['total_percent'][$date] = (string) ($total ? $debt / $total * 100 : 0);
+            $data['book']['formulas']['net_debt']['total_percent'][$date] = $this->makeFormulaDescription([$debt, $total], $data['book']['net_debt']['total_percent'][$date], $date, 'Total Net Debt', 'of_total_capital');
             $lastDebt = $debt;
 
             $data['book']['preferred_equity']['timeline'][$date] = (string) $prefEquity;
             $data['book']['preferred_equity']['total_percent'][$date] = (string) ($total ? $prefEquity / $total * 100 : 0);
+            $data['book']['formulas']['preferred_equity']['total_percent'][$date] = $this->makeFormulaDescription([$prefEquity, $total], $data['book']['preferred_equity']['total_percent'][$date], $date, 'Preferred Equity', 'of_total_capital');
 
             $data['book']['minority_interest']['timeline'][$date] = (string) $minorityInterest;
             $data['book']['minority_interest']['total_percent'][$date] = (string) ($total ? $minorityInterest / $total * 100 : 0);
+            $data['book']['formulas']['minority_interest']['total_percent'][$date] = $this->makeFormulaDescription([$minorityInterest, $total], $data['book']['minority_interest']['total_percent'][$date], $date, 'Minority Interest', 'of_total_capital');
 
             $data['book']['net_debt_by_capital'][$date] = (string) ($debt / $total * 100);
-            $data['book']['formulas']['net_debt_by_capital'][$date] = $this->makeFormulaDescription($debt, $total, $data['book']['net_debt_by_capital'][$date], $date, 'Net Debt / Capital', 'net_debt_by_capital');
+            $data['book']['formulas']['net_debt_by_capital'][$date] = $this->makeFormulaDescription([$debt, $total], $data['book']['net_debt_by_capital'][$date], $date, 'Net Debt / Capital', 'net_debt_by_capital');
         }
 
         // for market
@@ -277,30 +282,35 @@ class CapitalStructure extends Component
 
             $data['market']['total_value']['timeline'][$date] = (string) $total;
             $data['market']['total_value']['yoy_change'][$date] = (string) ($lastTotal && $idx ? (($total / $lastTotal) - 1) * 100 : 0);
-            $data['market']['formulas']['total_value']['yoy_change'][$date] = $this->makeFormulaDescription($total, $lastTotal, $data['market']['total_value']['yoy_change'][$date], $date, 'Total Enterprise Value');
+            $data['market']['formulas']['total_value']['yoy_change'][$date] = $this->makeFormulaDescription([$total, $lastTotal], $data['market']['total_value']['yoy_change'][$date], $date, 'Total Enterprise Value', 'yoy_change');
+            $data['market']['formulas']['total_value']['value'][$date] = $this->makeFormulaDescription([$equity, $debt, $prefEquity, $minorityInterest], $total, $date, 'Total Enterprise Value', 'total_enterprise_value');
             $lastTotal = $total;
 
             $data['market']['equity']['timeline'][$date] = (string) $equity;
+            $data['market']['formulas']['equity']['market_value_of_equity'][$date] = $this->makeFormulaDescription([$statement['Total Shares Out. on Filing Date'][$date], $this->findClosestEodPrice($eodPrices, $date)], $equity, $date, 'Market Value of Equity', 'market_value_of_equity');
             $data['market']['equity']['yoy_change'][$date] = (string) ($lastEquity && $idx ? (($equity / $lastEquity) - 1) * 100 : 0);
-            $data['market']['formulas']['equity']['yoy_change'][$date] = $this->makeFormulaDescription($equity, $lastEquity, $data['market']['equity']['yoy_change'][$date], $date, 'Book Value of Common Equity');
+            $data['market']['formulas']['equity']['yoy_change'][$date] = $this->makeFormulaDescription([$equity, $lastEquity], $data['market']['equity']['yoy_change'][$date], $date, 'Market Value of Common Equity', 'yoy_change');
             $data['market']['equity']['total_percent'][$date] = (string) ($total ? $equity / $total * 100 : 0);
+            $data['market']['formulas']['equity']['total_percent'][$date] = $this->makeFormulaDescription([$equity, $total], $data['market']['equity']['total_percent'][$date], $date, 'Market Value of Common Equity', 'of_total_capital');
             $lastEquity = $equity;
 
             $data['market']['net_debt']['timeline'][$date] = (string) $debt;
             $data['market']['net_debt']['yoy_change'][$date] = (string) ($lastDebt && $idx ? (($debt / $lastDebt) - 1)  * 100 : 0);
-            $data['market']['formulas']['net_debt']['yoy_change'][$date] = $this->makeFormulaDescription($debt, $lastDebt, $data['book']['net_debt']['yoy_change'][$date], $date, 'Total Net Debt');
+            $data['market']['formulas']['net_debt']['yoy_change'][$date] = $this->makeFormulaDescription([$debt, $lastDebt], $data['market']['net_debt']['yoy_change'][$date], $date, 'Total Net Debt', 'yoy_change');
             $data['market']['net_debt']['total_percent'][$date] = (string) ($total ? $debt / $total * 100 : 0);
+            $data['market']['formulas']['net_debt']['total_percent'][$date] = $this->makeFormulaDescription([$debt, $total], $data['market']['net_debt']['total_percent'][$date], $date, 'Total Net Debt', 'of_total_capital');
             $lastDebt = $debt;
 
             $data['market']['preferred_equity']['timeline'][$date] = (string) $prefEquity;
             $data['market']['preferred_equity']['total_percent'][$date] = (string) ($total ? $prefEquity / $total * 100 : 0);
+            $data['market']['formulas']['preferred_equity']['total_percent'][$date] = $this->makeFormulaDescription([$prefEquity, $total], $data['market']['preferred_equity']['total_percent'][$date], $date, 'Preferred Equity', 'of_total_capital');
 
             $data['market']['minority_interest']['timeline'][$date] = (string) $minorityInterest;
             $data['market']['minority_interest']['total_percent'][$date] = (string) ($total ? $minorityInterest / $total * 100 : 0);
-
+            $data['market']['formulas']['minority_interest']['total_percent'][$date] = $this->makeFormulaDescription([$minorityInterest, $total], $data['market']['minority_interest']['total_percent'][$date], $date, 'Minority Interest', 'of_total_capital');
 
             $data['market']['net_debt_by_capital'][$date] = (string) ($debt / $total * 100);
-            $data['market']['formulas']['net_debt_by_capital'][$date] = $this->makeFormulaDescription($debt, $total, $data['market']['net_debt_by_capital'][$date], $date, 'Net Debt / Capital', 'net_debt_by_capital');
+            $data['market']['formulas']['net_debt_by_capital'][$date] = $this->makeFormulaDescription([$debt, $total], $data['market']['net_debt_by_capital'][$date], $date, 'Net Debt / Capital', 'net_debt_by_capital');
         }
 
         $this->rawData = $data;
@@ -334,11 +344,11 @@ class CapitalStructure extends Component
         ), false);
 
         $usedKeys = [
-            'Total Common Equity',
-            'Net Debt',
-            'Total Preferred Equity',
-            'Minority Interest',
-            'Total Shares Out. on Filing Date',
+            'Total Common Equity' => 'total_equity',
+            'Net Debt' => 'net_debt',
+            'Total Preferred Equity' => 'total_preferred_equity',
+            'Minority Interest' => 'minimum_interest',
+            'Total Shares Out. on Filing Date' => 'total_shares_out',
         ];
 
         $valueFormatter = fn ($value) => array_map(fn ($val) => intval(explode("|", $val[0] ?? "")[0]), $value);
@@ -348,10 +358,10 @@ class CapitalStructure extends Component
         foreach ($data as $key => $value) {
             $key = explode("|", $key)[0];
 
-            if (!in_array($key, $usedKeys)) continue;
+            if (!in_array($key, array_keys($usedKeys))) continue;
 
-            if ($key === 'Net Debt') {
-                $this->formulaHashes['net_debt'] = array_map(fn ($value) => $this->extractHashes($value), $value);
+            if (in_array($key, ['Net Debt', 'Total Common Equity'])) {
+                $this->formulaHashes[$usedKeys[$key]] = array_map(fn ($value) => $this->extractHashes($value), $value);
             }
 
             $tmp[$key] = $valueFormatter($value);
@@ -431,10 +441,9 @@ class CapitalStructure extends Component
         return 0;
     }
 
-    private function makeFormulaDescription($firstValue, $secondValue, $result, $date, $metric, $type = 'yoy_change')
+    private function makeFormulaDescription($arguments, $result, $date, $metric, $type)
     {
-        $isNetDebt = $type === 'net_debt_by_capital';
-        $value = makeFormulaDescription($firstValue, $secondValue, $result, $date, $metric, $isNetDebt);
+        $value = makeFormulaDescription($arguments, $result, $date, $metric, $type);
         $value['body']['value_final'] = $this->formatPercentageValue($result);
 
         return $value;
