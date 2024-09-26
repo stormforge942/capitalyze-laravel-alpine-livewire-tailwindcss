@@ -315,22 +315,6 @@ class CompanyController extends BaseController
         ]);
     }
 
-    public function icon(Request $request)
-    {
-        $ticker = $request->input('ticker');
-
-        if ($ticker) {
-            if (Storage::disk('s3')->exists("company_logos/{$ticker}.png")) {
-                $fileContents = Storage::disk('s3')->get("company_logos/{$ticker}.png");
-                return response($fileContents, 200)
-                    ->header('Content-Type', 'image/png');
-            } else {
-                $svgUrl = asset('svg/logo.svg');
-                return redirect($svgUrl);
-            }
-        }
-    }
-
     private function findOrFailCompany(string $ticker)
     {
         $cacheKey = 'company_' . $ticker;

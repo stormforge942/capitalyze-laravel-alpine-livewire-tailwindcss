@@ -8,6 +8,7 @@ use Illuminate\Support\Facades\DB;
 use App\Models\CompanyProfile;
 use App\Models\UserSearchHistory;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Storage;
 
 class GlobalSearch extends Component
 {
@@ -18,6 +19,15 @@ class GlobalSearch extends Component
     public function mount()
     {
         $this->history = $this->getSearchHistory();
+    }
+
+    private function getLogoUrl($ticker)
+    {
+        if (Storage::disk('s3')->exists("company_logos/{$ticker}.png")) {
+            return Storage::disk('s3')->url("company_logos/{$ticker}.png");
+        } else {
+            return asset('svg/logo.svg');
+        }
     }
 
     public function getSuggestions($searchString)
@@ -36,7 +46,7 @@ class GlobalSearch extends Component
             ->limit(4)
             ->get()
             ->map(function ($item) {
-                $item->logo = route('icon-view', ['ticker' => $item->ticker]);
+                $item->logo = $this->getLogoUrl($item->ticker);
                 $item->href = route('company.profile', $item->ticker);
                 $item->passed = true;
                 return $item;
