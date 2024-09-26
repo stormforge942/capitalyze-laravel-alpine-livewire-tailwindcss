@@ -33,7 +33,7 @@
     },
 }" x-modelable="value" x-model="universalCriteria.market_cap">
     <div class="flex items-center">
-        <x-dropdown x-model="showDropdown" placement="bottom-start">
+        <x-dropdown x-model="showDropdown" placement="bottom-start" :teleport="true">
             <x-slot name="trigger">
                 <p class="flex items-center border-[0.5px] border-[#D4DDD7] dropdown-trigger rounded-tl-full rounded-bl-full p-2 text-sm"
                    :class="[
@@ -69,11 +69,11 @@
 
                     <div class="py-4">
                         <div class="flex items-center justify-between">
-                            <input class="flex-1 w-16 rounded-sm border-2 border-gray-medium2" type="number"
+                            <input placeholder="Min" class="flex-1 w-16 rounded-sm border-2 border-gray-medium2" type="number"
                                    {{ false ? '' : 'min=0' }} step="1" x-model="tmpValue.min"
                                    :max="tmpValue.max">
                             <span class="px-5">-</span>
-                            <input class="flex-1 w-16 rounded-sm border-2 border-gray-medium2" type="number" step="1"
+                            <input placeholder="Max" class="flex-1 w-16 rounded-sm border-2 border-gray-medium2" type="number" step="1"
                                    x-model="tmpValue.max" :min="tmpValue.min">
                         </div>
 
@@ -86,7 +86,7 @@
                 <div class="p-6">
                     <button type="submit"
                             class="w-full px-4 py-3 font-medium bg-green-dark hover:bg-opacity-80 rounded disabled:pointer-events-none disabled:bg-[#D1D3D5] disabled:text-gray-medium2 text-base">
-                        Show Result
+                        Done
                     </button>
                 </div>
             </form>

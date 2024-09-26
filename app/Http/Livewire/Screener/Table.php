@@ -2,76 +2,84 @@
 
 namespace App\Http\Livewire\Screener;
 
-use App\Powergrid\BaseTable;
-use Illuminate\Support\Facades\DB;
-use PowerComponents\LivewirePowerGrid\Column;
-use PowerComponents\LivewirePowerGrid\PowerGrid;
-use PowerComponents\LivewirePowerGrid\PowerGridColumns;
+use App\Services\ScreenerTableBuilderService;
+use Livewire\Component;
 
-class Table extends BaseTable
+class Table extends Component
 {
-    public string $sortField = 'acceptance_time';
-    public string $sortDirection = 'desc';
-    public array $config = [];
-    public string $search = '';
+    public $page = 1;
 
-    protected function getListeners(): array
+    public $loaded = false;
+
+    public $listeners = ['refreshTable', 'refreshSummary'];
+
+    public array $universal = [];
+    public array $financial = [];
+    public array $summaries = [];
+
+    public $table = [
+        'data' => [],
+        'summary' => [],
+    ];
+
+    public function mount()
     {
-        return array_merge(parent::getListeners(), [
-            'updateEventFilingsTable' => 'updateProps',
-        ]);
+        $this->load();
     }
 
-    public function updateProps(array $config, ?string $search)
+    public function render()
     {
-        $this->config = $config;
-        $this->search = $search ?? '';
-
-        $this->resetPage();
+        return view('livewire.screener.table');
     }
 
-    public function datasource()
+    public function refreshTable(array $universal, array $financial, array $summaries)
     {
-        return DB::connection('pgsql-xbrl')
-            ->table('company_links')
-            ->when(isset($this->config['in']), function ($query) {
-                $in = [];
+        $this->loaded = false;
 
-                foreach ($this->config['in'] as $item) {
-                    $in[] = $item;
-                    $in[] = $item . '/A';
-                }
-
-                $query->whereIn('form_type', $in);
-            })
-            ->when($this->search, fn ($q) => $q->where('registrant_name', 'ilike', "%{$this->search}%"));
+        $this->universal = $universal;
+        $this->financial = $financial;
+        $this->summaries = $summaries;
     }
 
-    public function columns(): array
+    public function load()
+    {
+        if (count($this->universal) || count($this->financial)) {
+            $query = ScreenerTableBuilderService::makeQuery($this->universal, $this->financial);
+
+            $this->table['data'] = ScreenerTableBuilderService::generateTableData(
+                $query,
+                $this->resolveSelect(),
+                $this->page,
+            );
+
+            $this->refreshSummary($this->summaries);
+        }
+
+        $this->loaded = true;
+    }
+
+    public function refreshSummary(array $summaries)
+    {
+        $this->summaries = $summaries;
+
+        if ($this->summaries) {
+            $this->table['summary'] = ScreenerTableBuilderService::generateSummary(
+                ScreenerTableBuilderService::makeQuery($this->universal, $this->financial),
+                $this->table['summary'],
+                $this->resolveSelect(),
+            );
+        }
+    }
+
+    private function resolveSelect()
     {
         return [
-            Column::make('Ticker', 'symbol', 'symbol')->sortable(),
-            Column::make('Company Name', 'company', 'registrant_name')->sortable(),
-            Column::make('Filing Type', 'formatted_form_type', 'form_type')->sortable(),
-            Column::make('Description', 'description'),
-            Column::make('Filing Date', 'filing_date')->sortable(),
+            'c.symbol',
+            'c.registrant_name',
+            'c.country',
+            'c.exchange',
+            'c.sic_group',
+            'c.sic_description',
         ];
-    }
-
-    public function addColumns(): PowerGridColumns
-    {
-        return PowerGrid::columns()
-            ->addColumn('symbol')
-            ->addColumn('registrant_name')
-            ->addColumn('company', function ($row) {
-                $url = route('company.profile', $row->symbol);
-                return "<a class=\"text-blue hover:underline\" href=\"{$url}\">{$row->registrant_name}</a>";
-            })
-            ->addColumn('form_type')
-            ->addColumn('formatted_form_type', function ($row) {
-                return '<button class="inline-block px-2 py-1 bg-[#DCF6EC] hover:bg-green-dark transition-all rounded" @click="Livewire.emit(`slide-over.open`, `s3-link-content`, { sourceLink: `' . $row->s3_link . '` })">' . $row->form_type . '</button>';
-            })
-            ->addColumn('description')
-            ->addColumn('filing_date');
     }
 }

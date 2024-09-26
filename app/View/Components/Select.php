@@ -31,8 +31,6 @@ class Select extends Component
             }, []);
         }
 
-        info($this->options);
-
         $this->name = $name ?? Str::random(10);
         $this->placeholder = $placeholder ?? '';
     }

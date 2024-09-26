@@ -2,19 +2,21 @@
 
 namespace App\Http\Livewire\Screener;
 
+use Carbon\Carbon;
 use Livewire\Component;
 use App\Models\ScreenerTab;
+use Illuminate\Support\Str;
 use App\Models\CompanyProfile;
-use Carbon\Carbon;
-use Illuminate\Support\Facades\Cache;
+use App\Services\ScreenerTableBuilderService;
+use Illuminate\Validation\Rule;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Cache;
+use Illuminate\Support\Facades\Validator;
 
 class Page extends Component
 {
-    const DATE_START = 1990;
-
     public const SUMMARIES = ['Max', 'Min', 'Sum', 'Median'];
-    
+
     public const OPERATORS = [
         '>' => 'Greater than (>)',
         '>=' => 'Greater than or equal (>=)',
@@ -32,12 +34,17 @@ class Page extends Component
     public $universalCriteria = null;
     public $financialCriteria = null;
     public $views = null;
-    public $summaries = null;
+    public $summaries = [];
+
+    public $data = null;
 
     public $result = null;
 
+    private $tabCriterias = null;
+
     protected $listeners = [
-        'tabChanged' => 'tabChanged',
+        'tabChanged',
+        'generateResult',
     ];
 
     public function render()
@@ -73,6 +80,7 @@ class Page extends Component
                 'summaries' => self::SUMMARIES,
                 'operators' => self::OPERATORS,
             ],
+            'tabCriterias' => $this->tabCriterias,
         ]);
     }
 
@@ -93,17 +101,79 @@ class Page extends Component
             'industries' => data_get($universalCriteria, 'industries', $empty),
             'sectors' => data_get($universalCriteria, 'sectors', $empty),
             'market_cap' => data_get($universalCriteria, 'market_cap', [null, null]),
-            'currencies' => data_get($universalCriteria, 'currencies', $empty),
         ];
 
         $this->financialCriteria = $tab->financial_criteria ?? [];
 
-        $this->summaries = $tab->summaries;
+        $this->summaries = $tab->summaries ?? [];
 
         $this->views = $tab->views ?? [];
+
+        $this->tabCriterias = ScreenerTableBuilderService::resolveValidCriterias($this->universalCriteria, $this->financialCriteria);
     }
 
-    public function generateResult() {}
+    public function generateResult()
+    {
+        $data = [
+            'universal_criteria' => $this->universalCriteria,
+            'financial_criteria' => $this->financialCriteria,
+            'summaries' => $this->summaries,
+        ];
+
+        $validator = Validator::make($data, [
+            'universal_criteria' => ['nullable', 'array'],
+            'universal_criteria.locations.exclude' => ['required', 'boolean'],
+            'universal_criteria.locations.data' => ['nullable', 'array'],
+            'universal_criteria.locations.data.*' => ['string'],
+            'universal_criteria.stock_exchanges.exclude' => ['required', 'boolean'],
+            'universal_criteria.stock_exchanges.data' => ['nullable', 'array'],
+            'universal_criteria.stock_exchanges.data.*' => ['string'],
+            'universal_criteria.sectors.exclude' => ['required', 'boolean'],
+            'universal_criteria.sectors.data' => ['nullable', 'array'],
+            'universal_criteria.sectors.data.*' => ['string'],
+            'universal_criteria.industries.exclude' => ['required', 'boolean'],
+            'universal_criteria.industries.data' => ['nullable', 'array'],
+            'universal_criteria.industries.data.*' => ['string'],
+            'universal_criteria.market_cap' => ['required', 'array', 'min:2', 'max:2'],
+            'universal_criteria.market_cap.*' => ['nullable', 'numeric'],
+
+            'financial_criteria' => ['nullable', 'array'],
+            'financial_criteria.*' => ['array'],
+            'financial_criteria.*.id' => ['nullable', 'string'],
+            'financial_criteria.*.metric' => ['nullable', 'string'],
+            'financial_criteria.*.type' => ['nullable', Rule::in(['value', 'changeYoY'])],
+            'financial_criteria.*.period' => ['nullable', Rule::in(['annual', 'quarter'])],
+            'financial_criteria.*.dates' => ['nullable', 'array'],
+            'financial_criteria.*.dates.*' => ['required', 'string'],
+            'financial_criteria.*.operator' => ['nullable', Rule::in(array_keys(Page::OPERATORS))],
+            'financial_criteria.*.value' => ['nullable'],
+
+            'summaries' => ['nullable', 'array'],
+            'summaries.*' => ['required', Rule::in(Page::SUMMARIES)],
+        ]);
+
+        $attributes = $validator->validate();
+
+        $where = fn($criteria) => !empty($criteria['metric']) && !empty($criteria['type'] && !empty($criteria['period']) && !empty($criteria['dates']));
+
+        $attributes['financial_criteria'] = collect($attributes['financial_criteria'])
+            ->filter($where)
+            ->map(fn($item) => [
+                ...$item,
+                'id' => Str::uuid()->toString(),
+            ])
+            ->values()
+            ->toArray();
+
+        ScreenerTab::query()
+            ->where('user_id', auth()->id())
+            ->where('id', $this->tab['id'])
+            ->update($attributes);
+
+        $result = ScreenerTableBuilderService::resolveValidCriterias($attributes['universal_criteria'], $attributes['financial_criteria']);
+
+        $this->emitTo(Table::class, 'refreshTable', $result['universal'], $result['financial'], $attributes['summaries']);
+    }
 
     private function generateDates()
     {
@@ -122,7 +192,7 @@ class Page extends Component
 
         return [
             'annual' => $this->generateAnnualDates($dates['annual'] ?? $currentYear),
-            'quarterly' => $this->generateQuarterlyDates($dates['quarter'] ?? $currentYear),
+            'quarter' => $this->generateQuarterlyDates($dates['quarter'] ?? $currentYear),
         ];
     }
 

@@ -108,12 +108,7 @@
         showResult() {
             this.value = this.tmpValue;
             this.showDropdown = false;
-    
-            this.dispatchValueChanged()
         },
-        dispatchValueChanged() {
-            Livewire.emit('metricsChanged', this.value)
-        }
     }" x-modelable="value" x-model="criteria.metric">
         <x-dropdown x-model="showDropdown" placement="bottom-start" :fullWidthTrigger="true">
             <x-slot name="trigger">
@@ -235,10 +230,12 @@
         </x-dropdown>
     </div>
 
-    <x-select class="flex-none px-4" placeholder="Choose Data Type" :options="['value' => 'Value', 'changeYoY' => '% Change YoY']" x-model="criteria.type"
-        x-show="criteria.metric" :auto-disable="false" btn-text="Done"></x-select>
+    <div class="flex-none">
+        <x-select class="px-4" placeholder="Choose Data Type" :options="['value' => 'Value', 'changeYoY' => '% Change YoY']" x-model="criteria.type"
+            x-show="criteria.metric" :auto-disable="false" btn-text="Done"></x-select>
+    </div>
 
-    <x-select class="flex-none px-4" placeholder="Choose Period" :options="['annual' => 'Fiscal Annual', 'quarterly' => 'Fiscal Quarterly']" x-model="criteria.period"
+    <x-select class="flex-none px-4" placeholder="Choose Period" :options="['annual' => 'Fiscal Annual', 'quarter' => 'Fiscal Quarterly']" x-model="criteria.period"
         x-show="criteria.metric" :auto-disable="false" btn-text="Done"></x-select>
 
     <template x-if="criteria.metric && criteria.period === 'annual'">
@@ -246,8 +243,8 @@
             :multiple="true" :auto-disable="false" btn-text="Done"></x-select>
     </template>
 
-    <template x-if="criteria.metric && criteria.period === 'quarterly'">
-        <x-select class="flex-none px-4" placeholder="Dates" :options="$dates['quarterly']" x-model="criteria.dates"
+    <template x-if="criteria.metric && criteria.period === 'quarter'">
+        <x-select class="flex-none px-4" placeholder="Dates" :options="$dates['quarter']" x-model="criteria.dates"
             :multiple="true" :auto-disable="false" btn-text="Done"></x-select>
     </template>
 
