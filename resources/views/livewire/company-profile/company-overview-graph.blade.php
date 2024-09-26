@@ -37,7 +37,7 @@
         </div>
 
         <div class="flex items-center gap-x-5">
-            <div class="w-[200px]">
+            <div>
                 <b class="font-extrabold">{{ $name }} ({{ $ticker }})</b><br>
                 <small class="text-sm {{ $percentage >= 0 ? 'text-blue-600' : 'text-red-600' }}">
                     {{ $percentage }}% price return over {{ $chartPeriods[$currentChartPeriod] }}
@@ -234,6 +234,9 @@
                     scales: {
                         y: {
                             min: minPrice - 0.05 * minPrice,
+                            ticks: {
+                                crossAlign: "far",
+                            }
                         },
                         x: {
                             offset: false,
