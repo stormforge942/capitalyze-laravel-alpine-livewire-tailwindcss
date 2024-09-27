@@ -8,6 +8,7 @@ use Illuminate\Support\Facades\Http;
 use Illuminate\Support\Facades\Storage;
 use App\Models\CompanyProfile;
 use Illuminate\Support\Facades\Log;
+use Illuminate\Support\Str;
 
 class FillLogos extends Command
 {
@@ -68,6 +69,8 @@ class FillLogos extends Command
         $keyIndex = 0;
 
         $companies->map(function ($company) use ($keys, &$keyIndex) {
+            if (! $company->website) return;
+
             $symbol = $company->symbol;
             $domain = $this->getDomainFromWebsite($company->website);
             $sourceLink = "https://img.logo.dev/{$domain}?token={$keys[$keyIndex]}";
@@ -75,11 +78,15 @@ class FillLogos extends Command
             $response = Http::get($sourceLink);
 
             if ($response->ok()) {
-                $fileName = $symbol . '.png';
-                $filePath = '/company_logos/' . $fileName;
-                Storage::disk('s3')->put($filePath, $response->body());
+                $contentType = $response->header('Content-Type');
 
-                Log::info("Stored logo of {$symbol} successfully");
+                if (Str::startsWith($contentType, 'image/')) {
+                    $fileName = $symbol . '.png';
+                    $filePath = '/company_logos/' . $fileName;
+                    Storage::disk('s3')->put($filePath, $response->body());
+
+                    Log::info("Stored logo of {$symbol} successfully");
+                }
             } else {
                 Log::error("Logo of {$symbol} doesn't exist");
             }
