@@ -8,6 +8,7 @@ use Illuminate\Support\Carbon;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Js;
 use Illuminate\Support\Facades\Cache;
+use Illuminate\Support\Facades\Storage;
 
 class Page extends Component
 {
@@ -48,6 +49,15 @@ class Page extends Component
             '' => 'All',
             ...$this->exchanges
         ];
+    }
+
+    private function getLogoUrl($ticker)
+    {
+        if (Storage::disk('s3')->exists("company_logos/{$ticker}.png")) {
+            return Storage::disk('s3')->url("company_logos/{$ticker}.png");
+        } else {
+            return asset('svg/logo.svg');
+        }
     }
 
     public function getData($start = null, $end = null)
@@ -91,6 +101,10 @@ class Page extends Component
                 ->merge($earningsCalendar)
                 ->sortBy(function ($item) {
                     return Carbon::parse($item->date . ' ' . $item->time)->timestamp;
+                })
+                ->map(function ($item) {
+                    $item->logo = $this->getLogoUrl($item->symbol);
+                    return $item;
                 })
                 ->toArray());
         });

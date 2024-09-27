@@ -159,8 +159,10 @@
                         <table class="table power-grid-table w-full bg-white rounded-md overflow-clip">
                             <thead class="font-sm font-semibold capitalize bg-[#EDEDED] rounded-t-md">
                                 <tr>
+                                    <th></th>
                                     <template x-for="column in columns()" :key="column.key">
-                                        <th class="pl-6 py-2 text-dark whitespace-nowrap"
+                                        <th class="py-2 text-dark whitespace-nowrap"
+                                            :class="column.name == 'Ticker' ? '' : 'pl-6'"
                                             :style="`width: max-content;`">
                                             <div class="flex" :class="column.right ? 'justify-end' : ''">
                                                 <div class="inline-flex items-center gap-1"
@@ -193,7 +195,8 @@
                                 <template x-if="rows.length">
                                     <template x-for="(row, idx) in rows" :key="idx">
                                         <tr>
-                                            <td class="pl-6 py-4 whitespace-nowrap">
+                                            <td class="pl-2"><img x-bind:src="row.logo" width="32" height="32" /></td>
+                                            <td class="py-4 whitespace-nowrap">
                                                 <a :href="`/company/${row.symbol}`" class="text-blue hover:underline"
                                                     x-text="row.symbol"></a>
                                             </td>
