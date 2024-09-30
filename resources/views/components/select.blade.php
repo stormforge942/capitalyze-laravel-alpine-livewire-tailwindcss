@@ -73,8 +73,7 @@
     <x-dropdown x-model="showDropdown" placement="bottom-start" :disabled="$disabled">
         <x-slot name="trigger">
             <div class="border border-[{{ $color }}] p-2 rounded-full flex items-center gap-x-1"
-                :class="disabled ? 'bg-[#E2E2E2]' : ''"
-                :class="showDropdown ? 'bg-[#E2E2E2]' : 'bg-white hover:bg-[#E2E2E2]'" style="max-width: 15rem">
+                :class="showDropdown || disabled ? 'bg-[#E2E2E2]' : 'bg-white hover:bg-[#E2E2E2]'" style="max-width: 15rem">
                 <span class="truncate" x-bind:class="pillTextStyle" x-text="pillText">
                 </span>
 

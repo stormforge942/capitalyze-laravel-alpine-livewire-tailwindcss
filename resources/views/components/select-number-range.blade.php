@@ -22,6 +22,12 @@
             }
         })
     },
+    get filtersChanged() {
+        const filters = Array.from(this.value || [0, 0]);
+        const tmpFilters = Object.values(this.tmpValue);
+
+        return filters.length === tmpFilters.length && filters.sort().join('') === tmpFilters.sort().join('');
+    },
     updateValue() {
         this.tmpValue.min = Number(this.tmpValue.min);
         this.tmpValue.max = Number(this.tmpValue.max);
@@ -83,7 +89,9 @@
 
             <div class="p-6">
                 <button type="submit"
-                    class="w-full px-4 py-3 font-medium bg-green-dark hover:bg-opacity-80 rounded disabled:pointer-events-none disabled:bg-[#D1D3D5] disabled:text-gray-medium2 text-base">
+                    class="w-full px-4 py-3 font-medium bg-green-dark hover:bg-opacity-80 rounded disabled:pointer-events-none disabled:bg-[#D1D3D5] disabled:text-gray-medium2 text-base"
+                    :disabled="filtersChanged"
+                    >
                     Show Result
                 </button>
             </div>

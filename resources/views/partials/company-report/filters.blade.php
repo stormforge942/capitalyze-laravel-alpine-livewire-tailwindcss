@@ -43,6 +43,12 @@
                             perShare: fn(this.tmpValue?.perShare),
                         }
                     },
+                    get filtersChanged() {
+                        const value = this.valueText.split('|').map(item => item.slice(1).length).sort().join('');
+                        const tmpValue = this.tmpValue && Object.values(this.tmpValue).sort().join('');
+
+                        return value === tmpValue;
+                    },
                     init() {
                         $watch('showDropdown', value => {
                             this.tmpValue = {
@@ -211,8 +217,9 @@
 
                             <div class="p-6 pt-0">
                                 <button type="button"
-                                    class="w-full px-4 py-3 font-medium bg-green-dark hover:bg-opacity-80 rounded disabled:pointer-events-none text-base"
-                                    @click="onSave">
+                                    class="w-full px-4 py-3 font-medium bg-green-dark hover:bg-opacity-80 rounded disabled:pointer-events-none disabled:bg-[#D1D3D5] disabled:text-gray-medium2 text-base"
+                                    @click="onSave"
+                                    :disabled="filtersChanged">
                                     Show Result
                                 </button>
                             </div>
