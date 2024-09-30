@@ -153,19 +153,21 @@ class Geography extends Component
             return str_contains($key, 'Revenue');
         });
 
-        foreach ($apiReturns as $item) {
-            $date = array_key_first($item);
-
-            foreach ($item[$date] as $key => $value) {
-                $name = str_replace(' [Member]', '', $key);
-
-                if (!isset($regions[$name])) {
-                    $regions[$name] = [];
+        if (! is_null($apiReturns)) {
+            foreach ($apiReturns as $item) {
+                $date = array_key_first($item);
+    
+                foreach ($item[$date] as $key => $value) {
+                    $name = str_replace(' [Member]', '', $key);
+    
+                    if (!isset($regions[$name])) {
+                        $regions[$name] = [];
+                    }
+    
+                    $hashExtractionResult = $this->extractHashes($incomeStatements[$revenueKey][$date]);
+    
+                    $regions[$name][$date] = ['value' => intval($value), 'hash' => $hashExtractionResult['hash'], 'secondHash' => $hashExtractionResult['secondHash']];
                 }
-
-                $hashExtractionResult = $this->extractHashes($incomeStatements[$revenueKey][$date]);
-
-                $regions[$name][$date] = ['value' => intval($value), 'hash' => $hashExtractionResult['hash'], 'secondHash' => $hashExtractionResult['secondHash']];
             }
         }
 
