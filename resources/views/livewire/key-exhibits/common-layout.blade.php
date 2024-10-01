@@ -4,6 +4,7 @@
     items: @js($data),
     filtered: @js($filtered),
     dateSortOrder: @entangle('dateSortOrder').defer,
+    showExhibitDropdown: false,
     init() {
         this.$watch('search', (newVal, oldVal) => {
             @this.emit('onSearch', newVal);
@@ -13,6 +14,11 @@
             @this.emit('onDateSort', newVal);
 
             Livewire.emit('setSortOrder', newVal);
+        })
+
+        window.livewire.on('hideExhibitDropdown', () => {
+            this.showExhibitDropdown = false;
+            this.openExhibitPop = false;
         })
     }
 }">
@@ -35,7 +41,7 @@
 
         <div class="grid grid-cols-7 gap-2 mt-4 hidden md:grid">
             <div class="col-span-7 sm:col-span-2">
-                <x-search-filter x-model.debounce.800ms="search" py="3"></x-search-filter>
+                <x-search-filter x-model.debounce.800ms="search"></x-search-filter>
             </div>
 
             <div class="col-span-5 sm:col-span-5 px-4 py-3 bg-white flex flex-wrap items-center border border-[#D4DDD7] rounded-lg">
@@ -46,42 +52,38 @@
                     <x-select :options="['desc' => 'Newest to Oldest', 'asc' => 'Oldest to Newest']" placeholder="Sort by Date" x-model="dateSortOrder" ></x-select>
                 </div>
 
-                <div class="flex ml-2 relative justify-center mt-0 mx-0" x-data="{openExhibitsPop: false}" @keydown.window.escape="openExhibitsPop = false" @click.away="openExhibitsPop = false">
-                    <button @click="openExhibitsPop = ! openExhibitsPop" class="border-[0.5px] border-[#D4DDD7] p-2 rounded-full flex items-center gap-x-1 bg-white hover:bg-[#E2E2E2] {{ $checkedCount ? 'bg-[#E2E2E2] border-2 border-[#9DA3A8]' : '' }} ">
-                        <span class="text-sm p-x-4 font-[400] text-[#01090F]"> Select Exhibit Type</span>
-
-                        @if($checkedCount)
-                            <span class="bg-[#2C71F0] px-2 py-0 ml-2 leading-5 rounded-full text-[0.625rem] font-[600] text-white">{{$checkedCount}}</span>
-                        @endif
-
-                        <span :class="openExhibitsPop ? 'rotate-180' : ''" class="transition-transform shrink-0">
-                            <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 16 16" fill="none">
-                                <path d="M10.3083 6.19514L7.72167 8.78378L5.135 6.19514C5.01045 6.07021 4.84135 6 4.665 6C4.48865 6 4.31955 6.07021 4.195 6.19514C3.935 6.45534 3.935 6.87566 4.195 7.13585L7.255 10.1982C7.515 10.4584 7.935 10.4584 8.195 10.1982L11.255 7.13585C11.515 6.87566 11.515 6.45534 11.255 6.19514C10.995 5.94161 10.5683 5.93494 10.3083 6.19514Z" fill="#121A0F"></path>
-                            </svg>
-                        </span>
-                    </button>
-                    <div x-show="openExhibitsPop" class="absolute left-0 py-2 mt-10 bg-white rounded-md shadow-xl z-50 sm:left-1/2 transform -translate-x-1/2 left-1/2 2xl:translate-x-0 2xl:left-0">
+                <div class="flex ml-2 relative justify-center mx-0 my-auto"
+                     @keydown.window.escape="showExhibitDropdown = false"
+                     @click.away="showExhibitDropdown = false"
+                >
+                    <x-dropdown x-model="showExhibitDropdown" placement="bottom-start">
                         <x-slot name="trigger">
                             <div class="border-[0.5px] border-[#D4DDD7] p-2 rounded-full flex items-center gap-x-1"
-                                 :class="showDropdown ? 'bg-[#E2E2E2]' : 'bg-white hover:bg-[#E2E2E2]'">
-                                <span class="text-sm truncate" x-text="valueText"></span>
+                                 :class="showExhibitDropdown ? 'bg-[#E2E2E2]' : 'bg-white hover:bg-[#E2E2E2]'">
+                                <span class="text-sm truncate">
+                                    Select Exhibit Type
+                                </span>
 
-                                <span :class="openExhibitsPop ? 'rotate-180' : ''" class="transition-transform shrink-0">
-                                <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16"
-                                     viewBox="0 0 16 16" fill="none">
-                                    <path
-                                        d="M10.3083 6.19514L7.72167 8.78378L5.135 6.19514C5.01045 6.07021 4.84135 6 4.665 6C4.48865 6 4.31955 6.07021 4.195 6.19514C3.935 6.45534 3.935 6.87566 4.195 7.13585L7.255 10.1982C7.515 10.4584 7.935 10.4584 8.195 10.1982L11.255 7.13585C11.515 6.87566 11.515 6.45534 11.255 6.19514C10.995 5.94161 10.5683 5.93494 10.3083 6.19514Z"
-                                        fill="#121A0F" />
-                                </svg>
-                            </span>
+                                @if($checkedCount)
+                                    <span class="bg-[#2C71F0] px-2 py-0 ml-2 leading-5 rounded-full text-[0.625rem] font-[600] text-white">{{$checkedCount}}</span>
+                                @endif
+
+                                <span :class="showExhibitDropdown ? 'rotate-180' : ''" class="transition-transform shrink-0">
+                                    <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16"
+                                         viewBox="0 0 16 16" fill="none">
+                                        <path
+                                            d="M10.3083 6.19514L7.72167 8.78378L5.135 6.19514C5.01045 6.07021 4.84135 6 4.665 6C4.48865 6 4.31955 6.07021 4.195 6.19514C3.935 6.45534 3.935 6.87566 4.195 7.13585L7.255 10.1982C7.515 10.4584 7.935 10.4584 8.195 10.1982L11.255 7.13585C11.515 6.87566 11.515 6.45534 11.255 6.19514C10.995 5.94161 10.5683 5.93494 10.3083 6.19514Z"
+                                            fill="#121A0F" />
+                                    </svg>
+                                </span>
                             </div>
                         </x-slot>
 
-                        <div class="w-[800px]">
+                        <div class="w-[20rem] sm:w-[700px]">
                             <div class="flex justify-between gap-2 px-6 pt-6">
                                 <span class="font-medium text-base">Browse Filing Types</span>
 
-                                <button @click="openExhibitsPop = false">
+                                <button @click="showExhibitDropdown = false">
                                     <svg width="24" height="24" viewBox="0 0 24 24" fill="none"
                                          xmlns="http://www.w3.org/2000/svg">
                                         <path
@@ -95,7 +97,7 @@
                                 <livewire:filings-filter-pop-up :type="'exhibit'" :selectChecked="$selectChecked" :sortOrder="$dateSortOrder" />
                             </div>
                         </div>
-                    </div>
+                    </x-dropdown>
                 </div>
             </div>
         </div>

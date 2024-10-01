@@ -46,7 +46,7 @@
 
         <div class="grid-cols-7 gap-2 mt-4 hidden md:grid">
             <div class="col-span-7 sm:col-span-2">
-                <x-search-filter x-model.debounce.800ms="search" py="3"></x-search-filter>
+                <x-search-filter x-model.debounce.800ms="search"></x-search-filter>
             </div>
 
             <div class="col-span-5 sm:col-span-5 px-4 py-3 bg-white flex flex-wrap items-center border border-[#D4DDD7] rounded-lg">

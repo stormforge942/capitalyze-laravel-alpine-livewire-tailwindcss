@@ -31,7 +31,7 @@
     </div>
 
     <template x-if="open">
-        <div class="absolute z-10 mt-1 w-full bg-white border border-gray-300 rounded-lg shadow-lg p-6">
+        <div class="absolute z-50 mt-1 w-full bg-white border border-gray-300 rounded-lg shadow-lg p-6">
             <h3 class="text-lg font-semibold" x-text="'Discover' + (search ? ` “${search}“` : '')">Discover</h3>
 
             <template x-if="! checklist">
