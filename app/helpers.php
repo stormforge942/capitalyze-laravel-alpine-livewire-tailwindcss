@@ -610,3 +610,25 @@ function makeFormulaDescription($arguments, $result, $date, $metric, $type): arr
 
     return $result;
 }
+
+function extractTickerFromUrl($url)
+{
+    $ticker = '';
+    $currentUrl = parse_url($url);
+    $currentPath = explode('/', $currentUrl['path'])[1];
+
+    if ($currentPath === 'company') {
+        return explode('/', $currentUrl['path'])[2];
+    }
+
+    if (str_contains($currentUrl['query'], 'ticker')) {
+        $queryString = $currentUrl['query'];
+        $queryItems = [];
+
+        parse_str($queryString, $queryItems);
+
+        return $queryItems['ticker'];
+    }
+
+    return $ticker;
+}

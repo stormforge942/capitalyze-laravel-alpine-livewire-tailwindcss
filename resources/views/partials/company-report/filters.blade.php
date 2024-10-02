@@ -237,8 +237,4 @@
             </div>
         </div>
     </div>
-
-    <div class="cus-loader" wire:loading.block>
-        <div class="cus-loaderBar"></div>
-    </div>
 </div>

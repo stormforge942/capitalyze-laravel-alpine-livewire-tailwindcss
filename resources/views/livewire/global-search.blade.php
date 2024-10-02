@@ -15,8 +15,14 @@
     },
 
     navigateTo(item) {
-        this.$wire.navigateTo(item)
-            .then(() => window.location.href = item.href);
+        const currentUrl = window.location.href;
+
+        this.$wire.navigateTo(item, currentUrl)
+            .then(() => {
+                const prevTicker = $wire.prevHistoryItem.ticker;
+                const newUrl = window.location.href.replace(prevTicker, item.ticker);
+                window.location.href = newUrl;
+            });
     }
 }" class="h-14 w-full lg:w-2/3 relative" @keydown.window.escape="open = false" @click.away="open = false">
     <div class="rounded-lg border border-green-muted bg-white leading-[3rem] px-3 flex items-center focus-within:border-green-dark">
@@ -132,8 +138,8 @@
             </div>
             <div x-show="search">
                 <template x-if="loadingSuggestions">
-                    <div class="flex justify-center items-center w-full mt-2 mb-5 h-[100px]">
-                        <x-loader />
+                    <div class="my-4 flex justify-center">
+                        <span class="mx-auto simple-loader !text-green-dark"></span>
                     </div>
                 </template>
 

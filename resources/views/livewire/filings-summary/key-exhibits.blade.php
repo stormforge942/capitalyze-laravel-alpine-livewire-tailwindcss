@@ -39,11 +39,11 @@
     </div>
 
     <div class="relative">
-        <div wire:loading.block class="justify-center items-center w-full mt-5">
-            <x-loader />
+        <div class="place-items-center" wire:loading.grid>
+            <span class="mx-auto simple-loader !text-green-dark"></span>
         </div>
 
-        <div class="flex flex-col">
+        <div wire:loading.remove>
             <livewire:key-exhibits.common-layout key="{{ now() }}" :selectedTab="$selectedTab" :company="$company"
                 :checkedCount="$checkedCount" :selectChecked="$selectChecked" />
         </div>

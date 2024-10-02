@@ -13,6 +13,7 @@ use Illuminate\Support\Facades\Storage;
 class GlobalSearch extends Component
 {
     public $history = [];
+    public $prevHistoryItem;
     public $suggestions = [];
     public $checklist = false;
 
@@ -88,7 +89,7 @@ class GlobalSearch extends Component
         $this->history = [];
     }
 
-    public function navigateTo($item)
+    public function navigateTo($item, $currentUrl = null)
     {
         $model = UserSearchHistory::where('user_id', Auth::user()->id)->first();
 
@@ -106,6 +107,11 @@ class GlobalSearch extends Component
             return $entry['ticker'] !== $item['ticker'];
         });
 
+        $this->prevHistoryItem = $history[0] ?? [
+            'ticker' => extractTickerFromUrl($currentUrl),
+            'name' => null
+        ];
+
         $history[] = [
             'name' => $item['name'],
             'ticker' => $item['ticker'],
@@ -115,9 +121,7 @@ class GlobalSearch extends Component
             $history = array_slice($history, -4);
         }
 
-        $history = array_reverse($history);
-
-        $model->history = $history;
+        $model->history = array_reverse($history);
         $model->save();
     }
 

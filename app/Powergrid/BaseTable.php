@@ -31,8 +31,11 @@ class BaseTable extends PowerGridComponent
             $footer->showPerPage($this->perPage, $this->perPageValues)->showRecordCount();
         }
 
+        $header = Header::make();
+        $header->withoutLoading()->includeViewOnTop('components.dot-loader');
+
         return [
-            Header::make(),
+            $header,
             $footer
         ];
     }
