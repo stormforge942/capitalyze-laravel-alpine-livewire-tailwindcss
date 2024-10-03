@@ -33,17 +33,24 @@ class GlobalSearch extends Component
 
     public function getSuggestions($searchString)
     {
-        $result = CompanyProfile::query()
-            ->select('symbol as ticker', 'registrant_name as name', 'website', 'average_daily_volume')
-            ->when($searchString, function ($query) use ($searchString) {
-                $term = '%' . $searchString . '%';
-
-                return $query->where(
-                    fn ($q) => $q->where('symbol', 'ilike', $term)
-                        ->orWhere('registrant_name', 'ilike', $term)
-                );
+        $result = CompanyProfile::selectRaw("
+                symbol as ticker,
+                registrant_name as name,
+                website,
+                average_daily_volume,
+                CASE
+                    WHEN symbol = ? THEN 100
+                    WHEN registrant_name = ? THEN 90
+                    WHEN symbol ILIKE ? THEN 50
+                    ELSE 10
+                END as relevance", [$searchString, $searchString, "%{$searchString}%"])
+            ->where(function($query) use ($searchString) {
+                // Search for partial matches on both symbol and registrant_name
+                $query->where('symbol', 'ILIKE', "%{$searchString}%")
+                    ->orWhere('registrant_name', 'ILIKE', "%{$searchString}%");
             })
-            ->orderBy('average_daily_volume', 'desc')
+            ->orderBy('relevance', 'desc')
+            ->orderByRaw('LENGTH(symbol)')
             ->limit(4)
             ->get()
             ->map(function ($item) {
