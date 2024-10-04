@@ -60,7 +60,7 @@
             <div class="flex justify-between items-center mt-2">
                 @if ($page > 1)
                     <button type="button"
-                        class="relative inline-flex gap-x-1 items-center rounded-md bg-white px-4 py-2 text-gray-400 ring-1 ring-inset ring-gray-300 hover:bg-gray-50 focus:z-10 disabled:opacity-80 disabled:cursor-not-allowed"
+                        class="relative inline-flex gap-x-1 items-center rounded-md bg-white px-4 py-2 ring-1 ring-inset ring-gray-300 hover:bg-gray-50 focus:z-10 disabled:opacity-80 disabled:cursor-not-allowed"
                         @click="$wire.prevPage">
                         <svg class="h-5 w-5" viewBox="0 0 20 20" fill="currentColor" aria-hidden="true"
                             data-slot="icon">
@@ -76,7 +76,7 @@
 
                 @if (count($table['data']) >= \App\Services\ScreenerTableBuilderService::TABLE_PER_PAGE)
                     <button type="button"
-                        class="relative inline-flex gap-x-1 items-center rounded-md bg-white px-4 py-2 text-gray-400 ring-1 ring-inset ring-gray-300 hover:bg-gray-50 focus:z-10 disabled:opacity-80 disabled:cursor-not-allowed"
+                        class="relative inline-flex gap-x-1 items-center rounded-md bg-white px-4 py-2 ring-1 ring-inset ring-gray-300 hover:bg-gray-50 focus:z-10 disabled:opacity-80 disabled:cursor-not-allowed"
                         @click="$wire.nextPage">
                         <span>Next</span>
                         <svg class="h-5 w-5" viewBox="0 0 20 20" fill="currentColor" aria-hidden="true"
