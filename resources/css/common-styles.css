@@ -179,3 +179,44 @@ table.data-alt tr:nth-child(odd):hover > td:first-child {
 #default-sidebar ul > li span {
     white-space: nowrap;
 }
+
+.children-border-right > * {
+    position: relative;
+    flex-grow: 1;
+}
+
+.children-border-right > *::after {
+    display: flex;
+    content: "";
+    position: absolute;
+    top: 50%;
+    left: 100%;
+    transform: translateY(-50%);
+    height: 16px;
+    width: 1px;
+    background-color: #d1d5db; /* Tailwind gray-300 color */
+}
+
+.children-border-right > *:last-child {
+    @apply border-r-0;
+}
+
+.children-border-right > *:last-child::after {
+    display: none;
+}
+
+.children-border-left > * {
+    position: relative;
+}
+
+.children-border-left > *::before {
+    display: flex;
+    content: "";
+    position: absolute;
+    top: 50%;
+    right: 100%;
+    transform: translateY(-50%);
+    height: 16px;
+    width: 1px;
+    background-color: #d1d5db; /* Tailwind gray-300 color */
+}

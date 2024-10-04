@@ -21,6 +21,9 @@ class Select extends Component
         public string $size = 'sm',
         public string $color = '#D4DDD7',
         public bool $nobutton = false,
+        public bool $teleport = false,
+        public bool $autoDisable = true,
+        public string $btnText = 'Show Result',
     ) {
         if (!$this->associativeArray($options)) {
             $this->options = array_reduce($options, function ($carry, $item) {

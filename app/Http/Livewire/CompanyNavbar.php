@@ -47,6 +47,7 @@ class CompanyNavbar extends Component
             'Events Tracker',
             'Insider Transactions',
             'Earnings Calendar',
+            'Screener'
         ];
 
         $companyResearchLinks = [
