@@ -95,9 +95,9 @@ class ScreenerTableBuilderService
     }
 
     public static function generateTableData(Builder $query, array $select_ = [], int $page = 1)
-    {
+    {        
         // get all unique company profiles
-        $result = $query->select(array_map(fn($item) => "c." . $item, static::DEFAULT_COLUMNS))
+        $result = $query->select(array_map(fn($item) => ("c." . $item), static::DEFAULT_COLUMNS))
             ->distinct()
             ->skip(($page - 1) * static::TABLE_PER_PAGE)
             ->take(static::TABLE_PER_PAGE)
@@ -109,12 +109,9 @@ class ScreenerTableBuilderService
 
         $select = [];
         $dates = [];
-        $periods = [];
 
         foreach ($select_ as $item) {
             $select[$item['column']] = $item['column'];
-
-            $periods['quarter'] = is_array($item['date']) ? 'quarter' : 'annual';
 
             $dates[implode('-', Arr::wrap($item['date']))] = $item['date'];
         }
@@ -131,8 +128,24 @@ class ScreenerTableBuilderService
             ->table('standardized_new')
             ->whereIn('ticker', $result->pluck('symbol')->toArray())
             ->select($select)
-            ->whereIn('period_type', array_keys($periods))
-            ->whereIn('year', array_values($dates))
+            ->where(function ($query) use ($dates) {
+                foreach ($dates as $date) {
+                    if (is_array($date)) {
+                        $query->orWhere([
+                            'year' => $date[0],
+                            'quarter' => $date[1],
+                            'period_type' => 'quarter',
+                        ]);
+                    } else {
+                        $query->orWhere([
+                            'year' => $date,
+                            'period_type' => 'annual',
+                        ]);
+                    }
+                }
+
+                return $query;
+            })
             ->get()
             ->groupBy('ticker');
 
@@ -213,8 +226,9 @@ class ScreenerTableBuilderService
             }
         }
 
-        return (array) $query->join('standardized_new as s1', 's.ticker', '=', 's1.ticker')
+        return (array) $query
             ->select($columns)
+            ->join('standardized_new as s1', 's.ticker', '=', 's1.ticker')
             ->first();
     }
 

@@ -68,12 +68,12 @@ class Table extends Component
             $query = ScreenerTableBuilderService::makeQuery($this->universal, $this->financial);
 
             $this->table['data'] = ScreenerTableBuilderService::generateTableData(
-                $query,
+                $query->clone(),
                 $this->columns,
                 $this->page,
             );
 
-            $this->refreshSummary($this->summaries, $query);
+            $this->refreshSummary($this->summaries, $query->clone());
         }
 
         $this->loaded = true;
