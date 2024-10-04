@@ -2,14 +2,12 @@
 
 namespace App\Http\Livewire\Screener;
 
-use Carbon\Carbon;
 use Livewire\Component;
 use App\Models\ScreenerTab;
 use Illuminate\Support\Str;
 use App\Models\CompanyProfile;
 use App\Services\ScreenerTableBuilderService;
 use Illuminate\Validation\Rule;
-use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Cache;
 use Illuminate\Support\Facades\Validator;
 
@@ -29,11 +27,8 @@ class Page extends Component
     public $tab = null;
     public $options = null;
 
-    public $selectedView = 'default';
-
     public $universalCriteria = null;
     public $financialCriteria = null;
-    public $views = null;
     public $summaries = [];
 
     public $data = null;
@@ -41,6 +36,8 @@ class Page extends Component
     public $result = null;
 
     private $tabCriterias = null;
+
+    public ?array $view = null;
 
     protected $listeners = [
         'tabChanged',
@@ -73,15 +70,24 @@ class Page extends Component
             ]);
         }
 
-
         return view('livewire.screener.page', [
-            'dates' => $this->generateDates(),
+            'dates' => ScreenerTableBuilderService::dataDateRange(),
             '_options' => [
                 'summaries' => self::SUMMARIES,
                 'operators' => self::OPERATORS,
             ],
             'tabCriterias' => $this->tabCriterias,
         ]);
+    }
+
+    public function updatedSummaries($value)
+    {
+        ScreenerTab::query()
+            ->where('user_id', auth()->id())
+            ->where('id', $this->tab['id'])
+            ->update(['summaries' => $value]);
+
+        $this->emitTo(Table::class, 'refreshSummary', $value);
     }
 
     public function tabChanged($tab_)
@@ -100,16 +106,23 @@ class Page extends Component
             'stock_exchanges' => data_get($universalCriteria, 'stock_exchanges', $empty),
             'industries' => data_get($universalCriteria, 'industries', $empty),
             'sectors' => data_get($universalCriteria, 'sectors', $empty),
-            'market_cap' => data_get($universalCriteria, 'market_cap', [null, null]),
+            'market_cap' => data_get($universalCriteria, 'market_cap', null),
         ];
 
         $this->financialCriteria = $tab->financial_criteria ?? [];
 
         $this->summaries = $tab->summaries ?? [];
 
-        $this->views = $tab->views ?? [];
-
         $this->tabCriterias = ScreenerTableBuilderService::resolveValidCriterias($this->universalCriteria, $this->financialCriteria);
+
+        $this->view = null;
+
+        foreach (collect($tab->views ?? []) as $view) {
+            if ($view['id'] === $tab->view) {
+                $this->view = $view;
+                break;
+            }
+        }
     }
 
     public function generateResult()
@@ -134,7 +147,7 @@ class Page extends Component
             'universal_criteria.industries.exclude' => ['required', 'boolean'],
             'universal_criteria.industries.data' => ['nullable', 'array'],
             'universal_criteria.industries.data.*' => ['string'],
-            'universal_criteria.market_cap' => ['required', 'array', 'min:2', 'max:2'],
+            'universal_criteria.market_cap' => ['nullable', 'array', 'min:2', 'max:2'],
             'universal_criteria.market_cap.*' => ['nullable', 'numeric'],
 
             'financial_criteria' => ['nullable', 'array'],
@@ -173,59 +186,5 @@ class Page extends Component
         $result = ScreenerTableBuilderService::resolveValidCriterias($attributes['universal_criteria'], $attributes['financial_criteria']);
 
         $this->emitTo(Table::class, 'refreshTable', $result['universal'], $result['financial'], $attributes['summaries']);
-    }
-
-    private function generateDates()
-    {
-        $cacheKey = 'screener_min_dates';
-        $dates = Cache::remember(
-            $cacheKey,
-            now()->addDay(),
-            fn() => DB::connection('pgsql-xbrl')
-                ->table('standardized_new')
-                ->select('period_type', DB::raw('min(year) as year'))
-                ->groupBy('period_type')
-                ->pluck('year', 'period_type')
-        );
-
-        $currentYear = Carbon::now()->year;
-
-        return [
-            'annual' => $this->generateAnnualDates($dates['annual'] ?? $currentYear),
-            'quarter' => $this->generateQuarterlyDates($dates['quarter'] ?? $currentYear),
-        ];
-    }
-
-    private function generateAnnualDates(int $startYear)
-    {
-        $dates = [];
-        $currentYear = Carbon::now()->year;
-
-        for ($i = $startYear; $i <= $currentYear; $i++) {
-            $dates[] = 'FY ' . $i;
-        }
-
-        return array_reverse($dates);
-    }
-
-    private function generateQuarterlyDates(int $startYear)
-    {
-        $dates = [];
-        $currentYear =  Carbon::now()->year;
-
-        for ($i = $startYear; $i < $currentYear; $i++) {
-            $dates[] = 'Q1 ' . $i;
-            $dates[] = 'Q2 ' . $i;
-            $dates[] = 'Q3 ' . $i;
-            $dates[] = 'Q4 ' . $i;
-        }
-
-        $currentQuarter = Carbon::now()->quarter;
-
-        foreach (range(1, $currentQuarter) as $quarter) {
-            $dates[] = 'Q' . $quarter . ' ' . $currentYear;
-        }
-
-        return array_reverse($dates);
     }
 }

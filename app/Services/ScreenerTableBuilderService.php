@@ -2,12 +2,84 @@
 
 namespace App\Services;
 
+use Illuminate\Support\Arr;
+use Illuminate\Support\Carbon;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Cache;
 use Illuminate\Database\Query\Builder;
 
 class ScreenerTableBuilderService
 {
-    const TABLE_PER_PAGE = 20;
+    public const TABLE_PER_PAGE = 20;
+
+    private const DEFAULT_COLUMNS = [
+        'symbol',
+        'registrant_name',
+        'country',
+        'exchange',
+        'sic_group',
+        'sic_description',
+    ];
+
+    public static function options($flattened = false)
+    {
+        $options = config('capitalyze.standardized_metrics');
+
+        if (!$flattened) {
+            return $options;
+        }
+
+        $flattenedOptions = [];
+
+        foreach ($options as $option) {
+            if ($option['has_children']) {
+                foreach ($option['items'] as $items) {
+                    foreach ($items as $key => $item) {
+                        $flattenedOptions[$key] = $item;
+                    }
+                }
+            } else {
+                foreach ($option['items'] as $key => $item) {
+                    $flattenedOptions[$key] = $item;
+                }
+            }
+        }
+
+        return $flattenedOptions;
+    }
+
+    public static function viewOptions($flattened = false)
+    {
+        $options = [];
+
+        foreach (config('capitalyze.standardized_metrics') as $option) {
+            $item = [
+                'title' => $option['title'],
+            ];
+
+            if ($option['has_children']) {
+                $item['items'] = collect(array_values($option['items']))->reduce(fn($c, $i) => array_merge($c, $i), []);
+            } else {
+                $item['items'] = $option['items'];
+            }
+
+            $options[] = $item;
+        }
+
+        if (!$flattened) {
+            return $options;
+        }
+
+        $flattenedOptions = [];
+
+        foreach ($options as $option) {
+            foreach ($option['items'] as $key => $item) {
+                $flattenedOptions[$key] = $item;
+            }
+        }
+
+        return $flattenedOptions;
+    }
 
     public static function makeQuery(array $universalCriteria, array $financialCriteria): Builder
     {
@@ -22,49 +94,128 @@ class ScreenerTableBuilderService
         return $query;
     }
 
-    public static function generateTableData(Builder $query, array $select, int $page = 1)
+    public static function generateTableData(Builder $query, array $select_ = [], int $page = 1)
     {
-        return $query
-            ->select($select)
+        // get all unique company profiles
+        $result = $query->select(array_map(fn($item) => "c." . $item, static::DEFAULT_COLUMNS))
+            ->distinct()
             ->skip(($page - 1) * static::TABLE_PER_PAGE)
             ->take(static::TABLE_PER_PAGE)
+            ->get();
+
+        if (!count($select_)) {
+            return $result->map(fn($item) => (array) $item)->toArray();
+        }
+
+        $select = [];
+        $dates = [];
+        $periods = [];
+
+        foreach ($select_ as $item) {
+            $select[$item['column']] = $item['column'];
+
+            $periods['quarter'] = is_array($item['date']) ? 'quarter' : 'annual';
+
+            $dates[implode('-', Arr::wrap($item['date']))] = $item['date'];
+        }
+
+        $select = [
+            'ticker',
+            'year',
+            'quarter',
+            'period_type',
+            ...array_values($select),
+        ];
+
+        $standardData = DB::connection('pgsql-xbrl')
+            ->table('standardized_new')
+            ->whereIn('ticker', $result->pluck('symbol')->toArray())
+            ->select($select)
+            ->whereIn('period_type', array_keys($periods))
+            ->whereIn('year', array_values($dates))
             ->get()
-            ->map(fn($item) => (array) $item)
-            ->toArray();
+            ->groupBy('ticker');
+
+        $returnable = [];
+
+        foreach ($result as $item) {
+            $dates = [];
+
+            $_data = $standardData
+                ->get($item->symbol)
+                ?->map(function ($i) {
+                    $i = (array) $i;
+                    unset($i['ticker']);
+                    return $i;
+                })
+                ?->toArray() ?? [];
+
+            $data = [];
+            foreach ($_data as $value) {
+                $keys = array_filter(array_keys($value), fn($key) => in_array(substr($key, 0, 3), ['si_', 'is_', 'bs_', 'cf_', 'ra_']));
+
+                foreach ($keys as $key) {
+                    if ($value['period_type'] === 'annual') {
+                        $data[$key . "_" . $value['year']] = $value[$key];
+                    }
+
+                    if ($value['period_type'] === 'quarter') {
+                        $data[$key . "_" . $value['year'] . "_" . $value['quarter']] = $value[$key];
+                    }
+                }
+            }
+
+            $returnable[] = [
+                ...((array) $item),
+                'standard_data' => $data,
+            ];
+        }
+
+        return $returnable;
     }
 
-    public static function generateSummary(Builder $query, array $summaries, array $select)
+    public static function generateSummary(Builder $query, array $summaries, array $select = [])
     {
+        if (!count($select)) {
+            return [];
+        }
+
         $columns = [];
 
         foreach ($summaries as $summary) {
-            foreach ($select as $column) {
-                if (!str_starts_with("s.", $column)) continue;
+            foreach ($select as $item) {
+                $column = "s1." . $item['column'];
 
-                $label = explode('.', $column)[1];
+                $date = $item['date'];
+
+                $where = is_array($date)
+                    ? "s1.period_type='quarter' AND s1.year={$date[0]} AND s1.quarter={$date[1]}"
+                    : "s1.period_type='annual' AND s1.year={$date}";
 
                 switch ($summary) {
                     case 'Min':
-                        $columns[] = DB::raw("MIN({$column}) as {$label}_min");
+                        $label = $item['accessor'] . "_min";
+                        $columns[] = DB::raw("MIN({$column}) FILTER (WHERE {$where}) as {$label}");
                         break;
                     case 'Max':
-                        $columns[] = DB::raw("MAX({$column}) as {$label}_max");
+                        $label = $item['accessor'] . "_max";
+                        $columns[] = DB::raw("MAX({$column}) FILTER (WHERE {$where}) as {$label}");
                         break;
-                    case 'Avg':
-                        $columns[] = DB::raw("AVG({$column}) as {$label}_avg");
+                    case 'Sum':
+                        $label = $item['accessor'] . "_sum";
+                        $columns[] = DB::raw("SUM({$column}) FILTER (WHERE {$where}) as {$label}");
                         break;
                     case 'Median':
-                        $columns[] = DB::raw("PERCENTILE_CONT(0.5) WITHIN GROUP (ORDER BY {$column}) AS {$label}_median");
+                        $label = $item['accessor'] . "_median";
+                        $columns[] = DB::raw("PERCENTILE_CONT(0.5) WITHIN GROUP (ORDER BY {$column}) FILTER (WHERE {$where}) AS {$label}");
                         break;
                 }
             }
         }
 
-        return $query
+        return (array) $query->join('standardized_new as s1', 's.ticker', '=', 's1.ticker')
             ->select($columns)
-            ->get()
-            ->map(fn($item) => (array) $item)
-            ->toArray();
+            ->first();
     }
 
     private static function applyUniversalCriteria(Builder $query, array $criterias)
@@ -110,7 +261,7 @@ class ScreenerTableBuilderService
 
     private static function applyFinancialCriteria(Builder $query_, array $criterias)
     {
-        $options = ChartBuilderService::options(true);
+        $options = static::options(true);
 
         foreach ($criterias as $criteria) {
             $key = $criteria['metric'] . '.mapping.' . ($criteria['type'] === 'value' ? 'self' : 'yoy_change');
@@ -129,7 +280,7 @@ class ScreenerTableBuilderService
                         ->map(fn($date) => intval(explode(' ', $date)[1]))
                         ->toArray();
 
-                    $query->whereIn('year', $dates);
+                    $query->whereIn('s.year', $dates);
                 } else {
                     $dates = collect(($criteria['dates'] ?? []))
                         ->map(function ($date) {
@@ -141,10 +292,12 @@ class ScreenerTableBuilderService
 
                     $query->where(function ($q) use ($dates) {
                         foreach ($dates as $date) {
-                            $q->orWhere(fn($q1) => $q1->where('year', $date[0])->where('quarter', $date[1]));
+                            $q->orWhere(fn($q1) => $q1->where('s.year', $date[0])->where('s.quarter', $date[1]));
                         }
                     });
                 }
+
+                $query->whereNotNull($column);
 
                 switch ($criteria['operator']) {
                     case '>':
@@ -180,7 +333,6 @@ class ScreenerTableBuilderService
         }
     }
 
-
     public static function resolveValidCriterias(array $universalCriteria_, array $financialCriteria_)
     {
         $universalCriteria = [];
@@ -208,6 +360,99 @@ class ScreenerTableBuilderService
             'universal' => $universalCriteria,
             'financial' => $financialCriteria,
         ];
+    }
+
+    public static function dataDateRange()
+    {
+        $cacheKey = 'screener_min_dates';
+        $dates = Cache::remember(
+            $cacheKey,
+            now()->addDay(),
+            fn() => DB::connection('pgsql-xbrl')
+                ->table('standardized_new')
+                ->select('period_type', DB::raw('min(year) as year'))
+                ->groupBy('period_type')
+                ->pluck('year', 'period_type')
+        );
+
+        $currentYear = Carbon::now()->year;
+
+        return [
+            'annual' => static::generateAnnualDates($dates['annual'] ?? $currentYear),
+            'quarter' => static::generateQuarterlyDates($dates['quarter'] ?? $currentYear),
+        ];
+    }
+
+    private static function mapSelectColumns(array $columns, string $append = "")
+    {
+        $options = static::options(true);
+
+        $select = [];
+
+        foreach ($columns as $column_) {
+            $key = $column_['metric'] . '.mapping.' . ($column_['type'] === 'value' ? 'self' : 'yoy_change');
+
+            $column = data_get($options, $key);
+
+            if (!$column) continue;
+
+            $dates = [];
+
+            foreach ($column_['dates'] as $date) {
+                switch ($column_['period']) {
+                    case "annual":
+                        $dates[] = (int) explode(" ", $date)[1];
+                        break;
+
+                    case "quarter":
+                        [$quarter, $year] = explode(" ", $date);
+                        $quarter = (int) ltrim($quarter, "Q");
+
+                        $dates[] = [(int) $year, (int) $quarter];
+                }
+            }
+
+            $select[] = [
+                "column" => $append . $column,
+                "period" => $column_['period'],
+                "dates" => $dates,
+            ];
+        }
+
+        return $select;
+    }
+
+    private static function generateAnnualDates(int $startYear)
+    {
+        $dates = [];
+        $currentYear = Carbon::now()->year;
+
+        for ($i = $startYear; $i <= $currentYear; $i++) {
+            $dates[] = 'FY ' . $i;
+        }
+
+        return array_reverse($dates);
+    }
+
+    private static function generateQuarterlyDates(int $startYear)
+    {
+        $dates = [];
+        $currentYear =  Carbon::now()->year;
+
+        for ($i = $startYear; $i < $currentYear; $i++) {
+            $dates[] = 'Q1 ' . $i;
+            $dates[] = 'Q2 ' . $i;
+            $dates[] = 'Q3 ' . $i;
+            $dates[] = 'Q4 ' . $i;
+        }
+
+        $currentQuarter = Carbon::now()->quarter;
+
+        foreach (range(1, $currentQuarter) as $quarter) {
+            $dates[] = 'Q' . $quarter . ' ' . $currentYear;
+        }
+
+        return array_reverse($dates);
     }
 
     private static function range($min, $max)

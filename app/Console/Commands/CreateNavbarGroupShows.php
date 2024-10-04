@@ -43,6 +43,7 @@ class CreateNavbarGroupShows extends Command
                 'insider-transactions',
                 'event-filings',
                 'earnings-calendar',
+                'screener',
                 'economics-calendar',
                 'delistings',
                 'etf-filings',

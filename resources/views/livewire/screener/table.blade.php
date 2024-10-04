@@ -1,61 +1,98 @@
-<div class="mt-11 overflow-x-auto" x-init="@if (!$loaded) $wire.load() @endif">
-    @if ($table['data'] || !$loaded)
-        <table class="table power-grid-table w-full bg-white rounded-md overflow-clip text-left">
-            <thead class="font-sm font-semibold capitalize bg-[#EDEDED] rounded-t-md">
-                <tr>
-                    <th class="pl-6 py-2 text-dark whitespace-nowrap">Ticker</th>
-                    <th class="pl-6 py-2 text-dark whitespace-nowrap">Name</th>
-                    <th class="pl-6 py-2 text-dark whitespace-nowrap">Location</th>
-                    <th class="pl-6 py-2 text-dark whitespace-nowrap">Exchange</th>
-                    <th class="pl-6 py-2 text-dark whitespace-nowrap">Industry</th>
-                    <th class="pl-6 py-2 text-dark whitespace-nowrap">Sector</th>
-                    <th class="pl-6 py-2 text-dark whitespace-nowrap">Maket Cap</th>
-                </tr>
-            </thead>
-            <tbody class="{{ !$loaded ? 'animate-pulse' : '' }}">
-                @if ($loaded)
-                    @foreach ($table['data'] as $row)
+<div x-init="@if (!$loaded) $wire.load() @endif" x-data="{
+    summaryAt: localStorage.getItem('screener-summary-at') || 'top',
+    toggleSummary() {
+        this.summaryAt = this.summaryAt === 'top' ? 'bottom' : 'top';
+
+        localStorage.setItem('screener-summary-at', this.summaryAt);
+    }
+}">
+    @if ($loaded && count($universal) + count($summaries))
+        <div wire:loading.remove>
+            <div class="overflow-x-auto">
+                <table class="table power-grid-table w-full bg-white rounded-b-md overflow-clip text-left" wire:key="{{ \Str::random(5) }}">
+                    <thead class="font-sm font-semibold capitalize bg-[#EDEDED] rounded-t-md">
                         <tr>
-                            <td class="pl-6 py-4 whitespace-nowrap">{{ $row['symbol'] }}</td>
-                            <td class="pl-6 py-4 whitespace-nowrap">{{ $row['registrant_name'] }}</td>
-                            <td class="pl-6 py-4 whitespace-nowrap">{{ $row['country'] }}</td>
-                            <td class="pl-6 py-4 whitespace-nowrap">{{ $row['exchange'] }}</td>
-                            <td class="pl-6 py-4 whitespace-nowrap">{{ $row['sic_group'] }}</td>
-                            <td class="pl-6 py-4 whitespace-nowrap">{{ $row['sic_description'] }}</td>
-                            <td class="pl-6 pr-6 py-4 whitespace-nowrap">--</td>
+                            <th class="pl-6 py-2 text-dark whitespace-nowrap">Ticker</th>
+                            <th class="pl-6 py-2 text-dark whitespace-nowrap">Name</th>
+                            <th class="pl-6 py-2 text-dark whitespace-nowrap">Location</th>
+                            <th class="pl-6 py-2 text-dark whitespace-nowrap">Exchange</th>
+                            <th class="pl-6 py-2 text-dark whitespace-nowrap">Industry</th>
+                            <th class="pl-6 py-2 text-dark whitespace-nowrap">Sector</th>
+                            <th class="pl-6 last:pr-6 py-2 text-dark whitespace-nowrap">Maket Cap</th>
+                            @foreach ($columns as $column)
+                                <th class="pl-6 last:pr-6 py-2 text-dark whitespace-nowrap">{!! $column['title'] !!}</th>
+                            @endforeach
                         </tr>
-                    @endforeach
+                    </thead>
+
+                    @include('livewire.screener.table-summary', ['for' => 'top'])
+
+                    <tbody class="[&>tr]:border-b-2 [&>tr]:border-gray-light font-semibold">
+                        @foreach ($table['data'] as $row)
+                            <tr class="last:border-0">
+                                <td class="pl-6 py-4 whitespace-nowrap">{{ $row['symbol'] }}</td>
+                                <td class="pl-6 py-4 whitespace-nowrap">{{ $row['registrant_name'] }}</td>
+                                <td class="pl-6 py-4 whitespace-nowrap">{{ $row['country'] }}</td>
+                                <td class="pl-6 py-4 whitespace-nowrap">{{ $row['exchange'] }}</td>
+                                <td class="pl-6 py-4 whitespace-nowrap">{{ $row['sic_group'] }}</td>
+                                <td class="pl-6 py-4 whitespace-nowrap">{{ $row['sic_description'] }}</td>
+                                <td class="pl-6 last:pr-6 py-4 whitespace-nowrap">N/A</td>
+                                @foreach ($columns as $column)
+                                    <td class="pl-6 last:pr-6 py-4 whitespace-nowrap">
+                                        @if (isset($row['standard_data'][$column['accessor']]) && !is_null($row['standard_data'][$column['accessor']]))
+                                            <span
+                                                :data-tooltip-content="{{ $row['standard_data'][$column['accessor']] }}">
+                                                {{ number_format($row['standard_data'][$column['accessor']], 3) }}
+                                            </span>
+                                        @else
+                                            N/A
+                                        @endif
+                                    </td>
+                                @endforeach
+                            </tr>
+                        @endforeach
+                    </tbody>
+
+                    @include('livewire.screener.table-summary', ['for' => 'bottom'])
+                </table>
+            </div>
+
+            <div class="flex justify-between items-center mt-2">
+                @if ($page > 1)
+                    <button type="button"
+                        class="relative inline-flex gap-x-1 items-center rounded-md bg-white px-4 py-2 text-gray-400 ring-1 ring-inset ring-gray-300 hover:bg-gray-50 focus:z-10 disabled:opacity-80 disabled:cursor-not-allowed"
+                        @click="$wire.prevPage">
+                        <svg class="h-5 w-5" viewBox="0 0 20 20" fill="currentColor" aria-hidden="true"
+                            data-slot="icon">
+                            <path fill-rule="evenodd"
+                                d="M11.78 5.22a.75.75 0 0 1 0 1.06L8.06 10l3.72 3.72a.75.75 0 1 1-1.06 1.06l-4.25-4.25a.75.75 0 0 1 0-1.06l4.25-4.25a.75.75 0 0 1 1.06 0Z"
+                                clip-rule="evenodd" />
+                        </svg>
+                        <span>Previous</span>
+                    </button>
                 @else
-                    @foreach (range(1, 10) as $row)
-                        <tr>
-                            <td class="pl-6 py-4 whitespace-nowrap">
-                                <p class="h-4 w-full bg-gray-300 rounded"></p>
-                            </td>
-                            <td class="pl-6 py-4 whitespace-nowrap">
-                                <p class="h-4 w-full bg-gray-300 rounded"></p>
-                            </td>
-                            <td class="pl-6 py-4 whitespace-nowrap">
-                                <p class="h-4 w-full bg-gray-300 rounded"></p>
-                            </td>
-                            <td class="pl-6 py-4 whitespace-nowrap">
-                                <p class="h-4 w-full bg-gray-300 rounded"></p>
-                            </td>
-                            <td class="pl-6 py-4 whitespace-nowrap">
-                                <p class="h-4 w-full bg-gray-300 rounded"></p>
-                            </td>
-                            <td class="pl-6 py-4 whitespace-nowrap">
-                                <p class="h-4 w-full bg-gray-300 rounded"></p>
-                            </td>
-                            <td class="pl-6 pr-6 py-4 whitespace-nowrap">
-                                <p class="h-4 w-full bg-gray-300 rounded"></p>
-                            </td>
-                        </tr>
-                    @endforeach
+                    <span></span>
                 @endif
-            </tbody>
-        </table>
+
+                @if (count($table['data']) >= \App\Services\ScreenerTableBuilderService::TABLE_PER_PAGE)
+                    <button type="button"
+                        class="relative inline-flex gap-x-1 items-center rounded-md bg-white px-4 py-2 text-gray-400 ring-1 ring-inset ring-gray-300 hover:bg-gray-50 focus:z-10 disabled:opacity-80 disabled:cursor-not-allowed"
+                        @click="$wire.nextPage">
+                        <span>Next</span>
+                        <svg class="h-5 w-5" viewBox="0 0 20 20" fill="currentColor" aria-hidden="true"
+                            data-slot="icon">
+                            <path fill-rule="evenodd"
+                                d="M8.22 5.22a.75.75 0 0 1 1.06 0l4.25 4.25a.75.75 0 0 1 0 1.06l-4.25 4.25a.75.75 0 0 1-1.06-1.06L11.94 10 8.22 6.28a.75.75 0 0 1 0-1.06Z"
+                                clip-rule="evenodd" />
+                        </svg>
+                    </button>
+                @else
+                    <span></span>
+                @endif
+            </div>
+        </div>
     @else
-        <div class="grid place-items-center py-24">
+        <div class="grid place-items-center py-24" wire:loading.remove>
             <svg width="168" height="164" viewBox="0 0 168 164" fill="none" xmlns="http://www.w3.org/3000/svg">
                 <g clip-path="url(#clip0_8757_81677)">
                     <path
@@ -96,7 +133,51 @@
                 </defs>
             </svg>
             <p class="mt-6 text-xl font-bold">No Data</p>
-            <p class="mt-2 text-md">There are no available data at the moment.</p>
+            <p class="mt-2 text-md">Please select criterias and summaries to generate the table</p>
         </div>
     @endif
+
+    <div class="overflow-x-auto" wire:loading.grid>
+        <table class="table power-grid-table w-full bg-white rounded-b-md overflow-clip text-left">
+            <thead class="font-sm font-semibold capitalize bg-[#EDEDED] rounded-t-md">
+                <tr>
+                    <th class="pl-6 py-2 text-dark whitespace-nowrap">Ticker</th>
+                    <th class="pl-6 py-2 text-dark whitespace-nowrap">Name</th>
+                    <th class="pl-6 py-2 text-dark whitespace-nowrap">Location</th>
+                    <th class="pl-6 py-2 text-dark whitespace-nowrap">Exchange</th>
+                    <th class="pl-6 py-2 text-dark whitespace-nowrap">Industry</th>
+                    <th class="pl-6 py-2 text-dark whitespace-nowrap">Sector</th>
+                    <th class="pl-6 py-2 text-dark whitespace-nowrap">Maket Cap</th>
+                </tr>
+            </thead>
+
+            <tbody class="animate-pulse">
+                @foreach (range(1, 10) as $idx)
+                    <tr>
+                        <td class="pl-6 py-4 whitespace-nowrap">
+                            <p class="h-4 w-full bg-gray-300 rounded"></p>
+                        </td>
+                        <td class="pl-6 py-4 whitespace-nowrap">
+                            <p class="h-4 w-full bg-gray-300 rounded"></p>
+                        </td>
+                        <td class="pl-6 py-4 whitespace-nowrap">
+                            <p class="h-4 w-full bg-gray-300 rounded"></p>
+                        </td>
+                        <td class="pl-6 py-4 whitespace-nowrap">
+                            <p class="h-4 w-full bg-gray-300 rounded"></p>
+                        </td>
+                        <td class="pl-6 py-4 whitespace-nowrap">
+                            <p class="h-4 w-full bg-gray-300 rounded"></p>
+                        </td>
+                        <td class="pl-6 py-4 whitespace-nowrap">
+                            <p class="h-4 w-full bg-gray-300 rounded"></p>
+                        </td>
+                        <td class="pl-6 pr-6 py-4 whitespace-nowrap">
+                            <p class="h-4 w-full bg-gray-300 rounded"></p>
+                        </td>
+                    </tr>
+                @endforeach
+            </tbody>
+        </table>
+    </div>
 </div>

@@ -20,6 +20,7 @@ return new class extends Migration
             $table->json('financial_criteria')->nullable();
             $table->json('summaries')->nullable();
             $table->json('views')->nullable();
+            $table->string('view')->nullable();
             $table->foreignId('user_id')->constrained('users');
             $table->timestamps();
         });

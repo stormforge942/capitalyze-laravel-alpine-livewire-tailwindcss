@@ -1,5 +1,16 @@
 <div class="py-3 flex items-center flex-1 border border-[#D4DDD7] rounded-lg children-border-right max-w-[1230px]"
-    x-init="$watch('criteria.type', () => criteria.dates = [])">
+    x-data="{
+        flattenedMetrics: @js($flattenedMetrics),
+        init() {
+            this.$watch('criteria.metric', () => {
+                criteria.type = 'value'
+            })
+    
+            this.$watch('criteria.type', () => {
+                criteria.dates = []
+            })
+        }
+    }">
     <div class="flex-none px-4" x-data="{
         search: '',
         options: [],
@@ -81,9 +92,7 @@
         get pillText() {
             if (!this.value) return 'Choose Data';
     
-            const flattened = @js($flattenedMetrics);
-    
-            return flattened[this.value].title;
+            return flattenedMetrics[this.value].title;
         },
         get subOptions() {
             if (!this.activeOption) {
@@ -197,26 +206,31 @@
                                 </template>
                             </div>
                         </template>
-                        <p class="text-gray-500" x-show="!options.length && search.length" x-cloak>
-                            No metrics found for the search
-                        </p>
+                        <template x-if="!options.length && search.length">
+                            <p class="text-gray-500">
+                                No metrics found for the search
+                            </p>
+                        </template>
                     </div>
 
-                    <div x-show="options.length" x-cloak>
-                        <div class="font-semibold" x-text="!activeOption ? '' : activeOption[activeOption.length - 1]">
-                        </div>
-                        <div class="mt-2 space-y-2 overflow-y-auto show-scrollbar" style="max-height: 310px">
-                            <template x-for="(option, value) in subOptions" :key="value">
-                                <label
-                                    class="p-4 flex items-center gap-x-4 cursor-pointer hover:bg-gray-100 rounded-lg">
-                                    <input type="radio" name="metrics" :value="value" x-model="tmpValue"
-                                        class="custom-radio border-dark focus:ring-0" />
+                    <template x-if="options.length">
+                        <div>
+                            <div class="font-semibold"
+                                x-text="!activeOption ? '' : activeOption[activeOption.length - 1]">
+                            </div>
+                            <div class="mt-2 space-y-2 overflow-y-auto show-scrollbar" style="max-height: 310px">
+                                <template x-for="(option, value) in subOptions" :key="value">
+                                    <label
+                                        class="p-4 flex items-center gap-x-4 cursor-pointer hover:bg-gray-100 rounded-lg">
+                                        <input type="radio" name="metrics" :value="value" x-model="tmpValue"
+                                            class="custom-radio border-dark focus:ring-0" />
 
-                                    <span x-text="option.title"></span>
-                                </label>
-                            </template>
+                                        <span x-text="option.title"></span>
+                                    </label>
+                                </template>
+                            </div>
                         </div>
-                    </div>
+                    </template>
                 </div>
 
                 <div class="mt-2 p-6 border-t">
@@ -230,13 +244,24 @@
         </x-dropdown>
     </div>
 
-    <div class="flex-none">
-        <x-select class="px-4" placeholder="Choose Data Type" :options="['value' => 'Value', 'changeYoY' => '% Change YoY']" x-model="criteria.type"
-            x-show="criteria.metric" :auto-disable="false" btn-text="Done"></x-select>
-    </div>
+    <template x-if="criteria.metric && flattenedMetrics[criteria.metric].mapping.yoy_change">
+        <div class="flex-none">
+            <x-select class="px-4" placeholder="Choose Data Type" :options="['value' => 'Value', 'changeYoY' => '% Change YoY']" x-model="criteria.type"
+                :auto-disable="false" btn-text="Done"></x-select>
+        </div>
+    </template>
 
-    <x-select class="flex-none px-4" placeholder="Choose Period" :options="['annual' => 'Fiscal Annual', 'quarter' => 'Fiscal Quarterly']" x-model="criteria.period"
-        x-show="criteria.metric" :auto-disable="false" btn-text="Done"></x-select>
+    <template x-if="criteria.metric && !flattenedMetrics[criteria.metric].mapping.yoy_change">
+        <div class="flex-none">
+            <x-select class="px-4" placeholder="Choose Data Type" :options="['value' => 'Value']" x-model="criteria.type"
+                :auto-disable="false" btn-text="Done"></x-select>
+        </div>
+    </template>
+
+    <template x-if="criteria.metric">
+        <x-select class="flex-none px-4" placeholder="Choose Period" :options="['annual' => 'Fiscal Annual', 'quarter' => 'Fiscal Quarterly']" x-model="criteria.period"
+            :auto-disable="false" btn-text="Done"></x-select>
+    </template>
 
     <template x-if="criteria.metric && criteria.period === 'annual'">
         <x-select class="flex-none px-4" placeholder="Dates" :options="$dates['annual']" x-model="criteria.dates"

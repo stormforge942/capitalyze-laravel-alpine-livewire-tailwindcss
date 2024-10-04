@@ -1,9 +1,9 @@
 <?php
-$metrics = App\Services\ChartBuilderService::options();
-$flattenedMetrics = App\Services\ChartBuilderService::options(true);
+$metrics = App\Services\ScreenerTableBuilderService::options();
+$flattenedMetrics = App\Services\ScreenerTableBuilderService::options(true);
 ?>
 
-<div wire:key="{{ \Str::random(5) }}" x-cloak>
+<div x-cloak>
     <div>
         <h1 class="text-xl font-bold">Screener</h1>
         <p class="mt-2 text-dark-light2">Recent filings of all companies</p>
@@ -17,7 +17,7 @@ $flattenedMetrics = App\Services\ChartBuilderService::options(true);
         <div class="mt-6" x-data="{
             universalCriteria: $wire.entangle('universalCriteria', true),
             financialCriteria: $wire.entangle('financialCriteria', true),
-            summaries: $wire.entangle('summaries', true),
+            summaries: $wire.entangle('summaries'),
             get disabledGetResultButton() {
                 return false
             },
@@ -27,7 +27,7 @@ $flattenedMetrics = App\Services\ChartBuilderService::options(true);
                     stock_exchanges: { data: [], exclude: false },
                     industries: { data: [], exclude: false },
                     sectors: { data: [], exclude: false },
-                    market_cap: [null, null],
+                    market_cap: null,
                 };
             },
             removeFinancialCriteria(id) {
@@ -163,7 +163,7 @@ $flattenedMetrics = App\Services\ChartBuilderService::options(true);
                                 value: null,
                             });
                         }
-                    }">
+                    }" wire:ignore>
                         <template x-for="(criteria, index) in criterias" :key="criteria.id">
                             <div class="flex items-center gap-x-4">
                                 @include('livewire.screener.financial-criteria')
@@ -185,21 +185,26 @@ $flattenedMetrics = App\Services\ChartBuilderService::options(true);
                     </div>
                 </div>
                 <div>
-                    <button :disabled="disabledGetResultButton" @click="getResult"
-                        class="absolute left-1/2 transform -translate-x-1/2 -bottom-6 px-10 py-3 rounded-lg bg-dark hover:bg-dark-light2 font-bold text-white flex justify-between items-center gap-2 disabled:bg-[#EDEDED] disabled:text-dark-lighter transition-all">
+                    <button @click="getResult"
+                        class="absolute left-1/2 transform -translate-x-1/2 -bottom-6 px-10 py-3 rounded-lg bg-dark hover:bg-dark-light2 font-bold text-white flex justify-between items-center gap-2 disabled:bg-opacity-70 disabled:cursor-not-allowed" wire:loading.attr="disabled">
                         <span>Get Result</span>
                         <svg width="14" height="14" viewBox="0 0 14 14" fill="none"
                             xmlns="http://www.w3.org/2000/svg">
                             <path
                                 d="M6.33594 0.332031C9.64794 0.332031 12.3359 3.02003 12.3359 6.33203C12.3359 9.64403 9.64794 12.332 6.33594 12.332C3.02394 12.332 0.335938 9.64403 0.335938 6.33203C0.335938 3.02003 3.02394 0.332031 6.33594 0.332031ZM6.33594 10.9987C8.91427 10.9987 11.0026 8.91036 11.0026 6.33203C11.0026 3.7537 8.91427 1.66536 6.33594 1.66536C3.7576 1.66536 1.66927 3.7537 1.66927 6.33203C1.66927 8.91036 3.7576 10.9987 6.33594 10.9987ZM11.9928 11.0461L13.8784 12.9317L12.9356 13.8745L11.05 11.9889L11.9928 11.0461Z"
-                                :fill="disabledGetResultButton ? '#9DA3A8' : '#DCF6EC'" />
+                                fill="#DCF6EC" />
                         </svg>
                     </button>
                 </div>
             </div>
         </div>
 
-        <livewire:screener.table :universal="$tabCriterias['universal']" :financial="$tabCriterias['financial']" :summaries="$summaries"  :wire:key="$tab['id']"/>
+        <div class="mt-11">
+            <livewire:screener.table-view-control :tab="$tab" :wire:key="'view-control' . $tab['id']" />
+
+            <livewire:screener.table :universal="$tabCriterias['universal']" :financial="$tabCriterias['financial']" :summaries="$summaries" :view="$view"
+                :wire:key="'table' . $tab['id']" />
+        </div>
     @else
         <div class="py-10 grid place-items-center">
             <span class="mx-auto simple-loader !text-green-dark"></span>

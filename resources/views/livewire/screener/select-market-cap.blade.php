@@ -26,8 +26,8 @@
         this.tmpValue.min = Number(this.tmpValue.min);
         this.tmpValue.max = Number(this.tmpValue.max);
 
-        this.tmpValue.max = this.tmpValue.max < this.tmpValue.min ? this.tmpValue.min : this.tmpValue.max;
-        this.value = this.tmpValue.min == 0 && this.tmpValue.max == 0 ? null : [this.tmpValue.min, this.tmpValue.max];
+        this.tmpValue.max = (this.tmpValue.max < this.tmpValue.min) ? this.tmpValue.min : this.tmpValue.max;
+        this.value = (this.tmpValue.min == 0 && this.tmpValue.max == 0) ? null : [this.tmpValue.min, this.tmpValue.max];
 
         this.showDropdown = false;
     },
@@ -96,7 +96,7 @@
             <template x-if="value?.length > 0 && value[1] > 0">
                 <div class="flex items-center bg-[#E2E2E2] p-2 rounded-tr-full rounded-br-full">
                     <span class="text-sm truncate mr-1" x-text="valueText"></span>
-                    <button type="button" @click="value=[]">
+                    <button type="button" @click="value = null;">
                         <svg width="16" height="16" viewBox="0 0 16 16" fill="none" xmlns="http://www.w3.org/2000/svg">
                             <path d="M8.00045 7.05767L11.0882 3.96994C11.2053 3.85279 11.3953 3.85279 11.5124 3.96995L12.031 4.48849C12.1481 4.60564 12.1481 4.79559 12.031 4.91275L8.94325 8.00047L12.031 11.0881C12.1481 11.2053 12.1481 11.3952 12.031 11.5124L11.5124 12.0309C11.3953 12.1481 11.2053 12.1481 11.0882 12.0309L8.00045 8.94327L4.91276 12.0309C4.7956 12.1481 4.60565 12.1481 4.48849 12.0309L3.96995 11.5124C3.85279 11.3952 3.85279 11.2053 3.96995 11.0881L7.05765 8.00047L3.96994 4.91275C3.85279 4.79559 3.85279 4.60564 3.96995 4.48849L4.48849 3.96994C4.60565 3.85279 4.7956 3.85279 4.91276 3.96995L8.00045 7.05767Z" fill="#C22929"/>
                         </svg>

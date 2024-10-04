@@ -3,8 +3,8 @@
 namespace App\Http\Livewire\Screener;
 
 use App\Http\Livewire\Screener\Page;
-use App\Models\CompanyChartComparison;
 use App\Models\ScreenerTab;
+use Illuminate\Http\Request;
 use Illuminate\Support\Arr;
 use Illuminate\Support\Facades\Auth;
 use Livewire\Component;
@@ -15,7 +15,7 @@ class ScreenerTabs extends Component
     public array $tabs = [];
     public string $addBtnLabel = 'New Screener';
 
-    public function mount()
+    public function mount(Request $request)
     {
         $cols = ['id', 'name'];
 
@@ -36,7 +36,7 @@ class ScreenerTabs extends Component
         }
 
         if (!$this->activeTab) {
-            $activeTab = session('screener.activeTab');
+            $activeTab = $request->query('tab', ScreenerTab::query()->where('user_id', Auth::id())->latest()->first()->id);
 
             $this->activeTab = $activeTab && Arr::first($this->tabs, fn($tab) => $tab['id'] == $activeTab)
                 ? $activeTab
@@ -82,8 +82,6 @@ class ScreenerTabs extends Component
         }
 
         $this->activeTab = $id;
-
-        session(['screener.activeTab' => $id]);
     }
 
     public function updateTab($id, $name)
