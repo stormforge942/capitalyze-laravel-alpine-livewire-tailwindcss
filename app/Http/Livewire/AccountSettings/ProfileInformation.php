@@ -102,8 +102,6 @@ class ProfileInformation extends Component
         ]);
 
         $this->reset('profilePhoto');
-
-        $this->isEdit = false;
     }
 
     public function render()

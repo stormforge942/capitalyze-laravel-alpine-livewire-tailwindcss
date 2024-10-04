@@ -47,7 +47,7 @@
                 <a href="{{ $info->website }}" target="_blank" class="text-black font-semibold hover:text-blue hover:underline">{{ $info->website }}</a>
             </div>
             <div class="flex items-center justify-between border-b py-4 mb-3">
-                <span class="text-dark-light2">Company Socials</span>
+                <span class="text-dark-light2">Socials</span>
                 <div class="flex gap-4">
                     @if ($info->linkedin_link)
                     <a href="{{ $info->linkedin_link }}"
@@ -137,7 +137,7 @@
                 ])
                 </div>
                 
-                <span class="block mb-3">Socials</span>
+                <span class="block mb-3 text-md font-semibold">Socials</span>
                 <div class="mb-4">
                 @include('partials.input', [
                     'label' => 'Linkedin',

@@ -25,7 +25,11 @@
             @auth
                 <button id="profileButtonMobile" data-dropdown-toggle="dropdownProfileMobile" type="button"
                     class="bg-[#52D3A2] w-9 h-9 leading-9 rounded-full font-semibold focus:outline-none transition self-start">
-                    {{ Auth::user()->initials }}
+                    @if (Auth::user()->profile_photo_path)
+                        <img src="{{ Auth::user()->profile_photo_url }}" alt="{{ Auth::user()->initials }}" class="rounded-full w-full h-full" />
+                    @else
+                        {{ Auth::user()->initials }}
+                    @endif
                 </button>
 
                 <div id="dropdownProfileMobile" class="z-10 hidden pr-4" aria-labelledby="profileButtonMobile">

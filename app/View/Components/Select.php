@@ -20,6 +20,7 @@ class Select extends Component
         public bool $disabled = false,
         public string $size = 'sm',
         public string $color = '#D4DDD7',
+        public bool $nobutton = false,
     ) {
         if (!$this->associativeArray($options)) {
             $this->options = array_reduce($options, function ($carry, $item) {

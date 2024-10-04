@@ -2,7 +2,7 @@
     isEdit: $wire.entangle('isEdit', true),
 
     confirmUpdate() {
-        $wire.updateProfile();
+        $wire.updateProfile().then(() => location.reload());
     },
 
     handleFileUpload(event) {
@@ -71,10 +71,9 @@
                 ])
             </div>
             <div class="mb-4">
-                @include('partials.input', [
+                @include('partials.datepicker', [
                     'label' => 'Date of Birth',
                     'name' => 'dob',
-                    'type' => 'date',
                     'attrs' => ['wire:model.defer' => 'dob'],
                 ])
             </div>
@@ -88,7 +87,7 @@
                     'attrs' => ['wire:model.defer' => 'country'],
                 ])
             </div>
-            <span class="block mb-3">Socials</span>
+            <span class="block mb-3 text-md font-semibold">Socials</span>
             <div class="mb-4">
                 @include('partials.input', [
                     'label' => 'Linkedin',
@@ -141,7 +140,7 @@
             </div>
 
             <div class="flex items-center justify-between border-b py-4">
-                <span class="text-dark-light2">Company Socials</span>
+                <span class="text-dark-light2">Socials</span>
                 <div class="flex gap-4">
                     <a x-show="$wire.linkedin_link" href="{{ $user->linkedin_link }}" target="_blank">
                         <img src="{{ asset('img/linkedin.png') }}"

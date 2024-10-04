@@ -58,8 +58,8 @@ class DataSettings extends Component
             'title' => 'Order',
             'description' => 'Enterprise',
             'options' => [
-                'Latest On The Right' => 'Latest On The Right',
-                'Latest On The Left' => 'Latest On The Left',
+                'Latest on the Right' => 'Latest on the Right',
+                'Latest on the Left' => 'Latest on the Left',
             ],
         ],
         'freezePane' => [
@@ -92,14 +92,18 @@ class DataSettings extends Component
         $this->settings = array_merge([
             'view' => 'As reported',
             'period' => 'Fiscal Annual',
-            'default_year_range' => [2005, 2023],
+            'defaultYearRange' => [2005, 2023],
             'unit' => 'Billions',
-            'decimalPlaces' => 2,
-            'perShareDecimalPlaces' => 1,
-            'order' => 'Latest On The Right',
+            'decimalPlaces' => 1,
+            'perShareDecimalPlaces' => 2,
+            'percentageDecimalPlaces' => 2,
+            'order' => 'Latest on the Right',
             'freezePane' => 'Top Row & First Column',
             'publicView' => 'yes',
         ], $settings);
+
+        // If not set default value, set default value
+        $this->updateSetting($this->settings);
     }
 
     public function updateSetting($settings)

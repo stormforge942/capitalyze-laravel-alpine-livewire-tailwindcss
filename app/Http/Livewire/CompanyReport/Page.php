@@ -54,27 +54,30 @@ class Page extends Component
 
     public function mount(Request $request, $company): void
     {
+        $settings = Auth::user()->settings ?? [];
+
         // set properties from query string 
         $this->activeTab = $request->query('tab', 'income-statement');
-        $this->view = $request->query('view', 'As reported');
-        $this->period = $request->query('period', 'Fiscal Annual');
-        $this->unitType = $request->query('unitType', 'Millions');
-        $this->decimalPlaces = intval($request->query('decimalPlaces', data_get(Auth::user(), 'settings.decimalPlaces', 1)));
-        $this->percentageDecimalPlaces = intval($request->query('percentageDecimalPlaces', 2));
-        $this->perShareDecimalPlaces = intval($request->query('perShareDecimalPlaces', 2));
-        $this->order = $request->query('order', 'Latest on the Right');
-        $this->freezePane = $request->query('freezePane', 'Top Row & First Column');
+        $this->view = $request->query('view', $settings['view'] ?? 'As reported');
+        $this->period = $request->query('period', $settings['period'] ?? 'Fiscal Annual');
+        $this->unitType = $request->query('unitType', $settings['unit'] ?? 'Millions');
+        $this->decimalPlaces = intval($request->query('decimalPlaces', $settings['decimalPlaces']));
+        $this->percentageDecimalPlaces = intval($request->query('percentageDecimalPlaces', $settings['percentageDecimalPlaces']));
+        $this->perShareDecimalPlaces = intval($request->query('perShareDecimalPlaces', $settings['perShareDecimalPlaces']));
+        $this->order = $request->query('order', $settings['order'] ?? 'Latest on the Right');
+        $this->freezePane = $request->query('freezePane', $settings['freezePane'] ?? 'Top Row & First Column');
         $this->disclosureTab = $request->query('disclosureTab', '');
         $this->disclosureFootnote = $request->query('disclosureFootnote', '');
 
         $this->publicView = data_get(Auth::user(), 'settings.publicView', true);
         $this->showAllRows = session('company-report.showAllRows', false);
 
+        $defaultYearRange = $settings['defaultYearRange'] ?? [2005,2023];
         $range = explode(',', $request->query('selectedDateRange', ''));
         if (count($range) === 2 && is_numeric($range[0]) && is_numeric($range[1])) {
             $this->selectedDateRange = [intval($range[0]), intval($range[1])];
         } else {
-            $this->selectedDateRange = [null, null];
+            $this->selectedDateRange = $defaultYearRange;
         }
 
         $this->company = [

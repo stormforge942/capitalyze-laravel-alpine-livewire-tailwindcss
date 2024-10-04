@@ -72,10 +72,10 @@
         <div class="flex">
             <div class="hidden lg:flex flex-col w-[35%] bg-white w gap-2 overflow-x-auto text-base mr-7" x-cloak>
                 <template x-for="tab in subTabs" :key="tab.title">
-                    <button class="px-4 py-3 rounded transition flex gap-2 box-content border mb-6"
+                    <button class="px-4 py-3 rounded transition flex gap-2 box-content mb-6"
                         :class="{
-                            'bg-green-light font-semibold': subTab === tab.title,
-                            'font-medium text-gray-medium2 hover:bg-gray-light': subTab !== tab.title
+                            'bg-green-light font-semibold border border-transparent': subTab === tab.title,
+                            'font-medium text-gray-medium2 border hover:bg-gray-light': subTab !== tab.title
                         }"
                         @click="subTab = tab.title;">
                         <span class="whitespace-nowrap" x-text="tab.description"></span>

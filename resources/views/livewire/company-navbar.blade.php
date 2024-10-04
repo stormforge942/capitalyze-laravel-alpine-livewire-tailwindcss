@@ -182,7 +182,11 @@
                         <div class="inline-flex items-center gap-x-2 font-semibold"
                             :class="collapsed ? '!px-0 mx-auto' : ''">
                             <div class="bg-[#52D3A2] w-9 h-9 leading-9 rounded-full mr-2 shrink-0">
-                                {{ Auth::user()->initials }}
+                                @if (Auth::user()->profile_photo_path)
+                                    <img src="{{ Auth::user()->profile_photo_url }}" alt="{{ Auth::user()->initials }}" class="rounded-full w-full h-full" />
+                                @else
+                                    {{ Auth::user()->initials }}
+                                @endif
                             </div>
 
                             <span class="tag-collapsed truncate max-w-[90px]">{{ Auth::user()->name }}</span>

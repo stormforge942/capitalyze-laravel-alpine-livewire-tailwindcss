@@ -26,16 +26,20 @@
                 <div class="flex items-center justify-between py-3 border-b">
                     <div>
                         <h6 class="text-md font-semibold mb-1">
-                            {{ $session['agent']['platform'] }}
+                            {{ $session['platform'] }}
                             @if ($session['is_current_device'])
                                 <span class="text-blue">(This device)</span>
                             @endif
                         </h6>
                         <p class="text-sm text-black">
-                            {{ $session['last_active'] }} • {{ $session['ip_location'] }} • {{ $session['ip_address'] }} • {{ $session['agent']['browser'] }}
+                            {{ $session['last_active'] }} • {{ $session['ip_location'] }} • {{ $session['ip_address'] }} • {{ $session['browser'] }}
                         </p>
                     </div>
-                    <button class="bg-red-500 text-white px-4 py-1 rounded" @click="$wire.revokeDevice('{{ $session['id'] }}')">Revoke</button>
+                    <button x-data
+                        class="bg-red-500 text-white px-4 py-1 rounded"
+                        @click.prevent="Livewire.emit('modal.open', 'account-settings.confirm-revoke-device', { sessionId: '{{ $session['id'] }}', platform: '{{ $session['platform'] }}' })"
+                        @device-revoke.window="$wire.revokeDevice($event.detail.sessionId)"
+                    >Revoke</button>
                 </div>
             @endforeach
         @else

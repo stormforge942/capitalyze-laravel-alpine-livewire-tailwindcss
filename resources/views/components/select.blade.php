@@ -68,6 +68,15 @@
         this.$watch('selectAll', value => {
             this.tmpValue = value ? Object.keys(this.options) : []
         })
+
+        @if ($nobutton)
+        this.$watch('tmpValue', value => {
+            if (value === this.value) return;
+            this.value = value;
+            this.showDropdown = false;
+            this.$dispatch('selected', { selected: value });
+        });
+        @endif
     },
 }" x-modelable="value" {{ $attributes->merge(['class' => 'inline-block']) }}>
     <x-dropdown x-model="showDropdown" placement="bottom-start" :disabled="$disabled">
@@ -171,6 +180,7 @@
                 </div>
             </div>
 
+            @if (! $nobutton)
             <div class="p-6">
                 <button type="button"
                     class="w-full px-4 py-3 font-medium bg-green-dark hover:bg-opacity-80 rounded disabled:pointer-events-none disabled:bg-[#D4DDD7] disabled:text-gray-medium2 text-base"
@@ -178,6 +188,10 @@
                     Show Result
                 </button>
             </div>
+            @endif
+            @if ($nobutton)
+            <div class="pb-6"></div>
+            @endif
         </form>
     </x-dropdown>
 </div>

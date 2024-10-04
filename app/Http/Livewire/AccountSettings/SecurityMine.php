@@ -2,11 +2,12 @@
 
 namespace App\Http\Livewire\AccountSettings;
 
-use App\Http\Livewire\AsTab;
 use Carbon\Carbon;
+use Livewire\Component;
+use App\Http\Livewire\AsTab;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
-use Livewire\Component;
+use Illuminate\Support\Facades\Redis;
 
 class SecurityMine extends Component
 {
@@ -31,9 +32,43 @@ class SecurityMine extends Component
         $this->tfa_enabled = Auth::user()->isTwoFactorEnabled();
     }
 
-    public function fetchSessions()
+    private function fetchSessionsRedis()
     {
-        $this->sessions = DB::table('sessions')
+        $sessions = [];
+        $userId = Auth::user()->id;
+
+        foreach (Redis::keys("session_{$userId}_*") as $sessionKey) {
+            $sessionData = Redis::get($sessionKey);
+
+            if ($sessionData) {
+                if (gettype($sessionData) == 'string') $sessionData = json_decode($sessionData);
+
+                $session = [
+                    'id' => $sessionData->id,
+                    'ip_location' => $sessionData->ip_location,
+                    'ip_address' => $sessionData->ip_address,
+                    'is_current_device' => $sessionData->id === session()->getId(),
+                    'platform' => $this->platform($sessionData->platform),
+                    'browser' => $this->browser($sessionData->browser),
+                    'last_active' => $this->formatTimestamp($sessionData->last_activity),
+                ];
+
+                // Check if user still exists
+                $status = Redis::exists($sessionData->id);
+                if ($status) {
+                    $sessions[] = $session;
+                } else {
+                    Redis::del($sessionKey);
+                }
+            }
+        }
+        
+        return $sessions;
+    }
+
+    private function fetchSessionsDatabase()
+    {
+        return DB::table('sessions')
             ->where('user_id', Auth::id())
             ->get()
             ->map(function ($session) {
@@ -42,14 +77,25 @@ class SecurityMine extends Component
                     'ip_location' => $session->ip_location,
                     'ip_address' => $session->ip_address,
                     'is_current_device' => $session->id === session()->getId(),
-                    'agent' => [
-                        'platform' => $this->platform($session->user_agent),
-                        'browser' => $this->browser($session->user_agent),
-                    ],
+                    'platform' => $this->platform($session->user_agent),
+                    'browser' => $this->browser($session->user_agent),
                     'last_active' => $this->formatTimestamp($session->last_activity),
                 ];
             })
             ->toArray();
+    }
+
+    public function fetchSessions()
+    {
+        $sessionDriver = config('session.driver');
+
+        if ($sessionDriver == 'database') {
+            $this->sessions = $this->fetchSessionsDatabase();
+        } else if ($sessionDriver == 'redis') {
+            $this->sessions = $this->fetchSessionsRedis();
+        } else {
+            $this->sessions = [];
+        }
     }
 
     public function formatTimestamp($timestamp)
@@ -94,10 +140,38 @@ class SecurityMine extends Component
         }
     }
 
-    public function revokeDevice($sessionId)
+    private function removeSessionRedis($sessionId)
+    {
+        $user = Auth::user();
+        Redis::del($sessionId);
+        Redis::del("session_{$user->id}_{$sessionId}");
+
+        if ($sessionId === session()->getId()) {
+            Auth::logout();
+            session()->invalidate();
+            session()->regenerateToken();
+            return redirect('/login');
+        }
+    }
+
+    private function removeSessionDatabase($sessionId)
     {
         DB::table('sessions')->where('id', $sessionId)->delete();
-        $this->fetchSessions();
+    }
+
+    public function revokeDevice($sessionId)
+    {
+        $sessionDriver = config('session.driver');
+
+        if ($sessionDriver == 'database') {
+            $this->removeSessionDatabase($sessionId);
+        } else if ($sessionDriver == 'redis') {
+            $this->removeSessionRedis($sessionId);
+        }
+
+        if (Auth::check()) {
+            $this->fetchSessions();
+        }
     }
 
     public function getPasswordConfirmedProperty()

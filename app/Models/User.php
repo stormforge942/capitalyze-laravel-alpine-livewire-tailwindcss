@@ -24,6 +24,26 @@ class User extends Authenticatable implements MustVerifyEmail
     use TwoFactorAuthenticatable;
     use HasNavbar;
 
+    public function __construct(array $attributes = [])
+    {
+        parent::__construct($attributes);
+
+        if (!isset($this->attributes['settings'])) {
+            $this->attributes['settings'] = json_encode([
+                'view' => 'As reported',
+                'period' => 'Fiscal Annual',
+                'defaultYearRange' => [2005, 2023],
+                'unit' => 'Billions',
+                'decimalPlaces' => 1,
+                'perShareDecimalPlaces' => 2,
+                'percentageDecimalPlaces' => 2,
+                'order' => 'Latest on the Right',
+                'freezePane' => 'Top Row & First Column',
+                'publicView' => 'yes',
+            ]);
+        }
+    }
+
     /**
      * The attributes that are mass assignable.
      *

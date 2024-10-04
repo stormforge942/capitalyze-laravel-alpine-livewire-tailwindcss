@@ -230,7 +230,7 @@
                             <div class="flex justify-between items-center border-b py-4 mb-3">
                                 <div>
                                     <span x-text="member.email"></span> &nbsp;
-                                    <x-select placeholder="Role" :options="$roles" x-model="member.role"></x-select>
+                                    <x-select placeholder="Role" :options="$roles" x-model="member.role" nobutton="true"></x-select>
                                 </div>
                                 <div class="flex flex-row gap-x-6">
                                     <span class="text-[#DA680B]" x-text="member.status" x-show="member.status" x-cloak></span>
@@ -269,7 +269,7 @@
                                 class="text-black bg-[#E2E2E2] border-[1px] border-[#D4DDD7] p-2 rounded-full">Admin</span>
                         </template>
                         <template x-if="!currentMember?.isOwner">
-                            <x-select name="role" :options="$roles" x-model="currentMember.role_id"
+                            <x-select name="role" :options="$roles" x-model="currentMember.role_id" nobutton="true"
                                 @selected="updateRole($event.detail.selected)" size="md"
                                 color="#0000FF"></x-select>
                         </template>
