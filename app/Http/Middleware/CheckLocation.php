@@ -40,7 +40,7 @@ class CheckLocation
         $user = Auth::user();
 
         if ($sessionId && $user) {
-            $sessionKey = "session_{{{$user->id}}}_{$sessionId}";
+            $sessionKey = "session_{{$user->id}}_{$sessionId}";
             $sessionData = Redis::get($sessionKey);
 
             // Decode session data from Redis if it exists

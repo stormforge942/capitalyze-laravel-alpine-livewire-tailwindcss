@@ -37,9 +37,10 @@ class SecurityMine extends Component
         $sessions = [];
         $userId = Auth::user()->id;
         $cursor = 0;
+        $matchPattern = "session_{{$userId}}_*";
 
         do {
-            $response = Redis::rawCommand('SCAN', $cursor, 'MATCH', "session_{{{$userId}}}_*", 'COUNT', 100);
+            $response = Redis::rawCommand('SCAN', (string) $cursor, 'MATCH', $matchPattern, 'COUNT', 100);
             $cursor = $response[0];
             $keys = $response[1];
 
@@ -150,7 +151,7 @@ class SecurityMine extends Component
     {
         $user = Auth::user();
         Redis::del($sessionId);
-        Redis::del("session_{{{$user->id}}}_{$sessionId}");
+        Redis::del("session_{{$user->id}}_{$sessionId}");
 
         if ($sessionId === session()->getId()) {
             Auth::logout();
