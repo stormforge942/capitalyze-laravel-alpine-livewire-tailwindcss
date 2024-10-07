@@ -36,33 +36,39 @@ class SecurityMine extends Component
     {
         $sessions = [];
         $userId = Auth::user()->id;
+        $cursor = 0;
 
-        foreach (Redis::keys("session_{$userId}_*") as $sessionKey) {
-            $sessionData = Redis::get($sessionKey);
+        do {
+            $response = Redis::rawCommand('SCAN', $cursor, 'MATCH', "session_{{{$userId}}}_*", 'COUNT', 100);
+            $cursor = $response[0];
+            $keys = $response[1];
 
-            if ($sessionData) {
-                if (gettype($sessionData) == 'string') $sessionData = json_decode($sessionData);
+            foreach ($keys as $sessionKey) {
+                $sessionData = Redis::get($sessionKey);
 
-                $session = [
-                    'id' => $sessionData->id,
-                    'ip_location' => $sessionData->ip_location,
-                    'ip_address' => $sessionData->ip_address,
-                    'is_current_device' => $sessionData->id === session()->getId(),
-                    'platform' => $this->platform($sessionData->platform),
-                    'browser' => $this->browser($sessionData->browser),
-                    'last_active' => $this->formatTimestamp($sessionData->last_activity),
-                ];
+                if ($sessionData) {
+                    $sessionData = json_decode($sessionData, true); // Decode as associative array
 
-                // Check if user still exists
-                $status = Redis::exists($sessionData->id);
-                if ($status) {
-                    $sessions[] = $session;
-                } else {
-                    Redis::del($sessionKey);
+                    $session = [
+                        'id' => $sessionData['id'],
+                        'ip_location' => $sessionData['ip_location'],
+                        'ip_address' => $sessionData['ip_address'],
+                        'is_current_device' => $sessionData['id'] === session()->getId(),
+                        'platform' => $this->platform($sessionData['platform']),
+                        'browser' => $this->browser($sessionData['browser']),
+                        'last_active' => $this->formatTimestamp($sessionData['last_activity']),
+                    ];
+
+                    // Check if session still exists
+                    if (Redis::exists($sessionData['id'])) {
+                        $sessions[] = $session;
+                    } else {
+                        Redis::del($sessionKey); // Clean up invalid session
+                    }
                 }
             }
-        }
-        
+        } while ($cursor > 0);
+
         return $sessions;
     }
 
@@ -144,7 +150,7 @@ class SecurityMine extends Component
     {
         $user = Auth::user();
         Redis::del($sessionId);
-        Redis::del("session_{$user->id}_{$sessionId}");
+        Redis::del("session_{{{$user->id}}}_{$sessionId}");
 
         if ($sessionId === session()->getId()) {
             Auth::logout();

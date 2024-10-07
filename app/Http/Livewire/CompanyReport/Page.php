@@ -61,9 +61,9 @@ class Page extends Component
         $this->view = $request->query('view', $settings['view'] ?? 'As reported');
         $this->period = $request->query('period', $settings['period'] ?? 'Fiscal Annual');
         $this->unitType = $request->query('unitType', $settings['unit'] ?? 'Millions');
-        $this->decimalPlaces = intval($request->query('decimalPlaces', $settings['decimalPlaces']));
-        $this->percentageDecimalPlaces = intval($request->query('percentageDecimalPlaces', $settings['percentageDecimalPlaces']));
-        $this->perShareDecimalPlaces = intval($request->query('perShareDecimalPlaces', $settings['perShareDecimalPlaces']));
+        $this->decimalPlaces = intval($request->query('decimalPlaces', $settings['decimalPlaces'] ?? '1'));
+        $this->percentageDecimalPlaces = intval($request->query('percentageDecimalPlaces', $settings['percentageDecimalPlaces'] ?? '2'));
+        $this->perShareDecimalPlaces = intval($request->query('perShareDecimalPlaces', $settings['perShareDecimalPlaces'] ?? '2'));
         $this->order = $request->query('order', $settings['order'] ?? 'Latest on the Right');
         $this->freezePane = $request->query('freezePane', $settings['freezePane'] ?? 'Top Row & First Column');
         $this->disclosureTab = $request->query('disclosureTab', '');
