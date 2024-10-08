@@ -36,39 +36,110 @@ class SecurityMine extends Component
     {
         $sessions = [];
         $userId = Auth::user()->id;
-        $cursor = 0;
         $matchPattern = "session_{{$userId}}_*";
 
-        do {
-            $response = Redis::rawCommand('SCAN', (string) $cursor, 'MATCH', $matchPattern, 'COUNT', 100);
-            $cursor = $response[0];
-            $keys = $response[1];
+        $isCluster = config('database.redis.options.cluster') === 'redis';
+
+        if ($isCluster) {
+            $redisNodes = array_map(function ($node) {
+                return "{$node['host']}:{$node['port']}";
+            }, config('database.redis.clusters.default'));
+
+            $redisCluster = new \RedisCluster(
+                null,
+                $redisNodes
+            );
+
+            $masters = $redisCluster->_masters();
+
+            $redisCluster->setOption(\RedisCluster::OPT_SLAVE_FAILOVER, \RedisCluster::FAILOVER_ERROR);
+
+            foreach ($masters as $node) {
+                $cursor = 0;
+                do {
+                    $redis = new \Redis();
+                    $connected = $redis->connect($node[0], $node[1]);
+
+                    $data = $redis->rawCommand('SCAN', $cursor, 'MATCH', $matchPattern, 'COUNT', 100);
+
+                    if ($data === false || !is_array($data)) {
+                        logger('Error in scan or no data found on node ' . $node[0] . ':' . $node[1]);
+                        break;
+                    }
+
+                    $cursor = $data[0];
+                    $keys = $data[1];
+
+                    foreach ($keys as $sessionKey) {
+                        if (! $sessionKey) break;
+
+                        $sessionData = $redisCluster->get($sessionKey);
+
+                        if ($sessionData !== false) {
+                            $sessionData = json_decode($sessionData, true);
+
+                            if (is_array($sessionData)) {
+                                $session = [
+                                    'id' => $sessionData['id'],
+                                    'ip_location' => $sessionData['ip_location'],
+                                    'ip_address' => $sessionData['ip_address'],
+                                    'is_current_device' => $sessionData['id'] === session()->getId(),
+                                    'platform' => $this->platform($sessionData['platform']),
+                                    'browser' => $this->browser($sessionData['browser']),
+                                    'last_active' => $this->formatTimestamp($sessionData['last_activity']),
+                                ];
+
+                                if ($redisCluster->exists($sessionData['id'])) {
+                                    $sessions[] = $session;
+                                } else {
+                                    $redisCluster->del($sessionKey);
+                                }
+                            }
+                        }
+                    }
+                } while ($cursor != 0);
+            }
+
+            $redisCluster->setOption(\RedisCluster::OPT_SLAVE_FAILOVER, \RedisCluster::FAILOVER_DISTRIBUTE);
+        } else {
+            $redis = Redis::connection();
+
+            $keys = $redis->keys($matchPattern);
+
+            if (empty($keys)) {
+                logger('No keys found with pattern ' . $matchPattern);
+                return $sessions;
+            }
 
             foreach ($keys as $sessionKey) {
-                $sessionData = Redis::get($sessionKey);
+                // Fetch session data for each matched key
+                $sessionData = $redis->get($sessionKey);
 
-                if ($sessionData) {
-                    $sessionData = json_decode($sessionData, true); // Decode as associative array
+                if ($sessionData !== false) {
+                    $sessionData = json_decode($sessionData, true);
 
-                    $session = [
-                        'id' => $sessionData['id'],
-                        'ip_location' => $sessionData['ip_location'],
-                        'ip_address' => $sessionData['ip_address'],
-                        'is_current_device' => $sessionData['id'] === session()->getId(),
-                        'platform' => $this->platform($sessionData['platform']),
-                        'browser' => $this->browser($sessionData['browser']),
-                        'last_active' => $this->formatTimestamp($sessionData['last_activity']),
-                    ];
+                    if (is_array($sessionData)) {
+                        $session = [
+                            'id' => $sessionData['id'],
+                            'ip_location' => $sessionData['ip_location'],
+                            'ip_address' => $sessionData['ip_address'],
+                            'is_current_device' => $sessionData['id'] === session()->getId(),
+                            'platform' => $this->platform($sessionData['platform']),
+                            'browser' => $this->browser($sessionData['browser']),
+                            'last_active' => $this->formatTimestamp($sessionData['last_activity']),
+                        ];
 
-                    // Check if session still exists
-                    if (Redis::exists($sessionData['id'])) {
-                        $sessions[] = $session;
-                    } else {
-                        Redis::del($sessionKey); // Clean up invalid session
+                        // Check if the session is still valid
+                        if ($redis->exists($sessionData['id'])) {
+                            $sessions[] = $session;
+                        } else {
+                            // Clean up invalid session
+                            $redis->del($sessionKey);
+                        }
                     }
                 }
             }
-        } while ($cursor > 0);
+        }
 
         return $sessions;
     }
