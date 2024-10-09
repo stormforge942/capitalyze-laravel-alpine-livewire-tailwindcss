@@ -59,7 +59,7 @@ use Laravel\Fortify\Http\Controllers\AuthenticatedSessionController;
 use App\Http\Controllers\Auth\CustomAuthenticatedSessionController;
 use App\Http\Controllers\Auth\TwoFactorController;
 use App\Http\Controllers\TeamInvitationController;
-
+use App\Http\Middleware\RemoveSession;
 use App\Http\Livewire\EarningPresentationContent;
 
 Route::get('/test-speed', function () {
@@ -235,6 +235,6 @@ Route::get(RoutePath::for('verification.verify', '/email/verify/{id}/{hash}'), V
     ->middleware(['signed', 'throttle:' . config('fortify.limiters.verification', '6,1')])
     ->name('verification.verify');
 
-Route::post('/logout', [AuthenticatedSessionController::class, 'destroy'])->name('logout');
+Route::post('/logout', [AuthenticatedSessionController::class, 'destroy'])->middleware([RemoveSession::class])->name('logout');
 
 Route::post('ping', fn() => response('OK'))->name('refresh-csrf');
