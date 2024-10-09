@@ -96,7 +96,7 @@
                                             'secondHash' => $result['secondHash'][$date],
                                             'isLink' => false,
                                             'decimalPlaces' => 3,
-                                            'formulaPreset' => $data['formulas'][$result['title']]['yoy_change'][$date]
+                                            'formulaPreset' => $data['formulas'][$result['title']]['yoy_change'][$date] ?? null
                                         ]; ?>
 
                                         <x-review-number-button x-show="!publicView" x-data="{ amount: '{{ $value['value'] }}', date: '{{ $date }}' }">
@@ -129,7 +129,7 @@
                                             'secondHash' => null,
                                             'isLink' => false,
                                             'decimalPlaces' => 3,
-                                            'formulaPreset' => $data['formulas'][$result['title']]['revenue_percentage'][$date]
+                                            'formulaPreset' => $data['formulas'][$result['title']]['revenue_percentage'][$date] ?? null
                                         ]; ?>
 
                                         <x-review-number-button x-show="!publicView" x-data="{ amount: '{{ $value['value'] }}', date: '{{ $date }}' }">
@@ -162,7 +162,7 @@
                                             'secondHash' => null,
                                             'isLink' => false,
                                             'decimalPlaces' => 3,
-                                            'formulaPreset' => $data['formulas'][$result['title']]['expense_percentage'][$date]
+                                            'formulaPreset' => $data['formulas'][$result['title']]['expense_percentage'][$date] ?? null
                                         ]; ?>
 
                                         <x-review-number-button x-show="!publicView" x-data="{ amount: '{{ $value['value'] }}', date: '{{ $date }}' }">
@@ -236,7 +236,7 @@
                                         'secondHash' => $data['total_expenses']['secondHash'][$date],
                                         'isLink' => false,
                                         'decimalPlaces' => 3,
-                                        'formulaPreset' => $data['formulas']['total_expenses']['yoy_change'][$date]
+                                        'formulaPreset' => $data['formulas']['total_expenses']['yoy_change'][$date] ?? null
                                     ]; ?>
 
                                     <x-review-number-button x-show="!publicView" x-data="{ amount: '{{ $value['value'] }}', date: '{{ $date }}' }">
@@ -271,7 +271,7 @@
                                         'secondHash' => $data['total_expenses']['secondHash'][$date],
                                         'isLink' => false,
                                         'decimalPlaces' => 3,
-                                        'formulaPreset' => $data['formulas']['total_expenses']['revenue_percentage'][$date]
+                                        'formulaPreset' => $data['formulas']['total_expenses']['revenue_percentage'][$date] ?? null
                                     ]; ?>
 
                                     <x-review-number-button x-show="!publicView" x-data="{ amount: '{{ $value['value'] }}', date: '{{ $date }}' }">
@@ -346,7 +346,7 @@
                                         'secondHash' => $data['revenues']['secondHash'][$date],
                                         'isLink' => false,
                                         'decimalPlaces' => 3,
-                                        'formulaPreset' => $data['formulas']['revenues']['yoy_change'][$date]
+                                        'formulaPreset' => $data['formulas']['revenues']['yoy_change'][$date] ?? null
                                         ];
                                     ?>
 

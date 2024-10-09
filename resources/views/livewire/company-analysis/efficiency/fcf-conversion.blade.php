@@ -90,7 +90,7 @@
                                             'secondHash' => $data['revenues']['secondHash'][$date],
                                             'isLink' => false,
                                             'decimalPlaces' => 3,
-                                            'formulaPreset' => $data['revenues']['formulas']['yoy_change'][$date]
+                                            'formulaPreset' => $data['revenues']['formulas']['yoy_change'][$date] ?? null
                                         ];
                                     ?>
 
@@ -166,7 +166,7 @@
                                         'secondHash' => $data['ebitda']['secondHash'][$date],
                                         'isLink' => false,
                                         'decimalPlaces' => 3,
-                                        'formulaPreset' => $data['ebitda']['formulas']['yoy_change'][$date]
+                                        'formulaPreset' => $data['ebitda']['formulas']['yoy_change'][$date] ?? null
                                     ];
                                     ?>
 
@@ -200,7 +200,7 @@
                                             'secondHash' => $data['ebitda']['secondHash'][$date],
                                             'isLink' => false,
                                             'decimalPlaces' => 3,
-                                            'formulaPreset' => $data['ebitda']['formulas']['margin'][$date]
+                                            'formulaPreset' => $data['ebitda']['formulas']['margin'][$date] ?? null
                                         ];
                                     ?>
 
@@ -280,7 +280,7 @@
                                                 'secondHash' => $data[$key]['secondHash'][$date],
                                                 'isLink' => false,
                                                 'decimalPlaces' => 3,
-                                                'formulaPreset' => $data[$key]['formulas']['yoy_change'][$date]
+                                                'formulaPreset' => $data[$key]['formulas']['yoy_change'][$date] ?? null
                                             ];
                                         ?>
 
@@ -314,7 +314,7 @@
                                                 'secondHash' => null,
                                                 'isLink' => false,
                                                 'decimalPlaces' => 3,
-                                                'formulaPreset' => $data[$key]['formulas']['ebitda_percentage'][$date]
+                                                'formulaPreset' => $data[$key]['formulas']['ebitda_percentage'][$date] ?? null
                                             ];
                                         ?>
 
@@ -349,7 +349,7 @@
                                             'secondHash' => null,
                                             'isLink' => false,
                                             'decimalPlaces' => 3,
-                                            'formulaPreset' => $data[$key]['formulas']['of_total_revenue'][$date]
+                                            'formulaPreset' => $data[$key]['formulas']['of_total_revenue'][$date] ?? null
                                         ];
                                     ?>
 
@@ -388,7 +388,7 @@
                                     'secondHash' => null,
                                     'isLink' => false,
                                     'decimalPlaces' => 3,
-                                    'formulaPreset' => $data['free_cashflow']['formulas']['free_cashflow'][$date]
+                                    'formulaPreset' => $data['free_cashflow']['formulas']['free_cashflow'][$date] ?? null
                                 ];
                                 ?>
 
@@ -424,7 +424,7 @@
                                             'secondHash' => $data[$key]['secondHash'][$date],
                                             'isLink' => false,
                                             'decimalPlaces' => 3,
-                                            'formulaPreset' => $data['free_cashflow']['formulas']['yoy_change'][$date]
+                                            'formulaPreset' => $data['free_cashflow']['formulas']['yoy_change'][$date] ?? null
                                         ];
                                     ?>
 
@@ -458,7 +458,7 @@
                                         'secondHash' => null,
                                         'isLink' => false,
                                         'decimalPlaces' => 3,
-                                        'formulaPreset' => $data['free_cashflow']['formulas']['ebitda_percentage'][$date]
+                                        'formulaPreset' => $data['free_cashflow']['formulas']['ebitda_percentage'][$date] ?? null
                                     ];
                                     ?>
 
@@ -492,7 +492,7 @@
                                         'secondHash' => null,
                                         'isLink' => false,
                                         'decimalPlaces' => 3,
-                                        'formulaPreset' => $data['free_cashflow']['formulas']['of_total_revenue'][$date]
+                                        'formulaPreset' => $data['free_cashflow']['formulas']['of_total_revenue'][$date] ?? null
                                     ];
                                     ?>
 
@@ -569,7 +569,7 @@
                                         'secondHash' => $data['networth_change']['secondHash'][$date],
                                         'isLink' => false,
                                         'decimalPlaces' => 3,
-                                        'formulaPreset' => $data['networth_change']['formulas']['yoy_change'][$date]
+                                        'formulaPreset' => $data['networth_change']['formulas']['yoy_change'][$date] ?? null
                                     ]; ?>
 
                                     <x-review-number-button x-show="!publicView" x-data="{ amount: '{{ $value['value'] }}', date: '{{ $date }}' }">
@@ -602,7 +602,7 @@
                                         'secondHash' => null,
                                         'isLink' => false,
                                         'decimalPlaces' => 3,
-                                        'formulaPreset' => $data['networth_change']['formulas']['ebitda_percentage'][$date]
+                                        'formulaPreset' => $data['networth_change']['formulas']['ebitda_percentage'][$date] ?? null
                                     ];
                                     ?>
 
@@ -636,7 +636,7 @@
                                         'secondHash' => null,
                                         'isLink' => false,
                                         'decimalPlaces' => 3,
-                                        'formulaPreset' => $data['networth_change']['formulas']['revenue_percentage'][$date]
+                                        'formulaPreset' => $data['networth_change']['formulas']['revenue_percentage'][$date] ?? null
                                     ];
                                     ?>
 
@@ -675,7 +675,7 @@
                                     'secondHash' => null,
                                     'isLink' => false,
                                     'decimalPlaces' => 3,
-                                    'formulaPreset' => $data['levered_free_cashflow']['formulas']['levered_free_cashflow'][$date]
+                                    'formulaPreset' => $data['levered_free_cashflow']['formulas']['levered_free_cashflow'][$date] ?? null
                                 ]; ?>
 
                                 <td class="pl-6 pt-2 pb-1 last:pr-8 last:rounded-tr-lg">
@@ -710,7 +710,7 @@
                                         'secondHash' => null,
                                         'isLink' => false,
                                         'decimalPlaces' => 3,
-                                        'formulaPreset' => $data['levered_free_cashflow']['formulas']['yoy_change'][$date]
+                                        'formulaPreset' => $data['levered_free_cashflow']['formulas']['yoy_change'][$date] ?? null
                                     ]; ?>
 
                                     <x-review-number-button x-show="!publicView" x-data="{ amount: '{{ $value['value'] }}', date: '{{ $date }}' }">
@@ -743,7 +743,7 @@
                                         'secondHash' => null,
                                         'isLink' => false,
                                         'decimalPlaces' => 3,
-                                        'formulaPreset' => $data['levered_free_cashflow']['formulas']['ebitda_percentage'][$date]
+                                        'formulaPreset' => $data['levered_free_cashflow']['formulas']['ebitda_percentage'][$date] ?? null
                                     ];
                                     ?>
 
@@ -777,7 +777,7 @@
                                         'secondHash' => null,
                                         'isLink' => false,
                                         'decimalPlaces' => 3,
-                                        'formulaPreset' => $data['levered_free_cashflow']['formulas']['lcf_margin'][$date]
+                                        'formulaPreset' => $data['levered_free_cashflow']['formulas']['lcf_margin'][$date] ?? null
                                     ]; ?>
 
                                     <x-review-number-button x-show="!publicView" x-data="{ amount: '{{ $value['value'] }}', date: '{{ $date }}' }">

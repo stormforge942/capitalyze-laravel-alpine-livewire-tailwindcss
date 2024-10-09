@@ -74,12 +74,12 @@
                                     Levered Free Cash Flow
                                 </td>
                                 @foreach ($selectedDates as $date)
-                                    <?php $value = $data['sources']['free_cashflow']['timeline'][$date]; ?>
+                                    <?php $value = $data['sources']['free_cashflow']['timeline'][$date] ?? null; ?>
                                     <?php $sliderData = [
                                         'ticker' => $company['ticker'],
                                         'value' => $value['value'],
-                                        'hash' => $formulaHashes['free_cashflow'][$date]['hash'],
-                                        'secondHash' => $formulaHashes['free_cashflow'][$date]['secondHash'],
+                                        'hash' => $formulaHashes['free_cashflow'][$date]['hash'] ?? null,
+                                        'secondHash' => $formulaHashes['free_cashflow'][$date]['secondHash'] ?? null,
                                         'isLink' => false,
                                         'decimalPlaces' => 3,
                                     ]; ?>
@@ -108,7 +108,7 @@
                                 </td>
                                 @foreach ($selectedDates as $date)
                                     <td class="pl-6 py-1 last:pr-8">
-                                        <?php $value = $data['sources']['free_cashflow']['total_percent'][$date]; ?>
+                                        <?php $value = $data['sources']['free_cashflow']['total_percent'][$date] ?? null; ?>
                                         <?php $sliderData = [
                                             'ticker' => $company['ticker'],
                                             'value' => $value['value'],
@@ -116,7 +116,7 @@
                                             'secondHash' => null,
                                             'isLink' => false,
                                             'decimalPlaces' => 3,
-                                            'formulaPreset' => $data['sources']['formulas']['free_cashflow']['total_percent'][$date]
+                                            'formulaPreset' => $data['sources']['formulas']['free_cashflow']['total_percent'][$date] ?? null
                                         ]; ?>
 
                                         <x-review-number-button x-show="!publicView" x-data="{ amount: '{{ $value['value'] }}', date: '{{ $date }}' }">
@@ -140,12 +140,12 @@
                                     Total Debt Issued
                                 </td>
                                 @foreach ($selectedDates as $date)
-                                    <?php $value = $data['sources']['net_debt']['timeline'][$date]; ?>
+                                    <?php $value = $data['sources']['net_debt']['timeline'][$date] ?? null; ?>
                                     <?php $sliderData = [
                                         'ticker' => $company['ticker'],
                                         'value' => $value['value'],
-                                        'hash' => $formulaHashes['net_debt'][$date]['hash'],
-                                        'secondHash' => $formulaHashes['net_debt'][$date]['secondHash'],
+                                        'hash' => $formulaHashes['net_debt'][$date]['hash'] ?? null,
+                                        'secondHash' => $formulaHashes['net_debt'][$date]['secondHash'] ?? null,
                                         'isLink' => false,
                                         'decimalPlaces' => 3,
                                     ]; ?>
@@ -174,7 +174,7 @@
                                 </td>
                                 @foreach ($selectedDates as $date)
                                     <td class="pl-6 py-1 last:pr-8">
-                                        <?php $value = $data['sources']['net_debt']['total_percent'][$date]; ?>
+                                        <?php $value = $data['sources']['net_debt']['total_percent'][$date] ?? null; ?>
                                         <?php $sliderData = [
                                             'ticker' => $company['ticker'],
                                             'value' => $value['value'],
@@ -182,7 +182,7 @@
                                             'secondHash' => null,
                                             'isLink' => false,
                                             'decimalPlaces' => 3,
-                                            'formulaPreset' => $data['sources']['formulas']['net_debt']['total_percent'][$date]
+                                            'formulaPreset' => $data['sources']['formulas']['net_debt']['total_percent'][$date] ?? null
                                         ]; ?>
 
                                         <x-review-number-button x-show="!publicView" x-data="{ amount: '{{ $value['value'] }}', date: '{{ $date }}' }">
@@ -206,7 +206,7 @@
                                     Issuance of Preferred Stock
                                 </td>
                                 @foreach ($selectedDates as $date)
-                                    <?php $value = $data['sources']['preferred_stock']['timeline'][$date]; ?>
+                                    <?php $value = $data['sources']['preferred_stock']['timeline'][$date] ?? null; ?>
 
                                     <td
                                         class="pl-6 py-1 last:pr-8 @if (!$loop->first) last:rounded-tr-lg @endif">
@@ -226,7 +226,7 @@
                                 </td>
                                 @foreach ($selectedDates as $date)
                                     <td class="pl-6 py-1 last:pr-8">
-                                        <?php $value = $data['sources']['preferred_stock']['total_percent'][$date]; ?>
+                                        <?php $value = $data['sources']['preferred_stock']['total_percent'][$date] ?? null; ?>
                                         <?php $sliderData = [
                                             'ticker' => $company['ticker'],
                                             'value' => $value['value'],
@@ -234,7 +234,7 @@
                                             'secondHash' => null,
                                             'isLink' => false,
                                             'decimalPlaces' => 3,
-                                            'formulaPreset' => $data['sources']['formulas']['preferred_stock']['total_percent'][$date]
+                                            'formulaPreset' => $data['sources']['formulas']['preferred_stock']['total_percent'][$date] ?? null
                                         ]; ?>
 
                                         <x-review-number-button x-show="!publicView" x-data="{ amount: '{{ $value['value'] }}', date: '{{ $date }}' }">
@@ -258,7 +258,7 @@
                                     Issuance of Common Stock
                                 </td>
                                 @foreach ($selectedDates as $date)
-                                    <?php $value = $data['sources']['common_stock']['timeline'][$date]; ?>
+                                    <?php $value = $data['sources']['common_stock']['timeline'][$date] ?? null; ?>
                                     <?php $sliderData = [
                                         'ticker' => $company['ticker'],
                                         'value' => $value['value'],
@@ -292,7 +292,7 @@
                                 </td>
                                 @foreach ($selectedDates as $date)
                                     <td class="pl-6 pt-1 pb-2 last:pr-8">
-                                        <?php $value = $data['sources']['common_stock']['total_percent'][$date]; ?>
+                                        <?php $value = $data['sources']['common_stock']['total_percent'][$date] ?? null; ?>
                                         <?php $sliderData = [
                                             'ticker' => $company['ticker'],
                                             'value' => $value['value'],
@@ -300,7 +300,7 @@
                                             'secondHash' => null,
                                             'isLink' => false,
                                             'decimalPlaces' => 3,
-                                            'formulaPreset' => $data['sources']['formulas']['common_stock']['total_percent'][$date]
+                                            'formulaPreset' => $data['sources']['formulas']['common_stock']['total_percent'][$date] ?? null
                                         ]; ?>
 
                                         <x-review-number-button x-show="!publicView" x-data="{ amount: '{{ $value['value'] }}', date: '{{ $date }}' }">
@@ -325,7 +325,7 @@
                                     Total Sources of Cash
                                 </td>
                                 @foreach ($selectedDates as $date)
-                                    <?php $value = $data['sources']['total']['timeline'][$date]; ?>
+                                    <?php $value = $data['sources']['total']['timeline'][$date] ?? null; ?>
                                     <?php $sliderData = [
                                         'ticker' => $company['ticker'],
                                         'value' => $value['value'],
@@ -333,7 +333,7 @@
                                         'secondHash' => null,
                                         'isLink' => false,
                                         'decimalPlaces' => 3,
-                                        'formulaPreset' => $data['uses']['formulas']['total']['value'][$date]
+                                        'formulaPreset' => $data['uses']['formulas']['total']['value'][$date] ?? null
                                     ]; ?>
 
                                     <td class="pl-6 pt-2 pb-1 last:pr-8">
@@ -359,7 +359,7 @@
                                 </td>
                                 @foreach ($selectedDates as $date)
                                     <td class="pl-6 pt-1 pb-2 last:pr-8 last:rounded-br-lg">
-                                        <?php $value = $data['sources']['total']['yoy_change'][$date]; ?>
+                                        <?php $value = $data['sources']['total']['yoy_change'][$date] ?? null; ?>
                                         <?php $sliderData = [
                                             'ticker' => $company['ticker'],
                                             'value' => $value['value'],
@@ -367,7 +367,7 @@
                                             'secondHash' => null,
                                             'isLink' => false,
                                             'decimalPlaces' => 3,
-                                            'formulaPreset' => $data['sources']['formulas']['total']['yoy_change'][$date]
+                                            'formulaPreset' => $data['sources']['formulas']['total']['yoy_change'][$date] ?? null
                                         ]; ?>
 
                                         <x-review-number-button x-show="!publicView" x-data="{ amount: '{{ $value['value'] }}', date: '{{ $date }}' }">
@@ -412,7 +412,7 @@
                                     Acquisition
                                 </td>
                                 @foreach ($selectedDates as $date)
-                                    <?php $value = $data['uses']['acquisition']['timeline'][$date]; ?>
+                                    <?php $value = $data['uses']['acquisition']['timeline'][$date] ?? null; ?>
                                     <?php $sliderData = [
                                         'ticker' => $company['ticker'],
                                         'value' => $value['value'],
@@ -446,7 +446,7 @@
                                 </td>
                                 @foreach ($selectedDates as $date)
                                     <td class="pl-6 py-1 last:pr-8">
-                                        <?php $value = $data['uses']['acquisition']['total_percent'][$date]; ?>
+                                        <?php $value = $data['uses']['acquisition']['total_percent'][$date] ?? null; ?>
                                         <?php $sliderData = [
                                             'ticker' => $company['ticker'],
                                             'value' => $value['value'],
@@ -454,7 +454,7 @@
                                             'secondHash' => null,
                                             'isLink' => false,
                                             'decimalPlaces' => 3,
-                                            'formulaPreset' => $data['uses']['formulas']['acquisition']['total_percent'][$date]
+                                            'formulaPreset' => $data['uses']['formulas']['acquisition']['total_percent'][$date] ?? null
                                         ]; ?>
 
                                         <x-review-number-button x-show="!publicView" x-data="{ amount: '{{ $value['value'] }}', date: '{{ $date }}' }">
@@ -479,7 +479,7 @@
                                     Total Debt Repaid
                                 </td>
                                 @foreach ($selectedDates as $date)
-                                    <?php $value = $data['uses']['debt_repaid']['timeline'][$date]; ?>
+                                    <?php $value = $data['uses']['debt_repaid']['timeline'][$date] ?? null; ?>
                                     <?php $sliderData = [
                                         'ticker' => $company['ticker'],
                                         'value' => $value['value'],
@@ -514,7 +514,7 @@
                                 </td>
                                 @foreach ($selectedDates as $date)
                                     <td class="pl-6 py-1 last:pr-8">
-                                        <?php $value = $data['uses']['debt_repaid']['total_percent'][$date]; ?>
+                                        <?php $value = $data['uses']['debt_repaid']['total_percent'][$date] ?? null; ?>
                                         <?php $sliderData = [
                                             'ticker' => $company['ticker'],
                                             'value' => $value['value'],
@@ -522,7 +522,7 @@
                                             'secondHash' => null,
                                             'isLink' => false,
                                             'decimalPlaces' => 3,
-                                            'formulaPreset' => $data['uses']['formulas']['debt_repaid']['total_percent'][$date]
+                                            'formulaPreset' => $data['uses']['formulas']['debt_repaid']['total_percent'][$date] ?? null
                                         ]; ?>
 
                                         <x-review-number-button x-show="!publicView" x-data="{ amount: '{{ $value['value'] }}', date: '{{ $date }}' }">
@@ -547,7 +547,7 @@
                                     Repurchase of Preferred Stock
                                 </td>
                                 @foreach ($selectedDates as $date)
-                                    <?php $value = $data['uses']['preferred_repurchase']['timeline'][$date]; ?>
+                                    <?php $value = $data['uses']['preferred_repurchase']['timeline'][$date] ?? null; ?>
 
                                     <td
                                         class="pl-6 py-1 last:pr-8 @if (!$loop->first) last:rounded-tr-lg @endif">
@@ -568,7 +568,7 @@
                                 </td>
                                 @foreach ($selectedDates as $date)
                                     <td class="pl-6 py-1 last:pr-8">
-                                        <?php $value = $data['uses']['preferred_repurchase']['total_percent'][$date]; ?>
+                                        <?php $value = $data['uses']['preferred_repurchase']['total_percent'][$date] ?? null; ?>
                                         <?php $sliderData = [
                                             'ticker' => $company['ticker'],
                                             'value' => $value['value'],
@@ -576,7 +576,7 @@
                                             'secondHash' => null,
                                             'isLink' => false,
                                             'decimalPlaces' => 3,
-                                            'formulaPreset' => $data['uses']['formulas']['preferred_repurchase']['total_percent'][$date]
+                                            'formulaPreset' => $data['uses']['formulas']['preferred_repurchase']['total_percent'][$date] ?? null
                                         ]; ?>
 
                                         <x-review-number-button x-show="!publicView" x-data="{ amount: '{{ $value['value'] }}', date: '{{ $date }}' }">
@@ -601,7 +601,7 @@
                                     Repurchase of Common Stock
                                 </td>
                                 @foreach ($selectedDates as $date)
-                                    <?php $value = $data['uses']['common_repurchase']['timeline'][$date]; ?>
+                                    <?php $value = $data['uses']['common_repurchase']['timeline'][$date] ?? null; ?>
                                     <?php $sliderData = [
                                         'ticker' => $company['ticker'],
                                         'value' => $value['value'],
@@ -635,7 +635,7 @@
                                 </td>
                                 @foreach ($selectedDates as $date)
                                     <td class="pl-6 py-1 last:pr-8">
-                                        <?php $value = $data['uses']['common_repurchase']['total_percent'][$date]; ?>
+                                        <?php $value = $data['uses']['common_repurchase']['total_percent'][$date] ?? null; ?>
                                         <?php $sliderData = [
                                             'ticker' => $company['ticker'],
                                             'value' => $value['value'],
@@ -643,7 +643,7 @@
                                             'secondHash' => null,
                                             'isLink' => false,
                                             'decimalPlaces' => 3,
-                                            'formulaPreset' => $data['uses']['formulas']['common_repurchase']['total_percent'][$date]
+                                            'formulaPreset' => $data['uses']['formulas']['common_repurchase']['total_percent'][$date] ?? null
                                         ]; ?>
 
                                         <x-review-number-button x-show="!publicView" x-data="{ amount: '{{ $value['value'] }}', date: '{{ $date }}' }">
@@ -668,7 +668,7 @@
                                     Total Dividends Paid
                                 </td>
                                 @foreach ($selectedDates as $date)
-                                    <?php $value = $data['uses']['dividends']['timeline'][$date]; ?>
+                                    <?php $value = $data['uses']['dividends']['timeline'][$date] ?? null; ?>
                                     <?php $sliderData = [
                                         'ticker' => $company['ticker'],
                                         'value' => $value['value'],
@@ -702,7 +702,7 @@
                                 </td>
                                 @foreach ($selectedDates as $date)
                                     <td class="pl-6 py-1 last:pr-8">
-                                        <?php $value = $data['uses']['dividends']['total_percent'][$date]; ?>
+                                        <?php $value = $data['uses']['dividends']['total_percent'][$date] ?? null; ?>
                                         <?php $sliderData = [
                                             'ticker' => $company['ticker'],
                                             'value' => $value['value'],
@@ -710,7 +710,7 @@
                                             'secondHash' => null,
                                             'isLink' => false,
                                             'decimalPlaces' => 3,
-                                            'formulaPreset' => $data['uses']['formulas']['dividends']['total_percent'][$date]
+                                            'formulaPreset' => $data['uses']['formulas']['dividends']['total_percent'][$date] ?? null
                                         ]; ?>
 
                                         <x-review-number-button x-show="!publicView" x-data="{ amount: '{{ $value['value'] }}', date: '{{ $date }}' }">
@@ -737,7 +737,7 @@
                                 @foreach ($selectedDates as $date)
                                     <td class="pl-6 py-1 last:pr-8 @if (!$loop->first) last:rounded-tr-lg @endif">
 
-                                        <?php $value = $data['uses']['other']['timeline'][$date]; ?>
+                                        <?php $value = $data['uses']['other']['timeline'][$date] ?? null; ?>
                                         <?php $sliderData = [
                                             'ticker' => $company['ticker'],
                                             'value' => $value['value'],
@@ -745,7 +745,7 @@
                                             'secondHash' => null,
                                             'isLink' => false,
                                             'decimalPlaces' => 3,
-                                            'formulaPreset' => $data['uses']['formulas']['other']['value'][$date]
+                                            'formulaPreset' => $data['uses']['formulas']['other']['value'][$date] ?? null
                                         ]; ?>
 
                                         <x-review-number-button x-show="!publicView" x-data="{ amount: '{{ $value['value'] }}', date: '{{ $date }}' }">
@@ -770,7 +770,7 @@
                                 </td>
                                 @foreach ($selectedDates as $date)
                                     <td class="pl-6 pt-1 pb-2 last:pr-8">
-                                        <?php $value = $data['uses']['other']['total_percent'][$date]; ?>
+                                        <?php $value = $data['uses']['other']['total_percent'][$date] ?? null; ?>
                                         <?php $sliderData = [
                                             'ticker' => $company['ticker'],
                                             'value' => $value['value'],
@@ -778,7 +778,7 @@
                                             'secondHash' => null,
                                             'isLink' => false,
                                             'decimalPlaces' => 3,
-                                            'formulaPreset' => $data['uses']['formulas']['other']['total_percent'][$date]
+                                            'formulaPreset' => $data['uses']['formulas']['other']['total_percent'][$date] ?? null
                                         ]; ?>
 
                                         <x-review-number-button x-show="!publicView" x-data="{ amount: '{{ $value['value'] }}', date: '{{ $date }}' }">
@@ -803,7 +803,7 @@
                                     Total Sources of Cash
                                 </td>
                                 @foreach ($selectedDates as $date)
-                                    <?php $value = $data['uses']['total']['timeline'][$date]; ?>
+                                    <?php $value = $data['uses']['total']['timeline'][$date] ?? null; ?>
                                     <?php $sliderData = [
                                         'ticker' => $company['ticker'],
                                         'value' => $value['value'],
@@ -811,7 +811,7 @@
                                         'secondHash' => null,
                                         'isLink' => false,
                                         'decimalPlaces' => 3,
-                                        'formulaPreset' => $data['uses']['formulas']['total']['value'][$date]
+                                        'formulaPreset' => $data['uses']['formulas']['total']['value'][$date] ?? null
                                     ]; ?>
 
                                     <td class="pl-6 pt-2 pb-1 last:pr-8">
@@ -837,7 +837,7 @@
                                 </td>
                                 @foreach ($selectedDates as $date)
                                     <td class="pl-6 pt-1 pb-2 last:pr-8 last:rounded-br-lg">
-                                        <?php $value = $data['uses']['total']['yoy_change'][$date]; ?>
+                                        <?php $value = $data['uses']['total']['yoy_change'][$date] ?? null; ?>
                                         <?php $sliderData = [
                                             'ticker' => $company['ticker'],
                                             'value' => $value['value'],
@@ -845,7 +845,7 @@
                                             'secondHash' => null,
                                             'isLink' => false,
                                             'decimalPlaces' => 3,
-                                            'formulaPreset' => $data['uses']['formulas']['total']['yoy_change'][$date]
+                                            'formulaPreset' => $data['uses']['formulas']['total']['yoy_change'][$date] ?? null
                                         ]; ?>
 
                                         <x-review-number-button x-show="!publicView" x-data="{ amount: '{{ $value['value'] }}', date: '{{ $date }}' }">

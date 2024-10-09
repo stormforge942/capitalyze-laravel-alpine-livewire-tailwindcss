@@ -107,7 +107,7 @@
 
                                         val.isViewed = true
 
-                                        Livewire.emit('modal.open', 'company-link-s3-content', { row: val });
+                                        Livewire.emit('modal.open', 'company-link-s3-exhibit-content', { row: val });
                                     }"
                                     :style="index === 0 ? 'border-top: none !important;' : ''"
                                     :class="{ 'hover:bg-gray-50 cursor-pointer': true, 'opacity-60': val.isViewed }">

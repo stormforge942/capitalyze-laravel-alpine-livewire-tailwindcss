@@ -91,7 +91,7 @@
                                         'secondHash' => null,
                                         'isLink' => false,
                                         'decimalPlaces' => 3,
-                                        'formulaPreset' => $data['revenues']['formulas'][$date]
+                                        'formulaPreset' => $data['revenues']['formulas'][$date] ?? null
                                     ]; ?>
 
                                     <x-review-number-button x-show="!publicView" x-data="{ amount: '{{ $value['value'] }}', date: '{{ $date }}' }">
@@ -150,7 +150,7 @@
                                         'secondHash' => null,
                                         'isLink' => false,
                                         'decimalPlaces' => 3,
-                                        'formulaPreset' => $data['employee_count']['formulas']['yoy_change'][$date]
+                                        'formulaPreset' => $data['employee_count']['formulas']['yoy_change'][$date] ?? null
                                     ]; ?>
 
                                     <x-review-number-button x-show="!publicView" x-data="{ amount: '{{ $value['value'] }}', date: '{{ $date }}' }">
@@ -183,7 +183,7 @@
                                     'secondHash' => null,
                                     'isLink' => false,
                                     'decimalPlaces' => 3,
-                                    'formulaPreset' => $data['rev_by_emp']['formulas']['rev_by_emp'][$date]
+                                    'formulaPreset' => $data['rev_by_emp']['formulas']['rev_by_emp'][$date] ?? null
                                 ]; ?>
 
                                 <td class="pl-6 pt-2 pb-1 last:pr-8">
@@ -217,7 +217,7 @@
                                         'secondHash' => null,
                                         'isLink' => false,
                                         'decimalPlaces' => 3,
-                                        'formulaPreset' => $data['rev_by_emp']['formulas']['yoy_change'][$date]
+                                        'formulaPreset' => $data['rev_by_emp']['formulas']['yoy_change'][$date] ?? null
                                     ]; ?>
 
                                     <x-review-number-button x-show="!publicView" x-data="{ amount: '{{ $value['value'] }}', date: '{{ $date }}' }">

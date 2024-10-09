@@ -1,6 +1,7 @@
 <div x-data="{
     active: '{{ $active }}',
     dropdown: null,
+    queryLabel: @js($queryLabel),
     tabs: @js($tabs),
     badges: @js($badges),
     showActive: false,
@@ -17,7 +18,7 @@
     },
     init() {
         this.dropdown = new Dropdown(this.$refs.dropdown, this.$refs.dropdownBtn, { placement: 'bottom-start' });
-        window.updateQueryParam('tab', this.active);
+        window.updateQueryParam(this.queryLabel, this.active);
 
         @if ($triggerChange) this.$nextTick(() => this.$dispatch('tab-changed', this.activeTab)) @endif
 
@@ -27,7 +28,7 @@
         })
 
         this.$watch('active', (value) => {
-            window.updateQueryParam('tab', value);
+            window.updateQueryParam(this.queryLabel, value);
         })
     },
 }" {{ $attributes }}>
