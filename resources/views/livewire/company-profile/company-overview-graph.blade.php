@@ -39,7 +39,7 @@
         <div class="flex items-center gap-x-5">
             <div>
                 <b class="font-extrabold">{{ $name }} ({{ $ticker }})</b><br>
-                <small class="text-sm {{ $percentage >= 0 ? 'text-blue-600' : 'text-red-600' }}">
+                <small class="inline-block w-48 whitespace-nowrap text-sm {{ $percentage >= 0 ? 'text-blue-600' : 'text-red-600' }}">
                     {{ $percentage }}% price return over {{ $chartPeriods[$currentChartPeriod] }}
                 </small>
             </div>
