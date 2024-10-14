@@ -5,6 +5,7 @@ namespace App\Http\Livewire\InsiderTransactions;
 use App\Powergrid\BaseTable;
 use Carbon\Carbon;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Storage;
 use PowerComponents\LivewirePowerGrid\Column;
 use PowerComponents\LivewirePowerGrid\PowerGrid;
 use PowerComponents\LivewirePowerGrid\PowerGridColumns;
@@ -26,6 +27,15 @@ class Table extends BaseTable
     {
         $this->filters = $filters;
         $this->resetPage();
+    }
+    
+    private function getLogoUrl($ticker)
+    {
+        if (Storage::disk('s3')->exists("company_logos/{$ticker}.png")) {
+            return Storage::disk('s3')->url("company_logos/{$ticker}.png");
+        } else {
+            return asset('svg/logo.svg');
+        }
     }
 
     public function datasource()
@@ -85,6 +95,8 @@ class Table extends BaseTable
     public function columns(): array
     {
         return [
+            Column::make('', 'logo')
+                ->headerAttribute('[&>div]:w-[30px]'),
             Column::make('Company', 'company', 'symbol')->sortable(),
             Column::make('Insider Name', 'reporting_person')->sortable(),
             Column::make('Title', 'relationship_of_reporting_person'),
@@ -113,6 +125,10 @@ class Table extends BaseTable
     public function addColumns(): PowerGridColumns
     {
         return PowerGrid::columns()
+            ->addColumn('logo', function ($row) {
+                $url = $this->getLogoUrl($row->symbol);
+                return "<img src='{$url}' width='32' height='32' style='width: 32px;' />";
+            })
             ->addColumn('symbol')
             ->addColumn('registrant_name')
             ->addColumn('company', function ($row) {
