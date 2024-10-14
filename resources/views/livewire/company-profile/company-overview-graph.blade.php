@@ -83,7 +83,7 @@
         </div>
 
         <div class="mt-3 place-items-center h-[300px]" wire:loading.grid>
-            <span class="mx-auto simple-loader text-blue"></span>
+            <span class="mx-auto simple-loader !text-green-dark"></span>
         </div>
 
         <div class="mt-3 h-[300px]" wire:loading.remove>

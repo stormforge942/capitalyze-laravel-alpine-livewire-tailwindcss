@@ -10,7 +10,7 @@
         </div>
     @endif
 
-    <div class="mt-6 relative">
+    <div wire:loading.remove class="mt-6 relative">
         @if (count($dates))
             <x-analysis-chart-box title="Revenue By Employee" :company="$company" :chart="$chart" :hasPercentageMix="false"
                 :unit="$unit" :decimal-places="$decimalPlaces" function="renderRevenueByEmployeeChart"></x-analysis-chart-box>
@@ -242,9 +242,10 @@
         @else
             <p class="bg-white p-4 text-center font-bold">No data found</p>
         @endif
-
-        <div class="cus-loader" wire:loading.block>
-            <div class="cus-loaderBar"></div>
+    </div>
+    <div wire:loading class="py-10 w-full">
+        <div class="w-full flex justify-center">
+            <div class="simple-loader !text-green-dark"></div>
         </div>
     </div>
 </div>

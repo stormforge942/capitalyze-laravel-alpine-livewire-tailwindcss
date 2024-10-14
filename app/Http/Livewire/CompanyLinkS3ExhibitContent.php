@@ -51,6 +51,10 @@ class CompanyLinkS3ExhibitContent extends Modal
 
         $s3ExhibitLinksData = json_decode($entry->exhibit_s3_links, true);
 
+        if (!isset($s3ExhibitLinksData)) {
+            return;
+        }
+
         $s3ExhibitLinksFormatedData = array_reduce($s3ExhibitLinksData, function ($carry, $item) {
             if (!isset($carry[$item['folder']])) {
                 $carry[$item['folder']] = [];

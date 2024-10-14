@@ -297,9 +297,6 @@
             }
         }" wire:key="{{ \Str::random(5) }}"
             wire:loading.class="pointer-events-none animate-pulse">
-            <div class="cus-loader" wire:loading.block>
-                <div class="cus-loaderBar"></div>
-            </div>
 
             <div class="grid grid-cols-1 sm:grid-cols-10 gap-2 whitespace-nowrap flex-wrap">
                 <div class="sm:col-span-5 xl:col-span-3 bg-white p-2 rounded-t">
@@ -321,7 +318,7 @@
                     @include('livewire.builder.table.settings')
                 </div>
             </div>
-            <div class="mt-0.5 overflow-x-auto rounded-b-lg">
+            <div wire:loading.remove class="mt-0.5 overflow-x-auto rounded-b-lg" x-cloak x-show="tableRows.length">
                 <table class="overflow-hidden">
                     <tr class="font-bold whitespace-nowrap bg-[#EDEDED]">
                         <td class="py-3 pl-8">Ticker</td>
@@ -445,7 +442,7 @@
                     </template>
                 </table>
             </div>
-            <div class="mt-[6rem] flex flex-col items-center" x-cloak x-show="!tableRows.length">
+            <div wire:loading.remove class="mt-[6rem] flex flex-col items-center" x-cloak x-show="!tableRows.length">
                 <svg width="168" height="164" viewBox="0 0 168 164" fill="none"
                     xmlns="http://www.w3.org/2000/svg">
                     <g clip-path="url(#clip0_9710_178945)">
@@ -488,6 +485,12 @@
                 </svg>
                 <p class="mt-6 font-bold text-xl">No Data</p>
                 <p class="mt-2">Create financial tables to analyse data</p>
+            </div>
+
+            <div wire:loading class="py-10 w-full">
+                <div class="w-full flex justify-center">
+                    <div class="simple-loader !text-green-dark"></div>
+                </div>
             </div>
         </div>
     @else

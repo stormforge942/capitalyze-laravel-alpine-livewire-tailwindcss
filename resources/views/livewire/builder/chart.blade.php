@@ -135,10 +135,6 @@
             },
         }" wire:key="{{ \Str::random(5) }}"
             wire:loading.class="pointer-events-none animate-pulse">
-            <div class="cus-loader" wire:loading.block>
-                <div class="cus-loaderBar"></div>
-            </div>
-
             <div class="grid grid-cols-1 xl:grid-cols-2 gap-6">
                 <div>
                     <livewire:builder.chart.select-company :selected="$companies" :wire:key="Str::random(5)" />
@@ -149,7 +145,13 @@
                 </div>
             </div>
 
-            <div x-show="showChart && dates.length" x-cloak>
+            <div wire:loading class="py-10 w-full">
+                <div class="w-full flex justify-center">
+                    <div class="simple-loader !text-green-dark"></div>
+                </div>
+            </div>
+
+            <div wire:loading.remove x-show="showChart && dates.length" x-cloak>
                 <div class="mt-6">
                     <x-filter-box>
                         <div class="flex items-center gap-x-1">
@@ -332,7 +334,7 @@
                 </div>
             </div>
 
-            <div class="grid place-items-center py-24" x-show="!showChart || !dates.length" x-cloak>
+            <div wire:loading.remove class="grid place-items-center py-24" x-show="!showChart || !dates.length" x-cloak>
                 <svg width="168" height="164" viewBox="0 0 168 164" fill="none"
                     xmlns="http://www.w3.org/2000/svg">
                     <g clip-path="url(#clip0_8757_81677)">

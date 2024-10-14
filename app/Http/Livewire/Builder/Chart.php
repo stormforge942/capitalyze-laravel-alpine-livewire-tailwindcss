@@ -63,6 +63,10 @@ class Chart extends Component
             if ($_data && !count($this->filters['dateRange'])) {
                 $range = $data['dateRange'][$this->filters['period']];
 
+                if (!isset($range)) {
+                    return $data;
+                }
+
                 $start = max($range[0], $range[1] - 10);
 
                 $this->filters['dateRange'] = [$start, $range[1]];

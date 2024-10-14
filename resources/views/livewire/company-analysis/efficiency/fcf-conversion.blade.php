@@ -11,6 +11,7 @@
     @endif
 
     <div
+        wire:loading.remove
         x-data="{
             publicView: $wire.entangle('publicView', false),
             init() {
@@ -804,9 +805,10 @@
                 No data available
             </div>
         @endif
-
-        <div class="cus-loader" wire:loading.block>
-            <div class="cus-loaderBar"></div>
+    </div>
+    <div wire:loading class="py-10 w-full">
+        <div class="w-full flex justify-center">
+            <div class="simple-loader !text-green-dark"></div>
         </div>
     </div>
 </div>

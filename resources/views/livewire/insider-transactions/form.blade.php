@@ -1,7 +1,7 @@
 <x-wire-elements-pro::tailwind.slide-over>
     <div class="h-full" wire:init="load">
         <div class="place-items-center" wire:loading.grid>
-            <span class="mx-auto simple-loader text-blue"></span>
+            <span class="mx-auto simple-loader !text-green-dark"></span>
         </div>
 
         <div class="relative h-full" wire:loading.remove>

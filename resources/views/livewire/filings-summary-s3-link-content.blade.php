@@ -3,7 +3,7 @@
 <x-wire-elements-pro::tailwind.slide-over>
     <div wire:init="load">
         <div class="grid place-items-center" id="{{ $id }}-loader">
-            <span class="mx-auto simple-loader text-blue"></span>
+            <span class="mx-auto simple-loader !text-green-dark"></span>
         </div>
 
         <div wire:loading.remove>
