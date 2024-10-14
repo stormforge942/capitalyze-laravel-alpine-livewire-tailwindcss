@@ -12,6 +12,9 @@
     showResult() {
         settings = this.tmpValue
         this.showDropdown = false
+    },
+    get hasValueChanged() {
+        return JSON.stringify(this.tmpValue) !== JSON.stringify(settings)
     }
 }">
     <x-dropdown placement="bottom-end" x-model="showDropdown">
@@ -115,6 +118,7 @@
                     </div>
                 </div>
                 <button type="button"
+                    :disabled="!hasValueChanged"
                     class="mt-6 w-full px-4 py-3 font-medium bg-green-dark hover:bg-opacity-80 rounded disabled:pointer-events-none disabled:bg-[#D4DDD7] disabled:text-gray-medium2 text-base"
                     @click="showResult">
                     Show Result

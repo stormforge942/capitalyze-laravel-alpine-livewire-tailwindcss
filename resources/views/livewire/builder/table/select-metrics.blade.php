@@ -72,6 +72,17 @@ $options = App\Services\TableBuilderService::options();
     get currentSelectedCount() {
         return new Set(this.tmpValue.map(item => item.metric + item.type)).size
     },
+    get hasValueChanged() {
+        const valueDatesCount = this.value.reduce((carry, item) => {
+            return carry + item.dates.length;
+        }, 0)
+
+        const tmpValueDatesCount = this.tmpValue.reduce((carry, item) => {
+            return carry + item.dates.length;
+        }, 0)
+
+        return ([...this.value].sort().map(item => item).join('-') !== [...this.tmpValue.filter(item => item.dates.length)].sort().map(item => item).join('-')) || valueDatesCount !== tmpValueDatesCount
+    },
     makeOptions() {
         const options = @js($options);
 
@@ -591,6 +602,7 @@ $options = App\Services\TableBuilderService::options();
 
                     <div class="mt-2 p-6">
                         <button type="button"
+                            :disabled="!hasValueChanged"
                             class="w-full px-4 py-3 font-medium bg-green-dark hover:bg-opacity-80 rounded disabled:pointer-events-none disabled:bg-[#D1D3D5] disabled:text-white text-base"
                             @click.prevent="showResult">
                             Show Result

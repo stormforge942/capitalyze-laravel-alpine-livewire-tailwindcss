@@ -347,11 +347,13 @@
                                 <div x-data="{
                                     openDropdown: false,
                                     content: row.note,
+                                    tmpContent: '',
                                     init() {
                                         this.$watch('openDropdown', value => {
                                             if (value) {
                                                 this.content = row.note;
-                                                this.$el.querySelector('textarea').focus()
+                                                this.tmpContent = this.content;
+                                                this.$el.querySelector('textarea').focus();
                                             }
                                         })
                                     },
@@ -359,13 +361,13 @@
                                         this.openDropdown = false;
 
                                         const oldNote = row.note;
-                                        row.note = this.content;
+                                        row.note = this.tmpContent;
 
                                         http(`/table-builder/${$wire.tab.id}/update-note`, {
                                             method: 'POST',
                                             body: {
                                                 company: row.ticker,
-                                                note: this.content,
+                                                note: this.tmpContent,
                                             }
                                         }).catch(err => {
                                             alert('Something went wrong while saving note. Please try again')
@@ -411,9 +413,9 @@
                                             </div>
                                             <form class="px-6 py-4" @submit.prevent="saveNote">
                                                 <textarea class="w-full focus:outline-none focus:ring-0 border-0 font-normal resize-none"
-                                                    placeholder="Write note here..." rows="10" x-model="content"></textarea>
-                                                <button type="submit"
-                                                    class="mt-4 py-2 w-full text-sm font-medium bg-green-dark hover:bg-opacity-80 rounded">
+                                                    placeholder="Write note here..." rows="10" x-model="tmpContent"></textarea>
+                                                <button :disabled="content === tmpContent" type="submit"
+                                                    class="mt-4 py-2 w-full text-sm font-medium bg-green-dark hover:bg-opacity-80 rounded disabled:pointer-events-none disabled:bg-[#D4DDD7] disabled:text-gray-medium2">
                                                     Save Note
                                                 </button>
                                             </form>
