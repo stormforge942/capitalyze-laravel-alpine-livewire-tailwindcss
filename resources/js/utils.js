@@ -151,6 +151,25 @@ export function formatDecimalNumber(number, decimals = 0, decPoint = '.', thousa
     return result;
 }
 
+export function roundUpToHigherSignificant(value, base = 1) {
+    if (value === 0) return 0;
+
+    const sign = Math.sign(value);
+    const absValue = Math.abs(value);
+    const magnitude = Math.pow(10, Math.floor(Math.log10(absValue)));
+
+    return sign * Math.ceil(absValue / (magnitude * base)) * magnitude * base;
+}
+
+export function roundDownToLowerSignificant(value, base = 1) {
+    if (value <= 0) return 0;
+
+    const magnitude = Math.pow(10, Math.floor(Math.log10(value)));
+    const roundedValue = Math.floor(value / (magnitude * base)) * magnitude * base;
+
+    return roundedValue < magnitude ? 0 : roundedValue;
+}
+
 window.updateUserSettings = updateUserSettings
 window.formatCmpctNumber = formatCmpctNumber
 window.formatNumber = formatNumber
@@ -161,3 +180,5 @@ window.randomColor = randomColor
 window.http = http
 window.niceNumber = niceNumber
 window.formatDecimalNumber = formatDecimalNumber
+window.roundUpToHigherSignificant = roundUpToHigherSignificant
+window.roundDownToLowerSignificant = roundDownToLowerSignificant

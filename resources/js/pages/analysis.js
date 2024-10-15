@@ -1,5 +1,10 @@
 import chartJsPlugins from "../chartjs-plugins"
-import { formatCmpctNumber, formatNumber } from "../utils"
+import {
+    formatCmpctNumber,
+    formatNumber,
+    roundDownToLowerSignificant,
+    roundUpToHigherSignificant,
+} from "../utils"
 
 const tooltipConfig = (config) => ({
     bodyFont: {
@@ -48,6 +53,22 @@ const dataLabelConfig = (config) => ({
     color: (ctx) => (ctx.dataset?.type !== "line" ? "#fff" : "#121A0F"),
 })
 
+const setScalesRange = (scale, scaleName, min, max) => {
+    scale[scaleName].min = min;
+    scale[scaleName].max = max;
+
+    return scale;
+}
+
+const adjustSignificantValues = (values) => {
+    return values.map(value => ({
+        max: roundUpToHigherSignificant(value.max),
+        min: value.min < 0
+            ? roundUpToHigherSignificant(value.min)
+            : roundDownToLowerSignificant(value.min)
+    }));
+}
+
 const scales = (percentage = false, xOffset = true, reverseX) => ({
     y: {
         afterFit(scale) {
@@ -58,6 +79,8 @@ const scales = (percentage = false, xOffset = true, reverseX) => ({
         ticks: {
             callback: percentage ? (val) => val + "%" : formatCmpctNumber,
         },
+        max: percentage ? 100 : null,
+        min: percentage ? 0 : null,
     },
     x: {
         stacked: true,
@@ -117,11 +140,47 @@ function renderSourcesAndUsesChart(canvas, datasets, config) {
 function renderRevenueByEmployeeChart(canvas, datasets, config) {
     const ctx = canvas.getContext("2d")
 
+    const yAxisRanges = {}
+
+    let maxYValue = 0
+    let minYValue = 0
+    let minY1Value = 0
+    let maxY1Value = 0
+
     datasets.forEach((dataset) => {
         if (dataset.type !== "line") {
             dataset.maxBarThickness = 150
         }
+
+        if (dataset?.dataType !== 'percentage') {
+            dataset.data.forEach(item => {
+                if (!yAxisRanges[item.x]) {
+                    yAxisRanges[item.x] = 0
+                }
+
+                yAxisRanges[item.x] += item.y;
+            })
+        }
+
+        if (dataset?.dataType === 'percentage') {
+            dataset.data.forEach(item => {
+                minY1Value = Math.min(item.y, minY1Value);
+                maxY1Value = Math.max(item.y, maxY1Value);
+            })
+        }
     })
+
+    maxYValue = Math.max(...Object.values(yAxisRanges))
+
+    const adjustedValues = adjustSignificantValues([
+        { max: maxYValue, min: minYValue },
+        { max: maxY1Value, min: minY1Value }
+    ])
+
+    minYValue = adjustedValues[0].min;
+    maxYValue = adjustedValues[0].max;
+    minY1Value = adjustedValues[1].min;
+    maxY1Value = adjustedValues[1].max;
 
     return new Chart(ctx, {
         plugins: [
@@ -171,7 +230,7 @@ function renderRevenueByEmployeeChart(canvas, datasets, config) {
                 },
             },
             scales: {
-                ...scales(false, true, config.reverse),
+                ...setScalesRange(scales(false, true, config.reverse), 'y', minYValue, maxYValue),
                 y1: {
                     ticks: {
                         callback: (val) => val + "%",
@@ -183,6 +242,8 @@ function renderRevenueByEmployeeChart(canvas, datasets, config) {
                     grid: {
                         drawOnChartArea: false,
                     },
+                    max: maxY1Value,
+                    min: minY1Value
                 },
             },
         },
@@ -191,6 +252,12 @@ function renderRevenueByEmployeeChart(canvas, datasets, config) {
 
 function renderCostStructureChart(canvas, datasets, config) {
     const ctx = canvas.getContext("2d")
+    const yAxisRanges = {}
+
+    let maxYValue = 0;
+    let minYValue = 0;
+    let maxY1Value = 0;
+    let minY1Value = 0;
 
     datasets.forEach((dataset) => {
         dataset.data.map((value) => {
@@ -208,7 +275,35 @@ function renderCostStructureChart(canvas, datasets, config) {
 
             return value
         })
+
+        if (dataset?.dataType !== 'percentage') {
+            dataset.data.forEach(item => {
+                if (!yAxisRanges[item.x]) {
+                    yAxisRanges[item.x] = 0
+                }
+
+                yAxisRanges[item.x] += item.value
+            })
+        }
+
+        if (dataset?.dataType === 'percentage') {
+            dataset.data.forEach(item => {
+                maxY1Value = Math.max(item.y, maxY1Value)
+            })
+        }
     })
+
+    maxYValue = Math.max(...Object.values(yAxisRanges))
+
+    const adjustedValues = adjustSignificantValues([
+        {max: maxYValue, min: minYValue},
+        {max: maxY1Value, min: minY1Value}
+    ])
+
+    minYValue = adjustedValues[0].min
+    maxYValue = adjustedValues[0].max
+    minY1Value = adjustedValues[1].min
+    maxY1Value = adjustedValues[1].max
 
     return new Chart(ctx, {
         plugins: [
@@ -261,7 +356,7 @@ function renderCostStructureChart(canvas, datasets, config) {
                 },
             },
             scales: {
-                ...scales(config.type === "percentage", true, config.reverse),
+                ...setScalesRange(scales(config.type === "percentage", true, config.reverse), 'y', minYValue, maxYValue),
                 y1: {
                     afterFit(scale) {
                         scale.width = 50;
@@ -276,6 +371,8 @@ function renderCostStructureChart(canvas, datasets, config) {
                     grid: {
                         drawOnChartArea: false,
                     },
+                    min: minY1Value,
+                    max: maxY1Value
                 },
             },
         },
@@ -285,11 +382,28 @@ function renderCostStructureChart(canvas, datasets, config) {
 function renderFcfConversionChart(canvas, data, config) {
     const ctx = canvas.getContext("2d")
 
+    let minY1Value = 0
+    let maxY1Value = 0
+
     data.datasets.forEach((dataset) => {
         if (dataset.type !== "line") {
             dataset.maxBarThickness = 150
         }
+
+        if (dataset?.dataType === 'value') {
+            dataset.data.forEach(item => {
+                minY1Value = Math.min(item.y, minY1Value)
+                maxY1Value = Math.max(item.y, maxY1Value)
+            })
+        }
     })
+
+    const adjustedValues = adjustSignificantValues([
+        {max: maxY1Value, min: minY1Value}
+    ])
+
+    minY1Value = adjustedValues[0].min
+    maxY1Value = adjustedValues[0].max
 
     return new Chart(ctx, {
         plugins: [
@@ -382,6 +496,8 @@ function renderFcfConversionChart(canvas, data, config) {
                     grid: {
                         drawOnChartArea: false,
                     },
+                    max: maxY1Value,
+                    min: minY1Value
                 },
             },
         },
@@ -390,6 +506,37 @@ function renderFcfConversionChart(canvas, data, config) {
 
 function renderCapitalStructureChart(canvas, datasets, config) {
     const ctx = canvas.getContext("2d")
+
+    let maxYValue = 0
+    let minYValue = 0
+    let maxY1Value = 0
+    let minY1Value = 0
+
+    datasets.forEach((dataset) => {
+        if (dataset?.dataType !== 'percentage') {
+            dataset.data.forEach(item => {
+                minYValue = Math.min(parseInt(item.y), minYValue)
+                maxYValue = Math.max(parseInt(item.y), maxYValue)
+            })
+        }
+
+        if (dataset?.dataType === 'percentage') {
+            dataset.data.forEach(item => {
+                maxY1Value = Math.max(item.y, maxY1Value)
+                minY1Value = Math.min(item.y, minY1Value)
+            })
+        }
+    })
+
+    const adjustedValues = adjustSignificantValues([
+        {max: maxYValue, min: minYValue},
+        {max: maxY1Value, min: minY1Value}
+    ])
+
+    minYValue = adjustedValues[0].min
+    maxYValue = adjustedValues[0].max
+    minY1Value = adjustedValues[1].min
+    maxY1Value = adjustedValues[1].max
 
     return new Chart(ctx, {
         plugins: [
@@ -446,7 +593,7 @@ function renderCapitalStructureChart(canvas, datasets, config) {
                 },
             },
             scales: {
-                ...scales(false, false, config.reverse),
+                ...setScalesRange(scales(false, false, config.reverse), 'y', minYValue, maxYValue),
                 y1: {
                     ticks: {
                         callback: (val) => val + "%",
@@ -458,6 +605,8 @@ function renderCapitalStructureChart(canvas, datasets, config) {
                     grid: {
                         drawOnChartArea: false,
                     },
+                    max: maxY1Value,
+                    min: minY1Value
                 },
             },
         },
@@ -476,11 +625,27 @@ window.analysisPage = {
 function basicBarChart(canvas, datasets, config) {
     const ctx = canvas.getContext("2d")
 
+    const yAxisRanges = {}
+
+    let maxYValue = 0
+    let minYValue = 0
+
     datasets.forEach((dataset) => {
         if (dataset.type !== "line") {
             dataset.maxBarThickness = 150
         }
+
+        dataset.data.forEach(item => {
+            if (!yAxisRanges[item.x]) {
+                yAxisRanges[item.x] = 0
+            }
+
+            yAxisRanges[item.x] += item.value
+        })
     })
+
+    maxYValue = Math.max(...Object.values(yAxisRanges))
+    maxYValue = roundUpToHigherSignificant(maxYValue)
 
     return new Chart(ctx, {
         plugins: [window.ChartDataLabels, chartJsPlugins.htmlLegend, chartJsPlugins.addLogo],
@@ -527,7 +692,7 @@ function basicBarChart(canvas, datasets, config) {
                           },
                       }),
             },
-            scales: scales(false, true, config.reverse),
+            scales: setScalesRange(scales(false, true, config.reverse), 'y', minYValue, maxYValue),
         },
     })
 }
