@@ -3,6 +3,7 @@
 namespace App\Models;
 
 use App\Traits\HasNavbar;
+use Carbon\Carbon;
 use Illuminate\Http\UploadedFile;
 use Laravel\Sanctum\HasApiTokens;
 use Laravel\Jetstream\HasProfilePhoto;
@@ -32,7 +33,7 @@ class User extends Authenticatable implements MustVerifyEmail
             $this->attributes['settings'] = json_encode([
                 'view' => 'As reported',
                 'period' => 'Fiscal Annual',
-                'defaultYearRange' => [2005, 2023],
+                'defaultYearRange' => [Carbon::now()->subYears(4)->year, Carbon::now()->year],
                 'unit' => 'Billions',
                 'decimalPlaces' => 1,
                 'perShareDecimalPlaces' => 2,

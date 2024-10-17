@@ -11,7 +11,7 @@ use Illuminate\Support\Facades\Cache;
 class CompanyOverviewGraph extends Component
 {
     public $ticker = "";
-    public $currentChartPeriod = "5yr";
+    public $currentChartPeriod = "1yr";
     public $chartData = [];
     public $dateRange = [null, null];
 

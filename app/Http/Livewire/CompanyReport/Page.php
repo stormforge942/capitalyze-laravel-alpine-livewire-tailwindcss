@@ -72,7 +72,7 @@ class Page extends Component
         $this->publicView = data_get(Auth::user(), 'settings.publicView', true);
         $this->showAllRows = session('company-report.showAllRows', false);
 
-        $defaultYearRange = $settings['defaultYearRange'] ?? [2005,2023];
+        $defaultYearRange = $settings['defaultYearRange'] ?? [Carbon::now()->subYears(4)->year, Carbon::now()->year];
         $range = explode(',', $request->query('selectedDateRange', ''));
         if (count($range) === 2 && is_numeric($range[0]) && is_numeric($range[1])) {
             $this->selectedDateRange = [intval($range[0]), intval($range[1])];
@@ -339,7 +339,7 @@ class Page extends Component
         $end = $this->selectedDateRange[1];
 
         if (!$start || !$end) {
-            $idx = count($this->rangeDates) - 6;
+            $idx = count($this->rangeDates) - 5;
             $start = $this->rangeDates[$idx < 0 ? 0 : $idx];
 
             $idx = count($this->rangeDates) - 1;

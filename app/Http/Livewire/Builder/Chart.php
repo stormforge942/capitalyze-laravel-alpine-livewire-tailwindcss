@@ -2,6 +2,7 @@
 
 namespace App\Http\Livewire\Builder;
 
+use Carbon\Carbon;
 use Livewire\Component;
 use Illuminate\Support\Facades\Auth;
 use App\Models\CompanyChartComparison;
@@ -94,7 +95,11 @@ class Chart extends Component
 
         $this->filters = [
             'period' => data_get($_tab, 'filters.period', 'annual'),
-            'dateRange' => data_get($_tab, 'filters.dateRange', []),
+            'dateRange' => data_get(
+                $_tab,
+                'filters.dateRange',
+                data_get(Auth::user(), 'settings.defaultYearRange', [Carbon::now()->subYears(4)->year, Carbon::now()->year])
+            ),
             'unit' => data_get($_tab, 'filters.unit', 'Millions'),
             'decimalPlaces' => data_get(
                 $_tab,

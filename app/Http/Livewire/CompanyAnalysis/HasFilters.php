@@ -16,6 +16,7 @@ trait HasFilters
     public $dates = [];
     public $selectedDates = [];
     public array $selectedDateRange = [];
+    public array $defaultDateRange = [];
 
     protected $chartColors = [];
 
@@ -24,6 +25,7 @@ trait HasFilters
         $this->chartColors = config('capitalyze.chartColors');
 
         $this->decimalPlaces = data_get(Auth::user(), 'settings.decimalPlaces', 1);
+        $this->defaultDateRange = data_get(Auth::user(), 'settings.defaultYearRange', [Carbon::now()->subYears(4)->year, Carbon::now()->year]);
     }
 
     public function isReverseOrder(): bool
@@ -80,8 +82,12 @@ trait HasFilters
                 ? $this->selectedDateRange[1]
                 : $dateRange[1];
         } else {
-            $this->selectedDateRange[0] = $startYear;
-            $this->selectedDateRange[1] = $dateRange[1];
+            $this->selectedDateRange[0] = $this->defaultDateRange[0] >= $dateRange[0]
+                ? $this->defaultDateRange[0]
+                : $dateRange[0];
+            $this->selectedDateRange[1] = $this->defaultDateRange[1] <= $dateRange[1]
+                ? $this->defaultDateRange[1]
+                : $dateRange[1];
         }
 
         $this->updateSelectedDates();
