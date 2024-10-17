@@ -4,6 +4,7 @@ namespace App\Http\Livewire\EventFilings;
 
 use App\Powergrid\BaseTable;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Storage;
 use PowerComponents\LivewirePowerGrid\Column;
 use PowerComponents\LivewirePowerGrid\PowerGrid;
 use PowerComponents\LivewirePowerGrid\PowerGridColumns;
@@ -20,6 +21,15 @@ class Table extends BaseTable
         return array_merge(parent::getListeners(), [
             'updateEventFilingsTable' => 'updateProps',
         ]);
+    }
+
+    private function getLogoUrl($ticker)
+    {
+        if (Storage::disk('s3')->exists("company_logos/{$ticker}.png")) {
+            return Storage::disk('s3')->url("company_logos/{$ticker}.png");
+        } else {
+            return asset('svg/logo.svg');
+        }
     }
 
     public function updateProps(array $config, ?string $search)
@@ -50,6 +60,7 @@ class Table extends BaseTable
     public function columns(): array
     {
         return [
+            Column::make('', 'logo')->headerAttribute('[&>div]:w-[30px]'),
             Column::make('Company Name', 'company', 'registrant_name')->sortable(),
             Column::make('Filing Type', 'formatted_form_type', 'form_type')->sortable(),
             Column::make('Description', 'description'),
@@ -60,6 +71,10 @@ class Table extends BaseTable
     public function addColumns(): PowerGridColumns
     {
         return PowerGrid::columns()
+            ->addColumn('logo', function ($row) {
+                $url = $this->getLogoUrl($row->symbol);
+                return "<img src='{$url}' width='32' height='32' style='width: 32px;' />";
+            })
             ->addColumn('registrant_name')
             ->addColumn('company', function ($row) {
                 $url = route('company.profile', $row->symbol);

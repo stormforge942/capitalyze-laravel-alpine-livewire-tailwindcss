@@ -4,6 +4,7 @@ namespace App\Http\Livewire\Ownership;
 
 use App\Powergrid\BaseTable;
 use App\Models\CompanyFilings;
+use Illuminate\Support\Facades\Storage;
 use App\Services\OwnershipHistoryService;
 use Illuminate\Database\Eloquent\Builder;
 use PowerComponents\LivewirePowerGrid\Column;
@@ -25,6 +26,15 @@ class FundHoldingsTable extends BaseTable
             parent::getListeners(),
             ['filtersChanged' => 'setFilters']
         );
+    }
+
+    private function getLogoUrl($ticker)
+    {
+        if (Storage::disk('s3')->exists("company_logos/{$ticker}.png")) {
+            return Storage::disk('s3')->url("company_logos/{$ticker}.png");
+        } else {
+            return asset('svg/logo.svg');
+        }
     }
 
     public function setFilters($filters)
@@ -73,7 +83,9 @@ class FundHoldingsTable extends BaseTable
                     );
                 }
 
-                return '<a href=" ' . $href . ' " class="text-blue hover:underline">' . $companyFilings->symbol . (!empty($companyFilings->name_of_issuer) ? ' <span class="text-xs font-light">(' . $companyFilings->name_of_issuer . ')<span>' : '') . '</a>';
+                $url = $this->getLogoUrl($companyFilings->symbol);
+
+                return '<a href=" ' . $href . ' " class="text-blue hover:underline flex flex-row items-center gap-x-2">' . "<img src='{$url}' width='32' height='32' style='width: 32px;' />" . "<span>" . $companyFilings->symbol . (!empty($companyFilings->name_of_issuer) ? ' <span class="text-xs font-light">(' . $companyFilings->name_of_issuer . ')<span>' : '') . '</span></a>';
             })
             ->addColumn('ssh_prnamt')
             ->addColumn('ssh_prnamt_formatted', function (CompanyFilings $companyFilings) {
