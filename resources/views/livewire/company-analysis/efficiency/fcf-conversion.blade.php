@@ -50,13 +50,13 @@
                                 Revenues
                             </td>
                             @foreach ($selectedDates as $date)
-                                <?php $value = $data['revenues']['timeline'][$date]; ?>
-                                <?php $hash = $data['revenues']['hash'][$date]; ?>
+                                <?php $value = $data['revenues']['timeline'][$date] ?? null; ?>
+                                <?php $hash = $data['revenues']['hash'][$date] ?? null; ?>
                                 <?php $sliderData = [
                                     'ticker' => $company['ticker'],
                                     'value' => $value['value'],
                                     'hash' => $hash,
-                                    'secondHash' => $data['revenues']['secondHash'][$date],
+                                    'secondHash' => $data['revenues']['secondHash'][$date] ?? null,
                                     'isLink' => false,
                                     'decimalPlaces' => 3
                                     ];
@@ -82,13 +82,13 @@
                             </td>
                             @foreach ($selectedDates as $date)
                                 <td class="pl-6 pt-1 pb-2 last:pr-8 last:rounded-br-lg">
-                                    <?php $value = $data['revenues']['yoy_change'][$date]; ?>
-                                    <?php $hash = $data['revenues']['hash'][$date]; ?>
+                                    <?php $value = $data['revenues']['yoy_change'][$date] ?? null; ?>
+                                    <?php $hash = $data['revenues']['hash'][$date] ?? null; ?>
                                     <?php $sliderData = [
                                             'ticker' => $company['ticker'],
                                             'value' => $value['value'],
                                             'hash' => $hash,
-                                            'secondHash' => $data['revenues']['secondHash'][$date],
+                                            'secondHash' => $data['revenues']['secondHash'][$date] ?? null,
                                             'isLink' => false,
                                             'decimalPlaces' => 3,
                                             'formulaPreset' => $data['revenues']['formulas']['yoy_change'][$date] ?? null
@@ -122,13 +122,13 @@
                             </td>
 
                             @foreach ($selectedDates as $date)
-                                <?php $value = $data['ebitda']['timeline'][$date]; ?>
-                                <?php $hash = $data['ebitda']['hash'][$date]; ?>
+                                <?php $value = $data['ebitda']['timeline'][$date] ?? null; ?>
+                                <?php $hash = $data['ebitda']['hash'][$date] ?? null; ?>
                                 <?php $sliderData = [
                                     'ticker' => $company['ticker'],
                                     'value' => $value['value'],
                                     'hash' => $hash,
-                                    'secondHash' => $data['ebitda']['secondHash'][$date],
+                                    'secondHash' => $data['ebitda']['secondHash'][$date] ?? null,
                                     'isLink' => false,
                                     'decimalPlaces' => 3
                                     ];
@@ -158,13 +158,13 @@
                             </td>
                             @foreach ($selectedDates as $date)
                                 <td class="pl-6 pt-2 pb-1 last:pr-8">
-                                    <?php $value = $data['ebitda']['yoy_change'][$date]; ?>
-                                    <?php $hash = $data['ebitda']['hash'][$date]; ?>
+                                    <?php $value = $data['ebitda']['yoy_change'][$date] ?? null; ?>
+                                    <?php $hash = $data['ebitda']['hash'][$date] ?? null; ?>
                                     <?php $sliderData = [
                                         'ticker' => $company['ticker'],
                                         'value' => $value['value'],
                                         'hash' => $hash,
-                                        'secondHash' => $data['ebitda']['secondHash'][$date],
+                                        'secondHash' => $data['ebitda']['secondHash'][$date] ?? null,
                                         'isLink' => false,
                                         'decimalPlaces' => 3,
                                         'formulaPreset' => $data['ebitda']['formulas']['yoy_change'][$date] ?? null
@@ -193,12 +193,12 @@
                             </td>
                             @foreach ($selectedDates as $date)
                                 <td class="pl-6 py-1 last:pr-8">
-                                    <?php $value = $data['ebitda']['margin'][$date]; ?>
+                                    <?php $value = $data['ebitda']['margin'][$date] ?? null; ?>
                                     <?php $sliderData = [
                                             'ticker' => $company['ticker'],
                                             'value' => $value['value'],
                                             'hash' => $hash,
-                                            'secondHash' => $data['ebitda']['secondHash'][$date],
+                                            'secondHash' => $data['ebitda']['secondHash'][$date] ?? null,
                                             'isLink' => false,
                                             'decimalPlaces' => 3,
                                             'formulaPreset' => $data['ebitda']['formulas']['margin'][$date] ?? null
@@ -237,13 +237,13 @@
                                 </td>
                                 @foreach ($selectedDates as $date)
                                     <td class="pl-6 py-1 last:pr-8">
-                                        <?php $value = $data[$key]['timeline'][$date]; ?>
-                                        <?php $hash = $data[$key]['hash'][$date]; ?>
+                                        <?php $value = $data[$key]['timeline'][$date]  ?? null; ?>
+                                        <?php $hash = $data[$key]['hash'][$date]  ?? null; ?>
                                         <?php $sliderData = [
                                             'ticker' => $company['ticker'],
                                             'value' => $value['value'],
                                             'hash' => $hash,
-                                            'secondHash' => $data[$key]['secondHash'][$date],
+                                            'secondHash' => $data[$key]['secondHash'][$date] ?? null,
                                             'isLink' => false,
                                             'decimalPlaces' => 3
                                         ];
@@ -272,13 +272,13 @@
                                 </td>
                                 @foreach ($selectedDates as $date)
                                     <td class="pl-6 py-1 last:pr-8">
-                                        <?php $value = $data[$key]['yoy_change'][$date]; ?>
-                                        <?php $hash = $data[$key]['hash'][$date]; ?>
+                                        <?php $value = $data[$key]['yoy_change'][$date]  ?? null; ?>
+                                        <?php $hash = $data[$key]['hash'][$date]  ?? null; ?>
                                         <?php $sliderData = [
                                                 'ticker' => $company['ticker'],
                                                 'value' => $value['value'],
                                                 'hash' => $hash,
-                                                'secondHash' => $data[$key]['secondHash'][$date],
+                                                'secondHash' => $data[$key]['secondHash'][$date] ?? null,
                                                 'isLink' => false,
                                                 'decimalPlaces' => 3,
                                                 'formulaPreset' => $data[$key]['formulas']['yoy_change'][$date] ?? null
@@ -307,7 +307,7 @@
                                 </td>
                                 @foreach ($selectedDates as $date)
                                     <td class="pl-6 py-1 last:pr-8">
-                                        <?php $value = $data[$key]['ebitda_percentage'][$date]; ?>
+                                        <?php $value = $data[$key]['ebitda_percentage'][$date]  ?? null; ?>
                                         <?php $sliderData = [
                                                 'ticker' => $company['ticker'],
                                                 'value' => $value['value'],
@@ -342,7 +342,7 @@
                             </td>
                             @foreach ($selectedDates as $date)
                                 <td class="pl-6 pt-1 pb-2 last:pr-8 last:rounded-br-lg">
-                                    <?php $value = $data[$key]['revenue_percentage'][$date]; ?>
+                                    <?php $value = $data[$key]['revenue_percentage'][$date] ?? null; ?>
                                     <?php $sliderData = [
                                             'ticker' => $company['ticker'],
                                             'value' => $value['value'],
@@ -381,7 +381,7 @@
                             </td>
 
                             @foreach ($selectedDates as $date)
-                                <?php $value = $data['free_cashflow']['timeline'][$date]; ?>
+                                <?php $value = $data['free_cashflow']['timeline'][$date]  ?? null; ?>
                                 <?php $sliderData = [
                                     'ticker' => $company['ticker'],
                                     'value' => $value['value'],
@@ -416,7 +416,7 @@
                             </td>
                             @foreach ($selectedDates as $date)
                                 <td class="pl-6 py-1 last:pr-8">
-                                    <?php $value = $data['free_cashflow']['yoy_change'][$date]; ?>
+                                    <?php $value = $data['free_cashflow']['yoy_change'][$date]  ?? null; ?>
                                     <?php $hash = $data[$key]['hash'][$date]; ?>
                                     <?php $sliderData = [
                                             'ticker' => $company['ticker'],
@@ -451,7 +451,7 @@
                             </td>
                             @foreach ($selectedDates as $date)
                                 <td class="pl-6 py-1 last:pr-8">
-                                    <?php $value = $data['free_cashflow']['ebitda_percentage'][$date]; ?>
+                                    <?php $value = $data['free_cashflow']['ebitda_percentage'][$date]  ?? null; ?>
                                     <?php $sliderData = [
                                         'ticker' => $company['ticker'],
                                         'value' => $value['value'],
@@ -485,7 +485,7 @@
                             </td>
                             @foreach ($selectedDates as $date)
                                 <td class="pl-6 pt-1 pb-2 last:pr-8 last:rounded-br-lg">
-                                    <?php $value = $data['free_cashflow']['revenue_percentage'][$date]; ?>
+                                    <?php $value = $data['free_cashflow']['revenue_percentage'][$date] ?? null; ?>
                                     <?php $sliderData = [
                                         'ticker' => $company['ticker'],
                                         'value' => $value['value'],
@@ -524,13 +524,13 @@
                             </td>
 
                             @foreach ($selectedDates as $date)
-                                <?php $value = $data['networth_change']['timeline'][$date]; ?>
-                                <?php $hash = $data['networth_change']['hash'][$date]; ?>
+                                <?php $value = $data['networth_change']['timeline'][$date] ?? null; ?>
+                                <?php $hash = $data['networth_change']['hash'][$date] ?? null; ?>
                                 <?php $sliderData = [
                                     'ticker' => $company['ticker'],
                                     'value' => $value['value'],
                                     'hash' => $hash,
-                                    'secondHash' => $data['networth_change']['secondHash'][$date],
+                                    'secondHash' => $data['networth_change']['secondHash'][$date] ?? null,
                                     'isLink' => false,
                                     'decimalPlaces' => 3
                                 ]; ?>
@@ -561,13 +561,13 @@
                             </td>
                             @foreach ($selectedDates as $date)
                                 <td class="pl-6 py-1 last:pr-8">
-                                    <?php $value = $data['networth_change']['yoy_change'][$date]; ?>
-                                    <?php $hash = $data['networth_change']['hash'][$date]; ?>
+                                    <?php $value = $data['networth_change']['yoy_change'][$date] ?? null; ?>
+                                    <?php $hash = $data['networth_change']['hash'][$date] ?? null; ?>
                                     <?php $sliderData = [
                                         'ticker' => $company['ticker'],
                                         'value' => $value['value'],
                                         'hash' => $hash,
-                                        'secondHash' => $data['networth_change']['secondHash'][$date],
+                                        'secondHash' => $data['networth_change']['secondHash'][$date] ?? null,
                                         'isLink' => false,
                                         'decimalPlaces' => 3,
                                         'formulaPreset' => $data['networth_change']['formulas']['yoy_change'][$date] ?? null
@@ -595,7 +595,7 @@
                             </td>
                             @foreach ($selectedDates as $date)
                                 <td class="pl-6 py-1 last:pr-8">
-                                    <?php $value = $data['networth_change']['ebitda_percentage'][$date]; ?>
+                                    <?php $value = $data['networth_change']['ebitda_percentage'][$date] ?? null; ?>
                                     <?php $sliderData = [
                                         'ticker' => $company['ticker'],
                                         'value' => $value['value'],
@@ -629,7 +629,7 @@
                             </td>
                             @foreach ($selectedDates as $date)
                                 <td class="pl-6 pt-1 pb-2 last:pr-8 last:rounded-br-lg">
-                                    <?php $value = $data['networth_change']['revenue_percentage'][$date]; ?>
+                                    <?php $value = $data['networth_change']['revenue_percentage'][$date] ?? null; ?>
                                     <?php $sliderData = [
                                         'ticker' => $company['ticker'],
                                         'value' => $value['value'],
@@ -668,7 +668,7 @@
                             </td>
 
                             @foreach ($selectedDates as $date)
-                                <?php $value = $data['levered_free_cashflow']['timeline'][$date]; ?>
+                                <?php $value = $data['levered_free_cashflow']['timeline'][$date] ?? null; ?>
                                 <?php $sliderData = [
                                     'ticker' => $company['ticker'],
                                     'value' => $value['value'],
@@ -702,8 +702,8 @@
                             </td>
                             @foreach ($selectedDates as $date)
                                 <td class="pl-6 py-1 last:pr-8">
-                                    <?php $value = $data['levered_free_cashflow']['yoy_change'][$date]; ?>
-                                    <?php $hash = $data['networth_change']['hash'][$date]; ?>
+                                    <?php $value = $data['levered_free_cashflow']['yoy_change'][$date] ?? null; ?>
+                                    <?php $hash = $data['networth_change']['hash'][$date] ?? null; ?>
                                     <?php $sliderData = [
                                         'ticker' => $company['ticker'],
                                         'value' => $value['value'],
@@ -736,7 +736,7 @@
                             </td>
                             @foreach ($selectedDates as $date)
                                 <td class="pl-6 py-1 last:pr-8">
-                                    <?php $value = $data['levered_free_cashflow']['ebitda_percentage'][$date]; ?>
+                                    <?php $value = $data['levered_free_cashflow']['ebitda_percentage'][$date] ?? null; ?>
                                     <?php $sliderData = [
                                         'ticker' => $company['ticker'],
                                         'value' => $value['value'],
@@ -770,7 +770,7 @@
                             </td>
                             @foreach ($selectedDates as $date)
                                 <td class="pl-6 pt-1 pb-2 last:pr-8">
-                                    <?php $value = $data['levered_free_cashflow']['margin'][$date]; ?>
+                                    <?php $value = $data['levered_free_cashflow']['margin'][$date] ?? null; ?>
                                     <?php $sliderData = [
                                         'ticker' => $company['ticker'],
                                         'value' => $value['value'],

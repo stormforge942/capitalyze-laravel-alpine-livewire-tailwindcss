@@ -76,12 +76,12 @@
                                     Book Value of Common Equity
                                 </td>
                                 @foreach ($selectedDates as $date)
-                                    <?php $value = $data['book']['equity']['timeline'][$date]; ?>
+                                    <?php $value = $data['book']['equity']['timeline'][$date] ?? null; ?>
                                     <?php $sliderData = [
                                         'ticker' => $company['ticker'],
                                         'value' => $value['value'],
-                                        'hash' => $formulaHashes['total_equity'][$date]['hash'],
-                                        'secondHash' => $formulaHashes['total_equity'][$date]['secondHash'],
+                                        'hash' => $formulaHashes['total_equity'][$date]['hash'] ?? null,
+                                        'secondHash' => $formulaHashes['total_equity'][$date]['secondHash'] ?? null,
                                         'isLink' => false,
                                         'decimalPlaces' => 3,
                                     ]; ?>
@@ -110,7 +110,7 @@
                                 </td>
                                 @foreach ($selectedDates as $date)
                                     <td class="pl-6 py-1 last:pr-8">
-                                        <?php $value = $data['book']['equity']['yoy_change'][$date]; ?>
+                                        <?php $value = $data['book']['equity']['yoy_change'][$date] ?? null; ?>
                                         <?php $sliderData = [
                                             'ticker' => $company['ticker'],
                                             'value' => $value['value'],
@@ -118,7 +118,7 @@
                                             'secondHash' => null,
                                             'isLink' => false,
                                             'decimalPlaces' => 3,
-                                            'formulaPreset' => $data['book']['formulas']['equity']['yoy_change'][$date]  ?? null
+                                            'formulaPreset' => $data['book']['formulas']['equity']['yoy_change'][$date] ?? null
                                         ]; ?>
 
                                         <x-review-number-button x-show="!publicView" x-data="{ amount: '{{ $value['value'] }}', date: '{{ $date }}' }">
@@ -143,7 +143,7 @@
                                 </td>
                                 @foreach ($selectedDates as $date)
                                     <td class="pl-6 py-1 last:pr-8">
-                                        <?php $value = $data['book']['equity']['total_percent'][$date]; ?>
+                                        <?php $value = $data['book']['equity']['total_percent'][$date] ?? null; ?>
                                         <?php $sliderData = [
                                             'ticker' => $company['ticker'],
                                             'value' => $value['value'],
@@ -175,12 +175,12 @@
                                     Total Net Debt
                                 </td>
                                 @foreach ($selectedDates as $date)
-                                    <?php $value = $data['book']['net_debt']['timeline'][$date]; ?>
+                                    <?php $value = $data['book']['net_debt']['timeline'][$date] ?? null; ?>
                                     <?php $sliderData = [
                                         'ticker' => $company['ticker'],
                                         'value' => $value['value'],
-                                        'hash' => $formulaHashes['net_debt'][$date]['hash'],
-                                        'secondHash' => $formulaHashes['net_debt'][$date]['secondHash'],
+                                        'hash' => $formulaHashes['net_debt'][$date]['hash'] ?? null,
+                                        'secondHash' => $formulaHashes['net_debt'][$date]['secondHash'] ?? null,
                                         'isLink' => false,
                                         'decimalPlaces' => 3,
                                     ]; ?>
@@ -209,7 +209,7 @@
                                 </td>
                                 @foreach ($selectedDates as $date)
                                     <td class="pl-6 py-1 last:pr-8">
-                                        <?php $value = $data['book']['net_debt']['yoy_change'][$date]; ?>
+                                        <?php $value = $data['book']['net_debt']['yoy_change'][$date] ?? null; ?>
                                         <?php $sliderData = [
                                             'ticker' => $company['ticker'],
                                             'value' => $value['value'],
@@ -242,7 +242,7 @@
                                 </td>
                                 @foreach ($selectedDates as $date)
                                     <td class="pl-6 py-1 last:pr-8">
-                                        <?php $value = $data['book']['net_debt']['total_percent'][$date]; ?>
+                                        <?php $value = $data['book']['net_debt']['total_percent'][$date] ?? null; ?>
                                         <?php $sliderData = [
                                             'ticker' => $company['ticker'],
                                             'value' => $value['value'],
@@ -274,7 +274,7 @@
                                     Preferred Equity
                                 </td>
                                 @foreach ($selectedDates as $date)
-                                    <?php $value = $data['book']['preferred_equity']['timeline'][$date]; ?>
+                                    <?php $value = $data['book']['preferred_equity']['timeline'][$date] ?? null; ?>
 
                                     <td
                                         class="pl-6 py-1 last:pr-8 @if (!$loop->first) last:rounded-tr-lg @endif">
@@ -294,7 +294,7 @@
                                 </td>
                                 @foreach ($selectedDates as $date)
                                     <td class="pl-6 py-1 last:pr-8">
-                                        <?php $value = $data['book']['preferred_equity']['total_percent'][$date]; ?>
+                                        <?php $value = $data['book']['preferred_equity']['total_percent'][$date] ?? null; ?>
                                         <?php $sliderData = [
                                             'ticker' => $company['ticker'],
                                             'value' => $value['value'],
@@ -326,7 +326,7 @@
                                     Minority Interest
                                 </td>
                                 @foreach ($selectedDates as $date)
-                                    <?php $value = $data['book']['minority_interest']['timeline'][$date]; ?>
+                                    <?php $value = $data['book']['minority_interest']['timeline'][$date] ?? null; ?>
 
                                     <td
                                         class="pl-6 py-1 last:pr-8 @if (!$loop->first) last:rounded-tr-lg @endif">
@@ -346,7 +346,7 @@
                                 </td>
                                 @foreach ($selectedDates as $date)
                                     <td class="pl-6 pt-1 pb-2 last:pr-8">
-                                        <?php $value = $data['book']['minority_interest']['total_percent'][$date]; ?>
+                                        <?php $value = $data['book']['minority_interest']['total_percent'][$date] ?? null; ?>
                                         <?php $sliderData = [
                                             'ticker' => $company['ticker'],
                                             'value' => $value['value'],
@@ -379,7 +379,7 @@
                                     Total Capital (Book Value)
                                 </td>
                                 @foreach ($selectedDates as $date)
-                                    <?php $value = $data['book']['total_value']['timeline'][$date]; ?>
+                                    <?php $value = $data['book']['total_value']['timeline'][$date] ?? null; ?>
                                     <?php $sliderData = [
                                         'ticker' => $company['ticker'],
                                         'value' => $value['value'],
@@ -413,7 +413,7 @@
                                 </td>
                                 @foreach ($selectedDates as $date)
                                     <td class="pl-6 py-1 last:pr-8">
-                                        <?php $value = $data['book']['total_value']['yoy_change'][$date]; ?>
+                                        <?php $value = $data['book']['total_value']['yoy_change'][$date] ?? null; ?>
                                             <?php $sliderData = [
                                             'ticker' => $company['ticker'],
                                             'value' => $value['value'],
@@ -446,7 +446,7 @@
                                 </td>
                                 @foreach ($selectedDates as $date)
                                     <td class="pl-6 pt-1 pb-2 last:pr-8 last:rounded-br-lg">
-                                        <?php $value = $data['book']['net_debt_by_capital'][$date]; ?>
+                                        <?php $value = $data['book']['net_debt_by_capital'][$date] ?? null; ?>
                                         <?php $sliderData = [
                                             'ticker' => $company['ticker'],
                                             'value' => $value['value'],
@@ -499,7 +499,7 @@
                                     Market Value of Equity
                                 </td>
                                 @foreach ($selectedDates as $date)
-                                    <?php $value = $data['market']['equity']['timeline'][$date]; ?>
+                                    <?php $value = $data['market']['equity']['timeline'][$date] ?? null; ?>
                                     <?php $sliderData = [
                                         'ticker' => $company['ticker'],
                                         'value' => $value['value'],
@@ -534,7 +534,7 @@
                                 </td>
                                 @foreach ($selectedDates as $date)
                                     <td class="pl-6 py-1 last:pr-8">
-                                        <?php $value = $data['market']['equity']['yoy_change'][$date]; ?>
+                                        <?php $value = $data['market']['equity']['yoy_change'][$date] ?? null; ?>
                                         <?php $sliderData = [
                                             'ticker' => $company['ticker'],
                                             'value' => $value['value'],
@@ -567,7 +567,7 @@
                                 </td>
                                 @foreach ($selectedDates as $date)
                                     <td class="pl-6 py-1 last:pr-8">
-                                        <?php $value = $data['market']['equity']['total_percent'][$date]; ?>
+                                        <?php $value = $data['market']['equity']['total_percent'][$date] ?? null; ?>
                                         <?php $sliderData = [
                                             'ticker' => $company['ticker'],
                                             'value' => $value['value'],
@@ -599,12 +599,12 @@
                                     Total Net Debt
                                 </td>
                                 @foreach ($selectedDates as $date)
-                                    <?php $value = $data['market']['net_debt']['timeline'][$date]; ?>
+                                    <?php $value = $data['market']['net_debt']['timeline'][$date] ?? null; ?>
                                     <?php $sliderData = [
                                         'ticker' => $company['ticker'],
                                         'value' => $value['value'],
-                                        'hash' => $formulaHashes['net_debt'][$date]['hash'],
-                                        'secondHash' => $formulaHashes['net_debt'][$date]['secondHash'],
+                                        'hash' => $formulaHashes['net_debt'][$date]['hash'] ?? null,
+                                        'secondHash' => $formulaHashes['net_debt'][$date]['secondHash'] ?? null,
                                         'isLink' => false,
                                         'decimalPlaces' => 3,
                                     ]; ?>
@@ -633,7 +633,7 @@
                                 </td>
                                 @foreach ($selectedDates as $date)
                                     <td class="pl-6 py-1 last:pr-8">
-                                        <?php $value = $data['market']['net_debt']['yoy_change'][$date]; ?>
+                                        <?php $value = $data['market']['net_debt']['yoy_change'][$date] ?? null; ?>
                                         <?php $sliderData = [
                                             'ticker' => $company['ticker'],
                                             'value' => $value['value'],
@@ -666,7 +666,7 @@
                                 </td>
                                 @foreach ($selectedDates as $date)
                                     <td class="pl-6 py-1 last:pr-8">
-                                        <?php $value = $data['market']['net_debt']['total_percent'][$date]; ?>
+                                        <?php $value = $data['market']['net_debt']['total_percent'][$date] ?? null; ?>
                                         <?php $sliderData = [
                                             'ticker' => $company['ticker'],
                                             'value' => $value['value'],
@@ -698,7 +698,7 @@
                                     Preferred Equity
                                 </td>
                                 @foreach ($selectedDates as $date)
-                                    <?php $value = $data['market']['preferred_equity']['timeline'][$date]; ?>
+                                    <?php $value = $data['market']['preferred_equity']['timeline'][$date] ?? null; ?>
 
                                     <td
                                         class="pl-6 py-1 last:pr-8 @if (!$loop->first) last:rounded-tr-lg @endif">
@@ -718,7 +718,7 @@
                                 </td>
                                 @foreach ($selectedDates as $date)
                                     <td class="pl-6 py-1 last:pr-8">
-                                        <?php $value = $data['market']['preferred_equity']['total_percent'][$date]; ?>
+                                        <?php $value = $data['market']['preferred_equity']['total_percent'][$date] ?? null; ?>
                                         <?php $sliderData = [
                                             'ticker' => $company['ticker'],
                                             'value' => $value['value'],
@@ -750,7 +750,7 @@
                                     Minority Interest
                                 </td>
                                 @foreach ($selectedDates as $date)
-                                    <?php $value = $data['market']['minority_interest']['timeline'][$date]; ?>
+                                    <?php $value = $data['market']['minority_interest']['timeline'][$date] ?? null; ?>
 
                                     <td
                                         class="pl-6 py-1 last:pr-8 @if (!$loop->first) last:rounded-tr-lg @endif">
@@ -770,7 +770,7 @@
                                 </td>
                                 @foreach ($selectedDates as $date)
                                     <td class="pl-6 pt-1 pb-2 last:pr-8">
-                                        <?php $value = $data['market']['minority_interest']['total_percent'][$date]; ?>
+                                        <?php $value = $data['market']['minority_interest']['total_percent'][$date] ?? null; ?>
                                         <?php $sliderData = [
                                             'ticker' => $company['ticker'],
                                             'value' => $value['value'],
@@ -803,7 +803,7 @@
                                     Total Enterprise Value
                                 </td>
                                 @foreach ($selectedDates as $date)
-                                    <?php $value = $data['market']['total_value']['timeline'][$date]; ?>
+                                    <?php $value = $data['market']['total_value']['timeline'][$date] ?? null; ?>
                                     <?php $sliderData = [
                                         'ticker' => $company['ticker'],
                                         'value' => $value['value'],
@@ -837,7 +837,7 @@
                                 </td>
                                 @foreach ($selectedDates as $date)
                                     <td class="pl-6 py-1 last:pr-8">
-                                        <?php $value = $data['market']['total_value']['yoy_change'][$date]; ?>
+                                        <?php $value = $data['market']['total_value']['yoy_change'][$date] ?? null; ?>
                                         <?php $sliderData = [
                                             'ticker' => $company['ticker'],
                                             'value' => $value['value'],
@@ -870,7 +870,7 @@
                                 </td>
                                 @foreach ($selectedDates as $date)
                                     <td class="pl-6 pt-1 pb-2 last:pr-8 last:rounded-br-lg">
-                                        <?php $value = $data['market']['net_debt_by_capital'][$date]; ?>
+                                        <?php $value = $data['market']['net_debt_by_capital'][$date] ?? null; ?>
                                         <?php $sliderData = [
                                             'ticker' => $company['ticker'],
                                             'value' => $value['value'],

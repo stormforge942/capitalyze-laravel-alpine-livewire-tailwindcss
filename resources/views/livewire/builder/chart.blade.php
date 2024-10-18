@@ -154,36 +154,17 @@
             <div wire:loading.remove x-show="showChart && dates.length" x-cloak>
                 <div class="mt-6">
                     <x-filter-box>
-                        <div class="flex items-center gap-x-1">
+                        <div class="flex items-center gap-x-1 mr-3">
                             <span class="text-sm text-dark-light2">Period Type</span>
                             <x-select placeholder="Period Type" :options="['annual' => 'Annual', 'quarter' => 'Quarterly']" x-model="filters.period"></x-select>
                         </div>
 
                         <div class="flex-1">
-                            <x-range-slider :min="2002" :max="date('Y')" x-init="() => {
-                                const range = fullDateRange
-                            
-                                min = range[0]
-                                max = range[1]
-                            
-                                value = filters.dateRange
-                            
-                                initSlider()
-                            }"
-                                @range-updated="filters.dateRange = $event.detail"
-                                @update-range-slider.window="() => {
-                                        const range = fullDateRange
-        
-                                        min = range[0]
-                                        max = range[1]
-                                    
-                                        value = filters.dateRange
-                                    
-                                        initSlider()    
-                                    }"></x-range-slider>
+                            <x-range-slider :min="$dateRange[$filters['period']][0]" :max="$dateRange[$filters['period']][1]" :value="$filters['dateRange']"
+                                @range-updated="filters.dateRange = $event.detail"></x-range-slider>
                         </div>
 
-                        <div class="flex items-center gap-x-1">
+                        <div class="flex items-center gap-x-1 ml-3">
                             <span class="text-sm text-dark-light2">Unit Type</span>
                             <x-select placeholder="Unit Type" :options="['As Stated', 'Thousands', 'Millions', 'Billions']" x-model="filters.unit"></x-select>
                         </div>

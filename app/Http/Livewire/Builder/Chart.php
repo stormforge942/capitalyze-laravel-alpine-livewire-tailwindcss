@@ -74,6 +74,7 @@ class Chart extends Component
             }
         }
 
+        $this->adjustDateRange($data);
 
         return $data;
     }
@@ -154,5 +155,16 @@ class Chart extends Component
                 'companies' => $this->companies,
                 'metrics' => $this->metrics,
             ]);
+    }
+
+    private function adjustDateRange($data)
+    {
+        if (isset($this->filters)) {
+            $dataStartRange = $data['dateRange'][$this->filters['period']][0];
+            $dataEndRange = $data['dateRange'][$this->filters['period']][1];
+
+            $this->filters['dateRange'][0] = max($this->filters['dateRange'][0], $dataStartRange);
+            $this->filters['dateRange'][1] = min($dataEndRange, $this->filters['dateRange'][1]);
+        }
     }
 }

@@ -52,13 +52,13 @@
                                     {{ $product }}
                                 </td>
                                 @foreach ($selectedDates as $date)
-                                    <?php $value = $result['timeline'][$date]; ?>
-                                    <?php $hash = $result['hash'][$date]; ?>
+                                    <?php $value = $result['timeline'][$date] ?? null; ?>
+                                    <?php $hash = $result['hash'][$date] ?? null; ?>
                                     <?php $sliderData = [
                                         'ticker' => $company['ticker'],
                                         'value' => $value['value'],
                                         'hash' => $hash,
-                                        'secondHash' => $result['secondHash'][$date],
+                                        'secondHash' => $result['secondHash'][$date] ?? null,
                                         'isLink' => false,
                                         'decimalPlaces' => 3
                                     ]; ?>
@@ -86,7 +86,7 @@
                                 </td>
                                 @foreach ($selectedDates as $date)
                                     <td class="pl-6 pt-2 pb-1 last:pr-8">
-                                        <?php $value = $result['yoy_change'][$date]; ?>
+                                        <?php $value = $result['yoy_change'][$date] ?? null; ?>
                                         <?php $sliderData = [
                                             'ticker' => $company['ticker'],
                                             'value' => $value['value'],
@@ -94,7 +94,7 @@
                                             'secondHash' => null,
                                             'isLink' => false,
                                             'decimalPlaces' => 3,
-                                            'formulaPreset' => $result['formulas']['yoy_change'][$date]
+                                            'formulaPreset' => $result['formulas']['yoy_change'][$date] ?? null
                                         ]; ?>
 
                                         <x-review-number-button x-show="!publicView" x-data="{ amount: '{{ $value['value'] }}', date: '{{ $date }}' }">
@@ -119,7 +119,7 @@
                                 </td>
                                 @foreach ($selectedDates as $date)
                                     <td class="pl-6 pt-1 pb-2 last:pr-8 last:rounded-br-lg">
-                                        <?php $value = $result['total_percent'][$date]; ?>
+                                        <?php $value = $result['total_percent'][$date] ?? null; ?>
                                         <?php $sliderData = [
                                             'ticker' => $company['ticker'],
                                             'value' => $value['value'],
@@ -127,7 +127,7 @@
                                             'secondHash' => null,
                                             'isLink' => false,
                                             'decimalPlaces' => 3,
-                                            'formulaPreset' => $result['formulas']['total_percent'][$date]
+                                            'formulaPreset' => $result['formulas']['total_percent'][$date] ?? null
                                         ]; ?>
 
 
@@ -159,13 +159,13 @@
                             </td>
 
                             @foreach ($selectedDates as $date)
-                                <?php $value = $data['total']['timeline'][$date]; ?>
-                                <?php $hash = $result['hash'][$date]; ?>
+                                <?php $value = $data['total']['timeline'][$date] ?? null; ?>
+                                <?php $hash = $result['hash'][$date] ?? null; ?>
                                 <?php $sliderData = [
                                     'ticker' => $company['ticker'],
                                     'value' =>$value['value'],
                                     'hash' => $hash,
-                                    'secondHash' => $result['secondHash'][$date],
+                                    'secondHash' => $result['secondHash'][$date] ?? null,
                                     'isLink' => false,
                                     'decimalPlaces' => 3
                                 ]; ?>
@@ -193,7 +193,7 @@
                             </td>
                             @foreach ($selectedDates as $date)
                                 <td class="pl-6 pt-2 pb-2 last:pr-8">
-                                    <?php $value = $data['total']['yoy_change'][$date]; ?>
+                                    <?php $value = $data['total']['yoy_change'][$date] ?? null; ?>
                                     <?php $sliderData = [
                                         'ticker' => $company['ticker'],
                                         'value' => $value['value'],
@@ -201,7 +201,7 @@
                                         'secondHash' => null,
                                         'isLink' => false,
                                         'decimalPlaces' => 3,
-                                        'formulaPreset' => $data['total']['formulas'][$date]
+                                        'formulaPreset' => $data['total']['formulas'][$date] ?? null
                                     ]; ?>
 
                                     <x-review-number-button x-show="!publicView" x-data="{ amount: '{{ $value['value'] }}', date: '{{ $date }}' }">

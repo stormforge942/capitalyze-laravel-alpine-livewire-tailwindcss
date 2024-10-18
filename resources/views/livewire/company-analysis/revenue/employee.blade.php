@@ -49,7 +49,7 @@
                                 Revenues
                             </td>
                             @foreach ($selectedDates as $date)
-                                <?php $value = $data['revenues']['timeline'][$date]; ?>
+                                <?php $value = $data['revenues']['timeline'][$date] ?? null; ?>
                                 <?php $sliderData = [
                                     'ticker' => $company['ticker'],
                                     'value' => $value['value'],
@@ -83,7 +83,7 @@
                             </td>
                             @foreach ($selectedDates as $date)
                                 <td class="pl-6 py-1 last:pr-8">
-                                    <?php $value = $data['revenues']['yoy_change'][$date]; ?>
+                                    <?php $value = $data['revenues']['yoy_change'][$date] ?? null; ?>
                                     <?php $sliderData = [
                                         'ticker' => $company['ticker'],
                                         'value' => $value['value'],
@@ -115,8 +115,8 @@
                                 Employees
                             </td>
                             @foreach ($selectedDates as $date)
-                                <?php $value = $data['employee_count']['timeline'][$date]; ?>
-                                <?php $link = $data['employee_count']['links'][$date]; ?>
+                                <?php $value = $data['employee_count']['timeline'][$date] ?? null; ?>
+                                <?php $link = $data['employee_count']['links'][$date] ?? null; ?>
 
                                 <td
                                     class="pl-6 py-1 last:pr-8 @if (!$loop->first) last:rounded-tr-lg @endif">
@@ -142,7 +142,7 @@
                             </td>
                             @foreach ($selectedDates as $date)
                                 <td class="pl-6 pt-1 pb-2 last:pr-8">
-                                    <?php $value = $data['employee_count']['yoy_change'][$date]; ?>
+                                    <?php $value = $data['employee_count']['yoy_change'][$date]?? null; ?>
                                     <?php $sliderData = [
                                         'ticker' => $company['ticker'],
                                         'value' => $value['value'],
@@ -175,7 +175,7 @@
                                 Revenue / Employee ('000s)
                             </td>
                             @foreach ($selectedDates as $date)
-                                <?php $value = $data['rev_by_emp']['timeline'][$date]; ?>
+                                <?php $value = $data['rev_by_emp']['timeline'][$date] ?? null; ?>
                                 <?php $sliderData = [
                                     'ticker' => $company['ticker'],
                                     'value' => $value['value'],
@@ -209,7 +209,7 @@
                             </td>
                             @foreach ($selectedDates as $date)
                                 <td class="pl-6 pt-1 pb-2 last:pr-8 last:rounded-br-lg">
-                                    <?php $value = $data['rev_by_emp']['yoy_change'][$date]; ?>
+                                    <?php $value = $data['rev_by_emp']['yoy_change'][$date] ?? null; ?>
                                     <?php $sliderData = [
                                         'ticker' => $company['ticker'],
                                         'value' => $value['value'],
