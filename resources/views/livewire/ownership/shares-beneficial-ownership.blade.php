@@ -21,10 +21,10 @@
         this.chart = new Chart(this.$refs.chartShares.getContext('2d'), {
             type: 'doughnut',
             data: {
-                labels: this.data.ownership.map(item => item.name),
+                labels: this.data.map(item => item.owner_name),
                 datasets: [{
                     label: 'Shares Beneficial Ownership',
-                    data: this.data.ownership.map(item => item.shares),
+                    data: this.data.map(item => item.shares_owned),
                     borderWidth: 1
                 }],
             },
@@ -49,10 +49,9 @@
     getData() {
         this.$wire.getOwnership(this.year)
             .then(res => {
-                this.data = {
-                    ...res[0],
-                    ownership: JSON.parse(res[0].ownership),
-                };
+                this.data = [
+                    ...res,
+                ];
             });
     },
 }">

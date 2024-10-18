@@ -9,8 +9,6 @@ use App\Http\Livewire\AsTab;
 use Illuminate\Support\Facades\Cache;
 use App\Models\SharesBeneficiallyOwned;
 
-
-
 class SharesBeneficialOwnership extends Component
 {
     use AsTab;
@@ -52,13 +50,15 @@ class SharesBeneficialOwnership extends Component
     {
         $data = Cache::remember('shares_beneficial_ownership_' . $year . '_' . $this->ticker, now()->addMinutes(5), function () use ($year) {
             return SharesBeneficiallyOwned::query()
-                ->select('ownership', 'url', 's3_url')
+                ->select('owner_name', 'shares_owned', 'url', 's3_url')
                 ->when($this->ticker, fn ($q) => $q->where('symbol', $this->ticker))
                 ->when($year, fn ($q) => $q->whereRaw('EXTRACT(YEAR FROM CAST(acceptance_time AS DATE)) = ?', [$year]))
-                ->first();
+                ->orderByDesc('shares_owned')
+                ->get()
+                ->toArray();
         });
 
-        return [$data];
+        return $data;
     }
 
     public function render()

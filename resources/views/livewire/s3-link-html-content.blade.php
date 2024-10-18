@@ -18,6 +18,7 @@
                         iframe.onload = () => {
                             window.reportTextHighlighter.highlight(
                                 {{ $quantity }},
+                                {{ $quantity }},
                                 ['table tbody tr td', 'table tbody tr td p'],
                                 iframe.contentDocument
                             )
