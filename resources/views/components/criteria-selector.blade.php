@@ -67,8 +67,8 @@
                 </p>
             </x-slot>
 
-            <div class="w-[20rem] sm:w-[26rem] h-[400px] !overflow-scroll">
-                <div class="fixed top-0 left-0 z-50 bg-white">
+            <form class="w-[20rem] sm:w-[26rem]">
+                <div>
                     <div class="flex justify-between items-start gap-2 px-6 pt-6">
                         <div>
                             <p class="font-medium text-base">Select {{ $placeholder }}</p>
@@ -127,17 +127,19 @@
                     </template>
                 </div>
 
-                <div :class="tmpValue.exclude ? 'mt-[170px]' : 'my-[120px]'" class="p-4 relative z-0">
-                    <template x-for="(value, index) in computedOptions" :key="index">
-                        <label class="p-4 flex items-center gap-x-4 hover:bg-green-light cursor-pointer rounded">
-                            <input type="checkbox" name="company" class="custom-checkbox border-dark focus:ring-0"
-                                :value="value" x-model="tmpValue.data">
-                            <span x-text="value"></span>
-                        </label>
-                    </template>
+                <div class="max-h-[19rem] overflow-y-auto dropdown-scroll mr-1">
+                    <div class="space-y-2 px-6">
+                        <template x-for="(value, index) in computedOptions" :key="index">
+                            <label class="cursor-pointer rounded flex items-center p-4 hover:bg-green-light gap-x-4">
+                                <input type="checkbox" name="company" class="custom-checkbox border-dark focus:ring-0"
+                                    :value="value" x-model="tmpValue.data">
+                                <span x-text="value"></span>
+                            </label>
+                        </template>
+                    </div>
                 </div>
 
-                <div class="p-6 border-t flex gap-4 fixed bottom-0 bg-white w-full">
+                <div class="p-6 border-t flex gap-4">
                     <button type="button"
                         class="w-full px-4 py-3 font-medium bg-green-dark hover:bg-opacity-80 rounded disabled:pointer-events-none disabled:bg-[#D4DDD7] disabled:text-gray-medium2 text-base"
                         @click="tmpValue.data = [];">
@@ -149,7 +151,7 @@
                         Done
                     </button>
                 </div>
-            </div>
+            </form>
         </x-dropdown>
 
         <div class="flex items-center gap-1 border-[0.5px] border-[#D4DDD7] rounded-tr-full rounded-br-full"
