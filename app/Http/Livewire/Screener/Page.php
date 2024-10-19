@@ -20,8 +20,8 @@ class Page extends Component
         '>=' => 'Greater than or equal (>=)',
         '<' => 'Less than (<)',
         '<=' => 'Less than or equal (<=)',
-        '=' => 'Equal (=)',
         'between' => 'Between',
+        'display' => 'Display Only',
     ];
 
     public $tab = null;

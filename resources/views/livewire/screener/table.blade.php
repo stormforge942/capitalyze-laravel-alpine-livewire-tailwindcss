@@ -6,20 +6,17 @@
         localStorage.setItem('screener-summary-at', this.summaryAt);
     }
 }">
-    @if ($loaded && count($universal) + count($summaries))
+    @if ($loaded && count($table['data']))
         <div wire:loading.remove>
             <div class="overflow-x-auto">
-                <table class="table power-grid-table w-full bg-white rounded-b-md overflow-clip text-left" wire:key="{{ \Str::random(5) }}">
+                <table class="table power-grid-table w-full bg-white rounded-b-md overflow-clip text-left"
+                    wire:key="{{ \Str::random(5) }}">
                     <thead class="font-sm font-semibold capitalize bg-[#EDEDED] rounded-t-md">
                         <tr>
-                            <th class="pl-6 py-2 text-dark whitespace-nowrap">Ticker</th>
-                            <th class="pl-6 py-2 text-dark whitespace-nowrap">Name</th>
-                            <th class="pl-6 py-2 text-dark whitespace-nowrap">Location</th>
-                            <th class="pl-6 py-2 text-dark whitespace-nowrap">Exchange</th>
-                            <th class="pl-6 py-2 text-dark whitespace-nowrap">Industry</th>
-                            <th class="pl-6 py-2 text-dark whitespace-nowrap">Sector</th>
-                            <th class="pl-6 last:pr-6 py-2 text-dark whitespace-nowrap">Maket Cap</th>
-                            @foreach ($columns as $column)
+                            @foreach ($columns['simple'] as $column)
+                                <th class="pl-6 last:pr-6 py-2 text-dark whitespace-nowrap">{{ $column['title'] }}</th>
+                            @endforeach
+                            @foreach ($columns['complex'] as $column)
                                 <th class="pl-6 last:pr-6 py-2 text-dark whitespace-nowrap">{!! $column['title'] !!}</th>
                             @endforeach
                         </tr>
@@ -30,14 +27,10 @@
                     <tbody class="[&>tr]:border-b-2 [&>tr]:border-gray-light font-semibold">
                         @foreach ($table['data'] as $row)
                             <tr class="last:border-0">
-                                <td class="pl-6 py-4 whitespace-nowrap">{{ $row['symbol'] }}</td>
-                                <td class="pl-6 py-4 whitespace-nowrap">{{ $row['registrant_name'] }}</td>
-                                <td class="pl-6 py-4 whitespace-nowrap">{{ $row['country'] }}</td>
-                                <td class="pl-6 py-4 whitespace-nowrap">{{ $row['exchange'] }}</td>
-                                <td class="pl-6 py-4 whitespace-nowrap">{{ $row['sic_group'] }}</td>
-                                <td class="pl-6 py-4 whitespace-nowrap">{{ $row['sic_description'] }}</td>
-                                <td class="pl-6 last:pr-6 py-4 whitespace-nowrap">N/A</td>
-                                @foreach ($columns as $column)
+                                @foreach ($columns['simple'] as $column)
+                                    <td class="pl-6 py-4 whitespace-nowrap">{{ $row[$column['column']] }}</td>
+                                @endforeach
+                                @foreach ($columns['complex'] as $column)
                                     <td class="pl-6 last:pr-6 py-4 whitespace-nowrap">
                                         @if (isset($row['standard_data'][$column['accessor']]) && !is_null($row['standard_data'][$column['accessor']]))
                                             <span
@@ -143,23 +136,17 @@
                 <tr>
                     <th class="pl-6 py-2 text-dark whitespace-nowrap">Ticker</th>
                     <th class="pl-6 py-2 text-dark whitespace-nowrap">Name</th>
-                    <th class="pl-6 py-2 text-dark whitespace-nowrap">Location</th>
-                    <th class="pl-6 py-2 text-dark whitespace-nowrap">Exchange</th>
-                    <th class="pl-6 py-2 text-dark whitespace-nowrap">Industry</th>
-                    <th class="pl-6 py-2 text-dark whitespace-nowrap">Sector</th>
-                    <th class="pl-6 py-2 text-dark whitespace-nowrap">Maket Cap</th>
+                    @foreach (range(1, 3) as $idx)
+                        <th class="pl-6 last:pr-6 py-2 text-dark whitespace-nowrap">
+                            <p class="h-4 w-20 bg-gray-300 rounded"></p>
+                        </th>
+                    @endforeach
                 </tr>
             </thead>
 
             <tbody class="animate-pulse">
                 @foreach (range(1, 10) as $idx)
                     <tr>
-                        <td class="pl-6 py-4 whitespace-nowrap">
-                            <p class="h-4 w-full bg-gray-300 rounded"></p>
-                        </td>
-                        <td class="pl-6 py-4 whitespace-nowrap">
-                            <p class="h-4 w-full bg-gray-300 rounded"></p>
-                        </td>
                         <td class="pl-6 py-4 whitespace-nowrap">
                             <p class="h-4 w-full bg-gray-300 rounded"></p>
                         </td>

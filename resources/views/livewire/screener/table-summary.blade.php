@@ -1,4 +1,4 @@
-@if (count($summaries) && count($table['data']))
+@if (count($table['summary']) && count($table['data']))
     <template x-if="summaryAt === '{{ $for }}'">
         <tbody class="[&>tr]:border-b-2 [&>tr]:border-gray-light font-semibold">
             @if ($for === 'top')
@@ -25,9 +25,8 @@
             @foreach ($summaries as $summary)
                 <tr style="background: rgba(82, 198, 255, 0.10)">
                     <td class="uppercase pl-6 py-4">{{ $summary }}</td>
-                    <td colspan="5"></td>
-                    <td class="pl-6 last:pr-6 py-4">N/A</td>
-                    @foreach ($columns as $column)
+                    <td colspan="{{ count($columns['simple']) - 1 }}"></td>
+                    @foreach ($columns['complex'] as $column)
                         <td class="pl-6 last:pr-6 py-4">
                             <?php $key = $column['accessor'] . '_' . strtolower($summary); ?>
 

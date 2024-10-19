@@ -45,6 +45,8 @@ class Table extends Component
         $this->financial = $financial;
         $this->summaries = $summaries;
 
+        $this->makeColumns();
+
         $this->load();
     }
 
@@ -112,11 +114,60 @@ class Table extends Component
 
     private function makeColumns()
     {
-        $this->columns = [];
+        $simple = [
+            [
+                'title' => 'Ticker',
+                'column' => 'symbol',
+            ],
+            [
+                'title' => 'Name',
+                'column' => 'registrant_name',
+            ],
+        ];
+        $complex = [];
 
         $options = ScreenerTableBuilderService::options(true);
 
-        foreach ($this->resolveSelect() as $item) {
+        foreach (array_keys($this->universal) as $item) {
+            switch ($item) {
+                case 'locations':
+                    $simple[] = [
+                        'title' => 'Location',
+                        'column' => 'country',
+                        'accessor' => $item,
+                    ];
+                    break;
+
+                case 'stock_exchanges':
+                    $simple[] = [
+                        'title' => 'Exchange',
+                        'column' => 'exchange',
+                        'accessor' => $item,
+                    ];
+                    break;
+
+                case 'industries':
+                    $simple[] = [
+                        'title' => 'Industry',
+                        'column' => 'sic_group',
+                        'accessor' => $item,
+                    ];
+                    break;
+
+                case 'sectors':
+                    $simple[] = [
+                        'title' => 'Sector',
+                        'column' => 'sic_description',
+                        'accessor' => $item,
+                    ];
+                    break;
+
+                default:
+                    break;
+            }
+        }
+
+        foreach ($this->extraColumns() as $item) {
             $option = $options[$item['metric']];
             $key = 'mapping.' . ($item['type'] === 'value' ? 'self' : 'yoy_change');
 
@@ -140,7 +191,7 @@ class Table extends Component
 
                 $accessor = $column . "_" . implode("_", Arr::wrap($formattedDate));
 
-                $this->columns[] = [
+                $complex[] = [
                     'title' => $title . "<br>(" . ($date) . ")",
                     'column' => $column,
                     'accessor' => $accessor,
@@ -149,10 +200,47 @@ class Table extends Component
                 ];
             }
         }
+
+        $this->columns = [
+            'simple' => $simple,
+            'complex' => $complex,
+        ];
     }
 
-    private function resolveSelect(): array
+    private function extraColumns()
     {
-        return data_get($this->view, 'config', []);
+        $config = data_get($this->view, 'config', []);
+
+        $raw = [
+            ...array_map(fn($item) => Arr::only($item, ['metric', 'type', 'period', 'dates']), $this->financial),
+            ...$config,
+        ];
+
+        $seen = [];
+        $cols = [];
+
+        foreach ($raw as $col) {
+            $key = $col['metric'] . '-' .  $col['type'] . '-' .  $col['period'];
+
+            if ($seen[$key] ?? false) {
+                $cols[$key]['dates'] = collect(array_merge($cols[$key]['dates'], $col['dates']))->unique()
+                    ->sort(function ($val) {
+                        if (str_starts_with($val, 'Q')) {
+                            $val = ltrim($val, "Q");
+                            [$q, $y] = explode(" ", $val);
+
+                            return intval($y) * 4 + intval($q);
+                        }
+
+                        return intval(explode(" ", $val)[1]);
+                    })->toArray();
+                continue;
+            }
+
+            $seen[$key] = true;
+            $cols[$key] = $col;
+        }
+
+        return array_values($cols);
     }
 }

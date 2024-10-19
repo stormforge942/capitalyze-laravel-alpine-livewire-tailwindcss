@@ -12,15 +12,6 @@ class ScreenerTableBuilderService
 {
     public const TABLE_PER_PAGE = 20;
 
-    private const DEFAULT_COLUMNS = [
-        'symbol',
-        'registrant_name',
-        'country',
-        'exchange',
-        'sic_group',
-        'sic_description',
-    ];
-
     public static function options($flattened = false)
     {
         $options = config('capitalyze.standardized_metrics');
@@ -83,34 +74,43 @@ class ScreenerTableBuilderService
 
     public static function makeQuery(array $universalCriteria, array $financialCriteria): Builder
     {
+        $hasUniversalCriteria = count(array_keys($universalCriteria ?? []));
+        $hasFinancialCriteria = count($financialCriteria ?? []);
+
         $query = DB::connection('pgsql-xbrl')
             ->table('company_profile as c')
             ->join('standardized_new as s', 'c.symbol', '=', 's.ticker');
 
-        static::applyUniversalCriteria($query, $universalCriteria ?? []);
+        if ($hasUniversalCriteria) {
+            static::applyUniversalCriteria($query, $universalCriteria ?? []);
+        }
 
-        static::applyFinancialCriteria($query, $financialCriteria ?? []);
+        if ($hasFinancialCriteria) {
+            static::applyFinancialCriteria($query, $financialCriteria ?? []);
+        }
 
         return $query;
     }
 
     public static function generateTableData(Builder $query, array $select_ = [], int $page = 1)
-    {        
+    {
+        $columns = array_map(fn($item) => ("c." . $item), Arr::pluck($select_['simple'], 'column'));
+
         // get all unique company profiles
-        $result = $query->select(array_map(fn($item) => ("c." . $item), static::DEFAULT_COLUMNS))
+        $result = $query->select($columns)
             ->distinct()
             ->skip(($page - 1) * static::TABLE_PER_PAGE)
             ->take(static::TABLE_PER_PAGE)
             ->get();
 
-        if (!count($select_)) {
+        if (!count($select_['complex'])) {
             return $result->map(fn($item) => (array) $item)->toArray();
         }
 
         $select = [];
         $dates = [];
 
-        foreach ($select_ as $item) {
+        foreach ($select_['complex'] as $item) {
             $select[$item['column']] = $item['column'];
 
             $dates[implode('-', Arr::wrap($item['date']))] = $item['date'];
@@ -189,14 +189,14 @@ class ScreenerTableBuilderService
 
     public static function generateSummary(Builder $query, array $summaries, array $select = [])
     {
-        if (!count($select)) {
+        if (!count($select['complex'])) {
             return [];
         }
 
         $columns = [];
 
         foreach ($summaries as $summary) {
-            foreach ($select as $item) {
+            foreach ($select['complex'] as $item) {
                 $column = "s1." . $item['column'];
 
                 $date = $item['date'];
@@ -311,6 +311,8 @@ class ScreenerTableBuilderService
                     });
                 }
 
+                if ($criteria['operator'] === 'display') return $query;
+
                 $query->whereNotNull($column);
 
                 switch ($criteria['operator']) {
@@ -328,10 +330,6 @@ class ScreenerTableBuilderService
 
                     case '<=':
                         $query->where($column, '<=', $criteria['value']);
-                        break;
-
-                    case '=':
-                        $query->where($column, '=', $criteria['value']);
                         break;
 
                     case 'between':
@@ -364,7 +362,12 @@ class ScreenerTableBuilderService
             if (
                 $criteria['metric'] && $criteria['type'] && $criteria['period'] && count($criteria['dates']) && $criteria['operator']
                 // if operator is between, then value should be an array with two elements else it should be a single value
-                && ($criteria['operator'] === 'between' ? (data_get($criteria, 'value.0') && data_get($criteria, 'value.1')) : data_get($criteria, 'value'))
+                && (
+                    $criteria['operator'] === 'display' ||
+                    ($criteria['operator'] === 'between'
+                        ? (data_get($criteria, 'value.0') && data_get($criteria, 'value.1'))
+                        : data_get($criteria, 'value'))
+                )
             ) {
                 $financialCriteria[] = $criteria;
             }
@@ -395,45 +398,6 @@ class ScreenerTableBuilderService
             'annual' => static::generateAnnualDates($dates['annual'] ?? $currentYear),
             'quarter' => static::generateQuarterlyDates($dates['quarter'] ?? $currentYear),
         ];
-    }
-
-    private static function mapSelectColumns(array $columns, string $append = "")
-    {
-        $options = static::options(true);
-
-        $select = [];
-
-        foreach ($columns as $column_) {
-            $key = $column_['metric'] . '.mapping.' . ($column_['type'] === 'value' ? 'self' : 'yoy_change');
-
-            $column = data_get($options, $key);
-
-            if (!$column) continue;
-
-            $dates = [];
-
-            foreach ($column_['dates'] as $date) {
-                switch ($column_['period']) {
-                    case "annual":
-                        $dates[] = (int) explode(" ", $date)[1];
-                        break;
-
-                    case "quarter":
-                        [$quarter, $year] = explode(" ", $date);
-                        $quarter = (int) ltrim($quarter, "Q");
-
-                        $dates[] = [(int) $year, (int) $quarter];
-                }
-            }
-
-            $select[] = [
-                "column" => $append . $column,
-                "period" => $column_['period'],
-                "dates" => $dates,
-            ];
-        }
-
-        return $select;
     }
 
     private static function generateAnnualDates(int $startYear)

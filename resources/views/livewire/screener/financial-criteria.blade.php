@@ -295,7 +295,7 @@
                 </div>
             </template>
 
-            <template x-if="criteria.operator !== 'between'">
+            <template x-if="!['between', 'display'].includes(criteria.operator)">
                 <input x-model.debounce="criteria.value"
                     class="w-[80px] border-[0.5px] border-[#D4DDD7] p-2 rounded-full flex items-center gap-x-1 bg-white focus:ring-0 text-sm"
                     type="number" />
