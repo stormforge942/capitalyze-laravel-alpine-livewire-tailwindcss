@@ -185,6 +185,8 @@ class Page extends Component
 
         $result = ScreenerTableBuilderService::resolveValidCriterias($attributes['universal_criteria'], $attributes['financial_criteria']);
 
-        $this->emitTo(Table::class, 'refreshTable', $result['universal'], $result['financial'], $attributes['summaries']);
+        if (count(array_keys($result['universal'])) || count(array_keys($result['financial']))) {
+            $this->emitTo(Table::class, 'refreshTable', $result['universal'], $result['financial'], $attributes['summaries']);
+        }
     }
 }

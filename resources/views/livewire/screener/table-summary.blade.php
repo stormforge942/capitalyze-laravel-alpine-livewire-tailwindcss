@@ -27,7 +27,7 @@
                     <td class="uppercase pl-6 py-4">{{ $summary }}</td>
                     <td colspan="{{ count($columns['simple']) - 1 }}"></td>
                     @foreach ($columns['complex'] as $column)
-                        <td class="pl-6 last:pr-6 py-4">
+                        <td class="pl-6 last:pr-6 text-right py-4">
                             <?php $key = $column['accessor'] . '_' . strtolower($summary); ?>
 
                             @if (isset($table['summary'][$key]) && !is_null($table['summary'][$key]))

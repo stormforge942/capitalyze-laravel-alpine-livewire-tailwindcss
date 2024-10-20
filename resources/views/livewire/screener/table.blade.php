@@ -17,7 +17,7 @@
                                 <th class="pl-6 last:pr-6 py-2 text-dark whitespace-nowrap">{{ $column['title'] }}</th>
                             @endforeach
                             @foreach ($columns['complex'] as $column)
-                                <th class="pl-6 last:pr-6 py-2 text-dark whitespace-nowrap">{!! $column['title'] !!}</th>
+                                <th class="pl-6 last:pr-6 py-2 text-dark whitespace-nowrap text-right">{!! $column['title'] !!}</th>
                             @endforeach
                         </tr>
                     </thead>
@@ -31,7 +31,7 @@
                                     <td class="pl-6 py-4 whitespace-nowrap">{{ $row[$column['column']] }}</td>
                                 @endforeach
                                 @foreach ($columns['complex'] as $column)
-                                    <td class="pl-6 last:pr-6 py-4 whitespace-nowrap">
+                                    <td class="pl-6 last:pr-6 text-right py-4 whitespace-nowrap">
                                         @if (isset($row['standard_data'][$column['accessor']]) && !is_null($row['standard_data'][$column['accessor']]))
                                             <span
                                                 :data-tooltip-content="{{ $row['standard_data'][$column['accessor']] }}">
@@ -48,40 +48,6 @@
 
                     @include('livewire.screener.table-summary', ['for' => 'bottom'])
                 </table>
-            </div>
-
-            <div class="flex justify-between items-center mt-2">
-                @if ($page > 1)
-                    <button type="button"
-                        class="relative inline-flex gap-x-1 items-center rounded-md bg-white px-4 py-2 ring-1 ring-inset ring-gray-300 hover:bg-gray-50 focus:z-10 disabled:opacity-80 disabled:cursor-not-allowed"
-                        @click="$wire.prevPage">
-                        <svg class="h-5 w-5" viewBox="0 0 20 20" fill="currentColor" aria-hidden="true"
-                            data-slot="icon">
-                            <path fill-rule="evenodd"
-                                d="M11.78 5.22a.75.75 0 0 1 0 1.06L8.06 10l3.72 3.72a.75.75 0 1 1-1.06 1.06l-4.25-4.25a.75.75 0 0 1 0-1.06l4.25-4.25a.75.75 0 0 1 1.06 0Z"
-                                clip-rule="evenodd" />
-                        </svg>
-                        <span>Previous</span>
-                    </button>
-                @else
-                    <span></span>
-                @endif
-
-                @if (count($table['data']) >= \App\Services\ScreenerTableBuilderService::TABLE_PER_PAGE)
-                    <button type="button"
-                        class="relative inline-flex gap-x-1 items-center rounded-md bg-white px-4 py-2 ring-1 ring-inset ring-gray-300 hover:bg-gray-50 focus:z-10 disabled:opacity-80 disabled:cursor-not-allowed"
-                        @click="$wire.nextPage">
-                        <span>Next</span>
-                        <svg class="h-5 w-5" viewBox="0 0 20 20" fill="currentColor" aria-hidden="true"
-                            data-slot="icon">
-                            <path fill-rule="evenodd"
-                                d="M8.22 5.22a.75.75 0 0 1 1.06 0l4.25 4.25a.75.75 0 0 1 0 1.06l-4.25 4.25a.75.75 0 0 1-1.06-1.06L11.94 10 8.22 6.28a.75.75 0 0 1 0-1.06Z"
-                                clip-rule="evenodd" />
-                        </svg>
-                    </button>
-                @else
-                    <span></span>
-                @endif
             </div>
         </div>
     @else
@@ -167,4 +133,38 @@
             </tbody>
         </table>
     </div>
+
+    @if ($loaded)
+        <div class="flex justify-between items-center mt-2" wire:loading.remove>
+            @if ($page > 1)
+                <button type="button"
+                    class="relative inline-flex gap-x-1 items-center rounded-md bg-white px-4 py-2 ring-1 ring-inset ring-gray-300 hover:bg-gray-50 focus:z-10 disabled:opacity-80 disabled:cursor-not-allowed"
+                    @click="$wire.prevPage">
+                    <svg class="h-5 w-5" viewBox="0 0 20 20" fill="currentColor" aria-hidden="true" data-slot="icon">
+                        <path fill-rule="evenodd"
+                            d="M11.78 5.22a.75.75 0 0 1 0 1.06L8.06 10l3.72 3.72a.75.75 0 1 1-1.06 1.06l-4.25-4.25a.75.75 0 0 1 0-1.06l4.25-4.25a.75.75 0 0 1 1.06 0Z"
+                            clip-rule="evenodd" />
+                    </svg>
+                    <span>Previous</span>
+                </button>
+            @else
+                <span></span>
+            @endif
+
+            @if (count($table['data']) >= \App\Services\ScreenerTableBuilderService::TABLE_PER_PAGE)
+                <button type="button"
+                    class="relative inline-flex gap-x-1 items-center rounded-md bg-white px-4 py-2 ring-1 ring-inset ring-gray-300 hover:bg-gray-50 focus:z-10 disabled:opacity-80 disabled:cursor-not-allowed"
+                    @click="$wire.nextPage">
+                    <span>Next</span>
+                    <svg class="h-5 w-5" viewBox="0 0 20 20" fill="currentColor" aria-hidden="true" data-slot="icon">
+                        <path fill-rule="evenodd"
+                            d="M8.22 5.22a.75.75 0 0 1 1.06 0l4.25 4.25a.75.75 0 0 1 0 1.06l-4.25 4.25a.75.75 0 0 1-1.06-1.06L11.94 10 8.22 6.28a.75.75 0 0 1 0-1.06Z"
+                            clip-rule="evenodd" />
+                    </svg>
+                </button>
+            @else
+                <span></span>
+            @endif
+        </div>
+    @endif
 </div>
