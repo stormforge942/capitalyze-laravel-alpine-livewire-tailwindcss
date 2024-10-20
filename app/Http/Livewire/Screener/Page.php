@@ -173,7 +173,7 @@ class Page extends Component
             ->filter($where)
             ->map(fn($item) => [
                 ...$item,
-                'id' => Str::uuid()->toString(),
+                'id' => Str::isUuid($item['id']) ? $item['id'] : Str::uuid()->toString(),
             ])
             ->values()
             ->toArray();

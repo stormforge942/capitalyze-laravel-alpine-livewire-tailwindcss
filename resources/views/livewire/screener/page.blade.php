@@ -34,7 +34,6 @@ $flattenedMetrics = App\Services\ScreenerTableBuilderService::options(true);
                 this.financialCriteria = this.financialCriteria.filter(criteria => criteria.id !== id);
             },
             getResult() {
-        
                 Livewire.emit('generateResult', this.universalCriteria, this.financialCriteria, this.summaries)
             },
             formatTableValue(value, applyUnits) {
