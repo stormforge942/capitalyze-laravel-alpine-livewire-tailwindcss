@@ -16,7 +16,7 @@
         this.active = this.options[0].title
 
         this.$watch('open', (show) => {
-            this.tmpValue = JSON.parse(JSON.stringify(view.config))
+            this.tmpValue = JSON.parse(JSON.stringify(activeView.config))
 
             this.active = this.options[0].title
             this.expand = null
@@ -99,9 +99,9 @@
         this.options = options
     },
     showResult() {
-        view.config = this.tmpValue.filter(item => item.dates.length);
+        activeView.config = this.tmpValue.filter(item => item.dates.length)
+        this.$dispatch('update-view', activeView);
         open = false;
-        this.$dispatch('update-view', view);
     },
     dates(period) {
         if (!this.expand) {
@@ -148,7 +148,7 @@
                 </button>
             </div>
 
-            <p class="mt-2 font-sm text-dark-light2">Add metrics for “<span x-text="view.name"></span>”</p>
+            <p class="mt-2 font-sm text-dark-light2">Add metrics for “<span x-text="activeView.name"></span>”</p>
         </div>
 
         <div class="relative mt-2 px-6">
