@@ -10,6 +10,7 @@
             this.$wire.updateInvestors(this.curInvestors)
                 .finally(() => this.loading = false);
         });
+        this.$watch('overlapMatrix', value => this.loading = this.loadingMore = false);
     },
     showInvestorActivities(company_name, data) {
         Livewire.emit('modal.open', 'investor-fund.company-fund-content', { name: company_name, data: data });
@@ -171,7 +172,7 @@
                             <div class="mb-3 py-3 font-semibold text-md bg-white text-black flex flex-row justify-center items-center rounded-lg"
                                 x-text="key + ' investors'"></div>
 
-                            <div class="h-screen/2 overflow-auto">
+                            <div class="h-screen/2 overflow-auto show-scrollbar">
                                 <template x-for="investor in value['items']">
                                     <div class="mb-3 px-2 py-3 bg-white rounded-lg">
                                         <div class="text-md font-semibold px-2 py-2">

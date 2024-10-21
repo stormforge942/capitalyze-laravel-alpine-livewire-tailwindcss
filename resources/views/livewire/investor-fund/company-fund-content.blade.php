@@ -58,6 +58,14 @@
             </div>
         </template>
 
+        <template x-if="activeTab == 'Maintained'">
+            <div class="pt-3">
+                @foreach ($maintained as $fund)
+                    <div class="mb-3"><livewire:investor-fund.fund-item :fund="$fund" /></div>
+                @endforeach
+            </div>
+        </template>
+
         <template x-if="activeTab == 'Reduced'">
             <div class="pt-3">
                 @foreach ($reduced as $fund)

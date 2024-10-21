@@ -51,10 +51,15 @@ class OverlapMatrix extends Component
 
     public function updated($prop)
     {
-        if (in_array($prop, ['search', 'category', 'view'])) {
+        if (in_array($prop, ['search', 'category'])) {
             $this->page = 1;
             $this->investors = collect([]);
             $this->getInvestors();
+        } else if (in_array($prop, ['view'])) {
+            $this->page = 1;
+            $this->investors = collect([]);
+            $this->getInvestors();
+            $this->getOverlapMatrix($this->curInvestors);
         }
     }
 
@@ -161,7 +166,7 @@ class OverlapMatrix extends Component
             if ($investor['type'] === 'fund') {
                 $fundFilters[] = [
                     'cik' => $investor['cik'],
-                    'period' => $investor['date'],
+                    'period' => $this->view === 'most-recent' ? $investor['date'] : $this->view,
                 ];
             } else {
                 $mutualFundFilters[] = [
@@ -169,7 +174,7 @@ class OverlapMatrix extends Component
                     'fund_symbol' => $investor['fund_symbol'],
                     'series_id' => $investor['series_id'],
                     'class_id' => $investor['class_id'],
-                    'period' => $investor['date'],
+                    'period' => $this->view === 'most-recent' ? $investor['date'] : $this->view,
                 ];
             }
         }
@@ -285,11 +290,17 @@ class OverlapMatrix extends Component
             $query->when($filters, function ($query) use ($filters) {
                 foreach ($filters as $filter) {
                     $query->orWhere(function ($subQuery) use ($filter) {
+                        $date = Carbon::parse($filter['period']);
+                        $periodReport = [
+                            $date->startOfQuarter()->format('Y-m-d'),
+                            $date->endOfQuarter()->format('Y-m-d')
+                        ];
+
                         $subQuery->where('cik', $filter['cik'])
                             ->where('fund_symbol', $filter['fund_symbol'])
                             ->where('series_id', $filter['series_id'])
                             ->where('class_id', $filter['class_id'])
-                            ->where('period_of_report', $filter['period']);
+                            ->whereBetween('period_of_report', $periodReport);
                     });
                 }
             });
@@ -331,8 +342,14 @@ class OverlapMatrix extends Component
             $query->when($filters, function ($query) use ($filters) {
                 foreach ($filters as $filter) {
                     $query->orWhere(function ($subQuery) use ($filter) {
+                        $date = Carbon::parse($filter['period']);
+                        $periodReport = [
+                            $date->startOfQuarter()->format('Y-m-d'),
+                            $date->endOfQuarter()->format('Y-m-d')
+                        ];
+
                         $subQuery->where('cik', $filter['cik'])
-                            ->where('report_calendar_or_quarter', $filter['period']);
+                            ->whereBetween('report_calendar_or_quarter', $periodReport);
                     });
                 }
             });

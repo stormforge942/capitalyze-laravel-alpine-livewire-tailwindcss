@@ -16,6 +16,7 @@ class CompanyFundContent extends Modal
     public $newbuys;
     public $reduced;
     public $increased;
+    public $maintained;
     public $tabs;
     public $price;
 
@@ -36,6 +37,9 @@ class CompanyFundContent extends Modal
         });
         $this->increased = $data->filter(function ($fund) {
             return $fund['change_amount'] > 0 && $fund['previous'] != 0;
+        });
+        $this->maintained = $data->filter(function ($fund) {
+            return $fund['change_amount'] == 0;
         });
 
         $tabs = [[
@@ -59,6 +63,12 @@ class CompanyFundContent extends Modal
             $tabs[] = [
                 'title' => 'Reduced',
                 'icon' => 'red',
+            ];
+        }
+        if ($this->maintained->count() > 0) {
+            $tabs[] = [
+                'title' => 'Maintained',
+                'icon' => 'gray',
             ];
         }
 
