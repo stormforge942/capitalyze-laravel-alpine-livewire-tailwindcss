@@ -86,23 +86,10 @@ class DataSettings extends Component
     public function mount()
     {
         $settings = Auth::user()->settings ?? [];
-
         $settings['publicView'] = data_get($settings, 'publicView', true) ? 'yes' : 'no';
 
-        $this->settings = array_merge([
-            'view' => 'As reported',
-            'period' => 'Fiscal Annual',
-            'defaultYearRange' => [2005, 2023],
-            'unit' => 'Billions',
-            'decimalPlaces' => 1,
-            'perShareDecimalPlaces' => 2,
-            'percentageDecimalPlaces' => 2,
-            'order' => 'Latest on the Right',
-            'freezePane' => 'Top Row & First Column',
-            'publicView' => 'yes',
-        ], $settings);
+        $this->settings = validateAndSetDefaults($settings);
 
-        // If not set default value, set default value
         $this->updateSetting($this->settings);
     }
 

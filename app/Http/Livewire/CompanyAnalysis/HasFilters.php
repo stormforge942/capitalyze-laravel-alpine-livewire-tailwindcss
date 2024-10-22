@@ -24,8 +24,9 @@ trait HasFilters
     {
         $this->chartColors = config('capitalyze.chartColors');
 
-        $this->decimalPlaces = data_get(Auth::user(), 'settings.decimalPlaces', 1);
-        $this->defaultDateRange = data_get(Auth::user(), 'settings.defaultYearRange', [Carbon::now()->subYears(4)->year, Carbon::now()->year]);
+        $settings = validateAndSetDefaults(Auth::user()->settings ?? []);
+        $this->decimalPlaces = $settings['decimalPlaces'];
+        $this->defaultDateRange = $settings['defaultYearRange'];
     }
 
     public function isReverseOrder(): bool

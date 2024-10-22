@@ -94,18 +94,20 @@ class Chart extends Component
 
         $this->panel = $_tab['panel'] ?? 'single-panel';
 
+        $settings = validateAndSetDefaults(Auth::user()->settings ?? []);
+
         $this->filters = [
             'period' => data_get($_tab, 'filters.period', 'annual'),
             'dateRange' => data_get(
                 $_tab,
                 'filters.dateRange',
-                data_get(Auth::user(), 'settings.defaultYearRange', [Carbon::now()->subYears(4)->year, Carbon::now()->year])
+                $settings['defaultYearRange']
             ),
             'unit' => data_get($_tab, 'filters.unit', 'Millions'),
             'decimalPlaces' => data_get(
                 $_tab,
                 'filters.decimalPlaces',
-                data_get(Auth::user(), 'settings.decimalPlaces', 1)
+                $settings['decimalPlaces']
             ),
         ];
 

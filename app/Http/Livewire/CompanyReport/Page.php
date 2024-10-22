@@ -54,7 +54,7 @@ class Page extends Component
 
     public function mount(Request $request, $company): void
     {
-        $settings = Auth::user()->settings ?? [];
+        $settings = validateAndSetDefaults(Auth::user()->settings ?? []);
 
         // set properties from query string 
         $this->activeTab = $request->query('tab', 'income-statement');

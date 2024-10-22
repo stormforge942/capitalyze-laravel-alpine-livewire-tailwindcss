@@ -632,3 +632,32 @@ function extractTickerFromUrl($url)
 
     return $ticker;
 }
+
+function validateAndSetDefaults($settings)
+{
+    $availableViews = ['As reported', 'Adjusted', 'Standardized', 'Per Share', 'Common size'];
+    $availablePeriods = ['Fiscal Annual', 'Fiscal Quarterly', 'Fiscal Semi-Annual', 'YTD', 'LTM', 'Calendar Annual'];
+    $availableUnits = ['Billions', 'Millions', 'Thousands', 'As Stated'];
+    $availableOrders = ['Latest on the Right', 'Latest on the Left'];
+    $availableFreezePanes = ['Top Row', 'First Column', 'Top Row & First Column'];
+    $availablePublicView = ['yes', 'no'];
+
+    $settings['view'] = in_array($settings['view'] ?? null, $availableViews) ? $settings['view'] : 'As reported';
+    $settings['period'] = in_array($settings['period'] ?? null, $availablePeriods) ? $settings['period'] : 'Fiscal Annual';
+
+    if (!is_array($settings['defaultYearRange']) || count($settings['defaultYearRange']) != 2 || 
+        !is_int($settings['defaultYearRange'][0]) || !is_int($settings['defaultYearRange'][1])) {
+        $settings['defaultYearRange'] = [2005, 2023];
+    }
+
+    $settings['unit'] = in_array($settings['unit'] ?? null, $availableUnits) ? $settings['unit'] : 'Millions';
+    $settings['order'] = in_array($settings['order'] ?? null, $availableOrders) ? $settings['order'] : 'Latest on the Right';
+    $settings['freezePane'] = in_array($settings['freezePane'] ?? null, $availableFreezePanes) ? $settings['freezePane'] : 'Top Row & First Column';
+    $settings['publicView'] = in_array($settings['publicView'] ?? null, $availablePublicView) ? $settings['publicView'] : 'no';
+
+    $settings['decimalPlaces'] = (is_int($settings['decimalPlaces'] ?? null) && $settings['decimalPlaces'] >= 0) ? $settings['decimalPlaces'] : 1;
+    $settings['perShareDecimalPlaces'] = (is_int($settings['perShareDecimalPlaces'] ?? null) && $settings['perShareDecimalPlaces'] >= 0) ? $settings['perShareDecimalPlaces'] : 2;
+    $settings['percentageDecimalPlaces'] = (is_int($settings['percentageDecimalPlaces'] ?? null) && $settings['percentageDecimalPlaces'] >= 0) ? $settings['percentageDecimalPlaces'] : 2;
+
+    return $settings;
+}
