@@ -14,7 +14,6 @@ class Page extends Component
                 MutualFunds::class,
                 Favorites::class,
                 OverlapMatrix::class,
-                RssFeeds::class,
             ]
         ]);
     }
