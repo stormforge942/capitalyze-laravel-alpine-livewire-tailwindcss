@@ -1,11 +1,28 @@
 <div x-data="{
     loading: $wire.entangle('loading', true),
-}">
+    showingRss: false,
+}" @toggle-rss.window = "showingRss = !showingRss;">
     <h2 class="text-xl font-semibold">Discover Funds</h2>
 
     @include('livewire.track-investor.filters')
 
-    <div class="mt-6 relative">
+    <div class="mt-6 relative" x-show="showingRss" x-data="{
+        search: $wire.entangle('search'),
+        view: $wire.entangle('view'),
+
+        init() {
+            ['search', 'view'].map(propName => this.$watch(propName, (val) => {
+                Livewire.emit('filtersChanged', {
+                    search: this.search,
+                    view: this.view,
+                });
+            }));
+        }
+    }">
+        <livewire:track-investor.rss-feed-table :filters="$filters" :views="$views" />
+    </div>
+
+    <div class="mt-6 relative" x-show="! showingRss">
         <div class="py-10 grid place-items-center absolute top-0 left-0 w-full" x-show="loading" x-cloak>
             <span class="mx-auto simple-loader !text-green-dark"></span>
         </div>

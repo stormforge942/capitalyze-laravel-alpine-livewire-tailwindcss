@@ -5,6 +5,7 @@
     holdings: $wire.entangle('holdings'),
     view: $wire.entangle('view'),
     listStyle: $wire.entangle('listStyle'),
+    showingRss: false,
     init() {
         ['search', 'marketValue', 'turnOver', 'holdings', 'view', 'listStyle'].forEach((key) => {
             this.$watch(key, (value, oldVal) => {
@@ -29,6 +30,10 @@
         this.holdings = null
         this.view = 'most-recent'
     },
+    showRss() {
+        this.showingRss = !this.showingRss;
+        this.$dispatch('toggle-rss');
+    },
     toggleListStyle() {
         this.listStyle = this.listStyle === 'grid' ? 'list' : 'grid';
     },
@@ -51,7 +56,11 @@
 
             <x-select-number-range label="Number of Holdings" unit="" x-model="holdings"></x-select-number-range>
 
-            <button class="hidden md:inline-block ml-2.5 border-l pl-3" @click="reset">
+            <button class="hidden md:inline-block ml-2.5 border-l pl-3" :class="showingRss ? 'line-through' : ''" @click="showRss">
+                <span class="text-blue px-2">RSS Feed</span>
+            </button>
+
+            <button class="hidden md:inline-block ml-2.5" @click="reset">
                 <span class="text-red px-2">Reset</span>
             </button>
 

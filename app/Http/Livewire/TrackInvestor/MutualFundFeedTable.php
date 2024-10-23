@@ -13,8 +13,8 @@ use PowerComponents\LivewirePowerGrid\PowerGridEloquent;
 
 class MutualFundFeedTable extends BaseTable
 {
-    public $quarter;
-    public string $search = '';
+    public array $views;
+    public array $filters;
     public string $sortField = 'acceptance_time';
     public string $sortDirection = 'desc';
 
@@ -30,21 +30,32 @@ class MutualFundFeedTable extends BaseTable
 
     public function setFilters($filters)
     {
-        $this->quarter = $filters['quarter'];
-        $this->search = $filters['search'] ?? '';
+        $this->filters = $filters;
         $this->resetPage();
     }
 
     public function datasource(): ?Builder
     {
+        $quarter = $this->filters['view'];
+        $search = $this->filters['search'];
+
         return MutualFundFeed::query()
-            ->when($this->quarter, function ($query) {
-                $date = Carbon::parse($this->quarter);
-                $period = [$date->startOfQuarter()->format('Y-m-d'), $date->endOfQuarter()->format('Y-m-d')];
-                return $query->whereBetween('period_of_report', $period);
+            ->when($quarter, function ($query) use ($quarter) {
+                if ($quarter === 'all') {
+                    return $query;
+                } else if ($quarter === 'most-recent') {
+                    $date = Carbon::parse(array_keys($this->views)[2]);
+                    $period = [$date->startOfQuarter()->format('Y-m-d'), $date->endOfQuarter()->format('Y-m-d')];
+                    return $query->whereBetween('period_of_report', $period);
+                } else {
+                    $date = Carbon::parse($quarter);
+                    $period = [$date->startOfQuarter()->format('Y-m-d'), $date->endOfQuarter()->format('Y-m-d')];
+                    return $query->whereBetween('period_of_report', $period);
+                }
+
             })
-            ->when($this->search, function ($query) {
-                $term = '%' . $this->search . '%';
+            ->when($search, function ($query) use ($search) {
+                $term = '%' . $search . '%';
 
                 return $query->where('fund_symbol', 'ilike', $term);
             });

@@ -12,8 +12,8 @@ use PowerComponents\LivewirePowerGrid\PowerGridEloquent;
 
 class RssFeedTable extends BaseTable
 {
-    public $quarter;
-    public string $search = '';
+    public array $views;
+    public array $filters;
     public string $sortField = 'acceptance_time';
     public string $sortDirection = 'desc';
 
@@ -29,19 +29,28 @@ class RssFeedTable extends BaseTable
 
     public function setFilters($filters)
     {
-        $this->quarter = $filters['quarter'];
-        $this->search = $filters['search'] ?? '';
+        $this->filters = $filters;
         $this->resetPage();
     }
 
     public function datasource(): ?Builder
     {
+        $quarter = $this->filters['view'];
+        $search = $this->filters['search'];
+
         return RssFeed::query()
-            ->when($this->quarter, function ($query) {
-                return $query->where('report_calendar_or_quarter', '=', $this->quarter);
+            ->when($quarter, function ($query) use ($quarter) {
+                if ($quarter === 'all') {
+                    return $query;
+                } else if ($quarter === 'most-recent') {
+                    $date = array_keys($this->views)[2];
+                    return $query->where('report_calendar_or_quarter', '=', $date);
+                } else {
+                    return $query->where('report_calendar_or_quarter', '=', $quarter);
+                }
             })
-            ->when($this->search, function ($query) {
-                $term = '%' . $this->search . '%';
+            ->when($search, function ($query) use ($search) {
+                $term = '%' . $search . '%';
 
                 return $query->where('investor_name', 'ilike', $term);
             });

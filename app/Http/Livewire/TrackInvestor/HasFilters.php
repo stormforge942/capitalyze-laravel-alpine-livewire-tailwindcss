@@ -7,7 +7,7 @@ use Illuminate\Support\Facades\Auth;
 trait HasFilters
 {
     public $perPage = 20;
-    public $search = null;
+    public $search = '';
     public $marketValue = null;
     public $turnover = null;
     public $holdings = null;
