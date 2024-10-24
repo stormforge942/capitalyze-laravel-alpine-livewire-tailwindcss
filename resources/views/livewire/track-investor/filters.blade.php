@@ -56,8 +56,8 @@
 
             <x-select-number-range label="Number of Holdings" unit="" x-model="holdings"></x-select-number-range>
 
-            <button class="hidden md:inline-block ml-2.5 border-l pl-3" :class="showingRss ? 'line-through' : ''" @click="showRss">
-                <span class="text-blue px-2">RSS Feed</span>
+            <button class="hidden md:inline-block ml-2.5 border-l pl-3" @click="showRss">
+                <span class="text-blue px-2">Feed</span>
             </button>
 
             <button class="hidden md:inline-block ml-2.5" @click="reset">

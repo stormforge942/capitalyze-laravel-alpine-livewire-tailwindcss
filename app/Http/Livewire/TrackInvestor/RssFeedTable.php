@@ -5,6 +5,7 @@ namespace App\Http\Livewire\TrackInvestor;
 use Illuminate\Support\Str;
 use App\Powergrid\BaseTable;
 use App\Models\RssFeed;
+use Illuminate\Support\Carbon;
 use PowerComponents\LivewirePowerGrid\Column;
 use Illuminate\Contracts\Database\Query\Builder;
 use PowerComponents\LivewirePowerGrid\PowerGrid;
@@ -68,7 +69,7 @@ class RssFeedTable extends BaseTable
             Column::make('Form Type', 'form_type')
                 ->sortable(),
 
-            Column::make('Acceptance Time', 'acceptance_time')
+            Column::make('Time', 'format_time', 'acceptance_time')
                 ->sortable()
                 ->headerAttribute('[&>div]:justify-end')->bodyAttribute('text-right'),
         ];
@@ -85,6 +86,10 @@ class RssFeedTable extends BaseTable
             })
             ->addColumn('cik')
             ->addColumn('form_type')
-            ->addColumn('acceptance_time');
+            ->addColumn('acceptance_time')
+            ->addColumn('format_time', function ($row) {
+                $time = $row->acceptance_time;
+                return Carbon::parse($time)->diffForHumans();
+            });
     }
 }

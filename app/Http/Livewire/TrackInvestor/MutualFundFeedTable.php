@@ -70,7 +70,7 @@ class MutualFundFeedTable extends BaseTable
 
             Column::make('CIK', 'cik'),
 
-            Column::make('Acceptance Time', 'acceptance_time')
+            Column::make('Time', 'format_time', 'acceptance_time')
                 ->sortable()
                 ->headerAttribute('[&>div]:justify-end')->bodyAttribute('text-right'),
         ];
@@ -86,6 +86,10 @@ class MutualFundFeedTable extends BaseTable
                 return "<a class=\"text-blue hover:underline\" href=\"{$url}\">{$name}</a>";
             })
             ->addColumn('cik')
-            ->addColumn('acceptance_time');
+            ->addColumn('acceptance_time')
+            ->addColumn('format_time', function ($row) {
+                $time = $row->acceptance_time;
+                return Carbon::parse($time)->diffForHumans();
+            });
     }
 }
