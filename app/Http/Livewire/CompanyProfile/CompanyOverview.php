@@ -416,6 +416,7 @@ class CompanyOverview extends Component
             'registrant_name' => data_get($profile, 'registrant_name'),
             'average_3month_volume' => data_get($profile, 'average_3month_volume'),
             'beta' => round(data_get($profile, 'one_year_beta'), 3),
+            'market_cap' => data_get($profile, 'market_cap'),
         ];
     }
 

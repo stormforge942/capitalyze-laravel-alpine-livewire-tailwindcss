@@ -31,7 +31,7 @@
             'items' => [
                 [
                     'key' => 'Market Capital',
-                    'value' => '$133.74',
+                    'value' => is_numeric($profile['market_cap']) ? formatNiceNumber($profile['market_cap']) : '-',
                 ],
                 [
                     'key' => 'Total Enterprise Value',
