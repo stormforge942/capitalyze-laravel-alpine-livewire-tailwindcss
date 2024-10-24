@@ -154,11 +154,13 @@ class Employee extends Component
 
                 // try to match the month and year
                 if ($date_[0] == $_date_[0] && $date_[1] == $_date_[1]) {
+                    if (is_array($count)) return $count['count'];
                     return $count;
                 }
 
                 // try to match the year
                 if ($date_[0] == $_date_[0]) {
+                    if (is_array($count)) return $count['count'];
                     return $count;
                 }
             }

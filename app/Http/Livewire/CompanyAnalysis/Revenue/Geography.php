@@ -164,7 +164,7 @@ class Geography extends Component
                         $regions[$name] = [];
                     }
     
-                    $hashExtractionResult = $this->extractHashes($incomeStatements[$revenueKey][$date]);
+                    $hashExtractionResult = $this->extractHashes($incomeStatements[$revenueKey][$date] ?? null);
     
                     $regions[$name][$date] = ['value' => intval($value), 'hash' => $hashExtractionResult['hash'], 'secondHash' => $hashExtractionResult['secondHash']];
                 }
@@ -251,12 +251,20 @@ class Geography extends Component
 
     private function extractHashes($data)
     {
-        list($value, $hash, $secondHash) = array_pad(explode('|', $data[0]), 3, null);
-
+        if (empty($data) || !is_array($data)) {
+            return [
+                'value' => null,
+                'hash' => null,
+                'secondHash' => null,
+            ];
+        }
+    
+        $parts = explode('|', $data[0], 3);
+    
         return [
-            'value' => $value,
-            'hash' => $hash,
-            'secondHash' => $secondHash,
+            'value' => $parts[0] ?? null,
+            'hash' => $parts[1] ?? null,
+            'secondHash' => $parts[2] ?? null,
         ];
     }
 
