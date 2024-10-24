@@ -39,10 +39,16 @@ class Page extends Component
 
     public ?array $view = null;
 
+    public array $dates;
+
     protected $listeners = [
         'tabChanged',
-        'generateResult',
     ];
+
+    public function mount()
+    {
+        $this->dates = ScreenerTableBuilderService::dataDateRange();
+    }
 
     public function render()
     {
@@ -62,16 +68,7 @@ class Page extends Component
             }
         }
 
-        // fixes the stale data issue
-        if ($this->tab) {
-            $this->tabChanged([
-                'id' => $this->tab['id'],
-                'name' => $this->tab['name'],
-            ]);
-        }
-
         return view('livewire.screener.page', [
-            'dates' => ScreenerTableBuilderService::dataDateRange(),
             '_options' => [
                 'summaries' => self::SUMMARIES,
                 'operators' => self::OPERATORS,
@@ -171,24 +168,22 @@ class Page extends Component
 
         $attributes['financial_criteria'] = collect($attributes['financial_criteria'])
             ->filter($where)
-            ->map(fn($item) => [
-                ...$item,
-                'id' => Str::isUuid($item['id']) ? $item['id'] : Str::uuid()->toString(),
-            ])
             ->values()
             ->toArray();
+
+        info($attributes);
 
         ScreenerTab::query()
             ->where('user_id', auth()->id())
             ->where('id', $this->tab['id'])
             ->update($attributes);
 
-        $result = ScreenerTableBuilderService::resolveValidCriterias($attributes['universal_criteria'], $attributes['financial_criteria']);
+        $this->tabCriterias = ScreenerTableBuilderService::resolveValidCriterias($attributes['universal_criteria'], $attributes['financial_criteria']);
 
-        if (count(array_keys($result['universal'])) || count(array_keys($result['financial']))) {
-            $this->emitTo(Table::class, 'refreshTable', $result['universal'], $result['financial'], $attributes['summaries']);
+        if (count(array_keys($this->tabCriterias['universal'])) || count(array_keys($this->tabCriterias['financial']))) {
+            $this->emitTo(Table::class, 'refreshTable', $this->tabCriterias['universal'], $this->tabCriterias['financial'], $attributes['summaries']);
         }
 
-        $this->emitTo(static::class, 'resolveCriteriaCount', $result['universal'], $result['financial']);
+        $this->emitTo(static::class, 'resolveCriteriaCount', $this->tabCriterias['universal'], $this->tabCriterias['financial']);
     }
 }

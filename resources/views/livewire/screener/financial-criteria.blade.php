@@ -1,15 +1,20 @@
-<div class="py-3 flex-1 flex items-center justify-between border border-[#D4DDD7] rounded-lg max-w-[1230px]" x-data="{
-    flattenedMetrics: @js($flattenedMetrics),
-    init() {
-        this.$watch('criteria.metric', () => {
-            criteria.type = 'value'
-        })
-
-        this.$watch('criteria.type', () => {
-            criteria.dates = []
-        })
-    }
-}">
+<div class="py-3 flex-1 flex items-center justify-between border border-[#D4DDD7] rounded-lg max-w-[1230px]"
+    x-data="{
+        flattenedMetrics: @js($flattenedMetrics),
+        init() {
+            this.$watch('criteria.metric', (newVal, oldVal) => {
+                if (newVal !== oldVal) {
+                    criteria.type = 'value'
+                }
+            })
+    
+            this.$watch('criteria.type', (newVal, oldVal) => {
+                if (newVal !== oldVal) {
+                    criteria.dates = []
+                }
+            })
+        }
+    }">
     <div class="flex items-center children-border-right">
         <div class="flex-none px-4" x-data="{
             search: '',

@@ -19,6 +19,13 @@ $flattenedMetrics = App\Services\ScreenerTableBuilderService::options(true);
             financialCriteria: $wire.entangle('financialCriteria', true),
             summaries: $wire.entangle('summaries'),
             criteriaResultCount: {},
+            get universalResultCount() {
+                if (!this.criteriaResultCount.hasOwnProperty('universal')) {
+                    return 'empty';
+                }
+        
+                return this.criteriaResultCount.universal.toLocaleString() + ' Results';
+            },
             get disabledGetResultButton() {
                 return false
             },
@@ -38,9 +45,10 @@ $flattenedMetrics = App\Services\ScreenerTableBuilderService::options(true);
                 this.financialCriteria = this.financialCriteria.filter(criteria => criteria.id !== id);
             },
             getResult() {
-                this.refreshCriteriaResultCount();
-
-                Livewire.emit('generateResult', this.universalCriteria, this.financialCriteria, this.summaries)
+                $wire.generateResult()
+                    .finally(() => {
+                        this.refreshCriteriaResultCount();;
+                    });
             },
             formatTableValue(value, applyUnits) {
                 if (value === 'N/A') return value
@@ -53,13 +61,21 @@ $flattenedMetrics = App\Services\ScreenerTableBuilderService::options(true);
                 return value < 0 ? '(' + formatted + ')' : formatted;
             },
             refreshCriteriaResultCount() {
+                const tabCriterias = @js($tabCriterias);
+        
+                if (!(Object.keys(tabCriterias.universal).length + tabCriterias.financial.length)) {
+                    this.criteriaResultCount = {};
+                    return;
+                };
+        
                 window.http('{{ route('screener.criteria-result-count') }}', {
                         method: 'POST',
-                        body: @js($tabCriterias)
+                        body: tabCriterias
                     }).then(res => res.json())
                     .then(data => this.criteriaResultCount = data);
             }
-        }">
+        
+        }" wire:key="{{ \Str::random(5) }}">
             <div class="border-2 border-dashed border-green-dark p-6 mt-6 rounded-lg relative bg-white">
                 <div class="flex justify-between mb-6">
                     <div>
@@ -153,14 +169,12 @@ $flattenedMetrics = App\Services\ScreenerTableBuilderService::options(true);
                             </div>
                         </div>
                         <div class="ml-auto flex items-center children-border-right">
-                            <template x-if="criteriaResultCount.hasOwnProperty('universal')">
-                                <div class="pr-4">
-                                    <span
-                                        class="bg-blue font-medium text-white rounded-xl py-0.5 px-1.5 whitespace-nowrap text-sm"
-                                        x-text="criteriaResultCount.universal.toLocaleString() + ' Results'">
-                                    </span>
-                                </div>
-                            </template>
+                            <div class="pr-4" x-show="universalResultCount !== 'empty'" x-cloak>
+                                <span
+                                    class="bg-blue font-medium text-white rounded-xl py-0.5 px-1.5 whitespace-nowrap text-sm"
+                                    x-text="universalResultCount">
+                                </span>
+                            </div>
 
                             <button @click="resetUniversalCriteria()"
                                 class="text-red text-sm px-4 mr-1 font-medium hover:underline">Reset</button>

@@ -243,7 +243,7 @@ class ScreenerTableBuilderService
         $query = DB::connection('pgsql-xbrl')->table('company_profile as c')->join('standardized_new as s', 'c.symbol', '=', 's.ticker');
 
         if (count(array_keys($universal))) {
-            // $count['universal'] = static::applyUniversalCriteria($query->clone(), $universal)->count();
+            $count['universal'] = static::applyUniversalCriteria($query->clone(), $universal)->count(DB::raw('DISTINCT c.symbol'));
         }
 
         foreach ($financial as $item) {
