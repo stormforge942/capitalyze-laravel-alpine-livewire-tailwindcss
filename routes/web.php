@@ -74,6 +74,7 @@ Route::group(['middleware' => ['auth', 'two_factor', 'approved', 'verified', Che
     Route::get('/insider-transactions', InsiderTransactionsController::class)->name('insider-transactions');
     Route::get('/calendar/earnings', EarningsCalendarController::class)->name('earnings-calendar');
     Route::get('/screener', [ScreenerController::class, 'show'])->name('screener');
+    Route::post('/screener/critera-result-count', [ScreenerController::class, 'criteriaResultCount'])->name('screener.criteria-result-count');
 
     Route::get('/calendar/economics', EconomicsCalendar::class)->name('economics-calendar');
     Route::get('/calendar/economics/{release_id}/', EconomicRelease::class)->name('economics-release');

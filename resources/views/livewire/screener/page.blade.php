@@ -18,8 +18,12 @@ $flattenedMetrics = App\Services\ScreenerTableBuilderService::options(true);
             universalCriteria: $wire.entangle('universalCriteria', true),
             financialCriteria: $wire.entangle('financialCriteria', true),
             summaries: $wire.entangle('summaries'),
+            criteriaResultCount: {},
             get disabledGetResultButton() {
                 return false
+            },
+            init() {
+                this.refreshCriteriaResultCount();
             },
             resetUniversalCriteria() {
                 this.universalCriteria = {
@@ -34,6 +38,8 @@ $flattenedMetrics = App\Services\ScreenerTableBuilderService::options(true);
                 this.financialCriteria = this.financialCriteria.filter(criteria => criteria.id !== id);
             },
             getResult() {
+                this.refreshCriteriaResultCount();
+
                 Livewire.emit('generateResult', this.universalCriteria, this.financialCriteria, this.summaries)
             },
             formatTableValue(value, applyUnits) {
@@ -46,6 +52,13 @@ $flattenedMetrics = App\Services\ScreenerTableBuilderService::options(true);
         
                 return value < 0 ? '(' + formatted + ')' : formatted;
             },
+            refreshCriteriaResultCount() {
+                window.http('{{ route('screener.criteria-result-count') }}', {
+                        method: 'POST',
+                        body: @js($tabCriterias)
+                    }).then(res => res.json())
+                    .then(data => this.criteriaResultCount = data);
+            }
         }">
             <div class="border-2 border-dashed border-green-dark p-6 mt-6 rounded-lg relative bg-white">
                 <div class="flex justify-between mb-6">
@@ -139,8 +152,19 @@ $flattenedMetrics = App\Services\ScreenerTableBuilderService::options(true);
                                 @include('livewire.screener.select-market-cap')
                             </div>
                         </div>
-                        <button @click="resetUniversalCriteria()"
-                            class="ml-auto text-red text-sm px-4 mr-1 font-medium hover:underline">Reset</button>
+                        <div class="ml-auto flex items-center children-border-right">
+                            <template x-if="criteriaResultCount.hasOwnProperty('universal')">
+                                <div class="pr-4">
+                                    <span
+                                        class="bg-blue font-medium text-white rounded-xl py-0.5 px-1.5 whitespace-nowrap text-sm"
+                                        x-text="criteriaResultCount.universal.toLocaleString() + ' Results'">
+                                    </span>
+                                </div>
+                            </template>
+
+                            <button @click="resetUniversalCriteria()"
+                                class="text-red text-sm px-4 mr-1 font-medium hover:underline">Reset</button>
+                        </div>
                     </div>
                 </div>
                 <div class="my-6">
@@ -185,7 +209,8 @@ $flattenedMetrics = App\Services\ScreenerTableBuilderService::options(true);
                 </div>
                 <div>
                     <button @click="getResult"
-                        class="absolute left-1/2 transform -translate-x-1/2 -bottom-6 px-10 py-3 rounded-lg bg-dark hover:bg-dark-light2 font-bold text-white flex justify-between items-center gap-2 disabled:bg-opacity-70 disabled:cursor-not-allowed" wire:loading.attr="disabled">
+                        class="absolute left-1/2 transform -translate-x-1/2 -bottom-6 px-10 py-3 rounded-lg bg-dark hover:bg-dark-light2 font-bold text-white flex justify-between items-center gap-2 disabled:bg-opacity-70 disabled:cursor-not-allowed"
+                        wire:loading.attr="disabled">
                         <span>Get Result</span>
                         <svg width="14" height="14" viewBox="0 0 14 14" fill="none"
                             xmlns="http://www.w3.org/2000/svg">

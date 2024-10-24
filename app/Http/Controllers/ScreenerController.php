@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Models\Company;
 use Illuminate\Http\Request;
+use App\Services\ScreenerTableBuilderService;
 
 class ScreenerController extends Controller
 {
@@ -14,5 +15,12 @@ class ScreenerController extends Controller
         $company = Company::where('ticker', $ticker)->get()->first();
 
         return view('layouts.company', ['company' => $company, 'tab' => 'screener']);
+    }
+
+    public function criteriaResultCount(Request $request)
+    {
+        $result = ScreenerTableBuilderService::findEachCriteriaCount($request->input('universal'), $request->input('financial'));
+
+        return response()->json($result);
     }
 }

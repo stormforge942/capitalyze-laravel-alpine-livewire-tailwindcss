@@ -188,5 +188,7 @@ class Page extends Component
         if (count(array_keys($result['universal'])) || count(array_keys($result['financial']))) {
             $this->emitTo(Table::class, 'refreshTable', $result['universal'], $result['financial'], $attributes['summaries']);
         }
+
+        $this->emitTo(static::class, 'resolveCriteriaCount', $result['universal'], $result['financial']);
     }
 }

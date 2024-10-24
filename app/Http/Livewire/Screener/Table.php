@@ -224,15 +224,19 @@ class Table extends Component
 
             if ($seen[$key] ?? false) {
                 $cols[$key]['dates'] = collect(array_merge($cols[$key]['dates'], $col['dates']))->unique()
-                    ->sort(function ($val) {
-                        if (str_starts_with($val, 'Q')) {
-                            $val = ltrim($val, "Q");
-                            [$q, $y] = explode(" ", $val);
+                    ->sort(function ($val1, $val2) {
+                        $fn = function ($val) {
+                            if (str_starts_with($val, 'Q')) {
+                                $val = ltrim($val, "Q");
+                                [$q, $y] = explode(" ", $val);
 
-                            return intval($y) * 4 + intval($q);
-                        }
+                                return intval($y) * 4 + intval($q);
+                            }
 
-                        return intval(explode(" ", $val)[1]);
+                            return intval(explode(" ", $val)[1]);
+                        };
+
+                        return $fn($val2) - $fn($val1);
                     })->toArray();
                 continue;
             }

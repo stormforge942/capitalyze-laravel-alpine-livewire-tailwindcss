@@ -232,6 +232,29 @@ class ScreenerTableBuilderService
             ->first();
     }
 
+    public static function findEachCriteriaCount(array $universal, array $financial)
+    {
+        $count = [
+            'financial' => [],
+        ];
+
+        $universal = array_filter($universal, fn($item) => count($item['data']));
+
+        $query = DB::connection('pgsql-xbrl')->table('company_profile as c')->join('standardized_new as s', 'c.symbol', '=', 's.ticker');
+
+        if (count(array_keys($universal))) {
+            // $count['universal'] = static::applyUniversalCriteria($query->clone(), $universal)->count();
+        }
+
+        foreach ($financial as $item) {
+            if ($item['operator'] === 'display') continue;
+
+            $count['financial'][$item['id']] = static::applyFinancialCriteria($query->clone(), [$item])->count(DB::raw('DISTINCT c.symbol'));
+        }
+
+        return $count;
+    }
+
     private static function applyUniversalCriteria(Builder $query, array $criterias)
     {
         return $query
@@ -343,6 +366,8 @@ class ScreenerTableBuilderService
 
             $query_->where($where);
         }
+
+        return $query_;
     }
 
     public static function resolveValidCriterias(array $universalCriteria_, array $financialCriteria_)
