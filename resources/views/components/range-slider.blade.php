@@ -78,7 +78,13 @@
         } else {
             this.setMax(step);
         }
-    }
+    },
+    minorPadding(step) {
+        const length = this.stepValues.length;
+        const index = this.stepValues.indexOf(step);
+
+        return Math.floor(index * 40.0 / length);
+    },
 }" class="years-range-wrapper flex justify-center items-center h-[30px]"
    @mousemove="onDrag($event)"
    @mouseup="stopDragging()"
@@ -104,7 +110,7 @@
                 </template>
 
                 <div class="absolute z-30 w-12 h-8 top-3 flex items-center font-bold justify-center thumbsup bg-gray-800 text-white text-xs rounded-lg -mt-5 cursor-pointer"
-                     x-bind:style="'left: calc(' + minthumb + '% - 18px)'"
+                     x-bind:style="'left: calc(' + minthumb + '% - ' + minorPadding(value[0]) + 'px)'"
                      @mousedown.prevent="startDragging('min')" 
                      @touchstart.prevent="startDragging('min')">
                      <span x-text="value[0]" class="pointer-events-none">
@@ -112,7 +118,7 @@
                 </div>
 
                 <div class="absolute z-30 w-12 h-8 top-3 flex items-center font-bold justify-center thumbsup bg-gray-800 text-white text-xs rounded-lg -mt-5 cursor-pointer"
-                     x-bind:style="'left: calc(' + maxthumb + '% - 18px)'"
+                     x-bind:style="'left: calc(' + maxthumb + '% - ' + minorPadding(value[1]) + 'px)'"
                      @mousedown.prevent="startDragging('max')" 
                      @touchstart.prevent="startDragging('max')">
                      <span x-text="value[1]" class="pointer-events-none">
