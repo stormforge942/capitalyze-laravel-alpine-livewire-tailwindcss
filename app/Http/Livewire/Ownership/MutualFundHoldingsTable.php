@@ -134,7 +134,7 @@ class MutualFundHoldingsTable extends BaseTable
             ->addColumn(
                 'balance_formatted',
                 function ($fund) {
-                    $data = "{fund: {cik: '{$fund->cik}', fund_symbol: '{$fund->fund_symbol}', series_id: '{$fund->series_id}', class_id: '{$fund->class_id}', class_name: '{$fund->class_name}'}, date: '{$fund->period_of_report}'}";
+                    $data = "{fund: {cik: '{$fund->cik}', fund_symbol: '{$fund->fund_symbol}', series_id: '{$fund->series_id}', class_id: '{$fund->class_id}', class_name: '{$fund->class_name}'}, date: '{$fund->period_of_report}', balance: '{$fund->balance}'}";
                     return '<button class="inline-block px-2 py-1 bg-[#DCF6EC] hover:bg-green-dark transition-all rounded" onclick="Livewire.emit(`slide-over.open`, `ownership.nport-summary-s3-link-content`, ' . $data . ')">' . redIfNegative($fund->balance, number_format(...))  . '</button>';
                 }
             )

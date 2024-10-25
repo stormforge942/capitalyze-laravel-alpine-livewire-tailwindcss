@@ -9,6 +9,7 @@ class NportSummaryS3LinkContent extends SlideOver
 {
     public $fund;
     public $date;
+    public $balance;
     public string $content = '';
 
     public function render()
