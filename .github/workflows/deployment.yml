@@ -21,8 +21,10 @@ jobs:
       run: composer global require laravel/vapor-cli
     - name: Install Project Dependencies
       run: composer install --no-interaction --prefer-dist --optimize-autoloader
-    - name: Switch vappor team
+    - name: Switch vapor team
       run: vapor team:switch --id 69977
+      env:
+        VAPOR_API_TOKEN: ${{ secrets.VAPOR_API_TOKEN }}
     - name: Deploy to darkroom
       env:
         VAPOR_API_TOKEN: ${{ secrets.VAPOR_API_TOKEN }}
