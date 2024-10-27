@@ -34,12 +34,12 @@
                                     @if ($column['is_numeric'] ?? false)
                                         <td class="pl-6 py-4 whitespace-nowrap text-right">
                                             <span :data-tooltip-content="{{ $row[$column['column']] }}">
-                                                {{ number_format($row[$column['column']], 3) }}
+                                                {!! redIfNegative($row[$column['column']], fn($val) => number_format($val, 3)) !!}
                                             </span>
                                         </td>
                                     @else
                                         <td class="pl-6 py-4 whitespace-nowrap">
-                                            {{ $row[$column['column']] }}
+                                            {!! redIfNegative($row[$column['column']], fn($val) => number_format($val, 3)) !!}
                                         </td>
                                     @endif
                                 @endforeach
@@ -48,7 +48,7 @@
                                         @if (isset($row['standard_data'][$column['accessor']]) && !is_null($row['standard_data'][$column['accessor']]))
                                             <span
                                                 :data-tooltip-content="{{ $row['standard_data'][$column['accessor']] }}">
-                                                {{ number_format($row['standard_data'][$column['accessor']], 3) }}
+                                                {!! redIfNegative($row['standard_data'][$column['accessor']], fn($val) => number_format($val, 3)) !!}
                                             </span>
                                         @else
                                             N/A

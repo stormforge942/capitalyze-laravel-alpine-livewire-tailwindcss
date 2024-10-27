@@ -32,7 +32,7 @@
 
                                 @if (isset($table['summary'][$key]) && !is_null($table['summary'][$key]))
                                     <span :data-tooltip-content="{{ $table['summary'][$key] }}">
-                                        {{ number_format($table['summary'][$key], 3) }}
+                                        {!! redIfNegative($table['summary'][$key], fn($val) => number_format($val, 3)) !!}
                                     </span>
                                 @else
                                     N/A
@@ -49,7 +49,7 @@
 
                             @if (isset($table['summary'][$key]) && !is_null($table['summary'][$key]))
                                 <span :data-tooltip-content="{{ $table['summary'][$key] }}">
-                                    {{ number_format($table['summary'][$key], 3) }}
+                                    {!! redIfNegative($table['summary'][$key], fn($val) => number_format($val, 3)) !!}
                                 </span>
                             @else
                                 N/A
