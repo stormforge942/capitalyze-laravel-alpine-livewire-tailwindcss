@@ -22,7 +22,7 @@ jobs:
     - name: Install Project Dependencies
       run: composer install --no-interaction --prefer-dist --optimize-autoloader
     - name: Switch vappor team
-      run: vapor switch 69977
+      run: vapor team:switch --id 69977
     - name: Deploy to darkroom
       env:
         VAPOR_API_TOKEN: ${{ secrets.VAPOR_API_TOKEN }}
