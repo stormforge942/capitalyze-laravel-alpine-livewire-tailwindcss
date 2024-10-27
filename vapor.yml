@@ -1,8 +1,7 @@
-id: 50591
-name: Capitalyze
+id: 66584
+name: capitalyze-app
 environments:
     production:
-        # runtime: 'php-8.2:al2'
         runtime: docker
         gateway-version: 2
         octane: true
@@ -11,7 +10,7 @@ environments:
         timeout: 30
         cli-timeout: 600
         domain: capitalyze.com
-        database: xbrl-front
+        # database: xbrl-app
         cache: xbrl-cache
         memory: 2048
         cli-memory: 512
