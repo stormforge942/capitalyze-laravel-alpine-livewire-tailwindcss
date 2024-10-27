@@ -25,7 +25,24 @@
             @foreach ($summaries as $summary)
                 <tr style="background: rgba(82, 198, 255, 0.10)">
                     <td class="uppercase pl-6 py-4">{{ $summary }}</td>
-                    <td colspan="{{ count($columns['simple']) - 1 }}"></td>
+                    @foreach ($columns['simple'] as $column)
+                        @if ($column['is_numeric'] ?? false)
+                            <td class="pl-6 last:pr-6 text-right py-4">
+                                <?php $key = $column['column'] . '_' . strtolower($summary); ?>
+
+                                @if (isset($table['summary'][$key]) && !is_null($table['summary'][$key]))
+                                    <span :data-tooltip-content="{{ $table['summary'][$key] }}">
+                                        {{ number_format($table['summary'][$key], 3) }}
+                                    </span>
+                                @else
+                                    N/A
+                                @endif
+                            </td>
+                        @elseif($column['column'] != 'symbol')
+                            <td></td>
+                        @endif
+                    @endforeach
+
                     @foreach ($columns['complex'] as $column)
                         <td class="pl-6 last:pr-6 text-right py-4">
                             <?php $key = $column['accessor'] . '_' . strtolower($summary); ?>

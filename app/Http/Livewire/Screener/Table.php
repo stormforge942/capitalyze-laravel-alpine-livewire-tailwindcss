@@ -134,7 +134,6 @@ class Table extends Component
                     $simple[] = [
                         'title' => 'Location',
                         'column' => 'country',
-                        'accessor' => $item,
                     ];
                     break;
 
@@ -142,7 +141,6 @@ class Table extends Component
                     $simple[] = [
                         'title' => 'Exchange',
                         'column' => 'exchange',
-                        'accessor' => $item,
                     ];
                     break;
 
@@ -150,7 +148,6 @@ class Table extends Component
                     $simple[] = [
                         'title' => 'Industry',
                         'column' => 'sic_group',
-                        'accessor' => $item,
                     ];
                     break;
 
@@ -158,7 +155,14 @@ class Table extends Component
                     $simple[] = [
                         'title' => 'Sector',
                         'column' => 'sic_description',
-                        'accessor' => $item,
+                    ];
+                    break;
+
+                case 'market_cap':
+                    $simple[] = [
+                        'title' => 'Market Cap',
+                        'column' => 'market_cap',
+                        'is_numeric' => true,
                     ];
                     break;
 

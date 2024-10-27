@@ -4,7 +4,6 @@ namespace App\Http\Livewire\Screener;
 
 use Livewire\Component;
 use App\Models\ScreenerTab;
-use Illuminate\Support\Str;
 use App\Models\CompanyProfile;
 use App\Services\ScreenerTableBuilderService;
 use Illuminate\Validation\Rule;

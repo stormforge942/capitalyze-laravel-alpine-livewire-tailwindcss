@@ -14,10 +14,13 @@
                     <thead class="font-sm font-semibold capitalize bg-[#EDEDED] rounded-t-md">
                         <tr>
                             @foreach ($columns['simple'] as $column)
-                                <th class="pl-6 last:pr-6 py-2 text-dark whitespace-nowrap">{{ $column['title'] }}</th>
+                                <th
+                                    class="pl-6 last:pr-6 py-2 text-dark whitespace-nowrap {{ $column['is_numeric'] ?? false ? 'text-right' : '' }}">
+                                    {{ $column['title'] }}</th>
                             @endforeach
                             @foreach ($columns['complex'] as $column)
-                                <th class="pl-6 last:pr-6 py-2 text-dark whitespace-nowrap text-right">{!! $column['title'] !!}</th>
+                                <th class="pl-6 last:pr-6 py-2 text-dark whitespace-nowrap text-right">
+                                    {!! $column['title'] !!}</th>
                             @endforeach
                         </tr>
                     </thead>
@@ -28,7 +31,17 @@
                         @foreach ($table['data'] as $row)
                             <tr class="last:border-0">
                                 @foreach ($columns['simple'] as $column)
-                                    <td class="pl-6 py-4 whitespace-nowrap">{{ $row[$column['column']] }}</td>
+                                    @if ($column['is_numeric'] ?? false)
+                                        <td class="pl-6 py-4 whitespace-nowrap text-right">
+                                            <span :data-tooltip-content="{{ $row[$column['column']] }}">
+                                                {{ number_format($row[$column['column']], 3) }}
+                                            </span>
+                                        </td>
+                                    @else
+                                        <td class="pl-6 py-4 whitespace-nowrap">
+                                            {{ $row[$column['column']] }}
+                                        </td>
+                                    @endif
                                 @endforeach
                                 @foreach ($columns['complex'] as $column)
                                     <td class="pl-6 last:pr-6 text-right py-4 whitespace-nowrap">

@@ -189,13 +189,38 @@ class ScreenerTableBuilderService
 
     public static function generateSummary(Builder $query, array $summaries, array $select = [])
     {
-        if (!count($select['complex'])) {
+        $numericSimple = Arr::where($select['simple'], fn($item) => $item['is_numeric'] ?? false);
+
+        if (!count($numericSimple) || !count($select['complex'])) {
             return [];
         }
 
         $columns = [];
 
         foreach ($summaries as $summary) {
+            foreach ($numericSimple as $item) {
+                $column = 'c.' . $item['column'];
+
+                switch ($summary) {
+                    case 'Min':
+                        $label = $item['column'] . "_min";
+                        $columns[] = DB::raw("MIN({$column}) as {$label}");
+                        break;
+                    case 'Max':
+                        $label = $item['column'] . "_max";
+                        $columns[] = DB::raw("MAX({$column}) as {$label}");
+                        break;
+                    case 'Sum':
+                        $label = $item['column'] . "_sum";
+                        $columns[] = DB::raw("SUM({$column}) as {$label}");
+                        break;
+                    case 'Median':
+                        $label = $item['column'] . "_median";
+                        $columns[] = DB::raw("PERCENTILE_CONT(0.5) WITHIN GROUP (ORDER BY {$column}) AS {$label}");
+                        break;
+                }
+            }
+
             foreach ($select['complex'] as $item) {
                 $column = "s1." . $item['column'];
 
@@ -238,7 +263,13 @@ class ScreenerTableBuilderService
             'financial' => [],
         ];
 
-        $universal = array_filter($universal, fn($item) => count($item['data']));
+        $universal = array_filter($universal, function ($item, $key) {
+            if ($key === 'market_cap') {
+                return count($item) === 2;
+            }
+
+            return count($item['data']);
+        });
 
         $query = DB::connection('pgsql-xbrl')->table('company_profile as c')->join('standardized_new as s', 'c.symbol', '=', 's.ticker');
 
@@ -290,6 +321,17 @@ class ScreenerTableBuilderService
                     $query->whereNotIn('c.sic_description', $criterias['sectors']['data']);
                 } else {
                     $query->whereIn('c.sic_description', $criterias['sectors']['data']);
+                }
+
+                return $query;
+            })
+            ->when(isset($criterias['market_cap']), function ($query) use ($criterias) {
+                if (is_numeric($criterias['market_cap'][0])) {
+                    $query->where('c.market_cap', '>=', (float) $criterias['market_cap'][0]);
+                }
+
+                if (is_numeric($criterias['market_cap'][1])) {
+                    $query->where('c.market_cap', '<=', (float) $criterias['market_cap'][1]);
                 }
 
                 return $query;
@@ -378,8 +420,9 @@ class ScreenerTableBuilderService
                 $universalCriteria[$key] = $universalCriteria_[$key];
             }
         }
-        if ($val = static::range(data_get($universalCriteria, 'market_cap.0'), data_get($universalCriteria, 'market_cap.1'))) {
-            $universalCriteria['market_cap'] = $val;
+
+        if (count(data_get($universalCriteria_, 'market_cap') ?? []) === 2) {
+            $universalCriteria['market_cap'] = $universalCriteria_['market_cap'];
         }
 
         $financialCriteria = [];
@@ -456,22 +499,5 @@ class ScreenerTableBuilderService
         }
 
         return array_reverse($dates);
-    }
-
-    private static function range($min, $max)
-    {
-        if (is_null($min) && is_null($max)) {
-            return null;
-        }
-
-        if (is_null($min) || is_null($max)) {
-            return [$min, $max];
-        }
-
-        if ($min > $max) {
-            [$min, $max] = [$max, $min];
-        }
-
-        return [$min, $max];
     }
 }
