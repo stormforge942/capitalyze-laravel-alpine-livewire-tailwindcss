@@ -14,7 +14,7 @@
                         iframe.onload = () => {
                             window.reportTextHighlighter.highlight(
                                 {{ $balance }},
-                                {{ $balance }},
+                                {{ round($balance) }},
                                 ['table tbody tr td p', 'balance'],
                                 iframe.contentDocument
                             )
