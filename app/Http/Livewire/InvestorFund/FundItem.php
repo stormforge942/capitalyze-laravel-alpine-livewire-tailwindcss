@@ -10,6 +10,8 @@ class FundItem extends Component
 {
     public $fund;
     public $chartData;
+    public $percentage = -10.0;
+    public $priceChange = -30.0;
 
     public function mount($fund)
     {

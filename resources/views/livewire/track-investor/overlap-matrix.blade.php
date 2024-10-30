@@ -43,7 +43,7 @@
     }
 }">
     <h2 class="text-xl font-semibold">Overlap Matrix</h2>
-    <p class="text-gry-500 text-[#7C8286] my-2">Add funds and analyze the overlap in their portfolios.</p>
+    <p class="text-gry-500 text-[#7C8286] my-2">Choose multiple investment funds to compare and discover which stocks they share in their portfolios</p>
 
     <!-- Filters -->
     @include('livewire.track-investor.overlap-matrix-filters')
