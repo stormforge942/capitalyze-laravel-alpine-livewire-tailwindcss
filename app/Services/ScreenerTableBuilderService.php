@@ -321,11 +321,11 @@ class ScreenerTableBuilderService
             })
             ->when(isset($criterias['market_cap']), function ($query) use ($criterias) {
                 if (is_numeric($criterias['market_cap'][0])) {
-                    $query->where('c.market_cap', '>=', (float) $criterias['market_cap'][0]);
+                    $query->where('c.market_cap', '>=', $criterias['market_cap'][0] * 1000000000);
                 }
 
                 if (is_numeric($criterias['market_cap'][1])) {
-                    $query->where('c.market_cap', '<=', (float) $criterias['market_cap'][1]);
+                    $query->where('c.market_cap', '<=', $criterias['market_cap'][1] * 1000000000);
                 }
 
                 return $query;
