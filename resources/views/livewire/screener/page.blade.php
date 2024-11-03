@@ -46,9 +46,6 @@ $flattenedMetrics = App\Services\ScreenerTableBuilderService::options(true);
             },
             getResult() {
                 $wire.generateResult()
-                    .finally(() => {
-                        this.refreshCriteriaResultCount();;
-                    });
             },
             formatTableValue(value, applyUnits) {
                 if (value === 'N/A') return value

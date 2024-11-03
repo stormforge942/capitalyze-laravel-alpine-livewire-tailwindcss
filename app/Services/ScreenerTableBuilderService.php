@@ -263,13 +263,7 @@ class ScreenerTableBuilderService
             'financial' => [],
         ];
 
-        $universal = array_filter($universal, function ($item, $key) {
-            if ($key === 'market_cap') {
-                return count($item) === 2;
-            }
-
-            return count($item['data']);
-        });
+        $universal = collect($universal)->filter(fn($item, $key) => $key == 'market_cap' || count($item['data']))->toArray();
 
         $query = DB::connection('pgsql-xbrl')->table('company_profile as c')->join('standardized_new as s', 'c.symbol', '=', 's.ticker');
 
