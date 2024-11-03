@@ -5,7 +5,7 @@
 }">
     <div class="flex flex-col">
         <span class="text-[#2575F0] font-bold border-l-4 border-blue-500 py-2 px-2">Notification Settings</span>
-        <span class="text-[#2575F0] block mt-2 px-3">Set notification options</span>
+        <span class="text-[#2575F0] block mt-2 px-3">Set default table options for the financial table</span>
     </div>
 
     <div class="mt-3 px-3">
