@@ -27,7 +27,23 @@ $flattenedMetrics = App\Services\ScreenerTableBuilderService::options(true);
                 return this.criteriaResultCount.universal.toLocaleString() + ' Results';
             },
             get disabledGetResultButton() {
-                return false
+                const uCount = Object.values(this.universalCriteria).filter(c => (c.data || []).length || c.displayOnly).length;
+        
+                const fCount = this.financialCriteria.filter(c => {
+                    let condition = c.metric && c.type && c.period && c.dates.length && c.operator
+        
+                    if (c.operator === 'display') {
+                        return condition;
+                    }
+        
+                    if (c.operator === 'between') {
+                        return condition && c.value && c.value[0] && c.value[1];
+                    }
+        
+                    return condition && c.value;
+                }).length;
+        
+                return (uCount + fCount) < 1;
             },
             init() {
                 this.refreshCriteriaResultCount();
@@ -223,8 +239,8 @@ $flattenedMetrics = App\Services\ScreenerTableBuilderService::options(true);
                 </div>
                 <div>
                     <button @click="getResult"
-                        class="absolute left-1/2 transform -translate-x-1/2 -bottom-6 px-10 py-3 rounded-lg bg-dark hover:bg-dark-light2 font-bold text-white flex justify-between items-center gap-2 disabled:bg-opacity-70 disabled:cursor-not-allowed"
-                        wire:loading.attr="disabled">
+                        class="absolute left-1/2 transform -translate-x-1/2 -bottom-6 px-10 py-3 rounded-lg bg-dark hover:bg-dark-light2 font-bold text-white flex justify-between items-center gap-2 disabled:bg-opacity-70 disabled:cursor-not-allowed disabled:bg-dark"
+                        wire:loading.attr="disabled" :disabled="disabledGetResultButton">
                         <span>Get Result</span>
                         <svg width="14" height="14" viewBox="0 0 14 14" fill="none"
                             xmlns="http://www.w3.org/2000/svg">
