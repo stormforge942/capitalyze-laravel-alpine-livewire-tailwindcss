@@ -164,17 +164,22 @@ class ScreenerTableBuilderService
                 ?->toArray() ?? [];
 
             $data = [];
+            $quarterMap = [];
             foreach ($_data as $value) {
                 $keys = array_filter(array_keys($value), fn($key) => in_array(substr($key, 0, 3), ['si_', 'is_', 'bs_', 'cf_', 'ra_']));
 
                 foreach ($keys as $key) {
-                    if ($value['period_type'] === 'annual') {
-                        $data[$key . "_" . $value['year']] = $value[$key];
+                    $k = $value['period_type'] === 'annual'
+                        ? $key . "_" . $value['year']
+                        : $key . "_" . $value['year'] . "_" . $value['quarter'];
+
+                    // if we already have latest quarter data, then skip
+                    if (isset($quarterMap[$k]) && $quarterMap[$k] > $value['quarter']) {
+                        continue;
                     }
 
-                    if ($value['period_type'] === 'quarter') {
-                        $data[$key . "_" . $value['year'] . "_" . $value['quarter']] = $value[$key];
-                    }
+                    $data[$k] = $value[$key];
+                    $quarterMap[$k] = $value['quarter'];
                 }
             }
 
