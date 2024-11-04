@@ -60,7 +60,10 @@ $flattenedMetrics = App\Services\ScreenerTableBuilderService::options(true);
             refreshCriteriaResultCount() {
                 const tabCriterias = @js($tabCriterias ?? ['key' => 'value']);
         
-                if (!(Object.keys(tabCriterias.universal).length + tabCriterias.financial.length)) {
+                const uLength = Object.values(tabCriterias.universal).filter(c => (c.data || []).length).length;
+                const fLength = tabCriterias.financial.filter(c => c.operator !== 'display').length;
+        
+                if (!(uLength + fLength)) {
                     this.criteriaResultCount = {};
                     return;
                 };
