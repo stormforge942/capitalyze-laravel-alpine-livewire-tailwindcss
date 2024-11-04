@@ -388,8 +388,6 @@ class ScreenerTableBuilderService
                     });
                 }
 
-                if ($criteria['operator'] === 'display') return $query;
-
                 $query->whereNotNull($column);
 
                 switch ($criteria['operator']) {
@@ -418,7 +416,9 @@ class ScreenerTableBuilderService
                 }
             };
 
-            $query_->where($where);
+            if ($criteria['operator'] !== 'display') {
+                $query_->where($where);
+            }
         }
 
         return $query_;

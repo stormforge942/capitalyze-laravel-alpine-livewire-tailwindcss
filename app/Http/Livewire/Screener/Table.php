@@ -127,7 +127,7 @@ class Table extends Component
         $complex = [];
 
         $options = ScreenerTableBuilderService::options(true);
-        
+
         foreach (array_keys($this->universal) as $item) {
             switch ($item) {
                 case 'locations':
@@ -227,26 +227,31 @@ class Table extends Component
             $key = $col['metric'] . '-' .  $col['type'] . '-' .  $col['period'];
 
             if ($seen[$key] ?? false) {
-                $cols[$key]['dates'] = collect(array_merge($cols[$key]['dates'], $col['dates']))->unique()
-                    ->sort(function ($val1, $val2) {
-                        $fn = function ($val) {
-                            if (str_starts_with($val, 'Q')) {
-                                $val = ltrim($val, "Q");
-                                [$q, $y] = explode(" ", $val);
-
-                                return intval($y) * 4 + intval($q);
-                            }
-
-                            return intval(explode(" ", $val)[1]);
-                        };
-
-                        return $fn($val2) - $fn($val1);
-                    })->toArray();
+                $cols[$key]['dates'] = array_merge($cols[$key]['dates'], $col['dates']);
                 continue;
             }
 
             $seen[$key] = true;
             $cols[$key] = $col;
+        }
+
+        foreach ($cols as $key => $col) {
+            $cols[$key]['dates'] = collect(array_unique($col['dates']))->sort(
+                function ($val1, $val2) {
+                    $fn = function ($val) {
+                        if (str_starts_with($val, 'Q')) {
+                            $val = ltrim($val, "Q");
+                            [$q, $y] = explode(" ", $val);
+
+                            return intval($y) * 4 + intval($q);
+                        }
+
+                        return intval(explode(" ", $val)[1]);
+                    };
+
+                    return $fn($val2) - $fn($val1);
+                }
+            )->toArray();
         }
 
         return array_values($cols);
