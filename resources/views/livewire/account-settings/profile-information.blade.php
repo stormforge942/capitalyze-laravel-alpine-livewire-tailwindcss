@@ -26,10 +26,10 @@
             <div class="w-[120px] h-[120px] text-[50px] my-2 mr-2">
                 @if ($profilePhoto)
                     <img src="{{ $profilePhoto->temporaryUrl() }}" alt="Profile Photo"
-                        class="rounded-full w-full h-full" />
+                        class="rounded-full object-cover w-full h-full" />
                 @elseif ($user->profile_photo_path)
                     <img src="{{ $user->profile_photo_url }}" alt="Profile Photo"
-                        class="rounded-full w-full h-full">
+                        class="rounded-full object-cover w-full h-full">
                 @else
                     <div
                         class="bg-[#121A0F] text-[#DCF6EC] w-full h-full flex shrink-0 text-center items-center justify-center rounded-full">
