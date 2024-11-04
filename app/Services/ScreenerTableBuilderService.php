@@ -263,7 +263,7 @@ class ScreenerTableBuilderService
             'financial' => [],
         ];
 
-        $universal = collect($universal)->filter(fn($item, $key) => $key == 'market_cap' || count($item['data']))->toArray();
+        $universal = collect($universal)->filter(fn($item) => count($item['data'] ?? []))->toArray();
 
         $query = DB::connection('pgsql-xbrl')->table('company_profile as c')->join('standardized_new as s', 'c.symbol', '=', 's.ticker');
 
@@ -282,6 +282,8 @@ class ScreenerTableBuilderService
 
     private static function applyUniversalCriteria(Builder $query, array $criterias)
     {
+        $criterias = collect($criterias)->filter(fn($item) => count($item['data'] ?? []))->toArray();
+
         return $query
             ->when(isset($criterias['locations']), function ($query) use ($criterias) {
                 if ($criterias['locations']['exclude']) {
@@ -320,12 +322,28 @@ class ScreenerTableBuilderService
                 return $query;
             })
             ->when(isset($criterias['market_cap']), function ($query) use ($criterias) {
-                if (is_numeric($criterias['market_cap'][0])) {
-                    $query->where('c.market_cap', '>=', $criterias['market_cap'][0] * 1000000000);
+                $value = $criterias['market_cap']['data'];
+
+                $billion = 1000000000;
+
+                if ($criterias['market_cap']['exclude']) {
+                    if (is_numeric($value[0])) {
+                        $query->where('c.market_cap', '<', $value[0] * $billion);
+                    }
+
+                    if (is_numeric($value[1])) {
+                        $query->where('c.market_cap', '>', $value[1] * $billion);
+                    }
+
+                    return $query;
                 }
 
-                if (is_numeric($criterias['market_cap'][1])) {
-                    $query->where('c.market_cap', '<=', $criterias['market_cap'][1] * 1000000000);
+                if (is_numeric($value[0])) {
+                    $query->where('c.market_cap', '>=', $value[0] * $billion);
+                }
+
+                if (is_numeric($value[1])) {
+                    $query->where('c.market_cap', '<=', $value[1] * $billion);
                 }
 
                 return $query;
@@ -409,14 +427,10 @@ class ScreenerTableBuilderService
     public static function resolveValidCriterias(array $universalCriteria_, array $financialCriteria_)
     {
         $universalCriteria = [];
-        foreach (['locations', 'stock_exchanges', 'industries', 'sectors'] as $key) {
-            if (count(data_get($universalCriteria_, $key . '.data') ?? [])) {
+        foreach (['locations', 'stock_exchanges', 'industries', 'sectors', 'market_cap'] as $key) {
+            if (count(data_get($universalCriteria_, $key . '.data') ?? []) || data_get($universalCriteria_, $key . '.displayOnly')) {
                 $universalCriteria[$key] = $universalCriteria_[$key];
             }
-        }
-
-        if (count(data_get($universalCriteria_, 'market_cap') ?? []) === 2) {
-            $universalCriteria['market_cap'] = $universalCriteria_['market_cap'];
         }
 
         $financialCriteria = [];

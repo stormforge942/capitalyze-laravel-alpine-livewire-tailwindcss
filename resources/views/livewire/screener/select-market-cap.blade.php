@@ -4,41 +4,56 @@
     tmpValue: {
         min: '',
         max: '',
+        exclude: false,
+        displayOnly: false,
     },
     get valueText() {
-        if (!this.value) {
+        const value = this.value.data;
+
+        if (!value) {
             return 'Market Cap'
         }
 
-        if (!Number.isNaN(this.value[0]) && this.value[1] === '') {
-            return `From $${this.value[0]}B`
+        const exclude = this.value.exclude;
+
+        if (!Number.isNaN(value[0]) && value[1] === '') {
+            return (exclude ? 'Below' : 'From') + ` $${value[0]}B`
         }
 
-        if (this.value[0] === '' && !Number.isNaN(this.value[1])) {
-            return `Up to $${this.value[1]}B`
+        if (value[0] === '' && !Number.isNaN(value[1])) {
+            txt += (exclude ? 'From' : 'Up to') ` $${value[1]}B`
+            return txt
         }
 
-        return `$${this.value[0]}B - $${this.value[1]}B`
+        return (exclude ? 'Except ' : '') + `$${value[0]}B to $${value[1]}B`
     },
     init() {
         $watch('showDropdown', () => {
-            const value = this.value ? this.value : ['', ''];
+            const value = this.value?.data ? this.value.data : ['', ''];
 
             this.tmpValue = {
                 min: value[0],
                 max: value[1],
+                exclude: this.value?.exclude || false,
+                displayOnly: this.value?.displayOnly || false,
             }
         })
     },
     updateValue() {
+        let data = [this.tmpValue.min, this.tmpValue.max];
+
         if (
             this.tmpValue.min == '' && this.tmpValue.max == '' ||
             this.tmpValue.min == 0 && this.tmpValue.max == 0
         ) {
-            this.value = null;
+            data = null
         }
 
-        this.value = [this.tmpValue.min, this.tmpValue.max];
+        this.value = {
+            data,
+            exclude: this.tmpValue.exclude,
+            displayOnly: this.tmpValue.displayOnly,
+        };
 
         this.showDropdown = false;
     },
@@ -49,7 +64,7 @@
             <x-slot name="trigger">
                 <p class="flex items-center border-[0.5px] border-[#D4DDD7] dropdown-trigger rounded-tl-full rounded-bl-full p-2 text-sm"
                     :class="[
-                        value?.length > 0 ? 'rounded-tr-none rounded-br-none' :
+                        value?.data?.length > 0 ? 'rounded-tr-none rounded-br-none' :
                         'rounded-tr-full rounded-br-full',
                         showDropdown ? 'bg-[#E2E2E2]' : 'bg-white hover:bg-[#E2E2E2]'
                     ]">
@@ -65,7 +80,7 @@
                 </p>
             </x-slot>
 
-            <form class="w-[20rem]" @submit.prevent="updateValue">
+            <form class="w-[20rem] sm:w-[26rem]" @submit.prevent="updateValue">
                 <div class="px-6 pt-6">
                     <div class="flex justify-between">
                         <span class="font-medium text-base">Market Cap (in billions)</span>
@@ -80,19 +95,63 @@
                         </button>
                     </div>
 
+                    <div class="mt-2 bg-gray-light rounded px-2 flex items-center gap-x-5 text-sm text-[#DA680B]">
+                        <label class="cursor-pointer rounded flex items-center py-3 gap-x-2">
+                            <input type="checkbox"
+                                class="custom-checkbox !border-[#DA680B] !text-inherit focus:ring-0 h-[12px] w-[12px]"
+                                x-model="tmpValue.displayOnly"
+                                @change="(e) => {
+                                    if(e.target.checked) {
+                                        tmpValue.exclude = false
+                                        tmpValue.min = ''
+                                        tmpValue.max = ''
+                                    }
+                                }">
+                            <span class="font-medium">
+                                Display Only
+                            </span>
+                        </label>
+
+                        <label class="rounded flex items-center py-3 gap-x-2"
+                            :class="tmpValue.displayOnly ? 'cursor-not-allowed opacity-60' : 'cursor-pointer'">
+                            <input type="checkbox"
+                                class="custom-checkbox !border-[#DA680B] !text-inherit focus:ring-0 h-[12px] w-[12px]"
+                                x-model="tmpValue.exclude" :disabled="tmpValue.displayOnly">
+                            <span class="font-medium">
+                                Exclude
+                            </span>
+                        </label>
+                    </div>
+
+                    <template x-if="tmpValue.exclude">
+                        <div class="mt-2 flex gap-2 items-center bg-[#DA680B] bg-opacity-10 px-4 py-2 rounded">
+                            <svg width="14" height="14" viewBox="0 0 14 14" fill="none"
+                                xmlns="http://www.w3.org/2000/svg">
+                                <path fill-rule="evenodd" clip-rule="evenodd"
+                                    d="M7 0C3.136 0 0 3.136 0 7C0 10.864 3.136 14 7 14C10.864 14 14 10.864 14 7C14 3.136 10.864 0 7 0ZM6.9998 3.5C6.61321 3.5 6.2998 3.8134 6.2998 4.2C6.2998 4.5866 6.61321 4.9 6.9998 4.9C7.3864 4.9 7.6998 4.5866 7.6998 4.2C7.6998 3.8134 7.3864 3.5 6.9998 3.5ZM7.6998 9.8C7.6998 10.185 7.3848 10.5 6.9998 10.5C6.6148 10.5 6.2998 10.185 6.2998 9.8V7C6.2998 6.615 6.6148 6.3 6.9998 6.3C7.3848 6.3 7.6998 6.615 7.6998 7V9.8ZM1.40039 7C1.40039 10.087 3.91339 12.6 7.00039 12.6C10.0874 12.6 12.6004 10.087 12.6004 7C12.6004 3.913 10.0874 1.4 7.00039 1.4C3.91339 1.4 1.40039 3.913 1.40039 7Z"
+                                    fill="#DA680B" />
+                            </svg>
+                            <p class="text-sm text-[#DA680B]">
+                                Any selection you make will be excluded in the result
+                            </p>
+                        </div>
+                    </template>
+
                     <div class="py-4">
-                        <div class="flex items-center justify-between">
+                        <div class="flex items-center justify-between"
+                            :class="tmpValue.displayOnly ? 'opacity-60 cursor-not-allowed' : ''">
                             <input placeholder="Min" class="flex-1 w-16 rounded-sm border-2 border-gray-medium2"
                                 type="number" {{ false ? '' : 'min=0' }} step="1" x-model="tmpValue.min"
-                                :max="tmpValue.max">
+                                :max="tmpValue.max" :disabled="tmpValue.displayOnly">
                             <span class="px-5">-</span>
                             <input placeholder="Max" class="flex-1 w-16 rounded-sm border-2 border-gray-medium2"
-                                type="number" step="1" x-model="tmpValue.max" :min="tmpValue.min">
+                                type="number" step="1" x-model="tmpValue.max" :min="tmpValue.min"
+                                :disabled="tmpValue.displayOnly">
                         </div>
 
                         <button type="button" class="text-sm mt-1 hover:underline text-red"
-                            @click="tmpValue.min = 0; tmpValue.max = 0;" x-show="tmpValue.min != 0 || tmpValue.max != 0"
-                            x-cloak>Clear</button>
+                            @click="tmpValue.min = ''; tmpValue.max = '';"
+                            x-show="tmpValue.min != '' || tmpValue.max != ''" x-cloak>Clear</button>
                     </div>
                 </div>
 
@@ -106,7 +165,7 @@
         </x-dropdown>
 
         <div class="flex items-center gap-1 border-[0.5px] border-[#D4DDD7] rounded-tr-full rounded-br-full">
-            <template x-if="value?.length > 0">
+            <template x-if="value?.data?.length > 0">
                 <div class="flex items-center bg-[#E2E2E2] p-2 rounded-tr-full rounded-br-full">
                     <span class="text-sm truncate mr-1" x-text="valueText"></span>
                     <button type="button" @click="value = null;">

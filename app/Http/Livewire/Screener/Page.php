@@ -94,7 +94,7 @@ class Page extends Component
             ->where('user_id', auth()->id())
             ->find($tab_['id']);
 
-        $empty = ['data' => [], 'exclude' => false];
+        $empty = ['data' => [], 'exclude' => false, 'displayOnly' => false];
 
         $universalCriteria = $tab->universal_criteria ?? [];
         $this->universalCriteria = [
@@ -132,19 +132,26 @@ class Page extends Component
         $validator = Validator::make($data, [
             'universal_criteria' => ['nullable', 'array'],
             'universal_criteria.locations.exclude' => ['required', 'boolean'],
+            'universal_criteria.locations.displayOnly' => ['nullable', 'boolean'],
             'universal_criteria.locations.data' => ['nullable', 'array'],
             'universal_criteria.locations.data.*' => ['string'],
             'universal_criteria.stock_exchanges.exclude' => ['required', 'boolean'],
+            'universal_criteria.stock_exchanges.displayOnly' => ['nullable', 'boolean'],
             'universal_criteria.stock_exchanges.data' => ['nullable', 'array'],
             'universal_criteria.stock_exchanges.data.*' => ['string'],
             'universal_criteria.sectors.exclude' => ['required', 'boolean'],
+            'universal_criteria.sectors.displayOnly' => ['nullable', 'boolean'],
             'universal_criteria.sectors.data' => ['nullable', 'array'],
             'universal_criteria.sectors.data.*' => ['string'],
             'universal_criteria.industries.exclude' => ['required', 'boolean'],
+            'universal_criteria.industries.displayOnly' => ['nullable', 'boolean'],
             'universal_criteria.industries.data' => ['nullable', 'array'],
             'universal_criteria.industries.data.*' => ['string'],
-            'universal_criteria.market_cap' => ['nullable', 'array', 'min:2', 'max:2'],
-            'universal_criteria.market_cap.*' => ['nullable', 'numeric'],
+            'universal_criteria.market_cap' => ['nullable', 'array'],
+            'universal_criteria.market_cap.data' => ['nullable', 'array', 'min:2', 'max:2'],
+            'universal_criteria.market_cap.data.*' => ['nullable', 'numeric'],
+            'universal_criteria.market_cap.exclude' => ['required', 'boolean'],
+            'universal_criteria.market_cap.displayOnly' => ['nullable', 'boolean'],
 
             'financial_criteria' => ['nullable', 'array'],
             'financial_criteria.*' => ['array'],
@@ -169,8 +176,6 @@ class Page extends Component
             ->filter($where)
             ->values()
             ->toArray();
-
-        info($attributes);
 
         ScreenerTab::query()
             ->where('user_id', auth()->id())

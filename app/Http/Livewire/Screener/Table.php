@@ -127,7 +127,7 @@ class Table extends Component
         $complex = [];
 
         $options = ScreenerTableBuilderService::options(true);
-
+        
         foreach (array_keys($this->universal) as $item) {
             switch ($item) {
                 case 'locations':

@@ -8,7 +8,8 @@
     search: '',
     tmpValue: {
         data: [],
-        exclude: false
+        exclude: false,
+        displayOnly: false,
     },
     value: {
         data: [],
@@ -16,7 +17,11 @@
     },
     showDropdown: false,
     showResult() {
-        this.value = { ...this.tmpValue }
+        this.value = {
+            data: this.tmpValue.data,
+            exclude: this.tmpValue.exclude,
+            displayOnly: this.tmpValue.displayOnly,
+        }
         this.showDropdown = false
     },
     get computedOptions() {
@@ -38,7 +43,11 @@
     },
     init() {
         this.$watch('showDropdown', value => {
-            this.tmpValue = { ...this.value }
+            this.tmpValue = {
+                data: this.value.data || [],
+                exclude: this.value.exclude || false,
+                displayOnly: this.value.displayOnly || false
+            }
             this.search = ''
         })
 
@@ -84,7 +93,7 @@
                         </button>
                     </div>
 
-                    <div class="grid grid-cols-12 gap-4 px-6 mt-4 mb-2">
+                    <div class="px-6 mt-4 mb-2">
                         <div class="col-span-12 md:col-span-8">
                             <div class="bg-white rounded px-4 py-3 gap-3 flex items-center border border-[#D4DDD7]">
                                 <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24"
@@ -99,11 +108,28 @@
                             </div>
                         </div>
 
-                        <div class="col-span-12 flex md:col-span-4">
-                            <label class="cursor-pointer rounded flex items-center py-3 gap-x-3">
-                                <input type="checkbox" class="custom-checkbox border-dark focus:ring-0"
-                                    x-model="tmpValue.exclude">
-                                <span>
+                        <div class="mt-2 bg-gray-light rounded px-2 flex items-center gap-x-5 text-sm text-[#DA680B]">
+                            <label class="cursor-pointer rounded flex items-center py-3 gap-x-2">
+                                <input type="checkbox"
+                                    class="custom-checkbox !border-[#DA680B] !text-inherit focus:ring-0 h-[12px] w-[12px]"
+                                    x-model="tmpValue.displayOnly"
+                                    @change="(e) => {
+                                        if(e.target.checked) {
+                                            tmpValue.exclude = false
+                                            tmpValue.data = []
+                                        }
+                                    }">
+                                <span class="font-medium">
+                                    Display Only
+                                </span>
+                            </label>
+
+                            <label class="rounded flex items-center py-3 gap-x-2"
+                                :class="tmpValue.displayOnly ? 'cursor-not-allowed opacity-60' : 'cursor-pointer'">
+                                <input type="checkbox"
+                                    class="custom-checkbox !border-[#DA680B] !text-inherit focus:ring-0 h-[12px] w-[12px]"
+                                    x-model="tmpValue.exclude" :disabled="tmpValue.displayOnly">
+                                <span class="font-medium">
                                     Exclude
                                 </span>
                             </label>
@@ -111,7 +137,7 @@
                     </div>
 
                     <template x-if="tmpValue.exclude">
-                        <div class="px-6 py-2 ">
+                        <div class="px-6 py-2">
                             <div class="flex gap-2 items-center bg-[#DA680B] bg-opacity-10 px-4 py-2 rounded">
                                 <svg width="14" height="14" viewBox="0 0 14 14" fill="none"
                                     xmlns="http://www.w3.org/2000/svg">
@@ -130,9 +156,10 @@
                 <div class="max-h-[19rem] overflow-y-auto dropdown-scroll mr-1">
                     <div class="space-y-2 px-6">
                         <template x-for="(value, index) in computedOptions" :key="index">
-                            <label class="cursor-pointer rounded flex items-center p-4 hover:bg-green-light gap-x-4">
+                            <label class="rounded flex items-center p-4 hover:bg-green-light gap-x-4"
+                                :class="tmpValue.displayOnly ? 'cursor-not-allowed opacity-60' : 'cursor-pointer'">
                                 <input type="checkbox" name="company" class="custom-checkbox border-dark focus:ring-0"
-                                    :value="value" x-model="tmpValue.data">
+                                    :value="value" x-model="tmpValue.data" :disabled="tmpValue.displayOnly">
                                 <span x-text="value"></span>
                             </label>
                         </template>

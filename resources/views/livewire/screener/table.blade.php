@@ -32,13 +32,13 @@
                             <tr class="last:border-0">
                                 @foreach ($columns['simple'] as $column)
                                     @if ($column['is_numeric'] ?? false)
-                                        <td class="pl-6 py-4 whitespace-nowrap text-right">
+                                        <td class="pl-6 last:pr-6 py-4 whitespace-nowrap text-right">
                                             <span :data-tooltip-content="{{ $row[$column['column']] }}">
                                                 {!! redIfNegative($row[$column['column']], fn($val) => number_format($val, 3)) !!}
                                             </span>
                                         </td>
                                     @else
-                                        <td class="pl-6 py-4 whitespace-nowrap">
+                                        <td class="pl-6 last:pr-6 py-4 whitespace-nowrap">
                                             {!! redIfNegative($row[$column['column']], fn($val) => number_format($val, 3)) !!}
                                         </td>
                                     @endif
