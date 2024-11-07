@@ -34,7 +34,10 @@ class Page extends Component
 
     public $result = null;
 
-    private $tabCriterias = null;
+    private $tabCriterias = [
+        'universal' => [],
+        'financial' => [],
+    ];
 
     public ?array $view = null;
 
@@ -102,7 +105,7 @@ class Page extends Component
             'stock_exchanges' => data_get($universalCriteria, 'stock_exchanges', $empty),
             'industries' => data_get($universalCriteria, 'industries', $empty),
             'sectors' => data_get($universalCriteria, 'sectors', $empty),
-            'market_cap' => data_get($universalCriteria, 'market_cap', $empty),
+            'market_cap' => data_get($universalCriteria, 'market_cap', ['data' => null, 'exclude' => false, 'displayOnly' => false]),
         ];
 
         $this->financialCriteria = $tab->financial_criteria ?? [];
@@ -167,6 +170,8 @@ class Page extends Component
             'summaries' => ['nullable', 'array'],
             'summaries.*' => ['required', Rule::in(Page::SUMMARIES)],
         ]);
+
+        $validator->validate();
 
         $attributes = $validator->validate();
 

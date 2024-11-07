@@ -27,7 +27,6 @@ $flattenedMetrics = App\Services\ScreenerTableBuilderService::options(true);
                 return this.criteriaResultCount.universal.toLocaleString() + ' Results';
             },
             get disabledGetResultButton() {
-                console.log(this.universalCriteria)
                 const uCount = Object.values(this.universalCriteria).filter(c => (c.data || []).length || c.displayOnly).length;
         
                 const fCount = this.financialCriteria.filter(c => {
@@ -43,8 +42,6 @@ $flattenedMetrics = App\Services\ScreenerTableBuilderService::options(true);
         
                     return condition && c.value;
                 }).length;
-
-                console.log(uCount, fCount)
         
                 return (uCount + fCount) < 1;
             },
@@ -77,7 +74,11 @@ $flattenedMetrics = App\Services\ScreenerTableBuilderService::options(true);
                 return value < 0 ? '(' + formatted + ')' : formatted;
             },
             refreshCriteriaResultCount() {
-                const tabCriterias = @js($tabCriterias ?? ['key' => 'value']);
+                let tabCriterias = @js($tabCriterias);
+        
+                if (Array.isArray(tabCriterias.universal)) {
+                    tabCriterias.universal = {}
+                }
         
                 const uLength = Object.values(tabCriterias.universal).filter(c => (c.data || []).length).length;
                 const fLength = tabCriterias.financial.filter(c => c.operator !== 'display').length;
