@@ -102,7 +102,7 @@ class Page extends Component
             'stock_exchanges' => data_get($universalCriteria, 'stock_exchanges', $empty),
             'industries' => data_get($universalCriteria, 'industries', $empty),
             'sectors' => data_get($universalCriteria, 'sectors', $empty),
-            'market_cap' => data_get($universalCriteria, 'market_cap', null),
+            'market_cap' => data_get($universalCriteria, 'market_cap', $empty),
         ];
 
         $this->financialCriteria = $tab->financial_criteria ?? [];
