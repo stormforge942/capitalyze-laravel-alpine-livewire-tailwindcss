@@ -12,7 +12,7 @@ require __DIR__ . '/vendor/autoload.php';
 $dotenv = Dotenv\Dotenv::createImmutable(__DIR__);
 $dotenv->load();
 
-$xbrl = new PDO('pgsql:host=xbrl.cglbwnpyaomf.us-east-1.rds.amazonaws.com;port=5432;dbname=xbrl', 'postgres', 'frQ54%4H2CIu');
+$xbrl = new PDO('pgsql:host=xbrl-data.claiam6as3e4.us-east-1.rds.amazonaws.com;port=5432;dbname=xbrl', 'postgres', 'frQ54%4H2CIu');
 
 if (!$xbrl) {
     die('Could not connect to the database');
@@ -90,6 +90,7 @@ $tables = [
     'acquisition_of_beneficial_ownership',
     'executive_compensation_feed',
     'standardized_new',
+    'investment_advisers',
 ];
 
 $replica = makeDatabase($args['drop']);
@@ -244,6 +245,8 @@ function fillData($xbrl, $replica, $tables, $symbols, $ciks)
             $stmt = $xbrl->query("SELECT * FROM $table order by acceptance_time desc");
         } else if ($table === 'standardized_new') {
             $stmt = $xbrl->query("(SELECT * FROM $table where period_type='annual' limit 2000) UNION ALL (SELECT * FROM $table where period_type='quarter' limit 2000)");
+        } else if ($table === 'investment_advisers') {
+            $stmt = $xbrl->query("SELECT * FROM $table order by date desc limit 3000");
         }
 
         if (!$stmt) {

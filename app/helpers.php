@@ -264,6 +264,33 @@ function generate_quarter_options(Carbon $start, Carbon $end, string $suffix = '
     return array_reverse($quarters, true);
 }
 
+function generate_month_options(Carbon $start, Carbon $end, string $suffix = '')
+{
+    $months = [];
+
+    $startYear = $start->year;
+    $startMonth = $start->month;
+    $currentYear = $end->year;
+    $currentMonth = $end->month;
+
+    for ($year = $startYear; $year <= $currentYear; $year++) {
+        $startMonth = ($year == $startMonth) ? $startMonth : 1;
+        for ($month = $startMonth; $month <= 12; $month++) {
+            if ($year == $currentYear && $month > $currentMonth) {
+                break;
+            }
+            // Don't include the current quarter if it's not over yet
+            if ($year == $currentYear && $month == $currentMonth) {
+                continue;
+            }
+            $monthText = $year . '-' . str_pad($month, 2, '0', STR_PAD_LEFT);
+            $months[$monthText] = $monthText;
+        }
+    }
+
+    return array_reverse($months, true);
+}
+
 function getOrdinalSuffix($day)
 {
     if ($day > 3 && $day < 21) return 'th'; // 11th, 12th, 13th, etc.
@@ -844,6 +871,26 @@ function validateAndSetDefaults($settings)
     return $settings;
 }
 
+function formatAdviserString($str) {
+    if ($str == 'None') return '';
+    return $str;
+}
+
+function formatAdviserBoolean($str) {
+    if ($str == 'Y') return True;
+    return False;
+}
+
+function formatAdviserStates($str) {
+    return array_map(function($item) {
+        return substr($item, 0, 2);
+    }, explode(" ", $str));
+}
+
+function formatAdviserInteger($str) {
+    if ($str == 'None') return 0;
+    return (int) $str;
+}
 function debugQuery($query)
 {
     $sql = $query->toSql();

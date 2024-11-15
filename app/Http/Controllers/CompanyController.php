@@ -6,6 +6,7 @@ use App\Exceptions\CompanyNotFoundException;
 use App\Models\Fund;
 use App\Models\Company;
 use App\Models\MutualFunds;
+use App\Models\InvestmentAdvisers;
 use Illuminate\Http\Request;
 use App\Services\OwnershipHistoryService;
 use Illuminate\Routing\Controller as BaseController;
@@ -300,6 +301,28 @@ class CompanyController extends BaseController
             'currentCompany' => $currentCompany,
             'tab' => 'mutual-fund',
             'fund' => $fund,
+        ]);
+    }
+
+    public function adviser(Request $request, ?string $company = null)
+    {
+        $adviser = InvestmentAdvisers::query()->where('legal_name', $request->route('adviser'))->orderByDesc('date')->firstOrFail();
+
+        $currentCompany = $company
+            ? Company::query()
+            ->where('ticker', $company)
+            ->first()
+            : null;
+
+        $intialCompany = Company::query()
+            ->where('ticker', OwnershipHistoryService::getCompany())
+            ->firstOrFail();
+
+        return view('layouts.company', [
+            'company' => $intialCompany,
+            'currentCompany' => $currentCompany,
+            'tab' => 'adviser',
+            'fund' => $adviser,
         ]);
     }
 

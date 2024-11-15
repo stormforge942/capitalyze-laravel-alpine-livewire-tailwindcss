@@ -36,6 +36,8 @@
         <div class="mx-auto" style="max-width: 1500px;" x-data x-cloak>
             @if ($tab == 'track-investor')
                 <livewire:track-investor.page />
+            @elseif($tab == 'investor-adviser')
+                <livewire:investor-adviser.page />
             @elseif($tab == 'event-filings')
                 <livewire:event-filings.page />
             @elseif($tab == 'insider-transactions')
@@ -80,6 +82,8 @@
                 <livewire:ownership.fund :company="$currentCompany" :fund="$fund" />
             @elseif($tab == 'mutual-fund')
                 <livewire:ownership.mutual-fund :company="$currentCompany" :fund="$fund" />
+            @elseif($tab == 'adviser')
+                <livewire:investor-adviser.adviser :company="$currentCompany" :adviser="$fund" />
             @elseif($tab == 'etf-filings')
                 <livewire:etf.filings />
             @elseif($tab === 'filings-summary')

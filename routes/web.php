@@ -47,6 +47,7 @@ use App\Http\Controllers\EventFilingsController;
 use App\Http\Controllers\Builder\ChartController;
 use App\Http\Controllers\ResetLinkSentController;
 use App\Http\Controllers\TrackInvestorController;
+use App\Http\Controllers\InvestorAdviserController;
 use App\Http\Controllers\UpdateSettingsController;
 use App\Http\Controllers\EarningsCalendarController;
 use App\Http\Controllers\TableBuilder\TableController;
@@ -70,6 +71,7 @@ Route::get('/', HomeController::class)->name('home');
 
 Route::group(['middleware' => ['auth', 'two_factor', 'approved', 'verified', CheckPagePermission::class]], function () {
     Route::get('/track-investors', TrackInvestorController::class)->name('track-investors');
+    Route::get('/investor-advisers', InvestorAdviserController::class)->name('investor-adviser');
     Route::get('/event-filings', EventFilingsController::class)->name('event-filings');
     Route::get('/insider-transactions', InsiderTransactionsController::class)->name('insider-transactions');
     Route::get('/calendar/earnings', EarningsCalendarController::class)->name('earnings-calendar');
@@ -130,6 +132,7 @@ Route::group(['middleware' => ['auth', 'two_factor', 'approved', 'verified', Che
     // if company is supplied in url, it will show history of fund for that company otherwise it will show history of fund for all companies
     Route::get('/fund/{fund}/{company?}', [CompanyController::class, 'fund'])->name('company.fund');
     Route::get('/mutual-fund/{fund_symbol}/{company?}', [CompanyController::class, 'mutualFund'])->name('company.mutual-fund');
+    Route::get('/adviser/{adviser}', [CompanyController::class, 'adviser'])->name('company.adviser');
 
     Route::get('builder/chart', [BuilderController::class, 'chart'])->name('builder.chart');
     Route::get('builder/table', [BuilderController::class, 'table'])->name('builder.table');

@@ -40,6 +40,7 @@ class CreateNavbarGroupShows extends Command
             $isUpperNavbar = in_array($navbar->route_name, [
                 '',
                 'track-investors',
+                'investor-adviser',
                 'insider-transactions',
                 'event-filings',
                 'earnings-calendar',

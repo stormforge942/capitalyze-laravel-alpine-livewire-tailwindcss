@@ -44,6 +44,7 @@ class CompanyNavbar extends Component
 
         $mainLinks = [
             'Track Investors',
+            'Investor Advisers',
             'Events Tracker',
             'Insider Transactions',
             'Earnings Calendar',
@@ -114,6 +115,9 @@ class CompanyNavbar extends Component
                 'collapsed' => true
             ]
         ];
+
+        logger($allLinks);
+        logger($items);
 
         return array_filter($items, fn ($item) => count($item['items']) > 0);
     }
