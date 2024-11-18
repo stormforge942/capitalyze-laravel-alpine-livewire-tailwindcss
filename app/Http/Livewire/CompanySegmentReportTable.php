@@ -21,6 +21,8 @@ final class CompanySegmentReportTable extends PowerGridComponent
     public array $perPageValues = [10, 25, 50];
     public bool $displayLoader = true;
 
+    public $pagination = true;
+
     protected function getListeners(): array
     {
         return array_merge(
@@ -33,11 +35,15 @@ final class CompanySegmentReportTable extends PowerGridComponent
 
     public function setUp(): array
     {
+        $footer = Footer::make();
+
+        if ($this->pagination) {
+            $footer->showPerPage($this->perPage, $this->perPageValues)->showRecordCount();
+        }
+
         return [
             Header::make(),
-            Footer::make()
-                ->showPerPage($this->perPage, $this->perPageValues)
-                ->showRecordCount(),
+            $footer,
         ];
     }
 
