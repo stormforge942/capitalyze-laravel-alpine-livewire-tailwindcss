@@ -7,7 +7,7 @@ use Illuminate\Console\Command;
 use Illuminate\Support\Facades\Route;
 use Illuminate\Support\Facades\Log;
 
-class createNavbar extends Command
+class FetchNavbars extends Command
 {
     /**
      * The name and signature of the console command.
@@ -21,7 +21,7 @@ class createNavbar extends Command
      *
      * @var string
      */
-    protected $description = 'Fetch all navbar and groupShows items';
+    protected $description = 'Fetch all navbar items and log';
 
     /**
      * Execute the console command.
@@ -31,9 +31,7 @@ class createNavbar extends Command
     public function handle()
     {
         $navbars = Navbar::query()->get();
-        
         Log::info('Navbars:', $navbars->toArray());
-        
         $this->info('Fetch navbars successfully!');
     }
 }
