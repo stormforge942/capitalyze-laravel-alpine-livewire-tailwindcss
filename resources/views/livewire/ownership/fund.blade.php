@@ -9,7 +9,22 @@
 
     <div class="mt-6 flex items-center justify-between">
         <div>
-            <h1 class="text-xl font-bold">{{ $fund->name }}</h1>
+            <div class="flex flex-row items-center gap-x-4">
+                <h1 class="text-xl font-bold">{{ $fund->name }}</h1>
+                <div class="px-4 py-2 flex flex-row items-center gap-x-2 hover:cursor-pointer" wire:click="addOrRemoveFromFavourite">
+                    @if ($isFavorite)
+                        <span>Remove From Favourites</span>
+                        <svg width="14" height="14" viewBox="0 0 14 14" fill="none" xmlns="http://www.w3.org/2000/svg">
+                            <path d="M6.9991 11.173L3.24269 13.2757C2.87038 13.4841 2.4249 13.1604 2.50805 12.7419L3.34702 8.51961L0.186483 5.59686C-0.126768 5.30717 0.0433897 4.78348 0.467087 4.73324L4.74198 4.22638L6.54506 0.317342C6.72377 -0.0700937 7.27442 -0.0700927 7.45312 0.317344L9.25616 4.22638L13.531 4.73324C13.9547 4.78348 14.1249 5.30717 13.8117 5.59685L10.6512 8.51961L11.4901 12.7419C11.5733 13.1604 11.1278 13.4841 10.7555 13.2757L6.9991 11.173ZM6.9991 9.64501L9.83023 11.2297L9.1979 8.04747L11.58 5.84461L8.35803 5.46257L6.9991 2.51635L5.64012 5.46257L2.41817 5.84461L4.80024 8.04747L4.16792 11.2297L6.9991 9.64501Z" fill="none" stroke="#FFD700"/>
+                        </svg>
+                    @else
+                        <span>Add To Favourites</span>
+                        <svg width="14" height="14" viewBox="0 0 14 14" fill="none" xmlns="http://www.w3.org/2000/svg">
+                            <path d="M6.9991 11.173L3.24269 13.2757C2.87038 13.4841 2.4249 13.1604 2.50805 12.7419L3.34702 8.51961L0.186483 5.59686C-0.126768 5.30717 0.0433897 4.78348 0.467087 4.73324L4.74198 4.22638L6.54506 0.317342C6.72377 -0.0700937 7.27442 -0.0700927 7.45312 0.317344L9.25616 4.22638L13.531 4.73324C13.9547 4.78348 14.1249 5.30717 13.8117 5.59685L10.6512 8.51961L11.4901 12.7419C11.5733 13.1604 11.1278 13.4841 10.7555 13.2757L6.9991 11.173ZM6.9991 9.64501L9.83023 11.2297L9.1979 8.04747L11.58 5.84461L8.35803 5.46257L6.9991 2.51635L5.64012 5.46257L2.41817 5.84461L4.80024 8.04747L4.16792 11.2297L6.9991 9.64501Z" fill="#121A0F"/>
+                        </svg>
+                    @endif
+                </div>
+            </div>
             <div class="flex items-center gap-2 mt-2 text-xs">
                 <div class="border rounded border-blue border-opacity-50 px-1.5 py-0.5">
                     CIK:

@@ -116,9 +116,6 @@ class CompanyNavbar extends Component
             ]
         ];
 
-        logger($allLinks);
-        logger($items);
-
         return array_filter($items, fn ($item) => count($item['items']) > 0);
     }
 
