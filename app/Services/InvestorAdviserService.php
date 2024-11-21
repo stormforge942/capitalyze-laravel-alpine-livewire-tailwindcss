@@ -4,6 +4,7 @@ namespace App\Services;
 
 use Illuminate\Database\Query\Builder;
 use Illuminate\Support\Facades\DB;
+use App\Models\InvestmentAdvisers;
 
 class InvestorAdviserService
 {
@@ -11,7 +12,7 @@ class InvestorAdviserService
     {
         $q = DB::connection('pgsql-xbrl')
             ->table('investment_advisers')
-            ->select(['legal_name', 'cik', 'date', 'number_of_employees', 'assets_under_management', 'number_of_accounts']);
+            ->select(['legal_name', 'cik', 'date', 'number_of_employees', 'assets_under_management', 'number_of_accounts', 'form_data']);
 
         if ($filters['view'] != 'most-recent') {
             $q->where('date', $filters['view']);

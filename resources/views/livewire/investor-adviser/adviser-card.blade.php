@@ -9,22 +9,24 @@
 
     <div class="mt-4 grid grid-cols-2 gap-x-6 md:gap-x-8 gap-y-4">
         <div>
-            <label class="font-normal text-sm text-dark-light2">Assets</label>
-            <div class="font-semibold text-base break-all">{{ niceNumber($adviser['assets_under_management']) }}</div>
+            <label class="font-normal text-sm text-dark-light2">AUM</label>
+            <div class="font-semibold text-base break-all">{{ niceNumber($assets_under_management) }}</div>
         </div>
         <div>
-            <label class="font-normal text-sm text-dark-light2">Number of Employees</label>
-            <div class="font-semibold text-base break-all">{{ $adviser['number_of_employees'] }}</div>
+            <label class="font-normal text-sm text-dark-light2">CRD#</label>
+            <div class="font-semibold text-base break-all">{{ $crd_number }}</div>
         </div>
         <div>
-            <label class="font-normal text-sm text-dark-light2">Number of Accounts</label>
-            <div class="font-semibold text-base break-all">{{ $adviser['number_of_accounts'] }}</div>
+            <label class="font-normal text-sm text-dark-light2">Sec Region</label>
+            <div class="font-semibold text-base break-all">{{ $sec_region }}</div>
+        </div>
+        <div>
+            <label class="font-normal text-sm text-dark-light2">SEC#</label>
+            <div class="font-semibold text-base break-all">{{ $sec_number }}</div>
         </div>
         <div>
             <label class="font-normal text-sm text-dark-light2">CIK</label>
-            <div class="font-semibold text-base break-all">
-                {{ $adviser['cik'] ?? '--' }}
-            </div>
+            <div class="font-semibold text-base break-all">{{ $cik }}</div>
         </div>
     </div>
 </div>

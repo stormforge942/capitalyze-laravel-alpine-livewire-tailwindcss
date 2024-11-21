@@ -37,7 +37,7 @@ class Page extends Component
 
     private function getAdvisers(array $filters)
     {
-        $cacheKey = $filters['areApplied'] ? null : 'advisers_' . md5($this->search . '_perPage_' . $this->perPage);
+        $cacheKey = $filters['areApplied'] ? null : 'advisers_' . md5($this->search . '_view_' . $this->view . '_perPage_' . $this->perPage);
 
         $cb = fn() => app(InvestorAdviserService::class)
             ->buildQuery($filters, $this->views)
