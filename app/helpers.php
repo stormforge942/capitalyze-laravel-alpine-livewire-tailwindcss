@@ -818,23 +818,25 @@ function makeFormulaDescription($arguments, $result, $date, $metric, $type): arr
     return $result;
 }
 
-function extractTickerFromUrl($url)
+function extractTickerFromUrl($path)
 {
     $ticker = '';
-    $currentUrl = parse_url($url);
-    $currentPath = explode('/', $currentUrl['path'])[1];
+    $segments = explode('/', trim($path, '/'));
 
-    if ($currentPath === 'company') {
-        return explode('/', $currentUrl['path'])[2];
+    if (isset($segments[0]) && $segments[0] === 'company' && isset($segments[1])) {
+        return $segments[1];
     }
 
-    if (str_contains($currentUrl['query'], 'ticker')) {
-        $queryString = $currentUrl['query'];
+    if (str_contains($path, '?')) {
+        $parts = explode('?', $path);
+        $queryString = $parts[1];
         $queryItems = [];
 
         parse_str($queryString, $queryItems);
 
-        return $queryItems['ticker'];
+        if (isset($queryItems['ticker'])) {
+            return $queryItems['ticker'];
+        }
     }
 
     return $ticker;
@@ -900,4 +902,16 @@ function debugQuery($query)
     })->toArray());
 
     return $fullSql;
+}
+
+function getRouteNameFromUrl($url) {
+    $routes = Route::getRoutes();
+
+    foreach ($routes as $route) {
+        if ($route->matches(request()->create($url))) {
+            return $route->getName();
+        }
+    }
+
+    return null;
 }

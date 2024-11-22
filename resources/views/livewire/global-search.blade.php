@@ -15,14 +15,10 @@
     },
 
     navigateTo(item) {
-        const currentUrl = window.location.href;
+        const currentUrl = window.location.pathname;
 
         this.$wire.navigateTo(item, currentUrl)
-            .then(() => {
-                const prevTicker = $wire.prevHistoryItem.ticker;
-                const newUrl = window.location.href.replace(prevTicker, item.ticker);
-                window.location.href = newUrl;
-            });
+            .then((url) => window.location.href = url);
     }
 }" class="h-14 w-full lg:w-2/3 relative" @keydown.window.escape="open = false" @click.away="open = false">
     <div class="rounded-lg border border-green-muted bg-white leading-[3rem] px-3 flex items-center focus-within:border-green-dark">
@@ -33,7 +29,7 @@
                 fill="#9DA3A8" />
         </svg>
 
-        <input placeholder="Search" @focus="open = true;" x-model.debounce.500ms="search" class="w-full text-left text-[#7C8286] ml-3 focus:outline-none" />
+        <input placeholder="Search" @focus="open = true;" @input="open = true;" x-model.debounce.500ms="search" class="w-full text-left text-[#7C8286] ml-3 focus:outline-none" />
     </div>
 
     <template x-if="open">

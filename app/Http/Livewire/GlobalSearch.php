@@ -9,11 +9,11 @@ use App\Models\CompanyProfile;
 use App\Models\UserSearchHistory;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Storage;
+use Illuminate\Support\Facades\Route;
 
 class GlobalSearch extends Component
 {
     public $history = [];
-    public $prevHistoryItem;
     public $suggestions = [];
     public $checklist = false;
 
@@ -114,7 +114,7 @@ class GlobalSearch extends Component
             return $entry['ticker'] !== $item['ticker'];
         });
 
-        $this->prevHistoryItem = $history[0] ?? [
+        $prevHistoryItem = $history[0] ?? [
             'ticker' => extractTickerFromUrl($currentUrl),
             'name' => null
         ];
@@ -130,6 +130,17 @@ class GlobalSearch extends Component
 
         $model->history = array_reverse($history);
         $model->save();
+
+        $routeName = getRouteNameFromUrl($currentUrl);
+
+        if (str_starts_with($routeName, 'company.')) {
+            $prevTicker = $prevHistoryItem['ticker'];
+            $newUrl = str_replace($prevTicker, $item['ticker'], $currentUrl);
+        } else {
+            $newUrl = parse_url(route('company.profile', $item['ticker']), PHP_URL_PATH);
+        }
+
+        return $newUrl;
     }
 
     public function render()
