@@ -62,58 +62,61 @@ class SourceAndUses extends Component
 
         $datasets = [];
 
-        $keyTitleMap = $for === 'sources' ? [
-            'free_cashflow' => 'Free Cash Flow',
-            'net_debt' => 'Total Debt Issued',
-            'preferred_stock' => 'Issuance of Preferred Stock',
-            'common_stock' => 'Issuance of Common Stock',
-        ] : [
-            'acquisition' => 'Acquisitions',
-            'debt_repaid' => 'Total Debt Repaid',
-            'preferred_repurchase' => 'Repurchase of Preferred Stock',
-            'common_repurchase' => 'Repurchase of Common Stock',
-            'dividends' => 'Total Dividends Paid',
-            'other' => 'Cash Build / Other',
-        ];
-
-        $idx = 0;
-        foreach ($data as $key => $value) {
-            if (in_array($key, ['total', 'formulas'])) continue;
-
-            $datasets[] = [
-                'label' => $keyTitleMap[$key],
-                'data' => array_map(fn ($date) => [
-                    'x' => $this->formatDateForChart($date),
-                    'value' => $value['timeline'][$date],
-                    'percent' => round($value['total_percent'][$date], $this->decimalPlaces),
-                ], $this->selectedDates),
-                'backgroundColor' => $this->chartColors[$idx] ?? random_color(),
-                'borderRadius' => 2,
-                'fill' => true,
-                "datalabels" => ['color' => '#fff'],
+        if ($data) {
+            $keyTitleMap = $for === 'sources' ? [
+                'free_cashflow' => 'Free Cash Flow',
+                'net_debt' => 'Total Debt Issued',
+                'preferred_stock' => 'Issuance of Preferred Stock',
+                'common_stock' => 'Issuance of Common Stock',
+            ] : [
+                'acquisition' => 'Acquisitions',
+                'debt_repaid' => 'Total Debt Repaid',
+                'preferred_repurchase' => 'Repurchase of Preferred Stock',
+                'common_repurchase' => 'Repurchase of Common Stock',
+                'dividends' => 'Total Dividends Paid',
+                'other' => 'Cash Build / Other',
             ];
-
-            $idx++;
-        }
-
-        // calculate average for each dataset and add as data to each dataset
-        foreach ($datasets as $idx => $dataset) {
-            $average = [
-                'x' => 'Average',
-                'value' => 0,
-                'percent' => 0,
-            ];
-
-            foreach ($dataset['data'] as $data) {
-                $average['value'] += $data['value'];
-                $average['percent'] += $data['percent'];
+    
+            $idx = 0;
+            foreach ($data as $key => $value) {
+                if (in_array($key, ['total', 'formulas'])) continue;
+    
+                $datasets[] = [
+                    'label' => $keyTitleMap[$key],
+                    'data' => array_map(fn ($date) => [
+                        'x' => $this->formatDateForChart($date),
+                        'value' => $value['timeline'][$date],
+                        'percent' => round($value['total_percent'][$date], $this->decimalPlaces),
+                    ], $this->selectedDates),
+                    'backgroundColor' => $this->chartColors[$idx] ?? random_color(),
+                    'borderRadius' => 2,
+                    'fill' => true,
+                    "datalabels" => ['color' => '#fff'],
+                ];
+    
+                $idx++;
             }
-
-            $average['value'] = round($average['value'] / count($dataset['data']), $this->decimalPlaces);
-            $average['percent'] = round($average['percent'] / count($dataset['data']), $this->decimalPlaces);
-
-            $datasets[$idx]['data'][] = $average;
+    
+            // calculate average for each dataset and add as data to each dataset
+            foreach ($datasets as $idx => $dataset) {
+                $average = [
+                    'x' => 'Average',
+                    'value' => 0,
+                    'percent' => 0,
+                ];
+    
+                foreach ($dataset['data'] as $data) {
+                    $average['value'] += $data['value'];
+                    $average['percent'] += $data['percent'];
+                }
+    
+                $average['value'] = count($dataset['data']) ? round($average['value'] / count($dataset['data']), $this->decimalPlaces) : 0;
+                $average['percent'] = count($dataset['data']) ? round($average['percent'] / count($dataset['data']), $this->decimalPlaces) : 0;
+    
+                $datasets[$idx]['data'][] = $average;
+            }
         }
+
 
         return $datasets;
     }
@@ -124,34 +127,37 @@ class SourceAndUses extends Component
 
         $data = $this->rawData;
 
-        foreach ($data as &$value) {
-            foreach ($value as $key => $row) {
-                if ($key === 'formulas') {
-                    continue;
-                }
-
-                if (isset($row['timeline'])) {
-                    $value[$key]['timeline'] = array_map(
-                        fn ($val) => ['value' => $val, 'formatted' => $this->formatValue($val)],
-                        $row['timeline']
-                    );
-                }
-
-                if (isset($row['yoy_change'])) {
-                    $value[$key]['yoy_change'] = array_map(
-                        fn ($val) => ['formatted' => $this->formatPercentageValue($val), 'value' => $val],
-                        $row['yoy_change']
-                    );
-                }
-
-                if (isset($row['total_percent'])) {
-                    $value[$key]['total_percent'] = array_map(
-                        fn ($val) => ['formatted' => $this->formatPercentageValue($val), 'value' => $val],
-                        $row['total_percent']
-                    );
+        if ($data) {
+            foreach ($data as &$value) {
+                foreach ($value as $key => $row) {
+                    if ($key === 'formulas') {
+                        continue;
+                    }
+    
+                    if (isset($row['timeline'])) {
+                        $value[$key]['timeline'] = array_map(
+                            fn ($val) => ['value' => $val, 'formatted' => $this->formatValue($val)],
+                            $row['timeline']
+                        );
+                    }
+    
+                    if (isset($row['yoy_change'])) {
+                        $value[$key]['yoy_change'] = array_map(
+                            fn ($val) => ['formatted' => $this->formatPercentageValue($val), 'value' => $val],
+                            $row['yoy_change']
+                        );
+                    }
+    
+                    if (isset($row['total_percent'])) {
+                        $value[$key]['total_percent'] = array_map(
+                            fn ($val) => ['formatted' => $this->formatPercentageValue($val), 'value' => $val],
+                            $row['total_percent']
+                        );
+                    }
                 }
             }
         }
+
 
         return $data;
     }
@@ -301,10 +307,12 @@ class SourceAndUses extends Component
     {
         $dates = [];
 
-        foreach ($data as $values) {
-            foreach ($values as $date => $_) {
-                if (!in_array($date, $dates)) {
-                    $dates[] = $date;
+        if ($data) {
+            foreach ($data as $values) {
+                foreach ($values as $date => $_) {
+                    if (!in_array($date, $dates)) {
+                        $dates[] = $date;
+                    }
                 }
             }
         }
@@ -340,17 +348,20 @@ class SourceAndUses extends Component
 
         $tmp = [];
 
-        foreach ($data as $key => $value) {
-            $key = explode("|", $key)[0];
-
-            if (!in_array($key, array_keys($usedKeys))) continue;
-
-            if (in_array($key, array_keys($usedKeys))) {
-                $this->formulaHashes[$usedKeys[$key]] = array_map(fn ($value) => $this->extractHashes($value), $value);
+        if ($data) {
+            foreach ($data as $key => $value) {
+                $key = explode("|", $key)[0];
+    
+                if (!in_array($key, array_keys($usedKeys))) continue;
+    
+                if (in_array($key, array_keys($usedKeys))) {
+                    $this->formulaHashes[$usedKeys[$key]] = array_map(fn ($value) => $this->extractHashes($value), $value);
+                }
+    
+                $tmp[$key] = $valueFormatter($value);
             }
-
-            $tmp[$key] = $valueFormatter($value);
         }
+
 
         return $tmp;
     }

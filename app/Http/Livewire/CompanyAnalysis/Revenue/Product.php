@@ -209,25 +209,28 @@ class Product extends Component
         });
 
         $products = [];
-        $apiReturns = json_decode($data->api_return_open_ai, true);
-        $incomeStatements = collect(json_decode($data->income_statement, true));
-        $revenueKey = $incomeStatements->search(function ($value, $key) {
-            return str_contains($key, 'Revenue');
-        });
 
-        foreach ($apiReturns as $item) {
-            $date = array_key_first($item);
-
-            foreach ($item[$date] as $key => $value) {
-                $name = str_replace(' [Member]', '', $key);
-
-                if (!isset($products[$name])) {
-                    $products[$name] = [];
+        if ($data) {
+            $apiReturns = json_decode($data->api_return_open_ai, true);
+            $incomeStatements = collect(json_decode($data->income_statement, true));
+            $revenueKey = $incomeStatements->search(function ($value, $key) {
+                return str_contains($key, 'Revenue');
+            });
+    
+            foreach ($apiReturns as $item) {
+                $date = array_key_first($item);
+    
+                foreach ($item[$date] as $key => $value) {
+                    $name = str_replace(' [Member]', '', $key);
+    
+                    if (!isset($products[$name])) {
+                        $products[$name] = [];
+                    }
+    
+                    $hashExtractionResult = $this->extractHashes($incomeStatements[$revenueKey][$date]);
+    
+                    $products[$name][$date] = ['value' => intval($value), 'hash' => $hashExtractionResult['hash'], 'secondHash' => $hashExtractionResult['secondHash']];
                 }
-
-                $hashExtractionResult = $this->extractHashes($incomeStatements[$revenueKey][$date]);
-
-                $products[$name][$date] = ['value' => intval($value), 'hash' => $hashExtractionResult['hash'], 'secondHash' => $hashExtractionResult['secondHash']];
             }
         }
 

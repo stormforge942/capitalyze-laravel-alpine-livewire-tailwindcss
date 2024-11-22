@@ -100,131 +100,152 @@ class CostStructure extends Component
 
     private function formatData()
     {
-        $statement = $this->statements[$this->period]['income_statement'];
-
-        $data = [
-            'segments' => [],
-            'total_expenses' => [
-                'timeline' => array_reduce(
-                    $this->dates,
-                    function ($carry, $date) use ($statement) {
-                        $cgs = isset($statement['Cost of Goods Sold'][$date]) ? abs($this->extractValues($statement['Cost of Goods Sold'][$date])['value']) : 0;
-                        $rde = isset($statement['R&D Expenses'][$date]) ? abs($this->extractValues($statement['R&D Expenses'][$date])['value']) : 0;
-                        $sge = isset($statement['SG&A Expenses'][$date]) ? abs($this->extractValues($statement['SG&A Expenses'][$date])['value']) : 0;
-
-                        $carry[$date] =  $cgs + $rde + $sge;
-
-                        return $carry;
-                    },
-                    []
-                ),
-                'hash' => array_combine($this->dates, array_map(fn ($date) => $this->extractValues($statement['Total Operating Expenses'][$date])['hash'] ?? 0, $this->dates)),
-                'secondHash' => array_combine($this->dates, array_map(fn ($date) => $this->extractValues($statement['Total Operating Expenses'][$date])['secondHash'] ?? 0, $this->dates)),
-                'yoy_change' => [],
-                'revenue_percentage' => [],
-            ],
-            'revenues' => [
-                'timeline' => array_combine($this->dates, array_map(fn ($date) => $this->extractValues($statement['Total Revenues'][$date])['value'] ?? 0, $this->dates)),
-                'hash' => array_combine($this->dates, array_map(fn ($date) => $this->extractValues($statement['Total Revenues'][$date])['hash'], $this->dates)),
-                'secondHash' => array_combine($this->dates, array_map(fn ($date) => $this->extractValues($statement['Total Revenues'][$date])['secondHash'], $this->dates)),
-                'yoy_change' => [],
-            ],
-            'formulas' => []
-        ];
-
-        // update yoy change
-        foreach (['total_expenses', 'revenues'] as $key) {
-            $lastValue = 0;
-            $formulasLabelMap = [
-                'total_expenses' => 'Total Expenses',
-                'revenues' => 'Revenues',
+        if ($this->statements[$this->period]) {
+            $statement = $this->statements[$this->period]['income_statement'];
+    
+            $data = [
+                'segments' => [],
+                'total_expenses' => [
+                    'timeline' => array_reduce(
+                        $this->dates,
+                        function ($carry, $date) use ($statement) {
+                            $cgs = isset($statement['Cost of Goods Sold'][$date]) ? abs($this->extractValues($statement['Cost of Goods Sold'][$date])['value']) : 0;
+                            $rde = isset($statement['R&D Expenses'][$date]) ? abs($this->extractValues($statement['R&D Expenses'][$date])['value']) : 0;
+                            $sge = isset($statement['SG&A Expenses'][$date]) ? abs($this->extractValues($statement['SG&A Expenses'][$date])['value']) : 0;
+    
+                            $carry[$date] =  $cgs + $rde + $sge;
+    
+                            return $carry;
+                        },
+                        []
+                    ),
+                    'hash' => array_combine($this->dates, array_map(fn ($date) => $this->extractValues($statement['Total Operating Expenses'][$date])['hash'] ?? 0, $this->dates)),
+                    'secondHash' => array_combine($this->dates, array_map(fn ($date) => $this->extractValues($statement['Total Operating Expenses'][$date])['secondHash'] ?? 0, $this->dates)),
+                    'yoy_change' => [],
+                    'revenue_percentage' => [],
+                ],
+                'revenues' => [
+                    'timeline' => array_combine($this->dates, array_map(fn ($date) => $this->extractValues($statement['Total Revenues'][$date])['value'] ?? 0, $this->dates)),
+                    'hash' => array_combine($this->dates, array_map(fn ($date) => $this->extractValues($statement['Total Revenues'][$date])['hash'], $this->dates)),
+                    'secondHash' => array_combine($this->dates, array_map(fn ($date) => $this->extractValues($statement['Total Revenues'][$date])['secondHash'], $this->dates)),
+                    'yoy_change' => [],
+                ],
+                'formulas' => []
             ];
-
-            foreach ($this->dates as $idx => $date) {
-                $value = $data[$key]['timeline'][$date];
-
-                $data[$key]['yoy_change'][$date] = $lastValue && $idx
-                    ? (($value / $lastValue) - 1) * 100
-                    : 0;
-
-                $data['formulas'][$key]['yoy_change'][$date] = $this->makeFormulaDescription([$value, $lastValue], $data[$key]['yoy_change'][$date], $date, $formulasLabelMap[$key], 'yoy_change');
-
-                $lastValue = $value;
+    
+            // update yoy change
+            foreach (['total_expenses', 'revenues'] as $key) {
+                $lastValue = 0;
+                $formulasLabelMap = [
+                    'total_expenses' => 'Total Expenses',
+                    'revenues' => 'Revenues',
+                ];
+    
+                foreach ($this->dates as $idx => $date) {
+                    $value = $data[$key]['timeline'][$date];
+    
+                    $data[$key]['yoy_change'][$date] = $lastValue && $idx
+                        ? (($value / $lastValue) - 1) * 100
+                        : 0;
+    
+                    $data['formulas'][$key]['yoy_change'][$date] = $this->makeFormulaDescription([$value, $lastValue], $data[$key]['yoy_change'][$date], $date, $formulasLabelMap[$key], 'yoy_change');
+    
+                    $lastValue = $value;
+                }
             }
-        }
-
-        // calculate expenses revenue percentage
-        foreach ($this->dates as $date) {
-            $data['total_expenses']['revenue_percentage'][$date] = $data['total_expenses']['timeline'][$date] / $data['revenues']['timeline'][$date] * 100;
-            $data['formulas']['total_expenses']['revenue_percentage'][$date] = $this->makeFormulaDescription([$data['total_expenses']['timeline'][$date], $data['revenues']['timeline'][$date]], $data['total_expenses']['revenue_percentage'][$date], $date, 'Total Expenses', 'of_total_revenue');;
-        }
-
-        $segments = [
-            [
-                'title' => 'Cost of Goods Sold',
-                'key' => 'Cost of Goods Sold',
-            ],
-            [
-                'title' => 'R&D Expenses',
-                'key' => 'R&D Expenses',
-            ],
-            [
-                'title' => 'SG&A Expenses',
-                'key' => 'SG&A Expenses',
-            ],
-        ];
-
-        foreach ($segments as $seg) {
-            $segment = [
-                'title' => $seg['title'],
-                'timeline' => [],
-                'yoy_change' => [],
-                'revenue_percentage' => [],
-                'expense_percentage' => [],
+    
+            // calculate expenses revenue percentage
+            foreach ($this->dates as $date) {
+                $data['total_expenses']['revenue_percentage'][$date] = $data['total_expenses']['timeline'][$date] / $data['revenues']['timeline'][$date] * 100;
+                $data['formulas']['total_expenses']['revenue_percentage'][$date] = $this->makeFormulaDescription([$data['total_expenses']['timeline'][$date], $data['revenues']['timeline'][$date]], $data['total_expenses']['revenue_percentage'][$date], $date, 'Total Expenses', 'of_total_revenue');;
+            }
+    
+            $segments = [
+                [
+                    'title' => 'Cost of Goods Sold',
+                    'key' => 'Cost of Goods Sold',
+                ],
+                [
+                    'title' => 'R&D Expenses',
+                    'key' => 'R&D Expenses',
+                ],
+                [
+                    'title' => 'SG&A Expenses',
+                    'key' => 'SG&A Expenses',
+                ],
             ];
-
-            $lastValue = 0;
-            foreach ($this->dates as $idx => $date) {
-                $value = isset($statement[$seg['key']][$date]) ? abs($this->extractValues($statement[$seg['key']][$date])['value']) : 0;
-
-                $segment['timeline'][$date] = $value;
-
-                $segment['hash'][$date] = isset($statement[$seg['key']][$date]) ? $this->extractValues($statement[$seg['key']][$date])['hash'] : null;
-                $segment['secondHash'][$date] = isset($statement[$seg['key']][$date]) ? $this->extractValues($statement[$seg['key']][$date])['secondHash'] : null;
-
-                $segment['yoy_change'][$date] = $lastValue && $idx
-                    ? (($value / $lastValue) - 1) * 100
-                    : 0;
-
-                $segment['revenue_percentage'][$date] = $value / ($this->extractValues($statement['Total Revenues'][$date])['value'] ?? 0) * 100;
-                $segment['expense_percentage'][$date] = $value / $this->extractValues($data['total_expenses']['timeline'][$date])['value'] * 100;
-
-                $data['formulas'][$segment['title']]['yoy_change'][$date] = $this->makeFormulaDescription([$value, $lastValue], $segment['yoy_change'][$date], $date, $segment['title'], 'yoy_change');
-                $data['formulas'][$segment['title']]['expense_percentage'][$date] = $this->makeFormulaDescription([$value, $this->extractValues($data['total_expenses']['timeline'][$date])['value'] ?? 0], $segment['expense_percentage'][$date], $date, $segment['title'], 'of_total_expenses');
-                $data['formulas'][$segment['title']]['revenue_percentage'][$date] = $this->makeFormulaDescription([$value, $this->extractValues($statement['Total Revenues'][$date])['value'] ?? 0], $segment['revenue_percentage'][$date], $date, $segment['title'], 'of_total_revenue');
-
-                $lastValue = $value;
+    
+            foreach ($segments as $seg) {
+                $segment = [
+                    'title' => $seg['title'],
+                    'timeline' => [],
+                    'yoy_change' => [],
+                    'revenue_percentage' => [],
+                    'expense_percentage' => [],
+                ];
+    
+                $lastValue = 0;
+                foreach ($this->dates as $idx => $date) {
+                    $value = isset($statement[$seg['key']][$date]) ? abs($this->extractValues($statement[$seg['key']][$date])['value']) : 0;
+    
+                    $segment['timeline'][$date] = $value;
+    
+                    $segment['hash'][$date] = isset($statement[$seg['key']][$date]) ? $this->extractValues($statement[$seg['key']][$date])['hash'] : null;
+                    $segment['secondHash'][$date] = isset($statement[$seg['key']][$date]) ? $this->extractValues($statement[$seg['key']][$date])['secondHash'] : null;
+    
+                    $segment['yoy_change'][$date] = $lastValue && $idx
+                        ? (($value / $lastValue) - 1) * 100
+                        : 0;
+    
+                    $segment['revenue_percentage'][$date] = $value / ($this->extractValues($statement['Total Revenues'][$date])['value'] ?? 0) * 100;
+                    $segment['expense_percentage'][$date] = $value / $this->extractValues($data['total_expenses']['timeline'][$date])['value'] * 100;
+    
+                    $data['formulas'][$segment['title']]['yoy_change'][$date] = $this->makeFormulaDescription([$value, $lastValue], $segment['yoy_change'][$date], $date, $segment['title'], 'yoy_change');
+                    $data['formulas'][$segment['title']]['expense_percentage'][$date] = $this->makeFormulaDescription([$value, $this->extractValues($data['total_expenses']['timeline'][$date])['value'] ?? 0], $segment['expense_percentage'][$date], $date, $segment['title'], 'of_total_expenses');
+                    $data['formulas'][$segment['title']]['revenue_percentage'][$date] = $this->makeFormulaDescription([$value, $this->extractValues($statement['Total Revenues'][$date])['value'] ?? 0], $segment['revenue_percentage'][$date], $date, $segment['title'], 'of_total_revenue');
+    
+                    $lastValue = $value;
+                }
+    
+                $data['segments'][] = $segment;
             }
-
-            $data['segments'][] = $segment;
+    
+            $this->rawData = $data;
+        } else {
+            $this->rawData = [
+                'segments' => [],
+                'total_expenses' => [
+                    'timeline' => [],
+                    'hash' => [],
+                    'secondHash' => [],
+                    'yoy_change' => [],
+                    'revenue_percentage' => [],
+                ],
+                'revenues' => [
+                    'timeline' => [],
+                    'hash' => [],
+                    'secondHash' => [],
+                    'yoy_change' => [],
+                ],
+                'formulas' => []
+            ];
         }
-
-        $this->rawData = $data;
     }
 
     private function extractDates()
     {
         $dates = [];
 
-        foreach ($this->statements[$this->period]['income_statement'] as $values) {
-            foreach ($values as $date => $_) {
-                if (!in_array($date, $dates)) {
-                    $dates[] = $date;
+        if ($this->statements[$this->period]) {
+            foreach ($this->statements[$this->period]['income_statement'] as $values) {
+                foreach ($values as $date => $_) {
+                    if (!in_array($date, $dates)) {
+                        $dates[] = $date;
+                    }
                 }
             }
+            $this->selectDates($dates);
         }
-
-        $this->selectDates($dates);
     }
 
     private function makeData()

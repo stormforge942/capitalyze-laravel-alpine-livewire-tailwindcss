@@ -355,16 +355,18 @@ class CapitalStructure extends Component
 
         $tmp = [];
 
-        foreach ($data as $key => $value) {
-            $key = explode("|", $key)[0];
-
-            if (!in_array($key, array_keys($usedKeys))) continue;
-
-            if (in_array($key, ['Net Debt', 'Total Common Equity'])) {
-                $this->formulaHashes[$usedKeys[$key]] = array_map(fn ($value) => $this->extractHashes($value), $value);
+        if ($data) {
+            foreach ($data as $key => $value) {
+                $key = explode("|", $key)[0];
+    
+                if (!in_array($key, array_keys($usedKeys))) continue;
+    
+                if (in_array($key, ['Net Debt', 'Total Common Equity'])) {
+                    $this->formulaHashes[$usedKeys[$key]] = array_map(fn ($value) => $this->extractHashes($value), $value);
+                }
+    
+                $tmp[$key] = $valueFormatter($value);
             }
-
-            $tmp[$key] = $valueFormatter($value);
         }
 
         return $tmp;
@@ -372,26 +374,30 @@ class CapitalStructure extends Component
 
     private function getEodAdjPrices()
     {
-        $range = [
-            intval(explode('-', $this->dates[0])[0]),
-            intval(explode('-', $this->dates[count($this->dates) - 1])[0])
-        ];
-
-        $prices = DB::connection('pgsql-xbrl')
-            ->table('eod_prices')
-            ->whereBetween(DB::raw("TO_DATE(date, 'YYYY-MM-DD')"), [
-                "{$range[0]}-01-01",
-                "{$range[1]}-12-31",
-            ])
-            ->where('symbol', strtolower($this->company['ticker']))
-            ->get(['date', 'adj_close']);
-
-        // conver the array to this way [2021 => [02 => [29 => 123]]]
         $tmp = [];
-        foreach ($prices as $price) {
-            [$year, $month, $day] = array_map(fn ($a) => intval($a), explode('-', $price->date));
 
-            data_set($tmp, "{$year}.{$month}.{$day}", floatval($price->adj_close));
+        if (count($this->dates)) {
+            $range = [
+                intval(explode('-', $this->dates[0])[0]),
+                intval(explode('-', $this->dates[count($this->dates) - 1])[0])
+            ];
+        
+
+            $prices = DB::connection('pgsql-xbrl')
+                ->table('eod_prices')
+                ->whereBetween(DB::raw("TO_DATE(date, 'YYYY-MM-DD')"), [
+                    "{$range[0]}-01-01",
+                    "{$range[1]}-12-31",
+                ])
+                ->where('symbol', strtolower($this->company['ticker']))
+                ->get(['date', 'adj_close']);
+
+            // conver the array to this way [2021 => [02 => [29 => 123]]]
+            foreach ($prices as $price) {
+                [$year, $month, $day] = array_map(fn ($a) => intval($a), explode('-', $price->date));
+
+                data_set($tmp, "{$year}.{$month}.{$day}", floatval($price->adj_close));
+            }
         }
 
         return $tmp;

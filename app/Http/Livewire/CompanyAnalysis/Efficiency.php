@@ -31,8 +31,10 @@ class Efficiency extends Component
         ];
 
         foreach ($statements as $period => $item) {
-            $statements[$period]['income_statement'] = $this->formatIncomeData(json_decode($item['income_statement'], true));
-            $statements[$period]['cash_flow'] = $this->formatCashFlowData(json_decode($item['cash_flow'], true));
+            if ($statements[$period]) {
+                $statements[$period]['income_statement'] = $this->formatIncomeData(json_decode($item['income_statement'], true));
+                $statements[$period]['cash_flow'] = $this->formatCashFlowData(json_decode($item['cash_flow'], true));
+            }
         }
 
         return view('livewire.company-analysis.efficiency', [
